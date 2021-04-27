@@ -127,6 +127,7 @@ procedure BigFoot;
 procedure PoliceBox;
 procedure TalkCow;
 procedure UsedCar;
+procedure Scrapheap;
 
 procedure CheaterTimers;
 procedure CheaterTimersV13Invasion;
@@ -898,6 +899,7 @@ procedure TARDIS_9 begin
    giq_option( 1, SCRIPT_CHEATER, 352, PoliceBox, NEUTRAL_REACTION );
    //qiq_option(1, 621, 353, TalkCow, 50);
    giq_option( 1, SCRIPT_CHEATER, 354, UsedCar, NEUTRAL_REACTION );
+   NOption("Scrapheap", Scrapheap, 1);
    giq_option( 1, SCRIPT_CHEATER, 279, Cheater00a, NEUTRAL_REACTION );
 end
 
@@ -926,9 +928,12 @@ begin
    //load_map(MAP_TALKCOW, -1);
 end
 
-procedure UsedCar
-begin
+procedure UsedCar begin
    load_map(MAP_USEDCAR, -1);
+end
+
+procedure Scrapheap begin
+   load_map(MAP_SCRAPHEAP, -1);
 end
 
 procedure ChangeTheClock

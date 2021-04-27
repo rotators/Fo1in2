@@ -1,15 +1,16 @@
 /*
 
-   Junktown - Phrax
+   Scrapheap - Phrax
 
 */
 
 /* Include Files */
 #include "define.h"
-#include "boneyard.h"
+#include "scrapheap.h"
+#include "maps/junkdemo.h"
 
 #define NAME                    SCRIPT_PHRAX
-#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
 
 #include "command.h"
 #include "modreact.h"
@@ -29,260 +30,131 @@ procedure phrax07;
 procedure phraxend;
 procedure combat;
 
-procedure Start_War;
+#define LVAR_Once_Fool        (4)
+#define LVAR_Once_Fridge      (5)
+#define LVAR_Once_Generator   (6)
 
-import variable Fool_Counter;
-import variable Crypt_Counter;
-import variable Use_Fridge;
-import variable Use_Generator;
-import variable Broken_Gen;
-import variable Is_Fool;
-import variable Is_Crypt;
-import variable Fool_Pointer;
-import variable Crypt_Pointer;
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
+import variable Fridge_ptr;
 
-variable I_Am_A_Crypt := 1;
-variable I_Am_A_Fool;
-
-import variable Fool_Taunt;
-import variable Crypt_Taunt;
+#define EVENT_WAR          (1)
+#define EVENT_FRIDGE       (2)
+#define EVENT_GENERATOR    (3)
 
 variable tmp_hostile;
-variable Herebefore;
 variable Can_See;
 variable Only_Once := 1;
-variable Once_Fridge;
-variable Once_Fool;
-variable Once_Generator;
 variable Do_Once := 1;
 variable This_Once;
 
 procedure start begin
    if (Do_Once) then begin
+      I_Am_A_Crypt := 1;
       Phrax_Pointer := self_obj;
       Do_Once := 0;
    end
-   if (Is_Crypt and ((Use_Fridge < 2) or (Use_Generator < 2))) then begin
+   if (DUDE_IS_CRYPT and ((map_var(MVAR_Use_Fridge) < 2) or (map_var(MVAR_Use_Generator) < 2))) then begin
       set_self_team(TEAM_PLAYER);
    end
    else begin
-      set_self_team(TEAM_VAULT13);
-   end
-   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-      script_overrides;
-      display_msg(message_str(SCRIPT_PHRAX, 100));
-   end
-   else begin
-      if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-         tmp_hostile := 1;
-      end
-      else begin
-         if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-            script_overrides;
-            if (Is_Fool) then begin
-               call phrax06;
-            end
-            else begin
-               if (Is_Crypt) then begin
-                  call phrax05;
-               end
-               else begin
-                  if (Use_Generator) then begin
-                     call phrax04;
-                  end
-                  else begin
-                     if (Use_Fridge and Can_See) then begin
-                        Can_See := 1;
-                        start_gdialog(402, self_obj, 4, -1, -1);
-                        gsay_start;
-                        call phrax00;
-                        gsay_end;
-                        end_dialogue;
-                     end
-                     else begin
-                        call phrax07;
-                     end
-                  end
-               end
-            end
-         end
-         else begin
-            if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-               if (self_can_see_dude and not(global_var(GVAR_QUEST_BONEYARD_7_GANG_WAR))) then begin
-                  if (Use_Fridge and (Once_Fridge == 0)) then begin
-                     if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-                        Can_See := 1;
-                        Once_Fridge := 1;
-                        dialogue_system_enter;
-                     end
-                  end
-                  else begin
-                     if (Use_Generator and (Once_Generator == 0)) then begin
-                        if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-                           Can_See := 1;
-                           Once_Generator := 1;
-                           dialogue_system_enter;
-                        end
-                     end
-                     else begin
-                        if (Is_Fool and (Once_Fool == 0)) then begin
-                           Once_Fool := 1;
-                           dialogue_system_enter;
-                        end
-                        else begin
-                           if ((Use_Fridge > 1) or (Use_Generator > 1)) then begin
-                              if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
-                                 attack(dude_obj);
-                              end
-                           end
-                        end
-                     end
-                  end
-               end
-               else begin
-                  call critter_p_proc;
-               end
-            end
-            else begin
-               if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-                  call Start_War;
-               end
-               else begin
-                  if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-                     Crypt_Counter := Crypt_Counter - 1;
-                  end
-               end
-            end
-         end
-      end
+      set_self_team(TEAM_DEMO_CRYPTS);
    end
 end
 
-procedure phrax00
-begin
-   sayReply(0, message_str(SCRIPT_PHRAX, 101));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_PHRAX, 102), phrax02);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_PHRAX, 103), phrax01);
-   end
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
 end
 
-procedure phrax01
-begin
-   sayReply(0, message_str(SCRIPT_PHRAX, 104));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_PHRAX, 105), combat);
-   end
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
 end
 
-procedure phrax02
-begin
-   sayReply(0, message_str(SCRIPT_PHRAX, 106));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_PHRAX, 107), phrax03);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_PHRAX, 108), phraxend);
-   end
-end
-
-procedure phrax03
-begin
-   sayReply(0, message_str(SCRIPT_PHRAX, 109));
-   sayOption(message_str(SCRIPT_PHRAX, 114), phraxend);
-end
-
-procedure phrax04
-begin
-   float_msg(self_obj, message_str(SCRIPT_PHRAX, 110), FLOAT_MSG_NORMAL);
-end
-
-procedure phrax05
-begin
-   float_msg(self_obj, message_str(SCRIPT_PHRAX, 111), FLOAT_MSG_NORMAL);
-end
-
-procedure phrax06
-begin
-   float_msg(self_obj, message_str(SCRIPT_PHRAX, 112), FLOAT_MSG_NORMAL);
-end
-
-procedure phrax07
-begin
-   float_msg(self_obj, message_str(SCRIPT_PHRAX, 113), FLOAT_MSG_NORMAL);
-end
-
-procedure phraxend
-begin
-end
-
-procedure combat
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
-   if (I_Am_A_Fool and Crypt_Taunt) then begin
-      Crypt_Taunt := 0;
-      if (random(1, 5) == 1) then begin
-         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
+procedure talk_p_proc begin
+   script_overrides;
+   if DUDE_IS_FOOL then begin
+      call phrax06;
+   end
+   else if DUDE_IS_CRYPT then begin
+      call phrax05;
+   end
+   else if (map_var(MVAR_Use_Generator)) then begin
+      call phrax04;
+   end
+   else if (map_var(MVAR_Use_Fridge) and Can_See) then begin
+      Can_See := 1;
+      start_gdialog(402, self_obj, 4, -1, -1);
+      gsay_start;
+      call phrax00;
+      gsay_end;
+      end_dialogue;
+   end
+   else begin
+      call phrax07;
+   end
+end
+
+procedure critter_p_proc begin
+   if (self_can_see_dude and not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
+      if (DUDE_IS_FOOL and (local_var(LVAR_Once_Fool) == 0)) then begin
+         set_local_var(LVAR_Once_Fool, 1);
+         dialogue_system_enter;
       end
    end
    else begin
-      if (I_Am_A_Crypt and Fool_Taunt) then begin
-         Fool_Taunt := 0;
+      variable LVar0 := 0;
+      variable LVar1 := 0;
+      LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+      if (I_Am_A_Fool and Crypt_Taunt) then begin
+         Crypt_Taunt := 0;
          if (random(1, 5) == 1) then begin
-            float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+            float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
          end
       end
       else begin
-         if (get_gangwar_active and (self_tile != 20725)) then begin
+         if (I_Am_A_Crypt and Fool_Taunt) then begin
+            Fool_Taunt := 0;
+            if (random(1, 5) == 1) then begin
+               float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+            end
+         end
+         else if (global_var(GVAR_QUEST_DEMO_GANG_WAR) == 1 and (self_tile != 20725)) then begin
             self_walk_to_tile(20725);
          end
-         else begin
-            if (self_tile == 20725) then begin
-               add_timer_event(self_obj, game_ticks(2), 1);
+         else if (self_tile == 20725) then begin
+            add_timer_event(self_obj, game_ticks(2), 1);
+         end
+         else if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
+            if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+               This_Once := 1;
+               float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_DARK_GREY);
+            end
+            set_demo_gangwar_completed;
+            self_walk_to_tile(27504);
+         end
+         else if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+            if not(is_loading_game) then set_self_invisible;
+            if (I_Am_A_Fool) then begin
+               dec_fools_counter;
             end
             else begin
-               if (Broken_Gen and (self_tile != 27504)) then begin
-                  if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
-                     This_Once := 1;
-                     float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_DARK_GREY);
-                  end
-                  set_global_var(GVAR_QUEST_BONEYARD_7_GANG_WAR, 2);
-                  self_walk_to_tile(27504);
-               end
-               else begin
-                  if ((self_tile == 27504) and (global_var(GVAR_QUEST_BONEYARD_7_GANG_WAR) == 2)) then begin
-                     if not(is_loading_game) then set_self_invisible;
-                     if (I_Am_A_Fool) then begin
-                        Fool_Counter := Fool_Counter - 1;
-                     end
-                     else begin
-                        Crypt_Counter := Crypt_Counter - 1;
-                     end
-                  end
-                  else begin
-                     if (tmp_hostile) then begin
-                        attack(dude_obj);
-                     end
-                     else begin
-                        if (not(LVar0)) then begin
-                           if (random(0, 21) == 1) then begin
-                              LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
-                              self_walk_to_tile(LVar1);
-                           end
-                        end
-                     end
-                  end
+               dec_crypt_counter;
+            end
+         end
+         else begin
+            if (tmp_hostile) then begin
+               attack(dude_obj);
+            end
+            else if (not(LVar0)) then begin
+               if (random(0, 21) == 1) then begin
+                  LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+                  self_walk_to_tile(LVar1);
                end
             end
          end
@@ -290,28 +162,103 @@ begin
    end
 end
 
-procedure Start_War
-begin
-   if (fixed_param == 1) then begin
-      set_global_var(GVAR_QUEST_BONEYARD_7_GANG_WAR, 0);
-      if (I_Am_A_Fool) then begin
-         Fool_Taunt := 1;
-         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 115)), FLOAT_MSG_SEQUENTIAL);
-      end
-      else begin
-         Crypt_Taunt := 1;
-         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
-      end
-      add_timer_event(self_obj, 4, 2);
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_WAR) then begin
+      call Start_War;
    end
-   else begin
-      if (fixed_param == 2) then begin
-         if (I_Am_A_Fool) then begin
-            attack(Crypt_Pointer);
+
+   if (/*self_can_see_dude and*/ not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
+      if (fixed_param == EVENT_FRIDGE) then begin
+         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
+            if (local_var(LVAR_Once_Fridge) == 0) then begin
+               if (Fridge_ptr != 0) then begin
+                  if not(obj_is_locked(Fridge_ptr)) then obj_lock(Fridge_ptr);
+               end
+               Can_See := 1;
+               set_local_var(LVAR_Once_Fridge, 1);
+               dialogue_system_enter;
+            end
+            else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
+               attack(dude_obj);
+            end
          end
          else begin
-            attack(Fool_Pointer);
+            set_map_var(MVAR_Use_Fridge, 0);
+         end
+      end
+      else if (fixed_param == EVENT_GENERATOR) then begin
+         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
+            if (local_var(LVAR_Once_Generator) == 0) then begin
+               Can_See := 1;
+               set_local_var(LVAR_Once_Generator, 1);
+               dialogue_system_enter;
+            end
+            else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
+               attack(dude_obj);
+            end
+         end
+         else begin
+            set_map_var(MVAR_Use_Generator, 0);
          end
       end
    end
+end
+
+procedure destroy_p_proc begin
+   dec_crypt_counter;
+end
+
+procedure phrax00 begin
+   Reply(101);
+   if (dude_iq >= 4) then begin
+      NOption(102, phrax02, 4);
+   end
+   if (dude_iq >= 4) then begin
+      NOption(103, phrax01, 4);
+   end
+end
+
+procedure phrax01 begin
+   Reply(104);
+   if (dude_iq >= 4) then begin
+      NOption(105, combat, 4);
+   end
+end
+
+procedure phrax02 begin
+   Reply(106);
+   if (dude_iq >= 4) then begin
+      NOption(107, phrax03, 4);
+   end
+   if (dude_iq >= 4) then begin
+      NOption(108, phraxend, 4);
+   end
+end
+
+procedure phrax03 begin
+   Reply(109);
+   NOption(114, phraxend, 4);
+end
+
+procedure phrax04 begin
+   float_msg(self_obj, mstr(110), FLOAT_MSG_NORMAL);
+end
+
+procedure phrax05 begin
+   float_msg(self_obj, mstr(111), FLOAT_MSG_NORMAL);
+end
+
+procedure phrax06 begin
+   float_msg(self_obj, mstr(112), FLOAT_MSG_NORMAL);
+end
+
+procedure phrax07 begin
+   float_msg(self_obj, mstr(113), FLOAT_MSG_NORMAL);
+end
+
+procedure phraxend begin
+end
+
+procedure combat begin
+   tmp_hostile := 1;
 end

@@ -108,18 +108,12 @@ procedure viola76;
 procedure violadone;
 procedure violaend;
 procedure violacombat;
-procedure weapon_check;
 
 variable tmp_hostile;
-variable armed;
-variable GENDER;
 variable LASHERKNOWN;
 variable Only_Once := 1;
 variable TALKEDTOLAURA;
 variable LAURAWARNING;
-
-variable SrcObj := 0;
-variable SrcIsParty := 0;
 
 procedure start begin
    if Only_Once then begin
@@ -158,8 +152,7 @@ end
 
 procedure talk_p_proc begin
    dude_look_at_self;
-   GENDER := dude_gender;
-   call weapon_check;
+
    start_dialog(self_obj, 4);
    gsay_start;
    if ((local_var(4) == 1) and (dude_iq < 4)) then begin
@@ -178,34 +171,24 @@ procedure talk_p_proc begin
                call viola02;
             end
          end
-         else begin
-            if (armed == 1) then begin
-               call viola03;
+         else if (dude_is_armed) then begin
+            call viola03;
+         end
+         else if ((local_var(4) == 1) and (LAURAWARNING == 0)) then begin
+            call viola04;
+         end
+         else if not(dude_is_armed) then begin
+            if dude_wearing_coc_robe then begin
+               call viola05;
+            end
+            else if (has_rep_champion) then begin
+               call viola06;
+            end
+            else if (has_rep_childkiller and (has_rep_berserker)) then begin
+               call viola07;
             end
             else begin
-               if ((local_var(4) == 1) and (LAURAWARNING == 0)) then begin
-                  call viola04;
-               end
-               else begin
-                  if (armed == 0) then begin
-                     if dude_wearing_coc_robe then begin
-                        call viola05;
-                     end
-                     else begin
-                        if (has_rep_champion) then begin
-                           call viola06;
-                        end
-                        else begin
-                           if (has_rep_childkiller and (has_rep_berserker)) then begin
-                              call viola07;
-                           end
-                           else begin
-                              call viola08;
-                           end
-                        end
-                     end
-                  end
-               end
+               call viola08;
             end
          end
       end
@@ -216,7 +199,7 @@ procedure talk_p_proc begin
 end
 
 procedure viola00 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       Reply(101);
    end
    else begin
@@ -289,7 +272,7 @@ procedure viola05a begin
 end
 
 procedure viola06 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       Reply(129);
    end
    else begin
@@ -314,7 +297,7 @@ procedure viola06a begin
 end
 
 procedure viola07 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       Reply(136);
    end
    else begin
@@ -718,7 +701,7 @@ end
 
 procedure viola61
 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       NMessage(273);
    end
    else begin
@@ -728,7 +711,7 @@ end
 
 procedure viola62
 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       NMessage(275);
    end
    else begin
@@ -763,7 +746,7 @@ end
 
 procedure viola67
 begin
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       NMessage(286);
    end
    else begin
@@ -781,8 +764,7 @@ begin
    NMessage(289);
 end
 
-procedure viola70
-begin
+procedure viola70 begin
    if (dude_is_male) then begin
       NMessage(302);
    end
@@ -791,8 +773,7 @@ begin
    end
 end
 
-procedure viola71
-begin
+procedure viola71 begin
    if (dude_is_male) then begin
       NMessage(304);
    end
@@ -801,8 +782,7 @@ begin
    end
 end
 
-procedure viola72
-begin
+procedure viola72 begin
    if (dude_is_male) then begin
       NMessage(306);
    end
@@ -811,8 +791,7 @@ begin
    end
 end
 
-procedure viola73
-begin
+procedure viola73 begin
    if (dude_is_male) then begin
       NMessage(300);
    end
@@ -821,14 +800,12 @@ begin
    end
 end
 
-procedure viola74
-begin
+procedure viola74 begin
    NMessage(294);
 end
 
-procedure viola75
-begin
-   if (GENDER == 0) then begin
+procedure viola75 begin
+   if (dude_is_male) then begin
       NMessage(295);
    end
    else begin
@@ -836,13 +813,11 @@ begin
    end
 end
 
-procedure viola76
-begin
+procedure viola76 begin
    NMessage(297);
 end
 
-procedure violadone
-begin
+procedure violadone begin
    NOption(298, violaend, 1);
 end
 
@@ -852,14 +827,4 @@ end
 procedure violacombat begin
    set_global_var(GVAR_CATHEDRAL_ENEMY, 1);
    tmp_hostile := 1;
-end
-
-procedure weapon_check begin
-
-   if (dude_is_armed) then begin
-      armed := 1;
-   end
-   else begin
-      armed := 0;
-   end
 end

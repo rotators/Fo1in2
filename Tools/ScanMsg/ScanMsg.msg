@@ -1,40 +1,82 @@
-{{1}{}{error1}
-{2}{}{error2}}
-{3}{}{commenting} # with {brackets}
-{4}{quick}{hotfix} # {44}{went}{wrong}
-{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{[[5}{}{my key is stuck}
+## extra brackets
+{{1}{}{extra bracket begin}
+{2}{}{extra bracket end}}
+
+# lisac's crash aka how it started
+{3}{}{bracket in} # with {comment}
+{4}{oh noes}{too much} # {4}{}{brackets}
+
+{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{5}{}{my key is stuck}
 {{6}}{{6}}{{6}}
+{-7}{}{invalid id}
 
-{11}{}{multiline1
-{12}{}{multierror1}
-
-{21}{{}{multiline2.1
-multierror2.1}
-
-{22}}{}{multiline2.2
-{multierror2.2}
-
-{31}{}{multiline3
-multierror3}}
-
-a{41}{}{before1}
-# {41}{}{before2}
-
-{51}text{}{between1}
-{52}{}text{between2}
-{53}{} # {between3}
-
-{55}{}{} # between5
-
-{61}{}{after}text
-{62}{}{after} # text
-{63}{}{} # between4
-
-{100}{}{duplicated}
-{100}{}{entry}
-
-[1000}{}{bracket typo}
-
+## id validation
 {invalid}{}{id}
 {-1}{}{invalid id}
 {-1000000}{}{invald id}
+
+## duplicates
+{10}{}{copy paste}
+{10}{}{is bad, mkay?}
+
+{11}{}{multiline
+duplicate}
+{11}{}{single line}
+
+{12}{}{single line}
+{12}{}{multiline
+duplicate}
+
+## out of brackets
+rebel{21}{legit}{legit}
+{22}rebel{legit}{legit}
+{23}{legit}rebel{legit}
+{24}{legit}{legit}rebel
+
+## must fail
+{40}#{}#{text}
+{41}#{}{text}
+{42}{}#{text}
+
+; silly comment
+silly comment
+
+## text length
+{50}{}{        10        20        30        40        50        60        70        80        90       100       110       120       130       140       150       160       170       180       190       200       210       220       230       240       250       260       270       280       290       300       310       320       330       340       350       360       370       380       390       400       410       420       430       440       450       460       470       480       490       500       510       520       530       540       550       560       570       580       590       600       610       620       630       640       650       660       670       680       690       700       710       720       730       740       750       760       770       780       790       800       810       820       830       840       850       860       870       880       890       900       910       920       930       940       950       960       970       980       990      1000      1010      1020 2345 1030}
+{51}{}{        10        20        30        40        50        60        70        80        90       100
+       110       120       130       140       150       160       170       180       190       200
+       210       220       230       240       250       260       270       280       290       300
+       310       320       330       340       350       360       370       380       390       400
+       410       420       430       440       450       460       470       480       490       500
+       510       520       530       540       550       560       570       580       590       600
+       610       620       630       640       650       660       670       680       690       700
+       710       720       730       740       750       760       770       780       790       800
+       810       820       830       840       850       860       870       880       890       900
+       910       920       930       940       950       960       970       980       990      1000
+      1010      1020 2345 1030}
+
+## word length
+{60}{}{123456789012345678901234567890123456789012345678901234567890}
+{61}{}{text
+123456789012345678901234567890123456789012345678901234567890}
+{62}{}{text
+123456789012345678901234567890123456789012345678901234567890
+text}
+
+## random
+{100}{}{multiline1
+{101}{}{multierror1}
+
+{110}{{}{multiline2.1
+multierror2.1}
+
+{120}}{}{multiline2.2
+{multierror2.2}
+
+{130}{}{multiline3
+multierror3}}
+
+{140}{}multiline{rogue
+comment}
+
+[150}{}{bracket typo}

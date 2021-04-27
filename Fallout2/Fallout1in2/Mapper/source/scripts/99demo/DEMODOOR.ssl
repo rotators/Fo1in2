@@ -1,1 +1,129 @@
-procedure start begin end
+/*
+
+   Scrapheap - Fridge
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+#include "maps/junkdemo.h"
+
+#define NAME                    SCRIPT_DEMODOOR
+
+#include "command.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure do_stuff;
+procedure do_use_stuff;
+procedure do_skill;
+procedure see_stuff;
+procedure examine;
+
+import variable Phrax_Pointer;
+import variable Fridge_ptr;
+
+#define EVENT_RESET        (1)
+#define EVENT_FRIDGE       (2)
+
+variable unlocked;
+variable open;
+variable test;
+
+procedure start begin
+   Fridge_ptr := self_obj;
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      obj_lock(self_obj);
+   end
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   call examine;
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   call see_stuff;
+end
+
+procedure use_p_proc begin
+   call do_use_stuff;
+end
+
+procedure pickup_p_proc begin
+   call do_stuff;
+end
+
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+      call do_skill;
+   end
+   else begin
+      display_msg(mstr(106));
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_RESET) then begin
+      set_map_var(MVAR_Use_Fridge, 0);
+   end
+end
+
+procedure do_stuff begin
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
+   set_map_var(MVAR_Use_Fridge, 1);
+   if (obj_is_locked(self_obj)) then begin
+      script_overrides;
+   end
+   add_timer_event(self_obj, 5, EVENT_RESET);
+end
+
+procedure do_use_stuff begin
+   if obj_is_locked(self_obj) then begin
+      script_overrides;
+      display_msg(mstr(105));
+   end
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
+   set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
+end
+
+procedure do_skill begin
+   if (obj_is_locked(self_obj)) then begin
+      test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
+      if (is_success(test)) then begin
+         display_msg(mstr(100));
+         obj_unlock(self_obj);
+      end
+      else begin
+         display_msg(mstr(101));
+      end
+   end
+   else begin
+      display_msg(mstr(107));
+   end
+   set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
+end
+
+procedure see_stuff begin
+   display_msg(mstr(108));
+end
+
+procedure examine begin
+   if (obj_is_locked(self_obj)) then begin
+      display_msg(mstr(102));
+   end
+   else if (obj_is_open(self_obj)) then begin
+      display_msg(mstr(103));
+   end
+   else begin
+      display_msg(mstr(104));
+   end
+end

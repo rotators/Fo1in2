@@ -41,6 +41,7 @@
 #define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) >= 1) // we don't want 0.5, etc. values here
 #define fo1in2_red_dogmeat_enabled      (global_var(GVAR_ENABLE_RED_DOGMEAT) > 0)
 #define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
+#define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -123,6 +124,9 @@
 
 #define joined_bos                           (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 2)
 #define set_joined_bos                       set_global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM, 2)
+
+#define set_fo1_demo_completed   set_global_var(GVAR_QUEST_DEMO_GANG_WAR, 69)
+#define fo1_demo_completed       (global_var(GVAR_QUEST_DEMO_GANG_WAR) == 69)
 
 /*********************************************************
     TMA / Tell Me About
@@ -470,9 +474,9 @@ variable merch_slot_2;
 variable merch_slot_2_flags;
 variable merch_slot_armor;
 variable merch_slot_armor_flags;
-#define get_barter_inven(x)         merch_slot_1 := critter_inven_obj(self_obj, INVEN_TYPE_LEFT_HAND);  \
-                                    merch_slot_2 := critter_inven_obj(self_obj, INVEN_TYPE_RIGHT_HAND); \
-                                    merch_slot_armor := critter_inven_obj(self_obj,INVEN_TYPE_WORN);    \
+#define get_barter_inven(x)         merch_slot_1 := self_left_hand;                                     \
+                                    merch_slot_2 := self_right_hand;                                    \
+                                    merch_slot_armor := self_armor;                                     \
                                     if (merch_slot_1 > 0) then                                          \
                                         merch_slot_1_flags := get_flags(merch_slot_1);                  \
                                     if (merch_slot_2 > 0) then                                          \

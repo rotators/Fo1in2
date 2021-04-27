@@ -1,1 +1,125 @@
-procedure start begin end
+/*
+
+   Scrapheap - Computer terminal
+
+      Can play Fallout on this one.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+#include "maps/junkdemo.h"
+
+#define NAME                    SCRIPT_DEMOCOMP
+
+#include "command.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure description_p_proc;
+procedure look_at_p_proc;
+procedure use_p_proc;
+procedure talk_p_proc;
+
+procedure fix;
+procedure Node001;
+procedure Node002;
+procedure Node003;
+procedure Node004;
+procedure Node005;
+procedure Node999;
+
+#define LVAR_Fixed      (4)
+#define LVAR_GiveXP     (5)
+
+variable test;
+
+procedure start begin
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure use_p_proc begin
+   script_overrides;
+   if (map_var(MVAR_Broken_Gen) != 1) then begin
+      if (local_var(LVAR_Fixed) == 1) then begin
+         dialogue_system_enter;
+      end
+      else begin
+         call fix();
+      end
+   end
+end
+
+procedure talk_p_proc begin
+   start_dialog(self_obj, 4);
+   gsay_start;
+   call Node001();
+   gsay_end;
+   end_dialogue;
+end
+
+procedure fix begin
+   if (has_skill(dude_obj, SKILL_SCIENCE) > has_skill(dude_obj, SKILL_REPAIR)) then begin
+      test := roll_vs_skill(dude_obj, SKILL_SCIENCE, 0);
+   end
+   else begin
+      test := roll_vs_skill(dude_obj, SKILL_REPAIR, 0);
+   end
+   if (is_success(test)) then begin
+      display_msg(mstr(101));
+      set_local_var(LVAR_Fixed, 1);
+   end
+   else begin
+      display_msg(mstr(103));
+      if (is_critical(test)) then begin
+         display_msg(mstr(104));
+         critter_dmg(dude_obj, 1, 0 bwor 256);
+      end
+   end
+end
+
+procedure Node001 begin
+   Reply(105);
+   NOption(106, Node002, 4);
+   NOption(107, Node999, 4);
+end
+
+procedure Node002 begin
+   Reply(108);
+   NOption(109, Node003, 4);
+   NOption(110, Node999, 4);
+end
+
+procedure Node003 begin
+   Reply(111);
+   NOption(112, Node004, 4);
+   NOption(113, Node005, 4);
+   NOption(114, Node999, 4);
+end
+
+procedure Node004 begin
+   Reply(115);
+   NOption(116, Node003, 4);
+end
+
+procedure Node005 begin
+   if (not(local_var(LVAR_GiveXP))) then begin
+      give_exp_points(100);
+      display_msg(mstr(119));
+      set_local_var(LVAR_GiveXP, 1);
+   end
+   float_msg(dude_obj, mstr(118), FLOAT_MSG_NORMAL);
+end
+
+procedure Node999 begin
+end

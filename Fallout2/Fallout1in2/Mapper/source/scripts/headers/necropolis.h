@@ -14,7 +14,6 @@
                             cover_state := (obj_is_open(Cover_Ptr));                                    \
                             if (cover_state == 0) then begin                                            \
                                 script_overrides;                                                       \
-                                /*display_msg(message_str(SCRIPT_NHUP2DN1,100));*/                      \
                                 obj_open(Cover_Ptr);                                                    \
                             end                                                                         \
                             else begin                                                                  \
@@ -117,13 +116,13 @@ variable Critter,
    critter_attempt_placement(Critter, Critter_spawn_hex, 0);
    anim(Critter, ANIMATE_ROTATION, random(0, 5));
 
-   while(rats) do begin
+   /*while(rats) do begin
       Critter_tile := tile_num_in_direction(Critter_spawn_hex, random(0, 5), random(2,5));
       Critter := create_object_sid(PID_TOUGH_RADIATED_RAT, 0, 0, SCRIPT_NKINGRAT);
       critter_attempt_placement(Critter, Critter_spawn_hex, 0);
       anim(Critter, ANIMATE_ROTATION, random(0, 5));
       rats := rats - 1;
-   end
+   end*/
 
    set_global_var(GVAR_SEWER_KING_POS, -1);
 end

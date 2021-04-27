@@ -5,26 +5,31 @@
 */
 
 #include "define.h"
+#include "maps/junkdemo.h"
+
+#define NAME                    SCRIPT_JUNKDEMO
+
 #include "command.h"
 #include "updatmap.h"
+#include "sfall/main.h"
+#include "sfall/sfall.rotators.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
+procedure timed_event_p_proc;
 
-export variable Is_Fool;
-export variable Is_Crypt;
-export variable Broken_Gen;
-export variable Hiding_Bush;
-export variable Use_Fridge;
-export variable Use_Generator;
-export variable Dog_Is_Angry := 1;
+#define EVENT_END_GENERATOR   (1)
+#define EVENT_END_GANGS       (2)
+#define EVENT_SLIDESHOW       (3)
+
+#define ENDING_TIMER    (10) // Was 30
+
 export variable Phil_Approaches;
 export variable Growling;
 export variable Smartass;
 export variable Smartass2;
-export variable Know_Fools;
-export variable Know_Crypts;
-export variable Know_Power;
-export variable Rock_Invite;
 export variable Skippy_Talk;
 export variable Crypt_Pointer;
 export variable Fool_Pointer;
@@ -32,16 +37,13 @@ export variable Phrax_Pointer;
 export variable Rock_Pointer;
 export variable Fool_Taunt;
 export variable Crypt_Taunt;
-export variable Scouted_Crypts;
-export variable Scouted_Fools;
-export variable Mad_Cow;
-export variable Fool_counter := 4;
-export variable Crypt_counter := 8;
 
-variable new_obj;
-variable Time;
+export variable Fridge_ptr;
 
-procedure Invasion;
+variable Item;
+variable Timer;
+variable Slide;
+variable Temp_ptr;
 
 procedure start begin
 end
@@ -49,35 +51,144 @@ end
 procedure map_enter_p_proc begin
    Lighting;
 
-   /*
-   new_obj := create_object(PID_10MM_SMG, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_LEATHER_ARMOR, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_10MM_AP, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_10MM_AP, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_STIMPAK, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_STIMPAK, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   new_obj := create_object(PID_FLARE, 0, 0);
-   add_obj_to_inven(dude_obj, new_obj);
-   */
+   if map_first_run then begin
+      // Reset GVARs
+      set_global_var(GVAR_QUEST_DEMO_GANG_WAR, 0);
+      set_global_var(GVAR_DEMODOG_HIRELING_STATUS, 0);
+      set_global_var(GVAR_QUEST_DEMO_FIX_POWER, 0);
+      set_global_var(GVAR_TOWN_REP_SCRAPHEAP, 0);
+      set_global_var(GVAR_CSCOUT_1, 0);
+      set_global_var(GVAR_FSCOUT_1, 0);
+      set_global_var(GVAR_GANG_1_GVAR, 0);
+
+      // Save slots
+      set_map_var(MVAR_Slot1, critter_inven_obj2(dude_obj, INVEN_TYPE_LEFT_HAND));
+      set_map_var(MVAR_Slot2, critter_inven_obj2(dude_obj, INVEN_TYPE_RIGHT_HAND));
+      set_map_var(MVAR_SlotArmor, dude_armor);
+      if (map_var(MVAR_Slot1) > 0) then
+          set_map_var(MVAR_Slot1_flags, get_flags(map_var(MVAR_Slot1)));
+      if (map_var(MVAR_Slot2) > 0) then
+          set_map_var(MVAR_Slot2_flags, get_flags(map_var(MVAR_Slot2)));
+      if (map_var(MVAR_SlotArmor) > 0) then
+          set_map_var(MVAR_SlotArmor_flags, get_flags(map_var(MVAR_SlotArmor)));
+
+      // Need to remember the PID, in case the pointer is forgotten
+      set_map_var(MVAR_Slot1, obj_pid(critter_inven_obj2(dude_obj, INVEN_TYPE_LEFT_HAND)));
+      set_map_var(MVAR_Slot2, obj_pid(critter_inven_obj2(dude_obj, INVEN_TYPE_RIGHT_HAND)));
+      set_map_var(MVAR_SlotArmor, obj_pid(dude_armor));
+
+      // Move player inventory
+      Temp_ptr := create_object(PID_DEAD_TRAVELER, 0, 0);
+      move_to(Temp_ptr, 0, 0);
+      inven_unwield(dude_obj);
+      move_obj_inven_to_obj(dude_obj, Temp_ptr);
+
+      set_map_var(MVAR_CurHP, dude_cur_hp);
+      critter_heal(dude_obj, dude_max_hp);
+
+      // Create new inventory
+      Item := create_object(PID_10MM_SMG, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_LEATHER_ARMOR, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_10MM_AP, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_10MM_AP, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_STIMPAK, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_STIMPAK, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+      Item := create_object(PID_FLARE, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+   end
 
    override_map_start(106, 136, 0, 5);
 end
 
 procedure map_update_p_proc begin
    Lighting;
-   if (Broken_Gen) then begin
-      add_timer_event(dude_obj, game_ticks(30), 1);
+   if (map_var(MVAR_Broken_Gen)) then begin
+      flush_add_timer_event(self_obj, game_ticks(ENDING_TIMER), EVENT_END_GENERATOR);
    end
-   else if ((Fool_counter <= 1) and (Crypt_counter <= 1)) then begin
-      add_timer_event(dude_obj, game_ticks(30), 2);
+   else if ((map_var(MVAR_Fool_Counter) <= 1) and (map_var(MVAR_Crypt_Counter) <= 1)) then begin
+      flush_add_timer_event(self_obj, game_ticks(ENDING_TIMER), EVENT_END_GANGS);
    end
 end
 
-procedure Invasion begin
+procedure map_exit_p_proc begin
+variable hp_diff := dude_cur_hp - map_var(MVAR_CurHP);
+   set_global_var(GVAR_DEMO_EXIT, 1);
+
+   if (hp_diff > 0) then begin
+      critter_heal(dude_obj, (map_var(MVAR_CurHP) - dude_cur_hp));
+   end
+
+   obj_drop_everything(dude_obj);
+   Temp_ptr := tile_contains_pid_obj(0, 0, PID_DEAD_TRAVELER);
+   move_obj_inven_to_obj(Temp_ptr, dude_obj);
+
+   set_map_var(MVAR_Slot1, dude_item(map_var(MVAR_Slot1)));
+   set_map_var(MVAR_Slot2, dude_item(map_var(MVAR_Slot2)));
+   set_map_var(MVAR_SlotArmor, dude_item(map_var(MVAR_SlotArmor)));
+
+   if (map_var(MVAR_Slot1) > 0) then
+       set_flags(map_var(MVAR_Slot1), map_var(MVAR_Slot1_flags));
+   if (map_var(MVAR_Slot2) > 0) then
+       set_flags(map_var(MVAR_Slot2), map_var(MVAR_Slot2_flags));
+   if (map_var(MVAR_SlotArmor) > 0) then begin
+       set_flags(map_var(MVAR_SlotArmor), map_var(MVAR_SlotArmor_flags));
+
+      // TODO: Need to refresh FID
+      //art_change_fid_num(dude_obj, dude_fid);
+   end
+   refresh_pc_art;
+   intface_redraw;
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_END_GENERATOR and Timer == 0) then begin
+      Timer := 1;
+      float_msg(dude_obj, mstr(400), FLOAT_MSG_WARNING);
+      add_timer_event(self_obj, game_ticks(8), EVENT_SLIDESHOW);
+      game_ui_disable;
+      reg_anim_clear(dude_obj);
+   end
+   else if (fixed_param == EVENT_END_GANGS and Timer == 0) then begin
+      Timer := 1;
+      float_msg(dude_obj, mstr(402), FLOAT_MSG_WARNING);
+      add_timer_event(self_obj, game_ticks(6), EVENT_SLIDESHOW);
+      game_ui_disable;
+      reg_anim_clear(dude_obj);
+   end
+   else if (fixed_param == EVENT_SLIDESHOW) then begin
+      set_fo1_demo_completed;
+      add_timer_event(self_obj, game_ticks(5), EVENT_SLIDESHOW);
+      if (Slide == 0) then begin
+         variable music := play_sfall_sound("data\\sound\\music\\empty.acm", 2);
+         Slide := 1;
+         create_win("win_slide", 0, 0, get_screen_width, get_screen_height);
+         SelectWin("win_slide");
+         sfall_func("draw_image_scaled", "art\\intrface\\UPSELL00.frm");
+         ShowWin;
+      end
+      else if (Slide == 1) then begin
+         Slide := 2;
+         SelectWin("win_slide");
+         sfall_func("draw_image_scaled", "art\\intrface\\UPSELL01.frm");
+         ShowWin;
+      end
+      else if (Slide == 2) then begin
+         Slide := 3;
+         SelectWin("win_slide");
+         sfall_func("draw_image_scaled", "art\\intrface\\UPSELL02.frm");
+         ShowWin;
+      end
+      else if (Slide == 3) then begin
+         gfade_out(ONE_GAME_SECOND);
+         DeleteWin("win_slide");
+         game_ui_enable;
+         load_map(MAP_HOTEL, 69);
+      end
+   end
 end

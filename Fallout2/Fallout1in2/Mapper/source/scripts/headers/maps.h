@@ -156,7 +156,7 @@
 #define MAP_MNTCRVN4        (63)
 #define MAP_DESERT1         (64)
 #define MAP_HUBMIS0         (65)
-#define MAP_HUBMIS1         (66)
+#define MAP_HUBMIS1         (66) // UNSUED!
 #define MAP_RNDDESER        (67)
 #define MAP_RNDMOUNT        (68)
 #define MAP_RNDCITY         (69)
@@ -361,7 +361,7 @@
 #define glow_visible_on_map                 (town_known(AREA_GLOW) != MARK_STATE_UNKNOWN)
 #define boneyard_visible_on_map             (town_known(AREA_BONEYARD) != MARK_STATE_UNKNOWN)
 #define cathedral_visible_on_map            (town_known(AREA_CATHEDRAL) != MARK_STATE_UNKNOWN)
-
+#define scrapheap_visible_on_map            (town_known(AREA_SCRAPHEAP) != MARK_STATE_UNKNOWN)
 #define shady_caves_visible_on_map          (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
 #define hub_farm_visible_on_map             (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
 #define hub_lair_visible_on_map             (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
@@ -378,7 +378,7 @@
 #define glow_visit                          (town_known(AREA_GLOW) == MARK_STATE_VISITED)
 #define boneyard_visit                      (town_known(AREA_BONEYARD) == MARK_STATE_VISITED)
 #define cathedral_visit                     (town_known(AREA_CATHEDRAL) == MARK_STATE_VISITED)
-
+#define scrapheap_visit                     (town_known(AREA_SCRAPHEAP) != MARK_STATE_VISITED)
 #define shady_caves_visit                   (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
 #define hub_farm_visit                      (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
 #define hub_lair_visit                      (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
@@ -413,6 +413,7 @@
 #define mark_glow_on_map                  mark_on_map(AREA_GLOW)
 #define mark_boneyard_on_map              mark_on_map(AREA_BONEYARD)
 #define mark_cathedral_on_map             mark_on_map(AREA_CATHEDRAL)
+#define mark_scrapheap_on_map             mark_on_map(AREA_SCRAPHEAP)
 #define mark_shady_caves_on_map           mark_on_map(AREA_SHADY_CAVES)
 #define mark_hub_farm_on_map              mark_on_map(AREA_HUB_FARM)
 #define mark_hub_lair_on_map              mark_on_map(AREA_HUB_LAIR)
@@ -429,6 +430,7 @@
 #define unmark_glow_on_map                unmark_on_map(AREA_GLOW)
 #define unmark_boneyard_on_map            unmark_on_map(AREA_BONEYARD)
 #define unmark_cathedral_on_map           unmark_on_map(AREA_CATHEDRAL)
+#define unmark_scrapheap_on_map           unmark_on_map(AREA_SCRAPHEAP)
 #define unmark_shady_caves_on_map         unmark_on_map(AREA_SHADY_CAVES)
 #define unmark_hub_farm_on_map            unmark_on_map(AREA_HUB_FARM)
 #define unmark_hub_lair_on_map            unmark_on_map(AREA_HUB_LAIR)

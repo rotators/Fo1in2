@@ -1,0 +1,63 @@
+/*
+
+   Check if player is using drugs on critters and have them react to that.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure useobjon_handler;
+
+#define good_drug                (obj_pid(item == PID_STIMPAK)
+#define soft_drug                (obj_pid(item) == PID_BEER or obj_pid(item) == PID_BOOZE or obj_pid(item) == PID_ROENTGEN_RUM or obj_pid(item) == PID_GAMMA_GULP_BEER)
+#define hard_drug                (obj_pid(item) == PID_SUPER_STIMPAK or obj_pid(item) == PID_PSYCHO or obj_pid(item) == PID_JET)
+
+#define crit_fid                 obj_art_fid(target)
+#define crit_loser               (crit_fid == FID_NMLOSR)
+#define crit_hooker              (crit_fid == FID_NFTRMP)
+
+#define target_can_see_dude      obj_can_see_obj(target, dude_obj)
+
+variable STEAL_MOD := 0;
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      register_hook_proc(HOOK_USEOBJON, useobjon_handler);
+   end
+end
+
+procedure useobjon_handler begin
+   variable
+      target := get_sfall_arg,
+      source := get_sfall_arg,
+      item := get_sfall_arg;
+
+   // Check using a drug on non-party member critters
+   if ((source == dude_obj) and (obj_type(target) == OBJ_TYPE_CRITTER) and not(obj_in_party(target))) then begin
+      // Change modifier based on critter graphic
+      if (crit_loser or crit_hooker) then begin
+         STEAL_MOD := 50;
+      end
+      else STEAL_MOD := 0;
+
+      // Detect player interaction
+      if (target_can_see_dude and not(is_success(roll_vs_skill(dude_obj, SKILL_STEAL, STEAL_MOD)))) then begin
+         set_sfall_return(0);
+         if (soft_drug) then begin
+            float_msg(target, g_mstr(random(3054, 3058)), FLOAT_COLOR_BAD);
+         end
+         else if (hard_drug) then begin
+            float_msg(target, g_mstr(random(3060, 3062)), FLOAT_COLOR_BAD);
+            set_self(target);
+            attack(source);
+         end
+      end
+   end
+end

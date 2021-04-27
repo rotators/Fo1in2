@@ -1,1 +1,342 @@
-procedure start begin end
+/*
+
+   Scrapheap - Rayze, Crypt ganger
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+#include "maps/junkdemo.h"
+
+#define NAME                    SCRIPT_RAYZE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+
+procedure rayze00;
+procedure rayze01;
+procedure rayze02;
+procedure rayze03;
+procedure rayze04;
+procedure rayze05;
+procedure rayze05a;
+procedure rayze06;
+procedure rayze07;
+procedure rayze08;
+procedure rayze09;
+procedure rayze10;
+procedure rayze10a;
+procedure rayze10b;
+procedure rayze11;
+procedure rayze12;
+procedure rayze13;
+procedure rayze14;
+procedure rayze15;
+procedure rayze16;
+procedure rayze17;
+procedure rayze18;
+procedure rayze19;
+procedure rayzeend;
+
+procedure Combat;
+
+#define LVAR_Crypt_Liar    (4)
+#define LVAR_Herebefore    (5)
+
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable This_Once;
+variable tmp_hostile;
+variable Only_Once := 1;
+
+procedure start begin
+   if Only_Once then begin
+      Only_Once := 0;
+      Crypt_Pointer := self_obj;
+      I_Am_A_Crypt := 1;
+   end
+   if (DUDE_IS_CRYPT) then begin
+      set_self_team(TEAM_PLAYER);
+   end
+   else begin
+      set_self_team(TEAM_DEMO_CRYPTS);
+   end
+end
+
+procedure map_enter_p_proc begin
+   // Pretty sure that's wrong
+   //if map_first_run then begin
+   //   set_local_var(LVAR_Crypt_Liar, 1);
+   //end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc begin
+   call Start_War;
+end
+
+procedure talk_p_proc begin
+   if (DUDE_IS_FOOL) then begin
+      call rayze00;
+   end
+   else if (local_var(LVAR_Herebefore) and not(DUDE_IS_CRYPT)) then begin
+      call rayze09;
+   end
+   else if (FOOLS_COUNTER == 0) then begin
+      call rayze18;
+   end
+   else begin
+      if get_demo_gangwar_active then begin
+         call rayze19;
+      end
+      else begin
+         start_gdialog(412, self_obj, 4, -1, -1);
+         gsay_start;
+         if (DUDE_IS_CRYPT) then begin
+            call rayze10;
+         end
+         else begin
+            call rayze01;
+         end
+         gsay_end;
+         end_dialogue;
+      end
+   end
+end
+
+procedure destroy_p_proc begin
+   dec_crypt_counter;
+end
+
+procedure rayze00 begin
+   float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
+   call Combat;
+end
+
+procedure rayze01 begin
+   Reply(102);
+   if (map_var(MVAR_Rock_Invite)) then
+      NOption(103, rayze02, 4);
+   NOption(104, rayze07, 4);
+   if (KNOWS_FOOLS) then
+      NOption(105, rayze14, 4);
+   if (KNOWS_POWER) then
+      NOption(106, rayze15, 4);
+end
+
+procedure rayze02 begin
+   Reply(107);
+   NOption(108, rayze03, 4);
+   NOption(109, rayze04, 4);
+end
+
+procedure rayze03 begin
+   Reply(110);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze04 begin
+   Reply(111);
+   NOption(112, rayze05, 4);
+   NOption(113, rayze06, 4);
+end
+
+procedure rayze05 begin
+   Reply(114);
+   NOption(115, rayze05a, 4);
+   NOption(116, rayze06, 4);
+end
+
+procedure rayze05a begin
+   set_dude_is_crypt;
+   set_global_var(GVAR_FSCOUT_1, 1);
+end
+
+procedure rayze06 begin
+   Reply(117);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze07 begin
+   Reply(118);
+   NOption(119, rayze08, 4);
+end
+
+procedure rayze08 begin
+   Reply(120);
+   NOption(121, rayze05, 4);
+   NOption(122, rayze06, 4);
+end
+
+procedure rayze09 begin
+   float_msg(self_obj, mstr(123), FLOAT_MSG_NORMAL);
+end
+
+procedure rayze10 begin
+   Reply(124);
+   NOption(125, rayze10a, 4);
+   NOption(126, rayze10b, 4);
+   NOption(127, rayze13, 4);
+end
+
+procedure rayze10a begin
+   if (global_var(GVAR_FSCOUT_1) == 2) then begin
+      call rayze11;
+   end
+   else begin
+      if (local_var(LVAR_Crypt_Liar)) then begin
+         call rayze17;
+      end
+      else begin
+         call rayze16;
+      end
+   end
+end
+
+procedure rayze10b begin
+   if (global_var(GVAR_FSCOUT_1) == 2) then begin
+      call rayze12;
+   end
+   else begin
+      if (local_var(LVAR_Crypt_Liar)) then begin
+         call rayze17;
+      end
+      else begin
+         call rayze16;
+      end
+   end
+end
+
+procedure rayze11 begin
+   set_demo_gangwar_active;
+   Reply(128);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze12 begin
+   set_demo_gangwar_active;
+   Reply(129);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze13 begin
+   Reply(130);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze14 begin
+   Reply(131);
+   if (map_var(MVAR_Rock_Invite)) then
+      NOption(132, rayze02, 4);
+   NOption(133, rayze07, 4);
+   if (KNOWS_POWER) then
+      NOption(134, rayze15, 4);
+end
+
+procedure rayze15 begin
+   Reply(135);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze16 begin
+   set_local_var(LVAR_Crypt_Liar, 1);
+   Reply(142);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayze17 begin
+   Reply(143);
+   NOption(136, rayzeend, 4);
+   call Combat;
+end
+
+procedure rayze18 begin
+   float_msg(self_obj, mstr(144), FLOAT_MSG_NORMAL);
+   //signal_end_game;
+   debug("signal_end_game");
+end
+
+procedure rayze19 begin
+   Reply(145);
+   NOption(136, rayzeend, 4);
+end
+
+procedure rayzeend begin
+end
+
+procedure Combat begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+   if (I_Am_A_Fool and Crypt_Taunt) then begin
+      Crypt_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else if (I_Am_A_Crypt and Fool_Taunt) then begin
+      Fool_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else if (get_demo_gangwar_active and (self_tile != 20725)) then begin
+      self_walk_to_tile(20725);
+   end
+   else if (self_tile == 20725) then begin
+      add_timer_event(self_obj, game_ticks(2), 1);
+   end
+   else if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
+      if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+         This_Once := 1;
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
+      end
+      set_demo_gangwar_completed;
+      self_walk_to_tile(27504);
+   end
+   else if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+      if not(is_loading_game) then set_self_invisible;
+      if (I_Am_A_Fool) then begin
+         dec_fools_counter;
+      end
+      else begin
+         dec_crypt_counter;
+      end
+   end
+   else begin
+      if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      else if (not(LVar0)) then begin
+         if (random(0, 21) == 1) then begin
+            LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+            self_walk_to_tile(LVar1);
+         end
+      end
+   end
+end

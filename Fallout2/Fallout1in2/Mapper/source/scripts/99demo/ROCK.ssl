@@ -1,1 +1,259 @@
-procedure start begin end
+/*
+
+   Scrapheap - Rock, at the entrance
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+#include "maps/junkdemo.h"
+
+#define NAME                    SCRIPT_ROCK
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure critter_p_proc;
+
+procedure rock00;
+procedure rock01;
+procedure rock02;
+procedure rock03;
+procedure rock04;
+procedure rock05;
+procedure rock06;
+procedure rock07;
+procedure rock08;
+procedure rock09;
+procedure rock10;
+procedure rock11;
+
+procedure rockcombat;
+procedure rockend;
+
+#define LVAR_Known         (4)
+#define LVAR_Float         (5)
+#define LVAR_Herebefore    (6)
+
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable tmp_hostile;
+
+variable one_time;
+variable init_teams := 0;
+variable This_Once;
+
+procedure start begin
+   if DUDE_IS_CRYPT then begin
+      set_self_team(TEAM_PLAYER);
+   end
+   else begin
+      set_self_team(TEAM_DEMO_CRYPTS);
+   end
+   if (not(init_teams)) then begin
+      init_teams := 1;
+      Rock_Pointer := self_obj;
+      I_Am_A_Crypt := 1;
+   end
+
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Known) == 1) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Known) == 1) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
+end
+
+procedure timed_event_p_proc begin
+   call Start_War;
+end
+
+procedure destroy_p_proc begin
+   dec_crypt_counter;
+end
+
+procedure talk_p_proc begin
+   dude_look_at_self;
+   start_gdialog(410, self_obj, 4, -1, -1);
+   gsay_start;
+   if (dude_is_armed) then begin
+      call rock00;
+   end
+   else begin
+      if DUDE_IS_CRYPT then begin
+         call rock06;
+      end
+      else if DUDE_IS_FOOL then begin
+         call rock07;
+      end
+      else if (local_var(LVAR_Herebefore) == 0) then begin
+         call rock08;
+      end
+      else begin
+         call rock11;
+      end
+   end
+   gsay_end;
+   end_dialogue;
+end
+
+procedure rock00 begin
+   Reply(102);
+   NOption(103, rock01, 4);
+   NOption(104, rock01, 4);
+   NOption(105, rock02, 4);
+end
+
+procedure rock01 begin
+   set_local_var(LVAR_Known, 1);
+   Reply(108);
+   NOption(109, rockend, 4);
+end
+
+procedure rock02 begin
+   set_knows_crypts;
+   Reply(110);
+   NOption(111, rock03, 4);
+end
+
+procedure rock03 begin
+   Reply(112);
+   NOption(113, rock04, 4);
+   NOption(114, rock05, 4);
+end
+
+procedure rock04 begin
+   Reply(115);
+   NOption(116, rockend, 4);
+end
+
+procedure rock05 begin
+   set_local_var(LVAR_Known, 1);
+   set_map_var(MVAR_Rock_Invite, 1);
+   Reply(117);
+   NOption(118, rockend, 4);
+end
+
+procedure rock06 begin
+   Reply(119);
+   NOption(120, rockend, 4);
+end
+
+procedure rock07 begin
+   Reply(121);
+   NOption(131, rockend, 4);
+end
+
+procedure rock08 begin
+   set_local_var(LVAR_Herebefore, 1);
+   Reply(122);
+   NOption(123, rock09, 4);
+   NOption(124, rock10, 4);
+end
+
+procedure rock09 begin
+   Reply(125);
+   NOption(126, rockend, 4);
+end
+
+procedure rock10 begin
+   set_knows_crypts;
+   Reply(127);
+   NOption(128, rockend, 4);
+end
+
+procedure rock11 begin
+   Reply(129);
+   NOption(130, rockend, 4);
+end
+
+procedure rockcombat begin
+   tmp_hostile := 1;
+end
+
+procedure rockend begin
+end
+
+procedure critter_p_proc begin
+   variable LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+   variable LVar1 := 0;
+
+   if (local_var(LVAR_Float) == 0) then begin
+      if (self_can_see_dude) then begin
+         float_msg(self_obj, mstr(106), FLOAT_MSG_RED);
+         set_local_var(LVAR_Float, 1);
+      end
+   end
+
+   if (I_Am_A_Fool and Crypt_Taunt) then begin
+      Crypt_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else if (I_Am_A_Crypt and Fool_Taunt) then begin
+      Fool_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else if (get_demo_gangwar_active and (self_tile != 20725)) then begin
+      self_walk_to_tile(20725);
+   end
+   else if (self_tile == 20725) then begin
+      add_timer_event(self_obj, game_ticks(2), 1);
+   end
+   else if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
+      if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+         This_Once := 1;
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
+      end
+      set_demo_gangwar_completed;
+      self_walk_to_tile(27504);
+   end
+   else if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+      if not(is_loading_game) then set_self_invisible;
+      if (I_Am_A_Fool) then begin
+         dec_fools_counter;
+      end
+      else begin
+         dec_crypt_counter;
+      end
+   end
+   else begin
+      if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      else if (not(LVar0)) then begin
+         if (random(0, 21) == 1) then begin
+            LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+            self_walk_to_tile(LVar1);
+         end
+      end
+   end
+end

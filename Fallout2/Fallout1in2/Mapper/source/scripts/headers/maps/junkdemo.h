@@ -1,6 +1,6 @@
 /*
 
-    Scrapheap / Fo1 demo 
+    Scrapheap / Fo1 demo
 
 */
 
@@ -20,11 +20,16 @@
 #define MVAR_Know_Fools                 (5)
 #define MVAR_Know_Crypts                (6)
 #define MVAR_Know_Power                 (7)
-#define MVAR_Scouted_Fools              (8)
-#define MVAR_Scouted_Crypts             (9)
-#define MVAR_Fool_Counter               (10)     //must start at 4
-#define MVAR_Crypt_Counter              (11)     //must start at 8
-#define MVAR_Rock_Invite                (12)
-#define MVAR_Use_Fridge                 (13)
+#define MVAR_Fool_Counter               (8)     //must start at 4
+#define MVAR_Crypt_Counter              (9)     //must start at 8
+#define MVAR_Rock_Invite                (10)
+#define MVAR_Use_Fridge                 (11)
+#define MVAR_Slot1                      (12)
+#define MVAR_Slot2                      (13)
+#define MVAR_SlotArmor                  (14)
+#define MVAR_Slot1_flags                (15)
+#define MVAR_Slot2_flags                (16)
+#define MVAR_SlotArmor_flags            (17)
+#define MVAR_CurHP                      (18)
 
 #endif // JUNKDEMO_H
