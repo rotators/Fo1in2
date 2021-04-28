@@ -17,8 +17,8 @@ defaults:
   shell: bash
 
 jobs:
-
- English:
+ All:
+  if:      github.ref == 'refs/heads/master'
   runs-on: windows-latest
   steps:
 
@@ -36,17 +36,30 @@ jobs:
     with:
      workdir:    Fallout2/Fallout1in2/mods/
 
- Translations:
-  if:      github.ref != 'refs/heads/master'
+ English:
+  if:      github.ref == 'refs/heads/fo1_french' || github.ref == 'refs/heads/fo1_german'
   runs-on: windows-latest
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@v2
+
+  - name: ScanMsg (local)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:       fo1_base/text/english/
+     executable: Tools/ScanMsg/ScanMsg.exe
+     workdir:    Fallout2/Fallout1in2/mods/
+
+  - name: ScanMsg (upstream)
+    uses: wipe2238/ScanMsg@master
+    with:
+     workdir:    Fallout2/Fallout1in2/mods/
+
+ French:
+  if:      github.ref == 'refs/heads/fo1_french'
   needs:   English
-  name:    ${{ matrix.lang.name }}
-  strategy:
-   fail-fast: false
-   matrix:
-    lang:
-    - { name: German, directory: fo1_german/text/german/ }
-    # { name: French, directory: fo1_french/text/french/ }
+  runs-on: windows-latest
 
   steps:
 
@@ -57,13 +70,38 @@ jobs:
     uses: wipe2238/ScanMsg@master
     with:
      path:         fo1_base/text/english/
-     translations: ${{ matrix.lang.directory }}
+     translations: fo1_french/text/french/
      executable:   Tools/ScanMsg/ScanMsg.exe
      workdir:      Fallout2/Fallout1in2/mods/
 
   - name: ScanMsg (upstream)
     uses: wipe2238/ScanMsg@master
     with:
-     path:         fo1_base
-     translations: ${{ matrix.lang.directory }}
+     path:         fo1_base/text/english/
+     translations: fo1_french/text/french/
+     workdir:      Fallout2/Fallout1in2/mods/
+
+ German:
+  if:      github.ref == 'refs/heads/fo1_german'
+  needs:   English
+  runs-on: windows-latest
+
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@v2
+
+  - name: ScanMsg (local)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         fo1_base/text/english/
+     translations: fo1_german/text/german/
+     executable:   Tools/ScanMsg/ScanMsg.exe
+     workdir:      Fallout2/Fallout1in2/mods/
+
+  - name: ScanMsg (upstream)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         fo1_base/text/english/
+     translations: fo1_german/text/german/
      workdir:      Fallout2/Fallout1in2/mods/
