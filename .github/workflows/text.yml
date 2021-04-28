@@ -18,21 +18,53 @@ defaults:
 
 jobs:
 
- ScanMsg:
+ English:
   runs-on: windows-latest
   steps:
 
   - name: Clone
     uses: actions/checkout@v2
 
-  - name: ScanMsg
-    run:  |
-          :
-          $GITHUB_WORKSPACE/Tools/ScanMsg/ScanMsg.exe >/dev/null
-          if [ -f "ScanMsg.log" ]; then
-             cat "ScanMsg.log"
-             exit 1
-          else
-             exit 0
-          fi
-    working-directory: Fallout2/Fallout1in2
+  - name: ScanMsg (local)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:       fo1_base
+     executable: Tools/ScanMsg/ScanMsg.exe
+     workdir:    Fallout2/Fallout1in2/mods/
+
+  - name: ScanMsg (upstream)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:       fo1_base
+     workdir:    Fallout2/Fallout1in2/mods/
+
+ Translations:
+  runs-on: windows-latest
+  needs:   English
+  name:    ${{ matrix.lang.name }}
+  strategy:
+   fail-fast: false
+   matrix:
+    lang:
+    - { name: German, directory: fo1_german }
+    # { name: French, directory: fo1_french }
+
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@v2
+
+  - name: ScanMsg (local)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         fo1_base
+     translations: ${{ matrix.lang.directory }}
+     executable:   Tools/ScanMsg/ScanMsg.exe
+     workdir:      Fallout2/Fallout1in2/mods/
+
+  - name: ScanMsg (upstream)
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         fo1_base
+     translations: ${{ matrix.lang.directory }}
+     workdir:      Fallout2/Fallout1in2/mods/

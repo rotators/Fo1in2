@@ -17,5 +17,6 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
 - **Tweaked**: Hotspots in the Glow will give the player randomly 20 to 50 rads again (reverted Fixt change back to Fo1 vanilla values).
+- **Tweaked**: Moved the inventory weapons of Hub entrance guards into their off-hand slots, otherwise they would never use them.
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
 - **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.
