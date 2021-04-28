@@ -20,8 +20,6 @@
 {109}{}{Kill the Overseer.}
 {110}{}{Kill all inhabitants of Vault 13.}
 {120}{}{Find the Water Chip.}
-{130}{}{RESERVED}
-{140}{}{RESERVED}
 #
 # Vault 15 Quests
 #
@@ -30,13 +28,6 @@
 {202}{}{Find a way down the elevator shaft.}
 {203}{}{Find the hidden items.}
 {204}{}{Kill all the rats.}
-{205}{}{RESERVED}
-{206}{}{RESERVED}
-{207}{}{RESERVED}
-{208}{}{RESERVED}
-{209}{}{RESERVED}
-{210}{}{RESERVED}
-
 #
 # Shady Sands Quests
 #
