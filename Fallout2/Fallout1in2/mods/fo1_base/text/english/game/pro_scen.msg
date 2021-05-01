@@ -409,8 +409,8 @@
 {21201}{}{There are a couple stains of dubious origin on this well-worn sleeping device.}
 {21300}{}{Bed}
 {21301}{}{This bed has seen a lot of use and wear. Something must have crawled between the mattresses and died, too.}
-{21400}{}{}
-{21500}{}{}
+{21400}{}{Nothing out of the ordinary.}
+{21500}{}{Nothing out of the ordinary.}
 {21600}{}{Bookcase}
 {21700}{}{Bookcase}
 {21800}{}{Bookcase}
@@ -850,7 +850,7 @@
 {44500}{}{Cave In}
 {44501}{}{A large amount of rock, far more than could ever be moved easily.}
 {44600}{}{Water}
-{44601}{}{}
+{44601}{}{unused}
 {44700}{}{Wall}
 {44800}{}{Door}
 {44801}{}{A security door. Looks heavily armored.}
