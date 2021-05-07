@@ -1,8 +1,20 @@
 /*
 
-   Military Base - trap spatial script
+   Military Base - Vats, electrical trap spatial script
+
+   NOTE:
+
+      Template script!
+      Script shared with VEXDTRAP.ssl and VPLSTRAP.ssl
 
 */
+
+#define NAME                     SCRIPT_TRAPFLOR
+
+#ifndef SCRIPTNAME
+   #define SCRIPTNAME            SCRIPT_VELCTRAP
+   #define trap_damage           critter_dmg(source_obj, random(15, 40), DMG_electrical)
+#endif
 
 /* Include Files */
 #include "define.h"
@@ -12,9 +24,6 @@
 /* Standard Script Procedures */
 procedure start;
 procedure spatial_p_proc;
-
-/* Defines */
-#define sp_mstr(x)                     message_str(SCRIPT_TRAPFLOR, x)
 
 variable Passed_Times;
 
@@ -27,23 +36,21 @@ procedure spatial_p_proc begin
          if (is_success(roll_vs_skill(source_obj, SKILL_TRAPS, 0)) and (local_var(0) == 0)) then begin
             give_xp(EXP_TRAPS_NORMAL);
             reg_anim_clear(source_obj);
-
             if (source_obj != dude_obj) then begin
-               display_msg(proto_data(obj_pid(source_obj), 1) + sp_mstr(100));
+               display_msg(proto_data(obj_pid(source_obj), 1) + mstr(100));
             end
             else begin
                Passed_Times := Passed_Times + 1;
                if (Passed_Times > 2) then begin
                   set_local_var(0, 1);
                end
-               display_msg(sp_mstr(101));
+               display_msg(mstr(101));
             end
-
          end
          else begin
             if (local_var(0) == 0) then begin
                set_local_var(0, 1);
-               critter_dmg(source_obj, random(15, 40), DMG_electrical);
+               trap_damage;
             end
          end
       end

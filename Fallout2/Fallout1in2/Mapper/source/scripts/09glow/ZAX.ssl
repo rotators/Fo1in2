@@ -113,7 +113,10 @@ variable PlayerRoll;
 
 #define LVAR_Here_Before      (4)
 
-#define LVAR_Chess_Defeated   (6)
+#define LVAR_Chess_GiveExp    (6)
+#define LVAR_Chess_Wins       (11)
+#define LVAR_Chess_Draws      (12)
+#define LVAR_Chess_Losses     (13)
 
 procedure start begin
 end
@@ -148,6 +151,8 @@ procedure talk_p_proc begin
    call ZAX01;
    gsay_end;
    end_dialogue;
+
+   set_global_var(GVAR_GLOW_ZAX_STATE, 1);
 end
 
 procedure ZAX01 begin
@@ -236,7 +241,7 @@ procedure ZAX11 begin
 end
 
 procedure ZAX12 begin
-   Reply(mstr(148) + local_var(11) + mstr(228) + local_var(12) + mstr(229) + local_var(13) + mstr(230));
+   Reply(mstr(148) + local_var(LVAR_Chess_Wins) + mstr(228) + local_var(LVAR_Chess_Draws) + mstr(229) + local_var(LVAR_Chess_Losses) + mstr(230));
    NOption(215, ChessBlack, 5);
    NOption(216, ChessWhite, 5);
 end
@@ -334,25 +339,26 @@ procedure ChessPLAY begin
          end
       end
       if PlayerRoll == ZAXroll then begin
-         set_local_var(12, local_var(12) + 1);// Draws
+         set_local_var(LVAR_Chess_Draws, local_var(LVAR_Chess_Draws) + 1);
          Reply(225);
       end
       else if PlayerRoll > ZAXroll then begin
-         set_local_var(11, local_var(11) + 1);// Wins
-         if local_var(LVAR_Chess_Defeated) == 0 then begin
-            set_local_var(LVAR_Chess_Defeated, 1);// already_got_XP flag
+         set_local_var(LVAR_Chess_Wins, local_var(LVAR_Chess_Wins) + 1);
+         if local_var(LVAR_Chess_GiveExp) == 0 then begin
+            set_local_var(LVAR_Chess_GiveExp, 1);// already_got_XP flag
+            set_global_var(GVAR_GLOW_ZAX_STATE, 2);
             give_xp_msg(XP, mstr(227));
             inc_glow_rep(REP_BONUS_DEFEAT_ZAX);
          end
          Reply(149);
       end
       else begin
-         set_local_var(13, local_var(13) + 1);// Losses
+         set_local_var(LVAR_Chess_Losses, local_var(LVAR_Chess_Losses) + 1);
          Reply(150);
       end
    end
    else begin
-      set_local_var(13, local_var(13) + 1);// Losses
+      set_local_var(LVAR_Chess_Losses, local_var(LVAR_Chess_Losses) + 1);
       Reply(224);
    end
    NOption(151, ZAX12, 5);

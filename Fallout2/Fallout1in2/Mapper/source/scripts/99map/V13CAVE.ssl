@@ -15,6 +15,9 @@ procedure timed_event_p_proc;
 procedure Endgame_Slides;
 procedure Endgame_Slides_Debug;
 
+procedure Endgame_Slides_Expanded;
+procedure Endgame_Slides_Expanded_Debug;
+
 procedure base_inventory;
 procedure cheat_mode;
 procedure NamedInven;
@@ -54,8 +57,6 @@ variable Item;
       //--- Give initial reputation:
       inc_v13_rep(REP_BONUS_GAME_STARTED);
 
-      //display_msg(message_str(SCRIPT_FEARDARK, 100));
-
       if global_var(GVAR_IRONMAN_MODE) == 0 then begin
          call base_inventory;
          call TagInven;
@@ -70,19 +71,18 @@ variable Item;
    // Check if we should run the endgame scene:
    else begin
       if (waterchip_returned and (military_base_destroyed and cathedral_destroyed and (endgame_running == 0)) and not(is_story_finished)) then begin
-         // Remove water chip, if player still has one:
-         /*if not(waterchip_returned) and (dude_item_count(PID_WATER_CHIP)) then begin
-            set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2);
-            item := dude_item(PID_WATER_CHIP);
-            rm_obj_from_inven(dude_obj, item);
-         end*/
-
          // Hide party members
          //party_member_hide_all
 
          game_ui_disable;
-         call Endgame_Slides;
-         //call Endgame_Slides_Debug;
+         if fo1in2_expanded_slides_enabled then begin
+            call Endgame_Slides_Expanded;
+            //call Endgame_Slides_Expanded_Debug;
+         end
+         else begin
+            call Endgame_Slides;
+            //call Endgame_Slides_Debug;
+         end
       end
       else begin
          override_map_start(136, 129, 0, 1);
@@ -222,7 +222,6 @@ procedure TagInven begin
    end
 end
 
-
 procedure NamedInven begin
    if (proto_data(obj_pid(dude_obj), 1) == "Max Stone") then begin
       Item := create_object(PID_10MM_AP, 0, 0);
@@ -230,13 +229,13 @@ procedure NamedInven begin
       Item := create_object(PID_BRASS_KNUCKLES, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if (proto_data(obj_pid(dude_obj), 1) == "Natalia") then begin
+   else if (proto_data(obj_pid(dude_obj), 1) == "Natalia") then begin
       Item := create_object(PID_THROWING_KNIFE, 0, 0);
       add_obj_to_inven(dude_obj, Item);
       Item := create_object(PID_LOCKPICKS, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if (proto_data(obj_pid(dude_obj), 1) == "Albert") then begin
+   else if (proto_data(obj_pid(dude_obj), 1) == "Albert") then begin
       Item := create_object(PID_STIMPAK, 0, 0);
       add_obj_to_inven(dude_obj, Item);
       Item := create_object(PID_MENTATS, 0, 0);
@@ -318,8 +317,8 @@ procedure Endgame_Slides begin
    if hub_visible_on_map then begin
       if hub_invaded then
          set_end_hub_bad;
-      /*else if ( (global_var(GVAR_IS_HAROLD_ALIVE) == 1) and (global_var(GVAR_DECKER_STATUS) == 1) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) ) then*/
-      else if (global_var(GVAR_MISSING_CARAVAN) >= 2) and (global_var(GVAR_DECKER_STATUS) == 1) and (global_var(GVAR_KILL_MERCHANT) < 2) and (global_var(GVAR_IS_HAROLD_ALIVE) == 1) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) then
+      /*else if ( is_harold_alive and not(is_decker_alive) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) ) then*/
+      else if (global_var(GVAR_MISSING_CARAVAN) >= 2) and not(is_decker_alive) and is_hightower_alive and is_harold_alive and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) then
          set_end_hub_good;
       else
          set_end_hub_bad;
@@ -327,7 +326,7 @@ procedure Endgame_Slides begin
 
    // Raiders
    if raiders_visible_on_map then begin
-      if ( (get_raiders_alive <= 3) or ( (not(is_garl_alive)) and (get_raiders_alive <= 8) ) ) then
+      if ((get_raiders_alive <= 3) or ((not(is_garl_alive)) and (get_raiders_alive <= 8))) then
          set_end_raiders_dead;
       else if (get_raiders_alive < 16) then
          set_end_raiders_hurt;
@@ -340,6 +339,170 @@ procedure Endgame_Slides begin
 
    // Vault Dweller
    set_end_ending_vd;
+
+   add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
+end
+
+procedure Endgame_Slides_Expanded_Debug begin
+   set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS, 0);
+
+   set_end_fo1in2_Master;
+
+   set_end_fo1in2_shady_good;
+   set_end_fo1in2_hub_powerhouse;
+   set_end_fo1in2_hub_harold;
+   set_end_fo1in2_adytum_blades;
+   //set_end_fo1in2_gunrunners_leaving;
+   //set_end_fo1in2_gunrunners_rich;
+   set_end_fo1in2_gunrunners_staying;
+   set_end_fo1in2_deathclaws_alive;
+   set_end_fo1in2_ending_vd;
+   set_end_fo1in2_necropolis_dehydrated;
+   set_end_fo1in2_tycho;
+   set_end_fo1in2_ian;
+   set_end_fo1in2_katja;
+   set_end_fo1in2_dogmeat;
+   set_end_fo1in2_glow_neutral;
+   set_end_fo1in2_glow_bonus;
+   set_end_fo1in2_junktown_gizmo;
+
+   add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
+end
+
+procedure Endgame_Slides_Expanded begin
+   // Start
+   if (global_var(GVAR_ENDGAME_MOVIE_MUTANTS) != 1) then
+      set_end_fo1in2_Master;
+   else
+      set_end_fo1in2_Vats;
+   set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS, 0); // Need to reset this for the expanded slides
+
+   // Necropolis
+   if necropolis_invaded then
+      set_end_fo1in2_necropolis_invaded;
+   else if necropolis_wpump_fixed then
+      set_end_fo1in2_necropolis_survived;
+   else
+      set_end_fo1in2_necropolis_dehydrated;
+
+   // Shady Sands
+   if shady_sands_visible_on_map then begin
+      if shady_invaded then
+         set_end_fo1in2_shady_invaded;
+      else if is_tandi_alive and is_aradesh_alive then
+         set_end_fo1in2_shady_good;
+      else if is_aradesh_alive then
+         set_end_fo1in2_shady_tandi_dead;
+      else if is_tandi_alive then
+         set_end_fo1in2_shady_aradesh_dead;
+      else
+         set_end_fo1in2_shady_bad;
+   end
+
+   // Boneyard
+   if boneyard_visible_on_map then begin
+      if boneyard_invaded then begin
+         set_end_fo1in2_foa_invaded;
+      end
+      else begin
+         // Adytum
+         if is_caleb_alive then
+            set_end_fo1in2_adytum_regulators;
+         else if is_razor_alive then
+            set_end_fo1in2_adytum_blades;
+
+         // FoA
+         if is_nicole_alive and is_laura_escaped then
+            set_end_fo1in2_foa_trained; // good ending \o/
+         else
+            set_end_fo1in2_foa_invaded;
+
+         // Gunrunners
+         if is_caleb_alive and (global_var(GVAR_DEATHCLAWS_KILLED) == 9250) then
+            set_end_fo1in2_gunrunners_leaving;
+         else if not(is_caleb_alive) and (global_var(GVAR_DEATHCLAWS_KILLED) == 9250) then
+            set_end_fo1in2_gunrunners_staying;
+         else if is_caleb_alive and (global_var(GVAR_DEATHCLAWS_KILLED) != 9250) then
+            set_end_fo1in2_gunrunners_rich;
+
+         // Deathclaws
+         if (global_var(GVAR_DEATHCLAWS_KILLED) != 9250) then
+            set_end_fo1in2_deathclaws_alive;
+      end
+   end
+
+   // Junktown
+   if junktown_visible_on_map then begin
+      if junktown_invaded or (not(is_killian_alive) and (not(is_gizmo_alive))) then
+         set_end_fo1in2_junktown_invaded;
+      else if is_gizmo_alive then
+         set_end_fo1in2_junktown_gizmo;
+      else
+         set_end_fo1in2_junktown_killian;
+   end
+
+   // Brotherhood of Steel
+   if brotherhood_visible_on_map then begin
+      if bos_invaded then
+         set_end_fo1in2_bos_invaded;
+      else if is_rhombus_alive then
+         set_end_fo1in2_bos_good;
+      else
+         set_end_fo1in2_bos_bad;
+   end
+
+   // Hub
+   if hub_visible_on_map then begin
+      if (hub_invaded or (global_var(GVAR_MISSING_CARAVAN) < 2)) then begin
+         set_end_fo1in2_hub_bad;
+      end
+      else begin
+         if is_decker_alive and not(is_hightower_alive) then
+            set_end_fo1in2_hub_powerhouse;
+         else if not(is_decker_alive) and not(is_hightower_alive) then
+            set_end_fo1in2_hub_war;
+         else
+            set_end_fo1in2_hub_default;
+
+         // Harold
+         if (is_harold_alive) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) then
+            set_end_fo1in2_hub_harold;
+      end
+   end
+
+   // Raiders
+   if raiders_visible_on_map then begin
+      if ((get_raiders_alive <= 3) or ((not(is_garl_alive)) and (get_raiders_alive <= 8))) then
+         set_end_fo1in2_raiders_dead;
+      else if (get_raiders_alive < 16) then
+         set_end_fo1in2_raiders_hurt;
+      else
+         set_end_fo1in2_raiders_alive;
+   end
+   else begin
+      set_end_fo1in2_raiders_alive;
+   end
+
+   if (global_var(GVAR_IAN_HIRELING_STATUS) == 2) then
+      set_end_fo1in2_ian;
+   if (global_var(GVAR_TYCHO_HIRELING_STATUS) == 2) then
+      set_end_fo1in2_tycho;
+   if (global_var(GVAR_KATJA_HIRELING_STATUS) == 2) then
+      set_end_fo1in2_katja;
+   if (global_var(GVAR_DOGMEAT_HIRELING_STATUS) == 2) then
+      set_end_fo1in2_dogmeat;
+
+   if glow_visible_on_map then begin
+      if (global_var(GVAR_GLOW_ZAX_STATE) > 0) then
+         set_end_fo1in2_glow_neutral;
+
+      // Bonus slide (won in chess)
+      if (global_var(GVAR_GLOW_ZAX_STATE) > 1) then
+         set_end_fo1in2_glow_bonus;
+   end
+
+   // Vault Dweller
+   set_end_fo1in2_ending_vd;
 
    add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
 end

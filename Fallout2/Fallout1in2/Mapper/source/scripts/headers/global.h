@@ -101,16 +101,16 @@
 #define GVAR_PARTY_MEMBERS_HIDDEN               (632)
 
 // Endgame slideshow Fo1
-#define GVAR_ENDGAME_MOVIE_DESERT               (408)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_MUTANTS              (409)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_NECROPOLIS           (410)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_BONEYARD             (411)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_SHADY                (412)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_JUNKTOWN             (413)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_BOS                  (414)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_HUB                  (415)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_KHANS                (416)   // maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_VD                   (417)   // maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_DESERT               (408)
+#define GVAR_ENDGAME_MOVIE_MUTANTS              (409)
+#define GVAR_ENDGAME_MOVIE_NECROPOLIS           (410)
+#define GVAR_ENDGAME_MOVIE_BONEYARD             (411)
+#define GVAR_ENDGAME_MOVIE_SHADY                (412)
+#define GVAR_ENDGAME_MOVIE_JUNKTOWN             (413)
+#define GVAR_ENDGAME_MOVIE_BOS                  (414)
+#define GVAR_ENDGAME_MOVIE_HUB                  (415)
+#define GVAR_ENDGAME_MOVIE_KHANS                (416)
+#define GVAR_ENDGAME_MOVIE_VD                   (417)
 
 // Endgame slideshow Fo2
 #define GVAR_ENDGAME_MOVIE_REDDING              (418)   // maybe hard-coded, maybe not?
@@ -405,7 +405,7 @@
 #define GVAR_MBASE_FORCE_FIELD_STATE            (1262)
 #define GVAR_WATER_CHIP_6                       (1263)
 #define GVAR_TANDI_LOCATION_TRACKER             (1264)
-#define GVAR_WATER_CHIP_8                       (1265)
+#define GVAR_DEATHCLAWS_KILLED                  (1265)
 #define GVAR_BLADES_INVASION_READY              (1266)
 #define GVAR_BLADES_COUNTER                     (1267)
 #define GVAR_WATER_CHIP_11                      (1268)
@@ -4063,30 +4063,30 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4923)
 #define RESERVED_FOR_FALLOUT_FIXT               (4924)
 #define RESERVED_FOR_FALLOUT_FIXT               (4925)
-#define RESERVED_FOR_FALLOUT_FIXT               (4926)
-#define RESERVED_FOR_FALLOUT_FIXT               (4927)
-#define RESERVED_FOR_FALLOUT_FIXT               (4928)
-#define RESERVED_FOR_FALLOUT_FIXT               (4929)
-#define RESERVED_FOR_FALLOUT_FIXT               (4930)
-#define RESERVED_FOR_FALLOUT_FIXT               (4931)
-#define RESERVED_FOR_FALLOUT_FIXT               (4932)
-#define RESERVED_FOR_FALLOUT_FIXT               (4933)
-#define RESERVED_FOR_FALLOUT_FIXT               (4934)
-#define RESERVED_FOR_FALLOUT_FIXT               (4935)
-#define RESERVED_FOR_FALLOUT_FIXT               (4936)
-#define RESERVED_FOR_FALLOUT_FIXT               (4937)
-#define RESERVED_FOR_FALLOUT_FIXT               (4938)
-#define RESERVED_FOR_FALLOUT_FIXT               (4939)
-#define RESERVED_FOR_FALLOUT_FIXT               (4940)
-#define RESERVED_FOR_FALLOUT_FIXT               (4941)
-#define RESERVED_FOR_FALLOUT_FIXT               (4942)
-#define RESERVED_FOR_FALLOUT_FIXT               (4943)
-#define RESERVED_FOR_FALLOUT_FIXT               (4944)
-#define RESERVED_FOR_FALLOUT_FIXT               (4945)
-#define RESERVED_FOR_FALLOUT_FIXT               (4946)
-#define RESERVED_FOR_FALLOUT_FIXT               (4947)
-#define RESERVED_FOR_FALLOUT_FIXT               (4948)
-#define RESERVED_FOR_FALLOUT_FIXT               (4949)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4926)*/
+#define GVAR_ENABLE_EXPANDED_ENDING             (4927)
+#define GVAR_CALEB_DEAD                         (4928)
+#define GVAR_GLOW_ZAX_STATE                     (4929)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_HAROLD        (4930)   // Rerecorded, orig. Hub good ending
+#define GVAR_ENDGAME_MOVIE_FO1IN2_DESERT        (4931)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_MUTANTS       (4932)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_NECROPOLIS    (4933)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_BONEYARD      (4934)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_SHADY         (4935)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_JUNKTOWN      (4936)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_BOS           (4937)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_HUB           (4938)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_KHANS         (4939)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_VD            (4940)   // Rerecorded
+#define GVAR_ENDGAME_MOVIE_FO1IN2_ADYTUM        (4941)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_GUNRUNNERS    (4942)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_DEATHCLAWS    (4943)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_KATJA         (4944)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_IAN           (4945)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_TYCHO         (4946)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_DOGMEAT       (4947)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_GLOW          (4948)
+#define GVAR_ENDGAME_MOVIE_FO1IN2_ZAX           (4949)
 #define GVAR_DEMO_EXIT                          (4950)
 #define GVAR_DEMODOG_HIRELING_STATUS            (4951)
 #define GVAR_QUEST_DEMO_FIX_POWER               (4952)

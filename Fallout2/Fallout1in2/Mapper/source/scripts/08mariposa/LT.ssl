@@ -135,13 +135,18 @@ procedure start begin
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_SGT);
       Lt_ptr := self_obj;
-      if (local_var(6) == 0) then begin
-         variable LVar0 := 0;
-         LVar0 := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_LTCODES);
-         add_obj_to_inven(self_obj, LVar0);
-         LVar0 := create_object(PID_SECURITY_CARD, 0, 0);
-         add_obj_to_inven(self_obj, LVar0);
-         set_local_var(6, 1);
+   end
+end
+
+procedure map_enter_p_proc begin
+variable Item;
+
+   if map_first_run then begin
+      Item := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_LTCODES);
+      add_obj_to_inven(self_obj, Item);
+      if fixt_enabled then begin
+         Item := create_object(PID_SECURITY_CARD, 0, 0);
+         add_obj_to_inven(self_obj, Item);
       end
    end
 end
@@ -150,7 +155,7 @@ procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
       if (global_var(GVAR_DESTROY_VATS_4)) then begin
          if (random(0, 3) == 3) then begin
-            critter_injure(dude_obj, DAM_KNOCKED_OUT);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
+            critter_injure(dude_obj, DAM_KNOCKED_OUT);
          end
       end
    end
@@ -260,7 +265,8 @@ procedure talk_p_proc begin
          reg_anim_end();
       gfade_in(1);
    end
-//
+   //
+
    if (End_The_Game == 1) then begin
       move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
       debug_msg("Started playing cutscene#10 and #7 for Dipping and V13 invasion, may crash / cause issues!");

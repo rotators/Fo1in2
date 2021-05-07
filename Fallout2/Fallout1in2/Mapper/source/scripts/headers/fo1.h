@@ -42,6 +42,7 @@
 #define fo1in2_red_dogmeat_enabled      (global_var(GVAR_ENABLE_RED_DOGMEAT) > 0)
 #define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
 #define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
+#define fo1in2_expanded_slides_enabled  (global_var(GVAR_ENABLE_EXPANDED_ENDING) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -71,7 +72,11 @@
 /*********************************************************
     Quests:
 *********************************************************/
-#define looking_for_waterchip               ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) and (dude_item_count(PID_WATER_CHIP) == 0))
+#define looking_for_waterchip               ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) < 2) and (dude_item_count(PID_WATER_CHIP) == 0))
+
+#define v13_water_delivered                 (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 1)
+#define set_v13_deliver_water               set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 1)
+
 #define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
 #define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
 
@@ -108,6 +113,11 @@
 #define is_rhombus_alive                    (global_var(GVAR_RHOMBUS_STATUS) == 0)
 #define is_garl_alive                       (global_var(GVAR_GARL_DEAD) == 0)
 #define is_nicole_alive                     (global_var(GVAR_NICOLE_DEAD) == 0)
+#define is_razor_alive                      (global_var(GVAR_ZIMMERMAN_STATUS) < 9002)
+#define is_decker_alive                     (global_var(GVAR_DECKER_STATUS) == 0)
+#define is_hightower_alive                  (global_var(GVAR_KILL_MERCHANT) < 2)
+#define is_harold_alive                     (global_var(GVAR_IS_HAROLD_ALIVE) == 1)
+#define is_caleb_alive                      (global_var(GVAR_CALEB_DEAD) == 0)
 
 #define is_laura_alive                       (global_var(GVAR_IS_LAURA_ALIVE) != 1)
 #define set_laura_escaping                   set_global_var(GVAR_IS_LAURA_ALIVE,2)
@@ -287,6 +297,62 @@ variable tma_gvar_array;
 #define set_end_raiders_alive               set_global_var(GVAR_ENDGAME_MOVIE_KHANS,3)
 
 #define set_end_ending_vd                   set_global_var(GVAR_ENDGAME_MOVIE_VD,1)
+
+/*********************************************************
+    Endgame slideshow expanded
+*********************************************************/
+#define set_end_fo1in2_Vats                        set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_MUTANTS,1)
+#define set_end_fo1in2_Master                      set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_MUTANTS,2)
+
+#define set_end_fo1in2_necropolis_dehydrated       set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_NECROPOLIS,1)
+#define set_end_fo1in2_necropolis_survived         set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_NECROPOLIS,2)
+#define set_end_fo1in2_necropolis_invaded          set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_NECROPOLIS,3)
+
+#define set_end_fo1in2_adytum_regulators           set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_ADYTUM,1)
+#define set_end_fo1in2_adytum_blades               set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_ADYTUM,2)
+
+#define set_end_fo1in2_foa_trained                 set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_BONEYARD,1)
+#define set_end_fo1in2_foa_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_BONEYARD,2)
+
+#define set_end_fo1in2_gunrunners_leaving          set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_GUNRUNNERS,1)
+#define set_end_fo1in2_gunrunners_staying          set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_GUNRUNNERS,2)
+#define set_end_fo1in2_gunrunners_rich             set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_GUNRUNNERS,3)
+
+#define set_end_fo1in2_deathclaws_alive            set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_DEATHCLAWS,1)
+
+#define set_end_fo1in2_shady_good                  set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_SHADY,1)
+#define set_end_fo1in2_shady_tandi_dead            set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_SHADY,2)
+#define set_end_fo1in2_shady_aradesh_dead          set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_SHADY,3)
+#define set_end_fo1in2_shady_bad                   set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_SHADY,4)
+#define set_end_fo1in2_shady_invaded               set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_SHADY,5)
+
+#define set_end_fo1in2_junktown_killian            set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_JUNKTOWN,1)
+#define set_end_fo1in2_junktown_gizmo              set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_JUNKTOWN,2)
+#define set_end_fo1in2_junktown_invaded            set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_JUNKTOWN,3)
+
+#define set_end_fo1in2_bos_good                    set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_BOS,1)
+#define set_end_fo1in2_bos_bad                     set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_BOS,2)
+#define set_end_fo1in2_bos_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_BOS,3)
+
+#define set_end_fo1in2_hub_harold                  set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_HAROLD,1)
+#define set_end_fo1in2_hub_bad                     set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_HUB,1)
+#define set_end_fo1in2_hub_default                 set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_HUB,2)
+#define set_end_fo1in2_hub_powerhouse              set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_HUB,3) // Decker alive, Hightower dead
+#define set_end_fo1in2_hub_war                     set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_HUB,4) // Decker dead, Hightower dead
+
+#define set_end_fo1in2_raiders_dead                set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_KHANS,1)
+#define set_end_fo1in2_raiders_hurt                set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_KHANS,2)
+#define set_end_fo1in2_raiders_alive               set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_KHANS,3)
+
+#define set_end_fo1in2_glow_neutral                set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_GLOW,1)
+#define set_end_fo1in2_glow_bonus                  set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_ZAX,1)
+
+#define set_end_fo1in2_katja                       set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_KATJA,1)
+#define set_end_fo1in2_ian                         set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_IAN,1)
+#define set_end_fo1in2_tycho                       set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_TYCHO,1)
+#define set_end_fo1in2_dogmeat                     set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_DOGMEAT,1)
+
+#define set_end_fo1in2_ending_vd                   set_global_var(GVAR_ENDGAME_MOVIE_FO1IN2_VD,1)
 
 /*********************************************************
     Invasions

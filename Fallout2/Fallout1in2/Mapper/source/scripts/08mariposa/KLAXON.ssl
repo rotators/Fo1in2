@@ -5,20 +5,27 @@
 */
 
 #include "define.h"
-#include "command.h"
 #include "mbase.h"
+
+#define NAME                    SCRIPT_COMMAND
+
+#include "command.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure timed_event_p_proc;
 procedure map_update_p_proc;
+procedure description_p_proc;
 
 procedure check_lights;
 
 #define LVAR_LIGHT_STATUS     (0)
 
-#define LIGHT_OFF             (0)
-#define LIGHT_ON              (1)
+#define light_on              (local_var(LVAR_LIGHT_STATUS) == 1)
+#define light_off             (local_var(LVAR_LIGHT_STATUS) == 0)
+
+#define set_light_off         set_local_var(LVAR_LIGHT_STATUS, 0)
+#define set_light_on          set_local_var(LVAR_LIGHT_STATUS, 1)
 
 #define FID_EW_ON             (33555350)
 #define FID_NS_ON             (33555351)
@@ -46,15 +53,23 @@ procedure map_update_p_proc begin
    call check_lights;
 end
 
+procedure description_p_proc begin
+   if (mbase_full_alert and light_on) then begin
+      script_overrides;
+      display_msg(mstr(100));
+   end
+end
+
 procedure check_lights begin
-   if mbase_full_alert and (local_var(LVAR_LIGHT_STATUS) == LIGHT_OFF) then begin
-      set_local_var(LVAR_LIGHT_STATUS, LIGHT_ON);
+   if mbase_full_alert and light_off then begin
+      set_light_on;
       if (self_fid == FID_EW_OFF) then
          art_change_fid_num(self_obj, FID_EW_ON);
       else
          art_change_fid_num(self_obj, FID_NS_ON);
    end
-   else if not(mbase_full_alert) and (local_var(LVAR_LIGHT_STATUS) == LIGHT_ON) then begin
+   else if (not(mbase_full_alert) and light_on) then begin
+      set_light_off;
       if (self_fid == FID_EW_ON) then
          art_change_fid_num(self_obj, FID_EW_OFF);
       else

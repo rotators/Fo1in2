@@ -36,17 +36,17 @@
 #define set_quest_kill_deathclaws       set_global_var(GVAR_GUN_RUNNERS_STATUS, 9201)
 #define get_quest_kill_deathclaws       (global_var(GVAR_GUN_RUNNERS_STATUS) == 9201)
 
-#define set_all_deathclaws_killed       set_global_var(GVAR_WATER_CHIP_8, 9250); \
+#define set_all_deathclaws_killed       set_global_var(GVAR_DEATHCLAWS_KILLED, 9250); \
                                         set_momclaw_quest_completed
-#define get_all_deathclaws_killed       (global_var(GVAR_WATER_CHIP_8) == 9250)
+#define get_all_deathclaws_killed       (global_var(GVAR_DEATHCLAWS_KILLED) == 9250)
 
 #define set_gunrunners_armed_blades     set_global_var(GVAR_GUN_RUNNERS_STATUS, 9202); \
                                         set_blades_quest_completed
 #define get_gunrunners_armed_blades     (global_var(GVAR_GUN_RUNNERS_STATUS) == 9202)
 
-#define set_gunrunners_armed_dude       set_global_var(GVAR_WATER_CHIP_8, 2); \
+#define set_gunrunners_armed_dude       set_global_var(GVAR_DEATHCLAWS_KILLED, 2); \
                                         set_blades_quest_completed
-#define get_gunrunners_armed_dude       (global_var(GVAR_WATER_CHIP_8) == 2)
+#define get_gunrunners_armed_dude       (global_var(GVAR_DEATHCLAWS_KILLED) == 2)
 
 //--- Blades:
 // PipBoy quest tracker:

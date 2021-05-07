@@ -1,3 +1,9 @@
+/*
+
+   Necropolis - Old computer terminal in the Motel.
+
+*/
+
 #include "define.h"
 
 #define NAME                    SCRIPT_DEADCOMP
@@ -25,19 +31,16 @@ procedure CLS;
 variable Damage;
 variable DisplayLine := 0;
 
-// local_var(4) == Comp_Fixed
-// local_var(5) == EXP_Earned
-// local_var(6) == DemoExp
-// local_var(7) == played_before
-// local_var(8) == PreviousDisplayedLine
-// local_var(9) == Heard500
-// local_var(10) == Heard501
-// local_var(11) == Heard502
-//      12 is reserved, do not use
-// local_var(13) == SeenAllMsgs
-// local_var(14) == SeenDemo400
-// local_var(15) == SeenDemo401
-//  local_var(16) == Heard503
+#define LVAR_Comp_Fixed       (4)
+#define LVAR_EXP_Earned       (5)
+#define LVAR_DemoExp          (6)
+#define LVAR_PlayedBefore     (7)
+#define LVAR_Heard500         (8)
+#define LVAR_Heard501         (9)
+#define LVAR_Heard502         (10)
+#define LVAR_SeenDemo400      (11)
+#define LVAR_SeenDemo401      (12)
+#define LVAR_Heard503         (13)
 
 procedure start begin
 end
@@ -69,7 +72,7 @@ procedure use_p_proc begin
          load_map(MAP_SCRAPHEAP, 0);
       end
    end
-   else if fixt_enabled and (local_var(4) == 1) then begin
+   else if fixt_enabled and (local_var(LVAR_Comp_Fixed) == 1) then begin
       start_gdialog(62, self_obj, 4, -1, -1);
       gsay_start;
       call NecroDemoCompEgg00;
@@ -86,9 +89,9 @@ procedure use_skill_on_p_proc begin
       script_overrides;
       if (action_being_used == SKILL_REPAIR) then begin
          if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -30))) then begin
-            if (local_var(4) != 1) then begin
+            if (local_var(LVAR_Comp_Fixed) != 1) then begin
                display_msg(mstr(101));
-               set_local_var(4, 1);
+               set_local_var(LVAR_Comp_Fixed, 1);
             end
          end
          else begin
@@ -97,9 +100,9 @@ procedure use_skill_on_p_proc begin
             critter_heal(dude_obj, -Damage);
          end
       end
-      if (action_being_used == SKILL_SCIENCE) then begin
+      else if (action_being_used == SKILL_SCIENCE) then begin
          if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -30))) then begin
-            if (local_var(4) == 1) then begin
+            if (local_var(LVAR_Comp_Fixed) == 1) then begin
                start_gdialog(62, self_obj, 4, -1, -1);
                gsay_start;
                call NecroDemoCompEgg00;
@@ -156,28 +159,28 @@ end
 procedure PlayGame begin
    gfade_out(1);
    DisplayLine := random(500, 503);
-   if ((local_var(9) == 1) and (local_var(10) == 1) and (local_var(11) == 1) and (local_var(16) == 1)) then begin
+   if ((local_var(LVAR_Heard500) == 1) and (local_var(LVAR_Heard501) == 1) and (local_var(LVAR_Heard502) == 1) and (local_var(LVAR_Heard503) == 1)) then begin
    end
    else begin
-      while(((DisplayLine == 500) and (local_var(9) == 1)) or ((DisplayLine == 501) and (local_var(10) == 1)) or ((DisplayLine == 502) and (local_var(11) == 1)) or ((DisplayLine == 503) and (local_var(16) == 1))) do
+      while(((DisplayLine == 500) and (local_var(LVAR_Heard500) == 1)) or ((DisplayLine == 501) and (local_var(LVAR_Heard501) == 1)) or ((DisplayLine == 502) and (local_var(LVAR_Heard502) == 1)) or ((DisplayLine == 503) and (local_var(LVAR_Heard503) == 1))) do
       begin
          if (DisplayLine == 503) then begin
-            if (local_var(16) == 1) then begin
+            if (local_var(LVAR_Heard503) == 1) then begin
                DisplayLine := random(500, 502);
             end
          end
          else if (DisplayLine == 500) then begin
-            if (local_var(9) == 1) then begin
+            if (local_var(LVAR_Heard500) == 1) then begin
                DisplayLine := random(501, 503);
             end
          end
          else if (DisplayLine == 501) then begin
-            if (local_var(10) == 1) then begin
+            if (local_var(LVAR_Heard501) == 1) then begin
                DisplayLine := random(502, 503);
             end
          end
          else if (DisplayLine == 502) then begin
-            if (local_var(11) == 1) then begin
+            if (local_var(LVAR_Heard502) == 1) then begin
                if random(0, 2) then begin
                   DisplayLine := 503;
                end
@@ -187,45 +190,45 @@ procedure PlayGame begin
             end
          end
       end
-      if (local_var(5) == 0) then begin
-         set_local_var(5, 1);
+      if (local_var(LVAR_EXP_Earned) == 0) then begin
+         set_local_var(LVAR_EXP_Earned, 1);
          give_xp_msg(EXP_PLAY_FALLOUT, mstr(119));
          if (DisplayLine == 500) then begin
-            set_local_var(9, 1);
+            set_local_var(LVAR_Heard500, 1);
          end
          else if (DisplayLine == 501) then begin
-            set_local_var(10, 1);
+            set_local_var(LVAR_Heard501, 1);
          end
          else if (DisplayLine == 502) then begin
-            set_local_var(11, 1);
+            set_local_var(LVAR_Heard502, 1);
          end
          else if (DisplayLine == 503) then begin
-            set_local_var(16, 1);
+            set_local_var(LVAR_Heard503, 1);
          end
       end
       else begin
-         if ((DisplayLine == 500) and (local_var(9) == 0)) then begin
-            set_local_var(9, 1);
+         if ((DisplayLine == 500) and (local_var(LVAR_Heard500) == 0)) then begin
+            set_local_var(LVAR_Heard500, 1);
             give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
          end
-         else if ((DisplayLine == 501) and (local_var(10) == 0)) then begin
-            set_local_var(10, 1);
+         else if ((DisplayLine == 501) and (local_var(LVAR_Heard501) == 0)) then begin
+            set_local_var(LVAR_Heard501, 1);
             give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
          end
-         else if ((DisplayLine == 502) and (local_var(11) == 0)) then begin
-            set_local_var(11, 1);
+         else if ((DisplayLine == 502) and (local_var(LVAR_Heard502) == 0)) then begin
+            set_local_var(LVAR_Heard502, 1);
             give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
          end
-         else if ((DisplayLine == 503) and (local_var(16) == 0)) then begin
-            set_local_var(16, 1);
+         else if ((DisplayLine == 503) and (local_var(LVAR_Heard503) == 0)) then begin
+            set_local_var(LVAR_Heard503, 1);
             give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
          end
       end
    end
    gfade_in(1);
    Reply(DisplayLine);
-   if (local_var(7) == 0) then begin
-      set_local_var(7, 1);
+   if (local_var(LVAR_PlayedBefore) == 0) then begin
+      set_local_var(LVAR_PlayedBefore, 1);
       NOption(110, CLS, 6);
    end
    else begin
@@ -236,36 +239,36 @@ end
 procedure PlayDemo begin
    variable LVar0;
    LVar0 := random(400, 401);
-   if (local_var(14) and local_var(15)) then begin
+   if (local_var(LVAR_SeenDemo400) and local_var(LVAR_SeenDemo401)) then begin
    end
    else begin
       if (LVar0 == 400) then begin
-         if local_var(14) then begin
+         if local_var(LVAR_SeenDemo400) then begin
             LVar0 := 401;
-            set_local_var(15, 1);
+            set_local_var(LVAR_SeenDemo401, 1);
          end
          else begin
-            set_local_var(14, 1);
+            set_local_var(LVAR_SeenDemo400, 1);
          end
       end
       else if (LVar0 == 401) then begin
-         if local_var(15) then begin
+         if local_var(LVAR_SeenDemo401) then begin
             LVar0 := 400;
-            set_local_var(14, 1);
+            set_local_var(LVAR_SeenDemo400, 1);
          end
          else begin
-            set_local_var(15, 1);
+            set_local_var(LVAR_SeenDemo401, 1);
          end
       end
    end
    gfade_out(1);
    gfade_in(1);
    Reply(LVar0);
-   if (local_var(6) == 0) then begin
-      set_local_var(6, 1);
+   if (local_var(LVAR_DemoExp) == 0) then begin
+      set_local_var(LVAR_DemoExp, 1);
       give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(155));
    end
-   if (local_var(7) == 0) then begin
+   if (local_var(LVAR_PlayedBefore) == 0) then begin
       NOption(153, CLS, 6);
    end
    else begin

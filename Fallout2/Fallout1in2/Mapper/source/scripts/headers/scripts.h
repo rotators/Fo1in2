@@ -972,7 +972,7 @@
 #define SCRIPT_GENEMIT   (959)  //  GenEmit.int     ; generic damaged force field emitter
 #define SCRIPT_TEST      (960)  //  Test.int        ; testing scripts
 
-//FalloutFIXT
+// FalloutFIXT
 #define SCRIPT_CHITEM    (961)
 #define SCRIPT_CARCUST   (962)
 #define SCRIPT_JBOXER    (963)
@@ -990,7 +990,7 @@
 #define SCRIPT_GRNMTARM  (973)
 #define SCRIPT_MYSTSTRN  (974)
 
-//Lexx
+// Fo1in2
 #define SCRIPT_CHEATBOX  (975)
 #define SCRIPT_NIF2HINT  (976)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
 #define SCRIPT_RNDENC    (977)   // Random encounter map selector script
