@@ -252,9 +252,11 @@ variable step_tile;
 
 #define dude_rotation_to_self             rotation_to_tile(dude_tile,self_tile)
 #define self_rotation_to_dude             rotation_to_tile(self_tile,dude_tile)
+#define self_rotation_to(ptr)             rotation_to_tile(self_tile,tile_num(ptr))
 
 #define dude_look_at_self                 anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
 #define self_look_at_dude                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to_dude)
+#define self_look_at(ptr)                 anim(dude_obj,ANIMATE_ROTATION,self_rotation_to(ptr))
 
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
 #define self_is_sneaking                  using_skill(self_obj,SKILL_SNEAK)
@@ -1021,7 +1023,7 @@ variable removed_qty;
 
 #define arm_obj(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty)                give_obj_weapon(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty, true)
 #define stock_weapon_obj(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty)       give_obj_weapon(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty, false)
-   
+
 procedure give_item(variable critter, variable pidList) begin
    variable pid, qty;
    foreach (pid: qty in pidList) begin

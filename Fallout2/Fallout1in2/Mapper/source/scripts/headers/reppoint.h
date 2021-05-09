@@ -506,17 +506,18 @@
 #define REP_BONUS_KILLED_HIGHTOWER              (-10)
 #define REP_BONUS_NECKLACE_STOLEN               (-3)
 #define REP_BONUS_KIND_TO_HAROLD                (1)
+#define REP_BONUS_DAN_AND_BILLY                 (1)
 #define inc_hub_rep(x)                          inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
 #define REP_BONUS_FARM_REPAIRED                 (3)
-#define REP_BONUS_RAZOR_DEAD                    (-2)
-#define REP_BONUS_GABRIEL_DEAD                  (-1)
+#define REP_BONUS_RAZOR_DEAD                    (-5)
+#define REP_BONUS_GABRIEL_DEAD                  (-2)
 #define REP_BONUS_ZIMMERMAN_DEAD                (2)
 #define REP_BONUS_BLADES_DEAD                   (-10)
 #define REP_BONUS_GUNRNR_DEAD                   (-5)
 #define REP_BONUS_DEATHCLAWS_DEAD               (5)
-#define REP_BONUS_REGULATORS_DEAD               (20)
+#define REP_BONUS_REGULATORS_DEAD               (25)
 #define inc_boneyard_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis

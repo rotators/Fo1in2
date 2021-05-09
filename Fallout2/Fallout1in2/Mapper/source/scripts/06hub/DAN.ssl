@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "maps/hubent.h"
 
 #define NAME                    SCRIPT_DAN
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -17,6 +17,7 @@
 /* Standard Script Procedures */
 
 procedure start;
+procedure map_enter_p_proc;
 procedure combat;
 procedure critter_p_proc;
 procedure pickup_p_proc;
@@ -72,6 +73,28 @@ variable Talky;
 variable WalkToTalker;
 variable Sleeping;
 
+#define LVAR_Herebefore                (4)
+#define LVAR_Home_Tile                 (10)
+#define LVAR_Home_Rotation             (11)
+
+// Is the player in Dan's house?
+// coords: top left, top right, bottom left, bottom right
+#define inside(x)     ((tile_in_tile_rect(14728, 14720, 17128, 17120, dude_tile)) or (tile_in_tile_rect(13936, 13928, 17136, 17128, x)))
+#define dude_inside   inside(dude_tile)
+#define dan_inside    inside(self_tile)
+
+#define EVENT_TO_START     (1)
+#define EVENT_TO_STREET    (2)
+#define EVENT_TO_CATTLE1   (3)
+#define EVENT_TO_CATTLE2   (4)
+
+#define hex_start          (15522)
+#define hex_street         (15295)
+#define hex_cattle1        (13693) // orig: (12871) - is too far away for the ai. Split into waypoint #1 and #2 instead.
+#define hex_cattle2        (12871)
+#define hex_sleep          (14932)
+#define hex_billy          (13891)
+
 import variable Billy_ptr;
 import variable Dan_ptr;
 
@@ -84,45 +107,66 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure map_enter_p_proc begin
+   if (local_var(LVAR_Home_Tile) == 0) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+
+   if not(is_loading_game) then begin
+      if night then begin
+         Sleeping := 1;
+         critter_attempt_placement(self_obj, hex_sleep, self_elevation);
+      end
+      else begin
+         if (self_tile == hex_sleep) then begin
+            critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+            self_rotate(local_var(LVAR_Home_Rotation));
+         end
+         if (SetDayNight == 0) then begin
+            add_timer_event(self_obj, game_ticks(5), EVENT_TO_CATTLE1);
+            SetDayNight := 1;
+         end
+      end
+   end
+end
+
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
    if (morning) then begin
       if (SetDayNight == 0) then begin
-         add_timer_event(self_obj, game_ticks(30), 3);
+         add_timer_event(self_obj, game_ticks(30), EVENT_TO_CATTLE1);
          SetDayNight := 1;
       end
    end
-   if (map_var(0) == 1) then begin
+   if (map_var(MVAR_DanFlag2) == 1) then begin
       if (WalkToTalker == 0) then begin
          reg_anim_clear(self_obj);
          reg_anim_begin();
-         reg_anim_obj_move_to_tile(self_obj, 13891, -1);
+         reg_anim_obj_move_to_tile(self_obj, hex_billy, -1);
          reg_anim_end();
          WalkToTalker := 1;
       end
    end
-   if (self_tile == 13891) then begin
-      if (map_var(0) == 1) then begin
+   if (self_tile == hex_billy) then begin
+      if (map_var(MVAR_DanFlag2) == 1) then begin
          if (Talky == 0) then begin
             call Dan27;
             Talky := 1;
-            add_timer_event(self_obj, game_ticks(60 * 2), 1);
+            add_timer_event(self_obj, game_ticks(60 * 2), EVENT_TO_START);
          end
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
@@ -133,55 +177,41 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+   if ((game_time_hour >= 1900) or (game_time_hour < 600)) and dan_inside then begin
       call DanAtNight;
    end
-   else begin
-      if (local_var(4) == 1) then begin
-         set_local_var(4, 2);
-         if ((map_var(0) == 2) and (local_var(8) == 0)) then begin
-            if (local_var(1) > 1) then begin
-               start_gdialog(562, self_obj, 4, -1, -1);
-               gsay_start;
-               call Dan15;
-               gsay_end;
-               end_dialogue;
-            end
-            else begin
-               call Dan28;
-            end
+   else if (local_var(LVAR_Herebefore) == 1) then begin
+      set_local_var(LVAR_Herebefore, 2);
+      if ((map_var(MVAR_DanFlag2) == 2) and (local_var(8) == 0)) then begin
+         if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
+            start_dialog_at_node(Dan15);
          end
          else begin
-            call Dan28;
+            start_dialog_at_node(Dan16);
+            //call Dan28;
          end
       end
       else begin
-         if (local_var(4) == 2) then begin
-            if ((map_var(0) == 2) and (local_var(8) == 0)) then begin
-               if (local_var(1) == 1) then begin
-                  start_gdialog(562, self_obj, 4, -1, -1);
-                  gsay_start;
-                  call Dan16;
-                  gsay_end;
-                  end_dialogue;
-               end
-               else begin
-                  call Dan28;
-               end
-            end
-            else begin
-               call Dan28;
-            end
+         call Dan28;
+      end
+   end
+   else if (local_var(LVAR_Herebefore) == 2) then begin
+      if ((map_var(MVAR_DanFlag2) == 2) and (local_var(8) == 0)) then begin
+         if (local_var(LVAR_reaction_level) == BAD) then begin
+            start_dialog_at_node(Dan16);
          end
          else begin
-            start_gdialog(562, self_obj, 4, -1, -1);
-            gsay_start;
-            call Dan00;
-            gsay_end;
-            end_dialogue;
-            set_local_var(4, 1);
+            start_dialog_at_node(Dan15);
+            //call Dan28;
          end
       end
+      else begin
+         call Dan28;
+      end
+   end
+   else begin
+      start_dialog_at_node(Dan00);
+      set_local_var(LVAR_Herebefore, 1);
    end
 end
 
@@ -190,83 +220,81 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
 procedure timed_event_p_proc begin
-   if (morning or (day)) then begin
+   if (morning or day) then begin
       if (Sleeping == 1) then begin
          reg_anim_clear(self_obj);
          reg_anim_begin();
-         reg_anim_obj_move_to_tile(self_obj, 12871, -1);
+         reg_anim_obj_move_to_tile(self_obj, hex_cattle1, -1);
          reg_anim_end();
-         add_timer_event(self_obj, game_ticks(60 * 25), 2);
+         add_timer_event(self_obj, game_ticks(60 * 25), EVENT_TO_STREET);
          Sleeping := 0;
       end
       else begin
-         if (fixed_param == 1) then begin
+         if (fixed_param == EVENT_TO_START) then begin
             call SendToStart;
          end
-         else begin
-            if (fixed_param == 2) then begin
-               call SendToStreet;
-            end
-            else begin
-               if (fixed_param == 3) then begin
-                  call SendToCattle1;
-               end
-               else begin
-                  if (fixed_param == 4) then begin
-                     call SendToCattle2;
-                  end
-               end
-            end
+         else if (fixed_param == EVENT_TO_STREET) then begin
+            call SendToStreet;
+         end
+         else if (fixed_param == EVENT_TO_CATTLE1) then begin
+            call SendToCattle1;
+         end
+         else if (fixed_param == EVENT_TO_CATTLE2) then begin
+            call SendToCattle2;
          end
       end
    end
    else begin
       call SendToSleep;
       if (fixed_param == 4) then begin
-         if (tile_distance_objs(self_obj, dude_obj) <= 10) then begin
+         if dude_inside and self_can_see_dude then begin
             float_msg(self_obj, mstr(215), FLOAT_MSG_RED);
          end
       end
-      else begin
-         if (fixed_param == 5) then begin
-            NightCount := 0;
-            if (tile_distance_objs(self_obj, dude_obj) <= 10) then begin
-               float_msg(self_obj, mstr(216), FLOAT_MSG_RED);
-               tmp_hostile := 1;
-            end
+      else if (fixed_param == 5) then begin
+         NightCount := 0;
+         if dude_inside and self_can_see_dude then begin
+            float_msg(self_obj, mstr(216), FLOAT_MSG_RED);
+            tmp_hostile := 1;
          end
       end
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_HUB, 1);
    end
 end
 
-procedure Dan00
-begin
-   Reply(102);
+procedure Dan00 begin
+variable tmp_msg;
+
+   if dude_is_male then begin
+      if (dude_age < 30) then
+         tmp_msg := 103;
+      else
+         tmp_msg := 104;
+   end
+   else
+      tmp_msg := 105;
+
+   Reply(mstr(102) + mstr(tmp_msg));
    NOption(106, Dan11, 5);
    NOption(107, Dan01, 4);
-   if (map_var(0) == 2) then begin
+   if (map_var(MVAR_DanFlag2) == 2) then begin
       NOption(108, Dan14, 4);
-      set_local_var(8, 1);
    end
    NLowOption(109, Dan02);
 end
 
-procedure Dan01
-begin
+procedure Dan01 begin
    Reply(110);
    NOption(111, Dan03, 4);
    NOption(112, Dan05, 4);
@@ -274,13 +302,11 @@ begin
    NOption(114, DanEnd, 4);
 end
 
-procedure Dan02
-begin
+procedure Dan02 begin
    BMessage(115);
 end
 
-procedure Dan03
-begin
+procedure Dan03 begin
    if (dude_is_male) then begin
       Reply(118);
    end
@@ -292,44 +318,38 @@ begin
    NOption(122, DanEnd, 4);
 end
 
-procedure Dan04
-begin
+procedure Dan04 begin
    Reply(123);
    BOption(124, Dan06, 4);
    NOption(125, DanEnd, 4);
 end
 
-procedure Dan05
-begin
+procedure Dan05 begin
    Reply(126);
    BOption(127, Dan06, 4);
    NOption(128, DanEnd, 4);
 end
 
-procedure Dan06
-begin
+procedure Dan06 begin
    set_local_var(5, 1);
    Reply(129);
    BOption(130, Dan07, 4);
    NOption(131, Dan09, 4);
 end
 
-procedure Dan07
-begin
+procedure Dan07 begin
    Reply(132);
    BOption(133, Dan10, 4);
    NOption(134, Dan08, 4);
 end
 
-procedure Dan08
-begin
+procedure Dan08 begin
    Reply(135);
    NOption(136, Dan09, 4);
    NOption(137, Dan11, 4);
 end
 
-procedure Dan09
-begin
+procedure Dan09 begin
    if (dude_is_male) then begin
       BMessage(138);
    end
@@ -338,14 +358,12 @@ begin
    end
 end
 
-procedure Dan10
-begin
+procedure Dan10 begin
    BMessage(141);
    call combat;
 end
 
-procedure Dan11
-begin
+procedure Dan11 begin
    if (dude_is_male) then begin
       Reply(142);
    end
@@ -357,65 +375,59 @@ begin
    NOption(146, DanEnd, 4);
 end
 
-procedure Dan12
-begin
+procedure Dan12 begin
    Reply(147);
    NOption(148, DanEnd, 4);
    NOption(149, DanEnd, 4);
    NOption(150, Dan13, 5);
 end
 
-procedure Dan13
-begin
+procedure Dan13 begin
    NMessage(151);
 end
 
-procedure Dan14
-begin
+procedure Dan14 begin
+   set_local_var(8, 1);
+
    Reply(152);
    NOption(153, Dan17, 4);
    NOption(154, DanEnd, 4);
 end
 
-procedure Dan15
-begin
+procedure Dan15 begin
    Reply(155);
    NOption(156, Dan11, 5);
    NOption(157, Dan01, 4);
-   if (map_var(0) == 2) then begin
+   if (map_var(MVAR_DanFlag2) == 2) then begin
       NOption(158, Dan14, 4);
    end
    NOption(159, DanEnd, 4);
    NLowOption(160, Dan02);
 end
 
-procedure Dan16
-begin
+procedure Dan16 begin
    Reply(161);
-   if (map_var(0) == 2) then begin
+   if (map_var(MVAR_DanFlag2) == 2) then begin
       NOption(162, Dan14, 4);
    end
    NOption(163, DanEnd, 4);
    NLowOption(164, Dan02);
 end
 
-procedure Dan17
-begin
+procedure Dan17 begin
    Reply(168);
    NOption(169, Dan19, 4);
    NOption(170, Dan18, 4);
    NOption(171, DanEnd, 4);
 end
 
-procedure Dan18
-begin
+procedure Dan18 begin
    Reply(172);
    NOption(173, Dan19, 5);
    NOption(174, DanEnd, 4);
 end
 
-procedure Dan19
-begin
+procedure Dan19 begin
    Reply(175);
    BOption(176, Dan20, 4);
    NOption(177, DanEnd, 4);
@@ -426,8 +438,7 @@ begin
    NOption(180, Dan23, 4);
 end
 
-procedure Dan20
-begin
+procedure Dan20 begin
    Reply(181);
    BOption(182, Dan21, 4);
    BOption(183, Dan21, 4);
@@ -435,59 +446,51 @@ begin
    NOption(185, Dan25, 4);
 end
 
-procedure Dan21
-begin
+procedure Dan21 begin
    Reply(186);
    NOption(187, DanEnd, 4);
    NOption(188, DanEnd, 4);
    NOption(189, DanEnd, 4);
 end
 
-procedure Dan22
-begin
+procedure Dan22 begin
    set_local_var(7, 1);
-   set_map_var(1, 1);
+   set_map_var(MVAR_DanFlag4, 1);
    NMessage(190);
 end
 
-procedure Dan23
-begin
+procedure Dan23 begin
    NMessage(191);
 end
 
-procedure Dan24
-begin
+procedure Dan24 begin
    Reply(192);
    BOption(193, DanEnd, 4);
    BOption(194, DanEnd, 4);
    BOption(195, DanEnd, 4);
 end
 
-procedure Dan25
-begin
+procedure Dan25 begin
    NMessage(196);
 end
 
-procedure Dan26
-begin
+procedure Dan26 begin
    if (tile_num(Billy_ptr) != 9858) then begin
       float_msg(self_obj, mstr(random(197, 199)), FLOAT_MSG_RED);
    end
 end
 
-procedure Dan27
-begin
+procedure Dan27 begin
+   self_look_at(Billy_ptr);
    float_msg(self_obj, mstr(random(200, 203)), FLOAT_MSG_RED);
-   set_map_var(0, 2);
+   set_map_var(MVAR_DanFlag2, 2);
 end
 
-procedure Dan28
-begin
+procedure Dan28 begin
    float_msg(self_obj, mstr(random(208, 213)), FLOAT_MSG_RED);
 end
 
-procedure DanAtNight
-begin
+procedure DanAtNight begin
    if (NightCount == 0) then begin
       float_msg(self_obj, mstr(214), FLOAT_MSG_RED);
       NightCount := 1;
@@ -496,59 +499,53 @@ begin
    end
 end
 
-procedure SendToStart
-begin
+procedure SendToStart begin
    reg_anim_clear(self_obj);
    reg_anim_begin();
-   reg_anim_obj_move_to_tile(self_obj, 15522, -1);
+   reg_anim_obj_move_to_tile(self_obj, hex_start, -1);
    reg_anim_end();
-   add_timer_event(self_obj, game_ticks(60 * 12), 2);
+   add_timer_event(self_obj, game_ticks(60 * 12), EVENT_TO_STREET);
 end
 
-procedure SendToStreet
-begin
+procedure SendToStreet begin
    reg_anim_clear(self_obj);
    reg_anim_begin();
-   reg_anim_obj_move_to_tile(self_obj, 15295, -1);
+   reg_anim_obj_move_to_tile(self_obj, hex_street, -1);
    reg_anim_end();
-   add_timer_event(self_obj, game_ticks(60 * 2), 3);
+   add_timer_event(self_obj, game_ticks(60 * 2), EVENT_TO_CATTLE1);
 end
 
-procedure SendToCattle1
-begin
+procedure SendToCattle1 begin
    reg_anim_clear(self_obj);
    reg_anim_begin();
-   reg_anim_obj_move_to_tile(self_obj, 12871, -1);
+   reg_anim_obj_move_to_tile(self_obj, hex_cattle1, -1);
    reg_anim_end();
    if (random(1, 10) >= 6) then begin
-      add_timer_event(self_obj, game_ticks(60 * 3), 4);
+      add_timer_event(self_obj, game_ticks(60 * 3), EVENT_TO_CATTLE2);
    end
    else begin
-      add_timer_event(self_obj, game_ticks(60 * 4), 1);
+      add_timer_event(self_obj, game_ticks(60 * 4), EVENT_TO_START);
    end
 end
 
-procedure SendToCattle2
-begin
+procedure SendToCattle2 begin
    reg_anim_clear(self_obj);
    reg_anim_begin();
-   reg_anim_obj_move_to_tile(self_obj, 12871, -1);
+   reg_anim_obj_move_to_tile(self_obj, hex_cattle2, -1);
    reg_anim_end();
-   add_timer_event(self_obj, game_ticks(60 * 4), 1);
+   add_timer_event(self_obj, game_ticks(60 * 4), EVENT_TO_START);
 end
 
-procedure SendToSleep
-begin
+procedure SendToSleep begin
    if (Sleeping == 0) then begin
       reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_obj_move_to_tile(self_obj, 14932, -1);
+      reg_anim_obj_move_to_tile(self_obj, hex_sleep, -1);
       reg_anim_end();
       SetDayNight := 0;
       Sleeping := 1;
    end
 end
 
-procedure DanEnd
-begin
+procedure DanEnd begin
 end
