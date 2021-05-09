@@ -1,9 +1,23 @@
+/*
+
+   Junktown - Hotel room spatial script
+
+*/
+
+/* Include Files */
 #include "define.h"
+#include "maps/junkkill.h"
+
+#define NAME                    SCRIPT_CRASHRM
+
 #include "command.h"
 
+/* Standard Script Procedures */
 procedure start;
-procedure spatial_p_proc;//    script_action == spatial_proc
+procedure spatial_p_proc;
 procedure talk_p_proc;
+
+procedure CrashRm00;
 procedure CrashRm01;
 procedure CrashRm02;
 procedure CrashRmEnd;
@@ -13,66 +27,61 @@ variable item;
 import variable JTRaider_ptr;
 import variable Sinthia_ptr;
 
-
 procedure start begin
 end
 
-procedure spatial_p_proc
-begin
+procedure spatial_p_proc begin
    if ((source_obj == dude_obj) and (global_var(GVAR_RENT_TIME) > (GAME_TIME_IN_DAYS))) then begin
       dialogue_system_enter;
    end
 end
 
-procedure talk_p_proc
-begin
-   dude_look_at_self;
-   start_gdialog(807, self_obj, 4, -1, -1);
-   gsay_start;
-   gsay_reply(SCRIPT_CRASHRM, 100);
-   giq_option(0, SCRIPT_CRASHRM, 101, CrashRm01, NEUTRAL_REACTION);
-   giq_option(0, SCRIPT_CRASHRM, 102, CrashRmEnd, NEUTRAL_REACTION);
-   gsay_end;
-   end_dialogue;
+procedure talk_p_proc begin
+   start_dialog_at_node(CrashRm00);
+
    if (local_var(0) == 1) then begin
       call CrashRm02;
    end
 end
 
-procedure CrashRm01
-begin
+procedure CrashRm00 begin
+   Reply(100);
+   NOption(101, CrashRm01, 1);
+   NOption(102, CrashRmEnd, 1);
+end
+
+procedure CrashRm01 begin
    set_local_var(0, 1);
 end
 
-procedure CrashRm02
-begin
+procedure CrashRm02 begin
    set_local_var(0, 0);
    gfade_out(1);
-   game_time_advance(game_ticks(60 * (60 - (game_time_hour % 100))));
-   if (game_time_hour < 1000) then begin
-      game_time_advance(game_ticks(36 * (1000 - game_time_hour)));
-   end
-   else begin
-      game_time_advance(game_ticks(36 * (3400 - game_time_hour)));
-   end
-   critter_heal(dude_obj, random(10, 15));
-   display_msg(message_str(SCRIPT_CRASHRM, 103));
-   if ((map_var(3) == 0) and (map_var(0) != 2)) then begin
-      JTRaider_ptr := create_object_sid(PID_RAIDER_GUARD, 17484, 0, SCRIPT_JTRAIDER);
-      move_to(Sinthia_ptr, 17485, 0);
-      obj_rotate(JTRaider_ptr, 3);
-      obj_rotate(Sinthia_ptr, 3);
-      item := create_object(PID_10MM_PISTOL, 0, 0);
-      add_obj_to_inven(JTRaider_ptr, item);
-      wield_obj_critter(JTRaider_ptr, item);
-      item := create_object(PID_LEATHER_ARMOR, 0, 0);
-      add_obj_to_inven(JTRaider_ptr, item);
-      wield_obj_critter(JTRaider_ptr, item);
-      set_map_var(3, 1);
-   end
+      game_time_advance(game_ticks(60 * (60 - (game_time_hour % 100))));
+      if (game_time_hour < 1000) then begin
+         game_time_advance(game_ticks(36 * (1000 - game_time_hour)));
+      end
+      else begin
+         game_time_advance(game_ticks(36 * (3400 - game_time_hour)));
+      end
+      critter_heal(dude_obj, random(10, 15));
+      display_msg(message_str(NAME, 103));
+
+      if ((map_var(3) == 0) and (map_var(0) != 2)) then begin
+         JTRaider_ptr := create_object_sid(PID_RAIDER_GUARD, 17484, 0, SCRIPT_JTRAIDER);
+         move_to(Sinthia_ptr, 17485, 0);
+         obj_rotate(JTRaider_ptr, 3);
+         obj_rotate(Sinthia_ptr, 3);
+         item := create_object(PID_10MM_PISTOL, 0, 0);
+         add_obj_to_inven(JTRaider_ptr, item);
+         wield_obj_critter(JTRaider_ptr, item);
+         item := create_object(PID_LEATHER_ARMOR, 0, 0);
+         add_obj_to_inven(JTRaider_ptr, item);
+         wield_obj_critter(JTRaider_ptr, item);
+         set_map_var(3, 1);
+      end
    gfade_in(1);
 end
 
-procedure CrashRmEnd
-begin
+procedure CrashRmEnd begin
 end
