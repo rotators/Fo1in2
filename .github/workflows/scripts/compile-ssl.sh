@@ -182,7 +182,7 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # pass #2
     # confirm result -- does log exists and is not empty?
     if [ -s $log_file ]; then
-       log_msg="$ssl_result $ssl_show"
+       log_msg="[$ssl_result] $ssl_show"
 
        if [ "$ssl_result" == "ERROR" ]; then
           echo $log_msg
