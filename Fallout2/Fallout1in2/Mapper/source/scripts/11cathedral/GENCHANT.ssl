@@ -16,7 +16,12 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
 procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure talk_p_proc;
 
 procedure Chant01;
 procedure Chant02;
@@ -36,45 +41,46 @@ procedure start begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
    end
-   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-      script_overrides;
-      display_msg(mstr(100));
-   end
-   else begin
-      if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-         inc_inv_good_crit
-      end
-      else begin
-         if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-            tmp_hostile := 1;
-         end
-         else begin
-            if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-               if (tmp_hostile) then begin
-                  tmp_hostile := 0;
-                  attack(dude_obj);
-               end
-            end
-         end
-      end
-   end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      script_overrides;
-      if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
-         float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
-      end
-      else begin
-         start_gdialog(396, self_obj, 4, -1, -1);
-         gsay_start;
-         call Chant01;
-         gsay_end;
-         end_dialogue;
-      end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure destroy_p_proc begin
+   inc_inv_good_crit
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
-procedure Chant01
-begin
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_COC);
+
+   script_overrides;
+   if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
+      float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
+   end
+   else begin
+      start_dialog_at_node(Chant01);
+   end
+end
+
+procedure Chant01 begin
    Reply(102);
    NOption(103, Chant02, 7);
    NOption(104, Chant03, 4);
@@ -85,49 +91,34 @@ begin
    NLowOption(107, Chant06);
 end
 
-procedure Chant02
-begin
+procedure Chant02 begin
    Reply(108);
    NOption(113, ChantEnd, 1);
 end
 
-procedure Chant03
-begin
+procedure Chant03 begin
    Reply(109);
    NOption(113, ChantEnd, 1);
 end
 
-procedure Chant04
-begin
+procedure Chant04 begin
    Reply(110);
    NOption(113, ChantEnd, 1);
 end
 
-procedure Chant05
-begin
+procedure Chant05 begin
    Reply(111);
    NOption(113, ChantEnd, 1);
 end
 
-procedure Chant06
-begin
+procedure Chant06 begin
    Reply(112);
    NOption(113, ChantEnd, 1);
 end
 
-procedure ChantEnd
-begin
+procedure ChantEnd begin
 end
 
-procedure Combat
-begin
+procedure Combat begin
    tmp_hostile := 1;
-end
-
-
-
-
-procedure destroy_p_proc
-begin
-
 end

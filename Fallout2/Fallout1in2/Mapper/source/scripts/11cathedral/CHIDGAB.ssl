@@ -1,6 +1,6 @@
 /*
 
-   Cathedral - ???
+   Cathedral - Gangers inside the cathedral, level 1.
 
 */
 
@@ -16,7 +16,12 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
 procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure talk_p_proc;
 
 procedure Brat02;
 procedure Brat03;
@@ -30,61 +35,57 @@ procedure BratEnd;
 variable tmp_hostile;
 variable Only_Once := 1;
 
-procedure start
-begin
-
-
+procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
    end
-   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-      script_overrides;
-      display_msg(mstr(100));
-   end
-   else begin
-      if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-         tmp_hostile := 1;
-      end
-      else begin
-         if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-            if (tmp_hostile) then begin
-               tmp_hostile := 0;
-               attack(dude_obj);
-            end
-         end
-         else begin
-            if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-               inc_inv_evil_crit
-            end
-            else begin
-               if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-                  script_overrides;
-                  if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
-                     if (has_rep_berserker or has_rep_childkiller) then begin
-                        float_msg(self_obj, mstr(102), FLOAT_MSG_NORMAL);
-                     end
-                     else begin
-                        float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
-                     end
-                  end
-                  else begin
-                     start_gdialog(395, self_obj, 4, -1, -1);
-                     gsay_start;
-                     call Brat02;
-                     gsay_end;
-                     end_dialogue;
-                  end
-               end
-            end
-         end
-      end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
-procedure Brat02
-begin
+procedure destroy_p_proc begin
+   inc_inv_evil_crit
+end
+
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_COC);
+
+   script_overrides;
+   if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
+      if (has_rep_berserker or has_rep_childkiller) then begin
+         float_msg(self_obj, mstr(102), FLOAT_MSG_NORMAL);
+      end
+      else begin
+         float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
+      end
+   end
+   else begin
+      start_dialog_at_node(Brat02);
+   end
+end
+
+procedure Brat02 begin
    Reply(103);
    NOption(104, Brat03, 7);
    NOption(105, Brat04, 4);
@@ -98,46 +99,34 @@ begin
    NLowOption(109, Brat07);
 end
 
-procedure Brat03
-begin
+procedure Brat03 begin
    Reply(110);
    NOption(115, BratEnd, 1);
 end
 
-procedure Brat04
-begin
+procedure Brat04 begin
    Reply(111);
    NOption(115, BratEnd, 1);
 end
 
-procedure Brat05
-begin
+procedure Brat05 begin
    Reply(112);
    NOption(115, BratEnd, 1);
 end
 
-procedure Brat06
-begin
+procedure Brat06 begin
    Reply(113);
    NOption(115, BratEnd, 1);
 end
 
-procedure Brat07
-begin
+procedure Brat07 begin
    Reply(114);
    NOption(115, BratEnd, 1);
 end
 
-procedure Combat
-begin
+procedure Combat begin
    tmp_hostile := 1;
 end
 
-procedure BratEnd
-begin
-end
-
-procedure destroy_p_proc
-begin
-
+procedure BratEnd begin
 end
