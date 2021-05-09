@@ -251,14 +251,18 @@ procedure destroy_p_proc begin
    add_obj_to_inven(self_obj, DogTags);
    set_global_var(GVAR_KILLIAN_DEAD, 1);
 
+   // Quest tracker
    if (global_var(GVAR_KILL_KILLIAN) == 1) then begin
       set_global_var(GVAR_KILL_KILLIAN, 2);
    end
 
-   if (source_obj == dude_obj) then begin
-      //inc_junktown_rep(REP_BONUS_KILLED_KILLIAN); // moved to JUNKKILL.ssl
+   // If Killian dies while attacking Gizmo, don't necessarily attribute this to the player!
+   // Rest of the kill-code is checked in JUNKKILL.ssl (experience + reputation changes).
+   if (source_obj == dude_obj or CUR_MAP_JUNKKILL) then begin
+      set_global_var(GVAR_KILLIAN_SOMETHING_1, 1);
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
    end
+
    inc_good_critter
    Killian_ptr := 0;
 end
@@ -371,7 +375,7 @@ procedure talk_p_proc begin
             end
          end
 
-         start_gdialog(47, self_obj, 4, 10, 7);
+         start_gdialog(47, self_obj, 4, HEAD_KILLIAN, BACKGROUND_JUNKTOWN);
          gsay_start;
          if (ILLEGAL) then begin
             if (ILLEGBEFORE) then begin

@@ -112,7 +112,7 @@ procedure critter_p_proc begin
       else if (self_item_count(PID_ELECTRONIC_BUG)) then begin
          set_global_var(GVAR_BUG_PLANTED, 1);
       end
-      else if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin// - ENEMY_GIZMOS_GANG
+      else if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin
          if (self_can_see_dude) then begin
             attack(dude_obj);
          end
@@ -188,7 +188,14 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if (local_var(8) == 1) then begin
+   if (stealing) then begin
+      start_gdialog(44, self_obj, 4, HEAD_GIZMO, BACKGROUND_JUNKTOWN);
+      gsay_start;
+      call Gizmo45;
+      gsay_end;
+      end_dialogue;
+   end
+   else if (local_var(8) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, 104), FLOAT_MSG_RED);
    end
    else begin
@@ -196,12 +203,9 @@ procedure talk_p_proc begin
          float_msg(self_obj, message_str(SCRIPT_ENEMY, 101), FLOAT_MSG_NORMAL);
       end
       else begin
-         start_gdialog(44, self_obj, 4, 21, 7);
+         start_gdialog(44, self_obj, 4, HEAD_GIZMO, BACKGROUND_JUNKTOWN);
          gsay_start;
-         if (stealing) then begin
-            call Gizmo45;
-         end
-         else if not(is_killian_alive) then begin
+         if not(is_killian_alive) then begin
             call Gizmo21;
          end
          else if (local_var(4) == 1) then begin
@@ -364,8 +368,7 @@ begin
    BOption(142, Gizmo20, 4);//   was 50
 end
 
-procedure Gizmo13_1
-begin
+procedure Gizmo13_1 begin
    if (dude_item_count(PID_DOG_TAGS) or not(is_killian_alive)) then begin
       call Gizmo14;
    end
@@ -374,8 +377,7 @@ begin
    end
 end
 
-procedure Gizmo14
-begin
+procedure Gizmo14 begin
    Reply(143);
    if (dude_item_count(PID_DOG_TAGS)) then begin
       GOption(g_more, Gizmo15, 1);
@@ -385,8 +387,7 @@ begin
    end
 end
 
-procedure Gizmo15
-begin
+procedure Gizmo15 begin
    destroy_object(dude_item(PID_DOG_TAGS));
    set_global_var(GVAR_HIRED_BY_GIZMO, 2);
    Reply(144);
@@ -396,8 +397,7 @@ begin
    NOption(148, GizmoPay, 7);
 end
 
-procedure Gizmo15_1
-begin
+procedure Gizmo15_1 begin
    set_local_var(5, local_var(5) + 1);
    if (local_var(5) > 1) then begin
       call Gizmo11;
@@ -407,8 +407,7 @@ begin
    end
 end
 
-procedure Gizmo16
-begin
+procedure Gizmo16 begin
    Reply(149);
    NOption(150, GizmoPay, 4);
    if (not(is_success(do_check(dude_obj, STAT_lu, 0)))) then begin
@@ -417,14 +416,12 @@ begin
    NOption(152, GizmoPay, 6);
 end
 
-procedure Gizmo16a
-begin
+procedure Gizmo16a begin
    DownReactLevel
    call badmouth;
 end
 
-procedure Gizmo17
-begin
+procedure Gizmo17 begin
    Reply(153);
    NOption(154, Gizmo18, 4);
    BOption(155, Gizmo19, 6);
@@ -432,8 +429,7 @@ begin
    NOption(157, Gizmo20, 6);
 end
 
-procedure Gizmo18
-begin
+procedure Gizmo18 begin
    if (local_var(6) > 0) then begin//  was "> 1"
       call Gizmo11;
    end
@@ -447,8 +443,7 @@ begin
    end
 end
 
-procedure Gizmo19
-begin
+procedure Gizmo19 begin
    Reply(159);
    NOption(160, Gizmo20, 4);
    if (not(is_success(do_check(dude_obj, STAT_lu, 0)))) then begin

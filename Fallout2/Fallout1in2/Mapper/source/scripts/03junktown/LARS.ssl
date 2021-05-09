@@ -69,6 +69,8 @@ variable wait_for_Lars;
 
 #define LVAR_Here_Before   (4)
 
+#define LVAR_15Seconds     (6)
+
 procedure start begin
 end
 
@@ -87,7 +89,7 @@ procedure combat_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (not(is_gizmo_alive) and (global_var(GVAR_LARS_DEAD) == 0) and (CUR_MAP_JUNKCSNO) and (combat_is_initialized == 0)) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+   if (not(is_gizmo_alive) and (global_var(GVAR_LARS_DEAD) == 0) and (CUR_MAP_JUNKCSNO) and (combat_is_initialized == 0)) then begin
       destroy_object(self_obj);
    end
    if (tmp_hostile) then begin
@@ -109,12 +111,11 @@ procedure critter_p_proc begin
 end
 
 procedure description_p_proc begin
+   script_overrides;
    if (is_success(do_check(dude_obj, STAT_pe, dude_perk(PERK_bonus_awareness)))) then begin
-      script_overrides;
       display_msg(mstr(103));
    end
    else begin
-      script_overrides;
       display_msg(mstr(102));
    end
 end
@@ -185,13 +186,15 @@ procedure talk_p_proc begin
 
    start_gdialog(518, self_obj, 4, -1, -1);
    gsay_start;
-
    if has_rep_childkiller then begin
       call Lars01;
    end
    else begin
       if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
-         call Lars27;
+         if (local_var(LVAR_15Seconds) == 1) then
+            tmp_hostile := 1;
+         else
+            call Lars27;
       end
       else if (not(is_gizmo_alive) and (global_var(GVAR_CAPTURE_GIZMO) != 2)) then begin
          call Lars26;
@@ -342,13 +345,11 @@ procedure Lars12 begin
    if (local_var(1) > 1) then begin
       Reply(135);
    end
+   else if (global_var(GVAR_CAPTURE_GIZMO) == 2) then begin
+      Reply(171);
+   end
    else begin
-      if (global_var(GVAR_CAPTURE_GIZMO) == 2) then begin
-         Reply(171);
-      end
-      else begin
-         Reply(136);
-      end
+      Reply(136);
    end
    if (not(global_var(GVAR_BUST_SKULZ))) then begin
       NOption(137, Lars18, 4);
@@ -460,8 +461,9 @@ procedure LarsKillNeal begin
    Lars_kill_Neal := 1;
 end
 
-
-
 procedure timed_event_p_proc begin
-   tmp_hostile := 1;
+   set_local_var(LVAR_15Seconds, 1);
+   if self_can_see_dude then begin
+      tmp_hostile := 1;
+   end
 end
