@@ -1,6 +1,6 @@
 /*
 
-   Hub - Sid
+   Hub - Sid, the guard in Beth's gunshop
 
 */
 
@@ -15,7 +15,6 @@
 #include "modreact.h"
 
 /* Standard Script Procedures */
-
 procedure start;
 procedure combat;
 procedure critter_p_proc;
@@ -24,10 +23,14 @@ procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure damage_p_proc;
 procedure look_at_p_proc;
+procedure timed_event_p_proc;
 procedure Sid00;
 
 variable tmp_hostile;
 variable Only_Once := 1;
+variable whisper_event := 0;
+
+#define EVENT_FIRED     (1)
 
 import variable Sid_Ptr;
 import variable Beth_Ptr;
@@ -41,54 +44,52 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
-   call Sid00;
+   if (whisper_event == 0) then
+      call Sid00;
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure damage_p_proc
-begin
-   if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_ENEMY_HUB, 1);
-   end
+procedure damage_p_proc begin
+   set_global_var(GVAR_ENEMY_HUB, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Sid00
-begin
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_FIRED) then begin
+      whisper_event := 0;
+      float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 378), FLOAT_MSG_RED);
+      float_msg(self_obj, mstr(111), FLOAT_MSG_YELLOW);
+   end
+end
+
+procedure Sid00 begin
    variable LVar0 := 0;
    LVar0 := random(1, 7);
    if (LVar0 == 1) then begin
@@ -109,38 +110,30 @@ begin
          end
       end
    end
+   else if (LVar0 == 2) then begin
+      float_msg(self_obj, mstr(105), FLOAT_MSG_YELLOW);
+   end
+   else if (LVar0 == 3) then begin
+      float_msg(self_obj, mstr(106), FLOAT_MSG_YELLOW);
+      float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 374), FLOAT_MSG_RED);
+   end
+   else if (LVar0 == 4) then begin
+      float_msg(self_obj, mstr(107), FLOAT_MSG_YELLOW);
+      float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 375), FLOAT_MSG_RED);
+   end
+   else if (LVar0 == 5) then begin
+      float_msg(self_obj, mstr(108), FLOAT_MSG_YELLOW);
+      float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 376), FLOAT_MSG_RED);
+   end
+   else if (LVar0 == 6) then begin
+      float_msg(self_obj, mstr(109), FLOAT_MSG_YELLOW);
+      float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 377), FLOAT_MSG_RED);
+   end
    else begin
-      if (LVar0 == 2) then begin
-         float_msg(self_obj, mstr(105), FLOAT_MSG_YELLOW);
-      end
-      else begin
-         if (LVar0 == 3) then begin
-            float_msg(self_obj, mstr(106), FLOAT_MSG_YELLOW);
-            float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 374), FLOAT_MSG_RED);
-         end
-         else begin
-            if (LVar0 == 4) then begin
-               float_msg(self_obj, mstr(107), FLOAT_MSG_YELLOW);
-               float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 375), FLOAT_MSG_RED);
-            end
-            else begin
-               if (LVar0 == 5) then begin
-                  float_msg(self_obj, mstr(108), FLOAT_MSG_YELLOW);
-                  float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 376), FLOAT_MSG_RED);
-               end
-               else begin
-                  if (LVar0 == 6) then begin
-                     float_msg(self_obj, mstr(109), FLOAT_MSG_YELLOW);
-                     float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 377), FLOAT_MSG_RED);
-                  end
-                  else begin
-                     float_msg(self_obj, mstr(110), FLOAT_MSG_YELLOW);
-                     float_msg(Beth_Ptr, message_str(SCRIPT_HBETH, 378), FLOAT_MSG_RED);
-                     float_msg(self_obj, mstr(111), FLOAT_MSG_YELLOW);
-                  end
-               end
-            end
-         end
-      end
+      whisper_event := 1;
+      float_msg(self_obj, mstr(110), FLOAT_MSG_YELLOW);
+      add_timer_event(self_obj, game_ticks(5), EVENT_FIRED);
    end
 end
+
+
