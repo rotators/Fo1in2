@@ -24,6 +24,7 @@
 
 {1100}{}{Ein Mann, der weiß, was gut für ihn ist! Schauen Sie sich dieses hundertprozentig originelle und zweihundertprozentig wirksame Wundermittel an, und ich garantiere Ihnen, dass Sie dies anderswo nicht billiger bekommen können!}
 {1101}{}{Eine Frau, die weiß, was gut für sie ist! Schauen Sie sich dieses hundertprozentig originelle und zweihundertprozentig wirksame Wundermittel an, und ich garantiere Ihnen, dass Sie dies anderswo nicht billiger bekommen können!}
+{1102}{}{Schauen Sie mal rein und staunen Sie!}
     {1110}{}{[Weiter]}
 
 {1200}{}{Dieses Produkt von *höchster Qualität*, wird *überall in der Welt* gegen Rheuma eingesetzt! Auch Leberbeschwerden, Magenbeschwerden, und vor allem *alle* Blutkrankheiten werden hiermit...}
