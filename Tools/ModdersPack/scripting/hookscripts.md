@@ -888,3 +888,19 @@ Critter arg4 - the target of the critter (can be 0)
 
 Item    ret0 - overrides the chosen best weapon
 ```
+
+-------------------------------------------
+
+#### `HOOK_CANUSEWEAPON (hs_canuseweapon.int)`
+
+Run when the AI checks whether it can use a weapon.
+This mostly happens when NPCs try to find weapons in their inventory or on the map.
+
+```
+Critter arg0 - the critter doing the check
+Item    arg1 - the weapon being checked
+int     arg2 - attack type (see ATKTYPE_* constants)
+int     arg3 - original result of engine function: 1 - can use, 0 - can't use
+
+int     ret0 - overrides the result of engine function. Any non-zero value allows using the weapon
+```

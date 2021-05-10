@@ -2,21 +2,35 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
 - **Fixed**: 49/50hp mutants on Mariposa level 1.
 - **Fixed**: A potential procedure loop in the (generic) super mutant sergeant script when talking to them in disguise.
+- **Fixed**: Asking the Water Merchants for a caravan job wasn't possible anymore after asking about a water delivery, but then declining the service.
 - **Fixed**: Cathedral technicians would blast the disguise-check code on every game tick, no matter if they see thep player or not. This can cause the game to crash on certain hardware.
+- **Fixed**: Dan at the Hub entrance was unable to get to the Brahmin pens (waypoint too far away for the ai pathfinding). Added another waypoint in the middle, which not only fixes his daily schedule, but also restores an interaction with Billy, the brahmin boy.
+- **Fixed**: Dan at the Hub entrance would tell the player to get out of his house at night (and attack him later), even though the player wasn't in his house.
+- **Fixed**: Gizmo would not react to the player trying to steal from him after certain dialog choices.
 - **Fixed**: Gizmo's dead remains (with flies animation) can now be looted correctly.
+- **Fixed**: If Kenji is about to attack Killian and the player leaves the map, he will now be removed (if the player returns after days, he would still be there. Now he is killed off-screen by the guards).
+- **Fixed**: If Killian gets killed while fighting Gizmo, the player would get the experience points and Junktown becomes hostile. 
+- **Fixed**: If Lars in Junktown gives the player 15 seconds to "leave and never come back", he would start combat no matter where on the map the player is.
+- **Fixed**: If the player is a child killer, Fry at the Hub entrance would still greet him happily, even though it makes no sense in his dialog.
 - **Fixed**: MacRae in the Boneyard now correctly gives the player +5% Damage Resistance, and + 1% Melee Damage (vanilla Fo1 bug + removed the old Fixt workaround which gave skill points instead).
 - **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
 - **Fixed**: Mines / Traps spatial scripts had no range assigned to them.
 - **Fixed**: Mines in the thief circle map didn't want to explode.
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
+- **Fixed**: Shady Sands becomes hostile to the player, even if he kills Tandi outside of town.
+- **Fixed**: Sid (Hub / Beth's guard) would float a text message so fast, it was impossible to read.
+- **Fixed**: Some locations would not be marked as visible when asking about them in dialog.
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
+- **Removed**: Old code in Ian, Tycho, and Katja scripts when giving them items. Nobody used this function anyways, also it was possible to exploit their carry weight limit with this. 
 - **Tweaked**: Hotspots in the Glow will give the player randomly 20 to 50 rads again (reverted Fixt change back to Fo1 vanilla values).
+- **Tweaked**: Increased the float timer between Guido and Leon (Hub / FLC guards), because the text was barely readable.
 - **Tweaked**: Moved the inventory weapons of Hub entrance guards into their off-hand slots, otherwise they would never use them.
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
 - **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.

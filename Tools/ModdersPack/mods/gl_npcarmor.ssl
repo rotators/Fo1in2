@@ -9,7 +9,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.1
+   version 1.2
 
 */
 
@@ -21,6 +21,7 @@
 #define FID_OBJ_CRITTER  (0x01000000)
 
 procedure update_armor_apperance;
+procedure canuseweapon_handler;
 
 variable
    modIni := "npcarmor.ini",
@@ -203,6 +204,7 @@ procedure start begin
       register_hook_proc(HOOK_INVENWIELD, invenwield_handler);
       register_hook_proc(HOOK_ADJUSTFID, adjustfid_handler);
       register_hook_proc(HOOK_INVENTORYMOVE, inventorymove_handler);
+      register_hook_proc_spec(HOOK_CANUSEWEAPON, canuseweapon_handler);
 
       debug_msg("NPC armor appearance mod: Done.");
    end
@@ -218,5 +220,16 @@ procedure update_armor_apperance begin
          if (fid == -1 or art_exists(fid) == false) then continue;
          art_change_fid_num(npc, fid);
       end
+   end
+end
+
+procedure canuseweapon_handler begin
+   variable critter, canWield;
+   critter := get_sfall_arg;
+   if (critter) then begin
+      canWield := check_weapon_change(critter, get_sfall_arg, true);
+      //if (canWield != 0) then canWield := 1;
+      set_sfall_arg(3, canWield); // override result
+      set_sfall_return(canWield);
    end
 end
