@@ -252,7 +252,7 @@
 {12601}{}{Ein häufig vorkommendes Wüstenunkraut.}
 {12700}{}{Unkraut}
 {12701}{}{Ein häufig vorkommendes Wüstenunkraut.}
-{12800}{}{}
+{12800}{}{Blocking Hex (NoLight)}
 {12900}{}{Wand}
 {13000}{}{Wand}
 {13100}{}{Wand}
