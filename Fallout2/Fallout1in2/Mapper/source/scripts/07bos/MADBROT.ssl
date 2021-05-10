@@ -1,12 +1,12 @@
 /*
 
-   ??
+   Unused Brotherhood of Steel script?
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/brotherhood.h"
 
 #define NAME                    SCRIPT_MADBROT
 //#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -27,13 +27,7 @@ variable tmp_hostile;
 variable init := 0;
 variable maxleash := 10;
 variable noevent;
-variable loopcount;
-variable rndx;
-variable rndy;
-variable rndz;
-variable dist;
 variable new_tile;
-
 
 procedure start begin
    if (not(init)) then begin
@@ -41,49 +35,21 @@ procedure start begin
          set_local_var(3, self_tile);
          set_local_var(1, 1);
       end
-      set_self_team(TEAM_32);
+      set_self_team(TEAM_NECROPOLIS_MINDLESS);
       set_self_ai(AI_BROTHERHOOD_KNIGHT);
       init := 1;
    end
-   else begin
-      if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-         call timetomove;
-      end
-      else begin
-         if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-            call talk_p_proc;
-         end
-         else begin
-            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-               tmp_hostile := 1;
-            end
-            else begin
-               if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                  call do_action;
-               end
-               else begin
-                  if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-                     inc_good_critter
-                  end
-               end
-            end
-         end
-      end
-   end
 end
 
-procedure talk_p_proc
-begin
-   dude_look_at_self;
+procedure timed_event_p_proc begin
+   call timetomove;
 end
 
-procedure combat
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure do_action
-begin
+procedure critter_p_proc begin
    if (global_var(GVAR_ENEMY_BROTHERHOOD)) then begin
       tmp_hostile := 1;
    end
@@ -109,8 +75,19 @@ begin
    end
 end
 
-procedure timetomove
-begin
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure talk_p_proc begin
+   dude_look_at_self;
+end
+
+procedure combat begin
+   tmp_hostile := 1;
+end
+
+procedure timetomove begin
    noevent := 0;
    set_local_var(4, self_tile);
    new_tile := tile_num_in_direction(local_var(4), random(0, 5), 2);

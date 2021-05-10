@@ -1,9 +1,21 @@
 #ifndef ARTFID_H
 #define ARTFID_H
 
-/*******************************************************************************
-                    Идентификаторы изображения персонажей
-*******************************************************************************/
+/******************************************************************
+   File Name: ArtFid.H
+
+
+   Purpose: This file will contain defines for all the critter
+            fids for the game. The pids can be found by using mapper
+            and selecting the critter and then edit. The FID will show
+            up on the debug screen preceded by "proto->fid = ".
+            Note: all the FID defines with that only have () were not
+            in the game at the time that this file was made so if they
+            show up, make 'em.
+
+
+   Created: April 28, 1998
+******************************************************************/
 
 
 // Take FID -10 to get the line number in critters.lst !
