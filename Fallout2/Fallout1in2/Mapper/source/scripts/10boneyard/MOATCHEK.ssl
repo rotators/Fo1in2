@@ -39,7 +39,7 @@ procedure spatial_p_proc begin
            my_boots := get_item(source_obj, PID_RUBBER_BOOTS);
            rm_obj_from_inven(source_obj, my_boots);
            destroy_object(my_boots);
-           if (source_obj == dude_obj) then
+           if source_is_dude then
               display_msg(mstr(130));
         end
       end
@@ -50,9 +50,8 @@ procedure spatial_p_proc begin
 end
 
 procedure pain begin
-   if not(dude_wearing_power_armor) then begin
-
-      if source_obj == dude_obj then begin
+   if not(critter_wearing_power_armor(source_obj)) then begin
+      if source_is_dude then begin
          radiation_inc(dude_obj, 100);
          Damage := random(5, 30) + (difficulty_level * 10);
          CurrentHP := dude_cur_hp;
@@ -79,14 +78,11 @@ procedure pain begin
               display_msg(mstr(110));
          end
       end
-      else begin
-         if source_obj == party_member_obj(obj_pid(source_obj)) then begin
-            critter_dmg(source_obj, random(10, 20), DMG_plasma);
-         end
-         else begin
-            critter_dmg(source_obj, random(15, 40), DMG_plasma);
-         end
+      else if source_in_party then begin
+         critter_dmg(source_obj, random(10, 20), DMG_plasma);
       end
-
+      else begin
+         critter_dmg(source_obj, random(15, 40), DMG_plasma);
+      end
    end
 end

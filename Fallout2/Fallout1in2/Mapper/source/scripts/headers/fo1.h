@@ -590,6 +590,11 @@ variable merch_slot_armor_flags;
       reg_anim_end();                                          \
    end                                                         \
    noop
+   
+   
+// Generic stuff
+#define source_is_dude           (source_obj == dude_obj)
+#define source_in_party          (source_obj == party_member_obj(obj_pid(source_obj)))
 
 /*********************************************************
                         THE END
