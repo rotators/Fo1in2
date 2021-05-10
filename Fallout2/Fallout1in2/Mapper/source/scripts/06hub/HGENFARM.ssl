@@ -1,6 +1,6 @@
 /*
 
-   Generic farmer?
+   Hub - Yellow shirt farmer in the entrance fields.
 
 */
 
@@ -15,8 +15,8 @@
 #include "modreact.h"
 
 /* Standard Script Procedures */
-
 procedure start;
+procedure combat;
 procedure critter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
@@ -27,7 +27,6 @@ procedure damage_p_proc;
 
 procedure Farmer00;
 procedure Farmer01;
-procedure combat;
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -50,8 +49,7 @@ procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile and self_can_see_dude) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -76,31 +74,27 @@ begin
          end
       end
    end
-   else begin
-      if (Sleeping == 0) then begin
-         reg_anim_clear(self_obj);
-         Sleeping := 1;
-         if ((self_tile != sleep_tile) and ((game_time_hour - 1800) > 10) or ((600 - game_time_hour) > 0)) then begin
-            move_to(self_obj, sleep_tile, self_elevation);
-         end
+   else if (Sleeping == 0) then begin
+      reg_anim_clear(self_obj);
+      Sleeping := 1;
+      if ((self_tile != sleep_tile) and ((game_time_hour - 1800) > 10) or ((600 - game_time_hour) > 0)) then begin
+         move_to(self_obj, sleep_tile, self_elevation);
       end
-      else begin
-         if ((self_tile != sleep_tile) and not(anim_busy(self_obj))) then begin
-            self_walk_to_tile(sleep_tile);
-         end
+   end
+   else begin
+      if ((self_tile != sleep_tile) and not(anim_busy(self_obj))) then begin
+         self_walk_to_tile(sleep_tile);
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    if ((game_time_hour >= 600) and (game_time_hour < 1800)) then begin
@@ -115,14 +109,12 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       in_timed_event := 0;
       if ((game_time_hour >= 600) and (game_time_hour < 1800)) then begin
@@ -131,15 +123,13 @@ begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if source_is_dude then begin
       set_global_var(GVAR_ENEMY_HUB, 1);
    end
 end
 
-procedure Farmer00
-begin
+procedure Farmer00 begin
    variable LVar0 := 0;
    if Dog_In_Party then begin
       LVar0 := random(101, 109);
@@ -153,7 +143,6 @@ begin
    end
 end
 
-procedure Farmer01
-begin
+procedure Farmer01 begin
    float_msg(self_obj, mstr(random(110, 114)), FLOAT_MSG_GREEN);
 end

@@ -1,6 +1,6 @@
 /*
 
-   Female farmer
+   Hub - Female farmer in the entrance fields.
 
 */
 
@@ -9,7 +9,7 @@
 //#include "area/necropolis.h"
 
 #define NAME                    SCRIPT_FEMFARMR
-//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
 
 #include "command.h"
 #include "modreact.h"
@@ -31,14 +31,11 @@ procedure Farmer01;
 variable tmp_hostile;
 variable Only_Once := 1;
 variable Sleeping;
-
 variable home_tile;
 variable sleep_tile;
 variable in_timed_event;
 
 procedure start begin
-
-
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_HUB_FARMER);
@@ -48,13 +45,11 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile and self_can_see_dude) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -79,31 +74,27 @@ begin
          end
       end
    end
-   else begin
-      if (Sleeping == 0) then begin
-         reg_anim_clear(self_obj);
-         Sleeping := 1;
-         if ((self_tile != sleep_tile) and ((game_time_hour - 1800) > 10) or ((600 - game_time_hour) > 0)) then begin
-            move_to(self_obj, sleep_tile, self_elevation);
-         end
+   else if (Sleeping == 0) then begin
+      reg_anim_clear(self_obj);
+      Sleeping := 1;
+      if ((self_tile != sleep_tile) and ((game_time_hour - 1800) > 10) or ((600 - game_time_hour) > 0)) then begin
+         move_to(self_obj, sleep_tile, self_elevation);
       end
-      else begin
-         if ((self_tile != sleep_tile) and not(anim_busy(self_obj))) then begin
-            self_walk_to_tile(sleep_tile);
-         end
+   end
+   else begin
+      if ((self_tile != sleep_tile) and not(anim_busy(self_obj))) then begin
+         self_walk_to_tile(sleep_tile);
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    if ((game_time_hour >= 600) and (game_time_hour < 1800)) then begin
@@ -118,14 +109,12 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(message_str(SCRIPT_FEMFARMR, 100));
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       in_timed_event := 0;
       if ((game_time_hour >= 600) and (game_time_hour < 1800)) then begin
@@ -134,56 +123,43 @@ begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if source_is_dude then begin
       set_global_var(GVAR_ENEMY_HUB, 1);
    end
 end
 
-procedure Farmer00
-begin
+procedure Farmer00 begin
    variable LVar0 := 0;
    LVar0 := random(1, 5);
    if (LVar0 == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 101), FLOAT_MSG_RED);
    end
-   else begin
-      if (LVar0 == 2) then begin
-         if ((game_time_hour >= 600) and (game_time_hour < 1200)) then begin
-            float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 102), FLOAT_MSG_RED);
-         end
-         else begin
-            if ((game_time_hour >= 1200) and (game_time_hour < 1600)) then begin
-               float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 103), FLOAT_MSG_RED);
-            end
-            else begin
-               float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 104), FLOAT_MSG_RED);
-            end
-         end
+   else if (LVar0 == 2) then begin
+      if ((game_time_hour >= 600) and (game_time_hour < 1200)) then begin
+         float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 102), FLOAT_MSG_RED);
+      end
+      else if ((game_time_hour >= 1200) and (game_time_hour < 1600)) then begin
+         float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 103), FLOAT_MSG_RED);
       end
       else begin
-         if (LVar0 == 3) then begin
-            float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 105), FLOAT_MSG_RED);
-         end
-         else begin
-            if (LVar0 == 4) then begin
-               float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 106), FLOAT_MSG_RED);
-            end
-            else begin
-               if (LVar0 == 5) then begin
-                  float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 107), FLOAT_MSG_RED);
-               end
-               else begin
-                  float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 108), FLOAT_MSG_RED);
-               end
-            end
-         end
+         float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 104), FLOAT_MSG_RED);
       end
+   end
+   else if (LVar0 == 3) then begin
+      float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 105), FLOAT_MSG_RED);
+   end
+   else if (LVar0 == 4) then begin
+      float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 106), FLOAT_MSG_RED);
+   end
+   else if (LVar0 == 5) then begin
+      float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 107), FLOAT_MSG_RED);
+   end
+   else begin
+      float_msg(self_obj, message_str(SCRIPT_FEMFARMR, 108), FLOAT_MSG_RED);
    end
 end
 
-procedure Farmer01
-begin
+procedure Farmer01 begin
    float_msg(self_obj, message_str(SCRIPT_FEMFARMR, random(109, 116)), FLOAT_MSG_RED);
 end
