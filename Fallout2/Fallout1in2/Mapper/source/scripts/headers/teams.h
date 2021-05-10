@@ -34,7 +34,7 @@
 #define TEAM_BOUNTY_HUNTER          (29)
 #define TEAM_NECROPOLIS_GANGER      (30)
 #define TEAM_NECROPOLIS_UNDERGROUND (31)
-#define TEAM_32                     (32) //#define TEAM_NECROPOLIS_MINDLESS (32)
+#define TEAM_NECROPOLIS_MINDLESS    (32)
 //#define TEAM_PLACE_HOLDER         (33)
 #define TEAM_NECROPOLIS_MUTANT      (34)
 #define TEAM_HUB_WATER_MERCHANTS    (35)
