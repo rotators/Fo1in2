@@ -13,6 +13,7 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
 
 #include "command.h"
+#include "upgweap.h"
 #include "modreact.h"
 
 /* Standard Script Procedures */
@@ -47,6 +48,21 @@ procedure Barter;
 procedure Get_Stuff;
 procedure Put_Stuff;
 
+// Weapon Upgrades
+procedure NodeUpgrade;
+procedure NodeUpgrade_Done;
+procedure NodeUpgrade_Pistols;
+procedure NodeUpgrade_Rifles;
+procedure NodeUpgrade_BigGunsA;
+procedure NodeUpgrade_Melee;
+procedure NodeUpgrade_Revolver;
+procedure NodeUpgrade_DesertEagle;
+procedure NodeUpgrade_HRifle;
+procedure NodeUpgrade_ARifle;
+procedure NodeUpgrade_FNFAL;
+procedure NodeUpgrade_Flamer;
+procedure NodeUpgrade_CattleProd;
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
@@ -68,6 +84,17 @@ import variable Jake_Desk_Ptr;
 #endif
 
 #define caps_amount              floor((2000 + random(0, 1000)) * caps_modifier)
+
+#define upgrade_cost(base)          ((base * (25000/(160 + has_skill(dude_obj, SKILL_BARTER))))/100)
+#define MCOST                       upgrade_cost(450)
+#define DECOST                      upgrade_cost(1250)
+#define HRCOST                      upgrade_cost(1500)
+#define ARCOST                      upgrade_cost(1500)
+#define FNCOST                      upgrade_cost(5000)
+#define CPCOST                      upgrade_cost(1250)
+
+#define give_money(x)               dude_caps_adjust(-x);  \
+                                    self_caps_adjust(x)
 
 procedure start begin
    if Only_Once then begin
@@ -250,6 +277,9 @@ procedure Jake09 begin
    else
       NOption(103, Jake02, 4);
 
+   if fo1in2_weapon_upgrades_enabled then
+      NOption(1999, NodeUpgrade, 4);
+
    NOption(147, Jake13, 4);
 end
 
@@ -270,6 +300,9 @@ procedure Jake10 begin
       NOption(165, Jake16, 4);
    else
       NOption(103, Jake02, 4);
+
+   if fo1in2_weapon_upgrades_enabled then
+      NOption(1999, NodeUpgrade, 4);
 
    NOption(152, Jake15, 4);
    NOption(153, Jake13, 4);
@@ -326,3 +359,143 @@ end
 procedure Put_Stuff begin
    put_barter_inven(Jake_Desk_Ptr);
 end
+
+// Upgrade weapons
+procedure NodeUpgrade begin
+variable has_pistol := false;
+variable has_rifle := false;
+variable has_other := false;
+
+   if ((dude_item_count(PID_DESERT_EAGLE)) or (dude_item_count(PID_44_MAGNUM_REVOLVER))) then begin
+      has_pistol := true;
+   end
+   if ((dude_item_count(PID_HUNTING_RIFLE)) or (dude_item_count(PID_ASSAULT_RIFLE))) then begin
+      has_rifle := true;
+   end
+   if (dude_item_count(PID_CATTLE_PROD)) then begin
+      has_other := true;
+   end
+
+   if ((has_pistol) or (has_rifle) or (has_other)) then begin
+      Reply(2000);
+      if (has_pistol) then
+         NOption(2010, NodeUpgrade_Pistols, 4);
+      if (has_rifle) then
+         NOption(2020, NodeUpgrade_Rifles, 4);
+      if (has_other) then
+         NOption(2030, NodeUpgrade_Melee, 4);
+   end
+   else begin
+      Reply(2001);
+   end
+   NOption(2040, Barter, 4);
+   NOption(2050, JakeEnd, 4);
+end
+
+procedure NodeUpgrade_Done begin
+   NMessage(2600);
+
+   gfade_out(1);
+   game_time_advance(ONE_GAME_HOUR * 2);
+   gfade_in(1);
+
+   Reply(2601);
+   NOption(2110, NodeUpgrade, 4);
+   NOption(g_bye, JakeEnd, 4);
+end
+
+procedure NodeUpgrade_Pistols begin
+variable temp_msg := "";
+variable afford := false;
+   if (dude_item_count(PID_44_MAGNUM_REVOLVER)) then begin
+      temp_msg += mstr(2200) + MCOST + mstr(2202) + " ";
+   end
+   if (dude_item_count(PID_DESERT_EAGLE)) then begin
+      temp_msg += mstr(2201) + DECOST + mstr(2202);
+   end
+
+   Reply(temp_msg);
+   if ((dude_item_count(PID_44_MAGNUM_REVOLVER)) and (dude_caps >= MCOST)) then begin
+      NOption(2210, NodeUpgrade_Revolver, 004);
+      afford := true;
+   end
+   if ((dude_item_count(PID_DESERT_EAGLE)) and (dude_caps >= DECOST)) then begin
+      NOption(2220, NodeUpgrade_DesertEagle, 004);
+      afford := true;
+   end
+   if (afford == false) then begin
+      NOption(2140, JakeEnd, 004);
+   end
+   NOption(2110, NodeUpgrade, 4);
+   NOption(2040, Barter, 4);
+   NOption(2130, JakeEnd, 4);
+end
+
+procedure NodeUpgrade_Rifles begin
+variable temp_msg;
+variable afford := false;
+   temp_msg := "";
+   if (dude_item_count(PID_HUNTING_RIFLE)) then begin
+      temp_msg += mstr(2300) + HRCOST + mstr(2202) + " ";
+   end
+   if (dude_item_count(PID_ASSAULT_RIFLE)) then begin
+      temp_msg += mstr(2301) + ARCOST + mstr(2202) + " ";
+   end
+
+   Reply(temp_msg);
+   if ((dude_item_count(PID_HUNTING_RIFLE)) and (dude_caps >= HRCOST)) then begin
+      NOption(2310, NodeUpgrade_HRifle, 004);
+      afford := true;
+   end
+   if ((dude_item_count(PID_ASSAULT_RIFLE)) and (dude_caps >= ARCOST)) then begin
+      NOption(2320, NodeUpgrade_ARifle, 004);
+      afford := true;
+   end
+   if (afford == false) then begin
+      NOption(2140, JakeEnd, 004);
+   end
+   NOption(2110, NodeUpgrade, 4);
+   NOption(2040, Barter, 4);
+   NOption(2130, JakeEnd, 4);
+end
+
+procedure NodeUpgrade_Melee begin
+   Reply(mstr(2400) + CPCOST + mstr(2202));
+   if (dude_caps >= CPCOST) then begin
+      NOption(2410, NodeUpgrade_CattleProd, 004);
+   end else begin
+      NOption(2140, JakeEnd, 004);
+   end
+   NOption(2110, NodeUpgrade, 4);
+   NOption(2040, Barter, 4);
+   NOption(2130, JakeEnd, 4);
+end
+
+procedure NodeUpgrade_Revolver begin
+   give_money(MCOST);
+   call upgrade_weapon(PID_44_MAGNUM_REVOLVER, PID_44_MAGNUM_SPEEDLOADER);
+   call NodeUpgrade_Done;
+end
+procedure NodeUpgrade_DesertEagle begin
+   give_money(DECOST);
+   call upgrade_weapon(PID_DESERT_EAGLE, PID_DESERT_EAGLE_EXT_MAG);
+   call NodeUpgrade_Done;
+end
+
+procedure NodeUpgrade_HRifle begin
+   give_money(HRCOST);
+   call upgrade_weapon(PID_HUNTING_RIFLE, PID_SCOPED_HUNTING_RIFLE);
+   call NodeUpgrade_Done;
+end
+procedure NodeUpgrade_ARifle begin
+   give_money(ARCOST);
+   call upgrade_weapon(PID_ASSAULT_RIFLE, PID_ASSAULT_RIFLE_EXT_MAG);
+   call NodeUpgrade_Done;
+end
+
+procedure NodeUpgrade_CattleProd begin
+   give_money(CPCOST);
+   call upgrade_weapon(PID_CATTLE_PROD, PID_SUPER_CATTLE_PROD);
+   call NodeUpgrade_Done;
+end
+
