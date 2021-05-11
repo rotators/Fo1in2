@@ -34,9 +34,11 @@ variable $addr;
 #define VOODOO_survivalist_bonus \
                write_byte(0x496FAB, 0)
 
-// This will play the maybe.acm instead of Fo2's akiss.acm file when the credits are rolling.
-#define VOODOO_play_maybe \
-               write_string(0x501A40, "maybe")
+// This will change the credits and wordlmap music tracks, so that
+// the HQ music pack will not overwrite the Fo1 music with Fo2 tracks.
+#define VOODOO_fo1_music \
+               write_string(0x501A40, "maybe");    \
+               write_string(0x50F790, "03WORLD")
 
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //
