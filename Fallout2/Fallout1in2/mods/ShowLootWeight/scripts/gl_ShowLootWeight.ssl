@@ -16,8 +16,8 @@ procedure start;
 procedure GameModeChange_handler;
 procedure create_windows;
 procedure delete_windows;
-procedure print_text(variable obj);
-procedure RefreshText;
+procedure PrintText;
+procedure GetText(variable obj);
 
 #define weight(obj)                          who_carry_amount(obj)
 #define maxWeight(obj)                       who_max_carry(obj)
@@ -32,16 +32,14 @@ procedure start begin
       set_global_script_type(1);
       register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
    end
-   call RefreshText;
+   call PrintText;
 end
 
 procedure GameModeChange_handler begin
-   if ((get_sfall_global_int("show_wgt") == 0) and get_game_mode bwand (INTFACELOOT)) then begin
+   if ((get_sfall_global_int("show_wgt") == 0) and get_game_mode bwand (INTFACELOOT)) then
       call create_windows;
-   end
-   if (get_game_mode bwand (INTFACELOOT) == false) and get_sfall_global_int("show_wgt") then begin
+   else if get_sfall_global_int("show_wgt") and (get_game_mode bwand (INTFACELOOT) == false) then
       call delete_windows;
-   end
 end
 
 procedure create_windows begin
@@ -53,7 +51,7 @@ procedure create_windows begin
 
    create_win_flag("win_loot_left", (Scr_Width - 95), (Scr_Height + 88), 80, 15, WIN_FLAG_MOVEONTOP + WIN_FLAG_TRANSPARENT);
    create_win_flag("win_loot_right", (Scr_Width + 22), (Scr_Height + 88), 80, 15, WIN_FLAG_MOVEONTOP + WIN_FLAG_TRANSPARENT);
-   call RefreshText;
+   call PrintText;
 end
 
 procedure delete_windows begin
@@ -63,7 +61,17 @@ procedure delete_windows begin
    DeleteWin("win_loot_right");
 end
 
-procedure print_text(variable obj) begin
+procedure PrintText begin
+   if get_sfall_global_int("show_wgt") then begin
+      SelectWin("win_loot_left");
+      call GetText(dude_obj);
+
+      SelectWin("win_loot_right");
+      call GetText(loot_obj);
+   end
+end
+
+procedure GetText(variable obj) begin
    // Container don't have weight, they use size.
    if (obj_item_subtype(obj) == item_type_container) then begin
       cur_obj_weight := get_current_inven_size(obj);
@@ -75,7 +83,7 @@ procedure print_text(variable obj) begin
    end
 
    SetFont(101);
-   if (max_obj_weight and cur_obj_weight > max_obj_weight) then
+   if (cur_obj_weight > max_obj_weight) then
       SetTextColor(1.0, 0.1, 0.0);
    else
       SetTextColor(0.0, 1.0, 0.0);
@@ -84,15 +92,3 @@ procedure print_text(variable obj) begin
    Format((cur_obj_weight + "/" + max_obj_weight), 0, 0, 80, 15, justifycenter);
    ShowWin;
 end
-
-procedure RefreshText begin
-   if get_sfall_global_int("show_wgt") then begin
-      SelectWin("win_loot_left");
-      call print_text(dude_obj);
-
-      SelectWin("win_loot_right");
-      call print_text(loot_obj);
-   end
-end
-
-
