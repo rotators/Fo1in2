@@ -25,7 +25,7 @@ end
 // Gets the string value from the specified ini
 procedure GetIniConfigStr(variable section, variable key, variable def, variable inifile) begin
    variable val := get_ini_string(inifile + "|" + section + "|" + key);
-   if val == -1 or val == "" then val := def;
+   if val == -1 orElse val == "" then val := def;
    return val;
 end
 
@@ -39,14 +39,14 @@ end
 // Gets the string value from sfall-mods.ini
 procedure GetConfigStr(variable section, variable key, variable def) begin
    variable val := get_ini_string(ini + "|" + section + "|" + key);
-   if val == -1 or val == "" then val := def;
+   if val == -1 orElse val == "" then val := def;
    return val;
 end
 
 // Gets the value from sfall-mods.ini as a temp array of strings
 procedure GetConfigList(variable section, variable key) begin
    variable val := get_ini_string(ini + "|" + section + "|" + key);
-   if val == -1 or val == "" then return [];
+   if val == -1 orElse val == "" then return [];
 
    return string_split(val, ",");
 end
@@ -65,7 +65,7 @@ end
 // Translates given string using Translations.ini
 procedure Translate(variable id, variable def) begin
    variable str := get_ini_string(translationIni + "|Sfall|" + id);
-   if not str or (strlen(str) == 0) then begin
+   if (str == 0 orElse (strlen(str) == 0)) then begin
       str := def;
    end
    return str;

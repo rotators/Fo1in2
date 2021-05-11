@@ -3,6 +3,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
+- **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
 - **Fixed**: 49/50hp mutants on Mariposa level 1.
@@ -23,6 +24,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Mines in the thief circle map didn't want to explode.
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
+- **Fixed**: Restored floating text of Glowing Ghouls in the Necropolis Vault (when talking to them after taking the water chip and not repairing the water pump. Not sure why Fixt removed this).
 - **Fixed**: Shady Sands becomes hostile to the player, even if he kills Tandi outside of town.
 - **Fixed**: Sid (Hub / Beth's guard) would float a text message so fast, it was impossible to read.
 - **Fixed**: Some locations would not be marked as visible when asking about them in dialog.
