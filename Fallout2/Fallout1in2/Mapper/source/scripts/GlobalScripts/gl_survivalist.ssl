@@ -12,16 +12,33 @@
 
 /* Standard Script Procedures */
 procedure start;
+
+procedure GameModeChange_handler;
 procedure survivalist_perk;
+
+variable prev_mode := 0;
 
 procedure start begin
    if (game_loaded) then begin
-      set_global_script_repeat(30);
       set_global_script_type(1);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
    end
 
-   if (get_game_mode == CHARSCREEN) then
+   if (get_game_mode == CHARSCREEN) then begin
+      prev_mode := CHARSCREEN;
       call survivalist_perk;
+   end
+   else if (prev_mode == CHARSCREEN) then begin
+      prev_mode := 0;
+      set_global_script_repeat(0);
+      set_sfall_global("survperk", dude_perk(PERK_survivalist));
+   end
+end
+
+procedure GameModeChange_handler begin
+   if (get_game_mode == CHARSCREEN) then begin
+      set_global_script_repeat(1);
+   end
 end
 
 procedure survivalist_perk begin

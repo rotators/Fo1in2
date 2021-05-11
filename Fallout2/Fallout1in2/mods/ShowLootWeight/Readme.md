@@ -3,7 +3,7 @@
 Show Loot Weight
 ------------------
 
-This mod will enable the display of current / max carry weight numbers when looting objects.
+This mod adds a current / max carry weight indicator to the looting and stealing interface.
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\ShowLootWeight" at the end of the "PatchFile"-list!
