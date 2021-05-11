@@ -34,6 +34,10 @@ variable $addr;
 #define VOODOO_survivalist_bonus \
                write_byte(0x496FAB, 0)
 
+// This will play the maybe.acm instead of Fo2's akiss.acm file when the credits are rolling.
+#define VOODOO_play_maybe \
+               write_string(0x501A40, "maybe")
+
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
