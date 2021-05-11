@@ -14,11 +14,10 @@
 procedure start;
 
 procedure GameModeChange_handler;
-procedure RemoveInvenObj_handler;
 procedure create_windows;
-procedure RefreshText;
+procedure delete_windows;
 procedure print_text(variable obj);
-procedure delete_win;
+procedure RefreshText;
 
 #define weight(obj)                          who_carry_amount(obj)
 #define maxWeight(obj)                       who_max_carry(obj)
@@ -35,28 +34,17 @@ variable max_obj_weight;
 procedure start begin
    if (game_loaded) then begin
       set_global_script_type(1);
-
       register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
    end
-
    call RefreshText;
 end
 
 procedure GameModeChange_handler begin
-   if ((get_sfall_global_int("show_wgt") == 0) and get_game_mode bwand (INTFACELOOT + COUNTERWIN)) then begin
+   if ((get_sfall_global_int("show_wgt") == 0) and get_game_mode bwand (INTFACELOOT)) then begin
       call create_windows;
    end
    if (get_game_mode bwand (INTFACELOOT) == false) and get_sfall_global_int("show_wgt") then begin
-      call delete_win;
-   end
-end
-
-procedure RemoveInvenObj_handler begin
-   if (get_game_mode bwand (INTFACELOOT)) then begin
-      if get_sfall_global_int("show_wgt") then begin
-         call delete_win;
-      end
-      call create_windows;
+      call delete_windows;
    end
 end
 
@@ -70,6 +58,13 @@ procedure create_windows begin
    create_win_flag("win_loot_left", (Scr_Width - 95), (Scr_Height + 88), 80, 15, WIN_FLAG_MOVEONTOP + WIN_FLAG_TRANSPARENT);
    create_win_flag("win_loot_right", (Scr_Width + 22), (Scr_Height + 88), 80, 15, WIN_FLAG_MOVEONTOP + WIN_FLAG_TRANSPARENT);
    call RefreshText;
+end
+
+procedure delete_windows begin
+   set_sfall_global("show_wgt", 0);
+   set_global_script_repeat(0);
+   DeleteWin("win_loot_left");
+   DeleteWin("win_loot_right");
 end
 
 procedure print_text(variable obj) begin
@@ -104,10 +99,4 @@ procedure RefreshText begin
    end
 end
 
-procedure delete_win begin
-   set_sfall_global("show_wgt", 0);
-   set_global_script_repeat(0);
-   DeleteWin("win_loot_left");
-   DeleteWin("win_loot_right");
-end
 
