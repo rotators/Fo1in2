@@ -31,7 +31,23 @@ jobs:
  English:
   if:      github.ref == 'refs/heads/fo1_french' || github.ref == 'refs/heads/fo1_german'
   runs-on: windows-latest
+  env:
+   MODS_LIST:      fo1_german ShowLootWeight
+  outputs:
+   fo1_german:     ${{ steps.config.outputs.fo1_german }}
+   ShowLootWeight: ${{ steps.config.outputs.ShowLootWeight }}
+
   steps:
+
+  - name: Config
+    id:   config
+    run: |
+         :
+         for dir in ${{ env.MODS_LIST }}; do
+             if [[ -d "Fallout2/Fallout1in2/mods/$dir" ]]; then
+                echo ""::set-output name=$dir::true"
+             fi
+         done
 
   - name: Clone
     uses: actions/checkout@v2
@@ -43,9 +59,17 @@ jobs:
      workdir: Fallout2/Fallout1in2/mods/
 
   - name: Robodog
+    if:   steps.config.outputs.fo1_robodog == 'true'
     uses: wipe2238/ScanMsg@master
     with:
      path:    fo1_robodog/text/english/
+     workdir: Fallout2/Fallout1in2/mods/
+
+  - name: ShowLootWeight
+    if:   steps.config.outputs.ShowLootWeight == 'true'
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:    ShowLootWeight/text/english/
      workdir: Fallout2/Fallout1in2/mods/
 
  French:
@@ -66,10 +90,19 @@ jobs:
      workdir:      Fallout2/Fallout1in2/mods/
 
   - name: Robodog
+    if:   needs.English.outputs.fo1_robodog == 'true'
     uses: wipe2238/ScanMsg@master
     with:
      path:         fo1_robodog/text/english/
      translations: fo1_robodog/text/french//
+     workdir:      Fallout2/Fallout1in2/mods/
+
+  - name: ShowLootWeight
+    if:   needs.English.outputs.ShowLootWeight == 'true'
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         ShowLootWeight/text/english/
+     translations: ShowLootWeight/text/french//
      workdir:      Fallout2/Fallout1in2/mods/
 
  German:
@@ -90,8 +123,17 @@ jobs:
      workdir:      Fallout2/Fallout1in2/mods/
 
   - name: Robodog
+    if:   needs.English.outputs.fo1_robodog == 'true'
     uses: wipe2238/ScanMsg@master
     with:
      path:         fo1_robodog/text/english/
      translations: fo1_robodog/text/german/
+     workdir:      Fallout2/Fallout1in2/mods/
+
+  - name: ShowLootWeight
+    if:   needs.English.outputs.ShowLootWeight == 'true'
+    uses: wipe2238/ScanMsg@master
+    with:
+     path:         ShowLootWeight/text/english/
+     translations: ShowLootWeight/text/german/
      workdir:      Fallout2/Fallout1in2/mods/
