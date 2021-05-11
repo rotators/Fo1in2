@@ -75,15 +75,18 @@ procedure map_enter_p_proc begin
       kill_critter_type(PID_HARRY, 0);
    end
    if (global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) then begin
-      if global_var(GVAR_NECRO_30_DAYS_GVAR225) or fixt_disabled then begin
-         if (((GAME_TIME_IN_DAYS) - global_var(GVAR_NECRO_MUTANTS_TIME_LEFT)) > 1) then begin
-            kill_critter_type(PID_PEASANT_ROBE, 0);
-         end
+      // The GVAR-condition is a bit stupid, because it's never set to anything else but 0?
+      // I guess it is supposed to remove the CoC robed guys 1 day after Harry and Friends are gone.
+      //if (((GAME_TIME_IN_DAYS) - global_var(GVAR_NECRO_MUTANTS_TIME_LEFT)) > 1) then begin
+      if (days_since_visited > 1) then begin
+         kill_critter_type(PID_PEASANT_ROBE, 0);
       end
    end
 
+   if not(is_loading_game) then begin
+      call set_critter_state;
+   end
    call Invasion;
-   call set_critter_state;
    call map_lightning;
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
