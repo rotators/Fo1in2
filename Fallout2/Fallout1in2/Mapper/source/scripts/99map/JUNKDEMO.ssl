@@ -52,6 +52,8 @@ procedure map_enter_p_proc begin
    Lighting;
 
    if map_first_run then begin
+      party_member_hide_all
+
       // Reset GVARs
       set_global_var(GVAR_QUEST_DEMO_GANG_WAR, 0);
       set_global_var(GVAR_DEMODOG_HIRELING_STATUS, 0);
@@ -64,13 +66,10 @@ procedure map_enter_p_proc begin
       // Save slots
       set_map_var(MVAR_Slot1, critter_inven_obj2(dude_obj, INVEN_TYPE_LEFT_HAND));
       set_map_var(MVAR_Slot2, critter_inven_obj2(dude_obj, INVEN_TYPE_RIGHT_HAND));
-      set_map_var(MVAR_SlotArmor, dude_armor);
       if (map_var(MVAR_Slot1) > 0) then
           set_map_var(MVAR_Slot1_flags, get_flags(map_var(MVAR_Slot1)));
       if (map_var(MVAR_Slot2) > 0) then
           set_map_var(MVAR_Slot2_flags, get_flags(map_var(MVAR_Slot2)));
-      if (map_var(MVAR_SlotArmor) > 0) then
-          set_map_var(MVAR_SlotArmor_flags, get_flags(map_var(MVAR_SlotArmor)));
 
       // Need to remember the PID, in case the pointer is forgotten
       set_map_var(MVAR_Slot1, obj_pid(critter_inven_obj2(dude_obj, INVEN_TYPE_LEFT_HAND)));
@@ -120,6 +119,8 @@ procedure map_exit_p_proc begin
 variable hp_diff := dude_cur_hp - map_var(MVAR_CurHP);
    set_global_var(GVAR_DEMO_EXIT, 1);
 
+   party_member_unhide_all
+
    if (hp_diff > 0) then begin
       critter_heal(dude_obj, (map_var(MVAR_CurHP) - dude_cur_hp));
    end
@@ -137,7 +138,7 @@ variable hp_diff := dude_cur_hp - map_var(MVAR_CurHP);
    if (map_var(MVAR_Slot2) > 0) then
        set_flags(map_var(MVAR_Slot2), map_var(MVAR_Slot2_flags));
    if (map_var(MVAR_SlotArmor) > 0) then begin
-       set_flags(map_var(MVAR_SlotArmor), map_var(MVAR_SlotArmor_flags));
+      wield_obj_critter(dude_obj, map_var(MVAR_SlotArmor));
    end
    refresh_pc_art;
    intface_redraw;

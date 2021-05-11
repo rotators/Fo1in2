@@ -3,7 +3,8 @@
 Show Loot Weight
 ------------------
 
-This mod adds a current / max carry weight indicator to the looting and stealing interface.
+This mod adds a lightweight current/max carry weight indicator to the looting and stealing interface.
+Should not be used in combination with the Inventory Filter mod. While the mods shouldn't conflict, it would be redundant. 
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\ShowLootWeight" at the end of the "PatchFile"-list!
