@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in2/releases/tag/v1.5.2288))
 
+- **Added**: A new mini-mod that enables current / maximum carry weight in the loot screen, similar to what Crafty's Sfall for Fo1 does.
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
