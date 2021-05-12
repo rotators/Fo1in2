@@ -150,5 +150,7 @@
 #define FID_HFCMBL        (16777343) // Female, Dark ("Black") Combat Armor
 #define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
 #define FID_MARDOG        (16777345) // Red colored dog
+#define FID_HFPRIM        (16777346) // Hero Female Primitive
+#define FID_HMWARR        (16777347) // Hero Male Primitive Warrior
 
 #endif // ARTFID_H

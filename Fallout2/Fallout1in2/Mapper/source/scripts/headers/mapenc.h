@@ -642,7 +642,7 @@ procedure dehydration_b begin
       call drink_water;
    end
    else begin
-      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
       if (is_success(Skill_roll)) then begin
          display_msg(message_str(SCRIPT_RNDDESRT, 110) + TimeHours + message_str(SCRIPT_RNDDESRT, 111));
       end

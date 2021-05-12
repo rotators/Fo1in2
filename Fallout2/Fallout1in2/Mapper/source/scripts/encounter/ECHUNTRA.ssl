@@ -54,6 +54,9 @@ procedure NodeGeckoSkinning;
 #define Add_Skinner                       critter_add_trait(dude_obj, TRAIT_PERK, PERK_gecko_skinning_perk, 1); \
                                           give_xp_msg(EXP_GECKO_SKINNING, mstr(150))
 
+#define outdoorsman_bonus                 critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, bonus); \
+                                          display_msg(gen_mstr(116) + bonus + gen_mstr(134))
+
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
    pointers and variables that need not be saved. If a variable
@@ -68,6 +71,7 @@ import variable hunter_b_ptr;
 variable Only_Once := 0;
 variable Float := 0;
 variable last_question;
+variable bonus;
 
 /*******************************************************************
 *******                         PROCEDURES                   *******
@@ -221,6 +225,9 @@ end
 procedure Node1500 begin
    Reply(1500);
 
+   if not(ghunters_pc_knows_names) then
+      NOption(1010, Node1100, 4);
+
    if (dude_perk(PERK_gecko_skinning_perk) == 0) then begin
       if (local_var(LVAR_Learn_Skinning) == 0) and ghunters_know_pc_name then
          NOption(1511, Node1700, 4);
@@ -242,7 +249,8 @@ procedure Node1700 begin
 end
 
 procedure Node1800 begin
-   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 10));
+   bonus := random(1, 10);
+   outdoorsman_bonus;
    Add_Skinner;
 
    Reply(1800);
@@ -250,8 +258,10 @@ procedure Node1800 begin
 end
 
 procedure Node1900 begin
-   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 2));
+   bonus := random(1, 2);
+   outdoorsman_bonus;
    set_local_var(LVAR_Learn_Skinning, 2);
+
    NMessage(1900);
    Reply(1901);
    NOption(1910, Node1400, 4);
