@@ -1,4 +1,4 @@
-<p align="center"><img src="fo1_newPremades.png" alt="Fallout 1 New Premades"/></p>
+<p align="center"><img src="fo1_new_premades.png" alt="Fallout 1 New Premades"/></p>
 
 Fallout 1 New Premade Characters
 ------------------
