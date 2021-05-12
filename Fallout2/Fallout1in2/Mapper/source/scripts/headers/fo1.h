@@ -570,9 +570,12 @@ variable merch_slot_armor_flags;
                                         set_flags(merch_slot_armor, merch_slot_armor_flags);            \
                                     destroy_object(tmp_merch_box)
 
+
 // Used to reduce the amount of caps a merchant spawns
 #define caps_modifier               (0.5)
 
+
+// Fo1 caps restocking on merchants
 #define fo1_caps_restock \
    if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin \
       set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);   \
@@ -581,7 +584,8 @@ variable merch_slot_armor_flags;
    self_caps_adjust(local_var(LVAR_Caps_Amount))
 
 
-// Use objects
+// Use objects - kinda deprecated?
+// Using objects on something will now play magic hands automatically with latest Sfall.
 #define dude_anim_magic_hands \
    if (source_obj == dude_obj) then begin                      \
       reg_anim_clear(dude_obj);                                \
@@ -596,8 +600,28 @@ variable merch_slot_armor_flags;
 #define source_is_dude           (source_obj == dude_obj)
 #define source_in_party          (source_obj == party_member_obj(obj_pid(source_obj)))
 
+
 // Calculate the bounty on players head
 #define childkiller_bounty       (global_var(GVAR_CHILDKILLER_REPUTATION) * 500)
+
+
+// Check and start the toe-mutation on the player
+#define set_toe_mutate_stage  \
+  if (global_var(GVAR_MUTATE_STAGE) < 1) then begin            \
+     mutate := global_var(GVAR_MUTATE);                        \
+     mutate := mutate+2;                                       \
+     set_global_var(GVAR_MUTATE, mutate);                      \
+     if (mutate > 29) then begin                               \
+        set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS);   \
+        set_global_var(GVAR_MUTATE_STAGE, 1);                  \
+        display_msg(message_str(SCRIPT_KTGOO, 150));           \
+     end                                                       \
+     else if (mutate > 14) then                                \
+        display_msg(message_str(SCRIPT_KTGOO, 140));           \
+     else                                                      \
+        display_msg(message_str(SCRIPT_KTGOO, 110));           \
+  end                                                          \
+  noop
 
 /*********************************************************
                         THE END

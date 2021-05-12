@@ -29,7 +29,7 @@ procedure spatial_p_proc begin
       // do nothing
       debug_msg("I float!");
    end
-   else begin
+   else if (not(is_success(do_check(source_obj, STAT_ag, 0)))) then begin
       //dont need to be carrying boots in hand
       if (get_item(source_obj, PID_RUBBER_BOOTS)) then begin
         //if carrying boots ..do boot damage
@@ -40,7 +40,7 @@ procedure spatial_p_proc begin
            rm_obj_from_inven(source_obj, my_boots);
            destroy_object(my_boots);
            if source_is_dude then
-              display_msg(mstr(130));
+              display_msg(message_str(SCRIPT_KTGOO, 130));
         end
       end
       else begin
@@ -52,31 +52,13 @@ end
 procedure pain begin
    if not(critter_wearing_power_armor(source_obj)) then begin
       if source_is_dude then begin
-         radiation_inc(dude_obj, 100);
+         radiation_inc(dude_obj, random(50, 100));
          Damage := random(5, 30) + (difficulty_level * 10);
          CurrentHP := dude_cur_hp;
-         if Damage >= CurrentHP then begin
-            critter_dmg(dude_obj, Damage, DMG_plasma);// doesn't NO_ANIMATE, so that you can melt properly
-         end
-         else begin
-            critter_dmg(dude_obj, Damage, 3 bwor 512);// NO_ANIMATE
-         end
+         critter_dmg(dude_obj, Damage, DMG_plasma);// doesn't NO_ANIMATE, so that you can melt properly
 
          // Let the toe mutate! - Fo2 code
-         if (global_var(GVAR_MUTATE_STAGE) < 1) then begin
-           mutate := global_var(GVAR_MUTATE);
-           mutate := mutate+2;
-           set_global_var(GVAR_MUTATE, mutate);
-           if (mutate > 29) then begin
-              set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS);
-              set_global_var(GVAR_MUTATE_STAGE, 1);
-              display_msg(mstr(150));
-           end
-           else if (mutate > 14) then
-              display_msg(mstr(140));
-           else
-              display_msg(mstr(110));
-         end
+         set_toe_mutate_stage;
       end
       else if source_in_party then begin
          critter_dmg(source_obj, random(10, 20), DMG_plasma);
