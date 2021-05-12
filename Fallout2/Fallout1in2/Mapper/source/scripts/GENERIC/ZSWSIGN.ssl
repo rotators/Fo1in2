@@ -1,21 +1,8 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+
+   Wanted poster - original Fo2 script, used in various locations.
+
 */
-
-/******************************************************************************************
-        Item:
-        Description:
-
-        Log:
-           Please note any changes that have been made to the file in Updated. Then comment
-           the code which you have changed/altered/commented out. Please, do not delete any
-           code which was written.
-
-           Created: September 26, 1997
-
-           Updated:
-******************************************************************************************/
-
 
 /* Include Files */
 #include "define.h"
@@ -31,124 +18,56 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure use_p_proc;
 procedure look_at_p_proc;
 procedure description_p_proc;
-procedure use_skill_on_p_proc;
-procedure use_obj_on_p_proc;
 procedure damage_p_proc;
 procedure map_enter_p_proc;
-procedure map_update_p_proc;
-
-/*****************************************************************
-   Local Variables which are saved. All Local Variables need to be
-   prepended by LVAR_
-*****************************************************************/
-
-/*******************************************************************
-   Imported variables from the Map scripts. These should only be
-   pointers and variables that need not be saved. If a variable
-   Needs to be saved, make it a map variable (MVAR_)
-*******************************************************************/
-
-/*******************************************************************
-   Local variables which do not need to be saved between map changes.
-*******************************************************************/
-
-
-/*******************************************************************
-*******                         PROCEDURES                   *******
-*******************************************************************/
-
-
-/*******************************************************************
-   The start procedure is the first procedure called when the map is
-   first entered. Any initial information that needs to be set up
-   should be placed in here.
-*******************************************************************/
 
 procedure start begin
 end
-
-procedure timed_event_p_proc begin
-end
-
-/********************************************************************
-********************************************************************/
-
-procedure use_p_proc begin
-end
-
-/***************************************************************************
-   This is cursory glance description that the player will receive should
-   he just pass the Action Cursor over. Examines which give more information
-   need to be in the description_p_proc procedure.
-***************************************************************************/
 
 procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-
-/**********************************************************************************
-**********************************************************************************/
-
 procedure description_p_proc begin
+variable reward_alive := floor(childkiller_bounty / 2);
+variable reward_dead := childkiller_bounty;
+
+   if (reward_dead == 0) then begin
+      reward_alive := floor(1 + (childkiller_bounty / 2));
+      reward_dead := (1 + childkiller_bounty);
+   end
+
    script_overrides;
-   if (has_rep_childkiller and check_general_rep < -499) then begin
+   // Orig. Fo2:
+   /*if (has_rep_childkiller and check_general_rep < -499) then begin
       display_msg(mstr(101) + " " + dude_name + " " + mstr(102));
    end else if (has_rep_childkiller) then begin
       display_msg(mstr(101) + " " + dude_name + " " + mstr(103));
    end else if (check_general_rep < -499) then begin
       display_msg(mstr(101) + " " + dude_name + " " + mstr(104));
+   end*/
+
+   if (has_rep_childkiller and check_general_rep < -499) then begin
+      display_msg(mstr(101) + " " + dude_name + " " + mstr(110) + reward_dead + mstr(113) + reward_alive + mstr(114));
+   end else if (has_rep_childkiller) then begin
+      display_msg(mstr(101) + " " + dude_name + " " + mstr(111) + reward_dead + mstr(113) + reward_alive + mstr(114));
+   end else if (check_general_rep < -499) then begin
+      display_msg(mstr(101) + " " + dude_name + " " + mstr(112) + reward_dead + mstr(113) + reward_alive + mstr(114));
    end
 end
-
-
-/**********************************************************************************
-   Make sure the door is working.
-**********************************************************************************/
-
-procedure use_skill_on_p_proc begin
-end
-
-
-/**********************************************************************************
-   This is called when the player is using an object on the door. When the check is
-   made to find out what is being used, obj_pid(obj_being_used_with) will need to
-   be checked against a prototype.
-**********************************************************************************/
-
-procedure use_obj_on_p_proc begin
-end
-
-
-/******************************************************************************************
-   IF it gets damaged it breaks
-******************************************************************************************/
 
 procedure damage_p_proc begin
    destroy_object(self_obj);
 end
 
-/***************************************************************************************
-   Whenever the map is first entered, this procedure will be called.
-***************************************************************************************/
-
 procedure map_enter_p_proc begin
-   if (is_loading_game == false) then begin // Seraph's Code
+   if (is_loading_game == false) then begin
       if (has_rep_childkiller or check_general_rep < -499) then
          set_self_visible;
       else
          set_self_invisible;
-   end // Seraph's Code
-end
-
-
-/**************************************************************************************
-   This procedure gets called roughly every 30 seconds of real time.
-**************************************************************************************/
-
-procedure map_update_p_proc begin
+   end
 end

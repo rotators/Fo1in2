@@ -4,7 +4,8 @@ Show Loot Weight
 ------------------
 
 This mod adds a lightweight current/max carry weight indicator to the looting and stealing interface.
-Should not be used in combination with the Inventory Filter mod. While the mods shouldn't conflict, it would be redundant. 
+
+This mod is compatible with any Fo2 mod as long as it uses the latest Sfall release. However, it should not be used in combination with the Inventory Filter mod.
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\ShowLootWeight" at the end of the "PatchFile"-list!

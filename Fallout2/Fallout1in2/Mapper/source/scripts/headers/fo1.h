@@ -596,6 +596,9 @@ variable merch_slot_armor_flags;
 #define source_is_dude           (source_obj == dude_obj)
 #define source_in_party          (source_obj == party_member_obj(obj_pid(source_obj)))
 
+// Calculate the bounty on players head
+#define childkiller_bounty       (global_var(GVAR_CHILDKILLER_REPUTATION) * 500)
+
 /*********************************************************
                         THE END
 *********************************************************/

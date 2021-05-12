@@ -4062,8 +4062,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4922)
 #define RESERVED_FOR_FALLOUT_FIXT               (4923)
 #define RESERVED_FOR_FALLOUT_FIXT               (4924)
-#define RESERVED_FOR_FALLOUT_FIXT               (4925)
-#define RESERVED_FOR_FALLOUT_FIXT               (4926)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4925)*/
+#define GVAR_IS_FISHERMAN_DEAD                  (4926)
 #define GVAR_ENABLE_EXPANDED_ENDING             (4927)
 #define GVAR_CALEB_DEAD                         (4928)
 #define GVAR_GLOW_ZAX_STATE                     (4929)
