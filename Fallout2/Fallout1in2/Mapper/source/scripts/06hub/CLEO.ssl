@@ -1,12 +1,13 @@
 /*
 
-   Hub - Cleo
+   Hub - Cleo, member of the Thieves' Circle
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/hub.h"
+#include "maps/huboldtn.h"
 
 #define NAME                    SCRIPT_CLEO
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -15,7 +16,6 @@
 #include "modreact.h"
 
 /* Standard Script Procedures */
-
 procedure start;
 procedure combat;
 procedure critter_p_proc;
@@ -60,21 +60,18 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
@@ -85,24 +82,14 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if (map_var(1) == 1) then begin
+   if (map_var(MVAR_Leave_Thieves) == 1) then begin
       call Cleo01;
    end
+   else if (global_var(GVAR_STEAL_NECKLACE) != 2) then begin
+      start_dialog_at_node(Cleo02);
+   end
    else begin
-      if (global_var(GVAR_STEAL_NECKLACE) != 2) then begin
-         start_gdialog(560, self_obj, 4, -1, -1);
-         gsay_start;
-         call Cleo02;
-         gsay_end;
-         end_dialogue;
-      end
-      else begin
-         start_gdialog(560, self_obj, 4, -1, -1);
-         gsay_start;
-         call Cleo03;
-         gsay_end;
-         end_dialogue;
-      end
+      start_dialog_at_node(Cleo03);
    end
 end
 
@@ -110,14 +97,12 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Cleo00
-begin
+procedure Cleo00 begin
    if (dude_is_male) then begin
       float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
    end
@@ -127,15 +112,13 @@ begin
    call combat;
 end
 
-procedure Cleo01
-begin
+procedure Cleo01 begin
    float_msg(self_obj, mstr(103), FLOAT_MSG_RED);
 end
 
-procedure Cleo02
-begin
+procedure Cleo02 begin
    Reply(104);
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(106, Cleo05, 4);
    end
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
@@ -152,13 +135,12 @@ begin
    NLowOption(111, Cleo10);
 end
 
-procedure Cleo03
-begin
+procedure Cleo03 begin
    Reply(112);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(113, Cleo11, 4);
    end
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(114, Cleo05, 4);
    end
    NOption(115, Cleo12, 4);
@@ -172,10 +154,9 @@ begin
    NLowOption(120, Cleo10);
 end
 
-procedure Cleo04
-begin
+procedure Cleo04 begin
    Reply(121);
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(122, Cleo05, 4);
    end
    NOption(123, Cleo06, 4);
@@ -189,8 +170,7 @@ begin
    NLowOption(127, Cleo10);
 end
 
-procedure Cleo05
-begin
+procedure Cleo05 begin
    Reply(128);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(129, Cleo04, 4);
@@ -206,13 +186,12 @@ begin
    NLowOption(135, Cleo10);
 end
 
-procedure Cleo06
-begin
+procedure Cleo06 begin
    Reply(136);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(137, Cleo04, 4);
    end
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(138, Cleo05, 4);
    end
    if (global_var(GVAR_DECKER_KNOWN) == 1) then begin
@@ -225,13 +204,12 @@ begin
    NLowOption(142, Cleo10);
 end
 
-procedure Cleo07
-begin
+procedure Cleo07 begin
    Reply(143);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(144, Cleo04, 4);
    end
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(145, Cleo05, 4);
    end
    NOption(146, Cleo06, 4);
@@ -242,13 +220,12 @@ begin
    NLowOption(149, Cleo10);
 end
 
-procedure Cleo08
-begin
+procedure Cleo08 begin
    Reply(150);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(151, Cleo04, 4);
    end
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(152, Cleo05, 4);
    end
    NOption(153, Cleo06, 4);
@@ -259,20 +236,17 @@ begin
    NLowOption(156, Cleo10);
 end
 
-procedure Cleo09
-begin
+procedure Cleo09 begin
    NMessage(157);
 end
 
-procedure Cleo10
-begin
+procedure Cleo10 begin
    NMessage(158);
 end
 
-procedure Cleo11
-begin
+procedure Cleo11 begin
    Reply(159);
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(160, Cleo05, 4);
    end
    NOption(161, Cleo12, 4);
@@ -286,13 +260,12 @@ begin
    NLowOption(166, Cleo10);
 end
 
-procedure Cleo12
-begin
+procedure Cleo12 begin
    Reply(167);
    if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
       NOption(168, Cleo11, 4);
    end
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_Know_Jasmine) == 1) then begin
       NOption(169, Cleo05, 4);
    end
    if (global_var(GVAR_DECKER_KNOWN) == 1) then begin
@@ -305,13 +278,11 @@ begin
    NLowOption(174, Cleo10);
 end
 
-procedure Cleo13
-begin
+procedure Cleo13 begin
    NMessage(175);
 end
 
-procedure Cleo14
-begin
+procedure Cleo14 begin
    set_global_var(GVAR_DECKER_KNOWN, 1);
    Reply(176);
    NOption(177, Cleo15, 4);
@@ -320,18 +291,15 @@ begin
    NOption(180, Cleo18, 4);
 end
 
-procedure Cleo15
-begin
+procedure Cleo15 begin
    NMessage(181);
 end
 
-procedure Cleo16
-begin
+procedure Cleo16 begin
    NMessage(182);
 end
 
-procedure Cleo17
-begin
+procedure Cleo17 begin
    Reply(183);
    NOption(184, Cleo20, 4);
    NOption(185, Cleo20, 4);
@@ -339,31 +307,25 @@ begin
    NOption(187, Cleo22, 4);
 end
 
-procedure Cleo18
-begin
+procedure Cleo18 begin
    NMessage(188);
 end
 
-procedure Cleo19
-begin
+procedure Cleo19 begin
    NMessage(189);
 end
 
-procedure Cleo20
-begin
+procedure Cleo20 begin
    NMessage(190);
 end
 
-procedure Cleo21
-begin
+procedure Cleo21 begin
    NMessage(191);
 end
 
-procedure Cleo22
-begin
+procedure Cleo22 begin
    NMessage(192);
 end
 
-procedure CleoEnd
-begin
+procedure CleoEnd begin
 end

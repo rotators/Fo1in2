@@ -1,12 +1,13 @@
 /*
 
-   Hub - Loxley, the thief guild dude
+   Hub - Loxley, leader of the Thieves' Circle
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/hub.h"
+#include "maps/huboldtn.h"
 
 #define NAME                    SCRIPT_LOXLEY
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -17,6 +18,11 @@
 /* Standard Script Procedures */
 
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
 procedure talk_p_proc;
 
 procedure loxley00;
@@ -136,12 +142,13 @@ procedure loxley89;
 procedure loxley91;
 procedure combat;
 
+#define LVAR_Herebefore       (4)
+#define LVAR_TalkedBefore     (7)
+
 variable tmp_hostile;
 
-variable ILLEGBEFORE;
 variable ILLEGAL;
 variable TRESPASS;
-variable CRIME;
 variable floatReward;
 
 variable Only_Once;
@@ -165,6 +172,7 @@ procedure description_p_proc begin
 end
 
 procedure pickup_p_proc begin
+   ILLEGAL := 1;
    tmp_hostile := 1;
 end
 
@@ -185,126 +193,100 @@ procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    set_global_var(GVAR_LOXLEY_KNOWN, 1);
-   if (ILLEGAL) then begin
-      if (ILLEGBEFORE) then begin
-         start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-         gsay_start;
-         call loxley57;
-         gsay_end;
-         end_dialogue;
-      end
-      else begin
-         if (CRIME == TRESPASS) then begin
-            start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-            gsay_start;
-            call loxley59;
-            gsay_end;
-            end_dialogue;
-         end
-         if (CRIME > TRESPASS) then begin
-            start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-            gsay_start;
-            call loxley58;
-            gsay_end;
-            end_dialogue;
-         end
-      end
+
+   if (global_var(GVAR_STEAL_NECKLACE) > 1) then begin
+      display_msg(mstr(267));
    end
    else begin
-      if (local_var(4) == 1) then begin
-         if (global_var(GVAR_STEAL_NECKLACE) == 1) then begin
-            start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-            gsay_start;
-            call loxley27;
-            gsay_end;
-            end_dialogue;
+      start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
+      gsay_start;
+      if (ILLEGAL or map_var(MVAR_Leave_Thieves)) then begin
+         if (TRESPASS > 1) then begin
+            call loxley59;
          end
-         else if (global_var(GVAR_STEAL_NECKLACE) == 0) then begin
-            if (local_var(1) > 1) then begin
-               start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-               gsay_start;
-               call loxley01;
-               gsay_end;
-               end_dialogue;
-            end
-            else begin
-               start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-               gsay_start;
-               call loxley24;
-               gsay_end;
-               end_dialogue;
-            end
+         else if (TRESPASS) then begin
+            call loxley58;
          end
          else begin
-            display_msg(mstr(267));
+            call loxley57;
          end
+         TRESPASS := TRESPASS + 1;
       end
       else begin
-         set_local_var(4, 1);
-         if (local_var(1) > 1) then begin
-            start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-            gsay_start;
-            call loxley01;
-            gsay_end;
-            end_dialogue;
+         if (local_var(LVAR_Herebefore) == 1) and (global_var(GVAR_STEAL_NECKLACE) == 1) then begin
+            call loxley27;
          end
          else begin
-            start_gdialog(49, self_obj, 4, HEAD_LOXLEY, BACKGROUND_HUB);
-            gsay_start;
-            call loxley24;
-            gsay_end;
-            end_dialogue;
+            set_local_var(LVAR_Herebefore, 1);
+            if not(bad_critter_reaction) then begin
+               call loxley01;
+            end
+            else begin
+               call loxley24;
+            end
          end
       end
+      gsay_end;
+      end_dialogue;
    end
+
    if (floatReward == 1) then begin
       floatReward := 0;
       float_msg(self_obj, mstr(268), FLOAT_MSG_RED);
    end
 end
 
-procedure loxley00
-begin
+procedure loxley00 begin
    Reply(101);
    GOption(102, loxley00aa, 4);
    BOption(103, loxley00ab, 4);
 end
 
-procedure loxley00a
-begin
+procedure loxley00a begin
    Reply(104);
    NOption(mstr(105) + dude_name + mstr(106), loxley02, 4);
    BOption(107, loxley00a1, 4);
    NOption(108, loxley22, 4);
 end
 
-procedure loxley01
-begin
-   if (dude_is_male) then begin
-      Reply(109);
+procedure loxley01 begin
+   if (local_var(LVAR_TalkedBefore) == 1) then begin
+      call loxley23;
    end
    else begin
-      Reply(110);
+      if (local_var(LVAR_TalkedBefore) == 2) then begin
+         Reply(177);
+         GOption(119, loxley03, 4);
+         NOption(120, loxley02_1, 4);
+      end
+      else begin
+         set_local_var(LVAR_TalkedBefore, 1);
+         if (dude_is_male) then begin
+            Reply(109);
+         end
+         else begin
+            Reply(110);
+         end
+         NOption(mstr(111) + dude_name + mstr(112), loxley02, 4);
+      end
+      BOption(113, loxley01a, 4);
+      NOption(114, loxley22, 4);
+      GOption(115, loxley01b, 5);
+      BOption(116, loxley01c, 4);
+      NLowOption(117, loxley90);
    end
-   NOption(mstr(111) + dude_name + mstr(112), loxley02, 4);
-   BOption(113, loxley01a, 4);
-   NOption(114, loxley22, 4);
-   GOption(115, loxley01b, 5);
-   BOption(116, loxley01c, 4);
-   NLowOption(117, loxley90);
 end
 
-procedure loxley02
-begin
+procedure loxley02 begin
+   set_local_var(LVAR_TalkedBefore, 2);
    Reply(118);
    GOption(119, loxley03, 4);
    NOption(120, loxley02_1, 4);
    BOption(121, loxley18, 4);
 end
 
-procedure loxley02_1
-begin
-   if (local_var(1) > 1) then begin
+procedure loxley02_1 begin
+   if not(bad_critter_reaction) then begin
       call loxley08;
    end
    else begin
@@ -312,24 +294,21 @@ begin
    end
 end
 
-procedure loxley03
-begin
+procedure loxley03 begin
    Reply(122);
    NOption(123, loxley04, 4);
    BOption(124, loxley03a, 4);
    NOption(125, loxley17, 4);
 end
 
-procedure loxley04
-begin
+procedure loxley04 begin
    Reply(126);
    NOption(127, loxley05, 4);
    BOption(128, loxley04a, 4);
    NOption(129, loxley10, 4);
 end
 
-procedure loxley05
-begin
+procedure loxley05 begin
    Reply(130);
    NOption(131, loxley06, 4);
    NOption(132, loxley07, 4);
@@ -348,114 +327,104 @@ procedure loxley06 begin
    call loxley06b;
 end
 
-procedure loxley06b
-begin
+procedure loxley06b begin
    NMessage(135);
    call loxleyx;
 end
 
-procedure loxley07
-begin
+procedure loxley07 begin
    Reply(136);
    NOption(137, loxley02_1, 4);
    BOption(138, loxley07a, 4);
    NOption(139, loxley03, 4);
 end
 
-procedure loxley08
-begin
+procedure loxley08 begin
    NMessage(140);
    call loxley34;
 end
 
-procedure loxley09
-begin
+procedure loxley09 begin
+   ILLEGAL := 1;
    BigDownReact
    BMessage(141);
    call loxleyx1;
 end
 
-procedure loxley10
-begin
+procedure loxley10 begin
    Reply(142);
    BOption(143, loxley11, 4);
    GOption(144, loxley12, 4);
 end
 
-procedure loxley11
-begin
+procedure loxley11 begin
+   set_map_var(MVAR_Leave_Thieves, 1);
+   ILLEGAL := 1;
    BigDownReact
    BMessage(145);
    call loxleyx1;
 end
 
-procedure loxley12
-begin
+procedure loxley12 begin
    Reply(146);
    NOption(147, loxley12b, 4);
    BOption(148, loxley13, 4);
 end
 
-procedure loxley12b
-begin
+procedure loxley12b begin
    NMessage(149);
    call loxley06;
 end
 
-procedure loxley13
-begin
+procedure loxley13 begin
+   set_map_var(MVAR_Leave_Thieves, 1);
+   ILLEGAL := 1;
    BigDownReact
    NMessage(150);
    call loxleyx1;
 end
 
-procedure loxley14
-begin
+procedure loxley14 begin
    set_global_var(GVAR_DECKER_KNOWN, 1);
    Reply(151);
    NOption(152, loxley05, 4);
    BOption(153, loxley07, 4);
 end
 
-procedure loxley16
-begin
+procedure loxley16 begin
+   ILLEGAL := 1;
    BigDownReact
    NMessage(154);
    call loxleyx1;
 end
 
-procedure loxley17
-begin
+procedure loxley17 begin
    Reply(155);
    NOption(156, loxley06, 4);
    NOption(157, loxley05, 4);
    NOption(158, loxley02_1, 4);
 end
 
-procedure loxley18
-begin
+procedure loxley18 begin
    Reply(159);
    BOption(160, loxley18a, 4);
    NOption(161, loxley12, 4);
 end
 
-procedure loxley21
-begin
+procedure loxley21 begin
    Reply(162);
    NOption(mstr(163) + dude_name + mstr(164), loxley02, 4);
    BOption(165, loxley10, 4);
 end
 
-procedure loxley22
-begin
+procedure loxley22 begin
    Reply(166);
    NOption(167, loxley04, 4);
    NOption(168, loxley02_1, 4);
    BOption(169, loxley10, 4);
 end
 
-procedure loxley23
-begin
+procedure loxley23 begin
    Reply(170);
    NOption(mstr(171) + dude_name + mstr(172), loxley02, 4);
    BOption(173, loxley23a, 4);
@@ -477,8 +446,8 @@ procedure loxley25 begin
    BOption(183, loxley26, 4);
 end
 
-procedure loxley26
-begin
+procedure loxley26 begin
+   ILLEGAL := 1;
    BigDownReact
    NMessage(184);
    call loxleyx1;
@@ -489,6 +458,9 @@ procedure loxley27 begin
    BOption(186, loxley32, 4);
    NOption(187, loxley33, 4);
    NOption(188, loxley27a, 4);
+
+   if debug_mode then
+      NOption("***DEBUG: Yes, here it is!", loxley29, 4);
 end
 
 procedure loxley29 begin
@@ -506,33 +478,28 @@ procedure loxley29 begin
    call loxleyx3;
 end
 
-procedure loxley30
-begin
+procedure loxley30 begin
    NMessage(190);
 end
 
-procedure loxley31
-begin
+procedure loxley31 begin
    BMessage(191);
    call loxleyx1;
 end
 
-procedure loxley32
-begin
+procedure loxley32 begin
    NMessage(192);
    set_global_var(GVAR_STEAL_NECKLACE, 2);
    call loxleyx1;
 end
 
-procedure loxley33
-begin
+procedure loxley33 begin
    BMessage(193);
    call loxleyx4;
 end
 
-procedure loxley34
-begin
-   gsay_reply(0, 0);
+procedure loxley34 begin
+   Reply("");
    NOption(194, loxley34_1, 4);
    NOption(195, loxley43, 4);
    NOption(196, loxley51, 4);
@@ -543,10 +510,9 @@ begin
    giq_option(4, SCRIPT_PATRICK, 114, loxleyx1, NEUTRAL_REACTION);
 end
 
-procedure loxley34_1
-begin
+procedure loxley34_1 begin
    if (global_var(GVAR_MISSING_CARAVANS_STATUS) != 5) then begin
-      if (local_var(1) > 1) then begin
+      if not(bad_critter_reaction) then begin
          call loxley35;//gsay 199 -> 202 -> 205
       end
       else begin
@@ -558,9 +524,8 @@ begin
    end
 end
 
-procedure loxley34_2
-begin
-   if (local_var(1) > 1) then begin
+procedure loxley34_2 begin
+   if (local_var(LVAR_reaction_level) > 1) then begin
       call loxley53;
    end
    else begin
@@ -568,16 +533,14 @@ begin
    end
 end
 
-procedure loxley35
-begin
+procedure loxley35 begin
    Reply(199);
    NOption(200, loxley36, 4);
    NOption(201, loxley35_1, 4);
 end
 
-procedure loxley35_1
-begin
-   if (local_var(1) > 1) then begin
+procedure loxley35_1 begin
+   if not(bad_critter_reaction) then begin
       call loxley38;
    end
    else begin
@@ -585,21 +548,18 @@ begin
    end
 end
 
-procedure loxley36
-begin
+procedure loxley36 begin
    Reply(202);
    NOption(203, loxley37, 4);
    NOption(204, loxley35_1, 4);
 end
 
-procedure loxley37
-begin
+procedure loxley37 begin
    Reply(205);
    NOption(206, loxley35_1, 4);
 end
 
-procedure loxley38
-begin
+procedure loxley38 begin
    set_local_var(6, local_var(6) + 1);
    if (local_var(6) == 1) then begin
       NMessage(207);
@@ -613,86 +573,73 @@ begin
    call loxley34;
 end
 
-procedure loxley39
-begin
+procedure loxley39 begin
    NMessage(210);
    call loxleyend;
 end
 
-procedure loxley40
-begin
+procedure loxley40 begin
    Reply(211);
    NOption(212, loxley41, 4);
    NOption(213, loxley39, 4);
 end
 
-procedure loxley41
-begin
+procedure loxley41 begin
    Reply(214);
    NOption(215, loxley39, 4);
 end
 
-procedure loxley42
-begin
+procedure loxley42 begin
    set_global_var(GVAR_DECKER_KNOWN, 1);
    NMessage(216);
    call loxley34;
 end
 
-procedure loxley43
-begin
+procedure loxley43 begin
    set_global_var(GVAR_DECKER_KNOWN, 1);
    Reply(217);
    NOption(218, loxley44, 4);
    NOption(219, loxley43a, 4);
 end
 
-procedure loxley43a
-begin
+procedure loxley43a begin
    NMessage(220);
    call loxley34;
 end
 
-procedure loxley44
-begin
+procedure loxley44 begin
    Reply(221);
    BOption(222, loxley44a, 4);
    GOption(223, loxley44b, 4);
 end
 
-procedure loxley47
-begin
+procedure loxley47 begin
    BMessage(224);
    call loxleyx1;
 end
 
-procedure loxley48
-begin
+procedure loxley48 begin
    NMessage(225);
    call loxley34;
 end
 
-procedure loxley51
-begin
+procedure loxley51 begin
    NMessage(226);
    call loxley34;
 end
 
-procedure loxley53
-begin
+procedure loxley53 begin
    NMessage(227);
    call loxley34;
 end
 
-procedure loxley54
-begin
+procedure loxley54 begin
    NMessage(228);
    call loxley34;
 end
 
-procedure loxley55
-begin
-   if (local_var(1) > 1) then begin
+procedure loxley55 begin
+   if not(bad_critter_reaction) then begin
       NMessage(229);
    end
    else begin
@@ -700,155 +647,127 @@ begin
    end
 end
 
-procedure loxley56
-begin
+procedure loxley56 begin
    NMessage(231);
 end
 
-procedure loxley57
-begin
+procedure loxley57 begin
    NMessage(232);
 end
 
-procedure loxley58
-begin
+procedure loxley58 begin
    NMessage(233);
 end
 
-procedure loxley59
-begin
+procedure loxley59 begin
    NMessage(234);
 end
 
-procedure loxley60
-begin
+procedure loxley60 begin
    NMessage(235);
 end
 
-procedure loxley61
-begin
+procedure loxley61 begin
    NMessage(236);
 end
 
-procedure loxley62
-begin
+procedure loxley62 begin
    NMessage(237);
 end
 
-procedure loxley90
-begin
+procedure loxley90 begin
    NMessage(265);
    call loxleyx1;
 end
 
-procedure loxleyx
-begin
+procedure loxleyx begin
 end
 
-procedure loxleyx1
-begin
+procedure loxleyx1 begin
 end
 
-procedure loxleyx2
-begin
+procedure loxleyx2 begin
 end
 
-procedure loxleyx3
-begin
-   set_map_var(3, 1);
+procedure loxleyx3 begin
+   set_map_var(MVAR_Give_reward, 1);
    floatReward := 1;
 end
 
-procedure loxleyx4
-begin
+procedure loxleyx4 begin
 end
 
-procedure loxley00aa
-begin
+procedure loxley00aa begin
    UpReact
    call loxley00a;
 end
 
-procedure loxley00ab
-begin
+procedure loxley00ab begin
    BigDownReact
    call loxley10;
 end
 
-procedure loxley00a1
-begin
+procedure loxley00a1 begin
    DownReact
    call loxley21;
 end
 
-procedure loxley01a
-begin
+procedure loxley01a begin
    DownReact
    call loxley21;
 end
 
-procedure loxley01b
-begin
+procedure loxley01b begin
    UpReact
    call loxley00;
 end
 
-procedure loxley01c
-begin
+procedure loxley01c begin
    BigDownReact
    call loxley00;
 end
 
-procedure loxley03a
-begin
+procedure loxley03a begin
    DownReact
    call loxley16;
 end
 
-procedure loxley04a
-begin
+procedure loxley04a begin
    DownReact
    call loxley14;
 end
 
-procedure loxley07a
-begin
+procedure loxley07a begin
    DownReact
    call loxley10;
 end
 
-procedure loxley18a
-begin
+procedure loxley18a begin
    DownReact
    call loxley10;
 end
 
-procedure loxley23a
-begin
+procedure loxley23a begin
    DownReact
    call loxley21;
 end
 
-procedure loxley23b
-begin
+procedure loxley23b begin
    UpReact
    call loxley00;
 end
 
-procedure loxley23c
-begin
+procedure loxley23c begin
    BigDownReact
    call loxley00;
 end
 
-procedure loxley24a
-begin
+procedure loxley24a begin
    UpReact
    call loxley23;
 end
 
-procedure loxley25a
-begin
+procedure loxley25a begin
    UpReact
    call loxley23;
 end
@@ -868,163 +787,131 @@ procedure loxley27a begin
    end
 end
 
-procedure loxley44a
-begin
+procedure loxley44a begin
    DownReact
    call loxley47;
 end
 
-procedure loxley44b
-begin
+procedure loxley44b begin
    UpReact
    call loxley48;
 end
 
-procedure loxleyend
-begin
+procedure loxleyend begin
 end
 
-procedure loxley63
-begin
+procedure loxley63 begin
    NMessage(238);
 end
 
-procedure loxley64
-begin
+procedure loxley64 begin
    NMessage(239);
 end
 
-procedure loxley65
-begin
+procedure loxley65 begin
    NMessage(240);
 end
 
-procedure loxley66
-begin
+procedure loxley66 begin
    NMessage(241);
 end
 
-procedure loxley67
-begin
+procedure loxley67 begin
    NMessage(242);
 end
 
-procedure loxley68
-begin
+procedure loxley68 begin
    NMessage(243);
 end
 
-procedure loxley69
-begin
+procedure loxley69 begin
    NMessage(244);
 end
 
-procedure loxley70
-begin
+procedure loxley70 begin
    NMessage(245);
 end
 
-procedure loxley71
-begin
+procedure loxley71 begin
    NMessage(246);
 end
 
-procedure loxley72
-begin
+procedure loxley72 begin
    NMessage(247);
 end
 
-procedure loxley73
-begin
+procedure loxley73 begin
    NMessage(248);
 end
 
-procedure loxley74
-begin
+procedure loxley74 begin
    NMessage(249);
 end
 
-procedure loxley75
-begin
+procedure loxley75 begin
    NMessage(250);
 end
 
-procedure loxley76
-begin
+procedure loxley76 begin
    NMessage(251);
 end
 
-procedure loxley77
-begin
+procedure loxley77 begin
    NMessage(252);
 end
 
-procedure loxley78
-begin
+procedure loxley78 begin
    NMessage(253);
 end
 
-procedure loxley79
-begin
+procedure loxley79 begin
    NMessage(254);
 end
 
-procedure loxley80
-begin
+procedure loxley80 begin
    NMessage(255);
 end
 
-procedure loxley81
-begin
+procedure loxley81 begin
    NMessage(256);
 end
 
-procedure loxley82
-begin
+procedure loxley82 begin
    NMessage(257);
 end
 
-procedure loxley83
-begin
+procedure loxley83 begin
    NMessage(258);
 end
 
-procedure loxley84
-begin
+procedure loxley84 begin
    NMessage(259);
 end
 
-procedure loxley85
-begin
+procedure loxley85 begin
    NMessage(260);
 end
 
-procedure loxley86
-begin
+procedure loxley86 begin
    NMessage(261);
 end
 
-procedure loxley87
-begin
+procedure loxley87 begin
    NMessage(262);
 end
 
-procedure loxley88
-begin
+procedure loxley88 begin
    NMessage(263);
 end
 
-procedure loxley89
-begin
+procedure loxley89 begin
    NMessage(264);
 end
 
-procedure loxley91
-begin
+procedure loxley91 begin
    NMessage(266);
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end

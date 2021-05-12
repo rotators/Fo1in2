@@ -13,6 +13,7 @@
 #include "command.h"
 #include "modreact.h"
 
+/* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
 procedure critter_p_proc;
@@ -38,7 +39,9 @@ procedure map_enter_p_proc begin
    if (map_first_run) then begin
       set_self_team(TEAM_HUB_POLICE);
       set_self_ai(AI_HUB_POLICE);
-      call spawn_items;
+
+      if fixt_enabled then
+         call spawn_items;
    end
 end
 
@@ -111,11 +114,9 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   else begin
-      if (global_var(GVAR_ENEMY_HUB) == 1) then begin
-         tmp_hostile := 1;
-         attack(dude_obj);
-      end
+   else if (global_var(GVAR_ENEMY_HUB) == 1) then begin
+      tmp_hostile := 1;
+      attack(dude_obj);
    end
 end
 
@@ -186,18 +187,16 @@ procedure Cop00 begin
       if (dude_is_armed) then begin
          float_msg(self_obj, mstr(random(107, 109)), FLOAT_MSG_RED);
       end
-      else begin
-         if (global_var(GVAR_KILL_DEATHCLAW) == 2) or (global_var(GVAR_MISSING_CARAVANS_STATUS) == 5) then begin
-            if random(0, 1) == 1 then begin
-               float_msg(self_obj, mstr(119), FLOAT_MSG_GREEN);
-            end
-            else begin
-               float_msg(self_obj, mstr(random(103, 106)), FLOAT_MSG_NORMAL);
-            end
+      else if (global_var(GVAR_KILL_DEATHCLAW) == 2) or (global_var(GVAR_MISSING_CARAVANS_STATUS) == 5) then begin
+         if random(0, 1) == 1 then begin
+            float_msg(self_obj, mstr(119), FLOAT_MSG_GREEN);
          end
          else begin
-            float_msg(self_obj, mstr(random(101, 106)), FLOAT_MSG_RED);
+            float_msg(self_obj, mstr(random(103, 106)), FLOAT_MSG_NORMAL);
          end
+      end
+      else begin
+         float_msg(self_obj, mstr(random(101, 106)), FLOAT_MSG_RED);
       end
    end
 end

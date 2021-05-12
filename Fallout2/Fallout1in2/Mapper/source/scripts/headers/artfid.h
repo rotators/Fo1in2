@@ -106,7 +106,7 @@
 #define FID_MADOGM        (16777299)
 #define FID_HMBROH        (16777300)
 #define FID_HFBROH        (16777301)
-#define FID_HFPRIM        (16777302)
+#define FID_HFPRIM        (16777302) // Hero Female Primitive
 #define FID_HANPWR        (16777303)
 #define FID_HMLHLR        (16777304) // Long hair leather armor
 #define FID_HMLHMT        (16777305) // Long hair metal armor
@@ -150,7 +150,6 @@
 #define FID_HFCMBL        (16777343) // Female, Dark ("Black") Combat Armor
 #define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
 #define FID_MARDOG        (16777345) // Red colored dog
-#define FID_HFPRIM        (16777346) // Hero Female Primitive
-#define FID_HMWARR        (16777347) // Hero Male Primitive Warrior
+#define FID_HMWARR        (16777346) // Hero Male Primitive Warrior
 
 #endif // ARTFID_H

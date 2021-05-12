@@ -115,7 +115,7 @@
 #define is_nicole_alive                     (global_var(GVAR_NICOLE_DEAD) == 0)
 #define is_razor_alive                      (global_var(GVAR_ZIMMERMAN_STATUS) < 9002)
 #define is_decker_alive                     (global_var(GVAR_DECKER_STATUS) == 0)
-#define is_hightower_alive                  (global_var(GVAR_KILL_MERCHANT) < 2)
+#define is_hightower_alive                  (global_var(GVAR_HIGHTOWER_STATUS) == 0)
 #define is_harold_alive                     (global_var(GVAR_IS_HAROLD_ALIVE) == 1)
 #define is_caleb_alive                      (global_var(GVAR_CALEB_DEAD) == 0)
 

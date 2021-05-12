@@ -1,0 +1,107 @@
+/*
+
+   Fo1_newPremade mod script.
+
+   Used to give unique inventory to special premade characters.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure Initial_Inven;
+procedure InvenBase;
+procedure InvenPremade;
+
+// Available "style" skins for male and female characters
+#define F_REG_HAIR            (0)
+#define F_PUNK_HAIR           (1)
+#define M_REG_HAIR            (0)
+#define M_LONG_HAIR           (1)
+#define M_BALD_HAIR           (2)
+
+// Premade names and skins
+#define PREMADE1_NAME         "Ken"
+#define PREMADE1_STYLE        M_LONG_HAIR
+
+#define PREMADE2_NAME         "Sarah"
+#define PREMADE2_STYLE        F_PUNK_HAIR
+
+#define PREMADE3_NAME         "Louis"
+#define PREMADE3_STYLE        M_BALD_HAIR
+
+// Conditions
+#define dude_is_premade1      (dude_name == PREMADE1_NAME and (get_sfall_global_int("HApStyle")) == PREMADE1_STYLE)
+#define dude_is_premade2      (dude_name == PREMADE2_NAME and (get_sfall_global_int("HApStyle")) == PREMADE2_STYLE)
+#define dude_is_premade3      (dude_name == PREMADE3_NAME and (get_sfall_global_int("HApStyle")) == PREMADE3_STYLE)
+#define dude_is_any_premade   (dude_is_premade1 or dude_is_premade2 or dude_is_premade3)
+
+procedure start begin
+   if game_loaded then begin
+      if (get_sfall_global_int("lxx_init") == 0) then begin
+         set_sfall_global("lxx_init", 1);
+         if dude_is_any_premade then
+            call Initial_Inven;
+      end
+   end
+end
+
+procedure Initial_Inven begin
+   variable item, count;
+
+   // Remove default items
+   count := inven_count(dude_obj);
+   while (count > 0) do begin
+      item := inven_ptr(dude_obj, count - 1);
+      item := destroy_mult_objs(item, 99999);
+      count--;
+   end
+
+   // Add new items
+   call InvenBase;
+   call InvenPremade;
+end
+
+procedure InvenBase begin
+   call give_item(dude_obj,
+   {
+      PID_KNIFE: 1,
+      PID_STIMPAK: 4,
+      PID_FLARE: 2
+   });
+end
+
+procedure InvenPremade begin
+   if dude_is_premade1 then begin // Traps, Throwing, Small Guns
+      call give_item(dude_obj,
+      {
+         PID_FRAG_GRENADE: 4,
+         PID_MOLOTOV_COCKTAIL: 2,
+         PID_DYNAMITE: 1,
+         PID_10MM_PISTOL: 1
+      });
+   end
+   else if dude_is_premade2 then begin // Energy, Repair, Science
+      call give_item(dude_obj,
+      {
+         PID_ZIP_GUN: 1,
+         PID_SMALL_ENERGY_CELL: 3,
+         PID_SUPER_TOOL_KIT: 1,
+         PID_BUFFOUT: 1
+      });
+   end
+   else if dude_is_premade3 then begin // Melee, First Aid, Doctor
+      call give_item(dude_obj,
+      {
+         PID_LOUISVILLE_SLUGGER: 1,
+         PID_DOCTORS_BAG: 1,
+         PID_MENTATS: 1
+      });
+   end
+end
