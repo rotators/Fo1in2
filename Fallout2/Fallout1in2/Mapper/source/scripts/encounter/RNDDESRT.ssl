@@ -4561,34 +4561,43 @@ procedure South5 begin
 end
 
 procedure South6 begin
-   // Fo1in2, Geckos:
-   if fo1in2_fo2_critters_enabled and (random(0, 2) == 1) then begin
-      call Golden_Geckos;
+   if fo1in2_fo2_critters_enabled and (random(1, 3) == 1) then begin
+      if ((ghunter_status(HUNTER_FATHER_DEAD) + ghunter_status(HUNTER_SON_DEAD) > 0) and global_var(GVAR_GECKO_HUNTER_WARPARTY) > 1) then
+         call Gecko_Hunter_Revenge;
+      else if ((dude_perk(PERK_gecko_skinning_perk) == 0) and not(ghunters_killed) and day) then
+         call Gecko_Hunter;
+      else
+         call Golden_Geckos;
    end
-
    else begin
-      display_msg(message_str(SCRIPT_RNDDESRT, 145));
-      Tot_Critter_A := random(2, 4);// was 3, 6
-      Outer_ring := (dude_enc_perception / 2) + 5;
-      Inner_ring := (dude_enc_perception / 2) + 3;
-      group_angle := random(0, 5);
-      Critter_type := PID_RADSCORPION;
-      Critter_script := SCRIPT_RADSCORP;
-      while(Tot_Critter_A) do begin
-         Critter_direction := group_angle + (random(0, 2 * 2) - 2);
-         while(Critter_direction < 0) do begin
-            Critter_direction := Critter_direction + 6;
-         end
-         if (Critter_direction > 5) then begin
-            Critter_direction := Critter_direction % 6;
-         end
-         call Place_critter;
-         obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-         Tot_Critter_A := Tot_Critter_A - 1;
+      // Fo1in2, Geckos:
+      if fo1in2_fo2_critters_enabled and (random(0, 2) == 1) then begin
+         call Golden_Geckos;
       end
+      else begin
+         display_msg(message_str(SCRIPT_RNDDESRT, 145));
+         Tot_Critter_A := random(2, 4);// was 3, 6
+         Outer_ring := (dude_enc_perception / 2) + 5;
+         Inner_ring := (dude_enc_perception / 2) + 3;
+         group_angle := random(0, 5);
+         Critter_type := PID_RADSCORPION;
+         Critter_script := SCRIPT_RADSCORP;
+         while(Tot_Critter_A) do begin
+            Critter_direction := group_angle + (random(0, 2 * 2) - 2);
+            while(Critter_direction < 0) do begin
+               Critter_direction := Critter_direction + 6;
+            end
+            if (Critter_direction > 5) then begin
+               Critter_direction := Critter_direction % 6;
+            end
+            call Place_critter;
+            obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+            Tot_Critter_A := Tot_Critter_A - 1;
+         end
+      end
+      set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
+      call Add_Mysterious_Stranger;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
-   call Add_Mysterious_Stranger;
 end
 
 procedure Geckos begin

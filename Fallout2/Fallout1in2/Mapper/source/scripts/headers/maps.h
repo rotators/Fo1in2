@@ -19,6 +19,8 @@
 #define AREA_BONEYARD             (10)
 #define AREA_CATHEDRAL            (11)
 
+#define AREA_VIPERS               (14)
+
 #define AREA_CAR_OUTTA_GAS        (21)
 
 #define AREA_RND_ENC_DESERT       (26)
@@ -78,6 +80,7 @@
 #define CUR_AREA_SHADY_CAVES          (cur_town == AREA_SHADY_CAVES)
 #define CUR_AREA_HUB_FARM             (cur_town == AREA_HUB_FARM)
 #define CUR_AREA_HUB_LAIR             (cur_town == AREA_HUB_LAIR)
+#define CUR_AREA_VIPERS               (cur_town == AREA_VIPERS)
 
 #define CUR_AREA_RND_DESERT           (cur_town == AREA_RND_DESERT or cur_town == AREA_RND_ENC_DESERT)
 #define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN or or cur_town == AREA_RND_ENC_CAVERN)
@@ -179,6 +182,8 @@
 #define MAP_MINE2           (88)
 #define MAP_MINE3           (89)
 
+#define MAP_VIPERS          (90)
+
 /*******************************************************************************
  Map Names (Strings)
 *******************************************************************************/
@@ -251,6 +256,7 @@
 
 #define MAPSTR_ARTEMPLE "artemple.MAP"
 #define MAPSTR_ARCAVES  "arcaves.MAP"
+#define MAPSTR_VIPERS   "VIPERS.MAP"
 
 /*******************************************************************************
  Current map index
@@ -330,6 +336,7 @@
 #define CUR_MAP_ARCAVES     (cur_map_index ==  MAP_ARCAVES)
 #define CUR_MAP_GUARDIAN    (cur_map_index ==  MAP_GUARDIAN)
 #define CUR_MAP_SCRAPHEAP   (cur_map_index ==  MAP_SCRAPHEAP)
+#define CUR_MAP_VIPERS      (cur_map_index ==  MAP_VIPERS)
 
 #define CUR_MAP_CITY2       (cur_map_index ==  MAP_CITY2)
 #define CUR_MAP_CITY3       (cur_map_index ==  MAP_CITY3)
@@ -365,6 +372,7 @@
 #define shady_caves_visible_on_map          (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
 #define hub_farm_visible_on_map             (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
 #define hub_lair_visible_on_map             (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
+#define vipers_visible_on_map               (town_known(AREA_VIPERS) != MARK_STATE_UNKNOWN)
 
 #define vault_13_visit                      (town_known(AREA_VAULT_13) == MARK_STATE_VISITED)
 #define vault_15_visit                      (town_known(AREA_VAULT_15) == MARK_STATE_VISITED)
@@ -382,6 +390,7 @@
 #define shady_caves_visit                   (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
 #define hub_farm_visit                      (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
 #define hub_lair_visit                      (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
+#define vipers_visit                        (town_known(AREA_VIPERS) != MARK_STATE_UNKNOWN)
 
 #define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin             \
                                                debug_msg("  mark_on_map("+x+")");                           \
@@ -417,6 +426,7 @@
 #define mark_shady_caves_on_map           mark_on_map(AREA_SHADY_CAVES)
 #define mark_hub_farm_on_map              mark_on_map(AREA_HUB_FARM)
 #define mark_hub_lair_on_map              mark_on_map(AREA_HUB_LAIR)
+#define mark_vipers_on_map                mark_on_map(AREA_VIPERS)
 
 #define unmark_vault_13_on_map            unmark_on_map(AREA_VAULT_13)
 #define unmark_vault_15_on_map            unmark_on_map(AREA_VAULT_15)
@@ -434,6 +444,7 @@
 #define unmark_shady_caves_on_map         unmark_on_map(AREA_SHADY_CAVES)
 #define unmark_hub_farm_on_map            unmark_on_map(AREA_HUB_FARM)
 #define unmark_hub_lair_on_map            unmark_on_map(AREA_HUB_LAIR)
+#define unmark_vipers_on_map              unmark_on_map(AREA_VIPERS)
 
 #define unmark_car_outta_gas_on_map       mark_area_known(MARK_TYPE_TOWN, AREA_CAR_OUTTA_GAS, MARK_STATE_UNKNOWN)
 

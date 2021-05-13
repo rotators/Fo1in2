@@ -745,7 +745,7 @@ end
 
 procedure Raid2
 begin
-   load_map(MAP_DESCRVN3, -1);
+   load_map(MAP_VIPERS, -1);
 end
 
 procedure TARDIS_6
