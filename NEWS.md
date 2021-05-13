@@ -13,27 +13,37 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Cathedral technicians would blast the disguise-check code on every game tick, no matter if they see thep player or not. This can cause the game to crash on certain hardware.
 - **Fixed**: Dan at the Hub entrance was unable to get to the Brahmin pens (waypoint too far away for the ai pathfinding). Added another waypoint in the middle, which not only fixes his daily schedule, but also restores an interaction with Billy, the brahmin boy.
 - **Fixed**: Dan at the Hub entrance would tell the player to get out of his house at night (and attack him later), even though the player wasn't in his house.
+- **Fixed**: Gaining Outdoorsman skill points from the gecko hunters will now show up in the message log.
 - **Fixed**: Gizmo would not react to the player trying to steal from him after certain dialog choices.
 - **Fixed**: Gizmo's dead remains (with flies animation) can now be looted correctly.
 - **Fixed**: If Kenji is about to attack Killian and the player leaves the map, he will now be removed (if the player returns after days, he would still be there. Now he is killed off-screen by the guards).
 - **Fixed**: If Killian gets killed while fighting Gizmo, the player would get the experience points and Junktown becomes hostile. 
 - **Fixed**: If Lars in Junktown gives the player 15 seconds to "leave and never come back", he would start combat no matter where on the map the player is.
 - **Fixed**: If the player is a child killer, Fry at the Hub entrance would still greet him happily, even though it makes no sense in his dialog.
+- **Fixed**: Loxley in the Hub wouldn't remember having talking to the player before. Also restored a few dialog lines for him and his friends after getting kicked out from the Circle.
 - **Fixed**: MacRae in the Boneyard now correctly gives the player +5% Damage Resistance, and + 1% Melee Damage (vanilla Fo1 bug + removed the old Fixt workaround which gave skill points instead).
 - **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
 - **Fixed**: Mines / Traps spatial scripts had no range assigned to them.
 - **Fixed**: Mines in the thief circle map didn't want to explode.
+- **Fixed**: Patrick the Celt had a dialog reaction to Aradesh being dead, but the condition was wrong.
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
 - **Fixed**: Restored floating text of Glowing Ghouls in the Necropolis Vault (when talking to them after taking the water chip and not repairing the water pump. Not sure why Fixt removed this).
 - **Fixed**: Shady Sands becomes hostile to the player, even if he kills Tandi outside of town.
 - **Fixed**: Sid (Hub / Beth's guard) would float a text message so fast, it was impossible to read.
 - **Fixed**: Some locations would not be marked as visible when asking about them in dialog.
+- **Fixed**: TMA would crash when not using the Sfall Dx9 mode.
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
+- **Fixed**: The Tag!-perk wouldn't give +20% to the new skill as it did in Fo1.
+- **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
+- **Fixed**: The wanted sign now correctly shows the current bounty on the players head (in caps).
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
 - **Removed**: Old code in Ian, Tycho, and Katja scripts when giving them items. Nobody used this function anyways, also it was possible to exploit their carry weight limit with this. 
+- **Tweaked**: Added the agility-check back into the Gunrunners toxic goo spatial script (was a Fixt change?).
 - **Tweaked**: Hotspots in the Glow will give the player randomly 20 to 50 rads again (reverted Fixt change back to Fo1 vanilla values).
+- **Tweaked**: In the character screen, "Karma" was called "Reputation" in Fo1.
 - **Tweaked**: Increased the float timer between Guido and Leon (Hub / FLC guards), because the text was barely readable.
 - **Tweaked**: Moved the inventory weapons of Hub entrance guards into their off-hand slots, otherwise they would never use them.
+- **Tweaked**: Perk description text still had Fo2 stuff in it. Reverted it back to the Fo1 text.
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
 - **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.
