@@ -14,8 +14,8 @@
 /* Standard Script Procedures */
 procedure start;
 
-procedure pipboy_note;
-procedure pipboy_note_refresh;
+procedure GameModeChange_handler;
+procedure RestTimer_handler;
 
 procedure check_watertimer;
 procedure check_invasions;
@@ -34,48 +34,58 @@ variable Scr_Height;
 
 procedure start begin
    if (game_loaded) then begin
-      set_global_script_repeat(1000);
       set_global_script_type(1);
-
-      register_hook_proc(HOOK_GAMEMODECHANGE, pipboy_note);
-      register_hook_proc(HOOK_RESTTIMER, pipboy_note_refresh);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
+      register_hook_proc(HOOK_RESTTIMER, RestTimer_handler);
    end
 
    if not(combat_is_initialized) then begin
       // Find the Water Chip for V13:
-      if (timer_active) then
+      if timer_active then
          call check_watertimer;
 
       // Invasion timers
-      // TODO: Toggle like in Fixt? Master or Vats or both required?
       if not(cathedral_destroyed) then
          call check_invasions;
    end
 end
 
-procedure pipboy_note begin
+procedure GameModeChange_handler begin
    // Show the pipboy note if the remaining water timer is > 0 days:
-   if (timer_active) then begin
 
-      if ((get_game_mode == PIPBOY) and (get_water_days_left > 0)) then begin
-         if (get_sfall_global_int("opennote") != 1) then begin
-            set_sfall_global("opennote", 1);
-            call show_note;
-         end
+   if ((get_game_mode bwand PIPBOY) and (get_water_days_left > 0)) then begin
+      if (get_sfall_global_int("opennote") != 1) then begin
+         set_sfall_global("opennote", 1);
+         call show_note;
+      end
+   end
+   else if (get_sfall_global_int("opennote") != 0) then begin
+      set_sfall_global("opennote", 0);
+      call delete_all;
+   end
+   else if (get_game_mode bwand WORLDMAP) then begin
+      // Only run the script on repeat of either water timer or invasions are still a thing.
+      if (timer_active or not(cathedral_destroyed)) then
+         set_global_script_repeat(10);
+   end
+   else begin
+      set_global_script_repeat(0);
+      if timer_active then
+         call check_watertimer;
+      if not(cathedral_destroyed) then
+         call check_invasions;
+   end
+end
+
+procedure RestTimer_handler begin
+   if (get_game_mode bwand PIPBOY) then begin
+      if timer_active and (get_sfall_global_int("opennote") > 0) then begin
+         call show_days;
+         call check_watertimer;
       end
       else if (get_sfall_global_int("opennote") != 0) then begin
          set_sfall_global("opennote", 0);
          call delete_all;
-      end
-
-   end
-end
-
-procedure pipboy_note_refresh begin
-   if (get_game_mode == PIPBOY) then begin
-      if (game_time > get_sfall_global_int("lastchek")) then begin
-         set_sfall_global("lastchek", game_time + ONE_GAME_MINUTE * ((ticks_til_hour(0) / 60) / 10));
-         call show_days;
       end
    end
 end
@@ -98,7 +108,7 @@ procedure check_watertimer begin
 end
 
 procedure check_invasions begin
-   if get_v13_days_left <= 0 and not(v13_invaded) then begin
+   if (get_v13_days_left <= 0) and not(v13_invaded) then begin
       set_global_var(GVAR_VAULT_13_WAS_INVADED, 1);
 
       play_gmovie(OVERRUN_MOVIE);
@@ -108,7 +118,7 @@ procedure check_invasions begin
 
    // Only check for invasions when on the worldmap.
    // This way, they only get triggered after the player left the location.
-   if (get_game_mode == WORLDMAP) then begin
+   if (get_game_mode bwand WORLDMAP) then begin
       if (get_hub_days_left <= 0) and not(hub_invaded) then begin
          set_global_var(GVAR_THE_HUB_WAS_INVADED, 1);
          debug("the hub just got invaded!");
