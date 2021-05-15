@@ -7,13 +7,12 @@
 /* Include Files */
 #include "define.h"
 #include "command.h"
+#include "mapenc.h"
 #include "sfall/sfall.rotators.h"
 #include "sfall/lib.math.h"
 #include "sfall/lib.arrays.h"
 
 #include "gl_worldmap.h"
-
-#define in_glow_zone       ((worldmap_xpos >= 1150) and (worldmap_xpos <= 1300) and (worldmap_ypos >= 1200) and (worldmap_ypos <= 1350))
 
 #define south_table        (global_var(GVAR_WORLDMAP_TABLE) == 3)
 #define vats_table         (global_var(GVAR_WORLDMAP_TABLE) == 11)
@@ -152,10 +151,12 @@ procedure SetWorldmapInfo begin
 end
 
 procedure SetRadiation begin
-   if above(game_time, tick) then begin
-      tick := game_time + ONE_GAME_HOUR;
-      radiation_inc(dude_obj, random(1, 20));
-      debug_msg("radiation from wm! " + dude_rads + " rads!");
+   if in_glow_zone then begin
+      if above(game_time, tick) then begin
+         tick := game_time + ONE_GAME_HOUR;
+         radiation_inc(dude_obj, random(1, 2));
+         //debug("radiation from wm! " + dude_rads + " rads!");
+      end
    end
 end
 
@@ -164,16 +165,18 @@ procedure override_terrain_type begin
 
    // Rewrite zone titles around the Glow
    // Traveling on these zones will radiate the player (see gl_worldmap.ssl)
-   set_terrain_name(23, 24, mstr_worldmap(1005));
-   set_terrain_name(24, 24, mstr_worldmap(1005));
-   set_terrain_name(25, 24, mstr_worldmap(1006));
+   if fo1in2_expanded_radiation then begin
+      set_terrain_name(23, 24, mstr_worldmap(1005));
+      set_terrain_name(24, 24, mstr_worldmap(1005));
+      set_terrain_name(25, 24, mstr_worldmap(1006));
 
-   set_terrain_name(23, 25, mstr_worldmap(1005));
-   set_terrain_name(25, 25, mstr_worldmap(1006));
+      set_terrain_name(23, 25, mstr_worldmap(1005));
+      set_terrain_name(25, 25, mstr_worldmap(1006));
 
-   set_terrain_name(23, 26, mstr_worldmap(1005));
-   set_terrain_name(24, 26, mstr_worldmap(1005));
-   set_terrain_name(25, 26, mstr_worldmap(1005));
+      set_terrain_name(23, 26, mstr_worldmap(1005));
+      set_terrain_name(24, 26, mstr_worldmap(1005));
+      set_terrain_name(25, 26, mstr_worldmap(1005));
+   end
 end
 
 procedure encounter_handler begin
@@ -235,11 +238,20 @@ procedure encounter_handler begin
    end
 end
 
+procedure GameModeChange_handler begin
+   if (get_game_mode bwand WORLDMAP) then begin
+      set_global_script_repeat(1);
+   end
+   else begin
+      set_global_script_repeat(0);
+   end
+end
+
 procedure start begin
    if (game_loaded) then begin
-      set_global_script_repeat(10);
       set_global_script_type(1);
 
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
       register_hook_proc(HOOK_ENCOUNTER, encounter_handler);
 
       call ReadWorldmapTxt;
@@ -248,17 +260,8 @@ procedure start begin
       call override_terrain_type;
    end
 
-   if (get_game_mode == WORLDMAP) then begin
+   if (get_game_mode bwand WORLDMAP) then begin
       call SetWorldmapInfo;
-      if in_glow_zone then call SetRadiation;
-   end
-   else begin
-      if in_glow_zone then begin
-         if above(game_time, tick) then begin
-            tick := game_time + (ONE_GAME_MINUTE * 10);
-            radiation_inc(dude_obj, random(1, 5)); //random(5, 15));
-            debug_msg("radiation from zones around Glow! " + dude_rads + " rads!");
-         end
-      end
+      if fo1in2_expanded_radiation then call SetRadiation;
    end
 end

@@ -43,6 +43,7 @@
 #define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
 #define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
 #define fo1in2_expanded_slides_enabled  (global_var(GVAR_ENABLE_EXPANDED_ENDING) > 0)
+#define fo1in2_expanded_radiation       (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)

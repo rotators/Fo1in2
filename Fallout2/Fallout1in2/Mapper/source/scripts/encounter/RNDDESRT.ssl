@@ -16,7 +16,9 @@
 
 procedure start;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure map_exit_p_proc;
+procedure timed_event_p_proc;
 
 procedure choose_start;
 procedure Place_critter;
@@ -126,6 +128,8 @@ export variable random_seed_1;
 export variable random_seed_2;
 export variable random_seed_3;
 
+#define EVENT_GLOW_RADS    (1)
+
 variable rnd_critter;
 variable party_elevation;
 
@@ -175,6 +179,11 @@ end
 
 procedure map_enter_p_proc begin
    Lighting;
+
+   if fo1in2_expanded_radiation and in_glow_zone then begin
+      flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
+   end
+
    dude_rot := random(0, 5);
    set_global_var(GVAR_MERCS_RANDOM_ENC_unsure, 0);
    if (map_first_run) and not(is_loading_game) then begin
@@ -239,6 +248,12 @@ end
 
 procedure map_exit_p_proc begin
    set_car_exit_map
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_GLOW_RADS) then begin
+      SetGlowEncRads;
+   end
 end
 
 procedure Place_critter begin

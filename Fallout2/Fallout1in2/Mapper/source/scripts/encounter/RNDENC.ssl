@@ -23,13 +23,22 @@
 #include "mapenc.h"
 
 procedure start;
-procedure timed_event_p_proc;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure map_exit_p_proc;
+procedure timed_event_p_proc;
 
 procedure CreateSceneryClutter;
 procedure CreateCityClutter;
+
+#define set_new_wm_pos                 wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos);     \
+                                       wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
+                                       wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos);   \
+                                       wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
+
+#define in_spawn_zone(x, y)            tile_in_tile_rect((x%200)-5, (x/200)-5, (x%200)+5, (x/200)+5, y)
+
+#define EVENT_GLOW_RADS    (1)
 
 variable scenery_pid;
 variable scenery_tile;
@@ -44,56 +53,17 @@ variable rnd_tile := 0;
 variable map;
 variable spawn_hex := 0;
 
-#define set_new_wm_pos                 wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos);     \
-                                       wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
-                                       wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos);   \
-                                       wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
-
-#define in_spawn_zone(x, y)             tile_in_tile_rect((x%200)-5, (x/200)-5, (x%200)+5, (x/200)+5, y)
-
 procedure start begin
-end
-
-procedure map_exit_p_proc begin
-   if (CUR_MAP_DESERT0) then begin
-      set_new_wm_pos;
-   end
-   set_car_exit_map
-end
-
-procedure timed_event_p_proc begin
-   if (CUR_MAP_DESERT0) then begin
-
-      if (fixed_param == 1) then begin
-         set_new_wm_pos;
-
-         if (is_terrain_desert) then begin
-            load_map(MAP_RNDDESER, 0);
-         end
-         else if (is_terrain_mountain) then begin
-            load_map(MAP_RNDMOUNT, 0);
-         end
-         else if (is_terrain_city) then begin
-            load_map(MAP_RNDCITY, 0);
-         end
-         else if (is_terrain_ocean) then begin
-            load_map(MAP_RNDCOAST, 0);
-         end
-         else begin
-            load_map(MAP_RNDDESER, 0);
-            debug_msg("!!! COULDN'T DETECT TERRAIN TYPE !!!");
-         end
-
-         debug("Loading terrain: " + global_var(GVAR_WORLDMAP_TERRAIN));
-      end
-
-   end
 end
 
 procedure map_enter_p_proc begin
    variable map; // := random(1, 3);
    variable Critter;
    variable Critter_Tile;
+
+   if fo1in2_expanded_radiation and in_glow_zone then begin
+      flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
+   end
 
    // Unused, because HOOK_ENCOUNTER in gl_worldmap.ssl ... Keep this anyway for now just in case.
    if (CUR_MAP_DESERT0) then begin
@@ -160,8 +130,46 @@ procedure map_update_p_proc begin
    if (CUR_MAP_DESERT0) then begin
       add_timer_event(self_obj, game_ticks(0), 1);
    end
-
    Lighting;
+end
+
+procedure map_exit_p_proc begin
+   if (CUR_MAP_DESERT0) then begin
+      set_new_wm_pos;
+   end
+   set_car_exit_map
+end
+
+procedure timed_event_p_proc begin
+   if (CUR_MAP_DESERT0) then begin
+      if (fixed_param == 1) then begin
+         set_new_wm_pos;
+
+         if (is_terrain_desert) then begin
+            load_map(MAP_RNDDESER, 0);
+         end
+         else if (is_terrain_mountain) then begin
+            load_map(MAP_RNDMOUNT, 0);
+         end
+         else if (is_terrain_city) then begin
+            load_map(MAP_RNDCITY, 0);
+         end
+         else if (is_terrain_ocean) then begin
+            load_map(MAP_RNDCOAST, 0);
+         end
+         else begin
+            load_map(MAP_RNDDESER, 0);
+            debug_msg("!!! COULDN'T DETECT TERRAIN TYPE !!!");
+         end
+
+         debug("Loading terrain: " + global_var(GVAR_WORLDMAP_TERRAIN));
+      end
+   end
+   else begin
+      if (fixed_param == EVENT_GLOW_RADS) then begin
+         SetGlowEncRads;
+      end
+   end
 end
 
 procedure CreateSceneryClutter begin

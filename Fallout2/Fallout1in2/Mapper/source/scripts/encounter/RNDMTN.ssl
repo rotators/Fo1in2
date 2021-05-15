@@ -70,7 +70,8 @@ procedure VAULT4;// ---------------RNDMTN ONLY
 procedure VAULT5;// ---------------RNDMTN ONLY
 procedure VAULT6;// ---------------RNDMTN ONLY
 
-#define EVENT_RADS   (1)
+#define EVENT_RADS         (1)
+#define EVENT_GLOW_RADS    (2)
 
 export variable signal_mutants;
 
@@ -156,6 +157,10 @@ end
 procedure map_enter_p_proc begin
    set_cur_exit;
 
+   if fo1in2_expanded_radiation and in_glow_zone then begin
+      flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
+   end
+
    if map_has_cavern then begin
       if (map_first_run and not(is_loading_game)) then begin
          if map_is_mine then
@@ -219,6 +224,9 @@ procedure timed_event_p_proc begin
       if (dude_elevation == 1) then
          radiation_inc(dude_obj, random(1, 4));
       add_timer_event(self_obj, game_ticks(random(5, 10)), EVENT_RADS);
+   end
+   else if (fixed_param == EVENT_GLOW_RADS) then begin
+      SetGlowEncRads;
    end
 end
 
