@@ -143,7 +143,8 @@ variable reaction_bonus_karma:=0;
                         end                                                                     \
                         LevelToReact
 
-variable exit_line;
-#define Goodbyes     exit_line := message_str(SCRIPT_MODREACT, random(100, 105))
+//variable exit_line;
+//#define Goodbyes     exit_line := message_str(SCRIPT_MODREACT, random(100, 105))
+#define exit_line      message_str(SCRIPT_MODREACT, random(100, 105))
 
 #endif // MODREACT_H
