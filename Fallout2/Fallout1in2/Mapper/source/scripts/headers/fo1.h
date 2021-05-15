@@ -21,9 +21,10 @@
     Settings:
 *********************************************************/
 #define fo1in2_fluff_enc_disabled       ((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
-#define fo1in2_auto_doors_closing       (global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
+#define fo1in2_auto_doors_closing       (global_var(GVAR_ENABLE_AUTO_DOORS_CLOSING) > 0)
 #define fo1in2_motorcycle_enabled       (global_var(GVAR_ENABLE_MOTORCYCLE) > 0)
-#define fo1in2_destroy_armor_enabled    (global_var(GVAR_ARMOR_DESTROY_MOD) > 0)
+#define fo1in2_destroy_armor_enabled    (global_var(GVAR_ENABLE_ARMOR_DESTROY_MOD) > 0)
+#define fo1in2_mr_handy_enabled         (global_var(GVAR_ENABLE_MR_HANDY_HIRELING) > 0)
 #define fo1in2_merch_restock_enabled    (global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) > 0)
 #define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
 #define fo1in2_unlimited_hpa_enabled    (global_var(GVAR_ENABLE_UNLIMITED_HPA) > 0)
@@ -43,7 +44,7 @@
 #define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
 #define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
 #define fo1in2_expanded_slides_enabled  (global_var(GVAR_ENABLE_EXPANDED_ENDING) > 0)
-#define fo1in2_expanded_radiation       (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
+#define fo1in2_radiation_enabled        (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
