@@ -406,7 +406,7 @@ int     ret0 - The new amount of ammo to be consumed, or ammo cost per round for
 #### `HOOK_KEYPRESS (hs_keypress.int)`
 
 Runs once every time when any key was pressed or released.
-- DX codes: (see **dik.h** header)
+- DX codes: see **dik.h** header or https://kippykip.com/b3ddocs/commands/scancodes.htm
 - VK codes: http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
 
 __NOTE:__ if you want to override a key, the new key DX scancode should be the same for both pressed and released events.

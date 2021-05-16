@@ -7,6 +7,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
+- **Added**: World and map radiation around the Glow is now optional (see fo1_settings.ini), but remains enabled by default.
 - **Fixed**: 49/50hp mutants on Mariposa level 1.
 - **Fixed**: A potential procedure loop in the (generic) super mutant sergeant script when talking to them in disguise.
 - **Fixed**: Asking the Water Merchants for a caravan job wasn't possible anymore after asking about a water delivery, but then declining the service.
@@ -36,6 +37,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
 - **Fixed**: The Tag!-perk wouldn't give +20% to the new skill as it did in Fo1.
 - **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
+- **Fixed**: The player can't rest in encounter locations anymore if there are other critters in the map.
 - **Fixed**: The wanted sign now correctly shows the current bounty on the players head (in caps).
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
 - **Removed**: Old code in Ian, Tycho, and Katja scripts when giving them items. Nobody used this function anyways, also it was possible to exploit their carry weight limit with this. 
