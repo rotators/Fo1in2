@@ -6,6 +6,7 @@
 
 #include "define.h"
 #include "command.h"
+#include "maps/hallded.h"
 
 #define NAME                     SCRIPT_DOOR
 
@@ -15,9 +16,6 @@
 
 /* Timer id's */
 #define TIMER_CLOSE                     (1)
-
-#define is_metal_door                   (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
-#define is_wood_door                    not(is_metal_door)
 
 /* Penalties for forcing the door open using strength */
 #define Crowbar_Bonus                   (0)
@@ -85,7 +83,7 @@ end
 
 procedure description_p_proc begin
    if (obj_is_locked(self_obj)) then
-      display_msg(message_str(SCRIPT_DOOR, 104));
+      display_msg(message_str(NAME, 104));
 end
 
 procedure timed_event_p_proc begin
@@ -108,7 +106,7 @@ end
 procedure map_enter_p_proc begin
    if (local_var(6) != 1) and (map_first_run) then begin
       set_local_var(5, 0);
-      set_map_var(11, 1);
+      set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
       set_local_var(6, 1);
    end
 
@@ -117,14 +115,14 @@ procedure map_enter_p_proc begin
    end
 
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-      if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
+      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(5) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
          obj_unlock(self_obj);
       end
    end
    else if (local_var(5) == 1) then begin
       obj_unlock(self_obj);
    end
-   else if (local_var(5) == 0) and (map_var(12) != 1) then begin
+   else if (local_var(5) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
       obj_close(self_obj);
       obj_lock(self_obj);
    end
@@ -132,21 +130,21 @@ end
 
 procedure map_update_p_proc begin
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-      if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
+      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(5) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
          obj_unlock(self_obj);
       end
    end
    else if (local_var(5) == 1) then begin
       obj_unlock(self_obj);
    end
-   else if (local_var(5) == 0) and (map_var(12) != 1) then begin
+   else if (local_var(5) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
       obj_close(self_obj);
       obj_lock(self_obj);
    end
 end
 
 procedure use_p_proc begin
-   if ((map_var(11) == 1) and source_is_dude) then begin
+   if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 1) and source_is_dude) then begin
       if (local_var(5) == 0) then begin
          if (GhDorGrd_Ptr != 0) and not(combat_is_initialized) then begin
             if obj_can_see_obj(dude_obj, GhDorGrd_Ptr) then
@@ -154,12 +152,12 @@ procedure use_p_proc begin
 
             obj_lock(self_obj);
             script_overrides;
-            display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+            display_msg(message_str(NAME, 104));//{104}{}{The door is locked.}
          end
          else begin
             obj_lock(self_obj);
             script_overrides;
-            display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+            display_msg(message_str(NAME, 104));//{104}{}{The door is locked.}
          end
       end
       else begin
@@ -183,7 +181,6 @@ procedure use_p_proc begin
    end
 
    if fo1in2_auto_doors_closing then begin
-   // debug("door will close");
       last_source_obj := source_obj;
       add_timer_event(self_obj, 10, TIMER_CLOSE);
    end
@@ -192,7 +189,7 @@ end
 procedure use_skill_on_p_proc begin
 variable Skills_Roll;
 
-   if (map_var(11) == 1) and (local_var(5) == 0) then begin
+   if (map_var(MVAR_Fixt_DOOR_LOCKED) == 1) and (local_var(5) == 0) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
@@ -231,10 +228,10 @@ procedure use_obj_on_p_proc begin
 
    Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 
-   if ((Tool == PID_LOCKPICKS or Tool == PID_EXP_LOCKPICK_SET) and (map_var(11) == 1)) then begin
+   if ((Tool == PID_LOCKPICKS or Tool == PID_EXP_LOCKPICK_SET) and (map_var(MVAR_Fixt_DOOR_LOCKED) == 1)) then begin
       if (local_var(5) == 0) then begin
          script_overrides;
-         
+
          if (Tool == PID_EXP_LOCKPICK_SET) then
             Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
 
@@ -264,7 +261,7 @@ procedure use_obj_on_p_proc begin
       end
    end
 
-   else if ((Tool == PID_CROWBAR) and (map_var(11) == 1)) then begin
+   else if ((Tool == PID_CROWBAR) and (map_var(MVAR_Fixt_DOOR_LOCKED) == 1)) then begin
       script_overrides;
       call Pry_Door;
    end
@@ -291,41 +288,41 @@ procedure Pry_Door begin
    Stat_Roll := do_check(source_obj, STAT_st, Crowbar_Bonus);
 
    if (is_success(Stat_Roll)) then begin
-       obj_unlock(self_obj);
+      obj_unlock(self_obj);
 
-       if source_is_dude then
-           display_msg(mstr(176));
-       else
-           display_msg(mstr(181));
+      if source_is_dude then
+         display_msg(mstr(176));
+      else
+         display_msg(mstr(181));
    end
    else if (is_critical(Stat_Roll)) then begin
-       critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
-       if source_is_dude then begin
-           if (Crowbar_Strain == 1) then
-               display_msg(mstr(177));
-           else
-               display_msg(mstr(178)+Crowbar_Strain + mstr(179));
-       end
-       else begin
-           if (get_is_male(source_obj)) then begin
-               if (Crowbar_Strain == 1) then
-                   display_msg(mstr(182));
-               else
-                   display_msg(mstr(183)+Crowbar_Strain + mstr(184));
-           end
-           else begin
-               if (Crowbar_Strain == 1) then
-                   display_msg(mstr(186));
-               else
-                   display_msg(mstr(187)+Crowbar_Strain + mstr(188));
-           end
-       end
+      critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+      if source_is_dude then begin
+         if (Crowbar_Strain == 1) then
+            display_msg(mstr(177));
+         else
+            display_msg(mstr(178) + Crowbar_Strain + mstr(179));
+      end
+      else begin
+         if (get_is_male(source_obj)) then begin
+            if (Crowbar_Strain == 1) then
+               display_msg(mstr(182));
+            else
+               display_msg(mstr(183) + Crowbar_Strain + mstr(184));
+         end
+         else begin
+            if (Crowbar_Strain == 1) then
+               display_msg(mstr(186));
+            else
+               display_msg(mstr(187) + Crowbar_Strain + mstr(188));
+         end
+      end
    end
    else begin
-       if source_is_dude then
-           display_msg(mstr(180));
-       else
-           display_msg(mstr(185));
+      if source_is_dude then
+         display_msg(mstr(180));
+      else
+         display_msg(mstr(185));
    end
 end
 
