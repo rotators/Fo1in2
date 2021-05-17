@@ -1036,3 +1036,5 @@
 {53701}{}{DO NOT USE}
 {53800}{}{Dehydration Strong}
 {53801}{}{DO NOT USE}
+{53900}{}{Fire Gecko Pelt}
+{53901}{}{This is the dried and cured hide of a fire gecko. It is badly burned and as a result, has little value.}

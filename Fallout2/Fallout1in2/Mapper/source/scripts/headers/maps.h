@@ -82,6 +82,7 @@
 #define CUR_AREA_HUB_LAIR             (cur_town == AREA_HUB_LAIR)
 #define CUR_AREA_VIPERS               (cur_town == AREA_VIPERS)
 
+// TODO: This stuff doesn't work. Encounter area is -1!
 #define CUR_AREA_RND_DESERT           (cur_town == AREA_RND_DESERT or cur_town == AREA_RND_ENC_DESERT)
 #define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN or or cur_town == AREA_RND_ENC_CAVERN)
 #define CUR_AREA_RND_CITY             (cur_town == AREA_RND_CITY or cur_town == AREA_RND_ENC_CITY)

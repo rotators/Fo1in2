@@ -53,6 +53,21 @@ variable rnd_tile := 0;
 variable map;
 variable spawn_hex := 0;
 
+#define spawn_scenery(amount, pid)  \
+   iter := 0;                                                                                      \
+   while iter < amount do begin                                                                    \
+      iter := iter+1;                                                                              \
+      a := random(7000, 30000);                                                                    \
+      scenery_pid := pid;                                                                          \
+      if tile_contains_pid_obj(a, 0, scenery_pid) then begin end else begin                        \
+         if not(in_spawn_zone(dude_tile, a)) then                                                  \
+         begin                                                                                     \
+            create_object(scenery_pid, a, 0);                                                      \
+         end                                                                                       \
+      end                                                                                          \
+   end                                                                                             \
+   noop
+
 procedure start begin
 end
 
@@ -179,35 +194,10 @@ procedure CreateSceneryClutter begin
    call Scenes(0);
 
    // Scrub grass
-   iter := 0;
-   while iter < 50 do
-   begin
-      iter := iter+1;
-      a := random(7000, 30000);
-      scenery_pid := random(PID_SCRUB_1, PID_SCRUB_4);
-      if tile_contains_pid_obj(a, 0, scenery_pid) then begin end else begin
-         //if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
-         if not(in_spawn_zone(dude_tile, a)) then
-         begin
-            create_object(scenery_pid, a, 0);
-         end
-      end
-   end
+   spawn_scenery(50, random(PID_SCRUB_1, PID_SCRUB_4));
 
    // Remains / dead animals, etc.
-   iter := 0;
-   while iter < 3 do
-   begin
-      iter := iter+1;
-      a := random(7000, 30000);
-      scenery_pid := random(PID_BONES_4, PID_BONES_5); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
-      if tile_contains_pid_obj(a, 0, scenery_pid) then begin end else begin
-         if not(in_spawn_zone(dude_tile, a)) then
-         begin
-            create_object(scenery_pid, a, 0);
-         end
-      end
-   end
+   spawn_scenery(3, random(PID_BONES_4, PID_BONES_5));
 
    // Tires, grass, smog, barrels desert elements
    iter := 0;
@@ -242,36 +232,12 @@ procedure CreateSceneryClutter begin
 
    // Cactus! - from RNDDESRT.ssl
    if (random(0, 3) == 1) then begin
-      iter := 0;
-      while iter < 10 do
-      begin
-         iter := iter+1;
-         a := random(7000, 30000);
-         scenery_pid := random(PID_CACTUS_1, PID_CACTUS_2);
-         if tile_contains_pid_obj(a, 0, scenery_pid) then begin end else begin
-            if not(in_spawn_zone(dude_tile, a)) then
-            begin
-               create_object(scenery_pid, a, 0);
-            end
-         end
-      end
+      spawn_scenery(10, random(PID_CACTUS_1, PID_CACTUS_2));
    end
 
    // Tires
    if (random(0, 5) == 1) then begin
-      iter := 0;
-      while iter < 14 do
-      begin
-         iter := iter+1;
-         a := random(7000, 30000);
-         scenery_pid := PID_TIRE;
-         if tile_contains_pid_obj(a, 0, scenery_pid) then begin end else begin
-            if not(in_spawn_zone(dude_tile, a)) then
-            begin
-               create_object(scenery_pid, a, 0);
-            end
-         end
-      end
+      spawn_scenery(14, PID_TIRE);
    end
 
 end

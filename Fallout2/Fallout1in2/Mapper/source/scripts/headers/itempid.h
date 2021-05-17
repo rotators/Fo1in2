@@ -571,6 +571,8 @@
 #define PID_DEHYDRATION_WEAK                (537)
 #define PID_DEHYDRATION_STRONG              (538)
 
+#define PID_FIRE_GECKO_PELT                 (539)
+
 // Fo1 Holodisks
 #define PID_BOS_HOLODISK                    (164) // Artifact disk
 #define PID_FEV_HOLODISK                    (190)
