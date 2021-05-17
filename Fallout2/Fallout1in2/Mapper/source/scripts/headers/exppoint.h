@@ -208,6 +208,7 @@
 #define EXP_UPGRADE_MOTORCYCLE                  (500)
 #define EXP_HIRED_KATJA                         (200)
 #define EXP_LEARN_BRAWLING                      (250)
+#define EXP_HELPED_TALIUS                       (500)
 
 // Necropolis
 #define EXP_WATER_CHIP_TAKEN                    (2500)

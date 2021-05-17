@@ -518,6 +518,7 @@
 #define REP_BONUS_GUNRNR_DEAD                   (-5)
 #define REP_BONUS_DEATHCLAWS_DEAD               (5)
 #define REP_BONUS_REGULATORS_DEAD               (25)
+#define REP_BONUS_HELPED_TALIUS                 (2)
 #define inc_boneyard_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis

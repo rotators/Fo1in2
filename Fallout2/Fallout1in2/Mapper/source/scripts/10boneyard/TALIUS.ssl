@@ -68,11 +68,26 @@ procedure Talius38;
 procedure Talius39;
 procedure Talius40;
 procedure Talius41;
+procedure Talius42;
+procedure Talius43;
 procedure TaliusEnd;
 procedure combat;
 
+#define LVAR_Herebefore       (4)
+#define LVAR_GivenMentats     (5)
+#define LVAR_GivenFlamer      (6)
+#define LVAR_SaidName         (7)
+#define LVAR_Description      (8)
+#define LVAR_Sleeping         (9)
+
 variable tmp_hostile;
 variable initial := 0;
+
+variable night_person;
+variable wake_time := 600;
+variable sleep_time := 1800;
+variable home_tile := 19269;
+variable sleep_tile := 21067;
 
 procedure start begin
    if not(initial) then begin
@@ -95,10 +110,14 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
+   else begin
+      sleeping
+   end
 end
 
 procedure description_p_proc begin
-   if (is_success(do_check(dude_obj, STAT_pe, dude_perk(PERK_bonus_awareness)))) then begin
+   if (local_var(LVAR_Description) or (is_success(do_check(dude_obj, STAT_pe, dude_perk(PERK_bonus_awareness))))) then begin
+      set_local_var(LVAR_Description, 1);
       script_overrides;
       display_msg(mstr(231));
    end
@@ -110,7 +129,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -130,21 +149,21 @@ procedure talk_p_proc begin
    if (global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 2) then begin
       call Talius41;
    end
+   else if (global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 1) then begin
+      call Talius40;
+   end
+   else if ((game_time_hour < 600) or (game_time_hour > 1800)) then begin
+      call Talius00;
+   end
    else begin
-      if (global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 1) then begin
-         call Talius40;
+      if (global_var(GVAR_QUEST_KILL_HARRY) == 2) then begin
+         call Talius43;
+      end
+      else if (global_var(GVAR_QUEST_KILL_HARRY) == 1) then begin
+         start_dialog_at_node(Talius42);
       end
       else begin
-         if ((game_time_hour < 600) or (game_time_hour > 1800)) then begin
-            call Talius00;
-         end
-         else begin
-            start_gdialog(274, self_obj, 4, -1, -1);
-            gsay_start;
-            call Talius01;
-            gsay_end;
-            end_dialogue;
-         end
+         start_dialog_at_node(Talius01);
       end
    end
 end
@@ -154,19 +173,31 @@ procedure Talius00 begin
 end
 
 procedure Talius01 begin
-   if (dude_is_female) then begin
-      Reply(102);
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      set_local_var(LVAR_Herebefore, 1);
+      Reply(102 + dude_is_male);
+   end
+   else
+      Reply(300 + dude_is_male);
+
+   if (local_var(LVAR_SaidName) == 0) then begin
+      NLowOption(mstr(105) + dude_name + mstr(106) + dude_name + mstr(107), Talius05);
+      NOption(mstr(108) + dude_name + mstr(109), Talius06, 4);
    end
    else begin
-      Reply(103);
+      NOption(302, Talius06, 4);
    end
    NLowOption(104, Talius02);
-   NLowOption(mstr(105) + dude_name + mstr(106) + dude_name + mstr(107), Talius05);
-   NOption(mstr(108) + dude_name + mstr(109), Talius06, 4);
    NOption(110, combat, 4);
    NOption(111, Talius36, 4);
-   NOption(mstr(112) + dude_name + mstr(113), Talius37, 6);
+   if (local_var(LVAR_SaidName) == 0) then
+      NOption(mstr(112) + dude_name + mstr(113), Talius37, 6);
+   else
+      NOption(303, Talius37, 6);
    NOption(114, Talius37, 8);
+
+   NOption(exit_line, TaliusEnd, 4);
+   NLowOption(g_grunt, TaliusEnd);
 end
 
 procedure Talius02 begin
@@ -175,20 +206,18 @@ procedure Talius02 begin
    NLowOption(117, combat);
 end
 
-procedure Talius03
-begin
+procedure Talius03 begin
    Reply(118);
    NLowOption(119, combat);
    NLowOption(120, Talius04);
 end
 
-procedure Talius04
-begin
+procedure Talius04 begin
    variable LVar0 := 0;
-   if (local_var(5) == 0) then begin
+   if (local_var(LVAR_GivenMentats) == 0) then begin
       LVar0 := create_object(PID_MENTATS, 0, 0);
       add_mult_objs_to_inven(dude_obj, LVar0, 3);
-      set_local_var(5, 1);
+      set_local_var(LVAR_GivenMentats, 1);
       NMessage(121);
    end
    else begin
@@ -196,15 +225,15 @@ begin
    end
 end
 
-procedure Talius05
-begin
+procedure Talius05 begin
+   set_local_var(LVAR_SaidName, 1);
    Reply(mstr(122) + dude_name + mstr(123));
    NLowOption(124, Talius02);
    NLowOption(125, combat);
 end
 
-procedure Talius06
-begin
+procedure Talius06 begin
+   set_local_var(LVAR_SaidName, 1);
    Reply(126);
 // if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 //    giq_option(4, 274, 127, Talius07, 50);
@@ -213,8 +242,7 @@ begin
    NOption(129, Talius32, 4);
 end
 
-procedure Talius07
-begin
+procedure Talius07 begin
    Reply(130);
    NOption(131, Talius08, 4);
 // if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -224,8 +252,7 @@ begin
    NOption(134, combat, 4);
 end
 
-procedure Talius08
-begin
+procedure Talius08 begin
    Reply(135);
    NOption(136, TaliusEnd, 4);
    NOption(137, Talius09, 4);
@@ -233,8 +260,7 @@ begin
    NOption(139, combat, 4);
 end
 
-procedure Talius09
-begin
+procedure Talius09 begin
    Reply(140);
    NOption(141, Talius10, 4);
    NOption(142, Talius15, 4);
@@ -242,51 +268,51 @@ begin
    NOption(144, Talius17, 5);
 end
 
-procedure Talius10
-begin
+procedure Talius10 begin
    Reply(145);
-   NOption(146, Talius11, 4);
+
+   if (global_var(GVAR_QUEST_KILL_HARRY) == 0) then
+      NOption(146, Talius11, 4);
+
    NOption(147, TaliusEnd, 4);
    NOption(148, Talius15, 4);
    NOption(149, Talius16, 4);
    NOption(150, Talius17, 4);
 end
 
-procedure Talius11
-begin
+procedure Talius11 begin
    Reply(151);
    NOption(152, Talius12, 4);
 end
 
-procedure Talius12
-begin
+procedure Talius12 begin
    Reply(153);
-   if (local_var(6) == 0) then begin
-      NOption(154, Talius13, 4);
+   if (global_var(GVAR_QUEST_KILL_HARRY) == 0) then begin
+      GOption(154, Talius13, 4);
+      NOption(155, Talius14, 4);
    end
-   NOption(155, Talius14, 4);
+   else begin
+      NOption(224, Talius39, 6);
+   end
 end
 
-procedure Talius13
-begin
-   variable LVar0 := 0;
-   set_local_var(6, 1);
+procedure Talius13 begin
+   variable Item;
+   set_global_var(GVAR_QUEST_KILL_HARRY, 1);
+
    NMessage(156);
-   LVar0 := create_object(PID_FLAMETHROWER_FUEL, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
-   LVar0 := create_object(PID_FLAMETHROWER_FUEL, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
-   LVar0 := create_object(PID_FLAMER, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
+   // Only give the flamer now, and more ammo later
+   //Item := create_object(PID_FLAMETHROWER_FUEL, 0, 0);
+   //add_mult_objs_to_inven(dude_obj, Item, 2);
+   Item := create_object(PID_FLAMER, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 end
 
-procedure Talius14
-begin
+procedure Talius14 begin
    NMessage(157);
 end
 
-procedure Talius15
-begin
+procedure Talius15 begin
    Reply(158);
    NOption(159, Talius16, 4);
    NOption(160, Talius17, 4);
@@ -294,25 +320,22 @@ begin
    NOption(162, TaliusEnd, 4);
 end
 
-procedure Talius16
-begin
+procedure Talius16 begin
    Reply(mstr(163) + " " + mstr(164));
    NOption(165, Talius17, 4);
    NOption(166, Talius22, 4);
    NOption(167, TaliusEnd, 4);
 end
 
-procedure Talius17
-begin
+procedure Talius17 begin
    NMessage(168);
    Reply(169);
    NOption(170, Talius18, 4);
-   NOption(171, Talius19, 4);
-   NOption(172, Talius21, 4);
+   NOption(171, Talius19, 4); // This line makes no fucking sense
+   BOption(172, Talius21, 4);
 end
 
-procedure Talius18
-begin
+procedure Talius18 begin
    NMessage(173);
    Reply(174);
    NOption(175, TaliusEnd, 4);
@@ -320,169 +343,168 @@ begin
    NOption(177, Talius12, 4);
 end
 
-procedure Talius19
-begin
+procedure Talius19 begin
    NMessage(178);
    Reply(179);
    NOption(180, TaliusEnd, 4);
-   if ((global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) and (local_var(6) == 0)) then begin
-      NOption(181, Talius20, 4);
+   if ((global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) or (global_var(GVAR_QUEST_KILL_HARRY) == 1)) then begin
+      GOption(181, Talius20, 4);
    end
 end
 
-procedure Talius20
-begin
-   variable LVar0 := 0;
-   set_local_var(6, 1);
-   NMessage(182);
-   LVar0 := create_object(PID_FLAMER, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
+procedure Talius20 begin
+   variable Item;
+
+   if (global_var(GVAR_QUEST_KILL_HARRY) == 1) then
+      set_global_var(GVAR_QUEST_KILL_HARRY, 2);
+
+   inc_boneyard_rep(REP_BONUS_HELPED_TALIUS);
+   give_xp_msg(EXP_HELPED_TALIUS, mstr(400));
+
+   GMessage(182);
+   // Giving a second flamer is stupid. Give more ammo instead.
+   //Item := create_object(PID_FLAMER, 0, 0);
+   if fo1in2_weapon_upgrades_enabled then
+      Item := create_object(PID_FLAMETHROWER_FUEL_MK_II, 0, 0);
+   else
+      Item := create_object(PID_FLAMETHROWER_FUEL, 0, 0);
+   add_mult_objs_to_inven(dude_obj, Item, 4);
 end
 
-procedure Talius21
-begin
-   NMessage(183);
+procedure Talius21 begin
+   BMessage(183);
 end
 
-procedure Talius22
-begin
+procedure Talius22 begin
    Reply(184);
-   NOption(185, Talius23, 4);
+   GOption(185, Talius23, 4);
    NOption(186, Talius26, 4);
    NOption(187, Talius27, 4);
 end
 
-procedure Talius23
-begin
+procedure Talius23 begin
    Reply(188);
    NOption(189, Talius24, 4);
    NOption(190, Talius24, 4);
    NOption(191, Talius25, 4);
 end
 
-procedure Talius24
-begin
+procedure Talius24 begin
    NMessage(192);
 end
 
-procedure Talius25
-begin
+procedure Talius25 begin
    NMessage(193);
 end
 
-procedure Talius26
-begin
+procedure Talius26 begin
    NMessage(194);
 end
 
-procedure Talius27
-begin
+procedure Talius27 begin
    Reply(195);
-   NOption(196, combat, 4);
+   BOption(196, combat, 4);
    NOption(197, Talius28, 4);
 end
 
-procedure Talius28
-begin
+procedure Talius28 begin
    NMessage(198);
    call combat;
 end
 
-procedure Talius29
-begin
+procedure Talius29 begin
    Reply(199);
    NOption(200, Talius29a, 4);
-   NOption(201, combat, 4);
+   BOption(201, combat, 4);
 end
 
-procedure Talius29a
-begin
+procedure Talius29a begin
    set_global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY, 1);
 end
 
-procedure Talius30
-begin
+procedure Talius30 begin
    NMessage(202);
    call combat;
 end
 
-procedure Talius31
-begin
+procedure Talius31 begin
    NMessage(203);
    Reply(204);
    NOption(205, TaliusEnd, 4);
    NOption(206, Talius09, 4);
    NOption(207, Talius09, 4);
-   NOption(208, combat, 4);
+   BOption(208, combat, 4);
 end
 
-procedure Talius32
-begin
+procedure Talius32 begin
    Reply(209);
    NOption(210, TaliusEnd, 4);
    NOption(211, Talius33, 4);
 end
 
-procedure Talius33
-begin
+procedure Talius33 begin
    Reply(212);
    NOption(213, TaliusEnd, 4);
    NOption(214, Talius34, 6);
 end
 
-procedure Talius34
-begin
+procedure Talius34 begin
    Reply(215);
    NOption(216, TaliusEnd, 6);
    NOption(217, Talius35, 8);
 end
 
-procedure Talius35
-begin
+procedure Talius35 begin
    Reply(218);
    NOption(219, TaliusEnd, 8);
 end
 
-procedure Talius36
-begin
+procedure Talius36 begin
    NMessage(220);
 end
 
-procedure Talius37
-begin
+procedure Talius37 begin
+   set_local_var(LVAR_SaidName, 1);
    Reply(221);
    NOption(222, Talius38, 6);
 end
 
-procedure Talius38
-begin
+procedure Talius38 begin
    Reply(223);
    NOption(224, Talius39, 6);
 end
 
-procedure Talius39
-begin
+procedure Talius39 begin
    Reply(225);
-   NOption(226, TaliusEnd, 6);
+   GOption(226, TaliusEnd, 6);
    NOption(227, TaliusEnd, 6);
 end
 
-procedure Talius40
-begin
+procedure Talius40 begin
    float_msg(self_obj, mstr(228), FLOAT_MSG_NORMAL);
 end
 
-procedure Talius41
-begin
+procedure Talius41 begin
    float_msg(self_obj, mstr(229), FLOAT_MSG_NORMAL);
 end
 
-procedure TaliusEnd
-begin
+procedure Talius42 begin
+   Reply(304 + dude_is_male);
+   if (global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) then
+      GOption(307, Talius20, 4);
+   NOption(302, Talius06, 4);
+   NOption(114, Talius37, 8);
+   NOption(306, TaliusEnd, 4);
 end
 
-procedure combat
-begin
+procedure Talius43 begin
+   float_msg(self_obj, mstr(350), FLOAT_MSG_NORMAL);
+end
+
+procedure TaliusEnd begin
+end
+
+procedure combat begin
    tmp_hostile := 1;
 end
 

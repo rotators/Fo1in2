@@ -61,6 +61,8 @@ procedure NeilQuest;
 procedure NeilCombat;
 procedure NeilEnd;
 
+#define LVAR_Herebefore       (4)
+
 variable tmp_hostile;
 variable initial := 0;
 
@@ -71,8 +73,7 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -83,10 +84,9 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -94,54 +94,36 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
       call Neil00;
    end
+   else if (global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 1) then begin
+      call Neil27;
+   end
+   else if ((global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 2) and (local_var(5) == 0)) then begin
+      set_local_var(5, 1);
+      start_dialog_at_node(Neil28);
+   end
+   else if ((followers_trained) and (local_var(6) == 0)) then begin
+      call Neil31;
+   end
    else begin
-      if (global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 1) then begin
-         call Neil27;
-      end
-      else begin
-         if ((global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY) == 2) and (local_var(5) == 0)) then begin
-            set_local_var(5, 1);
-            start_gdialog(271, self_obj, 4, -1, -1);
-            gsay_start;
-            call Neil28;
-            gsay_end;
-            end_dialogue;
-         end
-         else begin
-            if ((followers_trained) and (local_var(6) == 0)) then begin
-               call Neil31;
-            end
-            else begin
-               start_gdialog(271, self_obj, 4, -1, -1);
-               gsay_start;
-               call Neil01;
-               gsay_end;
-               end_dialogue;
-            end
-         end
-      end
+      start_dialog_at_node(Neil01);
    end
 end
 
-procedure Neil00
-begin
+procedure Neil00 begin
    float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
 end
 
-procedure Neil01
-begin
+procedure Neil01 begin
    Reply(103);
    NLowOption(104, Neil02);
    NLowOption(105, Neil03);
@@ -153,47 +135,40 @@ begin
    NOption(113, Neil26, 8);
 end
 
-procedure Neil02
-begin
+procedure Neil02 begin
    Reply(114);
    NOption(115, Neil03, 1);
    NOption(116, NeilCombat, 1);
    NOption(117, Neil04, 1);
 end
 
-procedure Neil03
-begin
+procedure Neil03 begin
    NMessage(118);
 end
 
-procedure Neil04
-begin
+procedure Neil04 begin
    Reply(119);
    NOption(120, Neil05, 1);
    NOption(121, Neil06, 1);
 end
 
-procedure Neil05
-begin
+procedure Neil05 begin
    NMessage(122);
    set_global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY, 1);
 end
 
-procedure Neil06
-begin
+procedure Neil06 begin
    NMessage(123);
 end
 
-procedure Neil07
-begin
+procedure Neil07 begin
    Reply(124);
    NOption(125, Neil08, 4);
    NOption(126, Neil14, 4);
    NOption(127, Neil15, 4);
 end
 
-procedure Neil08
-begin
+procedure Neil08 begin
    Reply(128);
    NOption(129, Neil09, 4);
    NOption(130, NeilEnd, 4);
@@ -201,43 +176,37 @@ begin
    NOption(132, Neil13, 4);
 end
 
-procedure Neil09
-begin
+procedure Neil09 begin
    Reply(133);
    NOption(134, NeilQuest, 4);
    NOption(135, Neil10, 4);
    NOption(136, Neil13, 4);
 end
 
-procedure Neil10
-begin
+procedure Neil10 begin
    Reply(137);
    NOption(138, Neil11, 4);
    NOption(139, NeilEnd, 4);
    NOption(140, NeilCombat, 4);
 end
 
-procedure Neil11
-begin
+procedure Neil11 begin
    Reply(141);
    NOption(142, Neil12, 4);
    NOption(143, Neil13, 4);
 end
 
-procedure Neil12
-begin
+procedure Neil12 begin
    NMessage(144);
    call NeilQuest;
 end
 
-procedure Neil13
-begin
+procedure Neil13 begin
    NMessage(145);
    call NeilCombat;
 end
 
-procedure Neil14
-begin
+procedure Neil14 begin
    Reply(146);
    NOption(147, Neil09, 4);
    NOption(148, NeilEnd, 4);
@@ -245,24 +214,21 @@ begin
    NOption(150, Neil13, 4);
 end
 
-procedure Neil15
-begin
+procedure Neil15 begin
    Reply(151);
    NOption(152, Neil09, 4);
    NOption(153, NeilCombat, 4);
    NOption(154, Neil13, 4);
 end
 
-procedure Neil16
-begin
+procedure Neil16 begin
    Reply(155);
    NOption(156, Neil17, 5);
    NOption(157, Neil18, 5);
    NOption(158, Neil16a, 5);
 end
 
-procedure Neil16a
-begin
+procedure Neil16a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Neil19;
    end
@@ -271,21 +237,18 @@ begin
    end
 end
 
-procedure Neil17
-begin
+procedure Neil17 begin
    variable LVar0 := 0;
    dude_caps_adjust(200);
    NMessage(mstr(159) + " " + mstr(160));
    call NeilCombat;
 end
 
-procedure Neil18
-begin
+procedure Neil18 begin
    NMessage(161);
 end
 
-procedure Neil19
-begin
+procedure Neil19 begin
    Reply(162);
    NOption(163, Neil20, 5);
    NOption(164, Neil21, 5);
@@ -294,8 +257,7 @@ begin
    NOption(167, NeilEnd, 5);
 end
 
-procedure Neil20
-begin
+procedure Neil20 begin
    Reply(168);
    NOption(169, Neil21, 5);
    NOption(170, Neil22, 5);
@@ -303,8 +265,7 @@ begin
    NOption(172, NeilEnd, 5);
 end
 
-procedure Neil21
-begin
+procedure Neil21 begin
    Reply(173);
    NOption(174, Neil20, 5);
    NOption(175, Neil22, 5);
@@ -312,8 +273,7 @@ begin
    NOption(177, NeilEnd, 5);
 end
 
-procedure Neil22
-begin
+procedure Neil22 begin
    Reply(178);
    NOption(179, Neil20, 5);
    NOption(180, Neil21, 5);
@@ -321,14 +281,12 @@ begin
    NOption(182, NeilEnd, 5);
 end
 
-procedure Neil23
-begin
+procedure Neil23 begin
    NMessage(183);
    call NeilCombat;
 end
 
-procedure Neil24
-begin
+procedure Neil24 begin
    Reply(184);
    NOption(185, Neil08, 6);
    NOption(186, Neil14, 6);
@@ -336,60 +294,50 @@ begin
    NOption(188, NeilEnd, 6);
 end
 
-procedure Neil25
-begin
+procedure Neil25 begin
    NMessage(189);
 end
 
-procedure Neil26
-begin
+procedure Neil26 begin
    NMessage(190);
 end
 
-procedure Neil27
-begin
+procedure Neil27 begin
    float_msg(self_obj, mstr(191), FLOAT_MSG_YELLOW);
 end
 
-procedure Neil28
-begin
+procedure Neil28 begin
    Reply(192);
    NOption(193, Neil29, 4);
    NOption(194, NeilEnd, 4);
 end
 
-procedure Neil29
-begin
+procedure Neil29 begin
    Reply(195);
    NOption(196, Neil30, 4);
    NOption(197, NeilEnd, 4);
 end
 
-procedure Neil30
-begin
+procedure Neil30 begin
    Reply(198);
    gfade_out(1);
-   game_time_advance(game_ticks(24 * 3600));
-   set_global_var(GVAR_SLIDE_TRAIN_FOLLOWERS, 1);
+      game_time_advance(game_ticks(24 * 3600));
+      set_global_var(GVAR_SLIDE_TRAIN_FOLLOWERS, 1);
    gfade_in(1);
    NOption(199, Neil31, 4);
 end
 
-procedure Neil31
-begin
+procedure Neil31 begin
    float_msg(self_obj, mstr(200), FLOAT_MSG_YELLOW);
 end
 
-procedure NeilQuest
-begin
+procedure NeilQuest begin
    set_global_var(GVAR_QUEST_BONEYARD_4_FIND_SPY, 1);
 end
 
-procedure NeilCombat
-begin
+procedure NeilCombat begin
    tmp_hostile := 1;
 end
 
-procedure NeilEnd
-begin
+procedure NeilEnd begin
 end

@@ -148,7 +148,7 @@
 {1106}{}{Stop the Gangs from attacking Adytum.}	#fo1 vanilla
 {1107}{}{Kill the Mother Deathclaw.}
 {1108}{}{Convince the Gun Runners to supply the Blades.}
-{1109}{}{RESERVED}
+{1109}{}{Kill the leader of the mutant army in Necropolis.}
 {1110}{}{RESERVED}
 {1111}{}{RESERVED}
 

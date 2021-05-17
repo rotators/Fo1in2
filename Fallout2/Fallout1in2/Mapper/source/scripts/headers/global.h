@@ -4059,8 +4059,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4919)
 #define RESERVED_FOR_FALLOUT_FIXT               (4920)
 #define RESERVED_FOR_FALLOUT_FIXT               (4921)
-#define RESERVED_FOR_FALLOUT_FIXT               (4922)
-#define RESERVED_FOR_FALLOUT_FIXT               (4923)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4922)*/
+#define GVAR_QUEST_KILL_HARRY                   (4923)
 #define GVAR_ENABLE_EXPANDED_RADIATION          (4924)
 #define GVAR_HIGHTOWER_STATUS                   (4925)
 #define GVAR_IS_FISHERMAN_DEAD                  (4926)
