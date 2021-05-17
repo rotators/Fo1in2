@@ -15,6 +15,9 @@
 #include "command.h"
 //#include "modreact.h"
 
+#undef  set_default_party_follow
+#define set_default_party_follow             set_follow_close
+
 /* Standard Script Procedures */
 procedure start;
 procedure push_p_proc;
@@ -42,7 +45,11 @@ variable Hex_Number;
 #define LVAR_Master_Stop_Following  (4)
 #define LVAR_Vats_Stop_Following    (5)
 
-#define cathedral_valid_map      ((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) or (CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12))
+#define LVAR_WAITING                (6)
+#define LVAR_FOLLOW_DISTANCE        (7)
+#define LVAR_TEAM                   (8)
+
+#define cathedral_valid_map      ((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34))
 #define mbase_valid_map          ((CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12))
 
 #define set_cathedral_final_map  set_local_var(LVAR_Master_Stop_Following, 1)
@@ -54,10 +61,6 @@ procedure start begin
       set_self_ai(AI_BROTHERHOOD_PALADIN);
       Only_Once := 0;
    end
-
-   // Unused. Delete in Cathedral.
-   if CUR_MAP_CHILDRN1 then
-      destroy_object(self_obj);
 end
 
 procedure push_p_proc begin
@@ -83,12 +86,16 @@ procedure critter_p_proc begin
    end
 
    // Follow player if on valid map, and, display one-time float message on ground-floor maps.
-   if (bos_invading_cathedral and cathedral_valid_map) or (bos_invading_mbase and mbase_valid_map) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
+   if (bos_invading_cathedral and cathedral_valid_map) or (bos_invading_mbase and mbase_valid_map) then begin
+      party_member_follow_dude
+      /*
       if (tile_distance_objs(dude_obj, self_obj) > 6) then begin
          self_run_to_tile(tile_num_in_direction(dude_tile, random(0, 5), random(3, 6)));
       end
+      */
+
       if (local_var(LVAR_BoS_Joins) == 0) then begin
-         if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_MBENT))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+         if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_MBENT))) then begin
             set_local_var(LVAR_BoS_Joins, 1);
             if (map_var(MVAR_BOS_FLOAT) == 0) then begin
                set_map_var(MVAR_BOS_FLOAT, 1);
@@ -100,17 +107,18 @@ procedure critter_p_proc begin
 
    // Removal processes after coming back to ground floor.
    if not(combat_is_initialized) then begin
-   //  CHILDREN - ENTRANCE AND GROUND FLOOR
-   /*if ((local_var(LVAR_Master_Stop_Following) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin
-      set_local_var(LVAR_Master_Stop_Following, 0);
-      set_local_var(LVAR_Add_to_Party, 2);
-      party_remove(self_obj);
-      set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
-      reg_anim_clear(self_obj);
-      float_msg(self_obj, message_str(SCRIPT_BROINVAD, 115), FLOAT_MSG_WHITE);
-      add_timer_event(self_obj, 10, 1);
-   end*/
-   //  MILITARY BASE - ENTRANCE
+      //  CHILDREN - ENTRANCE AND GROUND FLOOR
+      if ((local_var(LVAR_Add_to_Party) == 1) and (CUR_MAP_MSTRLR34 and self_elevation == 0) and (local_var(LVAR_Master_Stop_Following) == 1)) then begin
+         set_local_var(LVAR_Add_to_Party, 2);
+         party_remove(self_obj);
+         if (global_var(GVAR_BROTHERHOOD_SEND_HELP) < 10) then begin
+            set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
+            float_msg(self_obj, mstr(115), FLOAT_MSG_WHITE);
+         end
+         reg_anim_clear(self_obj);
+         add_timer_event(self_obj, 10, 4);
+      end
+      //  MILITARY BASE - ENTRANCE
       if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(LVAR_Add_to_Party) == 1) and (CUR_MAP_MBVATS12 and dude_elevation == 1) and (local_var(LVAR_Vats_Stop_Following) == 1)) then begin
          set_local_var(LVAR_Add_to_Party, 2);
          party_remove(self_obj);
@@ -127,7 +135,7 @@ end
 procedure map_enter_p_proc begin
    if not(is_loading_game) then begin
       // Add to party if first time on valid entrance map.
-      if ((local_var(LVAR_Add_to_Party) == 0) and (/*bos_invading_cathedral and (CUR_MAP_CHILDRN1) or*/ (bos_invading_mbase and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+      if ((local_var(LVAR_Add_to_Party) == 0) and ((bos_invading_cathedral and CUR_MAP_CHILDRN1) or (bos_invading_mbase and CUR_MAP_MBENT))) then begin
          set_local_var(LVAR_Add_to_Party, 1);
          if not(is_loading_game) then begin
             set_self_visible;
@@ -143,7 +151,9 @@ procedure map_enter_p_proc begin
                destroy_object(self_obj);
             end
          end
-         if /*(not(bos_invading_cathedral) and cathedral_valid_map) or*/ (not(bos_invading_mbase) and mbase_valid_map) then begin
+
+         // Remove Paladins from the other invasion location
+         if (not(bos_invading_cathedral) and cathedral_valid_map) or (not(bos_invading_mbase) and mbase_valid_map) then begin
             if not(is_loading_game) then begin
                set_self_invisible;
             end
@@ -173,7 +183,7 @@ procedure map_enter_p_proc begin
    end
 
    // Flags to initiate process of them leaving the map.
-   if local_var(LVAR_Master_Stop_Following) == 0 and CUR_MAP_MSTRLR12 then begin
+   if local_var(LVAR_Master_Stop_Following) == 0 and CUR_MAP_MSTRLR34 then begin
       set_cathedral_final_map;
    end
    // Flag that they've reached Vats, so it'll trigger leaving map when get back to surface.
