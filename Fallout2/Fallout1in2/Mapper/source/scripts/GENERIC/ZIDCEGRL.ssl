@@ -193,9 +193,9 @@ procedure map_enter_p_proc begin
    Only_Once := 0;
    if (map_first_run) then begin
       set_local_var(LVAR_Home_Tile, self_tile);
-      if CUR_MAP_JUNKCSNO then
-         check_restock_item_min_limit(PID_LOADED_DICE, 1, 1, 100)
-      else
+      //if CUR_MAP_JUNKCSNO then
+      //   check_restock_item_min_limit(PID_LOADED_DICE, 1, 1, 100)
+      //else
          check_restock_item_min_limit(PID_DICE, 1, 1, 100)
       check_restock_item_min_limit(PID_BOTTLE_CAPS, 5, 30, 100)
    end else if (self_tile != local_var(LVAR_Home_Tile)) then begin
@@ -222,17 +222,16 @@ procedure critter_p_proc begin
       end
    end
    else begin
-
       if (hostile and self_can_see_dude) then begin
          self_attack_dude;
       //added by killap
-      end else if (self_tile != local_var(LVAR_Home_Tile)) then begin
+      end
+      else if (self_tile != local_var(LVAR_Home_Tile)) then begin
          if (not(combat_is_initialized)) then begin
             self_walk_to_tile(local_var(LVAR_Home_Tile));
          end
       end
       //end added
-
    end
 end
 
@@ -296,10 +295,11 @@ end
 
 procedure use_skill_on_p_proc begin
 variable the_roll;
-   if ((action_being_used == SKILL_GAMBLING) and (dude_has_gambling_skills) and (obj_type(self_obj)==1)) then begin
+   if debug_mode or ((action_being_used == SKILL_GAMBLING) and (dude_has_gambling_skills) and (obj_type(self_obj)==1)) then begin
+   //if ((action_being_used == SKILL_STEAL) and (dude_has_gambling_skills) and (obj_type(self_obj)==1)) then begin
       script_overrides;
       the_roll := roll_vs_skill(dude_obj, action_being_used, 0);
-      if (is_success(the_roll)) then begin
+      if debug_mode or (is_success(the_roll)) then begin
          if (dice_count < 1) then begin
             dice_display_mstr(175);
          end else if (dice_count > 1) then begin
@@ -452,8 +452,9 @@ variable the_result := 0;
 
    if (get_dealer_money <= 0) then begin
       set_dealer_timeout;
-      if day then
-         gSay_Reply(SCRIPT_ZIDCEGRL, mstr(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result)) + mstr(5000 + day));
+      if day then begin
+         dice_reply(mstr(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result)) + mstr(5000 + day));
+      end
    end
    else begin
       dice_reply(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result));
