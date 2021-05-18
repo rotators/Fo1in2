@@ -4059,7 +4059,7 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4919)
 #define RESERVED_FOR_FALLOUT_FIXT               (4920)
 #define RESERVED_FOR_FALLOUT_FIXT               (4921)*/
-#define GVAR_FOLLOWER_MACHO_STATES              (4922)
+#define GVAR_CATHEDRAL_INVADER_STATES           (4922)
 #define GVAR_QUEST_KILL_HARRY                   (4923)
 #define GVAR_ENABLE_EXPANDED_RADIATION          (4924)
 #define GVAR_HIGHTOWER_STATUS                   (4925)
