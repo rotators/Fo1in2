@@ -188,56 +188,52 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-   if CUR_MAP_JUNKCSNO and (local_var(LVAR_Float) == 0) then begin
-      set_local_var(LVAR_Float, 1);
-      float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
-   end
-
    if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
       if (self_can_see_dude) then begin
          tmp_hostile := 1;
       end
    end
+   else if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
    else begin
-      if (tmp_hostile) then begin
-         tmp_hostile := 0;
-         attack(dude_obj);
-      end
-      else begin
-         if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin
-            ILLEGAL := 1;
-            TRESPASS := 1;
-            dialogue_system_enter;
-         end
-         if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (CUR_MAP_JUNKKILL)) then begin
-            dialogue_system_enter;
-         end
 
-         sleeping
-         if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(LVAR_Sleeping) == 0)) then begin
-            if (self_tile != home_tile) then begin
-               self_walk_to_tile(home_tile);
-            end
-            else begin
-               if (self_cur_rot != 2) then begin
-                  self_rotate(2);
-               end
-            end
+      if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin
+         ILLEGAL := 1;
+         TRESPASS := 1;
+         dialogue_system_enter;
+      end
+      if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (CUR_MAP_JUNKKILL)) then begin
+         dialogue_system_enter;
+      end
+
+      sleeping
+      if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(LVAR_Sleeping) == 0)) then begin
+         if (self_tile != home_tile) then begin
+            self_walk_to_tile(home_tile);
          end
-         if (Killian_barter_var != 0) then begin
-            if ((local_var(LVAR_Sleeping) == 0) and (CUR_MAP_JUNKKILL)) then begin
-               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-                  dialogue_system_enter;
-               end
-               else begin
-                  self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
-               end
-            end
-            else begin
-               Killian_barter_var := 0;
+         else begin
+            if (self_cur_rot != 2) then begin
+               self_rotate(2);
             end
          end
       end
+
+      if (Killian_barter_var != 0) then begin
+         if ((local_var(LVAR_Sleeping) == 0) and (CUR_MAP_JUNKKILL)) then begin
+            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+               dialogue_system_enter;
+            end
+            else begin
+               self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
+            end
+         end
+         else begin
+            Killian_barter_var := 0;
+         end
+      end
+
    end
 end
 
@@ -293,8 +289,7 @@ procedure map_enter_p_proc begin
          end
          else begin
             set_self_team(TEAM_PLAYER);
-            // Moved this to critter_p_proc, because it didn't want to show up for some reason
-            //float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
+            float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
          end
       end
       else begin
@@ -359,86 +354,80 @@ procedure talk_p_proc begin
    if ((local_var(LVAR_Sleeping) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
+   else if ((global_var(GVAR_GOT_CONFESSION) != 1) and (global_var(GVAR_BUG_PLANTED) != 1) and not(is_gizmo_alive) and (local_var(9) == 0)) then begin
+      call Killian89;
+   end
    else begin
-      if ((global_var(GVAR_GOT_CONFESSION) != 1) and (global_var(GVAR_BUG_PLANTED) != 1) and not(is_gizmo_alive) and (local_var(9) == 0)) then begin
-         call Killian89;
-      end
-      else begin
-         get_reaction
+      get_reaction
 
-         if (Killian_barter_var >= 0) then begin
-            if (Killian_barter_var == 1) then begin
-               if (Killian_store1_ptr > 0) then
-                  move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
-            end
-            else if (Killian_barter_var == 2) then begin
-               if (Killian_store2_ptr > 0) then
-                  move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
-            end
-            else if (Killian_barter_var == 3) then begin
-               if (Killian_store3_ptr > 0) then
-                  move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
-            end
-            else begin
-               move_obj_inven_to_obj(KillSafe_ptr, self_obj);
-            end
+      if (Killian_barter_var >= 0) then begin
+         if (Killian_barter_var == 1) then begin
+            if (Killian_store1_ptr > 0) then
+               move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
          end
-
-         start_gdialog(47, self_obj, 4, HEAD_KILLIAN, BACKGROUND_JUNKTOWN);
-         gsay_start;
-         if (ILLEGAL) then begin
-            if (ILLEGBEFORE) then begin
-               call Killian30;
-            end
-            else begin
-               ILLEGBEFORE := 1;
-               if (TRESPASS) then
-                  call Killian31;
-               else
-                  call Killian29;
-            end
+         else if (Killian_barter_var == 2) then begin
+            if (Killian_store2_ptr > 0) then
+               move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
+         end
+         else if (Killian_barter_var == 3) then begin
+            if (Killian_store3_ptr > 0) then
+               move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
          end
          else begin
-            if (Killian_barter_var == -1) then begin
-               set_local_var(8, local_var(8) + 1);
-               Killian_barter_var := 0;
-               if (local_var(8) == 1) then
-                  call Killian42;
-               else if (local_var(8) == 2) then
-                  call Killian43;
-               else if (local_var(8) == 3) then
-                  call Killian44;
-               else
-                  call Killian30;
-            end
-            else if (Killian_barter_var != 0) then begin
-               Reply(115);
-               NOption(118, Killian_barter, 4);
-               NOption(121, Killianx, 4);
-               NLowOption(110, Killian_barter);
-               NLowOption(122, Killianx);
-            end
-            else begin
-               if (map_var(MVAR_helped_Killian)) then begin
-                  call Killian47;
-               end
-               else begin
-                  if (local_var(5) == 1) then begin
-                     if ((global_var(GVAR_GOT_CONFESSION) == 1) or (global_var(GVAR_BUG_PLANTED) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then
-                        call Killian54;
-                     else if (local_var(1) >= 2) then
-                        call Killian24;
-                     else
-                        call Killian26;
-                  end
-                  else
-                     call Killian01;
-               end
-            end
+            move_obj_inven_to_obj(KillSafe_ptr, self_obj);
          end
-         gsay_end;
-         end_dialogue;
       end
+
+      start_gdialog(47, self_obj, 4, HEAD_KILLIAN, BACKGROUND_JUNKTOWN);
+      gsay_start;
+      if (ILLEGAL) then begin
+         if (ILLEGBEFORE) then begin
+            call Killian30;
+         end
+         else begin
+            ILLEGBEFORE := 1;
+            if (TRESPASS) then
+               call Killian31;
+            else
+               call Killian29;
+         end
+      end
+      else if (Killian_barter_var == -1) then begin
+         set_local_var(8, local_var(8) + 1);
+         Killian_barter_var := 0;
+         if (local_var(8) == 1) then
+            call Killian42;
+         else if (local_var(8) == 2) then
+            call Killian43;
+         else if (local_var(8) == 3) then
+            call Killian44;
+         else
+            call Killian30;
+      end
+      else if (Killian_barter_var != 0) then begin
+         Reply(115);
+         NOption(118, Killian_barter, 4);
+         NOption(121, Killianx, 4);
+         NLowOption(110, Killian_barter);
+         NLowOption(122, Killianx);
+      end
+      else begin
+         if (map_var(MVAR_helped_Killian)) then begin
+            call Killian47;
+         end
+         else if (local_var(5) == 1) then begin
+            if ((global_var(GVAR_GOT_CONFESSION) == 1) or (global_var(GVAR_BUG_PLANTED) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then
+               call Killian54;
+            else if (local_var(1) >= 2) then
+               call Killian24;
+            else
+               call Killian26;
+         end
+         else
+            call Killian01;
+      end
+      gsay_end;
+      end_dialogue;
    end
 
    // Spawn Kenji
@@ -840,14 +829,12 @@ procedure Killian54 begin
    end
 end
 
-procedure Killian55
-begin
+procedure Killian55 begin
    NMessage(222);
    call Killianx;
 end
 
-procedure Killian56
-begin
+procedure Killian56 begin
    Reply(223);
    if (global_var(GVAR_BUG_PLANTED)) then begin
       NOption(224, Killian57, 4);
@@ -858,8 +845,7 @@ begin
    end
 end
 
-procedure Killian57
-begin
+procedure Killian57 begin
    GMessage(226);
    call soundcheck;
 end
@@ -869,8 +855,7 @@ procedure Killian58 begin
    GOption(g_more, playback, 1);
 end
 
-procedure Killian59
-begin
+procedure Killian59 begin
    if (map_var(MVAR_got_Gizmo) == 0) then begin
       set_map_var(MVAR_got_Gizmo, 1);
    end
@@ -882,8 +867,7 @@ begin
    NLowOption(111, Killian64);
 end
 
-procedure Killian60
-begin
+procedure Killian60 begin
    set_local_var(1, 3);
    LevelToReact
    set_global_var(GVAR_CAPTURE_GIZMO, 1);
@@ -891,93 +875,77 @@ begin
    call Killianx;
 end
 
-procedure Killian61
-begin
+procedure Killian61 begin
    Reply(235);
    NOption(236, Killian62, 4);
    NOption(237, Killian63, 4);
 end
 
-procedure Killian62
-begin
+procedure Killian62 begin
    set_global_var(GVAR_CAPTURE_GIZMO, 1);
    NMessage(238);
    call Killianx;
 end
 
-procedure Killian63
-begin
+procedure Killian63 begin
    Reply(239);
    NOption(240, Killian62, 4);
    BOption(241, Killian63a, 4);
 end
 
-procedure Killian64
-begin
+procedure Killian64 begin
    NMessage(242);
    call Killianx;
 end
 
-procedure Killian65
-begin
+procedure Killian65 begin
    NMessage(243);
 end
 
-procedure Killian66
-begin
+procedure Killian66 begin
    NMessage(244);
 end
 
-procedure Killian67
-begin
+procedure Killian67 begin
    NMessage(245);
 end
 
-procedure Killian68
-begin
+procedure Killian68 begin
    NMessage(246);
 end
 
-procedure Killian71
-begin
+procedure Killian71 begin
    NMessage(249);
 end
 
-procedure Killian72
-begin
+procedure Killian72 begin
    NMessage(250);
 end
 
-procedure Killian73
-begin
+procedure Killian73 begin
    NMessage(251);
 end
 
-procedure Killian74
-begin
+procedure Killian74 begin
    NMessage(252);
 end
 
-procedure Killian75
-begin
+procedure Killian75 begin
    NMessage(253);
 end
 
-procedure Killian76
-begin
+procedure Killian76 begin
    NMessage(254);
 end
 
-procedure Killian88
-begin
+procedure Killian88 begin
    Reply(243);
    NOption(273, Killianx, 4);
    BOption(274, KillianCbt, 4);
    GOption(275, Killian48, 4);
 end
 
-procedure Killian89
-begin
+procedure Killian89 begin
    set_local_var(9, 1);
    set_map_var(MVAR_helped_Killian, 0);
    float_msg(self_obj, mstr(284), FLOAT_MSG_NORMAL);
@@ -991,22 +959,19 @@ end
 procedure Killianx begin
 end
 
-procedure Killianx1
-begin
+procedure Killianx1 begin
    NOption(183, Killianx3, 4);
    BOption(184, KillianCbt, 4);
    BLowOption(108, KillianCbt);
 end
 
-procedure Killianx2
-begin
+procedure Killianx2 begin
    if ((game_time_hour >= sleep_time) or (game_time_hour < 700)) then begin
       remove_dude := 1;
    end
 end
 
-procedure Killianx3
-begin
+procedure Killianx3 begin
    go_to_jail := 1;
 end
 
@@ -1020,78 +985,63 @@ procedure Killianx4 begin
    set_global_var(GVAR_HIRED_BY_KILLIAN, 1);
 end
 
-procedure Killian69
-begin
+procedure Killian69 begin
    NMessage(247);
 end
 
-procedure Killian70
-begin
+procedure Killian70 begin
    NMessage(248);
 end
 
-procedure Killian76a
-begin
+procedure Killian76a begin
    NMessage(255);
 end
 
-procedure Killian77
-begin
+procedure Killian77 begin
    NMessage(256);
 end
 
-procedure Killian78
-begin
+procedure Killian78 begin
    NMessage(257);
 end
 
-procedure Killian79
-begin
+procedure Killian79 begin
    NMessage(258);
 end
 
-procedure Killian80
-begin
+procedure Killian80 begin
    NMessage(259);
 end
 
-procedure Killian81
-begin
+procedure Killian81 begin
    NMessage(260);
 end
 
-procedure Killian82
-begin
+procedure Killian82 begin
    NMessage(261);
 end
 
-procedure Killian83
-begin
+procedure Killian83 begin
    NMessage(262);
 end
 
-procedure Killian84
-begin
+procedure Killian84 begin
    NMessage(263);
 end
 
-procedure Killian85
-begin
+procedure Killian85 begin
    NMessage(264);
 end
 
-procedure Killian86
-begin
+procedure Killian86 begin
    NMessage(265);
 end
 
-procedure Killian87
-begin
+procedure Killian87 begin
    NMessage(266);
 end
 
-procedure Killian02a
-begin
+procedure Killian02a begin
    DownReactLevel
    call Killian16;
 end
@@ -1101,31 +1051,26 @@ procedure Killian02b begin
    call Killian00;
 end
 
-procedure Killian03aa
-begin
+procedure Killian03aa begin
    DownReactLevel
    call Killian04;
 end
 
-procedure Killian03ba
-begin
+procedure Killian03ba begin
    call Killian03a;
 end
 
-procedure Killian03ca
-begin
+procedure Killian03ca begin
    DownReactLevel
    call Killian16;
 end
 
-procedure Killian32a
-begin
+procedure Killian32a begin
    DownReactLevel
    call Killianx2;
 end
 
-procedure Killian63a
-begin
+procedure Killian63a begin
    DownReactLevel
    call Killian64;
 end
@@ -1136,8 +1081,7 @@ procedure Killian_barter begin
    NOption(g_done, Killianx, 1);
 end
 
-procedure Killian_give_stuff
-begin
+procedure Killian_give_stuff begin
    if (dude_item_count(PID_TAPE_RECORDER)) then begin
       destroy_object(dude_item(PID_TAPE_RECORDER));
    end
