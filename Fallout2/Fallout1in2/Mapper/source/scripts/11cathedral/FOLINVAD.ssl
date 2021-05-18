@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/cathedral.h"
 
 #define NAME                    SCRIPT_FOLINVAD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -17,16 +17,23 @@
 /* Standard Script Procedures */
 procedure start;
 procedure push_p_proc;
-procedure destroy_p_proc;
 procedure talk_p_proc;
 procedure critter_p_proc;
 procedure map_enter_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
 
 procedure Initialize_p_proc;
 
+#define LVAR_Add_to_Party     (0)
+#define LVAR_FloatVault       (1)
+#define LVAR_FloatMaster      (2)
+#define LVAR_FloatExit        (3)
+#define LVAR_Herebefore       (4)
+#define LVAR_Add_to_Party     (5)
+
 variable Only_Once := 1;
 variable Hex_Number;
-
 
 procedure start begin
    if Only_Once == 1 then begin
@@ -53,7 +60,9 @@ end
 procedure critter_p_proc begin
    variable LVar0 := 0;
    if (global_var(GVAR_FOLLOWER_MACHO_HELP) == 1) then begin
-      if (local_var(4) == 0) then begin
+
+      // Initial walk to the player
+      if (local_var(LVAR_Herebefore) == 0) then begin
          if (Hex_Number == 0) then begin
             if not(is_loading_game) then set_self_visible;
 
@@ -94,10 +103,11 @@ procedure critter_p_proc begin
             self_walk_to_tile(Hex_Number);
          end
          else if (self_tile == Hex_Number) then begin
-            set_local_var(4, 1);
+            set_local_var(LVAR_Herebefore, 1);
          end
       end
       else begin
+         // Keep following the player
          if ((tile_distance_objs(dude_obj, self_obj) > 10) and (tile_distance_objs(dude_obj, self_obj) < 15)) then begin
             self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), random(3, 6)));
          end
@@ -108,36 +118,48 @@ procedure critter_p_proc begin
             self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(3, 6)));
          end
       end
-      if (local_var(4) == 1) then begin
-         if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) then begin //  CATHEDRAL - ENTRANCE AND ANY LEVELS
-            if (local_var(0) == 0) then begin
-               set_local_var(0, 1);
+
+      // Commentary floats
+      if (local_var(LVAR_Herebefore) == 1) then begin
+         if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) then begin
+            if (local_var(LVAR_Add_to_Party) == 0) then begin
+               set_local_var(LVAR_Add_to_Party, 1);
                party_add(self_obj);
-               float_msg(self_obj, mstr(112), FLOAT_MSG_WHITE);
+               if (invad_status(FOLINVAD_FLOAT_Entrance) == false) then begin
+                  set_invad_status(FOLINVAD_FLOAT_Entrance);
+                  float_msg(self_obj, mstr(112), FLOAT_MSG_WHITE);
+               end
             end
          end
-         else if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
-            if (local_var(1) == 0) then begin
+         else if CUR_MAP_MSTRLR12 then begin
+            if (invad_status(FOLINVAD_FLOAT_Vault) == false) then begin
                if (self_elevation == 1) then begin
-                  set_local_var(1, 1);
+                  set_invad_status(FOLINVAD_FLOAT_Vault);
                   float_msg(self_obj, mstr(109), FLOAT_MSG_WHITE);
                end
             end
          end
-         else if (CUR_MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
-            if (local_var(2) == 0) then begin
-               set_local_var(2, 1);
+         else if CUR_MAP_MSTRLR34 then begin
+            if (invad_status(FOLINVAD_FLOAT_Master) == false) then begin
+               set_invad_status(FOLINVAD_FLOAT_Master);
                float_msg(self_obj, mstr(110), FLOAT_MSG_WHITE);
             end
          end
          else begin
-            if (local_var(3) == 0) then begin
-               set_local_var(3, 1);
-               float_msg(self_obj, mstr(111), FLOAT_MSG_WHITE);
+            if (invad_status(FOLINVAD_FLOAT_Exit) == false) then begin
+               set_invad_status(FOLINVAD_FLOAT_Exit);
+               //float_msg(self_obj, mstr(111), FLOAT_MSG_WHITE);
+               set_local_var(LVAR_Add_to_Party, 0);
                party_remove(self_obj);
-               self_walk_to_tile(26000);
+               reg_anim_clear(self_obj);
                set_global_var(GVAR_FOLLOWER_MACHO_HELP, 5);
+               self_walk_to_tile(26000);
             end
+            // Not necessary
+            /*else if not(combat_is_initialized) then begin
+               debug("remove FOLINVAD!");
+               add_timer_event(self_obj, 10, 1);
+            end*/
          end
       end
    end
@@ -155,5 +177,23 @@ end
 procedure destroy_p_proc begin
    if source_is_dude then begin
       inc_good_critter
+   end
+end
+
+procedure timed_event_p_proc begin
+   if not(combat_is_initialized) then begin
+      if not(is_loading_game) then begin
+         set_self_invisible;
+         destroy_object(self_obj);
+      end
+      if (global_var(GVAR_FOLLOWER_MACHO_HELP) == 5) then begin
+         set_global_var(GVAR_FOLLOWER_MACHO_HELP, 6);
+         gfade_out(1);
+            float_msg_clear(self_obj);
+         gfade_in(1);
+      end
+   end
+   else begin
+      add_timer_event(self_obj, 10, 1);
    end
 end
