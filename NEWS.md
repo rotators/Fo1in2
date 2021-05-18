@@ -3,6 +3,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: A new mini-mod that enables current / maximum carry weight in the loot screen, similar to what Crafty's Sfall for Fo1 does.
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: Fire Gecko Pelt from the UPU has been added to the game.
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
 - **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
@@ -11,6 +12,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: 49/50hp mutants on Mariposa level 1.
 - **Fixed**: A potential procedure loop in the (generic) super mutant sergeant script when talking to them in disguise.
 - **Fixed**: Asking the Water Merchants for a caravan job wasn't possible anymore after asking about a water delivery, but then declining the service.
+- **Fixed**: Brotherhood crack paladins will show up at the Cathedral again.
 - **Fixed**: Cathedral technicians would blast the disguise-check code on every game tick, no matter if they see thep player or not. This can cause the game to crash on certain hardware.
 - **Fixed**: Dan at the Hub entrance was unable to get to the Brahmin pens (waypoint too far away for the ai pathfinding). Added another waypoint in the middle, which not only fixes his daily schedule, but also restores an interaction with Billy, the brahmin boy.
 - **Fixed**: Dan at the Hub entrance would tell the player to get out of his house at night (and attack him later), even though the player wasn't in his house.
@@ -36,6 +38,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: TMA would crash when not using the Sfall Dx9 mode.
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
 - **Fixed**: The Tag!-perk wouldn't give +20% to the new skill as it did in Fo1.
+- **Fixed**: The dialog of Talius in the Followers library was a mess. Added new sentences to remove his amnesia, added a new quest entry to the pipboy ("Kill the leader of the mutant army in Necropolis.") and fixed his quest rewards.
 - **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
 - **Fixed**: The player can't rest in encounter locations anymore if there are other critters in the map.
 - **Fixed**: The wanted sign now correctly shows the current bounty on the players head (in caps).
