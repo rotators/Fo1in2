@@ -173,8 +173,11 @@ variable remove_dude;
 
 #define LVAR_Sleeping         (7)
 #define LVAR_Money            (10)
+#define LVAR_Float            (11)
 
 #define EVENT_TRESPASS     (1)
+
+#define float(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_GREEN)
 
 variable barter_mod := 0;
 #ifndef barter_mod_initial
@@ -185,6 +188,11 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
+   if CUR_MAP_JUNKCSNO and (local_var(LVAR_Float) == 0) then begin
+      set_local_var(LVAR_Float, 1);
+      float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
+   end
+
    if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
       if (self_can_see_dude) then begin
          tmp_hostile := 1;
@@ -285,7 +293,8 @@ procedure map_enter_p_proc begin
          end
          else begin
             set_self_team(TEAM_PLAYER);
-            float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
+            // Moved this to critter_p_proc, because it didn't want to show up for some reason
+            //float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
          end
       end
       else begin

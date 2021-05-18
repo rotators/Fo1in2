@@ -64,6 +64,10 @@ variable Shopguard_ptr;
 #define LVAR_Home_Tile                  (5)
 #define LVAR_Home_Rotation              (6)
 
+#define EVENT_RESET_SNEAK           (2)
+#define EVENT_HOSTILE               (3)
+#define EVENT_SKULZ_ARREST          (4)
+
 #define shopguard_hex         (24874)
 #define nightguard_hex        (26276)
 
@@ -78,11 +82,11 @@ end
 procedure critter_p_proc begin
    if not(combat_is_initialized) then begin
       if is_shopguard then begin
-         if not(day) and (self_tile != nightguard_hex) then begin
+         if not(game_time_hour > 650 and game_time_hour < 1900) and (self_tile != nightguard_hex) then begin
             //self_walk_to_tile(nightguard_hex);
             move_to(self_obj, nightguard_hex, self_elevation);
          end
-         else if day and (self_tile != local_var(LVAR_Home_Tile)) then begin
+         else if (game_time_hour > 650 and game_time_hour < 1900) and (self_tile != local_var(LVAR_Home_Tile)) then begin
             //self_walk_to_tile(local_var(LVAR_Home_Tile));
             move_to(self_obj, local_var(LVAR_Home_Tile), self_elevation);
          end
@@ -129,7 +133,7 @@ procedure critter_p_proc begin
             else if (dude_is_sneaking and not(sneak_checked)) then begin
                sneaking := 1;
                sneak_checked := 1;
-               add_timer_event(self_obj, game_ticks(5), 2);
+               add_timer_event(self_obj, game_ticks(5), EVENT_RESET_SNEAK);
                dialogue_system_enter;
             end
             else if (CUR_MAP_JUNKKILL) then begin
@@ -271,20 +275,20 @@ procedure timed_event_p_proc begin
       if (weapon_checked) then begin
          if (dude_is_armed) then begin
             float_msg(self_obj, mstr(134), FLOAT_MSG_NORMAL);
-            add_timer_event(self_obj, game_ticks(5), 3);
+            add_timer_event(self_obj, game_ticks(5), EVENT_HOSTILE);
          end
          else begin
             weapon_checked := 0;
          end
       end
    end
-   else if (fixed_param == 2) then begin
+   else if (fixed_param == EVENT_RESET_SNEAK) then begin
       sneak_checked := 0;
    end
-   else if (fixed_param == 3) then begin
+   else if (fixed_param == EVENT_HOSTILE) then begin
       tmp_hostile := 1;
    end
-   else if (fixed_param == 4) then begin
+   else if (fixed_param == EVENT_SKULZ_ARREST) then begin
       float_msg(self_obj, mstr(139), FLOAT_MSG_NORMAL);
    end
 end
@@ -355,7 +359,7 @@ end
 
 procedure JTGenGrd06 begin
    times_caught_sneaking := times_caught_sneaking + 1;
-   add_timer_event(self_obj, game_ticks(5), 2);
+   add_timer_event(self_obj, game_ticks(5), EVENT_RESET_SNEAK);
    Reply(124);
    NOption(125, JTGenGrd07, 4);
    NOption(126, JTGenGrd06a, 5);
@@ -407,7 +411,7 @@ end
 
 procedure JTGenGrd18 begin
    float_msg(self_obj, mstr(135), FLOAT_MSG_RED);
-   add_timer_event(self_obj, game_ticks(5), 3);
+   add_timer_event(self_obj, game_ticks(5), EVENT_HOSTILE);
 end
 
 procedure JTGenGrd19 begin
