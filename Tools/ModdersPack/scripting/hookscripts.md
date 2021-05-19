@@ -87,8 +87,8 @@ The defines to use for the hookID are in **sfall.h**.
 
 #### `HOOK_TOHIT (hs_tohit.int)`
 
-Runs when Fallout is calculating the chances of an attack striking a target
-Runs after the hit chance is fully calculated normally, including applying the 95% cap
+Runs when Fallout is calculating the chances of an attack striking a target.
+Runs after the hit chance is fully calculated normally, including applying the 95% cap.
 
 ```
 int     arg0 - The hit chance (capped)
@@ -107,7 +107,7 @@ int     ret0 - the new hit chance
 
 #### `HOOK_AFTERHITROLL (hs_afterhitroll.int)`
 
-Runs after Fallout has decided if an attack will hit or miss
+Runs after Fallout has decided if an attack will hit or miss.
 
 ```
 int     arg0 - If the attack will hit: 0 - critical miss, 1 - miss, 2 - hit, 3 - critical hit
@@ -160,7 +160,7 @@ int     ret0 - The pid of an object to override the attacking weapon with
 
 #### `HOOK_DEATHANIM2 (hs_deathanim2.int)`
 
-Runs after Fallout has calculated the death animation. Lets you set your own custom frame id, so more powerful than `HOOK_DEATHANIM2`, but performs no validation.
+Runs after Fallout has calculated the death animation. Lets you set your own custom frame id, so more powerful than `HOOK_DEATHANIM1`, but performs no validation.
 When using `critter_dmg` function, this script will also run. In that case weapon pid will be -1 and attacker will point to an object with `obj_art_fid == 0x20001F5`.
 Does not run for critters in the knockdown/out state.
 
@@ -308,13 +308,13 @@ Runs whenever the value of goods being purchased is calculated.
 __NOTE:__ the hook is executed twice when entering the barter screen or after transaction: the first time is for the player and the second time is for NPC.
 
 ```
-critter arg0 - the critter doing the bartering (either dude_obj or inven_dude)
-critter arg1 - the critter being bartered with
+Critter arg0 - the critter doing the bartering (either dude_obj or inven_dude)
+Critter arg1 - the critter being bartered with
 int     arg2 - the default value of the goods
-critter arg3 - table of requested goods (being bought from NPC)
+Critter arg3 - table of requested goods (being bought from NPC)
 int     arg4 - the amount of actual caps in the barter stack (as opposed to goods)
 int     arg5 - the value of all goods being traded before skill modifications
-critter arg6 - table of offered goods (being sold to NPC)
+Critter arg6 - table of offered goods (being sold to NPC)
 int     arg7 - the total cost of the goods offered by the player
 int     arg8 - 1 if the "offers" button was pressed (not for a party member), 0 otherwise
 int     arg9 - 1 if trading with a party member, 0 otherwise
@@ -345,7 +345,7 @@ int     ret0 - the new AP cost
 * `HOOK_HEXSHOOTBLOCKING (hs_hexshootblocking.int)`
 * `HOOK_HEXSIGHTBLOCKING (hs_hexsightblocking.int)`
 
-Runs when checking to see if a hex blocks movement or shooting. (or ai-ing, presumably...)
+Run when checking to see if a hex blocks movement or shooting. (or ai-ing, presumably...)
 
 __NOTE:__ these hook scripts can become very CPU-intensive and you should avoid using them.
 For this reason, they may be removed in future versions.
@@ -375,7 +375,7 @@ Critter arg3 - The critter doing the attacking
 int     arg4 - The type of attack
 int     arg5 - non-zero if this is an attack using a melee weapon
 
-int     ret0 - Either the damage to be used, if ret2 isn't given, or the new minimum damage if it is
+int     ret0 - Either the damage to be used, if ret1 isn't given, or the new minimum damage if it is
 int     ret1 - The new maximum damage
 ```
 
@@ -385,7 +385,7 @@ int     ret1 - The new maximum damage
 
 Runs when calculating ammo cost for a weapon. Doesn't affect damage, only how much ammo is spent.
 By default, weapon will shoot when at least 1 round is left, regardless of ammo cost calculations.
-To add proper check for ammo before shooting and proper calculation of number of burst rounds (hook type 1 and 2 in arg4), set **CheckWeaponAmmoCost=1** in **Misc** section of ddraw.ini.
+To add proper check for ammo before shooting and proper calculation of number of burst rounds (hook type 1 and 2 in arg3), set **CheckWeaponAmmoCost=1** in **Misc** section of ddraw.ini.
 
 ```
 Item    arg0 - The weapon
@@ -457,7 +457,7 @@ Runs when checking an attempt to steal or plant an item in other inventory using
 
 This is fired before the default handlers are called, which you can override. In this case you MUST provide message of the result to player ("You steal the %s", "You are caught planting the %s", etc.).
 
-Example message (vanilla behavior): `display_msg(sprintf(mstr_skill(570 + (isSuccess != false) + arg4*2), obj_name(arg3)));`
+Example message (vanilla behavior): `display_msg(sprintf(mstr_skill(570 + (isSuccess != false) + arg3*2), obj_name(arg2)));`
 
 ```
 Critter arg0 - Thief
@@ -815,7 +815,7 @@ int     arg1 - the map ID that the encounter will load (see MAPS.h or Maps.txt)
 int     arg2 - 1 when the encounter occurs is a special encounter, 0 otherwise
 
 int     ret0 - overrides the map ID, or pass -1 for event type 0 to cancel the encounter and continue traveling
-int     ret1 - pass 1 to cancel the encounter and load the specified map from the ret1 (only for event type 0)
+int     ret1 - pass 1 to cancel the encounter and load the specified map from the ret0 (only for event type 0)
 ```
 
 -------------------------------------------
@@ -867,7 +867,7 @@ int     arg1 - the value of roll result (see ROLL_* constants), which is calcula
                for ROLL_CRITICAL_FAILURE: random(1, 100) <= -random_chance / 10
 int     arg2 - the chance value
 int     arg3 - the bonus value, used when checking critical success
-int     arg4 - random chance, calculated as: (chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
+int     arg4 - random chance (calculated as: chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
 
 int     ret0 - overrides the roll result
 ```

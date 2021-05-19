@@ -31,8 +31,10 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Patrick the Celt had a dialog reaction to Aradesh being dead, but the condition was wrong.
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
+- **Fixed**: Removed loaded dice from casino dice girls, as they "play bad" by default and giving them loaded dices will even the odds.
 - **Fixed**: Restored floating text of Glowing Ghouls in the Necropolis Vault (when talking to them after taking the water chip and not repairing the water pump. Not sure why Fixt removed this).
 - **Fixed**: Shady Sands becomes hostile to the player, even if he kills Tandi outside of town.
+- **Fixed**: Sherry in Junktown would leave the map after leaving the Skulz gang. This was added by TeamX a long time ago and I have no idea why. Reverted this change for now.
 - **Fixed**: Sid (Hub / Beth's guard) would float a text message so fast, it was impossible to read.
 - **Fixed**: Some locations would not be marked as visible when asking about them in dialog.
 - **Fixed**: TMA would crash when not using the Sfall Dx9 mode.
@@ -46,9 +48,11 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Removed**: Old code in Ian, Tycho, and Katja scripts when giving them items. Nobody used this function anyways, also it was possible to exploit their carry weight limit with this. 
 - **Tweaked**: Added the agility-check back into the Gunrunners toxic goo spatial script (was a Fixt change?).
 - **Tweaked**: Hotspots in the Glow will give the player randomly 20 to 50 rads again (reverted Fixt change back to Fo1 vanilla values).
+- **Tweaked**: Improved the floating text code of the FoA invades at the Cathedral a bit (only one will float, not all at the same time).
 - **Tweaked**: In the character screen, "Karma" was called "Reputation" in Fo1.
 - **Tweaked**: Increased the float timer between Guido and Leon (Hub / FLC guards), because the text was barely readable.
 - **Tweaked**: Moved the inventory weapons of Hub entrance guards into their off-hand slots, otherwise they would never use them.
 - **Tweaked**: Perk description text still had Fo2 stuff in it. Reverted it back to the Fo1 text.
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
+- **Tweaked**: Rewrote the floating text conversation between Guido and Leon (Hub / FLC guards) to get a better text speed pacing.
 - **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.

@@ -90,7 +90,7 @@ old:
   x := 5;
 
 
-> Multiple variable decleration: Multiple variables can be declared on one line, seperated by commas. This is an alterative to the ugly begin/end block, or the bulky single variable per line style.
+> Multiple variable declaration: Multiple variables can be declared on one line, seperated by commas. This is an alterative to the ugly begin/end block, or the bulky single variable per line style.
 
 new:
   variable a, b, c;
