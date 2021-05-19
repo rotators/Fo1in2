@@ -4,8 +4,7 @@
 
 */
 
-#ifndef HALLDED_H
-#define HALLDED_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -30,6 +29,4 @@
 #define MVAR_Fixt_PLACEHOLDER_2      (15)//   Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3      (16)//   Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4      (17)//   Adding for ass-covering and future-proofing
-
-#endif // HALLDED_H
 

@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef CONDTION_H
-#define CONDTION_H
+#pragma once
 
 /**********************************************************
    Filename: Condtion.h
@@ -55,5 +54,3 @@
 #ifndef night
 #define night                   ((game_time_hour <= 600) or (game_time_hour >= 1800))
 #endif
-
-#endif // CONDTION_H

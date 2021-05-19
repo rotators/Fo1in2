@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPMSTRLR34_H
-#define MAPMSTRLR34_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -29,5 +28,4 @@
 #define MVAR_Fixt_PLACEHOLDER_3   (14) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4   (15) //  Adding for ass-covering and future-proofing
 
-#endif // LAADYTUM_H
 

@@ -2,8 +2,7 @@
     Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef PARTY_H
-#define PARTY_H
+#pragma once
 
 /***************************************************************
     The following contain all of the Party information and
@@ -638,5 +637,3 @@ procedure checkPartyMembersNearDoor begin
    CHECKMEMBERNEARDOOR(MrHandyC_In_Party, Handy_ptr)
    return 0;
 end
-
-#endif // PARTY_H

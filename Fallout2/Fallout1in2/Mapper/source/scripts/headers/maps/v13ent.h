@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPV13ENT_H
-#define MAPV13ENT_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -23,4 +22,3 @@
 #define MVAR_Door_Blown             (1)  // Has door computer been destroyed (makes door stay open)
 #define MVAR_INVADED                (2)  // Has map been invaded
 
-#endif // MAPV13ENT_H

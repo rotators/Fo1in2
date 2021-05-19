@@ -2,8 +2,7 @@
     Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef UPDATMAP_H
-#define UPDATMAP_H
+#pragma once
 
 // Lighting Information
 #define BRIGHT_LIGHT                    (100)
@@ -266,5 +265,3 @@
 #define CAR_RND_COAST10_HEX                  (17919)
 #define CAR_RND_COAST11_HEX                  (20079)
 #define CAR_RND_COAST12_HEX                  (25515)
-
-#endif // UPDATMAP_H

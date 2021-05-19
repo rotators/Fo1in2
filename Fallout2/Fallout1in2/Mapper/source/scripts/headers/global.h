@@ -1,5 +1,4 @@
-#ifndef _GLOBAL_H_DEFINED
-#define _GLOBAL_H_DEFINED
+#pragma once
 
 // Mysterious Stranger Flags
 #define STRANGER_DEAD           bit_1
@@ -4158,5 +4157,3 @@
 #define GVAR_ENABLE_FO2_PARTY_LIMIT             (5015)
 
 #define GVAR_PLACEHOLDER                        (5016)
-
-#endif // _GLOBAL_H_DEFINED

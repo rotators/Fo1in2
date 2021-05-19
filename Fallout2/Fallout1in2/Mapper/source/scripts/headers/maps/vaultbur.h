@@ -4,8 +4,7 @@
 
 */
 
-#ifndef VAULTBUR_H
-#define VAULTBUR_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -27,6 +26,5 @@
 #define MVAR_RoamingCount         (1) // How many roamers are there currently.
 #define MVAR_RespawnTimer         (2) // How long until next respawn cycle?
 
-#endif // VAULTBUR_H
 
 

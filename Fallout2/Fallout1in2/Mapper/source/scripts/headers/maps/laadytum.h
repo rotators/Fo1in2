@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPLAADYTUM_H
-#define MAPLAADYTUM_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -27,7 +26,6 @@
 #define MVAR_InvasionForcesCreated  (3) // Have the invasion forces been created?
 #define MVAR_UpgradeMotorcycle      (4)
 
-#endif // MAPLAADYTUM_H
 
 
 

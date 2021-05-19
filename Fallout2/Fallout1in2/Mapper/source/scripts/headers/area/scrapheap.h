@@ -5,8 +5,7 @@
 
 */
 
-#ifndef SCRAPHEAP_H
-#define SCRAPHEAP_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -78,9 +77,3 @@ procedure Start_War begin
 		end
 	end
 end
-
-#endif // SCRAPHEAP_H
-
-
-
-

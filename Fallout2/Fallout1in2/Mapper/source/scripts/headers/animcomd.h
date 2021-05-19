@@ -2,8 +2,7 @@
     Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef ANIMCOMD_H
-#define ANIMCOMD_H
+#pragma once
 
 /************************************************************
    Filename: AnimComd.h
@@ -116,5 +115,3 @@
 #define reg_anim_begin()            reg_anim_func(REG_ANIM_BEGIN, RB_UNRESERVED)
 #define reg_anim_clear(who)         reg_anim_func(REG_ANIM_CLEAR, who)
 #define reg_anim_end()              reg_anim_func(REG_ANIM_END, 0)
-
-#endif // ANIMCOMD_H

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef HUBENT_H
-#define HUBENT_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -21,6 +20,3 @@
 #define MVAR_Fixt_PLACEHOLDER_2  (6) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (7) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (8) //  Adding for ass-covering and future-proofing
-
-#endif // HUBENT_H
-

@@ -1,5 +1,4 @@
-#ifndef SCRIPTS_H
-#define SCRIPTS_H
+#pragma once
 
 /*******************************************************************************
    File Name: Scripts.h
@@ -1034,5 +1033,3 @@
 #define SCRIPT_ZIHARDLK         (1014)  // ziHardLk.int    ; Generic Hard Lock Watch Script
 
 #define SCRIPT_HALLDOOR         (1015)  // halldoor.int    ; Necropolis - Entrance to Hall of the Dead
-
-#endif // SCRIPTS_H

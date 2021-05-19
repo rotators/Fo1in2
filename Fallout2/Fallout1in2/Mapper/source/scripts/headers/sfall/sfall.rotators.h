@@ -1,5 +1,4 @@
-#ifndef __SFALL_ROTATORS__
-#define __SFALL_ROTATORS__
+#pragma once
 
 #include "sfall.h"
 #include "sfall.rotators.voodoo.h"
@@ -42,5 +41,3 @@
 
 // TODO: (Re)move
 #define message_box_warning(text)      sfall_func("message_box", text, 0x01, 134, 145)
-
-#endif // __SFALL_ROTATORS__ //

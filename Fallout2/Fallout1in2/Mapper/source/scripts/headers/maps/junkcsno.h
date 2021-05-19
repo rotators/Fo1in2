@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPJUNKCAS_H
-#define MAPJUNKCAS_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -34,4 +33,3 @@
 #define MVAR_SKUM_NOISY             (12) // Has the player been caught breaking into the Skum Pitt?
 #define MVAR_GIZMO_REMAINS          (13) // Did Gizmo's remains already spawn?
 
-#endif // MAPJUNKCAS_H

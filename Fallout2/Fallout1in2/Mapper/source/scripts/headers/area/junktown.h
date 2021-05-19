@@ -5,8 +5,7 @@
 
 */
 
-#ifndef JUNKTOWN_H
-#define JUNKTOWN_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -58,9 +57,3 @@
       give_xp_msg(EXP_TRISH_SAUL_RELATIONSHIP, message_str(SCRIPT_TRISH, 204));  \
    end                                                                           \
    noop
-
-#endif // JUNKTOWN_H
-
-
-
-

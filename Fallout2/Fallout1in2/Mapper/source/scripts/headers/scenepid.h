@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef SCENEPID_H
-#define SCENEPID_H
+#pragma once
 
 /***********************************************************
    Filename: ScenePid.h
@@ -638,5 +637,3 @@ variable Scenery_Creation_Ptr;
 
 // This will see if a tile is blocked by a blocking hex
 #define tile_is_blocked(the_tile, the_elev)        (tile_contains_pid_obj(the_tile, the_elev, PID_BLOCKING_HEX) != 0)
-
-#endif // SCENEPID_H

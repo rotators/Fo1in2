@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPNECRO_H
-#define MAPNECRO_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -126,5 +125,3 @@ variable Critter,
 
    set_global_var(GVAR_SEWER_KING_POS, -1);
 end
-
-#endif // MAPNECRO_H

@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef CARAVAN_H
-#define CARAVAN_H
+#pragma once
 
 /**********************************************************
    All thing great and important to know about Caravans
@@ -332,5 +331,3 @@ variable Finding_New_Tile;
                                                    /*destroy_object(self_obj);*/ \
                                                    set_self_invisible; \
                                              end
-
-#endif // CARAVAN_H

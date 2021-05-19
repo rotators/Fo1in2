@@ -1,5 +1,4 @@
-#ifndef MAPS_H
-#define MAPS_H
+#pragma once
 
 /*******************************************************************************
  Location numbers
@@ -520,6 +519,3 @@ variable get_wm_distance;
 #define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
                                     (cur_map_index == MAP_MINE2) or  \
                                     (cur_map_index == MAP_MINE3))
-
-
-#endif // MAPS_H

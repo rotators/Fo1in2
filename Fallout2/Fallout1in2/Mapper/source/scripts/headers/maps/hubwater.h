@@ -4,8 +4,7 @@
 
 */
 
-#ifndef HUBWATER_H
-#define HUBWATER_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -25,6 +24,4 @@
 #define MVAR_Fixt_PLACEHOLDER_2  (10) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (11) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (12) //  Adding for ass-covering and future-proofing
-
-#endif // HUBWATER_H
 

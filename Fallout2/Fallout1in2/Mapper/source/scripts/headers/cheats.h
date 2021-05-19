@@ -1,5 +1,4 @@
-#ifndef CHEATS_H
-#define CHEATS_H
+#pragma once
 
 /*******************************************************************************
                     This file is included in OBJ_DUDE.ssl!
@@ -1034,5 +1033,3 @@ procedure CheaterTimersDown begin
 
    timerUPandDown;
 end
-
-#endif // CHEATS_H

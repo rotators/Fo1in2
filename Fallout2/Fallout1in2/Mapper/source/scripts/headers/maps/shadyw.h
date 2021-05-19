@@ -4,8 +4,7 @@
 
 */
 
-#ifndef SHADYW_H
-#define SHADYW_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -20,6 +19,5 @@
 #define MVAR_Invasion             (5)
 #define MVAR_TANDI_KIDNAPPING     (6)
 
-#endif // SHADYW_H
 
 

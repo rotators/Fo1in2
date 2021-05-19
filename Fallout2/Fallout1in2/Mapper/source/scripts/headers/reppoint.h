@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef REPPOINT_H
-#define REPPOINT_H
+#pragma once
 
 /*********************************************************
  Here is all of the reputation defines for the game
@@ -773,5 +772,3 @@
 #define REP_BONUS_SAN_FRAN_BOS_QUEST             30
 #define REP_BONUS_SAN_FRAN_ARMOR                 5
 #define REP_BONUS_SAN_FRAN_GAS                   5
-
-#endif // REPPOINT_H

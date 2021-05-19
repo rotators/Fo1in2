@@ -1,5 +1,5 @@
-#ifndef DEFINE_H
-#define DEFINE_H
+#pragma once
+#define DEFINE_H // sfall headers... sigh
 
 //   This file holds all of the things that should be preprocessed.
 
@@ -933,7 +933,3 @@ end
 
 #define critter_p_proc        old_critter_p_proc
 */
-
-
-#endif // DEFINE_H
-

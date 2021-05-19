@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPMSTRLR12_H
-#define MAPMSTRLR12_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -32,4 +31,3 @@
 #define MVAR_SPAWN_MONSTER        (10)  // have i placed critters here
 #define MVAR_TERMINAL_EXP         (11)  // player got the terminal experience bonus already?
 
-#endif // MAPMSTRLR12_H

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef FO1_H
-#define FO1_H
+#pragma once
 
 #include "debug.h"
 
@@ -628,5 +627,3 @@ variable merch_slot_armor_flags;
 /*********************************************************
                         THE END
 *********************************************************/
-
-#endif // FO1_H

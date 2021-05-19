@@ -1,8 +1,8 @@
 /*
 
+
 */
-#ifndef CRITPID_H
-#define CRITPID_H
+#pragma once
 
 /******************************************************************
    File Name: CritPid.H ..... PRO_CRIT entry = line number - 10
@@ -356,5 +356,3 @@
 // intentionally creates dead code in gl_partycontrol,
 // just to avoid editing it on each sfall update
 #define PID_MARCUS (-0xF02)
-
-#endif // CRITPID_H

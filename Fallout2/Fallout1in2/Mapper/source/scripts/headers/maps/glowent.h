@@ -4,8 +4,7 @@
 
 */
 
-#ifndef GLOWENT_H
-#define GLOWENT_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -18,6 +17,3 @@
 #define MVAR_Fixt_PLACEHOLDER_2  (3) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (4) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (5) //  Adding for ass-covering and future-proofing
-
-#endif // GLOWENT_H
-

@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef REACTION_H
-#define REACTION_H
+#pragma once
 
 /***************************************************
  This file as all the generic actions people will
@@ -546,5 +545,3 @@
 #define NC_GV_Catch_Sneak(Source,Count)                   Catch_Sneak(self_obj,TYPE_CITIZEN,Source,WARNING_CITIZEN,Count,TVAR_GLOBAL)
 #define NC_GV_Catch_Lockpick(Who,Source,Count)            Catch_Lockpick(Who,TYPE_CITIZEN,Source,WARNING_CITIZEN,Count,TVAR_GLOBAL)
 #define NC_GV_Catch_User(Who,Source,Count)                Catch_User(Who,TYPE_CITIZEN,Source,WARNING_CITIZEN,Count,TVAR_GLOBAL)
-
-#endif // REACTION_H

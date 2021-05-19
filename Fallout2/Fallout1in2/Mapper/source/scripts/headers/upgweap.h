@@ -4,8 +4,7 @@
   by phobos2077 & NovaRain
 */
 
-#ifndef UPGWEAP_H
-#define UPGWEAP_H
+#pragma once
 
 #define PROTO_WP_MAG_SIZE    (96)
 
@@ -36,5 +35,3 @@ procedure upgrade_weapon(variable oldPid, variable newPid) begin
       add_mult_objs_to_inven(dude_obj, restock_obj, 1);
    end
 end
-
-#endif

@@ -5,8 +5,7 @@
 
 */
 
-#ifndef BONEYARD_H
-#define BONEYARD_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -124,9 +123,3 @@
 
 #define set_zimmermann_at_peace         set_global_var(GVAR_ZIMMERMAN_STATUS, 2)
 #define get_zimmermann_at_peace         (global_var(GVAR_ZIMMERMAN_STATUS) == 2)
-
-#endif // BONEYARD_H
-
-
-
-

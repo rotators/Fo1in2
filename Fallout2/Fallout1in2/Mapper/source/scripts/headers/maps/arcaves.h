@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef ARCAVES_H
-#define ARCAVES_H
+#pragma once
 
 
 #define teleport_back      play_sfx("uranium");                   \
@@ -42,6 +41,3 @@
 #define MVAR_Arroyo_Trial_Spear18               (18)
 #define MVAR_Arroyo_Trial_Spear19               (19)
 #define MVAR_Passed_Fighting                    (20)
-
-
-#endif // ARCAVES_H

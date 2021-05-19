@@ -4,8 +4,7 @@
 
 */
 
-#ifndef LAFOLLWR_H
-#define LAFOLLWR_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -21,6 +20,5 @@
 #define MVAR_COC_THMUT_NAME         (6) // Assign correct unique names to THSUPMUT
 #define MVAR_Fixt_PLACEHOLDER_4     (7) //  Adding for ass-covering and future-proofing
 
-#endif // LAFOLLWR_H
 
 

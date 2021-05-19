@@ -1,5 +1,4 @@
-#ifndef MODREACT_H
-#define MODREACT_H
+#pragma once
 
 #define TOWN_REPUTATION                 global_var(TOWN_REP_VAR)
 
@@ -146,5 +145,3 @@ variable reaction_bonus_karma:=0;
 //variable exit_line;
 //#define Goodbyes     exit_line := message_str(SCRIPT_MODREACT, random(100, 105))
 #define exit_line      message_str(SCRIPT_MODREACT, random(100, 105))
-
-#endif // MODREACT_H

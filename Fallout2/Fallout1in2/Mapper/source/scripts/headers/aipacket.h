@@ -1,5 +1,4 @@
-#ifndef AIPACKET_H
-#define AIPACKET_H
+#pragma once
 
 /*********************************************************
  define file for AI Packets.
@@ -150,5 +149,3 @@
 #define AI_SPORE_PLANT              (129) // 5
 #define AI_TOUGH_BOT                (130) // 32
 #define AI_GECKO                    (131) // 26
-
-#endif // AIPACKET_H

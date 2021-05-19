@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef CARDESRT_H
-#define CARDESRT_H
+#pragma once
 
  // Map vars for ModMain Map
 
@@ -16,5 +15,3 @@
 // All Map Vars need to start w/ MVAR_
 
 #define MVAR_Made_Car                           (0)
-
-#endif // CARDESRT_H

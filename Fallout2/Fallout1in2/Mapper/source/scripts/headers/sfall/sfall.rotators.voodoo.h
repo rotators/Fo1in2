@@ -1,5 +1,4 @@
-#ifndef __SFALL_ROTATORS_VOODOO__
-#define __SFALL_ROTATORS_VOODOO__
+#pragma once
 
 //#include "sfall.rotators.h"
 
@@ -191,5 +190,3 @@ variable r_call_offset_result;
         r_call_offset_push(arg15); \
         r_call_offset_push(arg16); \
         r_call_offset_result := r_call_offset(addr)
-
-#endif // __SFALL_ROTATORS_VOODOO__ //

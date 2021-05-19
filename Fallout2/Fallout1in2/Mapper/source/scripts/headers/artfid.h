@@ -1,5 +1,4 @@
-#ifndef ARTFID_H
-#define ARTFID_H
+#pragma once
 
 /******************************************************************
    File Name: ArtFid.H
@@ -151,5 +150,3 @@
 #define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
 #define FID_MARDOG        (16777345) // Red colored dog
 #define FID_HMWARR        (16777346) // Hero Male Primitive Warrior
-
-#endif // ARTFID_H

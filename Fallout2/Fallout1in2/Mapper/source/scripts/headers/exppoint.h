@@ -2,8 +2,7 @@
     Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef EXPPOINT_H
-#define EXPPOINT_H
+#pragma once
 
 /************************************************************
    defines for the Experience Point awards in the game
@@ -268,5 +267,3 @@
 // Fallout 2
 #define give_xp(x)                              give_exp_points(x);             \
                                                 display_msg(g_mstr(10) + (x + ((x / 100 * 5) *  dude_perk(PERK_swift_learner))) + g_mstr(11))
-
-#endif // EXPPOINT_H

@@ -1,5 +1,4 @@
-#ifndef TEAMS_H
-#define TEAMS_H
+#pragma once
 
 /*********************************************************
  define file for Team Numbers.
@@ -77,5 +76,3 @@
 #define TEAM_DEMO_FOOLS             (96)
 #define TEAM_DEMO_CRYPTS            (97)
 #define TEAM_DEMO_PEASANT           (98)
-
-#endif // TEAMS_H

@@ -1,5 +1,4 @@
-#ifndef VOODOO_H
-#define VOODOO_H
+#pragma once
 
 /**************************************************
  *       _    __                __                *
@@ -123,5 +122,3 @@ variable $addr;
 #define VOODOO_ERROR_READ   r_write_byte(read_byte(-1),0)
 #define VOODOO_ERROR_WRITE  r_write_byte(-1,0)
 #define VOODOO_ERROR_RING0  r_call_offset(0x410003)
-
-#endif // VOODOO_H //

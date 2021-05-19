@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPLABLADES_H
-#define MAPLABLADES_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -23,7 +22,6 @@
 #define MVAR_InvasionForcesCreated   (1) // Have the invasion forces been created?
 #define MVAR_Car_Kids_created        (2) // Have the car kids spawned before?
 
-#endif // MAPLABLADES_H
 
 
 

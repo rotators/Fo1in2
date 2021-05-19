@@ -5,8 +5,7 @@
 
 */
 
-#ifndef VAULT13_H
-#define VAULT13_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -38,10 +37,3 @@
                                         DeathType := ANIM_fall_front_blood_sf;      \
                                     end                                             \
                                     kill_critter(self_obj, DeathType)
-
-
-#endif // VAULT13_H
-
-
-
-

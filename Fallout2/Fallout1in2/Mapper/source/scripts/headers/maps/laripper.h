@@ -4,8 +4,7 @@
 
 */
 
-#ifndef LARIPPER_H
-#define LARIPPER_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -22,6 +21,5 @@
 #define MVAR_Fixt_PLACEHOLDER_3   (7) //   Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4   (8) //   Adding for ass-covering and future-proofing
 
-#endif // LARIPPER_H
 
 

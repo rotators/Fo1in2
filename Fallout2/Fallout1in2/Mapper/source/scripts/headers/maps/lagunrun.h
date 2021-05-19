@@ -4,8 +4,7 @@
 
 */
 
-#ifndef LAGUNRUN_H
-#define LAGUNRUN_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -21,6 +20,5 @@
 #define MVAR_Fixt_PLACEHOLDER_3     (6) //   Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4     (7) //   Adding for ass-covering and future-proofing
 
-#endif // LAGUNRUN_H
 
 

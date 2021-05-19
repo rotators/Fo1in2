@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MBSTRG12_H
-#define MBSTRG12_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -43,6 +42,5 @@
 #define MVAR_Fixt_PLACEHOLDER_3   (28)  // Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4   (29)  // Adding for ass-covering and future-proofing
 
-#endif // MBSTRG12_H
 
 

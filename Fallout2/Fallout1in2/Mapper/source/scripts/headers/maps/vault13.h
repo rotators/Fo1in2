@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPVAULT13_H
-#define MAPVAULT13_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -27,4 +26,3 @@
 #define MVAR_rebels_leave_date    (5) // ignored
 #define MVAR_INVADED              (6) // Has map been invaded by mutant invasion
 
-#endif // MAPVAULT13_H

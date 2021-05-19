@@ -1,5 +1,4 @@
-#ifndef GL_WORLDMAP_H
-#define GL_WORLDMAP_H
+#pragma once
 
 #define WORLDMAP_TERRAIN_UNKNOWN  (0)
 #define WORLDMAP_TERRAIN_CITY     (1)
@@ -11,5 +10,3 @@
 #define is_terrain_city     (global_var(GVAR_WORLDMAP_TERRAIN) == WORLDMAP_TERRAIN_CITY)
 #define is_terrain_mountain (global_var(GVAR_WORLDMAP_TERRAIN) == WORLDMAP_TERRAIN_MOUNTAIN)
 #define is_terrain_ocean    (global_var(GVAR_WORLDMAP_TERRAIN) == WORLDMAP_TERRAIN_OCEAN)
-
-#endif // GL_WORLDMAP_H //

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef GLOW_H
-#define GLOW_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -43,5 +42,3 @@
                                 play_sfx("SNDOORSA");     \
                             else                          \
                                 play_sfx("SNDOORSB")
-
-#endif // GLOW_H

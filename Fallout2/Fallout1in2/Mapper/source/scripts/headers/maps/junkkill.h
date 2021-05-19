@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPJUNKKILL_H
-#define MAPJUNKKILL_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -31,4 +30,3 @@
 #define MVAR_dude_messing_with_Killians_home  (9)  // TRUE if dude picks Killian's home door. // Used in KILLSAFE.ssl
 #define MVAR_Invasion                         (10) // Has the town been invaded?
 
-#endif // MAPJUNKKILL_H

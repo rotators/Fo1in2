@@ -4,8 +4,7 @@
 
 */
 
-#ifndef HUBHEIGT_H
-#define HUBHEIGT_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -25,5 +24,4 @@
 #define MVAR_Fixt_PLACEHOLDER_3    (10) // Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4    (11) // Adding for ass-covering and future-proofing
 
-#endif // HUBHEIGT_H
 

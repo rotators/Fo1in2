@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPCHILDRN2_H
-#define MAPCHILDRN2_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -17,5 +16,3 @@
 #define MVAR_Fixt_PLACEHOLDER_2     (2)  // Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3     (3)  // Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4     (4)  // Adding for ass-covering and future-proofing
-
-#endif // MAPCHILDRN2_H

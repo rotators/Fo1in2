@@ -4,8 +4,7 @@
 
 */
 
-#ifndef BROTHERHOOD_H
-#define BROTHERHOOD_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -46,5 +45,3 @@
             art_change_fid_num(self_obj, FID_HFCMBL); \
       end                                             \
    end
-
-#endif // BROTHERHOOD_H

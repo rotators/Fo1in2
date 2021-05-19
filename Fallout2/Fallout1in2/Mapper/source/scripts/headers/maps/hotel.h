@@ -4,8 +4,7 @@
 
 */
 
-#ifndef HOTEL_H
-#define HOTEL_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -28,6 +27,3 @@
 #define MVAR_Fixt_PLACEHOLDER_2      (13) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3      (14) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4      (15) //  Adding for ass-covering and future-proofing
-
-#endif // HOTEL_H
-

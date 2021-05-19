@@ -4,8 +4,7 @@
 
 */
 
-#ifndef CVGENENC_H
-#define CVGENENC_H
+#pragma once
 
 variable
    i, count, chance,
@@ -769,6 +768,3 @@ procedure LoadChests begin
       end
    end
 end
-
-
-#endif // CVGENENC_H

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPCHILDRN1_H
-#define MAPCHILDRN1_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -20,5 +19,3 @@
 #define MVAR_Fixt_PLACEHOLDER_5     (5)
 #define MVAR_Fixt_PLACEHOLDER_6     (6)
 #define MVAR_BOS_FLOAT              (7)
-
-#endif // MAPCHILDRN1_H

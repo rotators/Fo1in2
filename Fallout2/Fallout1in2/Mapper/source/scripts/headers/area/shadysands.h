@@ -4,8 +4,7 @@
 
 */
 
-#ifndef SHADYSANDS_H
-#define SHADYSANDS_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -37,5 +36,3 @@
 
 #define set_tandi_quest_completed      set_global_var(GVAR_TANDI_RESCUE, 2); \
                                        set_global_var(GVAR_TANDI_QUEST_PIPBOY_ENTRY, 2)
-
-#endif // SHADYSANDS_H

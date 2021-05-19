@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MAPBROHD34_H
-#define MAPBROHD34_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -38,7 +37,3 @@
 #define MVAR_Fixt_PLACEHOLDER_2  (23) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (24) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (25) //  Adding for ass-covering and future-proofing
-
-#endif // MAPBROHD34_H
-
-

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef MBASE_H
-#define MBASE_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -36,5 +35,3 @@ variable ff_emitter;
                                     ff_emitter := create_object(PID_EMITTER_DESTROYED_EW, self_tile, self_elevation);  \
                                     destroy_object(self_obj);                                                          \
                                  end
-
-#endif // MBASE_H

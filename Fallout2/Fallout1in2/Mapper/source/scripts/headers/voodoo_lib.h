@@ -1,5 +1,4 @@
-#ifndef VOODOO_LIB_H
-#define VOODOO_LIB_H
+#pragma once
 
 /********************************************************
  *   _    __                __            __    _ __    *
@@ -384,5 +383,3 @@ begin
 
    display_msg("VOODOO call_offset_r invalid num<" + num + ">");
 end
-
-#endif // VOODOO_LIB_H //

@@ -4,8 +4,7 @@
 
 */
 
-#ifndef JUNKDEMO_H
-#define JUNKDEMO_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -32,4 +31,3 @@
 #define MVAR_SlotArmor_flags            (17)
 #define MVAR_CurHP                      (18)
 
-#endif // JUNKDEMO_H

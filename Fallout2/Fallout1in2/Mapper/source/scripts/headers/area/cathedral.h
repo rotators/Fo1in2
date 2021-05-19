@@ -5,8 +5,7 @@
 
 */
 
-#ifndef CATHEDRAL_H
-#define CATHEDRAL_H
+#pragma once
 
 /************************************************
     Generic Defines
@@ -22,9 +21,3 @@
 
 #define set_invad_status(x)         set_gvar_bit_on(GVAR_CATHEDRAL_INVADER_STATES, x)
 #define invad_status(x)             (gvar_bit(GVAR_CATHEDRAL_INVADER_STATES, x))
-
-#endif // CATHEDRAL_H
-
-
-
-

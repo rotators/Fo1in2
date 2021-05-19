@@ -2,8 +2,7 @@
    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
-#ifndef _ITEMPID_H_DEFINED
-#define _ITEMPID_H_DEFINED
+#pragma once
 
 /******************************************************************
    File Name: ItemPid.H
@@ -611,6 +610,3 @@
 #define PID_FLYING_LASER_BLAST              (83886089)
 #define PID_FLYING_PLASMA_BLAST             (83886090)
 #define PID_FLYING_ELECTRICITY_BOLT         (83886091)
-
-
-#endif  // _ITEMPID_H_DEFINED
