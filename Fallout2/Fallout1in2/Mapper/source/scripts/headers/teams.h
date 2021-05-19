@@ -56,7 +56,7 @@
 #define TEAM_DAN_THE_BRAHMIN_MAN    (62)
 #define TEAM_HUB_CARTS_GUARD        (64)
 #define TEAM_HUB_FARMER             (65)
-#define TEAM_67                     (67)
+#define TEAM_HUB_SHERIFF            (67)
 #define TEAM_HUB_STAPLETON          (70)
 #define TEAM_HUB_CATHEDRAL          (72)
 #define TEAM_HUB_FLC                (73)
