@@ -29,6 +29,11 @@ variable $addr;
 #define VOODOO_survivalist_bonus \
                write_byte(0x496FAB, 0)
 
+// This will change the skill bonus from Mr. Fixit perk to 20%.
+// In Fo2, the skill gives only +10%, while in Fo1 it is +20%.
+#define VOODOO_mr_fixit_bonus \
+               write_byte(0x496E00, 20)
+
 // This will change the credits and wordlmap music tracks, so that
 // the HQ music pack will not overwrite the Fo1 music with Fo2 tracks.
 #define VOODOO_fo1_music \

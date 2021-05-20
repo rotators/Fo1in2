@@ -54,9 +54,12 @@ variable reaction_bonus_karma:=0;
                            set_local_var(LVAR_reaction, BASE_REACTION);    \
                            set_local_var(LVAR_reaction_level, NEUTRAL);    \
                            set_local_var(LVAR_got_reaction, 1);            \
-                                                  /* We double the reaction check because -100 to 100 instead of 0 to 100! */       \
+                                                  /* We double the reaction check, because -100 to 100 instead of 0 to 100! */      \
                            set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * ((5 * dude_charisma) - 25)));               \
                            set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * (10 * dude_perk(PERK_presence))));          \
+                           if dude_perk(PERK_karma_beacon_perk) then begin /* Added support for Fo2 perk */                         \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) * 2);                                           \
+                           end                                                                                                      \
                            if dude_perk(PERK_cult_of_personality) then begin                                                        \
                               if (global_var(GVAR_PLAYER_REPUTATION) > 0) then begin                                                \
                                  set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * global_var(GVAR_PLAYER_REPUTATION))); \

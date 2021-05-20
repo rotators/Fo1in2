@@ -316,7 +316,7 @@ procedure use_obj_on_p_proc begin
    Tool := obj_pid(obj_being_used_with);
 
    if (LOCK_STATUS == STATE_STANDARD_LOCK) then begin
-       if (Tool == PID_LOCKPICKS) then begin
+      if (Tool == PID_LOCKPICKS) then begin
            script_overrides; //added by killap
            if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
                call Lockpick_Lock;
@@ -326,16 +326,24 @@ procedure use_obj_on_p_proc begin
            end
        end
        else if (Tool == PID_EXP_LOCKPICK_SET) then begin
-           script_overrides; //added by killap
-           if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
-               call Super_Lockpick_Lock;
-           end
-           else begin
-               call Super_Set_Lockpick_Lock;
-           end
-       end
+         script_overrides; //added by killap
+         if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
+            call Super_Lockpick_Lock;
+         end
+         else begin
+            call Super_Set_Lockpick_Lock;
+         end
+      end
+      //added by killap:
+      else if (Tool == PID_CROWBAR) then begin
+         script_overrides;
+         call Pry_Door;
+      end
+      else if ((Tool == PID_DYNAMITE) or (Tool == PID_PLASTIC_EXPLOSIVES)) then begin
+         script_overrides;
+         call Set_Trap;
+      end
    end
-
    else if (LOCK_STATUS == STATE_ELECTRIC_LOCK) then begin
       if (Tool == PID_ELECTRONIC_LOCKPICKS) then begin
          script_overrides; //added by killap
@@ -355,18 +363,16 @@ procedure use_obj_on_p_proc begin
             call Super_Set_Lockpick_Lock;
          end
       end
+      //added by killap:
+      else if (Tool == PID_CROWBAR) then begin
+         script_overrides;
+         call Pry_Door;
+      end
+      else if ((Tool == PID_DYNAMITE) or (Tool == PID_PLASTIC_EXPLOSIVES)) then begin
+         script_overrides;
+         call Set_Trap;
+      end
    end
-
-   else if (Tool == PID_CROWBAR) then begin
-      script_overrides; //added by killap
-      call Pry_Door;
-   end
-
-   else if ((Tool == PID_DYNAMITE) or (Tool == PID_PLASTIC_EXPLOSIVES)) then begin
-      script_overrides; //added by killap
-      call Set_Trap;
-   end
-
 end
 
 
@@ -993,86 +999,71 @@ procedure Look_Locks begin
    Locks_Check := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
 
    if (is_success(Perception_Check)) then begin
-       if (is_critical(Perception_Check)) then begin
-           if (is_success(Locks_Check)) then begin
-               if (is_critical(Locks_Check)) then begin
-                   display_msg(mstr(1140));
-               end                                              // Critical Success (Locks)
-
-               else begin
-                   display_msg(mstr(1150));
-               end                                              // Regular Success (Locks)
-           end
-
-           else if (is_critical(Locks_Check)) then begin
-               display_msg(mstr(1160));
-           end                                                  // Critical Failure (Locks)
-
-           else begin
-               display_msg(mstr(1170));
-           end                                                  // Regular Failure (Locks)
-       end                                                      // Critical Success (Stat_Pe)
-
-       else begin
-           if (is_success(Locks_Check)) then begin
-               if (is_critical(Locks_Check)) then begin
-                   display_msg(mstr(130));
-               end                                              // Critical Success (Locks)
-
-               else begin
-                   display_msg(mstr(131));
-               end                                              // Regular Success (Locks)
-           end
-
-           else if (is_critical(Locks_Check)) then begin
-               display_msg(mstr(132));
-           end                                                  // Critical Failure (Locks)
-
-           else begin
-               display_msg(mstr(133));
-           end                                                  // Regular Failure (Locks)
-       end                                                      // Regular Success (Stat_pe)
+      if (is_critical(Perception_Check)) then begin
+         if (is_success(Locks_Check)) then begin
+            if (is_critical(Locks_Check)) then begin
+               display_msg(mstr(1140));
+            end                                             // Critical Success (Locks)
+            else begin
+               display_msg(mstr(1150));
+            end                                             // Regular Success (Locks)
+         end
+         else if (is_critical(Locks_Check)) then begin
+            display_msg(mstr(1160));
+         end                                                // Critical Failure (Locks)
+         else begin
+            display_msg(mstr(1170));
+         end                                                // Regular Failure (Locks)
+      end                                                   // Critical Success (Stat_Pe)
+      else begin
+         if (is_success(Locks_Check)) then begin
+            if (is_critical(Locks_Check)) then begin
+               display_msg(mstr(130));
+            end                                             // Critical Success (Locks)
+            else begin
+               display_msg(mstr(131));
+            end                                             // Regular Success (Locks)
+         end
+         else if (is_critical(Locks_Check)) then begin
+            display_msg(mstr(132));
+         end                                                // Critical Failure (Locks)
+         else begin
+            display_msg(mstr(133));
+         end                                                // Regular Failure (Locks)
+      end                                                   // Regular Success (Stat_pe)
    end
-
    else if (is_critical(Perception_Check)) then begin
-       if (is_success(Locks_Check)) then begin
-           if (is_critical(Locks_Check)) then begin
-               display_msg(mstr(146));
-           end                                                  // Critical Success (Locks)
-
-           else begin
-               display_msg(mstr(147));
-           end                                                  // Regular Success (Locks)
-       end
-
-       else if (is_critical(Locks_Check)) then begin
-           display_msg(mstr(148));
-       end                                                      // Critical Failure (Locks)
-
-       else begin
-           display_msg(mstr(149));
-       end                                                      // Regular Failure (Locks)
-   end                                                          // Critical Failure (Stat_pe)
-
+      if (is_success(Locks_Check)) then begin
+         if (is_critical(Locks_Check)) then begin
+            display_msg(mstr(146));
+         end                                                // Critical Success (Locks)
+         else begin
+            display_msg(mstr(147));
+         end                                                // Regular Success (Locks)
+      end
+      else if (is_critical(Locks_Check)) then begin
+         display_msg(mstr(148));
+      end                                                   // Critical Failure (Locks)
+      else begin
+         display_msg(mstr(149));
+      end                                                   // Regular Failure (Locks)
+   end                                                      // Critical Failure (Stat_pe)
    else begin
-       if (is_success(Locks_Check)) then begin
-           if (is_critical(Locks_Check)) then begin
-               display_msg(mstr(162));
-           end                                                  // Critical Success (Locks)
-
-           else begin
-               display_msg(mstr(163));
-           end                                                  // Regular Success (Locks)
-       end
-
-       else if (is_critical(Locks_Check)) then begin
-           display_msg(mstr(164));
-       end                                                      // Critical Failure (Locks)
-
-       else begin
-           display_msg(mstr(165));
-       end                                                      // Regular Failure (Locks)
-   end                                                          // Regular Failure (Stat_Pe)
+      if (is_success(Locks_Check)) then begin
+         if (is_critical(Locks_Check)) then begin
+            display_msg(mstr(162));
+         end                                                // Critical Success (Locks)
+         else begin
+            display_msg(mstr(163));
+         end                                                // Regular Success (Locks)
+      end
+      else if (is_critical(Locks_Check)) then begin
+         display_msg(mstr(164));
+      end                                                   // Critical Failure (Locks)
+      else begin
+         display_msg(mstr(165));
+      end                                                   // Regular Failure (Locks)
+   end                                                      // Regular Failure (Stat_Pe)
 end
 
 
@@ -1104,48 +1095,39 @@ procedure Set_Trap begin
    of the script. */
 
    Traps_Roll := roll_vs_skill(source_obj, SKILL_TRAPS, Trap_Set_Bonus);
-
    Explosive := obj_being_used_with;
-
    if (obj_is_open(self_obj)) then begin
-       script_overrides;
-       if source_is_dude then begin
-           display_msg(mstr(206));
-       end
-
-       else begin
-           display_msg(obj_name(source_obj)+mstr(207));
-       end
+      script_overrides;
+      if source_is_dude then begin
+         display_msg(mstr(206));
+      end
+      else begin
+         display_msg(obj_name(source_obj)+mstr(207));
+      end
    end
-
    else begin
-       script_overrides;
-       Removal_Counter := rm_mult_objs_from_inven(source_obj, Explosive, 1);
-
-       if (is_success(Traps_Roll)) then begin
-           set_local_var(LVAR_Trapped, STATE_ACTIVE);
-           if source_is_dude then begin
-               display_msg(mstr(208));
-           end
-
-           else begin
-               display_msg(obj_name(source_obj)+mstr(210));
-           end
-       end
-
-       else if (is_critical(Traps_Roll)) then begin
-           call Damage_Critter;
-       end
-
-       else begin
-           if source_is_dude then begin
-               display_msg(mstr(209));
-           end
-
-           else begin
-               display_msg(obj_name(source_obj)+mstr(211));
-           end
-       end
+      script_overrides;
+      Removal_Counter := rm_mult_objs_from_inven(source_obj, Explosive, 1);
+      if (is_success(Traps_Roll)) then begin
+         set_local_var(LVAR_Trapped, STATE_ACTIVE);
+         if source_is_dude then begin
+            display_msg(mstr(208));
+         end
+         else begin
+            display_msg(obj_name(source_obj)+mstr(210));
+         end
+      end
+      else if (is_critical(Traps_Roll)) then begin
+         call Damage_Critter;
+      end
+      else begin
+         if source_is_dude then begin
+            display_msg(mstr(209));
+         end
+         else begin
+            display_msg(obj_name(source_obj)+mstr(211));
+         end
+      end
    end
 end
 
