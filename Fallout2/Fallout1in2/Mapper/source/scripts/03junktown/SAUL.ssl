@@ -76,6 +76,7 @@ variable Saul_hits;
 variable whose_turn;
 
 #define LVAR_Sleeping                     (4)
+#define LVAR_LostFight                    (8)
 
 #define fighting_hex          (15094)
 #define outside_hex           (16892)
@@ -194,7 +195,6 @@ end
 
 procedure map_update_p_proc begin
    if (not(combat_is_initialized)) then begin
-
       if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
          home_tile := fighting_hex;
       end
@@ -203,12 +203,13 @@ procedure map_update_p_proc begin
       end
 
       move_to(self_obj, home_tile, 0);
-
-      if (local_var(8) == 1) then begin
-         set_local_var(8, 0);
+      if (local_var(LVAR_LostFight) == 1) then begin
+         set_local_var(LVAR_LostFight, 0);
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
          reg_anim_animate(self_obj, ANIM_stand, 0);
+         reg_anim_end();
       end
-
       sleeping
    end
 end
@@ -227,18 +228,14 @@ procedure talk_p_proc begin
    else if (global_var(GVAR_ENEMY_JUNKTOWN)) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, 104), FLOAT_MSG_RED);
    end
+   else if (dude_is_armed) then begin
+      call Saul06;
+   end
+   else if (global_var(GVAR_SAUL_STATUS)) then begin
+      start_dialog_at_node(Saul23);
+   end
    else begin
-      if (dude_is_armed) then begin
-         call Saul06;
-      end
-      else begin
-         if (global_var(GVAR_SAUL_STATUS)) then begin
-            start_dialog_at_node(Saul23);
-         end
-         else begin
-            start_dialog_at_node(Saul07);
-         end
-      end
+      start_dialog_at_node(Saul07);
    end
    check_relationship_saved;
 end
@@ -270,7 +267,7 @@ procedure timed_event_p_proc begin
       end
       else if (fixed_param == EVENT_LOST) then begin
          Saul_loses := 1;
-         set_local_var(8, 1);
+         set_local_var(LVAR_LostFight, 1);
       end
    end
 end
@@ -329,7 +326,7 @@ procedure Saul08 begin
 end
 
 procedure Saul08a begin
-   if (local_var(LVAR_reaction_level) == NO_REACTION) then
+   //if (local_var(LVAR_reaction_level) == NO_REACTION) then
       set_local_var(LVAR_reaction_level, BAD);
 
    call Saul09;
