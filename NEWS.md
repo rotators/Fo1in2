@@ -28,6 +28,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
 - **Fixed**: Mines / Traps spatial scripts had no range assigned to them.
 - **Fixed**: Mines in the thief circle map didn't want to explode.
+- **Fixed**: Necropolis Motel map had wrong resting settings (No,Yes,No -> No,No,No).
 - **Fixed**: Patrick the Celt had a dialog reaction to Aradesh being dead, but the condition was wrong.
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
