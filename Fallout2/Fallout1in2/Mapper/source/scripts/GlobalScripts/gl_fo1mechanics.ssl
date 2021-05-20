@@ -18,19 +18,20 @@
 procedure start;
 
 procedure general;
-procedure mode_change_handler;
+procedure GameModeChange_handler;
 procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
 
 procedure night_person;
 procedure skilled;
 
-procedure item_description_handler;
-procedure afterhitroll_handler;
-procedure useanimobj_handler;
-procedure useskillon_handler;
-procedure useobjon_handler;
-procedure calcapcost_handler;
+procedure DescriptionObj_handler;
+procedure AfterHitRoll_handler;
+procedure UseAnimObj_handler;
+procedure UseSkillOn_handler;
+procedure UseObjOn_handler;
+procedure WithinPerception_handler;
+procedure CalcAPcost_handler;
 
 procedure steal_urn;
 
@@ -47,13 +48,14 @@ import variable Neal_urn_ptr;
 procedure start begin
    if (game_loaded) then begin
       set_global_script_type(0);
-      register_hook_proc(HOOK_GAMEMODECHANGE, mode_change_handler);
-      register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description_handler);
-      register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
-      register_hook_proc(HOOK_USESKILLON, useskillon_handler);
-      register_hook_proc(HOOK_USEOBJON, useobjon_handler);
-      register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
-      //register_hook_proc(HOOK_CALCAPCOST, calcapcost_handler);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
+      register_hook_proc(HOOK_DESCRIPTIONOBJ, DescriptionObj_handler);
+      register_hook_proc(HOOK_AFTERHITROLL, AfterHitRoll_handler);
+      register_hook_proc(HOOK_USESKILLON, UseSkillOn_handler);
+      register_hook_proc(HOOK_USEOBJON, UseObjOn_handler);
+      register_hook_proc(HOOK_USEANIMOBJ, UseAnimObj_handler);
+      register_hook_proc(HOOK_WITHINPERCEPTION, WithinPerception_handler);
+      //register_hook_proc(HOOK_CALCAPCOST, CalcAPcost_handler);
 
       //iniVal := get_ini_string("ddraw.ini|misc|FastShotFix");
       //intface_redraw;
@@ -88,7 +90,7 @@ procedure general begin
    VOODOO_fo1_music;
 end
 
-procedure mode_change_handler begin
+procedure GameModeChange_handler begin
    if (get_game_mode bwand WORLDMAP) then begin
       call scene_master_destroyed;
       call scene_vats_destroyed;
@@ -185,7 +187,7 @@ procedure skilled begin
       set_perk_freq(4);
 end
 
-procedure item_description_handler begin
+procedure DescriptionObj_handler begin
    variable
       item := obj_pid(get_sfall_arg),
       description;
@@ -198,7 +200,7 @@ procedure item_description_handler begin
    end
 end
 
-procedure afterhitroll_handler begin
+procedure AfterHitRoll_handler begin
    variable
       willHit := get_sfall_arg,
       attacker := get_sfall_arg,
@@ -227,7 +229,7 @@ procedure afterhitroll_handler begin
    end
 end
 
-procedure useanimobj_handler begin
+procedure UseAnimObj_handler begin
    variable
       critter := get_sfall_arg,
       target := get_sfall_arg,
@@ -251,7 +253,7 @@ procedure useanimobj_handler begin
    end
 end
 
-procedure useskillon_handler begin
+procedure UseSkillOn_handler begin
    variable
       critter := get_sfall_arg,
       target := get_sfall_arg,
@@ -278,7 +280,7 @@ procedure steal_urn begin
    end
 end
 
-procedure useobjon_handler begin
+procedure UseObjOn_handler begin
    variable
       target := get_sfall_arg,
       source := get_sfall_arg,
@@ -289,7 +291,24 @@ procedure useobjon_handler begin
       item_caps_adjust(source, 1);
 end
 
-procedure calcapcost_handler begin
+procedure WithinPerception_handler begin
+   variable
+      watcher := get_sfall_arg,
+      target  := get_sfall_arg,
+      oResult := get_sfall_arg,
+      type    := get_sfall_arg;
+
+   // Latest Sfall would end the combat automatically and the player gets teleported away.
+   // This is to allow the fight against Decker to continue, even after the thugs surrendered
+   if (cur_map_index == MAP_HUBDWNTN and dude_elevation == 1) then begin
+      if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (map_var(54) == 1) and watcher != dude_obj) then begin
+         debug_msg("WithinPerception: Decker and Kane are dead!!");
+         set_sfall_return(0);
+      end
+   end
+end
+
+procedure CalcAPcost_handler begin
    // This is done by latest Sfall now.
    /*variable
       critter := get_sfall_arg,
