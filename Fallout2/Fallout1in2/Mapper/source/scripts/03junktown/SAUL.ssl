@@ -478,27 +478,25 @@ procedure Saul20 begin
    if (local_var(LVAR_reaction_level) == BAD) then begin
       Reply(169);
    end
-   else begin
-      if get_trish_state(SAUL_CARES) and get_trish_state(TRISH_CONCERNED) then begin
-         Reply(mstr(160));
+   else if get_trish_state(SAUL_CARES) and get_trish_state(TRISH_CONCERNED) then begin
+      Reply(mstr(160));
+      if (dude_iq >= 6) then
+         GOption(172, Saul21, 6);
+      else
+         NOption(173, Saul22, 4);
+   end
+   else if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)))  then begin
+      set_trish_state(SAUL_CARES);
+      Reply(mstr(170) + mstr(171));
+      if get_trish_state(TRISH_CONCERNED) then begin
          if (dude_iq >= 6) then
             GOption(172, Saul21, 6);
          else
             NOption(173, Saul22, 4);
       end
-      else if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)))  then begin
-         set_trish_state(SAUL_CARES);
-         Reply(mstr(170) + mstr(171));
-         if get_trish_state(TRISH_CONCERNED) then begin
-            if (dude_iq >= 6) then
-               GOption(172, Saul21, 6);
-            else
-               NOption(173, Saul22, 4);
-         end
-      end
-      else begin
-         Reply(mstr(170));
-      end
+   end
+   else begin
+      Reply(mstr(170));
    end
    NOption(174, Saul18, 4);
    NOption(175, SaulEnd, 4);
@@ -550,6 +548,8 @@ procedure Saul24 begin
 end
 
 procedure SaulBoxing begin
+variable sound;
+
    reg_anim_clear(self_obj);
    reg_anim_clear(challenger_ptr);
 
@@ -557,40 +557,55 @@ procedure SaulBoxing begin
       reg_anim_begin();
       reg_anim_animate(self_obj, ANIM_throw_punch, -1);
       if (is_success(roll_vs_skill(self_obj, SKILL_UNARMED_COMBAT, 0))) then begin
+         sound := sfx_build_char_name(self_obj, ANIM_throw_punch, snd_contact);
+         reg_anim_play_sfx(self_obj, sound, 1);
          if (challenger_hits >= (get_endurance(challenger_ptr) * 2)) then begin
             reg_anim_animate(challenger_ptr, ANIM_fall_back, 4);
+            sound := sfx_build_char_name(challenger_ptr, ANIM_fall_back, snd_knock_down);
+            reg_anim_play_sfx(challenger_ptr, sound, 0);
             reg_anim_animate(challenger_ptr, ANIM_fall_back_sf, -1);
             add_timer_event(self_obj, game_ticks(2), EVENT_WON);
          end
          else begin
             reg_anim_animate(challenger_ptr, ANIM_hit_from_front, 4);
+            sound := sfx_build_char_name(challenger_ptr, ANIM_hit_from_front, snd_contact);
+            reg_anim_play_sfx(challenger_ptr, sound, 0);
             challenger_hits := challenger_hits + 1;
             add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
          end
       end
       else begin
+         sound := sfx_build_char_name(challenger_ptr, ANIM_dodge_anim, snd_contact);
+         reg_anim_play_sfx(challenger_ptr, sound, 0);
          reg_anim_animate(challenger_ptr, ANIM_dodge_anim, 4);
          add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
       end
       reg_anim_end();
    end
-
    else begin
       reg_anim_begin();
       reg_anim_animate(challenger_ptr, ANIM_throw_punch, -1);
       if (is_success(roll_vs_skill(challenger_ptr, SKILL_UNARMED_COMBAT, 0))) then begin
+         sound := sfx_build_char_name(challenger_ptr, ANIM_throw_punch, snd_contact);
+         reg_anim_play_sfx(challenger_ptr, sound, 1);
          if (Saul_hits >= (self_endurance * 2)) then begin
             reg_anim_animate(self_obj, ANIM_fall_back, 4);
+            sound := sfx_build_char_name(self_obj, ANIM_fall_back, snd_knock_down);
+            reg_anim_play_sfx(self_obj, sound, 0);
             reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
             add_timer_event(self_obj, game_ticks(2), EVENT_LOST);
          end
          else begin
             reg_anim_animate(self_obj, ANIM_hit_from_front, 4);
+            sound := sfx_build_char_name(self_obj, ANIM_hit_from_front, snd_contact);
+            reg_anim_play_sfx(self_obj, sound, 0);
             Saul_hits := Saul_hits + 1;
             add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
          end
       end
       else begin
+         sound := sfx_build_char_name(self_obj, ANIM_dodge_anim, snd_contact);
+         reg_anim_play_sfx(self_obj, sound, 0);
          reg_anim_animate(self_obj, ANIM_dodge_anim, 4);
          add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
       end
