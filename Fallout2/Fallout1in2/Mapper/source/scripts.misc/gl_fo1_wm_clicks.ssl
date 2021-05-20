@@ -1,0 +1,238 @@
+/*
+
+   Test script for button sfx on the worldmap.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+#include "sfall/sfall.rotators.h"
+#include "sfall/dik.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure GameModeChange_handler;
+procedure KeyPress_handler;
+procedure MouseClick_handler;
+
+procedure OverButton;
+procedure CheckMove;
+
+procedure do_down_small;
+procedure do_up_small;
+procedure do_down;
+procedure do_up;
+
+// TODO: Calculate xy based on screen size
+//#define in_wm_window       ((get_mouse_x > 217) and (get_mouse_x < 916) and (get_mouse_y > 21) and (get_mouse_y < 702))
+#define in_wm_window       ((get_mouse_x > (Scr_Width - 424)) and (get_mouse_x < (Scr_Width + 278)) and (get_mouse_y > (Scr_Height - 340)) and (get_mouse_y < (Scr_Height + 346)))
+
+// Buttons
+//#define on_townworld       ((get_mouse_x > 964) and (get_mouse_x < 978) and (get_mouse_y > 679) and (get_mouse_y < 694))
+#define on_townworld       ((get_mouse_x > (Scr_Width + 323)) and (get_mouse_x < (Scr_Width + 337)) and (get_mouse_y > (Scr_Height + 318)) and (get_mouse_y < (Scr_Height + 333)))
+
+//#define but_x              ((get_mouse_x > 952) and (get_mouse_x < (952 + 16)))
+#define but_x              ((get_mouse_x > (Scr_Width + 312)) and (get_mouse_x < (Scr_Width + 328)))
+//#define but_y(x)           ((get_mouse_y > (137 + (27 * x))) and (get_mouse_y < ((137 + 17) + (27 * x))))
+#define but_y(x)           ((get_mouse_y > ((Scr_Height - 222) + (27 * x))) and (get_mouse_y < ((Scr_Height - 205) + (27 * x))))
+#define on_but00           (but_x and but_y(0))
+#define on_but01           (but_x and but_y(1))
+#define on_but02           (but_x and but_y(2))
+#define on_but03           (but_x and but_y(3))
+#define on_but04           (but_x and but_y(4))
+#define on_but05           (but_x and but_y(5))
+#define on_but06           (but_x and but_y(6))
+#define on_but07           (but_x and but_y(7))
+#define on_but08           (but_x and but_y(8))
+#define on_but09           (but_x and but_y(9))
+#define on_but10           (but_x and but_y(10))
+#define on_but11           (but_x and but_y(11))
+#define on_but12           (but_x and but_y(12))
+#define on_but13           (but_x and but_y(13))
+#define on_but14           (but_x and but_y(14))
+
+//#define on_arr_up          ((get_mouse_x > 925) and (get_mouse_x < 935) and (get_mouse_y > 137) and (get_mouse_y < 150))
+#define on_arr_up          ((get_mouse_x > (Scr_Width + 284)) and (get_mouse_x < (Scr_Width + 294)) and (get_mouse_y > (Scr_Height - 223)) and (get_mouse_y < (Scr_Height - 210)))
+//#define on_arr_down        ((get_mouse_x > 925) and (get_mouse_x < 935) and (get_mouse_y > 152) and (get_mouse_y < 165))
+#define on_arr_down        ((get_mouse_x > (Scr_Width + 284)) and (get_mouse_x < (Scr_Width + 294)) and (get_mouse_y > (Scr_Height - 208)) and (get_mouse_y < (Scr_Height - 195)))
+
+// Button sfx
+#define SoundP             "butin4"
+#define SoundR             "butout4"
+#define SoundOff           "IB2LU1X1"
+#define SoundDown          "IB1P1XX1"
+#define SoundError         "IISXXXX1"
+
+#define RELEASED     (0)
+#define PRESSED      (1)
+
+variable iniVal;
+
+variable Scr_Width;
+variable Scr_Height;
+
+variable ButPres;
+variable CurBut;
+variable MousonBut;
+variable TownWorld;
+variable posWM;
+
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(1);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
+      register_hook_proc(HOOK_MOUSECLICK, MouseClick_handler);
+      register_hook_proc(HOOK_KEYPRESS, KeyPress_handler);
+   end
+
+   call OverButton;
+   call CheckMove;
+end
+
+procedure GameModeChange_handler begin
+   if (get_game_mode bwand WORLDMAP) then begin
+      set_global_script_repeat(1);
+   end
+   else begin
+      set_global_script_repeat(0);
+   end
+   TownWorld := false;
+end
+
+procedure CheckMove begin
+   // If the player is in the Town/World screen and clicks another town button,
+   // the Town/World interface will close and he starts traveling there.
+   // With this workaround, we detect if the player is moving and if yes, disable TownWorld-mode.
+   if (posWM == 0) then posWM := worldmap_xpos;
+   if (worldmap_xpos != posWM) then begin
+      TownWorld := false;
+      posWM := worldmap_xpos;
+   end
+end
+
+#define TravelButton(name,index) \
+   else if name and (CurBut == -1 or CurBut == index) then begin  \
+      if ButPres and (MousonBut < 0) then begin                   \
+         call do_down_small;                                      \
+      end                                                         \
+      MousonBut := index;                                         \
+      if (ButPres == false) then CurBut := index;                 \
+   end
+
+procedure OverButton begin
+   if on_but00 and (CurBut == -1 or CurBut == 0) then begin
+      if ButPres and (MousonBut < 0) then begin
+         call do_down_small;
+      end
+      MousonBut := 0;
+      if (ButPres == false) then CurBut := 0;
+   end
+   TravelButton(on_but01, 1)
+   TravelButton(on_but02, 2)
+   TravelButton(on_but03, 3)
+   TravelButton(on_but04, 4)
+   TravelButton(on_but05, 5)
+   TravelButton(on_but06, 6)
+   TravelButton(on_but07, 7)
+   TravelButton(on_but08, 8)
+   TravelButton(on_but09, 9)
+   TravelButton(on_but10, 10)
+   TravelButton(on_but11, 11)
+   TravelButton(on_but12, 12)
+   TravelButton(on_but13, 13)
+   TravelButton(on_but14, 14)
+   TravelButton(on_townworld, 15)
+   TravelButton(on_arr_up, 16)
+   TravelButton(on_arr_down, 17)
+   else begin
+      if ButPres and (MousonBut >= 0) then begin
+         call do_up_small;
+      end
+      MousonBut := -1;
+   end
+end
+
+procedure KeyPress_handler begin
+   variable
+      key_state := get_sfall_arg,
+      key_dik := get_sfall_arg;
+
+   if (get_game_mode bwand WORLDMAP) then begin
+      if (TownWorld and (key_dik == DIK_ESCAPE)) then begin
+         TownWorld := false;
+         //debug("disable TW");
+      end
+   end
+end
+
+procedure MouseClick_handler begin
+   variable
+      click_type := get_sfall_arg,
+      click_number := get_sfall_arg;
+
+   if (get_game_mode bwand WORLDMAP) then begin
+      Scr_Width  := (get_screen_width / 2);
+      Scr_Height := (get_screen_height / 2);
+
+      if (  on_arr_up or on_arr_down or
+            on_but00 or on_but01 or on_but02 or on_but03 or on_but04 or on_but05 or on_but06 or
+            on_but07 or on_but08 or on_but09 or on_but10 or on_but11 or on_but12 or on_but13 or on_but14 ) then begin
+         if (click_type == PRESSED) then begin
+            call do_down_small;
+            ButPres := true;
+         end
+         else begin
+            call do_up_small;
+         end
+      end
+
+      else if (in_wm_window and (TownWorld == false)) then begin
+         if (click_type == PRESSED) then begin
+            call do_down_small;
+         end
+      end
+      else if on_townworld then begin
+         if (click_type == PRESSED) then begin
+            call do_down_small;
+            ButPres := true;
+         end
+         else begin
+            call do_up_small;
+            if TownWorld then
+               TownWorld := false;
+            else
+               TownWorld := true;
+            //debug("enable TW");
+         end
+      end
+
+      if (click_type == RELEASED) then begin
+         ButPres := false;
+         MousonBut := -1;
+         CurBut := -1;
+      end
+   end
+end
+
+procedure do_down_small begin
+   play_sfx(SoundP);
+end
+
+procedure do_up_small begin
+   if (ButPres) then play_sfx(SoundR);
+end
+
+procedure do_down begin
+   play_sfx(SoundP);
+end
+
+procedure do_up begin
+   //ButPres := false;
+   play_sfx(SoundOff);
+end
+
