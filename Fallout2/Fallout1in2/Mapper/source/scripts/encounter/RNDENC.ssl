@@ -50,6 +50,7 @@ variable iter2 := 0;
 variable iter_cluster := 0;
 variable rnd_tile := 0;
 
+variable RadsTimer := 0;
 variable map;
 variable spawn_hex := 0;
 
@@ -75,10 +76,6 @@ procedure map_enter_p_proc begin
    variable map; // := random(1, 3);
    variable Critter;
    variable Critter_Tile;
-
-   if fo1in2_radiation_enabled and in_glow_zone then begin
-      flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
-   end
 
    // Unused, because HOOK_ENCOUNTER in gl_worldmap.ssl ... Keep this anyway for now just in case.
    if (CUR_MAP_DESERT0) then begin
@@ -144,6 +141,14 @@ end
 procedure map_update_p_proc begin
    if (CUR_MAP_DESERT0) then begin
       add_timer_event(self_obj, game_ticks(0), 1);
+   end
+   else begin
+      if fo1in2_radiation_enabled and in_glow_zone then begin
+         if (RadsTimer == 0) then begin
+            RadsTimer := 1;
+            flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
+         end
+      end
    end
    Lighting;
 end

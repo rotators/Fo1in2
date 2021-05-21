@@ -76,6 +76,7 @@ procedure VAULT6;// ---------------RNDMTN ONLY
 export variable signal_mutants;
 
 variable rnd_critter;
+variable RadsTimer;
 
 procedure start begin
 end
@@ -161,10 +162,6 @@ end
 procedure map_enter_p_proc begin
    set_cur_exit;
 
-   if fo1in2_radiation_enabled and in_glow_zone then begin
-      flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
-   end
-
    if map_has_cavern then begin
       if (map_first_run and not(is_loading_game)) then begin
          if map_is_mine then
@@ -213,6 +210,13 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
+   if fo1in2_radiation_enabled and in_glow_zone then begin
+      if (RadsTimer == 0) then begin
+         RadsTimer := 1;
+         flush_add_timer_event(self_obj, game_ticks(0), EVENT_GLOW_RADS);
+      end
+   end
+
    if (dude_elevation == 1) then
       Darkness;
    else
