@@ -279,7 +279,7 @@
 #define GVAR_RIPPERS_LEFT                       (1137)
 #define GVAR_QUEST_BONEYARD_5_FIX_FARM          (1138)
 #define GVAR_QUEST_GLOW_2_START_POWER           (1139)
-#define GVAR_QUEST_GLOW_1_TRAPS_OFF             (1140)
+#define GVAR_QUEST_GLOW_TRAPS                   (1140)
 #define GVAR_HOLODISK_ACCESS_CODE               (1141)
 #define GVAR_WEAPON_LOCKER                      (1142)
 #define GVAR_SAVE_SINTHIA                       (1143)
@@ -4056,8 +4056,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4917)
 #define RESERVED_FOR_FALLOUT_FIXT               (4918)
 #define RESERVED_FOR_FALLOUT_FIXT               (4919)
-#define RESERVED_FOR_FALLOUT_FIXT               (4920)
-#define RESERVED_FOR_FALLOUT_FIXT               (4921)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4920)*/
+#define GVAR_GLOW_TRAPS_STATE                   (4921)
 #define GVAR_CATHEDRAL_INVADER_STATES           (4922)
 #define GVAR_QUEST_KILL_HARRY                   (4923)
 #define GVAR_ENABLE_EXPANDED_RADIATION          (4924)
