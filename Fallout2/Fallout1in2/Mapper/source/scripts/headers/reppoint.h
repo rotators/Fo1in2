@@ -276,187 +276,21 @@
 **************************************************************************/
 
 
-// Fallout 2 default
-#define REP_ENEMY_ARROYO                        (global_var(GVAR_ENEMY_ARROYO) == 1)
-#define REP_ENEMY_DEN                           (global_var(GVAR_ENEMY_DEN) == 1)
-#define REP_ENEMY_KLAMATH                       (global_var(GVAR_ENEMY_KLAMATH) == 1)
-#define REP_ENEMY_VAULT_VILLAGE                 (global_var(GVAR_ENEMY_VAULT_VILLAGE) == 1)
-#define REP_ENEMY_VAULT_CITY                    (global_var(GVAR_ENEMY_VAULT_CITY) == 1)
-#define REP_ENEMY_GECKO                         (global_var(GVAR_ENEMY_GECKO) == 1)
-
-// Vault City Town Rep
-#define REP_TOWN_SEXED_UP_AMANDA                (-10)
-#define REP_TOWN_RESCUED_JOSHUA_NO_SEX          (3)
-#define REP_TOWN_TOLD_ANDREW_NO_REWARD          (1)
-#define REP_TOWN_FIXED_AUTODOC                  (1)
-#define REP_TOWN_CASSIDY_JOINED                 (1)
-#define REP_TOWN_DELIVERED_BOOZE                (3)
-#define REP_TOWN_CURED_CHARLIE                  (3)
-#define REP_TOWN_TORTURED_CURTIS                (-3)
-#define REP_TOWN_RETURNED_CURTIS_DOLL           (1)
-#define REP_TOWN_GAVE_TROY_FORMULA              (3)
-#define REP_TOWN_BLACKMAILED_TROY               (-3)
-#define REP_TOWN_PASSED_CITIZENSHIP_TEST        (10)
-#define REP_TOWN_TELL_KOHL_YOU_LIKE_BOOKS       (1)
-#define REP_TOWN_TOLD_LYNETTE_ABOUT_RAIDERS     (10)
-#define REP_TOWN_EXPOSED_MOORE                  (3)
-#define REP_TOWN_EXPOSED_BISHOP_RAIDERS         (5)
-#define REP_TOWN_EXPOSED_BISHOP_NCR             (5)
-#define REP_TOWN_GOT_LYNETTE_HOLODISK_BACK      (5)
-#define REP_TOWN_CAPTAIN_GUARD                  (10)
-#define REP_TOWN_EXILE_TROY                     (-5)
-#define REP_TOWN_VALERIE_TOOLS                  (1)
-#define REP_TOWN_PISSED_MCCLURE                 (-5)
-#define REP_TOWN_MCCLURE_REDDING_PROBLEM        (1)
-#define REP_TOWN_MCCLURE_ANTIDOTE_DELIVERED     (5)
-#define REP_TOWN_MCCLURE_CITIZENSHIP            (10)
-#define REP_TOWN_INSULT_GREETER                 (-3)
-#define REP_TOWN_BLACKMAIL_MOORE                (-1)
-#define REP_TOWN_SMITH_HELP_FREE                (3)
-#define REP_TOWN_SCREW_SMITHS                   (-3)
-#define REP_TOWN_DONATE_GREAT                   (3)
-#define REP_TOWN_DONATE_GOOD                    (1)
-#define REP_TOWN_PHYLLIS_STERILITY              (3)
-#define REP_TOWN_PISSED_RANDAL                  (-5)
-#define REP_TOWN_PULLED_RANK_ON_STARK           (-3)
-#define REP_TOWN_SCOUTED_GECKO                  (1)
-#define REP_TOWN_SCOUTED_NCR                    (3)
-#define REP_TOWN_PISSED_WALLACE                 (-1)
-#define REP_TOWN_KICKED_OUT                     (-30)
-
-// broken hills town rep
-#define REP_TOWN_MIGHTY_SUCCESS                 (2)
-#define REP_TOWN_PREACHED_TO_MANSON             (2)
-#define REP_TOWN_JAILBREAK_SUCCESS              (-10)
-#define REP_TOWN_PURIFIER_FIXED                 (10)
-#define REP_TOWN_PURIFIER_DESTROYED             (-30)
-#define REP_TOWN_CONSPIRACY_EXPOSED             (10)
-#define REP_TOWN_BODIES_FOUND                   (5)
-#define REP_TOWN_CONFRONTED_FRANCIS             (5)
-#define REP_TOWN_RETURNED_ORE_TO_CITY           (5)
-#define REP_TOWN_RETURNED_ORE_TO_CITY_FOR_CASH  (-5)
-#define REP_TOWN_SHOVELED_ALL_CRAP              (-5)
-#define REP_TOWN_GAVE_ERIC_POWER                (2)
-#define REP_TOWN_OPTIMIZED_POWER_GRID           (4)
-#define REP_TOWN_MARCUS_IN_PARTY                (5)
-#define REP_TOWN_REPLANTED_SEYMOUR              (5)
-#define REP_TOWN_TYPHON_TOLD_TREASURE           (5)
-
-// modoc town rep
-#define REP_TOWN_SAVE_JONNY                     (10)
-#define REP_TOWN_SOLVE_FAMILY_FEUD_BEST         (10)
-#define REP_TOWN_SOLVE_FAMILY_FEUD_WORST        (-10)
-#define REP_TOWN_FINISH_BRAHMIN_SEED            (2)
-#define REP_TOWN_FINISH_VERMIN_HUNT             (2)
-#define REP_TOWN_GAVE_ROSE_DOG                  (-1)
-#define REP_TOWN_HARRASS_MIRIA                  (-20)
-#define REP_TOWN_SOLVE_GHOST_FARM_BEST          (30)
-#define REP_TOWN_SOLVE_GHOST_FARM_REGULAR       (15)
-#define REP_TOWN_SOLVE_GHOST_FARM_BAD           (-5)
-#define REP_TOWN_SOLVE_GHOST_FARM_WORST         (-20)
-#define REP_TOWN_SEND_KARL_HOME                 (3)
-#define REP_TOWN_DRIVE_KARL_NUTS                (-3)
-#define REP_TOWN_JO_CHOP_FINGER                 (-10)
-
-// den town rep
-#define REP_TOWN_BURY_ANNA                      (5)
-#define REP_TOWN_DEN_KILL_METZGER               (30)
-#define REP_TOWN_DEN_KILL_BECKY                 (-50)
-#define REP_TOWN_DEN_JOIN_SLAVERS               (-20)
-#define REP_TOWN_DEN_KILL_MOM                   (-20)
-#define inc_den_rep(x)                          inc_global_var(GVAR_TOWN_REP_THE_DEN, x)
-
-// new reno rep mods
-/**************************************************************************
- Champion of a City Reputation
- These will need to be defined as:
-    REP_HERO_town
-**************************************************************************/
-
-//NCR
-#define REP_HERO_NCR_SOLVED_V15                  (20)
-#define REP_HERO_NCR_FOUND_V13                   (15)
-#define REP_HERO_NCR_FOUND_SPY                   (5)
-#define REP_HERO_NCR_STOPED_BRAHMIN_RAIDS        (5)
-#define REP_HERO_NCR_BECAME_RANGER               (5)
-#define REP_HERO_NCR_TALKED_JACK                 (10)
-
-#define inc_ncr_rep(x)     set_global_var(GVAR_TOWN_REP_NCR, global_var(GVAR_TOWN_REP_NCR) + x)
-
-//Vault 15
-#define REP_HERO_V15_CRISSY_ALIVE                (10)
-#define REP_HERO_V15_CRISSY_DEAD                  (5)
-#define REP_HERO_V15_KILL_DARION                 (25)
-
-#define inc_vault15_rep(x)  set_global_var(GVAR_TOWN_REP_VAULT_15, global_var(GVAR_TOWN_REP_VAULT_15) + x)
-
-//Vault 13
-#define REP_HERO_V13_FIX_COMPUTER                (30)
-
-#define inc_vault13_rep(x)  set_global_var(GVAR_TOWN_REP_VAULT_13, global_var(GVAR_TOWN_REP_VAULT_13) + x)
-
-//San Fran Town Rep
-#define REP_HERO_SAN_FRAN_SAVE_GIRL_DEAD        2
-#define REP_HERO_SAN_FRAN_SAVE_GIRL_ALIVE       5
-#define REP_HERO_SAN_FRAN_KILL_DRAGON           5
-#define REP_HERO_SAN_FRAN_KILL_DRAGON_LOPAN    10
-#define REP_HERO_SAN_FRAN_FUEL_EMP             -5
-#define REP_HERO_SAN_FRAN_ELRON_ADJUST         -5
-#define REP_HERO_SAN_FRAN_ELRON_KILL_BADGER    -7
-#define REP_HERO_SAN_FRAN_ELRON_KILL_EMP       -5
-#define REP_HERO_SAN_FRAN_ELRON_VERTIBIRD      -5
-#define REP_HERO_SAN_FRAN_ELRON_FORMAT          3
-#define REP_HERO_SAN_FRAN_KILL_LOPAN            5
-#define REP_HERO_SAN_FRAN_KILL_LOPAN_DRAGON    10
-#define REP_HERO_SAN_FRAN_HACKED_SHI_BAD      -10
-#define REP_HERO_SAN_FRAN_KILL_OZ9              5
-#define REP_HERO_SAN_FRAN_SHI_VERTIBIRD         2
-#define REP_HERO_SAN_FRAN_SPLEEN_DEADWONG       2
-#define REP_HERO_SAN_FRAN_SPLEEN_FOUND          4
-#define REP_HERO_SAN_FRAN_SPLEEN_REINSTERTED    6
-#define REP_HERO_SAN_FRAN_TANKER_FUEL_DAVE_EL   4
-#define REP_HERO_SAN_FRAN_TANKER_FUEL_DAVE_SHI -4
-#define REP_HERO_SAN_FRAN_BOS_QUEST             5
-#define REP_HERO_SAN_FRAN_ARMOR                 3
-#define REP_HERO_SAN_FRAN_GAS                   0
-
-#define inc_san_fran_rep(x) inc_global_var(GVAR_TOWN_REP_SAN_FRANCISCO, x)
-
-// new reno
-#define REP_NEW_RENO_BOXER_LEVEL_1              (1)
-#define REP_NEW_RENO_BOXER_LEVEL_2              (2)
-#define REP_NEW_RENO_BOXER_LEVEL_3              (5)
-#define REP_NEW_RENO_BOXER_LEVEL_4              (15)
-#define REP_NEW_RENO_FEED_CODY                  (1)
-#define REP_NEW_RENO_PORN_STAR                  (15)
-#define REP_NEW_RENO_MOORE_BRIEFCASE            (5)
-#define REP_NEW_RENO_ASSASINATE_WESTIN          (5)
-#define REP_NEW_RENO_ASSASSINATE_CARLSON        (5)
-#define REP_NEW_RENO_STEAL_POOR_BOX             (-1)
-#define REP_NEW_RENO_DONATE_POOR_BOX            (1)
-#define REP_NEW_RENO_MADE_MAN_BISHOP            (15)
-#define REP_NEW_RENO_SCARE_JULES                (3)
-#define REP_NEW_RENO_KITTY_DATE                 (10)
-#define REP_NEW_RENO_KITTY_MAGAZINES            (1)
-#define REP_NEW_RENO_MRS_BISHOP_CONVINCE        (1)
-#define REP_NEW_RENO_DESTROY_WRIGHT_STILLS      (-5)
-#define REP_NEW_RENO_SOLVE_MURDER               (5)
-#define REP_NEW_RENO_SOLVE_MURDER_BONUS         (5)
-#define REP_NEW_RENO_MADE_MAN_WRIGHT            (10)
-#define REP_NEW_RENO_RESOLVE_LLOYD_SITUATION    (5)
-#define REP_NEW_RENO_SALVATORE_TRIBUTE          (5)
-#define REP_NEW_RENO_MADE_MAN_SALVATORE         (10)
-#define REP_NEW_RENO_KILLED_BOSS_SALVATORE      (5)
-#define REP_NEW_RENO_NON_VIOLENT_CAR_RECOVER    (2)
-#define REP_NEW_RENO_BIG_JESUS_TRIBUTE          (5)
-#define REP_NEW_RENO_MADE_MAN_MORDINO           (15)
-#define REP_NEW_RENO_ELDRIDGE_LASER             (1)
-#define REP_NEW_RENO_RAMIREZ_PACKAGE            (3)
-#define REP_NEW_RENO_KILLED_BOSS                (-25)
-
-#define inc_reno_rep(x)    inc_global_var(GVAR_TOWN_REP_NEW_RENO, x)
-
-
+// Fallout 1 default
+#define REP_ENEMY_VAULT13                       (global_var(GVAR_VAULT_13_HOSTILE) == 1)
+#define REP_ENEMY_SHADY_SANDS                   (global_var(GVAR_ENEMY_SHADY_SANDS) == 1)
+#define REP_ENEMY_JUNKTOWN                      (global_var(GVAR_ENEMY_JUNKTOWN) == 1)
+#define REP_ENEMY_JUNKTOWN_CITIZENS             (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1)
+#define REP_ENEMY_JUNKTOWN_BOXER                (global_var(GVAR_DUDE_ENEMY_JUNK_BOXER) == 1)
+#define REP_ENEMY_JUNKTOWN_GIZMO                (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1)
+#define REP_ENEMY_JUNKTOWN_SKULZ                (global_var(GVAR_DUDE_ENEMY_SKULZ) == 1)
+#define REP_ENEMY_RAIDERS                       (global_var(GVAR_ENEMY_RAIDERS) == 1)
+#define REP_ENEMY_HUB                           (global_var(GVAR_ENEMY_HUB) == 1)
+#define REP_ENEMY_BOS                           (global_var(GVAR_ENEMY_BROTHERHOOD) == 1)
+#define REP_ENEMY_LA_ADYTUM                     (global_var(GVAR_ENEMY_ADYTUM) == 1)
+#define REP_ENEMY_LA_BLADES                     (global_var(GVAR_ENEMY_BLADES) == 1)
+#define REP_ENEMY_LA_REGULATORS                 (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1)
+#define REP_ENEMY_LA_GUNRUNNERS                 (global_var(GVAR_ENEMY_GUN_RUNNERS) == 1)
 
 
 /**************************************************************************

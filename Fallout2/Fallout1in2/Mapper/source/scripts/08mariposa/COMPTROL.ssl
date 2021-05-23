@@ -1,10 +1,20 @@
+/*
+
+   Mariposa - Supermutant in mbstrg12 level 1, computer center to the right.
+
+*/
+
+/* Include Files */
 #include "define.h"
+#include "area/mbase.h"
+#include "maps/mbstrg12.h"
 
 #define NAME                    SCRIPT_GENSUPR
 
 #include "command.h"
 #include "modreact.h"
 
+/* Standard Script Procedures */
 procedure start;
 procedure critter_p_proc;
 procedure damage_p_proc;
@@ -46,14 +56,12 @@ procedure critter_p_proc begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      else begin
-         if (global_var(GVAR_VATS_ALERT)) then begin
-            tmp_hostile := 1;
-         end
-         else if (not(map_var(4)) and not(ignoring_dude)) then begin
-            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-               dialogue_system_enter;
-            end
+      else if (global_var(GVAR_VATS_ALERT)) then begin
+         tmp_hostile := 1;
+      end
+      else if (not(map_var(MVAR_FieldB1_ptr)) and not(ignoring_dude)) then begin
+         if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+            dialogue_system_enter;
          end
       end
    end
@@ -63,11 +71,11 @@ procedure critter_p_proc begin
 end
 
 procedure damage_p_proc begin
-   set_map_var(13, 1);
+   set_map_var(MVAR_radio_room_attacked, 1);
 end
 
 procedure destroy_p_proc begin
-   set_map_var(12, 3);
+   set_map_var(MVAR_Warned_Player, 3);
    inc_evil_critter
 end
 
@@ -80,22 +88,17 @@ procedure talk_p_proc begin
    if (global_var(GVAR_LIEUTENANTS_DEAD)) then begin
       call GenSupr08;
    end
-   else begin
-      if (dude_is_armed) then begin
-         if (random(0, 5) == 5) then begin
-            call GenSupr00;
-         end
-         else begin
-            tmp_hostile := 1;
-         end
+   else if (dude_is_armed) then begin
+      if (random(0, 5) == 5) then begin
+         call GenSupr00;
       end
       else begin
-         start_gdialog(433, self_obj, 4, -1, -1);
-         gsay_start;
-         call GenSupr03;
-         gsay_end;
-         end_dialogue;
+         tmp_hostile := 1;
       end
+   end
+   else begin
+      call GenSupr03;
+      start_dialog_at_node(GenSupr03);
    end
 end
 

@@ -30,7 +30,7 @@
 #define MVAR_Field2c_Status      (16)
 #define MVAR_Field1d_Status      (17)
 #define MVAR_FieldH_Status       (18)
-#define MVAR_Warned_Player       (19)
+#define MVAR_Warned_Player2      (19) // Fixt made a duplicate ... looks unused.
 #define MVAR_Field5a_Status      (20) // COPIED FROM MBSTRG12.GAM  for Fallout Fixt
 #define MVAR_Field6a_Status      (21) // COPIED FROM MBSTRG12.GAM  for Fallout Fixt
 #define MVAR_Field1b_Status      (22) // COPIED FROM MBSTRG12.GAM  for Fallout Fixt
