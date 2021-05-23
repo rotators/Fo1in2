@@ -223,7 +223,7 @@ procedure critter_p_proc begin
    end
 
    if (local_var(LVAR_EnableOffGrid) == 0) then begin
-      if (not(glow_power_online) or glow_traps_inactive or (CUR_MAP_GLOWENT AndAlso (local_var(LVAR_RobotState) == STATE_OUTSIDE))) then begin
+      if (not(glow_power_online) or glow_traps_inactive or (CUR_MAP_GLOWENT and (local_var(LVAR_RobotState) == STATE_OUTSIDE))) then begin
          if robot_online then begin
             reg_anim_clear(self_obj);
             reg_anim_begin();
@@ -277,11 +277,11 @@ procedure talk_p_proc begin
    end
 end
 
+
 procedure use_skill_on_p_proc begin
    variable skill;
 
    if (action_being_used == SKILL_SCIENCE) then begin
-      script_overrides;
       if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
          if robot_offline then begin
             display_msg(mstr(156));
@@ -291,7 +291,7 @@ procedure use_skill_on_p_proc begin
             display_msg(mstr(155));
          end
       end
-      else if (CUR_MAP_GLOWENT AndAlso robot_offline) then begin
+      else if (CUR_MAP_GLOWENT and robot_offline) then begin
          if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10)) or (local_var(LVAR_PowerState) >= 2)) then begin
             if (local_var(LVAR_PowerState) == 0) then begin
                set_local_var(LVAR_PowerState, 1);
@@ -324,10 +324,10 @@ procedure use_skill_on_p_proc begin
       else begin
          display_msg(gen_mstr(174));
       end
+      script_overrides;
    end // Science End
    else if (action_being_used == SKILL_REPAIR) then begin
       if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
-         script_overrides;
          skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -10);
          if robot_online then begin
             call flee_dude;
@@ -340,9 +340,9 @@ procedure use_skill_on_p_proc begin
          else begin
             display_msg(mstr(160));
          end
-      end
-      else if (CUR_MAP_GLOWENT AndAlso robot_offline) then begin
          script_overrides;
+      end
+      else if (CUR_MAP_GLOWENT and robot_offline) then begin
          if (local_var(LVAR_PowerState) >= 2) then begin
             if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -30)) or (local_var(LVAR_PowerState) == 3)) then begin
                if (local_var(LVAR_PowerState) < 3) then begin
@@ -360,6 +360,7 @@ procedure use_skill_on_p_proc begin
          else begin
             display_msg(mstr(154));
          end
+         script_overrides;
       end
    end // Repair End
 
@@ -375,14 +376,12 @@ procedure use_obj_on_p_proc begin
       if (tool == PID_MICRO_FUSION_CELL) then begin
          skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -20);
          if is_success(skill) then begin
-            script_overrides;
-
             rm_obj_from_inven(dude_obj, obj_being_used_with);
 
             gfade_out(ONE_GAME_SECOND);
-               game_time_advance((ONE_GAME_HOUR * random(1, 3)));
                give_xp_msg(EXP_REPAIR_ROBOT_BATTERY, mstr(162));
                display_msg(mstr(163));
+               game_time_advance((ONE_GAME_HOUR * random(1, 3)));
             gfade_in(ONE_GAME_SECOND);
 
             set_local_var(LVAR_EnableOffGrid, 1);
@@ -399,8 +398,6 @@ procedure use_obj_on_p_proc begin
             end
          end
          else if is_critical(skill) then begin
-            script_overrides;
-
             rm_obj_from_inven(dude_obj, obj_being_used_with);
 
             gfade_out(ONE_GAME_SECOND);
@@ -411,9 +408,9 @@ procedure use_obj_on_p_proc begin
             kill_critter(self_obj, 0);
          end
          else begin
-            script_overrides;
             display_msg(mstr(165));
          end
+         script_overrides;
       end
    end
 
