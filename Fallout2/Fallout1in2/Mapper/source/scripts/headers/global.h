@@ -4054,9 +4054,9 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4915)
 #define RESERVED_FOR_FALLOUT_FIXT               (4916)
 #define RESERVED_FOR_FALLOUT_FIXT               (4917)
-#define RESERVED_FOR_FALLOUT_FIXT               (4918)
-#define RESERVED_FOR_FALLOUT_FIXT               (4919)
-#define RESERVED_FOR_FALLOUT_FIXT               (4920)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4918)*/
+#define GVAR_GLOW_ROBOT_EXP                     (4919)
+#define GVAR_ENABLE_EYEBOT_HIRELING             (4920)
 #define GVAR_GLOW_TRAPS_STATE                   (4921)
 #define GVAR_CATHEDRAL_INVADER_STATES           (4922)
 #define GVAR_QUEST_KILL_HARRY                   (4923)

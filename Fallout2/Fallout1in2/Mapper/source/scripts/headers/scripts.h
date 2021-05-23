@@ -566,7 +566,7 @@
 #define SCRIPT_AVERY     (554)  //  avery.int       ; guard for Lorenzo in the Hub
 #define SCRIPT_BILL      (555)  //  bill.int        ; guard for Lorenzo in the Hub
 #define SCRIPT_BILLY     (556)  //  billy.int       ; boy who works for Dan the Brahmin Man
-#define SCRIPT_BOB       (557)  //  bob.int         ; Bob's Iguana Bits owner - DEPRECATED
+#define SCRIPT_EYEBOT    (557)  //  eyebot.int      ; Fo1in2 - new eyebot party member
 #define SCRIPT_BOBSIGN   (558)  //  bobsign.int     ; Sign outside Bob's Iguana Bits
 #define SCRIPT_CALLY     (559)  //  cally.int       ; Another bodyguard for Lorenzo
 #define SCRIPT_CLEO      (560)  //  cleo.int        ; Guard for Lorenzo in the Hub

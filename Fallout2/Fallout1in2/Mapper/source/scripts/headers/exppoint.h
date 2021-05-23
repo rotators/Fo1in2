@@ -222,8 +222,12 @@
 
 // Glow
 #define EXP_DISABLED_TRAPS                      (0)
+#define EXP_INVESTIGATE_ROBOTS                  (250)
 #define EXP_MAINFRAME_ACCESS                    (100)
 #define EXP_REPAIR_GENERATOR                    (1000)
+#define EXP_HIRED_EYEBOT                        (150)
+#define EXP_REPAIR_ROBOT_BATTERY                (500)
+#define EXP_REPAIR_ROBOT_SENSORS                (150)
 
 // Brotherhood of Steel
 #define EXP_REPAIR_PA                           (500)
@@ -253,7 +257,7 @@
 
 #define EXP_SHOVELED_ALL_CRAP                   (150)
 #define EXP_TEMPLE_OF_TRIALS                    (500)
-#define EXP_GECKO_SKINNING                      (150)
+#define EXP_GECKO_SKINNING                      (300)
 
 /***************************************
  Give the experience points and display

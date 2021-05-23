@@ -35,6 +35,8 @@ procedure Diana12;
 procedure Dianaend;
 procedure combat;
 
+#define LVAR_Herebefore       (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable rndz;
@@ -125,7 +127,7 @@ end
 
 procedure combat begin
    if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
-set_self_team(TEAM_87);
+      set_self_team(TEAM_87);
    end
    tmp_hostile := 1;
 end
@@ -140,23 +142,18 @@ procedure talk_p_proc begin
    else begin
       set_local_var(7, 1);
       set_local_var(3, 1);
+
       get_reaction
-      start_gdialog(142, self_obj, 4, -1, -1);
-      gsay_start;
-      if (local_var(4)) then begin
-         call Diana10;
+      if (local_var(LVAR_Herebefore)) then begin
+         start_dialog_at_node(Diana10);
+      end
+      else if (global_var(GVAR_GARLS_FRIEND) == 1) then begin
+         start_dialog_at_node(Diana11);
       end
       else begin
-         if (global_var(GVAR_GARLS_FRIEND) == 1) then begin
-            call Diana11;
-         end
-         else begin
-            set_local_var(4, 1);
-            call Diana00;
-         end
+         set_local_var(LVAR_Herebefore, 1);
+         start_dialog_at_node(Diana00);
       end
-      gsay_end;
-      end_dialogue;
    end
 end
 

@@ -122,6 +122,7 @@ variable CurrentHP;
 #define LVAR_Sleeping                     (6)
 #define LVAR_Elev_TP                      (9)
 
+#define EVENT_BLINDING           (1)
 #define EVENT_TRANSITION         (3)
 
 #define table_hex    (12702) // TABLE ON LEFT SIDE OF UNDERGROUND
@@ -268,7 +269,7 @@ procedure talk_p_proc begin
             call Morbid21;
          end
       end
-      else if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+      else if night then begin
          if (local_var(4)) then begin
             call Morbid04N;
          end
@@ -296,7 +297,7 @@ procedure talk_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (fixed_param == 1) then begin
+   if (fixed_param == EVENT_BLINDING) then begin
       add_timer_event(self_obj, game_ticks(1), 2);
       critter_injure(dude_obj, DAM_BLIND);
       got_eye := 1;
@@ -493,7 +494,7 @@ procedure Morbid09 begin
          COST := COST + 50;
       end
    end
-   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+   if night then begin
       COST := COST * (3 / 2);
    end
    NMessage(DIAGNOSIS);
@@ -801,7 +802,7 @@ procedure get_eye begin
    self_run_to_tile(tile_num_in_direction(dude_tile, 1, 1));
    self_look_at_dude;
    rm_timer_event(self_obj);
-   add_timer_event(self_obj, game_ticks(5), 1);
+   add_timer_event(self_obj, game_ticks(5), EVENT_BLINDING);
    game_ui_disable;
 
    if (EyeHPloss == 2) then begin

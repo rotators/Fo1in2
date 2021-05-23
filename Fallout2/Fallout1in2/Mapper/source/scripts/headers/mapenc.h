@@ -751,5 +751,5 @@ end
 
 // Where the player will get radiation on the worldmap
 #define in_glow_zone       ((worldmap_xpos >= 1150) and (worldmap_xpos <= 1300) and (worldmap_ypos >= 1200) and (worldmap_ypos <= 1350))
-#define SetGlowEncRads     radiation_inc(dude_obj, random(1, 3)); \
+#define SetGlowEncRads     if (dude_elevation != 1) then radiation_inc(dude_obj, random(1, 3)); \
                            add_timer_event(self_obj, game_ticks(random(5, 10)), EVENT_GLOW_RADS)

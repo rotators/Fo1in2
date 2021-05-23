@@ -73,7 +73,7 @@
 #define FID_MACLAW        (16777267)
 #define FID_MAMANT        (16777268)
 #define FID_MAROBO        (16777269)
-#define FID_MAFEYE        (16777270)
+#define FID_MAFEYE        (16777270) // Floating Eye
 #define FID_MAMURT        (16777271) // Pig Rat
 #define FID_NABRWN        (16777272)
 #define FID_NMDOCC        (16777273)

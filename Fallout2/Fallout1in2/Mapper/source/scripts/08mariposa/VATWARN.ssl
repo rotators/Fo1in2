@@ -1,36 +1,35 @@
-#include "define.h"
-#include "command.h"
+/*
 
+   Mariposa - Spatial script, used in the trap corridor.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "area/mbase.h"
+#include "maps/mbvats12.h"
+
+#define NAME                    SCRIPT_VATWARN
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure spatial_p_proc;
+
 procedure Warn;
-variable RobesCheck := 0;
 
 procedure start begin
 end
 
 procedure spatial_p_proc begin
-   if (map_var(7) == 1) or global_var(GVAR_VATS_ALERT) then begin
+   if ((map_var(MVAR_corridor_active) == 1) or mbase_full_alert) then begin
       if source_in_party then begin
-         if global_var(GVAR_FIXT_VATWARN_TRIGGERED) == 0 then begin
+         coc_disguise_check;
+         if (DISGUISED == false) and global_var(GVAR_FIXT_VATWARN_TRIGGERED) == 0 then begin
             set_global_var(GVAR_FIXT_VATWARN_TRIGGERED, 1);
-            if source_in_party or (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-               call Warn;
-            end
-            else begin
-               RobesCheck := 0;
-               if dude_armor then begin
-                  RobesCheck := dude_armor;
-                  if obj_pid(RobesCheck) == PID_PURPLE_ROBE then begin
-                     RobesCheck := 1;
-                  end
-               end
-               if (RobesCheck == 1) then begin
-               end
-               else begin
-                  call Warn;
-               end
-            end
+            call Warn;
          end
       end
    end
@@ -44,6 +43,6 @@ procedure Warn begin
       reg_anim_clear(source_obj);
       reg_anim_clear(dude_obj);
    end
-   display_msg(message_str(SCRIPT_VATWARN, 100));
+   display_msg(message_str(NAME, 100));
 // float_msg(dude_obj, message_str(610, 101), -2);   <-- merged with msg100
 end

@@ -10,13 +10,13 @@
     Generic Defines
 ************************************************/
 // Power
-#define glow_power_offline          (global_var(GVAR_GLOW_POWER) == 0)
-#define glow_power_emergency        (global_var(GVAR_GLOW_POWER) == 1)
-#define glow_power_online           (global_var(GVAR_GLOW_POWER) == 2)
+#define glow_power_offline             (global_var(GVAR_GLOW_POWER) == 0)
+#define glow_power_emergency           (global_var(GVAR_GLOW_POWER) == 1)
+#define glow_power_online              (global_var(GVAR_GLOW_POWER) == 2)
 
-#define set_glow_power_offline      set_global_var(GVAR_GLOW_POWER, 0)
-#define set_glow_power_emergency    set_global_var(GVAR_GLOW_POWER, 1)
-#define set_glow_power_online       set_global_var(GVAR_GLOW_POWER, 2)
+#define set_glow_power_offline         set_global_var(GVAR_GLOW_POWER, 0)
+#define set_glow_power_emergency       set_global_var(GVAR_GLOW_POWER, 1)
+#define set_glow_power_online          set_global_var(GVAR_GLOW_POWER, 2)
 
 #define glow_quest_power_restored      (global_var(GVAR_QUEST_GLOW_2_START_POWER) == 2)
 
@@ -25,11 +25,11 @@
                                           set_global_var(GVAR_QUEST_GLOW_2_START_POWER, 2)
 
 // Traps
-#define glow_traps_active           (global_var(GVAR_GLOW_TRAPS_STATE) == 0)
-#define glow_traps_inactive         (global_var(GVAR_GLOW_TRAPS_STATE) == 1)
+#define glow_traps_active              (global_var(GVAR_GLOW_TRAPS_STATE) == 0)
+#define glow_traps_inactive            (global_var(GVAR_GLOW_TRAPS_STATE) == 1)
 
-#define set_glow_taps_active        set_global_var(GVAR_GLOW_TRAPS_STATE, 0)
-#define set_glow_taps_inactive      set_global_var(GVAR_GLOW_TRAPS_STATE, 1)
+#define set_glow_taps_active           set_global_var(GVAR_GLOW_TRAPS_STATE, 0)
+#define set_glow_taps_inactive         set_global_var(GVAR_GLOW_TRAPS_STATE, 1)
 
 // For potential future use. Quest currently not implemented.
 #define set_glow_quest_traps_active       set_global_var(GVAR_QUEST_GLOW_TRAPS, 1)

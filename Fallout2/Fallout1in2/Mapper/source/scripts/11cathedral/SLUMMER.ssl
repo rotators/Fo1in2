@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/cathedral.h"
+#include "maps/childrn1.h"
 
 #define NAME                    SCRIPT_SLUMMER
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -110,8 +111,9 @@ procedure slummerdone;
 procedure slummerend;
 procedure slummercombat;
 
+#define LVAR_Herebefore       (4)
+
 variable tmp_hostile;
-variable LASHERKNOWN;
 variable Only_Once := 1;
 
 procedure start begin
@@ -156,7 +158,7 @@ procedure talk_p_proc begin
    start_dialog(self_obj, 4);
    gsay_start;
    if dude_wearing_coc_robe then begin
-      if (local_var(4) == 0) then begin
+      if (local_var(LVAR_Herebefore) == 0) then begin
          if (dude_is_armed) then begin
             call slummer02;
          end
@@ -165,12 +167,12 @@ procedure talk_p_proc begin
          end
       end
       else begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Herebefore, 1);
          call slummer01;
       end
    end
    else begin
-      set_local_var(4, 1);
+      set_local_var(LVAR_Herebefore, 1);
       if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
          call slummer00;
       end
@@ -178,13 +180,11 @@ procedure talk_p_proc begin
          if (has_rep_champion) then begin
             call slummer04;
          end
+         else if (has_rep_childkiller or (has_rep_berserker)) then begin
+            call slummer06;
+         end
          else begin
-            if (has_rep_childkiller or (has_rep_berserker)) then begin
-               call slummer06;
-            end
-            else begin
-               call slummer05;
-            end
+            call slummer05;
          end
       end
       else if (has_rep_champion) then begin
@@ -361,7 +361,7 @@ procedure slummer10a begin
 end
 
 procedure slummer11 begin
-   LASHERKNOWN := 1;
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    NMessage(163);
 end
 
@@ -491,7 +491,7 @@ procedure slummer21a begin
 end
 
 procedure slummer22 begin
-   LASHERKNOWN := 1;
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    Reply(198);
    NOption(199, slummer50, 7);
    NOption(200, slummer49, 7);
@@ -605,7 +605,7 @@ end
 
 procedure slummer32 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
-   LASHERKNOWN := 1;
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    NMessage(242);
 end
 

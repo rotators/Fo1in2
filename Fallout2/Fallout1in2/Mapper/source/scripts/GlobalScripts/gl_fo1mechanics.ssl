@@ -23,6 +23,7 @@ procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
 
 procedure night_person;
+procedure gecko_skinning;
 procedure skilled;
 
 procedure DescriptionObj_handler;
@@ -42,6 +43,9 @@ variable move_item;
 
 #define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
                                else slot := INVEN_TYPE_RIGHT_HAND
+
+#define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
+#define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
 
 import variable Neal_urn_ptr;
 
@@ -88,6 +92,9 @@ procedure general begin
 
    // Change the credits and wordlmap music tracks to Fo1 files.
    VOODOO_fo1_music;
+
+   // Enable / Disable looting Geckos based on perk.
+   call gecko_skinning;
 end
 
 procedure GameModeChange_handler begin
@@ -156,13 +163,13 @@ procedure night_person begin
          mod_skill_points_per_level(2);
       end
 
-      if night and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
+      if night AndAlso (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 2);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) + 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) + 2);
          debug_msg("Night person trait is active!");
       end
-      else if not(night) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
+      else if not(night) AndAlso (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
@@ -170,7 +177,7 @@ procedure night_person begin
       end
    end
    // If used Mutate!-perk to remove Night Person, reset everything to default:
-   else if (not(dude_trait(TRAIT_night_person)) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) > 0)) then begin
+   else if (not(dude_trait(TRAIT_night_person)) AndAlso (global_var(GVAR_NIGHT_PERSON_ACTIVE) > 0)) then begin
       set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 0);
       mod_skill_points_per_level(0);
       if night then begin
@@ -187,12 +194,25 @@ procedure skilled begin
       set_perk_freq(4);
 end
 
+procedure gecko_skinning begin
+   if dude_perk(PERK_gecko_skinning_perk) then begin
+      set_proto_data(PID_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL));
+      set_proto_data(PID_GOLDEN_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL));
+      set_proto_data(PID_FIRE_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL));
+   end
+   else begin
+      set_proto_data(PID_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+      set_proto_data(PID_GOLDEN_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+      set_proto_data(PID_FIRE_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+   end
+end
+
 procedure DescriptionObj_handler begin
    variable
       item := obj_pid(get_sfall_arg),
       description;
 
-   if (item == PID_FARM_PARTS) and get_quest_farm_active then begin
+   if (item == PID_FARM_PARTS) AndAlso get_quest_farm_active then begin
       //if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
          description := get_string_pointer(message_str(SCRIPT_FARMPART, 101));
          set_sfall_return(description);
@@ -219,7 +239,8 @@ procedure AfterHitRoll_handler begin
          if (obj_pid(item) == PID_MOLOTOV_COCKTAIL) then begin
             if (obj_type(target) == OBJ_TYPE_SCENERY and willHit > 1) then begin
                set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_explosion);
-            end else begin
+            end
+            else begin
                set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_fire);
                set_attack_explosion_radius(2); // grenade radius
                set_attack_is_explosion_fire;
@@ -300,15 +321,21 @@ procedure WithinPerception_handler begin
 
    // Latest Sfall would end the combat automatically and the player gets teleported away.
    // This is to allow the fight against Decker to continue, even after the thugs surrendered
-   if (CUR_MAP_HUBDWNTN and dude_elevation == 1) then begin
-      if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (map_var(54) == 1) and watcher != dude_obj) then begin
+   if (CUR_MAP_HUBDWNTN AndAlso dude_elevation == 1) then begin
+      if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) AndAlso (map_var(54) == 1) AndAlso watcher != dude_obj) then begin
          debug_msg("WithinPerception: Decker and Kane are dead!!");
+         set_sfall_return(0);
+      end
+   end
+   else if CUR_AREA_GLOW then begin
+      // Can't end combat after attacking disabled robots in the Glow, so we do the same as above.
+      if (((global_var(GVAR_GLOW_POWER) < 2) or (global_var(GVAR_GLOW_TRAPS_STATE) == 1)) AndAlso watcher != dude_obj AndAlso (true_party_size == 0)) then begin
          set_sfall_return(0);
       end
    end
 end
 
-procedure CalcAPcost_handler begin
+procedure CalcAPcost_hAndAlsoler begin
    // This is done by latest Sfall now.
    /*variable
       critter := get_sfall_arg,
@@ -319,8 +346,8 @@ procedure CalcAPcost_handler begin
 
    // Replicates Fo1 behavior of the Fast Shot Trait (Unarmed attacks are unaffected, but also can't be aimed)
    // This is needed because the Sfall FastShotFix effect is wrong.
-   if dude_trait(TRAIT_fast_shot) and (iniVal == 2) then begin
-      get_active_hand(slot);
+   if dude_trait(TRAIT_fast_shot) AndAlso (iniVal == 2) then begin
+      get_active_hAndAlso(slot);
       item := critter_inven_obj(dude_obj, slot);
       if (item == 0) then begin
          set_sfall_return(apCost + 1);

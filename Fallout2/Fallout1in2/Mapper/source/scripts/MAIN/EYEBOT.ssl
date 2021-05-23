@@ -1,0 +1,570 @@
+/*
+
+   Floating Eyebot - Party Member, The Glow
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "area/glow.h"
+
+#define NAME                    SCRIPT_EYEBOT
+
+#include "command.h"
+#include "modreact.h"
+
+#undef  set_default_party_follow
+#define set_default_party_follow             set_follow_medium
+#define PARTY_NODE_X                         Node001
+#undef  def_follow_msg
+#define def_follow_msg                       mstr(1020)
+#undef  def_heal_msg
+#define def_heal_msg                         mstr(1014)
+#undef  def_gear_msg
+#define def_gear_msg                         mstr(1015)
+
+/* Standard Script Procedures */
+procedure start;
+procedure push_p_proc;
+procedure timed_event_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure destroy_p_proc;
+
+procedure Node998;
+procedure Node999;
+
+procedure Node001;
+procedure Node002;
+procedure Node003;
+
+procedure Node1001;
+procedure Node1002;
+procedure Node1003;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+procedure Node1008;
+procedure Node1009;
+procedure Node1010;
+procedure Node1100;
+
+procedure Heal_Robo(variable bonus);
+
+variable initial := 0;
+variable tmp_hostile := 0;
+
+#define LVAR_RobotExp                     (3)
+#define LVAR_AnimStatus                   (4)
+#define LVAR_RobotState                   (5)
+#define LVAR_EnableOffGrid                (6)
+#define LVAR_PowerState                   (7)
+
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
+#define LVAR_Heal_Count                   (13)
+#define LVAR_Heal_Dec_Time                (14)
+
+#define float_eyebot(x)                   float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+#define eyebot_joins_party                party_add_self;                                 \
+                                          add_timer_event(self_obj, game_ticks(1), 2);    \
+                                          set_self_team(TEAM_PLAYER)
+#define dude_has_free_slot_for_eyebot     fo1in2_party_limit_disabled or ((dude_at_max_party_size == false) and (Eyebot_In_Party == false))
+
+#define robot_offline                     (local_var(LVAR_AnimStatus) == 0)
+#define robot_online                      (local_var(LVAR_AnimStatus) == 1)
+#define set_robot_offline                 set_local_var(LVAR_AnimStatus, 0)
+#define set_robot_online                  set_local_var(LVAR_AnimStatus, 1)
+
+#define EVENT_FLOAT_JOIN                  (1)
+#define EVENT_FLOAT_INJURED               (2)
+#define EVENT_MOVE                        (3)
+#define EVENT_SHUTDOWN                    (4)
+
+#define STATE_SENSORS_DEFECT     (0)
+#define STATE_IDLE               (1)
+#define STATE_ACTIVATED          (2)
+#define STATE_OUTSIDE            (3)
+
+#define MAX_TRAVEL              (6)
+#define move_hex            (22089)
+#define MULTI_TOOL 10
+#define SUPER_TOOL 30
+
+procedure start begin
+end
+
+procedure push_p_proc begin
+   if ((Eyebot_In_Party == false) or robot_offline) then begin
+      script_overrides;
+   end
+end
+
+procedure timed_event_p_proc begin
+   variable sound;
+
+   if (fixed_param == EVENT_FLOAT_JOIN) then begin
+      debug("Eyebot is joining!");
+   end
+   if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Eyebot_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then
+               float_eyebot(3500);
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
+   end
+   else if (fixed_param == EVENT_MOVE) then begin
+      if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
+         if not(combat_is_initialized) and robot_online then begin
+            if (random(0,4) == 1) then begin
+               reg_anim_clear(self_obj);
+               reg_anim_begin();
+               if (random(0,4) == 1) then begin
+                  sound := sfx_build_char_name(self_obj, ANIM_hit_from_front, snd_contact);
+                  reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
+               end
+               else begin
+                  sound := sfx_build_char_name(self_obj, ANIM_throw_punch, snd_contact);
+                  reg_anim_animate(self_obj, ANIM_throw_punch, -1);
+               end
+               reg_anim_play_sfx(self_obj, sound, 1);
+               reg_anim_end();
+            end
+            else begin
+               if (tile_distance(self_tile, move_hex) < MAX_TRAVEL) then
+                  self_run_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(2, 6)));
+               else
+                  self_run_to_tile(tile_num_in_direction(move_hex, random(0, 5), random(2, 6)));
+            end
+         end
+         flush_add_timer_event(self_obj, game_ticks(random(1,2)), EVENT_MOVE);
+      end
+   end
+   else if (fixed_param == EVENT_SHUTDOWN and robot_online) then begin
+      sound := sfx_build_char_name(self_obj, ANIM_fall_back, snd_contact);
+      set_local_var(LVAR_RobotState, STATE_OUTSIDE);
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_play_sfx(self_obj, sound, 1);
+      reg_anim_animate(self_obj, ANIM_fall_back, -1);
+      reg_anim_end();
+      set_robot_offline;
+   end
+end
+
+procedure map_enter_p_proc begin
+   if not(fo1in2_eyebot_enabled) then destroy_object(self_obj);
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
+
+   if (map_first_run and CUR_MAP_GLOW1) then begin
+      critter_injure(dude_obj, DAM_BLIND);
+   end
+end
+
+procedure map_update_p_proc begin
+   if (local_var(LVAR_EnableOffGrid) == 0) then begin
+      if (CUR_MAP_GLOW1 or CUR_MAP_GLOW2) then begin
+         if glow_power_online and glow_traps_active then begin
+            if robot_offline then begin
+               set_robot_online;
+               reg_anim_clear(self_obj);
+               reg_anim_begin();
+               reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+               reg_anim_end();
+               add_timer_event(self_obj, game_ticks(random(1,2)), EVENT_MOVE);
+            end
+         end
+      end
+      else begin
+         if robot_offline then begin
+            anim(self_obj, ANIM_fall_back_sf, 0);
+         end
+         else begin
+            // Delay the robot shutdown on the surface by a few seconds.
+            if (local_var(LVAR_RobotState) == STATE_ACTIVATED) then begin
+               add_timer_event(self_obj, game_ticks(3), EVENT_SHUTDOWN);
+            end
+         end
+      end
+   end
+end
+
+procedure destroy_p_proc begin
+end
+
+procedure combat_p_proc begin
+   if (robot_offline) then begin
+      script_overrides;
+      anim(self_obj, ANIM_fall_back_sf, 0);
+   end
+end
+
+procedure critter_p_proc begin
+   if (Eyebot_In_Party and robot_online) then begin
+      party_member_follow_dude
+   end
+   else if (self_team == TEAM_PLAYER) then begin
+      set_self_abandon_party;
+   end
+
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+
+   if (local_var(LVAR_EnableOffGrid) == 0) then begin
+      if (not(glow_power_online) or glow_traps_inactive or (CUR_MAP_GLOWENT AndAlso (local_var(LVAR_RobotState) == STATE_OUTSIDE))) then begin
+         if robot_online then begin
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
+            reg_anim_animate(self_obj, ANIM_fall_back, -1);
+            reg_anim_end();
+            set_robot_offline;
+         end
+      end
+   end
+end
+
+procedure description_p_proc begin
+   if (robot_offline and CUR_MAP_GLOWENT) then begin
+      script_overrides;
+      if (local_var(LVAR_PowerState) >= 2) then begin
+         display_msg(152);
+      end
+      else if (local_var(LVAR_PowerState) == 1) then begin
+         display_msg(153);
+      end
+      else begin
+         display_msg(154);
+      end
+   end
+end
+
+procedure talk_p_proc begin
+   if Eyebot_In_Party then
+      self_look_at_dude;
+   dude_look_at_self;
+
+   if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
+      call flee_dude;
+      display_msg(155);
+   end
+   else if robot_offline then begin
+      display_msg(150);
+   end
+   else begin
+      if eyebot_is_prisoner then begin
+         float_eyebot(1000);
+         set_eyebot_prisoner(false);
+         eyebot_joins_party;
+      end
+      else if (Eyebot_In_Party) then begin
+         start_dialog_at_node(PARTY_NODE_X);
+      end
+      else if not(Eyebot_In_Party) then begin
+         start_dialog_at_node(Node002);
+      end
+   end
+end
+
+procedure use_skill_on_p_proc begin
+   variable skill;
+
+   if (action_being_used == SKILL_SCIENCE) then begin
+      script_overrides;
+      if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
+         if robot_offline then begin
+            display_msg(156);
+         end
+         else begin
+            call flee_dude;
+            display_msg(155);
+         end
+      end
+      else if (CUR_MAP_GLOWENT AndAlso robot_offline) then begin
+         if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10)) or (local_var(LVAR_PowerState) >= 2)) then begin
+            if (local_var(LVAR_PowerState) == 0) then begin
+               set_local_var(LVAR_PowerState, 1);
+               gfade_out(ONE_GAME_SECOND);
+                  game_time_advance(ONE_GAME_HOUR);
+                  display_msg(158);
+               gfade_in(ONE_GAME_SECOND);
+            end
+            else if (local_var(LVAR_PowerState) >= 1) then begin
+               if (local_var(LVAR_PowerState) < 2) then begin
+                  set_local_var(LVAR_PowerState, 2);
+                  gfade_out(ONE_GAME_SECOND);
+                     game_time_advance((ONE_GAME_HOUR * 2));
+                  gfade_in(ONE_GAME_SECOND);
+               end
+               display_msg(152);
+            end
+         end
+         else begin
+            display_msg(154);
+         end
+      end
+      else if (robot_offline and (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10))) or (global_var(GVAR_GLOW_ROBOT_EXP) == 1)) then begin
+         display_msg(gen_mstr(173));
+         if (global_var(GVAR_GLOW_ROBOT_EXP) == 0) then begin
+            set_global_var(GVAR_GLOW_ROBOT_EXP, 1);
+            give_xp(EXP_INVESTIGATE_ROBOTS);
+         end
+      end
+      else begin
+         display_msg(gen_mstr(174));
+      end
+   end // Science End
+   else if (action_being_used == SKILL_REPAIR) then begin
+      if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
+         script_overrides;
+         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -10);
+         if robot_online then begin
+            call flee_dude;
+            display_msg(155);
+         end
+         else if is_success(skill) then begin
+            set_local_var(LVAR_RobotState, STATE_IDLE);
+            give_xp_msg(EXP_REPAIR_ROBOT_SENSORS, 159);
+         end
+         else begin
+            display_msg(160);
+         end
+      end
+      else if (CUR_MAP_GLOWENT AndAlso robot_offline) then begin
+         script_overrides;
+         if (local_var(LVAR_PowerState) >= 2) then begin
+            if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -30)) or (local_var(LVAR_PowerState) == 3)) then begin
+               if (local_var(LVAR_PowerState) < 3) then begin
+                  set_local_var(LVAR_PowerState, 3);
+                  gfade_out(ONE_GAME_SECOND);
+                     game_time_advance((ONE_GAME_MINUTE * random(10, 60)));
+                  gfade_in(ONE_GAME_SECOND);
+               end
+               display_msg(161);
+            end
+            else begin
+               display_msg(152);
+            end
+         end
+         else begin
+            display_msg(154);
+         end
+      end
+   end // Repair End
+
+end
+
+procedure use_obj_on_p_proc begin
+   variable tool;
+   variable skill;
+   variable sound;
+   tool := obj_pid(obj_being_used_with);
+
+   if (CUR_MAP_GLOWENT and robot_offline /*and (local_var(LVAR_PowerState) >= 3)*/) then begin
+      if (tool == PID_MICRO_FUSION_CELL) then begin
+         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -20);
+         if is_success(skill) then begin
+            script_overrides;
+
+            rm_obj_from_inven(dude_obj, tool);
+
+            gfade_out(ONE_GAME_SECOND);
+               game_time_advance((ONE_GAME_HOUR * random(1, 3)));
+               give_xp_msg(EXP_REPAIR_ROBOT_BATTERY, 162);
+               display_msg(163);
+            gfade_in(ONE_GAME_SECOND);
+
+            set_local_var(LVAR_EnableOffGrid, 1);
+            set_robot_online;
+            sound := sfx_build_char_name(self_obj, ANIM_back_to_standing, snd_contact);
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
+            reg_anim_play_sfx(self_obj, sound, 1);
+            reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+            reg_anim_end();
+
+            if dude_has_free_slot_for_eyebot then begin
+               eyebot_joins_party;
+            end
+         end
+         else if is_critical(skill) then begin
+            script_overrides;
+
+            rm_obj_from_inven(dude_obj, tool);
+
+            gfade_out(ONE_GAME_SECOND);
+               game_time_advance((ONE_GAME_HOUR * random(1, 3)));
+            gfade_in(ONE_GAME_SECOND);
+            explosion(self_tile, self_elevation, random(6, 36));
+            display_msg(164);
+            kill_critter(self_obj, 0);
+         end
+         else begin
+            script_overrides;
+            display_msg(165);
+         end
+      end
+   end
+
+   if Eyebot_In_Party then begin
+      if (tool == PID_MULTI_TOOL) then begin
+         script_overrides;
+         call Heal_Robo(MULTI_TOOL);
+      end else if (tool == PID_SUPER_TOOL_KIT) then begin
+         script_overrides;
+         call Heal_Robo(SUPER_TOOL);
+      end
+   end
+end
+
+procedure Node998 begin
+   tmp_hostile := 1;
+end
+
+procedure Node999 begin
+end
+
+// Primary party node
+procedure Node001 begin
+   Reply(200);
+   party_member_default_options;
+end
+
+procedure Node002 begin
+   Reply(200);
+   NOption(201, Node003, 004);
+   NOption(g_bye, Node999, 004);
+end
+
+// Eyebot rejoin:
+procedure Node003 begin
+   if (local_var(LVAR_RobotState) == STATE_IDLE) then begin
+      set_local_var(LVAR_RobotState, STATE_ACTIVATED);
+   end
+
+   if dude_has_free_slot_for_eyebot then begin
+      eyebot_joins_party;
+
+      Reply(2002);
+      NOption(1050, Node999, 004);
+   end
+   else begin
+      Reply(2000);
+      NOption(2010, Node999, 004);
+   end
+end
+
+procedure Node1001 begin
+   // heal yourself
+   obj_heal(self_obj)
+   if (party_healed_max) then begin
+      Reply(1100);
+   end else if (party_healed_good) then begin
+      Reply(1200);
+   end else if (party_healed_hurt) then begin
+      Reply(1300);
+   end else begin
+      Reply(1400);
+   end
+   party_member_default_options;
+end
+
+procedure Node1002 begin
+   // wait here
+   set_party_waiting;
+   Reply(1501);
+   party_member_default_options;
+end
+
+procedure Node1003 begin
+   // put your weapon away
+   inven_unwield(self_obj);
+   Reply(1600);
+   party_member_default_options;
+end
+
+procedure Node1004 begin
+   // follow close
+   set_follow_close;
+   Reply(1700);
+   party_member_default_options;
+end
+
+procedure Node1005 begin
+   // follow medium
+   set_follow_medium;
+   Reply(1800);
+   party_member_default_options;
+end
+
+procedure Node1006 begin
+   // follow far
+   set_follow_far;
+   Reply(1900);
+   party_member_default_options;
+end
+
+procedure Node1007 begin
+   // distance
+   Reply(1007);
+   party_member_def_follow_options;
+end
+
+procedure Node1008 begin
+   // gear
+   Reply(1010);
+   party_member_def_gear_options;
+end
+
+procedure Node1009 begin
+   // remove armor
+   remove_armor(self_obj)
+   Reply(1009);
+   party_member_default_options;
+end
+
+procedure Node1010 begin
+   // weapons that can be used
+   Reply(1011);
+   party_member_default_options;
+end
+
+procedure Node1100 begin
+   if fo1in2_party_limit_disabled or not(dude_at_max_party_size) then begin
+      end_party_waiting;
+      Reply(2001);
+      party_member_default_options;
+   end
+   else begin
+      set_self_abandon_party;
+      Reply(2000);
+      NOption(g_mstr(10007), Node999, 004);
+   end
+end
+
+procedure Heal_Robo(variable bonus) begin
+   if (local_var(LVAR_Heal_Count) < has_skill(source_obj, SKILL_REPAIR)) then begin
+      if (skill_success(source_obj, SKILL_REPAIR, bonus)) then begin
+         critter_heal(self_obj, Random(10, 40));
+         set_local_var(LVAR_Heal_Count, local_var(LVAR_Heal_Count) + 50);
+      end
+      if (self_cur_hp != self_max_hp) then begin
+         display_mstr(901);
+      end else begin
+         display_mstr(902);
+      end
+   end else begin
+      display_mstr(900);
+   end
+end

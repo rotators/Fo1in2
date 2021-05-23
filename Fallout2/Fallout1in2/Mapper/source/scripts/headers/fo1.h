@@ -24,6 +24,7 @@
 #define fo1in2_motorcycle_enabled       (global_var(GVAR_ENABLE_MOTORCYCLE) > 0)
 #define fo1in2_destroy_armor_enabled    (global_var(GVAR_ENABLE_ARMOR_DESTROY_MOD) > 0)
 #define fo1in2_mr_handy_enabled         (global_var(GVAR_ENABLE_MR_HANDY_HIRELING) > 0)
+#define fo1in2_eyebot_enabled           (global_var(GVAR_ENABLE_EYEBOT_HIRELING) > 0)
 #define fo1in2_merch_restock_enabled    (global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) > 0)
 #define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
 #define fo1in2_unlimited_hpa_enabled    (global_var(GVAR_ENABLE_UNLIMITED_HPA) > 0)

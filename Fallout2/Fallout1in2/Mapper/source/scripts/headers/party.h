@@ -26,6 +26,7 @@ variable How_Many_Party_Members_Armed;
 #define Katja_ptr                           party_member_obj(PID_KATJA)
 #define Tandi_ptr                           party_member_obj(PID_TANDI)
 #define Handy_ptr                           party_member_obj(PID_MRHANDYC)
+#define Eyebot_ptr                          party_member_obj(PID_EYEBOT)
 
 // Is this person in my party
 #define Ian_In_Party                        (Ian_ptr != 0)
@@ -34,6 +35,7 @@ variable How_Many_Party_Members_Armed;
 #define Katja_In_Party                      (Katja_ptr != 0)
 #define Tandi_In_Party                      (Tandi_ptr != 0)
 #define MrHandyC_In_Party                   (Handy_ptr != 0)
+#define Eyebot_In_Party                     (Eyebot_ptr != 0)
 
 // Party Size Information
 #define party_size                          (party_member_count(DONT_LIST_HIDDEN_MEMBERS))
@@ -43,7 +45,7 @@ variable How_Many_Party_Members_Armed;
 #define party_size_humans                   (Ian_In_Party+Tycho_In_Party+Katja_In_Party+Tandi_In_Party)
 #define party_size_male                     (Ian_In_Party+Tycho_In_Party)
 #define party_size_female                   (Katja_In_Party+Tandi_In_Party)
-#define party_size_strange                  (MrHandyC_In_Party+Dog_In_Party)
+#define party_size_strange                  (MrHandyC_In_Party+Dog_In_Party+Eyebot_In_Party)
 #define party_size_biped                    (party_size_male + party_size_female)
 
 // Health of Party Members
@@ -70,9 +72,12 @@ variable How_Many_Party_Members_Armed;
                                             if (Tandi_In_Party) then                            \
                                                 if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (MrHandyC_In_Party) then                         \
-                                                if (Is_Injured(Handy_ptr)) then              \
+                                            /*if (MrHandyC_In_Party) then                       \
+                                                if (Is_Injured(Handy_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
+                                            if (Eyebot_In_Party) then                           \
+                                                if (Is_Injured(Eyebot_ptr)) then                \
+                                                    How_Many_Party_Members_Are_Injured+=1;*/    \
                                             if (How_Many_Party_Members_Are_Injured > 0)
 
 
@@ -95,7 +100,10 @@ variable How_Many_Party_Members_Armed;
                                                 if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Armed+=1;            \
                                             if (MrHandyC_In_Party) then                         \
-                                                if (Is_Injured(Handy_ptr)) then              \
+                                                if (Is_Injured(Handy_ptr)) then                 \
+                                                    How_Many_Party_Members_Armed+=1;            \
+                                            if (Eyebot_In_Party) then                           \
+                                                if (Is_Injured(Eyebot_ptr)) then                \
                                                     How_Many_Party_Members_Armed+=1;            \
                                             if (How_Many_Party_Members_Armed > 0)
 
@@ -116,7 +124,8 @@ variable How_Many_Party_Members_Armed;
         attempt_place_party_member(Tycho_ptr, the_tile, the_elev)         \
         attempt_place_party_member(Katja_ptr, the_tile, the_elev)         \
         attempt_place_party_member(Tandi_ptr, the_tile, the_elev)         \
-        attempt_place_party_member(Handy_ptr, the_tile, the_elev)
+        attempt_place_party_member(Handy_ptr, the_tile, the_elev)         \
+        attempt_place_party_member(Eyebot_ptr, the_tile, the_elev)
 
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
@@ -126,8 +135,9 @@ variable How_Many_Party_Members_Armed;
 #define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (Katja_ptr != 0))
 #define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Tandi_ptr != 0))
 #define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (Handy_ptr != 0))
+#define Childkiller_Eyebot                  ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_14) and (Eyebot_ptr != 0))
 
-#define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC
+#define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC or Childkiller_Eyebot
 
 //#define inc_party_childkiller(who)          if () then
 
@@ -267,7 +277,8 @@ variable PartyHealingItem;
             else get_p_hidden_flag_obj(x, Tycho_ptr, hidden_tycho_bit, hidden)                              \
             else get_p_hidden_flag_obj(x, Katja_ptr, hidden_katja_bit, hidden)                              \
             else get_p_hidden_flag_obj(x, Tandi_ptr, hidden_tandi_bit, hidden)                              \
-            else get_p_hidden_flag_obj(x, Handy_ptr, hidden_mrhandyc_bit, hidden)
+            else get_p_hidden_flag_obj(x, Handy_ptr, hidden_mrhandyc_bit, hidden)                           \
+            else get_p_hidden_flag_obj(x, Eyebot_ptr, hidden_eyebot_bit, hidden)
 
 #define party_member_hidden(x, result)                                           \
    if (x) then begin                                                             \
@@ -288,20 +299,8 @@ variable PartyHealingItem;
 #define hidden_katja_bit                    bit_4
 #define hidden_tandi_bit                    bit_5
 #define hidden_mrhandyc_bit                 bit_6
-/*
-#define hidden_cyberdog_bit                  bit_7
-#define hidden_doc_bit                       bit_8
-#define hidden_goris_bit                     bit_9
-#define hidden_davin_bit                     bit_10
-#define hidden_miria_bit                     bit_11
-#define hidden_robobrain_bit                 bit_12
-#define hidden_dogmeat_bit                   bit_13
-#define hidden_pariah_dog_bit                bit_14
-#define hidden_k9_bit                        bit_15
-#define hidden_robobrain_human_bit           bit_16
-#define hidden_robobrain_abnormal_bit        bit_17
-#define hidden_robobrain_chimp_bit           bit_18*/
-#define all_hidden_bit                       bit_19
+#define hidden_eyebot_bit                   bit_7
+#define all_hidden_bit                      bit_19
 
 
 
@@ -325,7 +324,8 @@ variable PartyHealingItem;
          party_member_hide(Tycho_ptr, hidden_tycho_bit)                             \
          party_member_hide(Katja_ptr, hidden_katja_bit)                             \
          party_member_hide(Tandi_ptr, hidden_tandi_bit)                             \
-         party_member_hide(Handy_ptr, hidden_mrhandyc_bit)
+         party_member_hide(Handy_ptr, hidden_mrhandyc_bit)                          \
+         party_member_hide(Eyebot_ptr, hidden_eyebot_bit)
 
 
 #define all_party_unhidden                   (all_party_hidden == false)
@@ -343,14 +343,15 @@ variable PartyHealingItem;
                debug_msg("PARTY.H:::: party member wasn't hidden.. clearing my state");         \
             end                                                                                 \
          end
-#define party_member_unhide_all                                                      \
-        set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                 \
-        party_member_unhide(Ian_ptr, hidden_ian_bit)                                 \
-          party_member_unhide(Dog_ptr, hidden_dog_bit)                               \
-          party_member_unhide(Tycho_ptr, hidden_tycho_bit)                           \
-          party_member_unhide(Katja_ptr, hidden_katja_bit)                           \
-          party_member_unhide(Tandi_ptr, hidden_tandi_bit)                           \
-          party_member_unhide(Handy_ptr, hidden_mrhandyc_bit)
+#define party_member_unhide_all                                      \
+        set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit); \
+        party_member_unhide(Ian_ptr, hidden_ian_bit)                 \
+        party_member_unhide(Dog_ptr, hidden_dog_bit)                 \
+        party_member_unhide(Tycho_ptr, hidden_tycho_bit)             \
+        party_member_unhide(Katja_ptr, hidden_katja_bit)             \
+        party_member_unhide(Tandi_ptr, hidden_tandi_bit)             \
+        party_member_unhide(Handy_ptr, hidden_mrhandyc_bit)          \
+        party_member_unhide(Eyebot_ptr, hidden_eyebot_bit)
 
 //End hiding party members
 
@@ -552,6 +553,7 @@ variable PartyHealingItem;
 #define prisoner_katja_bit                   bit_4
 #define prisoner_tandi_bit                   bit_5
 #define prisoner_mrhandy_bit                 bit_6
+#define prisoner_eyebot_bit                  bit_7
 
 #define set_p_prisoner_bit(bit, state)       if (state) then begin                                    \
                                                 set_gvar_bit_on(GVAR_PARTY_MEMBERS_PRISONER, bit);    \
@@ -570,6 +572,8 @@ variable PartyHealingItem;
                                              party_remove(Tandi_ptr)
 #define set_mrhandy_prisoner(state)          set_p_prisoner_bit(prisoner_mrhandy_bit, state) \
                                              party_remove(Handy_ptr)
+#define set_eyebot_prisoner(state)           set_p_prisoner_bit(prisoner_eyebot_bit, state)  \
+                                             party_remove(Eyebot_ptr)
 
 #define party_bit_prisoner(x)                (gvar_bit(GVAR_PARTY_MEMBERS_PRISONER, x))
 #define ian_is_prisoner                      party_bit_prisoner(prisoner_ian_bit)
@@ -578,6 +582,7 @@ variable PartyHealingItem;
 #define katja_is_prisoner                    party_bit_prisoner(prisoner_katja_bit)
 #define tandi_is_prisoner                    party_bit_prisoner(prisoner_tandi_bit)
 #define mrhandy_is_prisoner                  party_bit_prisoner(prisoner_mrhandy_bit)
+#define eyebot_is_prisoner                   party_bit_prisoner(prisoner_eyebot_bit)
 
 /***************************************************************************************
    If item is given to an NPC, check party inventory and remove it
@@ -588,7 +593,8 @@ variable PartyHealingItem;
                                             get_item_count(Dog_ptr,x)    +   \
                                             get_item_count(Katja_ptr,x)  +   \
                                             get_item_count(Tandi_ptr,x)  +   \
-                                            get_item_count(Handy_ptr,x)) > 0)
+                                            get_item_count(Handy_ptr,x)  +   \
+                                            get_item_count(Eyebot_ptr,x)) > 0)
 
 #define party_remove_item(x)                if (get_item_count(dude_obj,x) > 0) then begin          \
                                                 remove_pid_qty(dude_obj, x, 1)                      \
@@ -610,8 +616,10 @@ variable PartyHealingItem;
                                             end                                                     \
                                             else if (get_item_count(Handy_ptr,x) > 0) then begin    \
                                                 remove_pid_qty(Handy_ptr, x, 1)                     \
+                                            end                                                     \
+                                            else if (get_item_count(Eyebot_ptr,x) > 0) then begin   \
+                                                remove_pid_qty(Eyebot_ptr, x, 1)                    \
                                             end
-
 
 /***************************************************************************************
    This is to check to see if there are any party members within range of the door
@@ -635,5 +643,6 @@ procedure checkPartyMembersNearDoor begin
    CHECKMEMBERNEARDOOR(Katja_In_Party, Katja_ptr)
    CHECKMEMBERNEARDOOR(Tandi_In_Party, Tandi_ptr)
    CHECKMEMBERNEARDOOR(MrHandyC_In_Party, Handy_ptr)
+   CHECKMEMBERNEARDOOR(Eyebot_In_Party, Eyebot_ptr)
    return 0;
 end

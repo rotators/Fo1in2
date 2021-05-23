@@ -1,12 +1,13 @@
 /*
 
-   Cathedral - Zark
+   Cathedral - Zark, Cathedral entrance area
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/cathedral.h"
+#include "maps/childrn1.h"
 
 #define NAME                    SCRIPT_ZARK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -16,6 +17,11 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure pickup_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
 procedure talk_p_proc;
 
 procedure zark00;
@@ -105,8 +111,9 @@ procedure zarkdone;
 procedure zarkend;
 procedure zarkcombat;
 
+#define LVAR_Herebefore       (4)
+
 variable tmp_hostile;
-variable LASHERKNOWN;
 variable Only_Once := 1;
 
 procedure start begin
@@ -149,7 +156,7 @@ procedure talk_p_proc begin
    start_dialog(self_obj, 4);
    gsay_start;
    if dude_wearing_coc_robe then begin
-      if (local_var(4) == 0) then begin
+      if (local_var(LVAR_Herebefore) == 0) then begin
          if (dude_is_armed) then begin
             call zark14;
          end
@@ -158,42 +165,23 @@ procedure talk_p_proc begin
          end
       end
       else begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Herebefore, 1);
          call zark13;
       end
    end
    else begin
-      set_local_var(4, 1);
+      set_local_var(LVAR_Herebefore, 1);
       if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
          call zark00;
       end
+      else if (has_rep_champion or (check_general_rep > 50)) then begin
+         call zark02;
+      end
+      else if (has_rep_childkiller or (has_rep_berserker) or (check_general_rep < -50)) then begin
+         call zark45;
+      end
       else begin
-         if (dude_is_armed) then begin
-            if (has_rep_champion or (check_general_rep > 50)) then begin
-               call zark02;
-            end
-            else begin
-               if (has_rep_childkiller or (has_rep_berserker) or (check_general_rep < -50)) then begin
-                  call zark45;
-               end
-               else begin
-                  call zark03;
-               end
-            end
-         end
-         else begin
-            if (has_rep_champion or (check_general_rep > 50)) then begin
-               call zark02;
-            end
-            else begin
-               if (has_rep_childkiller or (has_rep_berserker) or (check_general_rep < -50)) then begin
-                  call zark45;
-               end
-               else begin
-                  call zark04;
-               end
-            end
-         end
+         call zark04;
       end
    end
    gsay_end;
@@ -216,8 +204,7 @@ procedure zark00 begin
    NLowOption(107, zark11);
 end
 
-procedure zark00a
-begin
+procedure zark00a begin
    if (dude_strength > 7) then begin
       call zark10;
    end
@@ -226,8 +213,7 @@ begin
    end
 end
 
-procedure zark00b
-begin
+procedure zark00b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark10;
    end
@@ -236,8 +222,7 @@ begin
    end
 end
 
-procedure zark00c
-begin
+procedure zark00c begin
    if (dude_strength > 7) then begin
       call zark12;
    end
@@ -246,8 +231,7 @@ begin
    end
 end
 
-procedure zark01
-begin
+procedure zark01 begin
    Reply(108);
    NOption(109, zark01a, 7);
    NOption(110, zark39, 7);
@@ -259,8 +243,7 @@ begin
    NLowOption(114, zark18);
 end
 
-procedure zark01a
-begin
+procedure zark01a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark38;
    end
@@ -269,8 +252,7 @@ begin
    end
 end
 
-procedure zark02
-begin
+procedure zark02 begin
    Reply(115);
    NOption(116, zark02a, 7);
    NOption(117, zark25, 4);
@@ -282,8 +264,7 @@ begin
    NLowOption(121, zark35);
 end
 
-procedure zark02a
-begin
+procedure zark02a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -292,8 +273,7 @@ begin
    end
 end
 
-procedure zark03
-begin
+procedure zark03 begin
    Reply(122);
    NOption(123, zark03a, 7);
    NOption(124, zark18, 4);
@@ -302,8 +282,7 @@ begin
    NLowOption(127, zark18);
 end
 
-procedure zark03a
-begin
+procedure zark03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark06;
    end
@@ -312,8 +291,7 @@ begin
    end
 end
 
-procedure zark04
-begin
+procedure zark04 begin
    Reply(128);
    NOption(129, zark04a, 7);
    NOption(130, zark26, 4);
@@ -321,8 +299,7 @@ begin
    NLowOption(132, zark18);
 end
 
-procedure zark04a
-begin
+procedure zark04a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark05;
    end
@@ -331,8 +308,7 @@ begin
    end
 end
 
-procedure zark04b
-begin
+procedure zark04b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark31;
    end
@@ -341,18 +317,16 @@ begin
    end
 end
 
-procedure zark05
-begin
+procedure zark05 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
-   LASHERKNOWN := 1;
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    Reply(133);
    NOption(134, zark05a, 7);
    NOption(135, zark31, 4);
    NOption(136, zark07, 4);
 end
 
-procedure zark05a
-begin
+procedure zark05a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark23;
    end
@@ -361,8 +335,7 @@ begin
    end
 end
 
-procedure zark06
-begin
+procedure zark06 begin
    Reply(137);
    NOption(138, zark06a, 7);
    NOption(139, zark06b, 4);
@@ -373,8 +346,7 @@ begin
    end
 end
 
-procedure zark06a
-begin
+procedure zark06a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -383,8 +355,7 @@ begin
    end
 end
 
-procedure zark06b
-begin
+procedure zark06b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -393,9 +364,8 @@ begin
    end
 end
 
-procedure zark07
-begin
-   LASHERKNOWN := 1;
+procedure zark07 begin
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    Reply(143);
    if (global_var(GVAR_MORPHEUS_KNOWN) == 1) then begin
       NOption(144, zark07a, 7);
@@ -406,8 +376,7 @@ begin
    end
 end
 
-procedure zark07a
-begin
+procedure zark07a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark26;
    end
@@ -416,8 +385,7 @@ begin
    end
 end
 
-procedure zark08
-begin
+procedure zark08 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(147);
    NOption(148, zark08a, 7);
@@ -428,8 +396,7 @@ begin
    end
 end
 
-procedure zark08a
-begin
+procedure zark08a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark09;
    end
@@ -438,8 +405,7 @@ begin
    end
 end
 
-procedure zark09
-begin
+procedure zark09 begin
    Reply(152);
    NOption(153, zark31, 7);
    NOption(154, zark47, 4);
@@ -449,13 +415,11 @@ begin
    end
 end
 
-procedure zark10
-begin
+procedure zark10 begin
    NMessage(157);
 end
 
-procedure zark11
-begin
+procedure zark11 begin
    NMessage(158);
    call zarkcombat;
 end
@@ -471,13 +435,11 @@ procedure zark12 begin
    NOption(162, zark11, 4);
 end
 
-procedure zark13
-begin
+procedure zark13 begin
    NMessage(163);
 end
 
-procedure zark14
-begin
+procedure zark14 begin
    Reply(164);
    NOption(165, zark14a, 7);
    NOption(166, zark18, 4);
@@ -489,8 +451,7 @@ begin
    NLowOption(170, zark18);
 end
 
-procedure zark14a
-begin
+procedure zark14a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark15;
    end
@@ -499,8 +460,7 @@ begin
    end
 end
 
-procedure zark15
-begin
+procedure zark15 begin
    Reply(171);
    NOption(172, zark15a, 7);
    NOption(173, zark15a, 4);
@@ -511,8 +471,7 @@ begin
    end
 end
 
-procedure zark15a
-begin
+procedure zark15a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -521,8 +480,7 @@ begin
    end
 end
 
-procedure zark15c
-begin
+procedure zark15c begin
    if (dude_strength < 7) then begin
       call zark21;
    end
@@ -531,24 +489,20 @@ begin
    end
 end
 
-procedure zark16
-begin
+procedure zark16 begin
    NMessage(177);
 end
 
-procedure zark17
-begin
+procedure zark17 begin
    BMessage(178);
    call zarkcombat;
 end
 
-procedure zark18
-begin
+procedure zark18 begin
    NMessage(179);
 end
 
-procedure zark19
-begin
+procedure zark19 begin
    Reply(180);
    NOption(181, zark19a, 4);
    NOption(182, zark24, 4);
@@ -559,8 +513,7 @@ begin
    end
 end
 
-procedure zark19a
-begin
+procedure zark19a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark23;
    end
@@ -569,8 +522,7 @@ begin
    end
 end
 
-procedure zark20
-begin
+procedure zark20 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(186);
    NOption(187, zark26, 7);
@@ -585,13 +537,11 @@ begin
    end
 end
 
-procedure zark21
-begin
+procedure zark21 begin
    Reply(193);
 end
 
-procedure zark22
-begin
+procedure zark22 begin
    Reply(194);
    NOption(195, zark19, 4);
    NOption(196, zark20, 4);
@@ -601,28 +551,23 @@ begin
    end
 end
 
-procedure zark23
-begin
+procedure zark23 begin
    NMessage(199);
 end
 
-procedure zark24
-begin
+procedure zark24 begin
    NMessage(200);
 end
 
-procedure zark25
-begin
+procedure zark25 begin
    NMessage(201);
 end
 
-procedure zark26
-begin
+procedure zark26 begin
    NMessage(202);
 end
 
-procedure zark27
-begin
+procedure zark27 begin
    Reply(203);
    NOption(204, zark32, 7);
    NOption(205, zark33, 4);
@@ -633,9 +578,8 @@ begin
    end
 end
 
-procedure zark28
-begin
-   LASHERKNOWN := 1;
+procedure zark28 begin
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    Reply(209);
    if (global_var(GVAR_MORPHEUS_KNOWN) == 1) then begin
       NOption(210, zark28a, 7);
@@ -649,8 +593,7 @@ begin
    end
 end
 
-procedure zark28a
-begin
+procedure zark28a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark26;
    end
@@ -659,17 +602,14 @@ begin
    end
 end
 
-procedure zark28b
-begin
+procedure zark28b begin
 end
 
-procedure zark29
-begin
+procedure zark29 begin
    NMessage(214);
 end
 
-procedure zark30
-begin
+procedure zark30 begin
    Reply(215);
    NOption(216, zark37, 4);
    NOption(217, zark37, 4);
@@ -678,8 +618,7 @@ begin
    end
 end
 
-procedure zark31
-begin
+procedure zark31 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(219);
    NOption(220, zark31a, 7);
@@ -694,8 +633,7 @@ begin
    end
 end
 
-procedure zark31a
-begin
+procedure zark31a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark23;
    end
@@ -704,8 +642,7 @@ begin
    end
 end
 
-procedure zark31b
-begin
+procedure zark31b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark27;
    end
@@ -714,40 +651,33 @@ begin
    end
 end
 
-procedure zark32
-begin
+procedure zark32 begin
    NMessage(226);
 end
 
-procedure zark33
-begin
+procedure zark33 begin
    NMessage(227);
 end
 
-procedure zark34
-begin
+procedure zark34 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    NMessage(228);
 end
 
-procedure zark35
-begin
+procedure zark35 begin
    NMessage(229);
 end
 
-procedure zark36
-begin
+procedure zark36 begin
    NMessage(230);
 end
 
-procedure zark37
-begin
-   LASHERKNOWN := 1;
+procedure zark37 begin
+   set_map_var(MVAR_LASHER_KNOWN, 1);
    NMessage(231);
 end
 
-procedure zark38
-begin
+procedure zark38 begin
    Reply(232);
    NOption(233, zark38a, 7);
    NOption(234, zark38b, 4);
@@ -761,8 +691,7 @@ begin
    end
 end
 
-procedure zark38a
-begin
+procedure zark38a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -771,8 +700,7 @@ begin
    end
 end
 
-procedure zark38b
-begin
+procedure zark38b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -781,8 +709,7 @@ begin
    end
 end
 
-procedure zark38c
-begin
+procedure zark38c begin
    if (dude_strength < 7) then begin
       call zark21;
    end
@@ -791,8 +718,7 @@ begin
    end
 end
 
-procedure zark39
-begin
+procedure zark39 begin
    Reply(239);
    NOption(240, zark39a, 7);
    NOption(241, zark39b, 7);
@@ -803,8 +729,7 @@ begin
    end
 end
 
-procedure zark39a
-begin
+procedure zark39a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark38;
    end
@@ -813,8 +738,7 @@ begin
    end
 end
 
-procedure zark39b
-begin
+procedure zark39b begin
    if dude_wearing_coc_robe then begin
       call zark16;
    end
@@ -823,8 +747,7 @@ begin
    end
 end
 
-procedure zark40
-begin
+procedure zark40 begin
    Reply(245);
    NOption(246, zark40a, 7);
    NOption(247, zark41, 7);
@@ -835,8 +758,7 @@ begin
    end
 end
 
-procedure zark40a
-begin
+procedure zark40a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -861,8 +783,7 @@ procedure zark41 begin
    end
 end
 
-procedure zark41a
-begin
+procedure zark41a begin
    if dude_wearing_coc_robe then begin
       call zark42;
    end
@@ -871,8 +792,7 @@ begin
    end
 end
 
-procedure zark41b
-begin
+procedure zark41b begin
    if dude_wearing_coc_robe then begin
       call zark42;
    end
@@ -881,23 +801,19 @@ begin
    end
 end
 
-procedure zark41c
-begin
+procedure zark41c begin
    call zarkcombat;
 end
 
-procedure zark42
-begin
+procedure zark42 begin
    NMessage(258);
 end
 
-procedure zark43
-begin
+procedure zark43 begin
    NMessage(259);
 end
 
-procedure zark44
-begin
+procedure zark44 begin
    Reply(260);
    NOption(261, zark44a, 7);
    NOption(262, zark44b, 4);
@@ -908,8 +824,7 @@ begin
    end
 end
 
-procedure zark44a
-begin
+procedure zark44a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -918,8 +833,7 @@ begin
    end
 end
 
-procedure zark44b
-begin
+procedure zark44b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark19;
    end
@@ -937,13 +851,11 @@ procedure zark45 begin
    end
 end
 
-procedure zark46
-begin
+procedure zark46 begin
    NMessage(268);
 end
 
-procedure zark47
-begin
+procedure zark47 begin
    Reply(269);
    NOption(270, zark47a, 7);
    NOption(271, zark48, 4);
@@ -951,8 +863,7 @@ begin
    NOption(273, zarkcombat, 4);
 end
 
-procedure zark47a
-begin
+procedure zark47a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call zark26;
    end
@@ -961,24 +872,20 @@ begin
    end
 end
 
-procedure zark48
-begin
+procedure zark48 begin
    NMessage(274);
    call zarkcombat;
 end
 
-procedure zark49
-begin
+procedure zark49 begin
    NMessage(275);
 end
 
-procedure zarkdone
-begin
+procedure zarkdone begin
    NOption(276, zarkend, 1);
 end
 
-procedure zarkend
-begin
+procedure zarkend begin
 end
 
 procedure zarkcombat begin

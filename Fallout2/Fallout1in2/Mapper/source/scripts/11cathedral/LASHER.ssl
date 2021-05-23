@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "maps/v13ent.h"
+#include "area/cathedral.h"
+#include "maps/childrn1.h"
 
 #define NAME                    SCRIPT_LASHER
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -81,7 +82,6 @@ procedure lasherend;
 procedure combat;
 
 variable tmp_hostile;
-variable Lasher_Abuse;
 variable Only_Once := 1;
 
 #define EVENT_ATTACK       (1)
@@ -102,7 +102,6 @@ procedure critter_p_proc begin
       dialogue_system_enter;
    end
    else begin
-
       if (self_can_see_dude and (dude_is_armed)) then begin
          //tmp_hostile := 1;
          add_timer_event(self_obj, game_ticks(5), EVENT_ATTACK);
@@ -111,7 +110,6 @@ procedure critter_p_proc begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-
    end
    if (tmp_hostile) then begin
       tmp_hostile := 0;
@@ -151,12 +149,7 @@ procedure talk_p_proc begin
 
    script_overrides;
 
-   if dude_armor then begin
-      variable RobesCheck;
-      RobesCheck := dude_armor;
-   end
-
-   if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
+   if dude_wearing_coc_robe then begin
       if (dude_is_armed) then begin
          start_dialog_at_node(lasher04);
       end
@@ -176,18 +169,17 @@ procedure talk_p_proc begin
    else if (has_rep_berserker) then begin
       start_dialog_at_node(lasher02);
    end
-   else if (local_var(0) == 1) then begin
+   else if (local_var(LVAR_reaction) == BAD) then begin
       start_dialog_at_node(lasher03);
    end
    else begin
       start_dialog_at_node(lasher07);
    end
 
-   set_local_var(0, 1);
+   set_local_var(LVAR_reaction, BAD);
 end
 
-procedure lasher00
-begin
+procedure lasher00 begin
    if (dude_is_male) then begin
       Reply(101);
    end
@@ -197,32 +189,28 @@ begin
    NOption(223, lasherend, 1);
 end
 
-procedure lasher01
-begin
+procedure lasher01 begin
    NMessage(103);
    call combat;
 end
 
-procedure lasher02
-begin
+procedure lasher02 begin
    NMessage(104);
    call combat;
 end
 
-procedure lasher03
-begin
+procedure lasher03 begin
    Reply(105);
    NOption(223, lasherend, 1);
 end
 
-procedure lasher04
-begin
+procedure lasher04 begin
    Reply(106);
    NOption(107, lasher08, 7);
    NOption(108, lasher09, 4);
    NOption(109, lasher10, 4);
    NOption(110, lasher11, 4);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(111, lasher12, 4);
    end
    if (has_rep_berserker) then begin
@@ -231,12 +219,11 @@ begin
    NLowOption(113, lasher13);
 end
 
-procedure lasher05
-begin
+procedure lasher05 begin
    Reply(114);
    NOption(115, lasher14, 7);
    NOption(116, lasher15, 7);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(117, lasher12, 4);
    end
    NOption(118, lasher16, 4);
@@ -248,8 +235,7 @@ begin
    NLowOption(121, lasher13);
 end
 
-procedure lasher06
-begin
+procedure lasher06 begin
    if (dude_is_male) then begin
       Reply(122);
    end
@@ -258,7 +244,7 @@ begin
    end
    NOption(124, lasher06a, 7);
    NOption(125, lasher15, 7);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(126, lasher12, 4);
    end
    NOption(127, lasher16, 4);
@@ -270,8 +256,7 @@ begin
    NLowOption(130, lasher13);
 end
 
-procedure lasher06a
-begin
+procedure lasher06a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher17;
    end
@@ -280,11 +265,10 @@ begin
    end
 end
 
-procedure lasher07
-begin
+procedure lasher07 begin
    Reply(131);
    NOption(132, lasher07a, 7);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(133, lasher12, 4);
    end
    NOption(134, lasher19, 4);
@@ -296,8 +280,7 @@ begin
    NLowOption(137, lasher13);
 end
 
-procedure lasher07a
-begin
+procedure lasher07a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher17;
    end
@@ -306,11 +289,10 @@ begin
    end
 end
 
-procedure lasher08
-begin
+procedure lasher08 begin
    Reply(138);
    NOption(139, lasher08a, 7);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(140, lasher12, 4);
    end
    NOption(141, lasher19, 4);
@@ -320,8 +302,7 @@ begin
    end
 end
 
-procedure lasher08a
-begin
+procedure lasher08a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher20_1;
    end
@@ -330,17 +311,15 @@ begin
    end
 end
 
-procedure lasher09
-begin
+procedure lasher09 begin
    Reply(144);
    NOption(223, lasherend, 1);
 end
 
-procedure lasher10
-begin
+procedure lasher10 begin
    Reply(145);
    NOption(146, lasher10a, 7);
-   if (Lasher_Abuse) then begin
+   if (map_var(MVAR_LASHER_ABUSE_KNOWN) == 1) then begin
       NOption(147, lasher26, 4);
    end
    NOption(148, lasher27, 4);
@@ -350,8 +329,7 @@ begin
    end
 end
 
-procedure lasher10a
-begin
+procedure lasher10a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher24;
    end
@@ -360,8 +338,7 @@ begin
    end
 end
 
-procedure lasher11
-begin
+procedure lasher11 begin
    Reply(151);
    NOption(152, lasher09, 4);
    NOption(153, lasher30, 4);
@@ -370,8 +347,7 @@ begin
    end
 end
 
-procedure lasher12
-begin
+procedure lasher12 begin
    Reply(155);
    NOption(156, lasher31, 7);
    NOption(157, lasher30, 4);
@@ -386,8 +362,7 @@ procedure lasher13 begin
    NMessage(161);
 end
 
-procedure lasher14
-begin
+procedure lasher14 begin
    if (dude_is_male) then begin
       Reply(163);
    end
@@ -402,8 +377,7 @@ begin
    end
 end
 
-procedure lasher14a
-begin
+procedure lasher14a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher34;
    end
@@ -412,8 +386,7 @@ begin
    end
 end
 
-procedure lasher15
-begin
+procedure lasher15 begin
    Reply(168);
    NOption(169, lasher18, 7);
    NOption(170, lasher35, 4);
@@ -424,13 +397,11 @@ begin
    end
 end
 
-procedure lasher16
-begin
+procedure lasher16 begin
    NMessage(174);
 end
 
-procedure lasher17
-begin
+procedure lasher17 begin
    Reply(175);
    if (global_var(GVAR_MORPHEUS_KNOWN) == 1) then begin
       NOption(176, lasher17a, 7);
@@ -443,8 +414,7 @@ begin
    end
 end
 
-procedure lasher17a
-begin
+procedure lasher17a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher38;
    end
@@ -453,55 +423,45 @@ begin
    end
 end
 
-procedure lasher18
-begin
+procedure lasher18 begin
    NMessage(181);
 end
 
-procedure lasher19
-begin
+procedure lasher19 begin
    NMessage(182);
 end
 
-procedure lasher20_1
-begin
+procedure lasher20_1 begin
    NMessage(mstr(183) + mstr(183));
 end
 
-procedure lasher20_2
-begin
+procedure lasher20_2 begin
 end
 
-procedure lasher21
-begin
+procedure lasher21 begin
    NMessage(186);
 end
 
-procedure lasher22
-begin
+procedure lasher22 begin
    NMessage(187);
 end
 
-procedure lasher23
-begin
+procedure lasher23 begin
    NMessage(188);
 end
 
-procedure lasher24
-begin
+procedure lasher24 begin
    variable LVar0 := 0;
    LVar0 := create_object(PID_RED_COC_BADGE, 0, 0);
    add_obj_to_inven(dude_obj, LVar0);
    NMessage(189);
 end
 
-procedure lasher25
-begin
+procedure lasher25 begin
    NMessage(190);
 end
 
-procedure lasher26
-begin
+procedure lasher26 begin
    Reply(191);
    NOption(192, lasher26a, 7);
    NOption(193, lasher25, 4);
@@ -512,8 +472,7 @@ begin
    end
 end
 
-procedure lasher26a
-begin
+procedure lasher26a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call lasher24;
    end
@@ -522,36 +481,30 @@ begin
    end
 end
 
-procedure lasher27
-begin
+procedure lasher27 begin
    NMessage(197);
 end
 
-procedure lasher28
-begin
+procedure lasher28 begin
    variable LVar0 := 0;
    LVar0 := create_object(PID_RED_COC_BADGE, 0, 0);
    add_obj_to_inven(dude_obj, LVar0);
    NMessage(198);
 end
 
-procedure lasher29
-begin
+procedure lasher29 begin
    NMessage(199);
 end
 
-procedure lasher30
-begin
+procedure lasher30 begin
    NMessage(200);
 end
 
-procedure lasher31
-begin
+procedure lasher31 begin
    NMessage(201);
 end
 
-procedure lasher32
-begin
+procedure lasher32 begin
    Reply(202);
    NOption(203, lasher21, 7);
    NOption(204, lasher42, 4);
@@ -563,8 +516,7 @@ begin
    end
 end
 
-procedure lasher33
-begin
+procedure lasher33 begin
    if (dude_is_female) then begin
       NMessage(209);
    end
@@ -573,77 +525,62 @@ begin
    end
 end
 
-procedure lasher34
-begin
+procedure lasher34 begin
    NMessage(211);
 end
 
-procedure lasher35
-begin
+procedure lasher35 begin
    NMessage(212);
 end
 
-procedure lasher36
-begin
+procedure lasher36 begin
    NMessage(213);
 end
 
-procedure lasher37
-begin
+procedure lasher37 begin
    NMessage(214);
 end
 
-procedure lasher38
-begin
+procedure lasher38 begin
    variable LVar0 := 0;
    LVar0 := create_object(PID_RED_COC_BADGE, 0, 0);
    add_obj_to_inven(dude_obj, LVar0);
    NMessage(224);
 end
 
-procedure lasher39
-begin
+procedure lasher39 begin
    NMessage(215);
 end
 
-procedure lasher40_1
-begin
+procedure lasher40_1 begin
    NMessage(mstr(216) + mstr(217));
 end
 
-procedure lasher40_2
-begin
+procedure lasher40_2 begin
 end
 
-procedure lasher41_1
-begin
+procedure lasher41_1 begin
    NMessage(mstr(218) + mstr(219));
 end
 
-procedure lasher41_2
-begin
+procedure lasher41_2 begin
 end
 
-procedure lasher42
-begin
+procedure lasher42 begin
    NMessage(220);
 end
 
-procedure lasher43
-begin
+procedure lasher43 begin
    NMessage(221);
 end
 
-procedure lasher44
-begin
+procedure lasher44 begin
    NMessage(222);
 end
 
-procedure lasherend
-begin
+procedure lasherend begin
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end

@@ -22,13 +22,18 @@ procedure pickup_p_proc;
 #define LVAR_RobotExp               (0)
 #define LVAR_AnimStatus             (1)
 
+#define robot_offline                     (local_var(LVAR_AnimStatus) == 0)
+#define robot_online                      (local_var(LVAR_AnimStatus) == 1)
+#define set_robot_offline                 set_local_var(LVAR_AnimStatus, 0)
+#define set_robot_online                  set_local_var(LVAR_AnimStatus, 1)
+
 procedure start begin
 end
 
 procedure map_update_p_proc begin
    if glow_power_online and glow_traps_active then begin
-      if (local_var(LVAR_AnimStatus) == 0) then begin
-         set_local_var(LVAR_AnimStatus, 1);
+      if robot_offline then begin
+         set_robot_online;
 
          reg_anim_clear(self_obj);
          reg_anim_begin();
@@ -45,15 +50,15 @@ procedure critter_p_proc begin
       end
    end
    else begin
-      if (local_var(LVAR_AnimStatus) == 0) then begin
+      if robot_offline then begin
          anim(self_obj, ANIM_fall_back_sf, 0);
       end
-      else if (local_var(LVAR_AnimStatus) == 1) then begin
+      else if robot_online then begin
          reg_anim_clear(self_obj);
          reg_anim_begin();
          reg_anim_animate(self_obj, ANIM_fall_back, -1);
          reg_anim_end();
-         set_local_var(LVAR_AnimStatus, 0);
+         set_robot_offline;
       end
    end
 end
@@ -61,11 +66,11 @@ end
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_SCIENCE) then begin
       script_overrides;
-      if (glow_power_online and is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10))) then begin
+      if (robot_offline and (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10))) or (global_var(GVAR_GLOW_ROBOT_EXP) == 1)) then begin
          display_msg(gen_mstr(173));
-         if (local_var(LVAR_RobotExp) == 0) then begin
-            give_xp(100);
-            set_local_var(LVAR_RobotExp, 1);
+         if (global_var(GVAR_GLOW_ROBOT_EXP) == 0) then begin
+            set_global_var(GVAR_GLOW_ROBOT_EXP, 1);
+            give_xp(EXP_INVESTIGATE_ROBOTS);
          end
       end
       else begin
@@ -76,7 +81,7 @@ end
 
 procedure combat_p_proc begin
    //if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-      if (not(glow_power_online) or not(glow_traps_active)) then begin
+      if (not(glow_power_online) or glow_traps_inactive) then begin
          script_overrides;
          anim(self_obj, ANIM_fall_back_sf, 0);
       end
@@ -84,7 +89,7 @@ procedure combat_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   if (not(glow_power_online) or not(glow_traps_active)) then begin
+   if (not(glow_power_online) or glow_traps_inactive) then begin
       script_overrides;
    end
 end
