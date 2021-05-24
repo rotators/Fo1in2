@@ -2,10 +2,13 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 
 - **Added**: A new mini-mod that enables current / maximum carry weight in the loot screen, similar to what Crafty's Sfall for Fo1 does.
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
+- **Added**: A new optional Floating Eye party member to the Glow.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
 - **Added**: Fire Gecko Pelt from the UPU has been added to the game.
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
 - **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
+- **Added**: Restored some inaccessible dialog for Lasher inside the Cathedral (about abusing children).
+- **Added**: Restored some inaccessible dialog for Viola inside the Cathedral (after talking to Laura).
 - **Added**: The Fo2 Karma Beacon perk now works with the Fo1 NPCs.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
