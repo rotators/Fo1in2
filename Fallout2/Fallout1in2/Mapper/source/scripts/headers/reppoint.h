@@ -301,7 +301,7 @@
 
 
 // Vault 13
-#define REP_BONUS_GAME_STARTED                  (25)
+#define REP_BONUS_GAME_STARTED                  (20)
 #define REP_BONUS_RETURNED_WATERCHP             (100)
 #define inc_v13_rep(x)                          inc_global_var_amt(GVAR_TOWN_REP_V13, x)
 
