@@ -1,30 +1,44 @@
+/*
+
+   The Glow - unused desk object script
+
+*/
+
+/* Include Files */
 #include "define.h"
 
+#define NAME                    SCRIPT_GLOWDESK
+
+#include "command.h"
+
+/* Standard Script Procedures */
 procedure start;
+procedure pickup_p_proc;
+procedure use_skill_on_p_proc;
 
+#define LVAR_Herebefore          (0)
 
-procedure start
-begin
-   if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-      if (local_var(0) == 0) then begin
-         script_overrides;
-         display_msg(message_str(SCRIPT_GLOWDESK, 100));
+procedure start begin
+end
+
+procedure pickup_p_proc begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      script_overrides;
+      display_msg(message_str(NAME, 100));
+   end
+end
+
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0))) then begin
+         set_local_var(LVAR_Herebefore, 1);
+         display_msg(message_str(NAME, 101));
+      end
+      else begin
+         display_msg(message_str(NAME, 102));
       end
    end
    else begin
-      if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-         if (action_being_used == SKILL_LOCKPICK) then begin
-            if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0))) then begin
-               set_local_var(0, 1);
-               display_msg(message_str(SCRIPT_GLOWDESK, 101));
-            end
-            else begin
-               display_msg(message_str(SCRIPT_GLOWDESK, 102));
-            end
-         end
-         else begin
-            display_msg(message_str(SCRIPT_GLOWDESK, 103));
-         end
-      end
+      display_msg(message_str(NAME, 103));
    end
 end

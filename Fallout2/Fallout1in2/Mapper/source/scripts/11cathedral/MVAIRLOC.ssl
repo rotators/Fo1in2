@@ -1,6 +1,23 @@
+/*
+
+   Cathedral - Masters Lair. Unused? Maybe this was supposed to be the entrance vault door?
+
+*/
+
+/* Include Files */
 #include "define.h"
 
+#define NAME                    SCRIPT_MVAIRLOC
+
+#include "command.h"
+
+/* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
+procedure look_at_p_proc;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+
 procedure use_stuff;
 procedure pick_lock;
 
@@ -8,53 +25,47 @@ variable unlocked;
 
 import variable MVAirlock_ptr;
 
+procedure start begin
+end
 
-procedure start
-begin
-   if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-      MVAirlock_ptr := self_obj;
-   end
-   else begin
-      if (script_action == look_at_proc) then begin// 21 is look_at, 3 is description (Binoculars)
-         script_overrides;
-         display_msg(message_str(SCRIPT_MVAIRLOC, 100));
-      end
-      else begin
-         if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-            call use_stuff;
-         end
-         else begin
-            if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-               if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
-                  call pick_lock;
-               end
-            end
-         end
-      end
+procedure map_enter_p_proc begin
+   MVAirlock_ptr := self_obj;
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(NAME, 100));
+end
+
+procedure use_p_proc begin
+   call use_stuff;
+end
+
+procedure use_skill_on_p_proc begin
+   if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
+      call pick_lock;
    end
 end
 
-procedure use_stuff
-begin
+procedure use_stuff begin
    if (not(unlocked)) then begin
       script_overrides;
-      display_msg(message_str(SCRIPT_MVAIRLOC, 101));
+      display_msg(message_str(NAME, 101));
    end
 end
 
-procedure pick_lock
-begin
+procedure pick_lock begin
    script_overrides;
    if (unlocked) then begin
-      display_msg(message_str(SCRIPT_MVAIRLOC, 102));
+      display_msg(message_str(NAME, 102));
    end
    else begin
       if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, -30))) then begin
-         display_msg(message_str(SCRIPT_MVAIRLOC, 103));
+         display_msg(message_str(NAME, 103));
          unlocked := 1;
       end
       else begin
-         display_msg(message_str(SCRIPT_MVAIRLOC, 104));
+         display_msg(message_str(NAME, 104));
       end
    end
 end
