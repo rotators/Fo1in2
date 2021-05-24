@@ -259,6 +259,7 @@ variable step_tile;
 
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
 #define self_is_sneaking                  using_skill(self_obj,SKILL_SNEAK)
+
 //
 // gear
 //
@@ -417,6 +418,16 @@ variable step_tile;
 #define self_item_count(pid)              get_item_count(self_obj,pid)
 
 //
+// skills/stats checks
+//
+
+#define skill_success(x,y,z)                is_success(roll_vs_skill(x,y,z))
+#define dude_skill_success(y,z)             skill_success(dude_obj,y,z)
+
+#define stat_success(x,y,z)                 is_success(do_check(x,y,z))
+#define dude_stat_success(y,z)              stat_success(dude_obj,y,z)
+
+//
 // misc triplets
 //
 
@@ -557,9 +568,6 @@ variable step_tile;
 #define self_is_running                     (art_anim(self_fid) == ANIM_running)
 
 #define self_inv_rot                        ((self_cur_rot + 3)%6)
-
-#define skill_success(x,y,z)                (is_success(roll_vs_skill(x,y,z)))
-#define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
 #define self_distance_from_dude             tile_distance(self_tile, dude_tile)
 #define self_is_high                        drug_influence(self_obj)
