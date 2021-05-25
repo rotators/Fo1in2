@@ -66,8 +66,7 @@ variable tmp_hostile := 0;
 #define LVAR_RobotExp                     (3)
 #define LVAR_AnimStatus                   (4)
 #define LVAR_RobotState                   (5)
-#define LVAR_EnableOffGrid                (6)
-#define LVAR_PowerState                   (7)
+#define LVAR_PowerState                   (6)
 
 #define LVAR_WAITING                      (10)
 #define LVAR_FOLLOW_DISTANCE              (11)
@@ -95,6 +94,8 @@ variable tmp_hostile := 0;
 #define STATE_IDLE               (1)
 #define STATE_ACTIVATED          (2)
 #define STATE_OUTSIDE            (3)
+#define STATE_SEC                (4)
+#define STATE_MFC                (5)
 
 #define MAX_TRAVEL              (6)
 #define move_hex            (22089)
@@ -127,7 +128,7 @@ procedure timed_event_p_proc begin
    end
    else if (fixed_param == EVENT_MOVE) then begin
       if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
-         if not(combat_is_initialized) and robot_online then begin
+         if not(combat_is_initialized) and robot_online and (dude_elevation == self_elevation) then begin
             if (random(0, 4) == 1) then begin
                reg_anim_clear(self_obj);
                reg_anim_begin();
@@ -169,12 +170,13 @@ procedure map_enter_p_proc begin
    add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
 
    if (map_first_run and CUR_MAP_GLOW1) then begin
-      critter_injure(dude_obj, DAM_BLIND);
+      critter_injure(self_obj, DAM_BLIND);
+      anim(self_obj, ANIM_fall_back_sf, 0);
    end
 end
 
 procedure map_update_p_proc begin
-   if (local_var(LVAR_EnableOffGrid) == 0) then begin
+   if (local_var(LVAR_RobotState) < STATE_SEC) then begin
       if (CUR_MAP_GLOW1 or CUR_MAP_GLOW2) then begin
          if glow_power_online and glow_traps_active then begin
             if robot_offline then begin
@@ -224,7 +226,7 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
 
-   if (local_var(LVAR_EnableOffGrid) == 0) then begin
+   if (local_var(LVAR_RobotState) < STATE_SEC) then begin
       if (not(glow_power_online) or glow_traps_inactive or (CUR_MAP_GLOWENT and (local_var(LVAR_RobotState) == STATE_OUTSIDE))) then begin
          if robot_online then begin
             reg_anim_clear(self_obj);
@@ -293,6 +295,8 @@ procedure use_skill_on_p_proc begin
             display_msg(mstr(155));
          end
       end
+
+      // Investigate the failed battery
       else if (CUR_MAP_GLOWENT and robot_offline) then begin
          if (dude_skill_success(SKILL_SCIENCE, -10) or (local_var(LVAR_PowerState) >= 2)) then begin
             if (local_var(LVAR_PowerState) == 0) then begin
@@ -316,6 +320,8 @@ procedure use_skill_on_p_proc begin
             display_msg(mstr(154));
          end
       end
+
+      // Investigate the disabled robot (works on all Glow robots)
       else if (robot_offline and (dude_skill_success(SKILL_SCIENCE, -10)) or (global_var(GVAR_GLOW_ROBOT_EXP) == 1)) then begin
          display_msg(gen_mstr(173));
          if (global_var(GVAR_GLOW_ROBOT_EXP) == 0) then begin
@@ -329,6 +335,7 @@ procedure use_skill_on_p_proc begin
       script_overrides;
    end // Science End
    else if (action_being_used == SKILL_REPAIR) then begin
+      // Repair the defect sensors
       if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
          skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -10);
          if robot_online then begin
@@ -338,12 +345,15 @@ procedure use_skill_on_p_proc begin
          else if is_success(skill) then begin
             set_local_var(LVAR_RobotState, STATE_IDLE);
             give_xp_msg(EXP_REPAIR_ROBOT_SENSORS, mstr(159));
+            critter_uninjure(self_obj, DAM_BLIND);
          end
          else begin
             display_msg(mstr(160));
          end
          script_overrides;
       end
+
+      // Investigate the defect battery
       else if (CUR_MAP_GLOWENT and robot_offline) then begin
          if (local_var(LVAR_PowerState) >= 2) then begin
             if (dude_skill_success(SKILL_REPAIR, -30) or (local_var(LVAR_PowerState) == 3)) then begin
@@ -351,9 +361,9 @@ procedure use_skill_on_p_proc begin
                   set_local_var(LVAR_PowerState, 3);
                   gfade_out(ONE_GAME_SECOND);
                      game_time_advance((ONE_GAME_MINUTE * random(10, 60)));
+                     display_msg(mstr(161));
                   gfade_in(ONE_GAME_SECOND);
                end
-               display_msg(mstr(161));
             end
             else begin
                display_msg(mstr(152));
@@ -373,12 +383,21 @@ procedure use_obj_on_p_proc begin
    variable skill;
    tool := obj_pid(obj_being_used_with);
 
-   if (CUR_MAP_GLOWENT and robot_offline /*and (local_var(LVAR_PowerState) >= 3)*/) then begin
+   if (CUR_MAP_GLOWENT and robot_offline and (local_var(LVAR_PowerState) >= 3)) then begin
       if (tool == PID_MICRO_FUSION_CELL) then begin
-         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -20);
+         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -30);
          if is_success(skill) then begin
             rm_obj_from_inven(dude_obj, obj_being_used_with);
+
+            gfade_out(ONE_GAME_SECOND);
+            give_xp_msg(EXP_REPAIR_ROBOT_BATTERY_MFC, mstr(162));
             call repair_battery;
+            set_local_var(LVAR_RobotState, STATE_MFC);
+
+            // Give special weapon if player used MFC to repair the bot
+            tool := create_object(PID_EYEBALL_FIST_1, 0, 0);
+            add_obj_to_inven(self_obj, tool);
+            wield_obj_critter(self_obj, tool);
          end
          else if is_critical(skill) then begin
             rm_obj_from_inven(dude_obj, obj_being_used_with);
@@ -389,6 +408,22 @@ procedure use_obj_on_p_proc begin
             explosion(self_tile, self_elevation, random(6, 36));
             display_msg(mstr(164));
             kill_critter(self_obj, ANIM_stand);
+         end
+         else begin
+            display_msg(mstr(165));
+         end
+         script_overrides;
+      end
+      else if (tool == PID_SMALL_ENERGY_CELL) then begin
+         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, 0);
+         if is_success(skill) then begin
+            rm_obj_from_inven(dude_obj, obj_being_used_with);
+
+            gfade_out(ONE_GAME_SECOND);
+            give_xp_msg(EXP_REPAIR_ROBOT_BATTERY_SEC, mstr(166));
+            rm_obj_from_inven(dude_obj, obj_being_used_with);
+            call repair_battery;
+            set_local_var(LVAR_RobotState, STATE_SEC);
          end
          else begin
             display_msg(mstr(165));
@@ -411,13 +446,10 @@ end
 procedure repair_battery begin
 variable sound;
 
-   gfade_out(ONE_GAME_SECOND);
-      give_xp_msg(EXP_REPAIR_ROBOT_BATTERY, mstr(162));
       display_msg(mstr(163));
       game_time_advance((ONE_GAME_HOUR * random(1, 3)));
    gfade_in(ONE_GAME_SECOND);
 
-   set_local_var(LVAR_EnableOffGrid, 1);
    set_robot_online;
    sound := sfx_build_char_name(self_obj, ANIM_back_to_standing, snd_contact);
    reg_anim_clear(self_obj);
@@ -469,16 +501,23 @@ procedure Node003 begin
 end
 
 procedure Node1001 begin
+variable battery;
+
+   if (local_var(LVAR_RobotState) == STATE_SEC) then
+      battery := mstr(1401);
+   else
+      battery := mstr(1402);
+
    // heal yourself
    obj_heal(self_obj)
    if (party_healed_max) then begin
-      Reply(1100);
+      Reply(battery + mstr(1100));
    end else if (party_healed_good) then begin
-      Reply(1200);
+      Reply(battery + mstr(1200));
    end else if (party_healed_hurt) then begin
-      Reply(1300);
+      Reply(battery + mstr(1300));
    end else begin
-      Reply(1400);
+      Reply(battery + mstr(1400));
    end
    party_member_default_options;
 end

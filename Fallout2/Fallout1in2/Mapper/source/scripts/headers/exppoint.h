@@ -226,7 +226,8 @@
 #define EXP_MAINFRAME_ACCESS                    (100)
 #define EXP_REPAIR_GENERATOR                    (1000)
 #define EXP_HIRED_EYEBOT                        (150)
-#define EXP_REPAIR_ROBOT_BATTERY                (500)
+#define EXP_REPAIR_ROBOT_BATTERY_SEC            (300)
+#define EXP_REPAIR_ROBOT_BATTERY_MFC            (500)
 #define EXP_REPAIR_ROBOT_SENSORS                (150)
 
 // Brotherhood of Steel
