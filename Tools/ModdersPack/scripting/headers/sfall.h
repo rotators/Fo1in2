@@ -290,6 +290,8 @@
 // clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling functions that are waiting for keyboard input
 #define clear_keyboard_buffer                           metarule3(201, 0, 0, 0)
 
+// checks if the specified PID number exists in the list of registered protos
+#define check_pid(pid)                                  (get_proto_data(pid, 0) != -1)
 
 /* sfall_funcX macros */
 #define add_extra_msg_file(name)                                sfall_func1("add_extra_msg_file", name)
