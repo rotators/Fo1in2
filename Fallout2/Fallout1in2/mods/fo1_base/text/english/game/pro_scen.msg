@@ -2789,3 +2789,11 @@
 {186400}{}{Casino Sign}
 {186401}{}{The advertisement for Gizmo's Casino. It has been turned off.}
 {186500}{}{Flies}
+{186600}{}{Mountain}
+{186601}{}{These mountain walls look very inaccessible.}
+{186700}{}{Mountain}
+{186701}{}{These mountain walls look very inaccessible.}
+{186800}{}{Mountain}
+{186801}{}{These mountain walls look very inaccessible.}
+{186900}{}{Mountain}
+{186901}{}{These mountain walls look very inaccessible.}
