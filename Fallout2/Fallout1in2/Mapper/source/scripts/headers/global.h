@@ -18,6 +18,11 @@
 #define GVAR_BERSERKER_REPUTATION               (3) // was 156 (1156) in Fallout 1 - was moved to 317 (1317) in Fallout Fixt because of display bug
 #define GVAR_BAD_MONSTER                        (4) // was 160 (1160) in Fallout 1
 #define GVAR_GOOD_MONSTER                       (5) // was 159 (1159) in Fallout 1
+#define GVAR_PLAYER_MARRIED                     (6)
+#define GVAR_PLAYER_SEX_LEVEL                   (194)
+#define GVAR_PARTY_CHILDKILLER                  (289)
+#define GVAR_SEX_COUNTER                        (358)
+#define GVAR_PLAYER_WAS_MARRIED                 (449)
 
 #define GVAR_REPUTATION_SLAVER                  (11)
 #define GVAR_REPUTATION_SLAVE_OWNER             (12)
@@ -61,10 +66,8 @@
 #define GVAR_MUTATE_WHEN                        (133)
 #define GVAR_HAVE_MUTATED                       (192)
 #define GVAR_MUTATE_STAGE                       (193)
-#define GVAR_PLAYER_SEX_LEVEL                   (194)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
 #define GVAR_GRAVES_UNEARTHED                   (319)
-#define GVAR_SEX_COUNTER                        (358)
 #define GVAR_SEXPERT                            (588)
 #define GVAR_GIGALO                             (589)
 #define GVAR_DUDE_VIRGIN                        (590)
