@@ -7,6 +7,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: Fire Gecko Pelt from the UPU has been added to the game.
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
 - **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
+- **Added**: New mini-mod that increases the mountain encounter map size to support a resolution of 1280x720px without showing black bars at the top and bottom of the screen.
 - **Added**: Restored some inaccessible dialog for Lasher inside the Cathedral (about abusing children).
 - **Added**: Restored some inaccessible dialog for Viola inside the Cathedral (after talking to Laura).
 - **Added**: The Fo2 Karma Beacon perk now works with the Fo1 NPCs.
