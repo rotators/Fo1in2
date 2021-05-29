@@ -2797,3 +2797,7 @@
 {186801}{}{These mountain walls look very inaccessible.}
 {186900}{}{Mountain}
 {186901}{}{These mountain walls look very inaccessible.}
+{187000}{}{Ground}
+{187001}{}{A nice view of the Boneyards from this tower level. You get a good feeling of just how high up in the sky you are.}
+{187100}{}{Ground}
+{187101}{}{A nice view of the Boneyards from this tower level.}
