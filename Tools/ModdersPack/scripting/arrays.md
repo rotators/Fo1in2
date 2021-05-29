@@ -9,7 +9,7 @@ Arrays can be extremely useful for some more advanced scripting, in conjunction 
 ***
 ### ARRAYS CONCEPT
 
-Arrays are created and manipulated with the array functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create/temp_array` can then be used with the other array functions. Arrays are shared between all scripts (i.e. you can call `create_array` from one script, and then use the returned ID from another script). They are also saved across savegames.
+Arrays are created and manipulated with the array functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of `int`, `float` and `string` in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts (i.e. you can call `create_array` from one script, and then use the returned ID from another script). They are also saved across savegames.
 
 *You must remember to free any arrays you create with `create_array` when you are done with them, or you will leak memory.*
 
@@ -238,7 +238,7 @@ ___
 
 For those who used arrays in their mods before sfall 3.4:
 
-* There is an INI parameter **ArraysBehavior** in **Misc** section of ddraw.ini. If set to 0, all scripts which used sfall arrays before should work. This basically changes that `create_array` will create permanent arrays which are "saved" by default and their ID is also permanent. It is 1 by default.
+* There is an INI parameter **arraysBehavior** in **Misc** section of ddraw.ini. If set to 0, all scripts which used sfall arrays before should work. This basically changes that `create_array` will create permanent arrays which are "saved" by default and their ID is also permanent. It is 1 by default.
 
 * How savegame compatibility is handled?
   Saved arrays are stored in *sfallgv.sav* file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), game shouldn't crash, but all arrays will be lost.

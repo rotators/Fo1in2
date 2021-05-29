@@ -16,10 +16,10 @@ This folder contains documentation about sfall scripting extensions.
         lib.strings.h - search in strings, join, repeat, etc.
         lib.misc.h - misc stuff
 
-    sfall function notes.txt - incomplete reference for new opcodes
-    sfall opcode list.txt - list of all sfall opcodes (w/o descriptions)
-    hookscripts.txt - detailed manual for using hook scripts to modify engine behavior
-    arrays.txt - manual for sfall arrays
+    sfall function notes.md - incomplete reference for new opcodes
+    sfall opcode list.md - list of all sfall opcodes (w/o descriptions)
+    hookscripts.md - detailed manual for using hook scripts to modify engine behavior
+    arrays.md - manual for sfall arrays
 
-If you are/will be using sfall Script Editor, don't forget to check out new compiler documentation in .\compiler\sslc_readme.txt.
+If you are/will be using sfall Script Editor, don't forget to check out new compiler documentation in **.\compiler\sslc_readme.txt**.
 There are numerious new syntax features and extensions to SSL (Star-Trek Scripting language).
