@@ -25,6 +25,7 @@ procedure scene_vats_destroyed;
 procedure night_person;
 procedure gecko_skinning;
 procedure skilled;
+procedure motion_scanner;
 
 procedure DescriptionObj_handler;
 procedure AfterHitRoll_handler;
@@ -39,10 +40,13 @@ procedure steal_urn;
 variable iniVal;
 variable dude_elev := 0;
 
-variable move_item;
+variable item;
+variable tmpScanner := false;
 
-#define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
-                               else slot := INVEN_TYPE_RIGHT_HAND
+#define get_active_hand(slot)    if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
+                                 else slot := INVEN_TYPE_RIGHT_HAND
+#define get_inactive_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_RIGHT_HAND; \
+                                 else slot := INVEN_TYPE_LEFT_HAND
 
 #define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
 #define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
@@ -104,6 +108,10 @@ procedure GameModeChange_handler begin
    end
    call night_person;
    call skilled;
+
+   // The Eyebot has a built-in motion scanner function
+   if Eyebot_In_Party then
+      call motion_scanner;
 
    // Activate special radiation death if > 1000 rem. See data/enddeath.txt
    set_global_var(GVAR_SPECIAL_RADIATION_DEATH, dude_rads);
@@ -204,6 +212,43 @@ procedure gecko_skinning begin
       set_proto_data(PID_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
       set_proto_data(PID_GOLDEN_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
       set_proto_data(PID_FIRE_GECKO, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+   end
+end
+
+procedure motion_scanner begin
+   variable
+   event    := get_sfall_arg,
+   prevMode := get_sfall_arg,
+   slot, tmpItem, flag;
+
+   if (get_game_mode bwand AUTOMAP) then begin
+      get_inactive_hand(slot);
+      item := critter_inven_obj2(dude_obj, slot);
+      if (obj_pid(item) != PID_MOTION_SENSOR) then begin
+         unwield_slot(dude_obj, slot);
+         tmpItem := create_object(PID_MOTION_SENSOR, 0, 0);
+         add_obj_to_inven(dude_obj, tmpItem);
+         if (slot == INVEN_TYPE_LEFT_HAND) then begin
+            set_flags(tmpItem, get_flags(tmpItem) bwor FLAG_LEFT_HAND);
+         end else begin
+            set_flags(tmpItem, get_flags(tmpItem) bwor FLAG_RIGHT_HAND);
+         end
+         tmpScanner := true;
+      end
+   end else if (tmpScanner andAlso (prevMode bwand AUTOMAP)) then begin
+      get_inactive_hand(slot);
+      tmpItem := critter_inven_obj2(dude_obj, slot);
+      if (tmpItem andAlso obj_pid(tmpItem) == PID_MOTION_SENSOR) then begin
+         rm_obj_from_inven(dude_obj, tmpItem);
+         destroy_object(tmpItem);
+         if (slot == INVEN_TYPE_LEFT_HAND) then begin
+            set_flags(item, get_flags(item) bwor FLAG_LEFT_HAND);
+         end else begin
+            set_flags(item, get_flags(item) bwor FLAG_RIGHT_HAND);
+         end
+         tmpScanner := false;
+         item := 0;
+      end
    end
 end
 
