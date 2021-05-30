@@ -3,7 +3,7 @@
 Fallout 1 Classic Worldmap
 --------------------------
 
-This mod replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1. 
+This mod replaces FALLOUT 2's native green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original FALLOUT 1. 
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\fo1_classic_worldmap" at the end of the "PatchFile"-list!

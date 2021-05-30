@@ -3,7 +3,7 @@
 Fallout 1 New Premade Characters
 ------------------
 
-Replaces the original premade characters. Depending on the picked character, the starting items will change.
+Replaces the original FALLOUT 1 premade characters. Depending on the picked character, the starting items will change.
 
 
 ### Installation

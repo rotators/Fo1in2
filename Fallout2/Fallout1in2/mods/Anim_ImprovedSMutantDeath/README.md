@@ -7,7 +7,7 @@ This mod increases the size of the "flame boy" and "electrocuted" death animatio
 
 Originally made by .Pixote. and Sduibek. The animations have been polished up some more and are now cleaner and less pixelated.
 
-Compatible with all Fallout 2 mods.
+Compatible with all FALLOUT 2 mods.
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\Anim_ImprovedSMutantDeath" at the end of the "PatchFile"-list!

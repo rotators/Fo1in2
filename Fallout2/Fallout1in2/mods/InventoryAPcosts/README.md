@@ -5,9 +5,9 @@ Features:
 - Reduces inventory opening cost to 0 action points.
 - Doing anything in the inventory costs 2 action points.
 - Limits the Quick Pockets perk to 1 rank.
-- Works with any other Fallout 2 mod.
+- Works with any other FALLOUT 2 mod.
 
-This script is based on the AP costs mod for fallout 2 by phobos2077:
+This script is based on the AP costs mod for FALLOUT 2 by phobos2077:
 https://github.com/phobos2077/sfall/tree/master/artifacts/example_mods/APcosts/
 
 ### Installation

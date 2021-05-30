@@ -4,11 +4,11 @@ Interface Upscaled
 ------------------
 
 ## Features:
-- Higher resolution Town/World graphics for Fallout et Tu and vanilla Fallout 2.
-- Higher resolution endgame slides for Fallout et Tu and vanilla Fallout 2.
-- Higher resolution death screen (the Fallout 2 graphic is in /INTRFACE/Fallout2/ and must be manually moved into the /INTRFACE/ folder of this mod).
-- Higher resolution splash screens (the Fallout 2 graphics are in /SPLASH/Fallout2/ and must be manually moved into the /SPLASH/ folder of this mod).
-- Works with any other Fallout 2 mod (eg. Restoration Project).
+- Higher resolution Town/World graphics for FALLOUT ET TU and vanilla FALLOUT 2.
+- Higher resolution endgame slides for FALLOUT ET TU and vanilla FALLOUT 2.
+- Higher resolution death screen (the FALLOUT 2 graphic is in /INTRFACE/Fallout2/ and must be manually moved into the /INTRFACE/ folder of this mod).
+- Higher resolution splash screens (the FALLOUT 2 graphics are in /SPLASH/Fallout2/ and must be manually moved into the /SPLASH/ folder of this mod).
+- Works with any other FALLOUT 2 mod (eg. Restoration Project).
 
 ## NOTE:
 - "ExpandWorldMap" in the ddraw.ini file must be set to 1, otherwise the game will crash!
