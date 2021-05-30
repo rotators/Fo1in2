@@ -12,16 +12,16 @@ If you want to play the 100% real deal, the very pure experience so to speak, yo
 ## Features
 - Replicates FALLOUT 1 in 2 almost 1:1.
 - Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Punk Girl).
-- Selected FALLOUT 2 weapons have been added (sparingly!) to the game world in ways that don't break the game balance.
 - FALLOUT 2 styled merchant inventory restocking.
 - Party members and generic NPCs can be pushed out of the way.
 - Party members level up and change their appearance based on worn armor.
 - Party members can be controlled in combat.
 - Automatic door opening and closing.
 - Traverse the wastes on your very own motorcycle!
-- Explore cavern and mine encounter maps.
-- Stumble over FALLOUT 2 critters such as Geckos in encounters.
+- Selected FALLOUT 2 weapons have been added (sparingly!) to the game world in ways that don't break the game balance.
 - Weapons can be upgraded in FALLOUT 2 style.
+- Explore classic FALLOUT 2 style cavern and new mining site encounter maps.
+- Stumble over FALLOUT 2 critters such as Geckos in encounter maps.
 - The original endgame is too easy? Try the new tougher mutants setting!
 - Continue playing after the main story has been completed.
 - Lots of bugfixes, making the game run more stable than even the original with patches.
