@@ -126,10 +126,10 @@ Turns Dogmeat into a Robodog, slightly changing available combat options.
 
 ADDITIONAL MODS
 --------------
-- [https://github.com/BGforgeNet/Fallout2-HQ-music](High quality music)
-- [https://github.com/BGforgeNet/Fallout2_Party_Orders](Party Orders)
-- [https://github.com/BGforgeNet/FO2tweaks](FO2tweaks)
-- [https://nma-fallout.com/threads/inventory-filter.214445/](Inventory filter)
+- [High quality music](https://github.com/BGforgeNet/Fallout2-HQ-music)
+- [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders)
+- [FO2tweaks](https://github.com/BGforgeNet/FO2tweaks)
+- [Inventory filter](https://nma-fallout.com/threads/inventory-filter.214445/)
 
 SPECIAL THANKS
 --------------
