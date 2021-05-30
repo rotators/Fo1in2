@@ -10,6 +10,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: New mini-mod that increases the mountain encounter map size to support a resolution of 1280x720px without showing black bars at the top and bottom of the screen.
 - **Added**: Restored some inaccessible dialog for Lasher inside the Cathedral (about abusing children).
 - **Added**: Restored some inaccessible dialog for Viola inside the Cathedral (after talking to Laura).
+- **Added**: The Cathedral tower maps have been adjusted in height for higher resolutions (see mini-mod).
 - **Added**: The Fo2 Karma Beacon perk now works with the Fo1 NPCs.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
