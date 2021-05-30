@@ -126,6 +126,7 @@ Turns Dogmeat into a Robodog, slightly changing available combat options.
 
 ADDITIONAL MODS
 --------------
+For various other QoL features that aren't included in FALLOUT ET TU already, check out these mods:
 - [High quality music](https://github.com/BGforgeNet/Fallout2-HQ-music)
 - [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders)
 - [FO2tweaks](https://github.com/BGforgeNet/FO2tweaks)
