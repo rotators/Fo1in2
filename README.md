@@ -2,12 +2,9 @@
 
 # FALLOUT ET TU
 
-A Fallout to FALLOUT 2 engine conversion (also called FALLOUT 1@2, 1at2, or 1in2) brought to you by Rotators (the people who made FONLINE: 2238 and stuff).
+Bought to you by Rotators (the people who made FONLINE: 2238 and stuff), this project brings the first FALLOUT 1 into the engine of the FALLOUT 2.
 
-This project brings the first FALLOUT game into the engine of the second while utilizing FALLOUT 2's features wherever we can.
-
-NOTE:
-If you want to play the 100% real deal, the very pure experience so to speak, you should grab the original FALLOUT 1 instead of this mod. Played the original already? Then there's no reason not to try ET TU!
+If you want to play the 100% real deal, the very pure experience so to speak, you should grab the original FALLOUT 1 instead of this mod. However, if you have played the original already, there's no reason not to try ET TU!
 
 ## Features
 - Replicates FALLOUT 1 in 2 almost 1:1.
