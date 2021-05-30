@@ -4,12 +4,12 @@
 
 A Fallout to FALLOUT 2 engine conversion (also called FALLOUT 1@2, 1at2, or 1in2) brought to you by Rotators (the people who made FONLINE: 2238 and stuff).
 
-The aim of this project is to bring the first Fallout game into the engine of the second while utilizing FALLOUT 2's features wherever we can (within reason).
-Generally we do not try to make a 1:1 copy of the first game. So, if you want to play the 100% real deal, the very pure experience so to speak, you should grab the original FALLOUT 1 instead of this mod.
+This project brings the first FALLOUT game into the engine of the second while utilizing FALLOUT 2's features wherever we can.
 
-However, if you do not mind the one or the other change in mechanics, then FALLOUT ET TU can be your way to go!
+NOTE:
+If you want to play the 100% real deal, the very pure experience so to speak, you should grab the original FALLOUT 1 instead of this mod. Played the original already? Then there's no reason not to try ET TU!
 
-## Features
+## FEATURES
 - Replicates FALLOUT 1 in 2 almost 1:1.
 - Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Punk Girl).
 - Selected FALLOUT 2 weapons have been added (sparingly!) to the game world in ways that don't break the game balance.
@@ -30,8 +30,8 @@ Most of these features are optional and can be toggled on and off via a dedicate
 
 Additionally, due to the more accessible modding features of FALLOUT 2, this project allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
 
-## Download
+## DOWNLOAD
 [Latest version](https://github.com/rotators/Fo1in2/releases/latest/download/Fallout1in2.zip)
 
-## Installation
+## INSTALLATION
 See [installation instructions](Fallout2/Fallout1in2/README.md#mod-installation).

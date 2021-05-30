@@ -86,6 +86,12 @@ Replaces Fallout 2's green circles, as well as the worldmap tiles with city loca
 Enabled by default.
 This mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 
+### Fallout 1 Maps - Mountains ###
+[mods/fo1_maps_mountains](mods/fo1_maps_mountains)
+
+Enabled by default.
+Increases the visible area of the mountain encounter maps to support a resolution of 1280x720px without showing black bars at the top and bottom of the screen.
+
 ### Improved Death Animations ###
 [mods/Anim_ImprovedSMutantDeath](mods/Anim_ImprovedSMutantDeath)
 
@@ -107,11 +113,23 @@ Tweaks the costs of specific actions while using inventory.
 
 The german translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
 
+### Carry Weight Indicator  ###
+[mods/ShowLootWeight](mods/ShowLootWeight)
+
+Adds a lightweight current/max carry weight indicator to the looting and stealing interface.
+
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
 
 Turns Dogmeat into a Robodog, slightly changing available combat options.
 
+
+ADDITIONAL MODS
+--------------
+- [https://github.com/BGforgeNet/Fallout2-HQ-music](High quality music)
+- [https://github.com/BGforgeNet/Fallout2_Party_Orders](Party Orders)
+- [https://github.com/BGforgeNet/FO2tweaks](FO2tweaks)
+- [https://nma-fallout.com/threads/inventory-filter.214445/](Inventory filter)
 
 SPECIAL THANKS
 --------------
