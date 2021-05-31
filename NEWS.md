@@ -30,6 +30,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: If Killian gets killed while fighting Gizmo, the player would get the experience points and Junktown becomes hostile. 
 - **Fixed**: If Lars in Junktown gives the player 15 seconds to "leave and never come back", he would start combat no matter where on the map the player is.
 - **Fixed**: If the player is a child killer, Fry at the Hub entrance would still greet him happily, even though it makes no sense in his dialog.
+- **Fixed**: LARIPPER map borders were wrong (parts of the visible map were inaccessible due to this).
 - **Fixed**: Loxley in the Hub wouldn't remember having talking to the player before. Also restored a few dialog lines for him and his friends after getting kicked out from the Circle.
 - **Fixed**: MacRae in the Boneyard now correctly gives the player +5% Damage Resistance, and + 1% Melee Damage (vanilla Fo1 bug + removed the old Fixt workaround which gave skill points instead).
 - **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
