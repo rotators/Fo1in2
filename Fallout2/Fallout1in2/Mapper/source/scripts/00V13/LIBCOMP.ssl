@@ -1,69 +1,27 @@
-#include "define.h"
+/*
 
-#define NAME                    SCRIPT_LIBCOMP
+   Vault 13 - 2 computer terminals in the library.
+
+*/
+
+#include "define.h"
+#include "area/vault13.h"
+
+#define NAME                     SCRIPT_LIBCOMP
 
 #include "command.h"
 
+/* Standard Script Procedures */
 procedure start;
 procedure description_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
+
+#define LVAR_UseTerminal         (0)
+
 variable Hours := 0;
 
 procedure start begin
-end
-
-procedure use_skill_on_p_proc begin
-   if (action_being_used == SKILL_SCIENCE) then begin
-      script_overrides;
-      display_msg(mstr(101));
-
-      if local_var(0) == 1 then begin
-         gfade_out(1);
-         Hours := random(1, 6);
-         game_time_advance(10 * 60 * 60 * Hours);
-         if Hours == 1 then begin
-            display_msg(mstr(102));
-         end
-         else begin
-            display_msg(mstr(106) + Hours + mstr(107));
-         end
-         gfade_in(1);
-      end
-      else if local_var(0) == 2 then begin
-         gfade_out(1);
-         Hours := random(6, 12);
-         game_time_advance(10 * 60 * 60 * Hours);
-         display_msg(mstr(106) + Hours + mstr(108));
-         gfade_in(1);
-      end
-      else if dude_is_stupid then begin
-         gfade_out(1);
-         Hours := random(6, 12);
-         game_time_advance(10 * 60 * 60 * Hours);
-         display_msg(mstr(106) + Hours + mstr(109));
-         gfade_in(1);
-         set_local_var(0, 2);
-      end
-      else if dude_stat_success(STAT_iq, 0) then begin
-         gfade_out(1);
-         game_time_advance(10 * 60 * 60 * 6);
-         display_msg(mstr(103));
-
-         give_xp(EXP_OUTSIDE_KNOWLEDGE);
-
-         set_global_var(GVAR_QUEST_VAULT13_7_LEARN_AT_LIBRARY, 2);
-         gfade_in(1);
-         set_local_var(0, 1);
-      end
-      else begin
-         gfade_out(1);
-         game_time_advance(10 * 60 * 60 * 6);
-         display_msg(mstr(104));
-         set_local_var(0, 2);
-         gfade_in(1);
-      end
-   end
 end
 
 procedure description_p_proc begin
@@ -74,4 +32,44 @@ end
 procedure use_p_proc begin
    script_overrides;
    display_msg(mstr(105));
+end
+
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_SCIENCE) then begin
+      script_overrides;
+      display_msg(mstr(101));
+
+      Hours := 6;
+      gfade_out(1);
+      if local_var(LVAR_UseTerminal) == 1 then begin
+         Hours := random(1, 6);
+         if (Hours == 1) then begin
+            display_msg(mstr(102));
+         end
+         else begin
+            display_msg(mstr(106) + Hours + mstr(107));
+         end
+      end
+      else if local_var(LVAR_UseTerminal) == 2 then begin
+         Hours := random(6, 12);
+         display_msg(mstr(106) + Hours + mstr(108));
+      end
+      else if dude_is_stupid then begin
+         Hours := random(6, 12);
+         display_msg(mstr(106) + Hours + mstr(109));
+         set_local_var(LVAR_UseTerminal, 2);
+      end
+      else if dude_stat_success(STAT_iq, 0) then begin
+         display_msg(mstr(103));
+         give_xp(EXP_OUTSIDE_KNOWLEDGE);
+         set_global_var(GVAR_QUEST_VAULT13_7_LEARN_AT_LIBRARY, 2);
+         set_local_var(LVAR_UseTerminal, 1);
+      end
+      else begin
+         display_msg(mstr(104));
+         set_local_var(LVAR_UseTerminal, 2);
+      end
+      game_time_advance(ONE_GAME_HOUR * Hours);
+      gfade_in(1);
+   end
 end

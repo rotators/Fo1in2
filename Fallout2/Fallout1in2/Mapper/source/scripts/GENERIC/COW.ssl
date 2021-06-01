@@ -1,6 +1,6 @@
 /*
 
-   Brahmin - generic script, used almost everywhere.
+   Brahmin - Seems to be only used in the talking cow special encounter right now.
 
 */
 
@@ -36,30 +36,23 @@ procedure start begin
       set_self_ai(AI_COW);
       set_self_team(TEAM_BRAHMIN);
 
-      if not(map_is_caravan_escort) and not(CUR_MAP_DESERT1) then begin
-         add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
-      end
+      flush_add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
    end
 end
 
 procedure push_p_proc begin
-   if map_is_caravan_escort then begin
-      script_overrides;
-   end
-   else begin
-      if (obj_in_party(source_obj)) then begin
-         if (stat_success(source_obj, STAT_st, 0)) then begin
-            if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
-               reg_anim_clear(self_obj);
-               reg_anim_begin();
-                  reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
-                  reg_anim_animate(self_obj, ANIM_fall_back, 5);
-                  reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
-               reg_anim_end();
-               critter_injure(self_obj, DAM_KNOCKED_DOWN);
-               add_timer_event(self_obj, game_ticks(Random(10, 30)), TIMER_STAND_UP);
-               debug_msg("ZCBRAHMN : ahh Cow TIPPED you get + 10 Hick Experience Points.");
-            end
+   if (obj_in_party(source_obj)) then begin
+      if (stat_success(source_obj, STAT_st, 0)) then begin
+         if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
+               reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
+               reg_anim_animate(self_obj, ANIM_fall_back, 5);
+               reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
+            reg_anim_end();
+            critter_injure(self_obj, DAM_KNOCKED_DOWN);
+            add_timer_event(self_obj, game_ticks(Random(10, 30)), TIMER_STAND_UP);
+            debug_msg("ZCBRAHMN : ahh Cow TIPPED you get + 10 Hick Experience Points.");
          end
       end
    end
@@ -84,10 +77,6 @@ procedure talk_p_proc begin
       else begin
          float_msg(self_obj, message_str(SCRIPT_BRAHMIN, random(109, 110)), FLOAT_MSG_NORMAL);
       end
-   end
-   else begin
-      dude_look_at_self;
-      display_msg(message_str(SCRIPT_BRAHMIN, random(102, 105)));
    end
 end
 
@@ -132,32 +121,20 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if not(map_is_caravan_escort) then begin
-      if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
-         critter_tile := tile_num_in_direction(self_tile, random(0, 5), 3);
-         reg_anim_clear(self_obj);
-         reg_anim_begin();
-         reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
-         reg_anim_end();
-      end
-      else if (fixed_param == TIMER_STAND_UP) then begin
-         reg_anim_clear(self_obj);
-         reg_anim_begin();
-         reg_anim_animate_reverse(self_obj, ANIM_fall_back, -1);
-         reg_anim_end();
-         critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
-      end
-      //add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
+   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
+   end
+   else if (fixed_param == TIMER_STAND_UP) then begin
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_animate_reverse(self_obj, ANIM_fall_back, -1);
+      reg_anim_end();
+      critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
+   end
+   //add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
 
-      if not(CUR_MAP_DESERT1) then begin
-         if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized)) then begin
-            critter_tile := tile_num_in_direction(self_tile, random(0, 5), 3);
-            reg_anim_clear(self_obj);
-            reg_anim_begin();
-            reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
-            reg_anim_end();
-         end
-      end
+   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized)) then begin
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
    end
 
    if (CUR_MAP_TALKCOW) then begin
@@ -178,18 +155,6 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   if (map_is_caravan_escort or CUR_MAP_DESERT1) then begin //  ANY CARAVAN ENCOUNTER MAPS
-      if source_is_dude then begin
-         inc_good_critter
-      end
-      if global_var(GVAR_CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
-         set_global_var(GVAR_CARAVAN_HOW_MANY_BRAHMIN, 1);
-      end
-      else if global_var(GVAR_CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-         set_global_var(GVAR_CARAVAN_HOW_MANY_BRAHMIN, 0);
-      end
-   end
-
    if obj_in_party(source_obj) then begin
       if CUR_AREA_HUB then begin
          set_global_var(GVAR_ENEMY_HUB, 1);
@@ -204,27 +169,4 @@ procedure destroy_p_proc begin
 end
 
 procedure damage_p_proc begin
-   if map_is_caravan_escort then begin
-      script_overrides;
-   end
-
-   if obj_in_party(source_obj) then begin
-      if not(map_is_caravan_escort) then begin
-         if (CUR_AREA_HUB or CUR_MAP_HUBMIS0) then begin
-            set_global_var(GVAR_ENEMY_HUB, 1);
-         end
-         else if CUR_AREA_JUNKTOWN then begin
-            set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-         end
-         else if CUR_AREA_SHADY_SANDS then begin
-            set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-         end
-
-         if not(map_is_caravan_escort) and not(CUR_MAP_DESERT1) then begin
-            party_remove(self_obj);
-            set_self_team(TEAM_BRAHMIN);
-            tmp_hostile := 1;
-         end
-      end
-   end
 end
