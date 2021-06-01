@@ -81,12 +81,6 @@
 #define CUR_AREA_HUB_LAIR             (cur_town == AREA_HUB_LAIR)
 #define CUR_AREA_VIPERS               (cur_town == AREA_VIPERS)
 
-// TODO: This stuff doesn't work. Encounter area is -1!
-#define CUR_AREA_RND_DESERT           (cur_town == AREA_RND_DESERT or cur_town == AREA_RND_ENC_DESERT)
-#define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN or or cur_town == AREA_RND_ENC_CAVERN)
-#define CUR_AREA_RND_CITY             (cur_town == AREA_RND_CITY or cur_town == AREA_RND_ENC_CITY)
-#define CUR_AREA_RND_COAST            (cur_town == AREA_RND_COAST or cur_town == AREA_RND_ENC_COAST)
-
 #define CUR_AREA_WORLDMAP             (cur_town == AREA_WORLDMAP)
 
 /*******************************************************************************
@@ -489,33 +483,47 @@ variable get_wm_distance;
 /******************************************************************
  Map Types
 ******************************************************************/
-#define map_is_caravan_escort       ((cur_map_index == MAP_DESCRVN1) or     \
-                                    (cur_map_index == MAP_DESCRVN2) or      \
-                                    (cur_map_index == MAP_DESCRVN3) or      \
-                                    (cur_map_index == MAP_DESCRVN4) or      \
-                                    (cur_map_index == MAP_MNTCRVN1) or      \
-                                    (cur_map_index == MAP_MNTCRVN2) or      \
-                                    (cur_map_index == MAP_MNTCRVN3) or      \
-                                    (cur_map_index == MAP_MNTCRVN4))
+#define map_is_caravan_escort             (CUR_MAP_DESCRVN1 or \
+                                          CUR_MAP_DESCRVN2 or  \
+                                          CUR_MAP_DESCRVN3 or  \
+                                          CUR_MAP_DESCRVN4 or  \
+                                          CUR_MAP_MNTCRVN1 or  \
+                                          CUR_MAP_MNTCRVN2 or  \
+                                          CUR_MAP_MNTCRVN3 or  \
+                                          CUR_MAP_MNTCRVN4)
 
-#define map_is_mountain_caravan_escort  ((cur_map_index == MAP_MNTCRVN1) or \
-                                        (cur_map_index == MAP_MNTCRVN2) or  \
-                                        (cur_map_index == MAP_MNTCRVN3) or  \
-                                        (cur_map_index == MAP_MNTCRVN4))
+#define map_is_mountain_caravan_escort    (CUR_MAP_MNTCRVN1 or \
+                                          CUR_MAP_MNTCRVN2 or  \
+                                          CUR_MAP_MNTCRVN3 or  \
+                                          CUR_MAP_MNTCRVN4)
 
-#define map_is_ocean                ((cur_map_index == MAP_COAST1) or   \
-                                    (cur_map_index == MAP_COAST2) or    \
-                                    (cur_map_index == MAP_RNDCOAST))
+#define map_is_desert                     (CUR_MAP_DESERT1 or  \
+                                          CUR_MAP_DESERT2 or   \
+                                          CUR_MAP_DESERT3 or   \
+                                          CUR_MAP_RNDDESER)    \
+                                    
+#define map_is_city                       (CUR_MAP_CITY1 or    \
+                                          CUR_MAP_CITY2 or     \
+                                          CUR_MAP_CITY3 or     \
+                                          CUR_MAP_RNDCITY)
+                                    
+#define map_is_ocean                      (CUR_MAP_COAST1 or   \
+                                          CUR_MAP_COAST2 or    \
+                                          CUR_MAP_RNDCOAST)
+                                          
+#define map_is_mountain                   (CUR_MAP_MOUNTN1 or  \
+                                          CUR_MAP_MOUNTN2 or   \
+                                          CUR_MAP_RNDMOUNT)
 
-#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or \
-                                    (cur_map_index == MAP_CAVE2) or  \
-                                    (cur_map_index == MAP_CAVE3) or  \
-                                    (cur_map_index == MAP_CAVE4) or  \
-                                    (cur_map_index == MAP_CAVE5) or  \
-                                    (cur_map_index == MAP_MINE1) or  \
-                                    (cur_map_index == MAP_MINE2) or  \
-                                    (cur_map_index == MAP_MINE3))
+#define map_has_cavern                    (CUR_MAP_CAVE1 or    \
+                                          CUR_MAP_CAVE2 or     \
+                                          CUR_MAP_CAVE3 or     \
+                                          CUR_MAP_CAVE4 or     \
+                                          CUR_MAP_CAVE5 or     \
+                                          CUR_MAP_MINE1 or     \
+                                          CUR_MAP_MINE2 or     \
+                                          CUR_MAP_MINE3)
 
-#define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
-                                    (cur_map_index == MAP_MINE2) or  \
-                                    (cur_map_index == MAP_MINE3))
+#define map_is_mine                       (CUR_MAP_MINE1 or    \
+                                          CUR_MAP_MINE2 or     \
+                                          CUR_MAP_MINE3)
