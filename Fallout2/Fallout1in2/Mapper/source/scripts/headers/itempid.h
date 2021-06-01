@@ -483,7 +483,7 @@
 #define PID_VERTIBIRD_PLANS                 (446)
 #define PID_BISHOPS_HOLODISK                (447)
 #define PID_ACCOUNT_BOOK                    (448)
-#define PID_ECON_HOLODISK                   (449)
+#define PID_COMBAT_SHOTGUN_EXT_MAG          (449)
 #define PID_TORN_PAPER_1                    (450)
 #define PID_TORN_PAPER_2                    (451)
 #define PID_TORN_PAPER_3                    (452)
