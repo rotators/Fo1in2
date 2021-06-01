@@ -9,9 +9,7 @@ Arrays can be extremely useful for some more advanced scripting, in conjunction 
 ***
 ### ARRAYS CONCEPT
 
-Arrays are created and manipulated with the array functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of `int`, `float` and `string` in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts (i.e. you can call `create_array` from one script, and then use the returned ID from another script). They are also saved across savegames.
-
-*You must remember to free any arrays you create with `create_array` when you are done with them, or you will leak memory.*
+Arrays are created and manipulated with the array functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts (i.e. you can call `create_array` from one script, and then use the returned ID from another script). They are also saved across savegames.
 
 Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad ID or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temporary arrays. You can use `fix_array` to make a temporary array permanent.
 
@@ -195,7 +193,7 @@ _*mixed means any type_
 #### `void resize_array(int arrayID, int size)`
 - changes array size
 - applicable to maps too, but only to reduce elements
-- there are number of special negative values of "size" which perform various operations on the array, use macros `sort_array`, `sort_array_reverse`, `reverse_array`, `shuffle_array` from *sfall.h* header
+- there are number of special negative values of "size" which perform various operations on the array, use macros `sort_array`, `sort_array_reverse`, `reverse_array`, `shuffle_array` from **sfall.h** header
 
 #### `void free_array(int arrayID)`
 - deletes any array
@@ -222,7 +220,7 @@ _*mixed means any type_
 - always returns 0
 
 #### `void save_array(mixed key, int arrayID)`
-- makes the array saveable; it will be saved in *sfallgv.sav* file when saving the game
+- makes the array saveable; it will be saved in **sfallgv.sav** file when saving the game
 - array ID is associated with given "key"
 - array becomes permanent (if it was temporary) and "saved"
 - key can be of any type (int, float or string)
@@ -240,7 +238,7 @@ For those who used arrays in their mods before sfall 3.4:
 
 * There is an INI parameter **arraysBehavior** in **Misc** section of ddraw.ini. If set to 0, all scripts which used sfall arrays before should work. This basically changes that `create_array` will create permanent arrays which are "saved" by default and their ID is also permanent. It is 1 by default.
 
-* How savegame compatibility is handled?
-  Saved arrays are stored in *sfallgv.sav* file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), game shouldn't crash, but all arrays will be lost.
+* How savegame compatibility is handled?<br>
+  Saved arrays are stored in **sfallgv.sav** file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), game shouldn't crash, but all arrays will be lost.
 
 * Previously you had to specify size in bytes for array elements. This parameter is now ignored and you can store strings of arbitrary length in arrays.

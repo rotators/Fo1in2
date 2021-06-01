@@ -256,6 +256,10 @@
  Current map index
 *******************************************************************************/
 
+// NOTE: All CUR_MAP_ names *must* match map name they're checking, due to way how ReDefine edits scripts code
+//       #define CUR_MAP_DESERT1207   (cur_map_index == MAP_DESERT1207)  -- good, ReDefine creates CUR_MAP_DESERT1207
+//       #define CUR_MAP_ELITE_DESERT (cur_map_index == MAP_DESERT1337)  -- bad,  ReDefine creates CUR_MAP_DESERT1337 instead
+
 #define CUR_MAP_DESERT0     (cur_map_index ==  MAP_DESERT0)
 #define CUR_MAP_DESERT1     (cur_map_index ==  MAP_DESERT1)
 #define CUR_MAP_DESERT2     (cur_map_index ==  MAP_DESERT2)

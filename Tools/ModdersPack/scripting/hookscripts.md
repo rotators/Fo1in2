@@ -56,7 +56,7 @@ Use zero (0) as the second argument to unregister the hook from the current glob
 #### `void register_hook_proc_spec(int hookID, procedure proc)`
 Works very similar to `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script). All scripts hooked to a single hook point with this function are executed in exact order of how they were registered, as opposed to the description below, which refers to using `register_hook` and `register_hook_proc` functions.
 
-__NOTE:__ you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again. Sometimes you need to multiply certain value in a chain of hook scripts.
+__NOTE:__ You can hook several scripts to a single hook point, for example, if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again. Sometimes you need to multiply certain value in a chain of hook scripts.
 
 Example: let's say we have a Mod A which reduces all "to hit" chances by 50%. The code might look like this:
 ```js
@@ -256,7 +256,7 @@ Runs when:
 
 This is fired before the object is used, and the relevant `use_obj_on` script procedures are run. You can disable default item behavior.
 
-__NOTE:__ you can't remove and/or destroy this object during the hookscript (game will crash otherwise). To remove it, return 1.
+__NOTE:__ You can't remove and/or destroy this object during the hookscript (game will crash otherwise). To remove it, return 1.
 
 ```
 Critter arg0 - The target
@@ -276,7 +276,7 @@ Runs when:
 
 This is fired before the object is used, and the relevant `use_obj` script procedures are run. You can disable default item behavior.
 
-__NOTE:__ you can't remove and/or destroy this object during the hookscript (game will crash otherwise). To remove it, return 1.
+__NOTE:__ You can't remove and/or destroy this object during the hookscript (game will crash otherwise). To remove it, return 1.
 
 ```
 Critter arg0 - The user
@@ -305,7 +305,7 @@ Obj     arg4 - The destination object when the item is moved to another object, 
 
 Runs whenever the value of goods being purchased is calculated.
 
-__NOTE:__ the hook is executed twice when entering the barter screen or after transaction: the first time is for the player and the second time is for NPC.
+__NOTE:__ The hook is executed twice when entering the barter screen or after transaction: the first time is for the player and the second time is for NPC.
 
 ```
 Critter arg0 - the critter doing the bartering (either dude_obj or inven_dude)
@@ -347,9 +347,9 @@ int     ret0 - the new AP cost
 
 Run when checking to see if a hex blocks movement or shooting. (or ai-ing, presumably...)
 
-__NOTE:__ these hook scripts can become very CPU-intensive and you should avoid using them.
-For this reason, they may be removed in future versions.
-If you want to check if some tile or path is blocked, use functions: `obj_blocking_tile`, `obj_blocking_line`, `path_find_to`.
+__NOTE:__ These hook scripts can become very CPU-intensive and you should avoid using them.
+For this reason, these hooks are not thoroughly supported in sfall, and may be removed in future versions.<br>
+If you want to check if some tile or path is blocked, use functions: `obj_blocking_tile`, `obj_blocking_line`, `path_find_to`.<br>
 If you want script to be called every time NPC moves by hex in combat, use `HOOK_MOVECOST` hook.
 
 ```
@@ -385,7 +385,7 @@ int     ret1 - The new maximum damage
 
 Runs when calculating ammo cost for a weapon. Doesn't affect damage, only how much ammo is spent.
 By default, weapon will shoot when at least 1 round is left, regardless of ammo cost calculations.
-To add proper check for ammo before shooting and proper calculation of number of burst rounds (hook type 1 and 2 in arg3), set **CheckWeaponAmmoCost=1** in **Misc** section of ddraw.ini.
+To add proper check for ammo before shooting and proper calculation of number of burst rounds (hook type 1 and 2 in `arg3`), set **CheckWeaponAmmoCost=1** in **Misc** section of ddraw.ini.
 
 ```
 Item    arg0 - The weapon
@@ -409,7 +409,7 @@ Runs once every time when any key was pressed or released.
 - DX codes: see **dik.h** header or https://kippykip.com/b3ddocs/commands/scancodes.htm
 - VK codes: http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
 
-__NOTE:__ if you want to override a key, the new key DX scancode should be the same for both pressed and released events.
+__NOTE:__ If you want to override a key, the new key DX scancode should be the same for both pressed and released events.
 
 ```
 int     arg0 - event type: 1 - pressed, 0 - released
@@ -457,7 +457,8 @@ Runs when checking an attempt to steal or plant an item in other inventory using
 
 This is fired before the default handlers are called, which you can override. In this case you MUST provide message of the result to player ("You steal the %s", "You are caught planting the %s", etc.).
 
-Example message (vanilla behavior): `display_msg(sprintf(mstr_skill(570 + (isSuccess != false) + arg3*2), obj_name(arg2)));`
+Example message (vanilla behavior):<br>
+`display_msg(sprintf(mstr_skill(570 + (isSuccess != false) + arg3 * 2), obj_name(arg2)));`
 
 ```
 Critter arg0 - Thief
@@ -474,7 +475,9 @@ int     ret0 - overrides hard-coded handler (1 - force success, 0 - force fail, 
 
 Runs when checking if one critter sees another critter. This is used in different situations like combat AI. You can override the result.
 
-__NOTE:__ `obj_can_see_obj` calls this first when deciding if critter can possibly see another critter with regard to perception, lighting, sneak factors. If check fails, the end result is false. If check succeeds (e.g. critter is within perception range), another check is made if there is any blocking tile between two critters (which includes stuff like windows, large bushes, barrels, etc.) and if there is - check still fails. You can override "within perception" check by returning 0 or 1, OR, as a convenience, you can also override blocking check after the perception check by returning 2 instead. In this case you should add "line of sight" check inside your hook script, otherwise critters will detect you through walls.
+__NOTE:__ `obj_can_see_obj` calls this first when deciding if critter can possibly see another critter with regard to perception, lighting, sneak factors.<br>
+If check fails, the end result is false. If check succeeds (e.g. critter is within perception range), another check is made if there is any blocking tile between two critters (which includes stuff like windows, large bushes, barrels, etc.) and if there is - check still fails.<br>
+You can override "within perception" check by returning 0 or 1, OR, as a convenience, you can also override blocking check after the perception check by returning 2 instead. In this case you should add "line of sight" check inside your hook script, otherwise critters will detect you through walls.
 
 This is fired after the default calculation is made.
 
@@ -531,7 +534,7 @@ int     ret0 - Override setting (-1 - use engine handler, any other value - prev
 Runs before causing a critter or the player to wield/unwield an armor or a weapon (except when using the inventory by PC).
 An example usage would be to change critter art depending on armor being used or to dynamically customize weapon animations.
 
-__NOTE:__ when replacing a previously wielded armor or weapon, the unwielding hook will not be executed.
+__NOTE:__ When replacing a previously wielded armor or weapon, the unwielding hook will not be executed.
 If you need to rely on this, try checking if armor/weapon is already equipped when wielding hook is executed.
 
 ```
@@ -551,7 +554,7 @@ int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other 
 Runs after calculating character figure FID on the inventory screen, whenever the game decides that character appearance might change.
 Also happens on other screens, like barter.
 
-__NOTE:__ FID has following format: 0x0ABBCDDD, where A is object type, BB - animation code (always 0 in this case), C - weapon code, DDD - FRM index in LST file.
+__NOTE:__ FID has following format: `0x0ABBCDDD`, where: `A` - object type, `BB` - animation code (always 0 in this case), `C` - weapon code, `DDD` - FRM index in LST file.
 
 ```
 int     arg0 - the vanilla FID calculated by the engine according to critter base FID and armor/weapon being used
@@ -666,6 +669,7 @@ int     ret1 - overrides the result of engine calculation: 0/1 - failure, 2/3 - 
 
 Runs when using the examine action icon to display the description of an object. You can override the description text.
 An example usage would be to add an additional description to the item based on player's stats/skills.
+
 Does not run if the script of the object overrides the description.
 
 ```
@@ -680,7 +684,7 @@ int     ret0 - a pointer to the new text received by using get_string_pointer fu
 
 Runs before using any skill on any object. Lets you override the critter that uses the skill.
 
-__NOTE:__ the user critter can't be overridden when using Steal skill.
+__NOTE:__ The user critter can't be overridden when using Steal skill.
 
 ```
 Critter arg0 - the user critter (usually dude_obj)
@@ -776,7 +780,7 @@ int     ret1 - overrides the duration time for the current result
 
 Runs before or after Fallout engine executes a standard procedure (handler) in any script of any object.
 
-__NOTE:__ this hook will not be executed for `start`, `critter_p_proc`, `timed_event_p_proc`, and `map_update_p_proc` procedures.
+__NOTE:__ This hook will not be executed for `start`, `critter_p_proc`, `timed_event_p_proc`, and `map_update_p_proc` procedures.
 
 ```
 int     arg0 - the number of the standard script handler (see define.h)
@@ -867,7 +871,7 @@ int     arg1 - the value of roll result (see ROLL_* constants), which is calcula
                for ROLL_CRITICAL_FAILURE: random(1, 100) <= -random_chance / 10
 int     arg2 - the chance value
 int     arg3 - the bonus value, used when checking critical success
-int     arg4 - random chance (calculated as: chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
+int     arg4 - random chance, calculated as: (chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
 
 int     ret0 - overrides the roll result
 ```
