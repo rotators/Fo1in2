@@ -55,6 +55,10 @@
  Current City Index
 *******************************************************************************/
 
+// NOTE: All CUR_AREA_ names *must* match area name they're checking, due to way how ReDefine edits scripts code
+//       #define CUR_AREA_VAULT1207   (cur_town == AREA_VAULT1207)  -- good, ReDefine creates CUR_AREA_VAULT1207
+//       #define CUR_AREA_ELITE_VAULT (cur_town == AREA_VAULT1337)  -- bad,  ReDefine creates CUR_AREA_VAULT1337 instead
+
 #define CUR_AREA_VAULT_13             (cur_town == AREA_VAULT_13)
 #define CUR_AREA_VAULT_15             (cur_town == AREA_VAULT_15)
 #define CUR_AREA_SHADY_SANDS          (cur_town == AREA_SHADY_SANDS)
