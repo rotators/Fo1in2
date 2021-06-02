@@ -59,6 +59,7 @@ procedure NodeUpgrade_DesertEagle;
 procedure NodeUpgrade_LaserPistol;
 procedure NodeUpgrade_HRifle;
 procedure NodeUpgrade_ARifle;
+procedure NodeUpgrade_CombatShotgun;
 procedure NodeUpgrade_LaserRifle;
 procedure NodeUpgrade_FNFAL;
 procedure NodeUpgrade_Flamer;
@@ -97,6 +98,7 @@ variable DisplayMessage;
 #define HRCOST                      upgrade_cost(1750) // old: 4000
 #define ARCOST                      upgrade_cost(2000) // old: 6000
 #define FNCOST                      upgrade_cost(4000) // old: 12000
+#define CSCOST                      upgrade_cost(3000)
 #define LRCOST                      upgrade_cost(5000)
 #define CPCOST                      upgrade_cost(1500) // old: 3000
 #define FLAMCOST                    upgrade_cost(4000)
@@ -339,16 +341,16 @@ variable has_rifle := false;
 variable has_other := false;
 variable has_flamer := false;
 
-   if ((dude_item_count(PID_DESERT_EAGLE)) or (dude_item_count(PID_44_MAGNUM_REVOLVER)) or (dude_item_count(PID_LASER_PISTOL))) then begin
+   if (dude_item_count(PID_DESERT_EAGLE) or dude_item_count(PID_44_MAGNUM_REVOLVER) or dude_item_count(PID_LASER_PISTOL)) then begin
       has_pistol := true;
    end
-   if ((dude_item_count(PID_HUNTING_RIFLE)) or (dude_item_count(PID_ASSAULT_RIFLE)) or (dude_item_count(PID_FN_FAL)) or (dude_item_count(PID_LASER_RIFLE))) then begin
+   if (dude_item_count(PID_HUNTING_RIFLE) or dude_item_count(PID_ASSAULT_RIFLE) or dude_item_count(PID_COMBAT_SHOTGUN) or dude_item_count(PID_FN_FAL) or dude_item_count(PID_LASER_RIFLE)) then begin
       has_rifle := true;
    end
-   if (dude_item_count(PID_CATTLE_PROD)) then begin
+   if dude_item_count(PID_CATTLE_PROD) then begin
       has_other := true;
    end
-   if (dude_item_count(PID_FLAMER)) then begin
+   if dude_item_count(PID_FLAMER) then begin
       has_flamer := true;
    end
 
@@ -429,8 +431,11 @@ variable afford := false;
    if (dude_item_count(PID_FN_FAL)) then begin
       temp_msg += mstr(2302) + FNCOST + mstr(2202);
    end
+   if (dude_item_count(PID_COMBAT_SHOTGUN)) then begin
+      temp_msg += mstr(2303) + CSCOST + mstr(2202);
+   end
    if (dude_item_count(PID_LASER_RIFLE)) then begin
-      temp_msg += mstr(2303) + FNCOST + mstr(2202);
+      temp_msg += mstr(2304) + FNCOST + mstr(2202);
    end
 
    Reply(temp_msg);
@@ -446,8 +451,12 @@ variable afford := false;
       NOption(2330, NodeUpgrade_FNFAL, 004);
       afford := true;
    end
+   if ((dude_item_count(PID_COMBAT_SHOTGUN)) and (dude_caps >= CSCOST)) then begin
+      NOption(2340, NodeUpgrade_CombatShotgun, 004);
+      afford := true;
+   end
    if ((dude_item_count(PID_LASER_RIFLE)) and (dude_caps >= LRCOST)) then begin
-      NOption(2340, NodeUpgrade_LaserRifle, 004);
+      NOption(2350, NodeUpgrade_LaserRifle, 004);
       afford := true;
    end
    if (afford == false) then begin
@@ -511,6 +520,11 @@ end
 procedure NodeUpgrade_FNFAL begin
    give_money(FNCOST);
    call upgrade_weapon(PID_FN_FAL, PID_FN_FAL_NIGHT_SCOPE);
+   call NodeUpgrade_Done;
+end
+procedure NodeUpgrade_CombatShotgun begin
+   give_money(CSCOST);
+   call upgrade_weapon(PID_COMBAT_SHOTGUN, PID_COMBAT_SHOTGUN_EXT_MAG);
    call NodeUpgrade_Done;
 end
 procedure NodeUpgrade_LaserRifle begin

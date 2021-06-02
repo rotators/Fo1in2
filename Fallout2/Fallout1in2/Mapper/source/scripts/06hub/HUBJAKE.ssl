@@ -59,6 +59,7 @@ procedure NodeUpgrade_Revolver;
 procedure NodeUpgrade_DesertEagle;
 procedure NodeUpgrade_HRifle;
 procedure NodeUpgrade_ARifle;
+procedure NodeUpgrade_CombatShotgun;
 procedure NodeUpgrade_FNFAL;
 procedure NodeUpgrade_Flamer;
 procedure NodeUpgrade_CattleProd;
@@ -90,6 +91,7 @@ import variable Jake_Desk_Ptr;
 #define DECOST                      upgrade_cost(1250)
 #define HRCOST                      upgrade_cost(1500)
 #define ARCOST                      upgrade_cost(1500)
+#define CSCOST                      upgrade_cost(4000)
 #define FNCOST                      upgrade_cost(5000)
 #define CPCOST                      upgrade_cost(1250)
 
@@ -366,13 +368,13 @@ variable has_pistol := false;
 variable has_rifle := false;
 variable has_other := false;
 
-   if ((dude_item_count(PID_DESERT_EAGLE)) or (dude_item_count(PID_44_MAGNUM_REVOLVER))) then begin
+   if (dude_item_count(PID_DESERT_EAGLE) or dude_item_count(PID_44_MAGNUM_REVOLVER)) then begin
       has_pistol := true;
    end
-   if ((dude_item_count(PID_HUNTING_RIFLE)) or (dude_item_count(PID_ASSAULT_RIFLE))) then begin
+   if (dude_item_count(PID_HUNTING_RIFLE) or dude_item_count(PID_ASSAULT_RIFLE) or dude_item_count(PID_COMBAT_SHOTGUN)) then begin
       has_rifle := true;
    end
-   if (dude_item_count(PID_CATTLE_PROD)) then begin
+   if dude_item_count(PID_CATTLE_PROD) then begin
       has_other := true;
    end
 
@@ -441,6 +443,9 @@ variable afford := false;
    if (dude_item_count(PID_ASSAULT_RIFLE)) then begin
       temp_msg += mstr(2301) + ARCOST + mstr(2202) + " ";
    end
+   if (dude_item_count(PID_COMBAT_SHOTGUN)) then begin
+      temp_msg += mstr(2303) + CSCOST + mstr(2202);
+   end
 
    Reply(temp_msg);
    if ((dude_item_count(PID_HUNTING_RIFLE)) and (dude_caps >= HRCOST)) then begin
@@ -449,6 +454,10 @@ variable afford := false;
    end
    if ((dude_item_count(PID_ASSAULT_RIFLE)) and (dude_caps >= ARCOST)) then begin
       NOption(2320, NodeUpgrade_ARifle, 004);
+      afford := true;
+   end
+   if ((dude_item_count(PID_COMBAT_SHOTGUN)) and (dude_caps >= CSCOST)) then begin
+      NOption(2340, NodeUpgrade_CombatShotgun, 004);
       afford := true;
    end
    if (afford == false) then begin
@@ -490,6 +499,11 @@ end
 procedure NodeUpgrade_ARifle begin
    give_money(ARCOST);
    call upgrade_weapon(PID_ASSAULT_RIFLE, PID_ASSAULT_RIFLE_EXT_MAG);
+   call NodeUpgrade_Done;
+end
+procedure NodeUpgrade_CombatShotgun begin
+   give_money(CSCOST);
+   call upgrade_weapon(PID_COMBAT_SHOTGUN, PID_COMBAT_SHOTGUN_EXT_MAG);
    call NodeUpgrade_Done;
 end
 

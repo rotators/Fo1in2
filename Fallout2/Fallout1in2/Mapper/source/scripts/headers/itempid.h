@@ -164,6 +164,7 @@
 #define PID_PLASMA_PISTOL_EXT_CART          (406)
 #define PID_MEGA_POWER_FIST                 (407)
 #define PID_HOLY_HAND_GRENADE               (421) //Special don't use this
+#define PID_COMBAT_SHOTGUN_EXT_MAG          (449)
 #define PID_FN_FAL_HPFA                     (500)
 //#define PID_BLOW_UP_DOLL                    (508)
 //#define PID_POPPED_BLOW_UP_DOLL             (509)
@@ -483,7 +484,6 @@
 #define PID_VERTIBIRD_PLANS                 (446)
 #define PID_BISHOPS_HOLODISK                (447)
 #define PID_ACCOUNT_BOOK                    (448)
-#define PID_COMBAT_SHOTGUN_EXT_MAG          (449)
 #define PID_TORN_PAPER_1                    (450)
 #define PID_TORN_PAPER_2                    (451)
 #define PID_TORN_PAPER_3                    (452)
