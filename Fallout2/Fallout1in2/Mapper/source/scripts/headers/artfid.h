@@ -83,7 +83,7 @@
 #define FID_HMIANJ        (16777277)
 #define FID_HMTYCL        (16777278)
 #define FID_MAMTN3        (16777279)
-#define FID_NMWARR        (16777280)
+#define FID_NMWARR        (16777280) // NPC Male Primitive Warrior
 #define FID_MAPLNT        (16777281)
 #define FID_MAROBT        (16777282)
 #define FID_MAGKO2        (16777283) // Silver Gecko
@@ -140,7 +140,7 @@
 #define FID_NFNICE        (16777334)
 #define FID_NMOLDD        (16777335)
 #define FID_MAROBE        (16777336)
-#define FID_NFPRIM        (16777337)
+#define FID_NFPRIM        (16777337) // NPC Female Primitive
 #define FID_NFPJMP        (16777338)
 #define FID_NMBJMP        (16777339)
 #define FID_NMLJMP        (16777340)
@@ -150,3 +150,4 @@
 #define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
 #define FID_MARDOG        (16777345) // Red colored dog
 #define FID_HMWARR        (16777346) // Hero Male Primitive Warrior
+#define FID_HMLHMX        (16777347) // Long hair leather jacket
