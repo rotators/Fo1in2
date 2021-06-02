@@ -872,7 +872,7 @@
 {44701}{}{This holodisk contains incriminating information on Bishop's secret deal with NCR. Apparently, Bishop hired mercenaries to attack Vault City in the hopes that Vault City would turn to NCR for military aid. This holodisk is audio only and has no text data. Vault City might be interested in this.}
 {44800}{}{Account Book}
 {44801}{}{This account book lists a series of monthly payments made to the mercenary band from the Bishop Family in New Reno. The payments depend heavily on how much "pressure" the mercenaries put on Vault City. Vault City might be interested in this.}
-{44900}{}{Combat Shotgun (Exp. mag.)}
+{44900}{}{Combat Shotgun (Exp. Mag.)}
 {44901}{}{A Winchester City-Killer 12-gauge combat shotgun, bullpup variant. In excellent condition, it has a round magazine for extended burst fire. Min ST: 5.}
 {45000}{}{Torn Paper 1}
 {45001}{}{You see a piece of paper with writing on it. It looks like it's part of a code of some sort. Unfortunately, the code is incomplete. If only you could find all three pieces. You can make out the following: 1. Physics Password KSLJ, 2. Chemistry Password TIU, 3. Biology Password INTL}
@@ -1038,31 +1038,3 @@
 {53801}{}{DO NOT USE}
 {53900}{}{Fire Gecko Pelt}
 {53901}{}{This is the dried and cured hide of a fire gecko. It is badly burned and as a result, has little value.}
-{54000}{}{Fuel Additive}
-{54001}{}{If mixed with the common flamethrower fuel, this additive improves the burning process.}
-{54100}{}{Power Servos}
-{54101}{}{These miniature servos are the ultimate upgrade for the standard power fist.}
-{54200}{}{Dynamite Stick}
-{54201}{}{A common stick of dynamite containing a high explosive substance. Just fire it up and throw it away. Min ST: 3.}
-{54300}{}{Timer}
-{54301}{}{Parts of a dynamite timer. Might still be useful with a little work.}
-{54400}{}{Explosive Spear}
-{54401}{}{Stab mit Dynamitstange. Der Schaft ist aus Holz und an der Spitze wurde eine Stange hochexplosives Dynamit befestigt. Anzünden, werfen, BOOM! Min ST: 4.}
-{54500}{}{Extended Magazine}
-{54501}{}{Extended magazine for the assault rifle AK-112.}
-{54600}{}{Advanced Precharger}
-{54601}{}{A modified precharging system for energy weapons.}
-{54700}{}{Turbo part}
-{54701}{}{fgd}
-{54800}{}{Capacitor-Battery}
-{54801}{}{An improved capacitor energy cell. Better and more durable than the base model.}
-{54900}{}{Li'l Chemist Kit}
-{54901}{}{A portable chemistry box. Interesting mixtures can be compiled with it.}
-{55000}{}{Targeting System}
-{55001}{}{Advanced laser targeting system.}
-{55100}{}{Advanced Fuel Mixer}
-{55101}{}{This upgrade part for flamethrowers will allow you to use the advanced super-burn fuel.}
-{55200}{}{Scope}
-{55201}{}{An old rifle scope.}
-{55300}{}{Speed Loader}
-{55301}{}{This speed loader is a useful upgrade for revolvers.}
