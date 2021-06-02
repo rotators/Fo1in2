@@ -189,9 +189,9 @@
 {9500}{}{12 ga. Shotgun Shells}
 {9501}{}{Shotgun ammunition. This particular ammo is marked: "12-gauge shells, not for use by children under the age of 3."}
 {9600}{}{Red Pass Key}
-{9601}{}{A electronic security key, color coded red.}
+{9601}{}{An electronic security key, color coded red.}
 {9700}{}{Blue Pass Key}
-{9701}{}{A electronic security key, color coded blue.}
+{9701}{}{An electronic security key, color coded blue.}
 {9800}{}{Junk}
 {9801}{}{A pile of junk parts. A little bit of everything.}
 {9900}{}{Gold Locket}

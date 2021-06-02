@@ -10,7 +10,7 @@
 {103}{}{Unarmed}
 {104}{}{Melee Weapons}
 {105}{}{Throwing}
-{106}{}{First aid}
+{106}{}{First Aid}
 {107}{}{Doctor}
 {108}{}{Sneak}
 {109}{}{Lockpick}
