@@ -4,9 +4,12 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: A new optional Floating Eye party member to the Glow.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: Combat Shotgun can be upgraded to a round magazine at Jack (Hub) and Zack (Gunrunners) if Fo2-style weapon upgrades are enabled.
 - **Added**: Fire Gecko Pelt from the UPU has been added to the game.
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
 - **Added**: Jack in Hub Oldtown can also upgrade weapons (Fo2-style) now.
+- **Added**: Long hair leather jacket (hero) animations as modder resource.
+- **Added**: Missing animations for tribal hero male and female critters (modder resource).
 - **Added**: New mini-mod that increases the mountain encounter map size to support a resolution of 1280x720px without showing black bars at the top and bottom of the screen.
 - **Added**: Restored some inaccessible dialog for Lasher inside the Cathedral (about abusing children).
 - **Added**: Restored some inaccessible dialog for Viola inside the Cathedral (after talking to Laura).
@@ -46,6 +49,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Sherry in Junktown would leave the map after leaving the Skulz gang. This was added by TeamX a long time ago and I have no idea why. Reverted this change for now.
 - **Fixed**: Sid (Hub / Beth's guard) would float a text message so fast, it was impossible to read.
 - **Fixed**: Some locations would not be marked as visible when asking about them in dialog.
+- **Fixed**: Spear-only raiders in Brotherhood encounters weren't able to use their spear. Temporarily fixed this with replacing their blue-pants look with generic leather jacket.
 - **Fixed**: TMA would crash when not using the Sfall Dx9 mode.
 - **Fixed**: The Junktown fighting match scenes are play sound effects now (punching, hitting, falling).
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
