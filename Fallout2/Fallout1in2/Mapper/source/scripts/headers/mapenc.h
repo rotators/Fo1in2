@@ -366,17 +366,19 @@ procedure Add_Mysterious_Stranger begin
    Die_Roll:=random(0,99);
    Stranger_Chance:=30 + (2 * dude_luck);
 
-   if ((map_first_run) and (not(get_stranger_flag(STRANGER_DEAD))) and (Die_Roll < Stranger_Chance) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
-       if (not(get_stranger_flag(STRANGER_GENDER))) then begin
+   if (map_first_run and not(get_stranger_flag(STRANGER_DEAD)) and (Die_Roll < Stranger_Chance) and has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)) then begin
+       if not(get_stranger_flag(STRANGER_GENDER)) then begin
            set_stranger_flag(STRANGER_GENDER);
            if (random(0,99) < 50) then begin
                set_stranger_flag(STRANGER_FEMALE);
            end
        end
-       if (get_stranger_flag(STRANGER_FEMALE)) then
+
+       if get_stranger_flag(STRANGER_FEMALE) then
            Critter:=create_object_sid(PID_MYSTERIOUS_STRANGER_FEMALE,0,0,SCRIPT_MYSTSTRN);
        else
            Critter:=create_object_sid(PID_MYSTERIOUS_STRANGER_MALE,0,0,SCRIPT_MYSTSTRN);
+
        Critter_Tile:=tile_num_in_direction(tile_num(dude_obj),random(0,5),random(5,10));
        critter_attempt_placement(Critter,Critter_Tile,elevation(dude_obj));
        val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);

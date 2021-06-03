@@ -291,7 +291,7 @@
 #define REP_ENEMY_LA_BLADES                     (global_var(GVAR_ENEMY_BLADES) == 1)
 #define REP_ENEMY_LA_REGULATORS                 (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1)
 #define REP_ENEMY_LA_GUNRUNNERS                 (global_var(GVAR_ENEMY_GUN_RUNNERS) == 1)
-
+#define REP_ENEMY_ENCOUNTER                     (global_var(GVAR_ENEMY_RANDOM_ENC) == 1)
 
 /**************************************************************************
  Reputation for Solving Seeds
