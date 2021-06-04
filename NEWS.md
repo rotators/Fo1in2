@@ -4,6 +4,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: A new optional Floating Eye party member to the Glow.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: Club-animations for the Tycho critter.
 - **Added**: Combat Shotgun can be upgraded to a round magazine at Jack (Hub) and Zack (Gunrunners) if Fo2-style weapon upgrades are enabled.
 - **Added**: Fire Gecko Pelt from the UPU has been added to the game.
 - **Added**: Gaining the melee combat bonus by MacRae will now be mentioned in the message log (same as how every other bonus gets mentioned).
