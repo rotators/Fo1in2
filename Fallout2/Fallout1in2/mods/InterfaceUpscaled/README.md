@@ -11,7 +11,7 @@ Interface Upscaled
 - Works with any other FALLOUT 2 mod (eg. Restoration Project).
 
 ## NOTE:
-- "ExpandWorldMap" in the ddraw.ini file must be set to 1, otherwise the game will crash!
+"ExpandWorldMap" in the ddraw.ini file must be set to 1 and the game has to run in a minimum resolution of 890x720px, otherwise the game will crash. Keep in mind that using the SCALE_2X option of the High-Res patch means the effective resolution is halved! 
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\InterfaceUpscaled" at the end of the "PatchFile"-list!
