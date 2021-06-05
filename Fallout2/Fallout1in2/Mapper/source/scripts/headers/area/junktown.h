@@ -10,6 +10,12 @@
 /************************************************
     Generic Defines
 ************************************************/
+// Killian
+#define shop_open_time              (650)
+#define shop_closed_time            (1900)
+#define darkwaters_shop_open        (game_time_hour > shop_open_time and game_time_hour < shop_closed_time)
+
+// Gizmo
 #define gizmo_hex                   (16523)
 
 #define set_gizmo_remains_timer     if (global_var(GVAR_GIZMO_REMAINS_TIMER) == 0) then set_global_var(GVAR_GIZMO_REMAINS_TIMER, game_time)
