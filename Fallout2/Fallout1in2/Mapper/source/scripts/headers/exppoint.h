@@ -251,6 +251,8 @@
 #define EXP_KNEW_ABOUT_MILITARY_BASE            (500)
 #define EXP_WENT_TO_MILITARY_BASE               (50)
 #define EXP_MASTER_DESTROYED                    (10000)
+#define EXP_RAY_KILLS_MASTER                    (1000)
+#define EXP_RAY_JOINS_DUDE                      (750)
 
 /***************************************************
      Giving Experience Points

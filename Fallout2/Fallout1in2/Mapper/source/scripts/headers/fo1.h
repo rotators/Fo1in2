@@ -45,6 +45,7 @@
 #define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
 #define fo1in2_expanded_slides_enabled  (global_var(GVAR_ENABLE_EXPANDED_ENDING) > 0)
 #define fo1in2_radiation_enabled        (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
+#define fo1in2_cut_characters_enabled   (global_var(GVAR_ENABLE_CUT_CHARACTERS) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)

@@ -1,0 +1,235 @@
+/*
+
+   Junktown - Hernandez, the gambler. cut-content.
+
+*/
+
+/* Include Files */
+#include "define.h"
+//#include "area/necropolis.h"
+
+#define NAME                    SCRIPT_GAMBLER
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+
+procedure see_stuff;
+
+procedure Hernandez01;
+procedure Hernandez02;
+procedure Hernandez03;
+procedure Hernandez04;
+procedure Hernandez05;
+procedure Hernandez06;
+procedure Hernandez07;
+procedure Hernandez08;
+procedure Hernandez09;
+procedure Hernandez10;
+procedure Hernandez11;
+procedure Hernandez12;
+procedure Hernandez13;
+procedure Hernandez14;
+procedure Hernandezend;
+
+#define LVAR_Herebefore          (4)
+#define LVAR_KnownCheat          (5)
+#define LVAR_GivenMoney          (6)
+
+variable tmp_hostile;
+variable initial;
+
+procedure start begin
+   if not(initial) then begin
+      set_self_team(TEAM_JUNKTOWNER);
+      set_self_ai(AI_CAREFUL);
+      initial := 1;
+   end
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+end
+
+procedure map_enter_p_proc begin
+   if ((global_var(GVAR_CAPTURE_GIZMO) == 2) or not(is_gizmo_alive)) then begin
+      destroy_object(self_obj);
+   end
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile and self_can_see_dude) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+
+   if ((global_var(GVAR_CAPTURE_GIZMO) == 2) or not(is_gizmo_alive)) then begin
+      destroy_object(self_obj);
+   end
+
+   if REP_ENEMY_JUNKTOWN_CITIZENS and self_can_see_dude then begin
+      call flee_dude;
+   end
+end
+
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure look_at_p_proc begin
+   call see_stuff;
+end
+
+procedure description_p_proc begin
+   call see_stuff;
+end
+
+procedure see_stuff begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore) == 0) then
+      display_msg(mstr(100));
+   else
+      display_msg(mstr(101));
+end
+
+procedure talk_p_proc begin
+   dude_look_at_self;
+
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      start_dialog_at_node(Hernandez01);
+   end
+   else begin
+      start_dialog_at_node(Hernandez12);
+   end
+end
+
+procedure destroy_p_proc begin
+   if source_is_dude and (local_var(LVAR_KnownCheat) == 0) then begin
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
+   inc_good_critter
+end
+
+procedure Hernandez01 begin
+   set_local_var(LVAR_Herebefore, 1);
+
+   Reply(102);
+   NOption(103, Hernandez02, 4);
+   NOption(104, Hernandez03, 4);
+   NLowOption(105, Hernandez04);
+end
+
+procedure Hernandez02 begin
+   Reply(106);
+   NOption(107, Hernandez03, 4);
+   NOption(108, Hernandez09, 5);
+   NOption(109, Hernandez11, 5);
+end
+
+procedure Hernandez03 begin
+   variable Skill := 0;
+   variable tmp_msg := 0;
+
+   tmp_msg := mstr(110);
+   if (is_success(Skill)) then begin
+      tmp_msg := tmp_msg + mstr(111);
+   end
+   NMessage(tmp_msg);
+   Reply(112);
+   if (dude_caps >= 25) then
+      NOption(113, Hernandez05, 4);
+   NOption(114, Hernandez06, 4);
+
+   Skill := do_check(dude_obj, STAT_pe, 0);
+   if (is_success(Skill)) then begin
+      NOption(115, Hernandez14, 4);
+   end
+end
+
+procedure Hernandez04 begin
+   NMessage(116);
+end
+
+procedure Hernandez05 begin
+   set_local_var(LVAR_GivenMoney, 1);
+   dude_caps_adjust(-25);
+   NMessage(117);
+end
+
+procedure Hernandez06 begin
+   NMessage(118);
+end
+
+procedure Hernandez07 begin
+   Reply(119);
+   NOption(120, Hernandez08, 4);
+   NOption(121, Hernandez03, 4);
+end
+
+procedure Hernandez08 begin
+   // TODO: Maybe add some real dice stuff in here?
+   gfade_out(ONE_GAME_SECOND);
+      game_time_advance(ONE_GAME_HOUR * random(1, 2));
+      if (random(0, 1)) then
+         play_sfx("dice");
+      else
+         play_sfx("dice1");
+   gfade_in(ONE_GAME_SECOND);
+end
+
+procedure Hernandez09 begin
+   NMessage(122);
+   Reply(123);
+   NOption(124, Hernandez07, 4);
+   NOption(125, Hernandez10, 6);
+end
+
+procedure Hernandez10 begin
+   NMessage(126);
+end
+
+procedure Hernandez11 begin
+   Reply(127);
+   NOption(128, Hernandez03, 4);
+end
+
+procedure Hernandez12 begin
+   if (dude_is_male) then begin
+      Reply(136);
+   end
+   else begin
+      Reply(137);
+   end
+   NOption(130, Hernandez13, 4);
+   NOption(131, Hernandezend, 4);
+end
+
+procedure Hernandez13 begin
+   Reply(132);
+   NOption(133, Hernandezend, 4);
+
+   if (local_var(LVAR_GivenMoney) == 1) then
+      NOption(134, Hernandez14, 4);
+end
+
+procedure Hernandez14 begin
+   set_local_var(LVAR_KnownCheat, 1);
+   NMessage(135);
+   add_timer_event(self_obj, 5, 1);
+end
+
+procedure Hernandezend begin
+end

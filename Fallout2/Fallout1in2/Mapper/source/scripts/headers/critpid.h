@@ -353,6 +353,7 @@
 #define PID_WILD_DOG                      (16777559)
 #define PID_SEWER_KING                    (16777560)
 #define PID_EYEBOT                        (16777561)
+#define PID_RAE                           (16777562)
 
 // intentionally creates dead code in gl_partycontrol,
 // just to avoid editing it on each sfall update

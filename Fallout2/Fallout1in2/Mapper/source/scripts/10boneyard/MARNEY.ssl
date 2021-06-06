@@ -1,6 +1,6 @@
 /*
 
-   ?? Marney, Doctor
+   Followers of the Apocalypse - Marney the doctor. cut-content.
 
 */
 
@@ -31,6 +31,9 @@ procedure Marney06;
 procedure Marney07;
 procedure MarneyEnd;
 
+#define LVAR_LearnFirstAid          (1)
+#define LVAR_LearnDoctor            (2)
+
 variable initial := 0;
 
 procedure start begin
@@ -39,6 +42,7 @@ procedure start begin
       set_self_ai(AI_FOLLOWER_LEADER);
       initial := 1;
    end
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
 end
 
 procedure critter_p_proc begin
@@ -78,15 +82,16 @@ procedure talk_p_proc begin
 end
 
 procedure Marney00 begin
-   variable LVar0 := 0;
-   LVar0 := dude_max_hp - dude_cur_hp;
+   variable hurt := 0;
+   hurt := dude_max_hp - dude_cur_hp;
+
    Reply(104);
    NLowOption(105, Marney01);
    NOption(125, MarneyEnd, 4);
-   if (LVar0 > 0) then begin
+   if (hurt > 0) then begin
       NOption(106, Marney01, 4);
    end
-   if (not(local_var(2))) then begin
+   if (local_var(LVAR_LearnDoctor) == 0) then begin
       NOption(107, Marney06, 5);
    end
 end
@@ -101,19 +106,19 @@ end
 
 procedure Marney02 begin
    variable LVar0 := 0;
+
    gfade_out(1);
       LVar0 := dude_max_hp - dude_cur_hp;
       game_time_advance(game_ticks(60 * 20 * LVar0));
-
       critter_heal(dude_obj, LVar0);
       critter_uninjure(dude_obj, (DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT));
-
-      NMessage(113);
-      if (not(local_var(1))) then begin
-         NOption(114, Marney03, 4);
-      end
-      NOption(115, MarneyEnd, 4);
    gfade_in(1);
+
+   Reply(113);
+   if (local_var(LVAR_LearnFirstAid) == 0) then begin
+      NOption(114, Marney03, 4);
+   end
+   NOption(115, MarneyEnd, 4);
 end
 
 procedure Marney03 begin
@@ -124,12 +129,12 @@ end
 
 procedure Marney04 begin
    gfade_out(1);
-   game_time_advance(game_ticks(18000));
-   critter_mod_skill(dude_obj, SKILL_FIRST_AID, 15);
-   set_local_var(1, 1);
-   NMessage(119);
+      game_time_advance(game_ticks(18000));
+      critter_mod_skill(dude_obj, SKILL_FIRST_AID, 15);
+      display_msg(gen_mstr(116) + 15 + gen_mstr(123));
+      set_local_var(LVAR_LearnFirstAid, 1);
    gfade_in(1);
-   display_msg(gen_mstr(116) + 15 + gen_mstr(141));
+   NMessage(119);
 end
 
 procedure Marney05 begin
@@ -146,10 +151,10 @@ procedure Marney07 begin
    gfade_out(1);
       game_time_advance(game_ticks(25200));
       critter_mod_skill(dude_obj, SKILL_DOCTOR, 15);
-      set_local_var(2, 1);
-      NMessage(124);
+      display_msg(gen_mstr(116) + 15 + gen_mstr(124));
+      set_local_var(LVAR_LearnDoctor, 1);
    gfade_in(1);
-   display_msg(gen_mstr(116) + 15 + gen_mstr(142));
+   NMessage(124);
 end
 
 procedure MarneyEnd begin

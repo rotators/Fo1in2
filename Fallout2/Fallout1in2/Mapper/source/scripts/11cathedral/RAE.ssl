@@ -1,0 +1,622 @@
+/*
+
+   Super Mutant Rae - cut-content
+
+      NOTE:
+
+         Temporary party member.
+         He will follow the player only in the Master's Lair.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "area/cathedral.h"
+
+#define NAME                    SCRIPT_RAE
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "command.h"
+#include "modreact.h"
+
+#undef  set_default_party_follow
+#define set_default_party_follow             set_follow_close
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
+procedure rae00;
+procedure rae00a;
+procedure rae00b;
+procedure rae01;
+procedure rae01a;
+procedure rae02;
+procedure rae03;
+procedure rae03a;
+procedure rae03b;
+procedure rae03c;
+procedure rae04;
+procedure rae04a;
+procedure rae04b;
+procedure rae04c;
+procedure rae05;
+procedure rae05a;
+procedure rae05b;
+procedure rae06;
+procedure rae06a;
+procedure rae06b;
+procedure rae06c;
+procedure rae07;
+procedure rae07a;
+procedure rae07b;
+procedure rae07c;
+procedure rae08;
+procedure rae08a;
+procedure rae08b;
+procedure rae08c;
+procedure rae09;
+procedure rae10;
+procedure rae10a;
+procedure rae11;
+procedure rae11a;
+procedure rae11b;
+procedure rae12;
+procedure rae13;
+procedure rae13a;
+procedure rae13b;
+procedure rae13c;
+procedure rae14;
+
+procedure dialog_end;
+procedure special_end;
+procedure raejoin;
+procedure raetym;
+procedure combat;
+
+#define LVAR_Herebefore             (4)
+#define LVAR_Follow                 (5)
+#define LVAR_WAITING                (6)
+#define LVAR_FOLLOW_DISTANCE        (7)
+#define LVAR_TEAM                   (8)
+
+import variable signal_mutants;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+variable movie;
+
+#define EVENT_ATTACK       (1)
+#define EVENT_JOIN         (2)
+#define EVENT_MASTER       (3)
+
+#define master_hex         (13257)
+
+#define cathedral_valid_map      ((CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34))
+
+procedure start begin
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+      set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
+   end
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+end
+
+procedure map_enter_p_proc begin
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_ATTACK) then begin
+      if (tile_distance_objs(dude_obj, self_obj) < 6) then begin
+         call combat;
+      end
+   end
+   else if (fixed_param == EVENT_JOIN) then begin
+      variable weapon;
+
+      set_local_var(LVAR_Follow, 1);
+      set_self_team(TEAM_PLAYER);
+      party_add(self_obj);
+
+      weapon := self_item(PID_PLASMA_RIFLE);
+      if (weapon > 0) then
+         wield_obj_critter(self_obj, weapon);
+   end
+   else if (fixed_param == EVENT_MASTER) then begin
+      gfade_out(ONE_GAME_SECOND);
+         critter_attempt_placement(self_obj, master_hex, 0);
+         self_rotate(5);
+
+         set_global_var(GVAR_PREVENT_REVULSION_DAMAGE, 2);
+         if (global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) == 0) then begin
+            set_global_var(GVAR_COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
+            add_timer_event(dude_obj, 0, 11);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+            set_master_killed;
+            if military_base_destroyed then begin
+               set_global_var(GVAR_VATS_STATUS, 1);
+            end
+            set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 2);
+         end
+         kill_critter_type(PID_RAE, 1);
+         kill_critter_type(PID_MASTER, 1);
+      gfade_in(ONE_GAME_SECOND);
+   end
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else if (local_var(LVAR_Follow) == 0) then begin
+      if (signal_mutants == 1) then begin
+         signal_mutants := 0;
+         call combat;
+      end
+   end
+
+   // Remove and destroy if on an invalid map.
+   if not(cathedral_valid_map) then begin
+      party_remove(self_obj);
+      destroy_object(self_obj);
+   end
+
+   if ((local_var(LVAR_Follow) == 1) and not(master_killed)) then begin
+      party_member_follow_dude
+   end
+end
+
+procedure pickup_p_proc begin
+   if source_is_dude then begin
+      tmp_hostile := 1;
+   end
+end
+
+procedure talk_p_proc begin
+   dude_look_at_self;
+   get_reaction
+
+   if (local_var(LVAR_Follow) == 1) then begin
+      float_msg(self_obj, mstr(155), FLOAT_COLOR_BAD);
+   end
+   else begin
+      if (local_var(LVAR_Herebefore) == 0) then begin
+         set_local_var(LVAR_Herebefore, 1);
+         start_dialog_at_node(rae00);
+      end
+      else begin
+         start_dialog_at_node(rae01);
+      end
+   end
+
+   // Old stuf. Not used anymore.
+   /*if (movie == 1) then begin
+      play_gmovie(CATHEXPLODE_MOVIE);
+      signal_end_game;
+   end*/
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore) == 0) then
+      display_msg(message_str(NAME, 101));
+   else
+      display_msg(message_str(NAME, 100));
+end
+
+procedure combat begin
+   tmp_hostile := 1;
+end
+
+procedure special_end begin
+   movie := 1;
+   add_timer_event(self_obj, game_ticks(0), EVENT_MASTER);
+   give_xp_msg(EXP_RAY_KILLS_MASTER, mstr(200));
+end
+
+procedure raejoin begin
+   add_timer_event(self_obj, game_ticks(0), EVENT_JOIN);
+   give_xp_msg(EXP_RAY_JOINS_DUDE, mstr(201));
+end
+
+procedure raetym begin
+   add_timer_event(self_obj, game_ticks(15), EVENT_ATTACK);
+end
+
+procedure rae00 begin
+   gsay_reply(NAME, 102);
+
+   if not(master_killed) then begin
+      giq_option(7, NAME, 103, rae02, NEUTRAL_REACTION);
+      giq_option(4, NAME, 104, rae00a, NEUTRAL_REACTION);
+      giq_option(4, NAME, 105, rae00b, NEUTRAL_REACTION);
+   end
+
+   if (has_rep_berserker) then begin
+      giq_option(4, NAME, 106, combat, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 107, dialog_end, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 108, dialog_end, NEUTRAL_REACTION);
+
+   if debug_mode then begin
+      NOption("*** DEBUG: Follow me!", rae09, 1);
+      NOption("*** DEBUG: Kill the Master!", special_end, 1);
+   end
+end
+
+procedure rae00a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae08;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae00b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae02;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae01 begin
+   gsay_reply(NAME, 109);
+
+   if not(master_killed) then begin
+      giq_option(7, NAME, 110, rae01a, NEUTRAL_REACTION);
+      giq_option(4, NAME, 111, dialog_end, NEUTRAL_REACTION);
+   end
+
+   if (has_rep_berserker) then begin
+      giq_option(4, NAME, 112, combat, NEUTRAL_REACTION);
+   end
+
+   if not(master_killed) then
+      giq_option(4, NAME, 113, rae02, NEUTRAL_REACTION);
+
+   giq_option(4, NAME, 114, dialog_end, NEUTRAL_REACTION);
+
+   if debug_mode then begin
+      NOption("*** DEBUG: Follow me!", rae09, 1);
+      NOption("*** DEBUG: Kill the Master!", special_end, 1);
+   end
+end
+
+procedure rae01a begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae03;
+   end
+   else begin
+      call rae05;
+   end
+end
+
+procedure rae02 begin
+   gsay_reply(NAME, 115);
+   giq_option(8, NAME, 116, rae03, NEUTRAL_REACTION);
+   giq_option(7, NAME, 117, rae03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 118, rae04, NEUTRAL_REACTION);
+   giq_option(4, NAME, 119, rae08, NEUTRAL_REACTION);
+   giq_option(4, NAME, 120, rae05, NEUTRAL_REACTION);
+end
+
+procedure rae03 begin
+   gsay_reply(NAME, 121);
+   giq_option(8, NAME, 122, rae04, NEUTRAL_REACTION);
+   giq_option(7, NAME, 123, rae03a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 124, rae03b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 125, rae03c, NEUTRAL_REACTION);
+end
+
+procedure rae03a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae04;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae03b begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae05;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae03c begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae08;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae04 begin
+   gsay_reply(NAME, 126);
+   giq_option(8, NAME, 127, rae04a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 128, rae12, NEUTRAL_REACTION);
+   giq_option(4, NAME, 129, rae04b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 130, rae04c, NEUTRAL_REACTION);
+end
+
+procedure rae04a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae05;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae04b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae05;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae04c begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae08;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae05 begin
+   gsay_reply(NAME, 131);
+   giq_option(9, NAME, 132, rae06, NEUTRAL_REACTION);
+   giq_option(8, NAME, 133, rae05a, NEUTRAL_REACTION);
+   if (has_rep_berserker) then begin
+      giq_option(4, NAME, 134, combat, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 135, rae05b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 136, rae07, NEUTRAL_REACTION);
+   giq_option(4, NAME, 137, dialog_end, NEUTRAL_REACTION);
+end
+
+procedure rae05a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae08;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae05b begin
+   if (dude_skill_success(SKILL_SPEECH, -25)) then begin
+      call rae06;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae06 begin
+   gsay_reply(NAME, 138);
+   giq_option(9, NAME, 139, rae07, NEUTRAL_REACTION);
+   giq_option(7, NAME, 140, rae06a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 141, rae06b, NEUTRAL_REACTION);
+   if (has_rep_berserker) then begin
+      giq_option(4, NAME, 142, rae06c, NEUTRAL_REACTION);
+   end
+end
+
+procedure rae06a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae11;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae06b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae11;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae06c begin
+   if (dude_skill_success(SKILL_SPEECH, -25)) then begin
+      call rae09;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae07 begin
+   gsay_reply(NAME, 143);
+   giq_option(9, NAME, 144, rae11, NEUTRAL_REACTION);
+   giq_option(7, NAME, 145, rae08, NEUTRAL_REACTION);
+   giq_option(4, NAME, 146, rae07a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 147, rae07b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 148, rae07c, NEUTRAL_REACTION);
+end
+
+procedure rae07a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae08;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae07b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae10;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae07c begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call dialog_end;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae08 begin
+   gsay_reply(NAME, 149);
+   giq_option(8, NAME, 150, rae13, NEUTRAL_REACTION);
+   giq_option(7, NAME, 151, rae08a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 152, rae08b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 153, rae08c, NEUTRAL_REACTION);
+   giq_option(4, NAME, 154, dialog_end, NEUTRAL_REACTION);
+end
+
+procedure rae08a begin
+   if (dude_skill_success(SKILL_SPEECH, -10)) then begin
+      call rae09;
+   end
+   else begin
+      call rae10;
+   end
+end
+
+procedure rae08b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae11;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae08c begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae13;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae09 begin
+   NMessage(155);
+   call raejoin;
+end
+
+procedure rae10 begin
+   gsay_reply(NAME, 156);
+   giq_option(4, NAME, 157, dialog_end, NEUTRAL_REACTION);
+   giq_option(4, NAME, 158, rae10a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 159, rae11, NEUTRAL_REACTION);
+end
+
+procedure rae10a begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae09;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae11 begin
+   gsay_reply(NAME, 160);
+   giq_option(9, NAME, 161, rae13, NEUTRAL_REACTION);
+   giq_option(7, NAME, 162, rae11a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 163, rae11b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 164, dialog_end, NEUTRAL_REACTION);
+end
+
+procedure rae11a begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae13;
+   end
+   else begin
+      call rae08;
+   end
+end
+
+procedure rae11b begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae13;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae12 begin
+   gsay_message(NAME, 165, NEUTRAL_REACTION);
+   call raetym;
+end
+
+procedure rae13 begin
+   gsay_reply(NAME, 166);
+   giq_option(9, NAME, 167, rae14, NEUTRAL_REACTION);
+   giq_option(7, NAME, 168, rae13a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 169, rae13b, NEUTRAL_REACTION);
+   giq_option(4, NAME, 170, dialog_end, NEUTRAL_REACTION);
+   giq_option(4, NAME, 171, rae13c, NEUTRAL_REACTION);
+end
+
+procedure rae13a begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae14;
+   end
+   else begin
+      call rae09;
+   end
+end
+
+procedure rae13b begin
+   if (dude_skill_success(SKILL_SPEECH, -20)) then begin
+      call rae09;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae13c begin
+   if (dude_skill_success(SKILL_SPEECH, -30)) then begin
+      call rae14;
+   end
+   else begin
+      call rae12;
+   end
+end
+
+procedure rae14 begin
+   gsay_reply(NAME, 172);
+
+   giq_option(4, NAME, 173, special_end, NEUTRAL_REACTION);
+   giq_option(4, NAME, 174, rae09, NEUTRAL_REACTION);
+end
+
+procedure dialog_end begin
+end
