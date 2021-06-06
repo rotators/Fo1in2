@@ -1,6 +1,6 @@
 /*
 
-   Brotherhood - paladin Farli
+   Brotherhood of Steel - Paladin Farli - cut content
 
 */
 
@@ -16,6 +16,9 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
 procedure destroy_p_proc;
 
 procedure farli0;
@@ -24,69 +27,61 @@ procedure farli2;
 procedure farli3;
 procedure farli4;
 
+#define LVAR_Herebefore       (4)
+
 variable Herebefore;
 
 procedure start begin
-   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-      script_overrides;
-      display_msg(mstr(100));
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure talk_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore) > 1) then begin
+      call farli4;
    end
    else begin
-      if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-         call destroy_p_proc;
+      if (local_var(LVAR_Herebefore) == 1) then begin
+         call farli3;
       end
       else begin
-         if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-            script_overrides;
-            if (Herebefore > 1) then begin
-               call farli4;
-            end
-            else begin
-               if (Herebefore == 1) then begin
-                  Herebefore := Herebefore + 1;
-                  call farli3;
-               end
-               else begin
-                  Herebefore := Herebefore + 1;
-                  start_gdialog(315, self_obj, 4, -1, -1);
-                  gsay_start;
-                  call farli0;
-                  gsay_end;
-                  end_dialogue;
-               end
-            end
-         end
+         start_dialog_at_node(farli0);
       end
+      set_local_var(LVAR_Herebefore, local_var(LVAR_Herebefore) + 1);
    end
 end
 
-procedure farli0
-begin
+procedure farli0 begin
    Reply(101);
    NOption(102, farli1, 3);
 end
 
-procedure farli1
-begin
+procedure farli1 begin
    Reply(103);
    NOption(mstr(104) + dude_name + mstr(105), farli2, 3);
 end
 
-procedure farli2
-begin
-   variable LVar0 := 0;
+procedure farli2 begin
+   variable Item := 0;
    NMessage(106);
-   LVar0 := create_object(PID_SHOTGUN_SHELLS, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
+   Item := create_object(PID_SHOTGUN_SHELLS, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 end
 
-procedure farli3
-begin
+procedure farli3 begin
    float_msg(self_obj, mstr(107), FLOAT_MSG_NORMAL);
 end
 
-procedure farli4
-begin
+procedure farli4 begin
    float_msg(self_obj, mstr(108), FLOAT_MSG_NORMAL);
 end
 
