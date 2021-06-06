@@ -16,6 +16,10 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
@@ -30,11 +34,29 @@ procedure dumar06;
 procedure dumar07;
 procedure dumarend;
 
-variable rndx;
-variable HEREBEFORE;
-variable mad;
+#define LVAR_Herebefore       (4)
+
+variable Only_Once;
+variable tmp_hostile;
 
 procedure start begin
+   if Only_Once then begin
+      set_self_team(TEAM_CATHEDRAL);
+      set_self_ai(AI_CHILDREN_TRUE);
+      Only_Once := 0;
+   end
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
 end
 
 procedure look_at_p_proc begin
@@ -47,97 +69,82 @@ procedure description_p_proc begin
    display_msg(100);
 end
 
-procedure talk_p_proc begin
-   dude_look_at_self;
-
-   if (mad == 1) then begin
-      attack(dude_obj);
-   end
-   else begin
-      start_dialog(self_obj, 4);
-      gsay_start;
-      if (HEREBEFORE) then begin
-         call dumar05;
-      end
-      else begin
-         HEREBEFORE := 1;
-         call dumar00;
-      end
-      gsay_end;
-      end_dialogue;
-   end
-end
-
-procedure dumar00 begin
-   sayReply(0, mstr(101));
-   if (-dude_iq >= -3) then begin
-      sayOption(mstr(102), dumar04);
-   end
-   if (dude_iq >= 6) then begin
-      sayOption(mstr(103), dumar03);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(mstr(104), dumar06);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(mstr(105), dumar07);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(mstr(105), dumar00);
-   end
-   if (dude_iq >= 5) then begin
-      sayOption(mstr(107), dumar05);
-   end
-   if (dude_iq >= 6) then begin
-      sayOption(mstr(108), dumar02);
-   end
-end
-
-procedure dumar01 begin
-   sayMessage(0, mstr(109));
-   call dumarend;
-end
-
-procedure dumar02 begin
-   sayMessage(0, mstr(110));
-   call dumarend;
-end
-
-procedure dumar03 begin
-   sayMessage(0, mstr(111));
-   call dumarend;
-end
-
-procedure dumar04 begin
-   sayMessage(0, mstr(112));
-   call dumarend;
-end
-
-procedure dumar05 begin
-   sayMessage(0, mstr(113));
-   call dumarend;
-end
-
-procedure dumar06 begin
-   sayMessage(0, mstr(114));
-   mad := 1;
-   call dumarend;
-end
-
-procedure dumar07 begin
-   sayMessage(0, mstr(115));
-   call dumarend;
-end
-
-procedure dumarend begin
-end
-
-
 procedure destroy_p_proc begin
    inc_neutral_critter
 end
 
-
 procedure damage_p_proc begin
    display_msg(mstr(116));
+end
+
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_COC);
+   dude_look_at_self;
+
+   if (tmp_hostile == 1) then begin
+      attack(dude_obj);
+   end
+   else begin
+      if (local_var(LVAR_Herebefore)) then begin
+         //start_dialog_at_node(dumar05);
+         floater(113);
+      end
+      else begin
+         set_local_var(LVAR_Herebefore, 1);
+         start_dialog_at_node(dumar00);
+      end
+   end
+end
+
+procedure dumar00 begin
+   variable hurt := 0;
+   hurt := dude_max_hp - dude_cur_hp;
+
+   Reply(101);
+   NLowOption(102, dumar04);
+   NOption(103, dumar03, 6);
+   BOption(104, dumar06, 4);
+   NOption(105, dumar07, 4);
+   BOption(106, dumar04, 4);
+   NOption(107, dumar05, 5);
+   NOption(108, dumar02, 6);
+end
+
+procedure dumar01 begin
+   NMessage(109);
+   call dumarend;
+end
+
+procedure dumar02 begin
+   NMessage(110);
+   call dumarend;
+end
+
+procedure dumar03 begin
+   NMessage(111);
+   call dumarend;
+end
+
+procedure dumar04 begin
+   NMessage(112);
+   call dumarend;
+end
+
+procedure dumar05 begin
+   NMessage(113);
+   call dumarend;
+end
+
+procedure dumar06 begin
+   NMessage(114);
+   tmp_hostile := 1;
+   call dumarend;
+end
+
+procedure dumar07 begin
+   NMessage(115);
+   call dumarend;
+end
+
+procedure dumarend begin
 end
