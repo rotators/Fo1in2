@@ -17,6 +17,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: The Cathedral tower maps have been adjusted in height for higher resolutions (see mini-mod).
 - **Added**: The Fo2 Karma Beacon perk now works with the Fo1 NPCs.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
+- **Added**: Throwing animation, club, hammer, and knife for the Tycho / Raider critter.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
 - **Added**: World and map radiation around the Glow is now optional (see fo1_settings.ini), but remains enabled by default.
 - **Fixed**: 49/50hp mutants on Mariposa level 1.
@@ -55,6 +56,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: The Junktown fighting match scenes are play sound effects now (punching, hitting, falling).
 - **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
 - **Fixed**: The Mr. Fixit perk would give +10% (Fo2) instead of +20% (Fo1).
+- **Fixed**: The Skum Pitt cutscene between the Skulz ganger and Trish had no sound effects.
 - **Fixed**: The Tag!-perk wouldn't give +20% to the new skill as it did in Fo1.
 - **Fixed**: The dialog of Talius in the Followers library was a mess. Added new sentences to remove his amnesia, added a new quest entry to the pipboy ("Kill the leader of the mutant army in Necropolis.") and fixed his quest rewards.
 - **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
