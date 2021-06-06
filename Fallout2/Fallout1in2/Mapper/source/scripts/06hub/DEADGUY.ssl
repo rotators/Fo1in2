@@ -1,12 +1,17 @@
 /*
 
-   Hub - Deadguy
+   Hub - "Deadguy" - cut-content
+
+      NOTE:
+
+         Appears in Decker's hideout now once the underground has been eliminated.
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/hub.h"
+#include "maps/hubdwntn.h"
 
 #define NAME                    SCRIPT_DEADGUY
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -16,12 +21,14 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure combat;
+procedure map_enter_p_proc;
 procedure critter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
+
+procedure combat;
 
 procedure Deadguy00;
 procedure Deadguy01;
@@ -34,6 +41,10 @@ procedure Deadguy07;
 procedure Deadguy08;
 procedure DeadguyEnd;
 
+#define LVAR_Herebefore       (4)
+#define LVAR_StealMoney       (5)
+#define LVAR_Disappear        (6)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
@@ -42,43 +53,56 @@ procedure start begin
       Only_Once := 0;
       set_self_team(TEAM_HUB_SKAG);
       set_self_ai(AI_HUB_PEASANTS);
+      critter_attempt_placement(self_obj, self_tile, 2);
+   end
+
+   // Critter dialog doesn't make much sense if there are still surrendered thugs in the cellar.
+   // Remove critter for now.
+   destroy_object(self_obj);
+end
+
+procedure map_enter_p_proc begin
+   if not(is_loading_game) then begin
+      if (local_var(LVAR_Disappear) == 1) then begin
+         destroy_object(self_obj);
+      end
+      else if ((map_var(MVAR_REWARD_FOR_DECKER) > 0) and (local_var(LVAR_Disappear) == 0)) then begin
+         critter_attempt_placement(self_obj, self_tile, 1);
+      end
+      else begin
+         critter_attempt_placement(self_obj, self_tile, 2);
+      end
    end
 end
 
-procedure combat
-begin
-   tmp_hostile := 1;
+procedure map_update_p_proc begin
+   if ((self_elevation != 1) and (map_var(MVAR_REWARD_FOR_DECKER) > 0) and (local_var(LVAR_Disappear) == 0)) then begin
+      critter_attempt_placement(self_obj, self_tile, 1);
+   end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       call Deadguy02;
    end
    else begin
-      set_local_var(4, 1);
-      start_gdialog(564, self_obj, 4, -1, -1);
-      gsay_start;
-      call Deadguy00;
-      gsay_end;
-      end_dialogue;
+      set_local_var(LVAR_Herebefore, 1);
+      start_dialog_at_node(Deadguy00);
    end
 end
 
@@ -86,51 +110,51 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Deadguy00
-begin
+procedure combat begin
+   tmp_hostile := 1;
+end
+
+procedure Deadguy00 begin
    Reply(101);
    BOption(102, Deadguy01, 4);
-   if (local_var(5) == 0) then begin
+   if (local_var(LVAR_StealMoney) == 0) then begin
       NOption(103, Deadguy03, 4);
    end
-   NOption(104, Deadguy07, 4);
+   GOption(104, Deadguy07, 4);
    NLowOption(105, Deadguy06);
 end
 
-procedure Deadguy01
-begin
+procedure Deadguy01 begin
    NMessage(106);
 end
 
-procedure Deadguy02
-begin
+procedure Deadguy02 begin
    float_msg(self_obj, mstr(107), FLOAT_MSG_RED);
 end
 
-procedure Deadguy03
-begin
-   set_local_var(5, 1);
+procedure Deadguy03 begin
+   set_local_var(LVAR_StealMoney, 1);
+   set_local_var(LVAR_Disappear, 1);
+   dec_general_rep(2);
+
    dude_caps_adjust(20);
    Reply(108);
    NOption(109, DeadguyEnd, 4);
-   NOption(110, Deadguy04, 4);
+   BOption(110, Deadguy04, 4);
 end
 
-procedure Deadguy04
-begin
+procedure Deadguy04 begin
    Reply(111);
-   NOption(112, Deadguy05, 4);
+   BOption(112, Deadguy05, 4);
    NOption(113, DeadguyEnd, 4);
 end
 
-procedure Deadguy05
-begin
+procedure Deadguy05 begin
    if (dude_is_male) then begin
       NMessage(114);
    end
@@ -139,8 +163,7 @@ begin
    end
 end
 
-procedure Deadguy06
-begin
+procedure Deadguy06 begin
    if (dude_is_male) then begin
       NMessage(118);
    end
@@ -149,20 +172,19 @@ begin
    end
 end
 
-procedure Deadguy07
-begin
+procedure Deadguy07 begin
+   set_local_var(LVAR_Disappear, 1);
    if (dude_is_male) then begin
       Reply(122);
    end
    else begin
       Reply(123);
    end
-   NOption(126, Deadguy08, 4);
-   NOption(127, combat, 4);
+   GOption(126, Deadguy08, 4);
+   BOption(127, combat, 4);
 end
 
-procedure Deadguy08
-begin
+procedure Deadguy08 begin
    if (dude_is_male) then begin
       NMessage(128);
    end
@@ -171,6 +193,5 @@ begin
    end
 end
 
-procedure DeadguyEnd
-begin
+procedure DeadguyEnd begin
 end

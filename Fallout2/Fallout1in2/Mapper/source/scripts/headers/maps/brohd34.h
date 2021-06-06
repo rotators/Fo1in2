@@ -27,7 +27,7 @@
 #define MVAR_SIG_SAUER           (13)
 #define MVAR_CBT_ARMOR           (14)
 #define MVAR_PWR_ARMOR           (15)
-#define MVAR_GIEGER              (16)
+#define MVAR_GEIGER              (16)
 #define MVAR_AMMO_THIS_WEEK      (17)
 #define MVAR_Door_Warning        (18)
 #define MVAR_Mathia09            (19)

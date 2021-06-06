@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/hub.h"
+#include "maps/hubdwntn.h"
 
 #define NAME                    SCRIPT_DECKER
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -64,6 +65,8 @@ procedure DeckerEndInsult;
 procedure DeckerEndNormal;
 procedure DeckerTransport;
 
+#define LVAR_Herebefore          (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable travel;
@@ -75,7 +78,7 @@ procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       Decker_Ptr := self_obj;
-      if (map_var(50) == 1) then begin
+      if (map_var(MVAR_DECKER_DEAD) == 1) then begin
          if not(is_loading_game) then set_self_invisible;
       end
       set_self_team(TEAM_HUB_UNDERGROUND);
@@ -115,8 +118,8 @@ procedure talk_p_proc begin
    dude_look_at_self;
    set_global_var(GVAR_DECKER_KNOWN, 1);
    get_reaction
-   if ((map_var(49) == 1) or (map_var(45) != 1)) then begin
-      if (map_var(52) == 0) then begin
+   if ((map_var(MVAR_KANE_DEAD) == 1) or (map_var(MVAR_KANE_MEET_DECKER) != 1)) then begin
+      if (map_var(MVAR_COPS_IN_HIDEOUT) == 0) then begin
          float_msg(self_obj, mstr(230), FLOAT_MSG_RED);
          call combat;
       end
@@ -126,11 +129,11 @@ procedure talk_p_proc begin
       end
    end
    else begin
-      set_map_var(45, 0);
+      set_map_var(MVAR_KANE_MEET_DECKER, 0);
       start_gdialog(42, self_obj, 4, HEAD_DECKER, BACKGROUND_HUB);
       gsay_start;
-      if (local_var(4) == 0) then begin
-         set_local_var(4, 1);
+      if (local_var(LVAR_Herebefore) == 0) then begin
+         set_local_var(LVAR_Herebefore, 1);
          call Decker01;
       end
       else if (global_var(GVAR_KILL_JAIN) == 2) then begin
@@ -146,12 +149,12 @@ end
 
 procedure destroy_p_proc begin
    inc_evil_critter
-   set_map_var(50, 1);
+   set_map_var(MVAR_DECKER_DEAD, 1);
    set_global_var(GVAR_DECKER_STATUS, 1);
-   if ((map_var(49) == 1) and (map_var(50) == 1)) then begin
+   if ((map_var(MVAR_KANE_DEAD) == 1) and (map_var(MVAR_DECKER_DEAD) == 1)) then begin
       set_global_var(GVAR_UNDERGROUND_STATUS, 1);
-      set_map_var(11, 1);
-      set_map_var(44, 1);
+      set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
+      set_map_var(MVAR_UNDERGROUND_HOSTILE, 1);
    end
 end
 
@@ -352,35 +355,35 @@ procedure Decker36 begin
 end
 
 procedure DeckerEndAcceptJob1 begin
-   set_map_var(46, 2);
+   set_map_var(MVAR_DECKER_JOB_STATUS, 2);
    set_global_var(GVAR_KILL_MERCHANT, 1);
    travel := 1;
 end
 
 procedure DeckerEndDeclineJob1 begin
-   set_map_var(46, 1);
-   set_map_var(11, 1);
+   set_map_var(MVAR_DECKER_JOB_STATUS, 1);
+   set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
    set_global_var(GVAR_KILL_MERCHANT, 0);
    travel := 1;
 end
 
 procedure DeckerEndAcceptJob2 begin
-   set_map_var(47, 3);
+   set_map_var(MVAR_DECKER_STATUS_JOB2, 3);
    set_global_var(GVAR_KILL_JAIN, 1);
    travel := 1;
 end
 
 procedure DeckerEndDeclineJob2 begin
-   set_map_var(47, 2);
-   set_map_var(11, 1);
+   set_map_var(MVAR_DECKER_STATUS_JOB2, 2);
+   set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
    set_global_var(GVAR_KILL_JAIN, 0);
    travel := 1;
 end
 
 procedure DeckerEndInsult begin
-   set_map_var(46, 1);
-   set_map_var(11, 1);
-   set_map_var(44, 1);
+   set_map_var(MVAR_DECKER_JOB_STATUS, 1);
+   set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
+   set_map_var(MVAR_UNDERGROUND_HOSTILE, 1);
    travel := 1;
 end
 
