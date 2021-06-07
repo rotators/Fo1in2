@@ -4,6 +4,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: A new optional Floating Eye party member to the Glow.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: Calder will appear at the destroyed Cathedral now.
 - **Added**: Club-animations for the Tycho critter.
 - **Added**: Combat Shotgun can be upgraded to a round magazine at Jack (Hub) and Zack (Gunrunners) if Fo2-style weapon upgrades are enabled.
 - **Added**: Fire Gecko Pelt from the UPU has been added to the game.
@@ -14,6 +15,10 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Added**: New mini-mod that increases the mountain encounter map size to support a resolution of 1280x720px without showing black bars at the top and bottom of the screen.
 - **Added**: Restored some inaccessible dialog for Lasher inside the Cathedral (about abusing children).
 - **Added**: Restored some inaccessible dialog for Viola inside the Cathedral (after talking to Laura).
+- **Added**: Restored the cut character Brenden in the Brotherhood bunker.
+- **Added**: Restored the cut character Dumar in the Cathedral.
+- **Added**: Restored various cut characters (Rae in the Cathedral, Marney at the Followers Library, Hernandez in Junktown). They can be enabled in the fo1_settings.ini file.
+- **Added**: Rufus (cut-content fluff character) has been added back into Hub Oldtown.
 - **Added**: The Cathedral tower maps have been adjusted in height for higher resolutions (see mini-mod).
 - **Added**: The Fo2 Karma Beacon perk now works with the Fo1 NPCs.
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
@@ -61,6 +66,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: The dialog of Talius in the Followers library was a mess. Added new sentences to remove his amnesia, added a new quest entry to the pipboy ("Kill the leader of the mutant army in Necropolis.") and fixed his quest rewards.
 - **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
 - **Fixed**: The player can't rest in encounter locations anymore if there are other critters in the map.
+- **Fixed**: The teacher in the Brotherhood library was supposed to randomly float text (timer event proc was missing).
 - **Fixed**: The wanted sign now correctly shows the current bounty on the players head (in caps).
 - **Fixed**: Using a crowbar on doors would actually not do anything (Fo2 feature - added by Killap for the UP, but it never worked).
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
