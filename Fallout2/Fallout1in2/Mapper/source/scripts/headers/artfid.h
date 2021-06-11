@@ -151,3 +151,5 @@
 #define FID_MARDOG        (16777345) // Red colored dog
 #define FID_HMWARR        (16777346) // Hero Male Primitive Warrior
 #define FID_HMLHMX        (16777347) // Long hair leather jacket
+#define FID_HMBMAX        (16777348) // Black dude leather jacket
+#define FID_HMBLTR        (16777349) // Black dude leather armor
