@@ -971,7 +971,7 @@ variable removed_qty;
                         (weapon_pid == PID_TURBO_PLASMA_RIFLE)) then begin                   \
               stock_pid_qty(who_obj, PID_MICRO_FUSION_CELL, ammo_qty)                        \
            end else if ((weapon_pid == PID_LASER_PISTOL) or                                  \
-                        (weapon_pid == PID_ZIP_GUN) or                                       \
+                        (weapon_pid == PID_LASER_ZIP_GUN) or                                 \
                         (weapon_pid == PID_POWER_FIST) or                                    \
                         (weapon_pid == PID_MEGA_POWER_FIST) or                               \
                         (weapon_pid == PID_RIPPER) or                                        \

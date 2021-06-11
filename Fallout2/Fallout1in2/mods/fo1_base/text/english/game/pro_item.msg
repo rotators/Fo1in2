@@ -496,8 +496,8 @@
 {25301}{}{This chip controls the flow of power into a car's electric engines. Many drivers quickly burnt out this chip through frequent rapid acceleration. Still a valuable part to have-- if you only had a car to install it in.}
 {25400}{}{Fuel Cell Regulator}
 {25401}{}{Some car-owners installed this regulator, that doubles your car's mileage between charges, but most drivers didn't care how much juice their cars consumed, after all, power's cheap and plentiful so why worry.}
-{25500}{}{Day Pass}
-{25501}{}{This slightly crumpled piece of paper grants you access to all areas of Vault City, except the Vault itself, during daylight hours only.}
+{25500}{}{Zip Gun}
+{25501}{}{A handmade laser pistol. Min ST: 3.}
 {25600}{}{False Citizenship Papers}
 {25601}{}{This is a set of false Citizenship Papers. They look authentic enough, but you doubt they could pass a serious inspection.}
 {25700}{}{Cornelius' Gold Watch}
@@ -587,7 +587,7 @@
 {29900}{}{Pipe Rifle}
 {29901}{}{This is a hand-made single shot rifle. Min ST: 5.}
 {30000}{}{Zip Gun}
-{30001}{}{A handmade laser pistol. Min ST: 3.}
+{30001}{}{A handmade single shot pistol. Min ST: 4.}
 {30100}{}{Clipboard}
 {30101}{}{This is a clipboard with the coolant report.}
 {30200}{}{Gecko Holodisk}

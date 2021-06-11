@@ -112,6 +112,7 @@
 #define PID_COMBAT_KNIFE                    (236)
 #define PID_223_PISTOL                      (241)
 #define PID_COMBAT_SHOTGUN                  (242)
+#define PID_LASER_ZIP_GUN                   (255) // Low-tier laser pistol
 #define PID_JONNY_BB_GUN                    (261)
 #define PID_HK_CAWS                         (268) // Assault Shotgun
 #define PID_ROBO_ROCKET_LAUNCHER            (270)
@@ -389,7 +390,6 @@
 #define PID_ANNA_GOLD_LOCKET                (252)
 //#define PID CAR_FUEL_CELL_CONTROLLER      (253) already used by moto key
 #define PID_CAR_FUEL_INJECTION              (254)
-#define PID_DAY_PASS                        (255)
 #define PID_FAKE_CITIZENSHIP                (256)
 #define PID_CORNELIUS_GOLD_WATCH            (257)
 #define PID_HY_MAG_PART                     (258)
