@@ -2,10 +2,12 @@
 
    Big fucking bank vault door
    Used in Hub Downtown but also in Master's Lair as elevators door.
+
 */
 
 #include "define.h"
 #include "command.h"
+#include "maps/hubdwntn.h"
 
 #define NAME                     SCRIPT_DOOR
 
@@ -18,6 +20,7 @@ procedure map_update_p_proc;
 procedure damage_p_proc;
 procedure OpenDoor;
 
+#define LVAR_DoorHP           (2)
 #define LVAR_Gave_Locks_XP    (3)
 
 import variable Cur_Door_Ptr;
@@ -30,12 +33,12 @@ procedure use_p_proc begin
       script_overrides;
       display_msg(mstr(104));
       if CUR_MAP_HUBDWNTN then begin
-         set_map_var(55, 1);
+         set_map_var(MVAR_VAULT_OPEN, 1);
       end
    end
    else begin
       if CUR_MAP_HUBDWNTN then begin
-         set_map_var(55, 2);
+         set_map_var(MVAR_VAULT_OPEN, 2);
       end
    end
 end
@@ -47,7 +50,7 @@ procedure use_skill_on_p_proc begin
          script_overrides;
          LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
          if CUR_MAP_HUBDWNTN then begin
-            set_map_var(55, 1);
+            set_map_var(MVAR_VAULT_OPEN, 1);
          end
          if (is_success(LVar0)) then begin
             call OpenDoor;
@@ -81,7 +84,7 @@ procedure use_obj_on_p_proc begin
    Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
 
    if CUR_MAP_HUBDWNTN then begin
-      set_map_var(55, 1);
+      set_map_var(MVAR_VAULT_OPEN, 1);
    end
 
    if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET /*or obj_pid(Item) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Item) == PID_ELEC_LOCKPICK_MKII*/) then begin
@@ -119,19 +122,19 @@ end
 
 procedure damage_p_proc begin
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-      if (local_var(2) == 2) then begin
+      if (local_var(LVAR_DoorHP) == 2) then begin
          if not(is_loading_game) then begin
             set_self_invisible;
          end
          set_local_var(1, 1);
          if CUR_MAP_HUBDWNTN then begin
-            set_map_var(55, 2);
+            set_map_var(MVAR_VAULT_OPEN, 2);
          end
       end
       else begin
-         set_local_var(2, local_var(2) + 1);
+         inc_local_var(LVAR_DoorHP);
          if CUR_MAP_HUBDWNTN then begin
-            set_map_var(55, 2);
+            set_map_var(MVAR_VAULT_OPEN, 2);
          end
       end
    end
@@ -145,7 +148,7 @@ procedure OpenDoor begin
    set_local_var(0, 1);
 
    if CUR_MAP_HUBDWNTN then begin
-      set_map_var(55, 2);
+      set_map_var(MVAR_VAULT_OPEN, 2);
    end
 
    display_msg(mstr(100));
