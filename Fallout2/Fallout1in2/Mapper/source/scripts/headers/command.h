@@ -255,7 +255,7 @@ variable step_tile;
 
 #define dude_look_at_self                 anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
 #define self_look_at_dude                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to_dude)
-#define self_look_at(ptr)                 anim(dude_obj,ANIMATE_ROTATION,self_rotation_to(ptr))
+#define self_look_at(ptr)                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to(ptr))
 
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
 #define self_is_sneaking                  using_skill(self_obj,SKILL_SNEAK)
