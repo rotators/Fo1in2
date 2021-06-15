@@ -45,6 +45,15 @@ procedure Node999;
 procedure Node001;
 procedure Node002;
 procedure Node003;
+procedure Node004;
+procedure Node005;
+procedure Node006;
+procedure Node007;
+procedure Node008;
+procedure Node008a;
+procedure Node008b;
+
+procedure NodeJoin;
 
 procedure Node1001;
 procedure Node1002;
@@ -67,6 +76,7 @@ variable tmp_hostile := 0;
 #define LVAR_AnimStatus                   (4)
 #define LVAR_RobotState                   (5)
 #define LVAR_PowerState                   (6)
+#define LVAR_Herebefore                   (7)
 
 #define LVAR_WAITING                      (10)
 #define LVAR_FOLLOW_DISTANCE              (11)
@@ -472,18 +482,92 @@ end
 
 // Primary party node
 procedure Node001 begin
-   Reply(200);
+   Reply(1000);
    party_member_default_options;
 end
 
 procedure Node002 begin
-   Reply(200);
-   NOption(201, Node003, 004);
+   if (local_var(LVAR_Herebefore) == 3) then begin
+      Reply(212);
+      NOption(213, NodeJoin, 004);
+      NOption(g_bye, Node999, 004);
+   end
+   else begin
+      Reply(200);
+      if (local_var(LVAR_Herebefore) == 0) then begin
+         set_local_var(LVAR_Herebefore, 1);
+         NOption(201, Node003, 004);
+      end
+      else begin
+         NOption(203, Node004, 004);
+         NOption(205, Node005, 004);
+         if (local_var(LVAR_Herebefore) == 2) then
+            NOption(207, Node006, 004);
+      end
+   end
+end
+
+procedure Node003 begin
+   Reply(202);
+   NOption(203, Node004, 004);
+   NOption(205, Node005, 004);
+   if (local_var(LVAR_Herebefore) == 2) then
+      NOption(207, Node006, 004);
+end
+
+procedure Node004 begin
+   Reply(204);
+   NOption(203, Node004, 004);
+   NOption(205, Node005, 004);
+   if (local_var(LVAR_Herebefore) == 2) then
+      NOption(207, Node006, 004);
+end
+
+procedure Node005 begin
+   set_local_var(LVAR_Herebefore, 2);
+   Reply(206);
+   NOption(207, Node006, 004);
+end
+
+procedure Node006 begin
+   Reply(208);
+   NOption(209, Node007, 006);
+   NOption(214, Node008, 004);
+end
+
+procedure Node007 begin
+   set_local_var(LVAR_Herebefore, 3);
+   NMessage(210);
+   NMessage(211);
+   Reply(212);
+   NOption(213, NodeJoin, 004);
    NOption(g_bye, Node999, 004);
 end
 
+procedure Node008 begin
+   if dude_stat_success(STAT_lu, 2) then begin
+      call Node008a;
+   end
+   else begin
+      if dude_stat_success(STAT_st, 2) then begin
+         critter_damage(self_obj, (random(1, 5) * dude_strength));
+      end
+      call Node008b;
+   end
+end
+
+procedure Node008a begin
+   NMessage(215);
+   call Node007;
+end
+
+procedure Node008b begin
+   Reply(216);
+   NOption(217, Node999, 004);
+end
+
 // Eyebot rejoin:
-procedure Node003 begin
+procedure NodeJoin begin
    if (local_var(LVAR_RobotState) == STATE_IDLE) then begin
       set_local_var(LVAR_RobotState, STATE_ACTIVATED);
    end
@@ -507,6 +591,7 @@ variable battery;
       battery := mstr(1401);
    else
       battery := mstr(1402);
+   battery := "";    // Disable for now
 
    // heal yourself
    obj_heal(self_obj)

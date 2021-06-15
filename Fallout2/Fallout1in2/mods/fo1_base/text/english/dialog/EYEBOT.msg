@@ -22,8 +22,30 @@
 {165}{}{You failed to improvise a battery.}
 
 # Dialog after fixing the robot
-{200}{}{All systems online. Orders?}
-{201}{}{Follow me.}
+{200}{}{[Click] SYSTEM ERROR. [Beep] Unit unable to process the last active task. Task manager is not responding. Orders?}
+{201}{}{Do you understand me?}
+
+{202}{}{Voice module online. System nominal. Orders?}
+{203}{}{What was your last task?}
+
+{204}{}{Accessing task queue ... Last task: Parameter security. Task canceled after suffering severe energy fluctuations. Battery overload. Hardware components damaged.}
+{205}{}{What is your status?}
+
+{206}{}{Maintenance status: OK ... Battery status: BAD ... Connection to local network: GOOD ... Weapon systems: ONLINE.}
+{207}{}{Can you follow me?}
+
+{208}{}{New task: NEGATIVE. Task queue full. Orders?}
+{209}{}{Wipe the memory.}
+
+{210}{}{Processing. Please wait ... [Beep]}
+{211}{}{System rebooting. Please wait ... [Beep]}
+{212}{}{[Click] SYSTEM ONLINE ... MEMORY LOAD 39% ... All systems nominal. Orders?}
+{213}{}{Follow me.}
+
+{214}{}{Uhh ... Maybe I should just wack you a little bit?}
+{215}{}{ERROR. [Beep] System rebooting. Please wait.}
+{216}{}{(You beat the robot, but nothing good happens)}
+{217}{}{Well, at least I tried.}
 
 # Repair partymember dialog
 {900}{}{Floating Eye can't be repaired anymore at this time.}
@@ -31,7 +53,7 @@
 {902}{}{Floating Eye is all fixed now.}
 
 # Primary party dialog
-{1000}{}{Initialize parameters.}
+{1000}{}{Initialize parameters. All systems online. Orders?}
 {1001}{}{}
 	{1014}{}{You should perform maintenance on yourself now.}
 	{1015}{}{We need to talk about what you can do.}
@@ -55,6 +77,8 @@
 {1200}{}{Maintenance status: Good. No repairs necessary.}
 {1300}{}{Maintenance status: Damaged. Suggesting additional repairs in the near future.}
 {1400}{}{Maintenance status: Bad. Suggesting additional repairs in the near future.}
+{1401}{}{Battery status: OK.}
+{1402}{}{Battery status: GOOD.}
 
 {1500}{}{We better stay together.}
 {1501}{}{Confirmed. Standby.}
