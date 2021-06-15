@@ -873,7 +873,7 @@
 {44800}{}{Account Book}
 {44801}{}{This account book lists a series of monthly payments made to the mercenary band from the Bishop Family in New Reno. The payments depend heavily on how much "pressure" the mercenaries put on Vault City. Vault City might be interested in this.}
 {44900}{}{Combat Shotgun (Exp. Mag.)}
-{44901}{}{A Winchester City-Killer 12-gauge combat shotgun, bullpup variant. In excellent condition, it has a round magazine for extended burst fire. Min ST: 5.}
+{44901}{}{A Winchester City-Killer 12-gauge combat shotgun, bullpup variant. In excellent condition. It has a round magazine for extended burst fire. Min ST: 5.}
 {45000}{}{Torn Paper 1}
 {45001}{}{You see a piece of paper with writing on it. It looks like it's part of a code of some sort. Unfortunately, the code is incomplete. If only you could find all three pieces. You can make out the following: 1. Physics Password KSLJ, 2. Chemistry Password TIU, 3. Biology Password INTL}
 {45100}{}{Torn Paper 2}
