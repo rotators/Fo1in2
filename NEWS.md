@@ -78,8 +78,10 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Tweaked**: Increased the float timer between Guido and Leon (Hub / FLC guards), because the text was barely readable.
 - **Tweaked**: Moved the inventory weapons of Hub entrance guards into their off-hand slots, otherwise they would never use them.
 - **Tweaked**: Perk description text still had Fo2 stuff in it. Reverted it back to the Fo1 text.
+- **Tweaked**: Removed the locker in the V13 medical room - it wasn't there in the original.
 - **Tweaked**: Reverted the +20% skill bonus of the Survivalist perk. In Fo1 it doesn't give any points and is only used in calculations "behind the scenes".
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
 - **Tweaked**: Rewrote the floating text conversation between Guido and Leon (Hub / FLC guards) to get a better text speed pacing.
 - **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.
 - **Tweaked**: Super Mutants in encounter maps will now start out with their weapons equipped.
+- **Tweaked**: Updated black metal armor critter with new (fixed) animations.
