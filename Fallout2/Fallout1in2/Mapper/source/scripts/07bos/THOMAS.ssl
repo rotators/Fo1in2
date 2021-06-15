@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "area/brotherhood.h"
+#include "maps/brohd12.h"
 
 #define NAME                    SCRIPT_THOMAS
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -23,7 +24,6 @@ procedure talk_p_proc;
 
 procedure Thomas00;
 
-procedure weapon_check;
 procedure give_skill;
 procedure prepare_for_combat;
 procedure do_combat;
@@ -36,7 +36,6 @@ procedure do_round;
 import variable Student_ptr;
 
 variable initial := 0;
-variable armed;
 variable x;
 variable student_armed;
 variable instructor_armed;
@@ -66,6 +65,8 @@ variable phase;
 variable tmp_hostile;
 variable skill_pts;
 
+variable sound;
+
 procedure start begin
    if not(initial) then begin
       initial := 1;
@@ -74,7 +75,7 @@ procedure start begin
       set_self_ai(AI_BROTHERHOOD_KNIGHT);
 
       my_hex := self_tile;
-      set_map_var(1, tile_num_in_direction(my_hex, 4, 1));
+      set_map_var(MVAR_STUDENT_HEX, tile_num_in_direction(my_hex, 4, 1));
       my_knife := self_item(PID_KNIFE);
       who := local_var(1);
       fell := local_var(2);
@@ -122,7 +123,7 @@ procedure critter_p_proc begin
    end
 
    if (global_var(GVAR_ENEMY_BROTHERHOOD) == 0) then begin
-      if (map_var(0) == 1) then begin
+      if (map_var(MVAR_STUDENT_READY) == 1) then begin
          if (local_var(0) < 1) then begin
             set_local_var(0, 1);
             phase := 0;
@@ -145,15 +146,6 @@ procedure critter_p_proc begin
    end
 end
 
-procedure weapon_check begin
-   if critter_is_armed(Student_ptr) then begin
-      armed := 1;
-   end
-   else begin
-      armed := 0;
-   end
-end
-
 procedure give_skill begin
    set_local_var(11, local_var(11) + 1);
    skill_pts := 1;
@@ -165,27 +157,27 @@ end
 
 procedure prepare_for_combat begin
    if (student_armed) then begin
-      st_manuver0 := 41;
-      st_manuver1 := 42;
-      st_manuver2 := 40;
+      st_manuver0 := ANIM_thrust_anim;
+      st_manuver1 := ANIM_swing_anim;
+      st_manuver2 := ANIM_parry_anim;
       wait3 := 0;
    end
    else begin
-      st_manuver0 := 16;
-      st_manuver1 := 17;
-      st_manuver2 := 13;
+      st_manuver0 := ANIM_throw_punch;
+      st_manuver1 := ANIM_kick_leg;
+      st_manuver2 := ANIM_dodge_anim;
       wait3 := 4;
    end
    if (instructor_armed) then begin
-      in_manuver0 := 41;
-      in_manuver1 := 42;
-      in_manuver2 := 40;
+      in_manuver0 := ANIM_thrust_anim;
+      in_manuver1 := ANIM_swing_anim;
+      in_manuver2 := ANIM_parry_anim;
       wait2 := 0;
    end
    else begin
-      in_manuver0 := 16;
-      in_manuver1 := 17;
-      in_manuver2 := 13;
+      in_manuver0 := ANIM_throw_punch;
+      in_manuver1 := ANIM_kick_leg;
+      in_manuver2 := ANIM_dodge_anim;
       wait2 := 4;
    end
 end
@@ -269,12 +261,16 @@ procedure recover_from_combat begin
       reg_anim_clear(Student_ptr);
       reg_anim_begin();
       if (fell == 1) then begin
+         sound := sfx_build_char_name(self_obj, ANIM_back_to_standing, snd_contact);
          reg_anim_animate(Student_ptr, ANIM_stand, -1);
          reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+         reg_anim_play_sfx(self_obj, sound, 1);
       end
       else begin
+         sound := sfx_build_char_name(Student_ptr, ANIM_back_to_standing, snd_contact);
          reg_anim_animate(self_obj, ANIM_stand, -1);
          reg_anim_animate(Student_ptr, ANIM_back_to_standing, -1);
+         reg_anim_play_sfx(Student_ptr, sound, 1);
       end
       reg_anim_end();
    end
@@ -285,22 +281,22 @@ procedure recover_from_combat begin
    fell := 0;
    set_local_var(2, fell);
    set_local_var(0, 0);
-   set_map_var(0, 0);
+   set_map_var(MVAR_STUDENT_READY, 0);
 end
 
 procedure pick_a_student begin
    fell := 0;
    set_local_var(2, fell);
-   set_map_var(0, 0);
-   temp := random(1, map_var(5));
+   set_map_var(MVAR_STUDENT_READY, 0);
+   temp := random(1, map_var(MVAR_STUDENT_NUM));
    set_local_var(8, temp);
    if (temp == local_var(9)) then begin
       set_local_var(8, local_var(9) + 1);
-      if (local_var(8) > map_var(5)) then begin
+      if (local_var(8) > map_var(MVAR_STUDENT_NUM)) then begin
          set_local_var(8, 1);
       end
    end
-   set_map_var(2, local_var(8));
+   set_map_var(MVAR_SIGNAL_NEW_STUDENT, local_var(8));
    set_local_var(9, local_var(8));
    student_armed := 0;
    instructor_armed := 0;
