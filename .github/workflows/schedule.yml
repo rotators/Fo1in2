@@ -27,7 +27,8 @@ defaults:
   shell: bash
 
 env:
- GHA_SCRIPTS: ".github/workflows/scripts"
+ GHA_SCRIPTS:                 ".github/workflows/scripts"
+ MOD_DIR:                     "Fallout2/Fallout1in2"
  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
@@ -37,8 +38,9 @@ jobs:
  Maintenance:
   if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
-  env:
-   MOD_DIR:            "Fallout2/Fallout1in2"
+  outputs:     # used by dependant jobs
+   event:      ${{ steps.preparations.outputs.event }}
+   repo-alive: ${{ steps.activity-check.outputs.repo-alive }}
   steps:
 
 ### Activity check
@@ -46,6 +48,7 @@ jobs:
 ### if it's older than a week, all other steps are skipped
 
   - name: Activity check
+    id:   activity-check
     run:  |
           :
           # old check, requires already cloned repository; left for reference
@@ -82,6 +85,9 @@ jobs:
 
           if [ $alive -eq 1 ]; then
              echo GHA_REPO_ALIVE=true >> $GITHUB_ENV
+             echo "::set-output name=gha-repo-alive::true
+          else
+             echo "::set-output name=gha-repo-alive::false
           fi
 
 ### Preparations
@@ -112,6 +118,7 @@ jobs:
      fetch-depth: 0
 
   - name: Preparations
+    id:   preparations
     if:   env.GHA_REPO_ALIVE == 'true'
     run:  |
           :
@@ -175,6 +182,7 @@ jobs:
                fi
           fi
           echo GHA_EVENT=$event >> $GITHUB_ENV
+          echo "::set-output name=event::$event"
           echo "GitHub event... $event"
 
   - name: Cache (DirectX)
@@ -442,3 +450,74 @@ jobs:
   - name: Post Clone ScanMsg
     if:   env.GHA_REPO_ALIVE == 'true'
     run:  rm -fR $HOME/ScanMsg
+
+ Synchronize:
+  if: github.repository == 'rotators/Fo1in2'
+  needs: Maintenance
+  runs-on: windows-latest
+  strategy:
+   max-parallel: 1
+   matrix:
+    branch: [ 'fo1_french', 'fo1_german' ]
+  steps:
+
+  - name: Preparations
+    run:  |
+          :
+          echo "GHA_EVENT=${{ needs.Maintenance.outputs.event" >> $GITHUB_ENV
+          echo "GHA_REPO_ALIVE=${{ needs.Maintenance.outputs.repo-alive }}" >> $GITHUB_ENV
+
+  - name: Clone FO1@2
+    if:   env.GHA_REPO_ALIVE == 'true'
+    uses: actions/checkout@v2
+    with:
+     token: ${{ secrets.ANTALASKAYA_TOKEN }}
+     ref:   ${{ matrix.branch }}
+
+  - name: Synch fo1_base/text/english/english/
+    if:   GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          git checkout master -- $MOD_DIR/mods/fo1_base/text/english
+          git diff --quiet || (git add --update && echo "- Synchronize english .msg files with master branch" >> $HOME/gha.commit)
+
+  - name: Validation
+    if:   GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          echo ::group::git status
+          git status 2>&1
+          echo ::endgroup::
+
+          if [ -f "$HOME/gha.commit" ]; then
+             sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
+             dos2unix $HOME/gha.commit
+             echo GHA_COMMIT=true >> $GITHUB_ENV
+             cat $HOME/gha.commit
+          fi
+
+  - name: Push
+    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    run:  |
+          :
+          echo ::group::git commit
+          dos2unix $HOME/gha.commit
+          sed -i '/^#/d' $HOME/gha.commit
+          git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
+          git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
+          git commit --file="$HOME/gha.commit" 2>&1
+          rm -f $HOME/gha.commit
+          echo ::endgroup::
+
+          echo ::group::git log
+          git log -p -n 1 2>&1
+          echo ::endgroup::
+
+          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
+             echo ::group::git push
+             git push 2>&1
+             echo ::endgroup::
+          else
+             echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
+          fi
+    continue-on-error: true
