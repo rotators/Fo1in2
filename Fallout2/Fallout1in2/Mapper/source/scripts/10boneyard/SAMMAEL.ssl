@@ -51,6 +51,8 @@ procedure FarmsEnd;
 variable tmp_hostile;
 variable initial := 0;
 
+#define LVAR_Herebefore             (4)
+#define LVAR_AskedFarmParts         (7)
 #define LVAR_Home_Tile              (8)
 #define LVAR_Home_Rotation          (9)
 
@@ -110,8 +112,7 @@ procedure critter_p_proc begin
    end*/
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if source_is_dude then begin
       set_global_var(GVAR_ENEMY_ADYTUM, 1);
 set_self_team(TEAM_LA_ADYTOWNER);
@@ -125,10 +126,9 @@ procedure destroy_p_proc begin
    end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -136,8 +136,7 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    set_global_var(GVAR_ENEMY_ADYTUM, 1);
 end
 
@@ -147,7 +146,7 @@ procedure talk_p_proc begin
    dude_look_at_self;
    start_gdialog(254, self_obj, 4, -1, -1);
    gsay_start;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       call Sammael14;
    end
    else begin
@@ -157,57 +156,49 @@ procedure talk_p_proc begin
    end_dialogue;
 end
 
-procedure Sammael01
-begin
+procedure Sammael01 begin
    Reply(102);
    NOption(mstr(103) + dude_name + mstr(104), Sammael02, 4);
    NOption(105, Sammael03, 4);
    NLowOption(106, Sammael15);
 end
 
-procedure Sammael02
-begin
-   set_local_var(4, 1);
+procedure Sammael02 begin
+   set_local_var(LVAR_Herebefore, 1);
    Reply(107);
-   if (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 1) and (local_var(7) != 2) then begin
+   if (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 1) and (local_var(LVAR_AskedFarmParts) != 2) then begin
       NOption(140, Farms01, 4);
-      set_local_var(7, 2);
    end
    NOption(108, Sammael04, 4);
    NOption(109, Sammael05, 4);
 end
 
-procedure Farms01
-begin
+procedure Farms01 begin
+   set_local_var(LVAR_AskedFarmParts, 2);
    Reply(141);
    NOption(142, FarmsEnd, 4);
    NOption(143, Farms03, 4);
    NOption(144, Farms02, 4);
 end
 
-procedure FarmsEnd
-begin
+procedure FarmsEnd begin
    NMessage(145);
 end
 
-procedure Farms02
-begin
+procedure Farms02 begin
    NMessage(146);
 end
 
-procedure Farms03
-begin
+procedure Farms03 begin
    NMessage(147);
    set_local_var(5, 1);
 end
 
-procedure Sammael03
-begin
+procedure Sammael03 begin
    NMessage(110);
 end
 
-procedure Sammael04
-begin
+procedure Sammael04 begin
    Reply(111);
    NOption(112, Sammael06, 4);
    NOption(113, Sammael07, 4);
@@ -215,26 +206,22 @@ begin
    NOption(115, Sammael05, 1);
 end
 
-procedure Sammael05
-begin
+procedure Sammael05 begin
    NMessage(116);
 end
 
-procedure Sammael06
-begin
+procedure Sammael06 begin
    Reply(117);
    NOption(118, Sammael07, 4);
    NOption(119, Sammael08, 6);
    NOption(120, Sammael05, 4);
 end
 
-procedure Sammael07
-begin
+procedure Sammael07 begin
    NMessage(121);
 end
 
-procedure Sammael08
-begin
+procedure Sammael08 begin
    Reply(122);
    NOption(123, Sammael09, 4);
    NOption(124, Sammael10, 4);
@@ -244,62 +231,53 @@ begin
    NOption(128, Sammael05, 4);
 end
 
-procedure Sammael09
-begin
+procedure Sammael09 begin
    NMessage(129);
    call Sammael08;
 end
 
-procedure Sammael10
-begin
+procedure Sammael10 begin
    NMessage(130);
    NMessage(131);
    call Sammael08;
 end
 
-procedure Sammael11
-begin
+procedure Sammael11 begin
    NMessage(132);
    call Sammael08;
 end
 
-procedure Sammael12
-begin
+procedure Sammael12 begin
    NMessage(133);
    call Sammael08;
 end
 
-procedure Sammael13
-begin
+procedure Sammael13 begin
    NMessage(134);
    NMessage(135);
    call Sammael08;
 end
 
-procedure Sammael14
-begin
+procedure Sammael14 begin
    Reply(136);
    if ((global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) > 2) or party_has_item(PID_FARM_PARTS) /*dude_item_count(PID_FARM_PARTS)*/) and (local_var(6) != 2) then begin
       NOption(148, Farms04, 4);
       NOption(149, Farms04, 4);
    end
    else begin
-      if get_quest_farm_active and (local_var(7) != 2) then begin
+      if get_quest_farm_active and (local_var(LVAR_AskedFarmParts) != 2) then begin
          NOption(140, Farms01, 4);
-         set_local_var(7, 2);
       end
       NOption(137, Sammael04, 4);
       NOption(138, Sammael05, 4);
    end
 end
 
-procedure Sammael15
-begin
+procedure Sammael15 begin
    NMessage(139);
 end
 
-procedure Farms04
-begin
+procedure Farms04 begin
    variable LVar0;
    NMessage(150);
    set_local_var(6, 2);
