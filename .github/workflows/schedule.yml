@@ -185,60 +185,27 @@ jobs:
           echo "::set-output name=event::$event"
           echo "GitHub event... $event"
 
-  - name: Cache (DirectX)
-    if:   env.DXSDK_DIR != ''
-    id:   cache-dx
-    uses: actions/cache@v2.1.6
-    with:
-     path: ~/cache-dx
-     key:  cache-sfall-dx
-
-  - name: Cache create (DirectX)
-    if:   env.DXSDK_DIR != '' && steps.cache-dx.outputs.cache-hit != 'true'
-    run:  |
-          :
-          echo ::group::DX2010
-          curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
-          7z x _DX2010_.exe DXSDK/Include -o_DX2010_
-          7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
-          mv _DX2010_/DXSDK $DXSDK_DIR
-          echo ::endgroup::
-
-          echo ::group::DX2007
-          curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
-          7z x _DX2007_.exe -o_DX2007_
-          7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
-          cp _DX2007_/Lib/x86/dinput.lib $DXSDK_DIR/Lib/x86
-          echo ::endgroup::
-
-          # clean & check
-          rm -fR _DX*_ _DX*_.exe
-          git status
-
-          #ls -Ra $HOME/cache-dx
-          du -hd0 $HOME/cache-dx
-
 ### Major tasks
 ### always generates commit (if needed)
 
   # updates customized version of sfall (rotators branch, ReleaseXP configuration)
-  - name: sfall-rotators update
-    if:   env.GHA_TASK_SFALL_ROTATORS == 'true'
-    run:  |
-          :
-          echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
-          sed -ri 's!(0x[0]*501|_WIN32_WINNT_WINXP)!0x0600!' $HOME/sfall-rotators/sfall/stdafx.h
-          ok=1
-          "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
-          if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
-             cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
-          fi
-          SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1 sfall)
-          SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
-          echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
-          ls -sh $MOD_DIR/ddraw.rotators.dll
-
-          git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
+  # name: sfall-rotators update
+  # if:   env.GHA_TASK_SFALL_ROTATORS == 'true'
+  # run:  |
+  #       :
+  #       echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
+  #       sed -ri 's!(0x[0]*501|_WIN32_WINNT_WINXP)!0x0600!' $HOME/sfall-rotators/sfall/stdafx.h
+  #       ok=1
+  #       "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
+  #       if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
+  #          cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
+  #       fi
+  #       SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1 sfall)
+  #       SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
+  #       echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
+  #       ls -sh $MOD_DIR/ddraw.rotators.dll
+  #
+  #       git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
 
   # updates .msg files scanner
   - name: ScanMsg update
