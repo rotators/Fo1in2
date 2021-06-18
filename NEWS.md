@@ -1,5 +1,4 @@
-N
-otable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in2/releases/tag/v1.5.2288))
+Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in2/releases/tag/v1.5.2288))
 
 - **Added**: A new mini-mod that enables current / maximum carry weight in the loot screen, similar to what Crafty's Sfall for Fo1 does.
 - **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
@@ -65,6 +64,7 @@ otable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in
 - **Fixed**: The Skum Pitt cutscene between the Skulz ganger and Trish had no sound effects.
 - **Fixed**: The Tag!-perk wouldn't give +20% to the new skill as it did in Fo1.
 - **Fixed**: The dialog of Talius in the Followers library was a mess. Added new sentences to remove his amnesia, added a new quest entry to the pipboy ("Kill the leader of the mutant army in Necropolis.") and fixed his quest rewards.
+- **Fixed**: The dialog option to ask Sammael in Adytum about the farm parts would show up only once.
 - **Fixed**: The fisherman and his son would reappear in encounters, even if the player killed them before.
 - **Fixed**: The player can't rest in encounter locations anymore if there are other critters in the map.
 - **Fixed**: The teacher in the Brotherhood library was supposed to randomly float text (timer event proc was missing).
