@@ -497,8 +497,8 @@
 {25301}{}{Dieser Chip steuert den Fluß des Kraftstoffs in den Elektromotor eines Autos. Bei vielen Fahrern ist der Chip schnell durchgebrannt, weil sie zu oft zu schnell beschleunigen. Kann dennoch ganz nützlich sein - wenn man nur ein Auto hätte, in das man den Chip einbauen könnte.}
 {25400}{}{Brennstoffzellenregler}
 {25401}{}{Einige Autobesitzer haben diesen Regulator eingebaut, mit dem sich die Kilometerleistung bis zum nächsten Laden verdoppeln lässt. Den meisten Autobesitzern ist es aber egal, wieviel ihr Wagen verbraucht, da Strom nicht teuer und reichlich vorhanden ist, also was soll's.}
-{25500}{}{Tagesausweis}
-{25501}{}{Dieses leicht zerknitterte Stück Papier gewährt dir Zugang zu allen Gebieten von Bunkerstadt mit Ausnahme des Bunkers selbst. Nur während der Tagesstunden gültig.}
+{25500}{}{Zip-Pistole}
+{25501}{}{Eine handgefertigte Laserpistole. Mindeststärke: 3.}
 {25600}{}{Falsche Bürgerschaftspapiere}
 {25601}{}{Gefälschte Bürgerschaftspapiere. Sie sehen ziemlich echt aus, aber du bezweifelst, dass sie eine sorgfältige Kontrolle überstehen würden.}
 {25700}{}{Cornelius' goldene Uhr}
@@ -588,7 +588,7 @@
 {29900}{}{Rohrgewehr}
 {29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuss. Mindeststärke: 5.}
 {30000}{}{Zip-Pistole}
-{30001}{}{Eine handgefertigte Laserpistole. Mindeststärke: 3.}
+{30001}{}{Eine handgefertigte Pistole. Mindeststärke: 3.}
 {30100}{}{Clipboard}
 {30101}{}{Dies ist ein Clipboard mit einem Kühlmittelbericht.}
 {30200}{}{Gecko-Holodisk}
@@ -873,8 +873,8 @@
 {44701}{}{Diese Holo-Disk enthält belastende Informationen aus Bishops geheimen Verhandlungen mit der NKR. Offensichtlich hat Bishop Söldner angestellt, die Bunkerstadt angreifen sollten, damit Bunkerstadt militärische Unterstützung aus der NKR anfordert. Diese Holo-Disk hat nur Audiofunktionen und keine Textdaten. Bunkerstadt könnte daran interessiert sein.}
 {44800}{}{Buchhaltungsbuch}
 {44801}{}{Dieses Buchhaltungsbuch listet eine Reihe monatlicher Zahlungen an die Söldnergang durch die Familie Bishop aus New Reno auf. Die Zahlungen hängen stark davon ab, wieviel "Druck" die Söldner auf Bunkerstadt ausüben. Bunkerstadt könnte daran interessiert sein.}
-{44900}{}{Nicht verwendet}
-{44901}{}{Nicht verwendet}
+{44900}{}{Kampfgewehr (Erw. Mag.)}
+{44901}{}{Kampfgewehr vom Typ Winchester City-Killer in 12 Gauge, Bullpup-Modell. In hervorragendem Zustand. Ausgestattet mit einem Trommelmagazin für verlängerte Feuertöße. Mindeststärke: 5.}
 {45000}{}{Zerrissenes Papier 1}
 {45001}{}{Du siehst ein Stück beschriebenes Papier. Die Schrift sieht aus, als sei sie Teil eines Codes. Leider ist dieser Code unvollständig. Wenn du nur alle drei Teile des Papiers finden könntest! Du kannst die folgenden Wörter lesen: 1. Physik-Kennwort KSLJ, 2. Chemie-Kennwort TIU, 3. Biologie-Kennwort INTL}
 {45100}{}{Zerrissenes Papier 2}
@@ -1037,3 +1037,5 @@
 {53701}{}{DO NOT USE}
 {53800}{}{Dehydration Stark}
 {53801}{}{DO NOT USE}
+{53900}{}{Feuergeckohaut}
+{53901}{}{Die getrocknete und präparierte Haut eines Feuergeckos. Sie ist stark verbrannt und hat daher wenig Wert.}

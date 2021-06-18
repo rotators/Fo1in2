@@ -2789,3 +2789,15 @@
 {186400}{}{Kasinoschild}
 {186401}{}{Sieht wie eine Werbetafel für Gizmos Kasino aus. Es wurde ausgeschaltet.}
 {186500}{}{Fliegen}
+{186600}{}{Berg}
+{186601}{}{Diese Bergwände sehen sehr unzugänglich aus.}
+{186700}{}{Berg}
+{186701}{}{Diese Bergwände sehen sehr unzugänglich aus.}
+{186800}{}{Berg}
+{186801}{}{Diese Bergwände sehen sehr unzugänglich aus.}
+{186900}{}{Berg}
+{186901}{}{Diese Bergwände sehen sehr unzugänglich aus.}
+{187000}{}{Boden}
+{187001}{}{Eine schöne Sicht auf die Boneyards von diesem Turm aus. Du kriegst ein gutes Gefühl dafür, wie hoch du bist.}
+{187100}{}{Boden}
+{187101}{}{Eine schöne Sicht auf die Boneyards von diesem Turm aus.}
