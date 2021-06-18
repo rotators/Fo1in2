@@ -70,6 +70,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: The teacher in the Brotherhood library was supposed to randomly float text (timer event proc was missing).
 - **Fixed**: The wanted sign now correctly shows the current bounty on the players head (in caps).
 - **Fixed**: Using a crowbar on doors would actually not do anything (Fo2 feature - added by Killap for the UP, but it never worked).
+- **Fixed**: When asking Rhombus at the Brotherhood for questions, his dialog option reply got overwritten by an empty line.
 - **Fixed**: When using the stealing skill on Dogmeat, an error message would show (old Fixt code).
 - **Removed**: Old code in Ian, Tycho, and Katja scripts when giving them items. Nobody used this function anyways, also it was possible to exploit their carry weight limit with this. 
 - **Tweaked**: Added the agility-check back into the Gunrunners toxic goo spatial script (was a Fixt change?).
