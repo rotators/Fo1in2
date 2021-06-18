@@ -14,7 +14,7 @@
 # You gain x ...
 {159}{}{ experience for successfully repairing the robots sensors.}
 {160}{}{You fail to repair the robots sensors.}
-{161}{}{You might be able to use a Microfusion cell to build a replacement battery.}
+{161}{}{You might be able to use a Small Energy or a Microfusion cell to build a replacement battery.}
 # You gain x ...
 {162}{}{ experience for replacing the built-in battery with a hotwired Microfusion cell.}
 {163}{}{The robot might not be as effective anymore as 100 years ago, but it works.}
@@ -70,8 +70,8 @@
 {1007}{}{Tasks?}
 {1008}{}{Tasks?}
 {1009}{}{Confirmed.}
-{1010}{}{[Beep] Unit #462 can perform nuclear reactor fuel core replacements, hazardous materials cleanup, radiation cleansing, basic mechanical repair procedures, and taking the dog out for a walk.}
-{1011}{}{[Beep] Unit #462 is programmed to use energy weapons and miniguns.}
+{1010}{}{[Click] This unit is programmed to follow an automated parameter and / or VIP security protocoll. This unit also has a built-in long range scanner system for early threat recognition.}
+{1011}{}{[Beep] This unit is equipped with an improved Wattz 2.4 taser-system for fast melee engagements.}
 
 {1100}{}{This eyebot is fully repaired and ready to go.}
 {1200}{}{Maintenance status: Good. No repairs necessary.}
