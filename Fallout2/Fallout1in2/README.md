@@ -71,6 +71,11 @@ While most optional content is a part of the mod core, and can be toggled on and
 Enabled by default.
 Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
 
+### Carry Weight Indicator  ###
+[mods/ShowLootWeight](mods/ShowLootWeight)
+
+Adds a lightweight current/max carry weight indicator to the looting and stealing interface.
+
 ### Fallout 1 Interface ###
 [mods/fo1_interface](mods/fo1_interface)
 
@@ -100,19 +105,14 @@ Various static images (splash/death screens, endgame slides, town/world, ...) us
 Tweaks the costs of specific actions while using inventory.
 
 ### Language Pack - German ###
-[mods/fo1_german](mods/fo1_german)
+[mods/fo1_lang_german](mods/fo1_lang_german)
 
 The german translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
 
 ### Language Pack - French ###
-[mods/fo1_french](mods/fo1_french)
+[mods/fo1_lang_french](mods/fo1_lang_french)
 
 The french translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
-
-### Carry Weight Indicator  ###
-[mods/ShowLootWeight](mods/ShowLootWeight)
-
-Adds a lightweight current/max carry weight indicator to the looting and stealing interface.
 
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
