@@ -104,6 +104,11 @@ Tweaks the costs of specific actions while using inventory.
 
 The german translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
 
+### Language Pack - French ###
+[mods/fo1_french](mods/fo1_french)
+
+The french translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
+
 ### Carry Weight Indicator  ###
 [mods/ShowLootWeight](mods/ShowLootWeight)
 
