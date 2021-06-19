@@ -1,7 +1,7 @@
 <p align="center"><img src="fo1_french.png" alt="Fallout 1 French"/></p>
 
 Fallout 1 Language Pack - French / Français
-------------------
+-------------------------------------------
 
 La version française de FALLOUT ET TU.
 

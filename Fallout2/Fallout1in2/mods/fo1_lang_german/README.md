@@ -1,7 +1,7 @@
 <p align="center"><img src="fo1_german.png" alt="Fallout 1 German"/></p>
 
 Fallout 1 Language Pack - German / Deutsch
-------------------
+------------------------------------------
 
 Die deutsche Übersetzung von FALLOUT ET TU.
 
