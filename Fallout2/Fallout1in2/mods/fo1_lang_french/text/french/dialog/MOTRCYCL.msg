@@ -7,7 +7,7 @@
 {220}{}{Tu réussi à attacher le régulateur de carburant correctement.}
 {230}{}{Tu échoues à installer le régulateur de carburant.}
 
-{250}{}{La moto est en panne d'essence. Fais le plein du véhicule pour le faire fonctionner à nouveau.}
+{250}{}{La moto est en panne. Fais le plein du véhicule pour le faire fonctionner à nouveau.}
 
 {300}{}{Tu échoues à réparer le véhicule. Peut-être qu'avec le contrôleur dont La Forge vous a parlé, cela pourrait fonctionner.}
 
@@ -17,8 +17,8 @@
 {450}{}{La moto ne fonctionne pas.}
 {451}{}{La moto n'a pas besoin de réparation.}
 {452}{}{La clé fonctionne !}
-{453}{}{On idrait que contrôleur de carburant a été retiré par précaution. Peut-être qu'il se trouve dans le secteur ?}
-{454}{}{On dirait que tu as besoin d'une clef pour démarrer la Moto.}
+{453}{}{On dirait que contrôleur de carburant a été retiré par précaution. Peut-être qu'il se trouve dans le secteur ?}
+{454}{}{On dirait que tu as besoin d'une clef pour démarrer la moto.}
 
 {500}{}{La moto n'est pas assez grande pour toute ton équipe !}
 {501}{}{Nous ne pouvons pas tous aller sur cette moto.}
@@ -27,9 +27,9 @@
 {504}{}{Ca ne fonctionnera pas pour nous.}
 {505}{}{J'ai un mauvais pressentiment à propos de tout ça.}
 
-{510}{}{Tu recharge la moto avec un peu de puissance.}
+{510}{}{Tu recharges le moteur à fusion nucléaire de la moto.}
 {511}{}{La moto est déjà à pleine charge.}
-{512}{}{La batterie de la moto est actuellement rechargée à }
+{512}{}{Le moteur à fusion nucléaire de la moto est actuellement rechargé à }
 {513}{}{%.}
 
 {520}{}{Le controleur de carburant est manquant.}
