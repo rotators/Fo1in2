@@ -32,3 +32,6 @@ Additionally, due to the more accessible modding features of FALLOUT 2, this pro
 
 ## Installation
 See [installation instructions](Fallout2/Fallout1in2/README.md#mod-installation).
+
+## Additional content
+See [Additional content](https://github.com/rotators/Fo1in2/blob/master/Fallout2/Fallout1in2/README.md#additional-content) for a list of some supported mods.
