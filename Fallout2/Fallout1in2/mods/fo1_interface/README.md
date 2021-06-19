@@ -1,7 +1,7 @@
 <p align="center"><img src="fo1_interface.png" alt="Fallout 1 Interface"/></p>
 
 Fallout 1 Interface
-------------------
+-------------------
 
 Replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 Highly recommended when playing FALLOUT ET TU!

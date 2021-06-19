@@ -1,7 +1,7 @@
 <p align="center"><img src="Anim_ImprovedSMutantDeath.png" alt="Flameboy size fix for Mutants"/></p>
 
 Improved Death Animations - Animation Fix
------------------
+-----------------------------------------
 
 This mod increases the size of the "flame boy" and "electrocuted" death animation for super mutant (120%) and power armor (larger than normal, but smaller than mutant-size) critters to match their normal scale.
 

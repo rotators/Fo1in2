@@ -1,7 +1,7 @@
 <p align="center"><img src="fo1_barter_formula.png" alt="Classic Barter Formula"/></p>
 
 Fallout 1 Barter Formula
---------------------------
+------------------------
 
 This mod reverts the barter formula and prices on merchants to the ones from FALLOUT 1.
 

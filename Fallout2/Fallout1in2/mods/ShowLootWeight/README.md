@@ -1,7 +1,7 @@
 <p align="center"><img src="ShowLootWeight.png" alt="Show Loot Weight"/></p>
 
 Show Loot Weight
-------------------
+----------------
 
 This mod adds a lightweight current/max carry weight indicator to the looting and stealing interface.
 

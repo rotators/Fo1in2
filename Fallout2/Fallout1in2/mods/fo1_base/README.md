@@ -1,7 +1,7 @@
 <p align="center"><img src="fo1_base.png" alt="Fallout base files"/></p>
 
 Fallout et tu
---------------------------
+-------------
 
 This is the base files package for FALLOUT ET TU. It is required for playing FALLOUT 1 in FALLOUT 2 and must always load first!
 
