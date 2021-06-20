@@ -2,14 +2,14 @@
 
 set -eu
 
-# NOTE: poify uses
-
 mods=Fallout2/Fallout1in2/mods
 msg2po=Tools/msg2po
 
 git submodule update --init
 pip3 install -r $msg2po/requirements.txt
 pip3 install shyaml
+
+# NOTE: msg2po scripts uses .bgforge.yml way too often, it's better to roll with that...
 
 po="$(cat .bgforge.yml | shyaml get-value translation.po_dir || echo po)"
 src="$(cat .bgforge.yml | shyaml get-value translation.src_lang)"
