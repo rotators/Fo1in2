@@ -8,7 +8,7 @@ If you want to play the 100% real deal, the very pure experience so to speak, yo
 
 ## Features
 - Replicates FALLOUT 1 in 2 almost 1:1.
-- Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Punk Girl).
+- Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Black Dude, Punk Girl).
 - FALLOUT 2 styled merchant inventory restocking.
 - Party members and generic NPCs can be pushed out of the way.
 - Party members level up and change their appearance based on worn armor.
