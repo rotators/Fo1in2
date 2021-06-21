@@ -5,6 +5,7 @@ set -eu
 mods=Fallout2/Fallout1in2/mods
 msg2po=Tools/msg2po
 
+git fetch origin master:master
 git submodule update --init
 pip3 install -r $msg2po/requirements.txt
 pip3 install shyaml

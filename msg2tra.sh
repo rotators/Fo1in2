@@ -5,6 +5,7 @@ set -eu
 mods=Fallout2/Fallout1in2/mods
 msg2po=Tools/msg2po
 
+git fetch origin master:master
 git submodule update --init
 pip3 install -r $msg2po/requirements.txt
 pip3 install shyaml
@@ -16,7 +17,7 @@ src="$(cat .bgforge.yml | shyaml get-value translation.src_lang)"
 tra="$(cat .bgforge.yml | shyaml get-value translation.tra_dir)"
 
 rm -fr $tra $mods
-mkdir -p $tra
+mkdir -p $tra/$po
 
 # get current state from master branch
 git checkout master $mods/fo1_base/text/$src/
@@ -26,7 +27,7 @@ git rm -r --cached Fallout2/
 # generate <base>.pot
 mv $mods/fo1_base/text/$src $tra/$src
 rm -fr $mods/fo1_base/
-$msg2po/poify
+$msg2po/poify | tee $tra/$po/$src.log
 rm -fr $tra/$src/
 
 # generate <lang>.po
@@ -39,9 +40,9 @@ find $mods -type d -name 'fo1_lang_*' | sort | while read dir; do
      rm -fr $dir/
 
      cp $tra/$po/$src.pot $tra/$po/$lang.po
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext msg
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext sve
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext txt
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext msg | tee --append $tra/$po/$lang.log
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext sve | tee --append $tra/$po/$lang.log
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext txt | tee --append $tra/$po/$lang.log
      # anything else?
 
      rm -fr $tra/$lang
