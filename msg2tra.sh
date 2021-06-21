@@ -39,9 +39,9 @@ find $mods -type d -name 'fo1_lang_*' | sort | while read dir; do
      rm -fr $dir/
 
      cp $tra/$po/$src.pot $tra/$po/$lang.po
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/po/$lang.po --ext msg
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/po/$lang.po --ext sve
-     $msg2po/dir2msgstr -s $tra/$lang -o $tra/po/$lang.po --ext txt
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext msg
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext sve
+     $msg2po/dir2msgstr -s $tra/$lang -o $tra/$po/$lang.po --ext txt
      # anything else?
 
      rm -fr $tra/$lang
