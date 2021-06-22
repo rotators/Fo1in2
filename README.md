@@ -2,9 +2,7 @@
 
 # FALLOUT ET TU
 
-Bought to you by Rotators (the people who made FONLINE: 2238 and stuff), this project brings the first FALLOUT 1 into the engine of the FALLOUT 2.
-
-If you want to play the 100% real deal, the very pure experience so to speak, you should grab the original FALLOUT 1 instead of this mod. However, if you have played the original already, there's no reason not to try ET TU!
+This project brings the first FALLOUT 1 into the engine of the FALLOUT 2.
 
 ## Features
 - Replicates FALLOUT 1 in 2 almost 1:1.
