@@ -15,7 +15,7 @@ defaults:
   shell: bash
 
 jobs:
- All:
+ ScanMsg:
   if:      github.actor != 'antalaskaya' && github.ref == 'refs/heads/master'
   runs-on: windows-latest
   steps:
@@ -28,112 +28,61 @@ jobs:
     with:
      workdir: Fallout2/Fallout1in2/mods/
 
- English:
-  if:      github.actor != 'antalaskaya' && (github.ref == 'refs/heads/fo1_french' || github.ref == 'refs/heads/fo1_german')
-  runs-on: windows-latest
-  env:
-   MODS_LIST:      fo1_robodog ShowLootWeight
-  outputs:
-   fo1_robodog:    ${{ steps.config.outputs.fo1_robodog }}
-   ShowLootWeight: ${{ steps.config.outputs.ShowLootWeight }}
-
+ Translations:
+  if:      github.actor != 'antalaskaya' && github.ref == 'refs/heads/master'
+  needs:   ScanMsg
+  runs-on: ubuntu-latest
   steps:
 
   - name: Clone
     uses: actions/checkout@v2
+    with:
+     ref:   translations
+     token: ${{ secrets.ANTALASKAYA_TOKEN }}
 
-  - name: Config
-    id:   config
-    run: |
-         :
-         for dir in ${{ env.MODS_LIST }}; do
-             if [[ -d "Fallout2/Fallout1in2/mods/$dir/" ]]; then
-                echo "::set-output name=$dir::true"
+  - name: msg2tra
+    run:  |
+          :
+          if [[ -f "msg2tra.sh" ]; then
+             echo ::group::msg2tra
+             ./msg2tra.sh
+             echo ::endgroup::
+             if [[ -n $(git status --short --untracked-files=all Translations/po/) ]]; then
+                git add Translations/po/
+                echo "Synchronize with master branch" >> .git/gha.commit
              fi
-         done
+          fi
 
-  - name: Base
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:    fo1_base/text/english/
-     workdir: Fallout2/Fallout1in2/mods/
+  - name: Validation
+    run:  |
+          :
+          echo ::group::git status
+          git status 2>&1
+          echo ::endgroup::
 
-  - name: Robodog
-    if:   steps.config.outputs.fo1_robodog == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:    fo1_robodog/text/english/
-     workdir: Fallout2/Fallout1in2/mods/
+          if [[ -f .git/gha.commit ]]; then
+             dos2unix .git/gha.commit
+             cat .git/gha.commit
+             echo GHA_COMMIT=true >> $GITHUB_ENV
+          fi
 
-  - name: ShowLootWeight
-    if:   steps.config.outputs.ShowLootWeight == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:    ShowLootWeight/text/english/
-     workdir: Fallout2/Fallout1in2/mods/
+  - name: Push
+    if:   env.GHA_COMMIT == 'true'
+    run:  |
+          :
+          echo ::group::git commit
+          dos2unix .git/gha.commit
+          git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
+          git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
+          git commit --file=".git/gha.commit" 2>&1
+          rm -f .git/gha.commit
+          echo ::endgroup::
 
- French:
-  if:      github.actor != 'antalaskaya' && github.ref == 'refs/heads/fo1_french'
-  needs:   English
-  runs-on: windows-latest
+          echo ::group::git log
+          git log -p -n 1 2>&1
+          echo ::endgroup::
 
-  steps:
-
-  - name: Clone
-    uses: actions/checkout@v2
-
-  - name: Base
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         fo1_base/text/english/
-     translations: fo1_french/text/french/
-     workdir:      Fallout2/Fallout1in2/mods/
-
-  - name: Robodog
-    if:   needs.English.outputs.fo1_robodog == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         fo1_robodog/text/english/
-     translations: fo1_robodog/text/french//
-     workdir:      Fallout2/Fallout1in2/mods/
-
-  - name: ShowLootWeight
-    if:   needs.English.outputs.ShowLootWeight == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         ShowLootWeight/text/english/
-     translations: ShowLootWeight/text/french//
-     workdir:      Fallout2/Fallout1in2/mods/
-
- German:
-  if:      github.actor != 'antalaskaya' && github.ref == 'refs/heads/fo1_german'
-  needs:   English
-  runs-on: windows-latest
-
-  steps:
-
-  - name: Clone
-    uses: actions/checkout@v2
-
-  - name: Base
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         fo1_base/text/english/
-     translations: fo1_german/text/german/
-     workdir:      Fallout2/Fallout1in2/mods/
-
-  - name: Robodog
-    if:   needs.English.outputs.fo1_robodog == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         fo1_robodog/text/english/
-     translations: fo1_robodog/text/german/
-     workdir:      Fallout2/Fallout1in2/mods/
-
-  - name: ShowLootWeight
-    if:   needs.English.outputs.ShowLootWeight == 'true'
-    uses: wipe2238/ScanMsg@master
-    with:
-     path:         ShowLootWeight/text/english/
-     translations: ShowLootWeight/text/german/
-     workdir:      Fallout2/Fallout1in2/mods/
+          echo ::group::git push
+          git push 2>&1
+          echo ::endgroup::
+    continue-on-error: true
