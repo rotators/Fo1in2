@@ -1,0 +1,103 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use utf8;
+
+use File::Find;
+use File::Spec;
+
+my( @msgcheck, %po );
+
+sub find_msgcheck
+{
+    my $file = $File::Find::name;
+    my $extension = lc(substr($file, -9));
+
+    $file =~  s!^\./!!;
+
+    push( @msgcheck, $file ) if( $extension eq '.msgcheck' );
+}
+
+sub load_po
+{
+    my( $filename, @lines ) = ( shift );
+
+    return if( exists( $po{$filename} ));
+
+    printf( "Loading %s ...\n", $filename );
+
+    if( open( my $file, '<:encoding(utf8)', $filename ))
+    {
+        chomp( @lines = <$file> );
+        close( $file );
+    }
+
+
+    my( @current, $num );
+    foreach my $line ( @lines )
+    {
+        $num++;
+
+        if( $line =~ /^#: (.+)/ )
+        {
+            push( @current, $1 );
+        }
+        elsif( $line =~ /^msg(id|str) / )
+        {
+            @{ $po{$filename}{$num} } = @current;
+        }
+        elsif( $line =~ /^$/ )
+        {
+            @current = ();
+        }
+    }
+}
+
+sub edit_msgcheck
+{
+    foreach my $msgcheck ( sort {$a cmp $b} @msgcheck )
+    {
+        my( @lines, @newlines );
+
+        if( open( my $file, '<:encoding(utf8)', $msgcheck ))
+        {
+            chomp( @lines = <$file> );
+            close( $file );
+
+            foreach my $line ( @lines )
+            {
+                push( @newlines, $line );
+                if( $line =~ /^(.+\.po):([0-9]+): / )
+                {
+                    my( $pofilename, $num ) = ( $1, $2 );
+                    load_po( $pofilename );
+                    foreach my $loc ( @{ $po{$pofilename}{$num} } )
+                    {
+                        push( @newlines, $loc );
+                    }
+                }
+            }
+
+            close( $file );
+        }
+        else
+        {
+            printf( "Cannot open: %s\n", $msgcheck );
+        }
+
+        if( open( my $file, '>:encoding(utf8)', $msgcheck ))
+        {
+            foreach my $line ( @newlines )
+            {
+               print( $file "$line\n" );
+            }
+            close( $file );
+        }
+    }
+}
+
+&find({ wanted => \& find_msgcheck, no_chdir => 1 }, '.' );
+
+&edit_msgcheck();

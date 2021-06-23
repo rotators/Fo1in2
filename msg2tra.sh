@@ -84,6 +84,7 @@ done
 rm -fr $gha $mods
 find . -type d -empty -delete
 
+Tools/msgcheck-addlocations
 find $tra/$po -type f -iname '*.msgcheck' | while read file; do
      sed -ri "s!$(pwd)/$tra/$po/!!g" $file
 done
