@@ -22,6 +22,9 @@ function Format()
     rm -f $po.tmp
 }
 
+git fetch origin master:master
+git submodule update --init
+
 msg2po="$(cat .bgforge.yml | grep msg2po_dir: | awk '{print $2}')"
 pip3 install -r $msg2po/requirements.txt
 
@@ -33,8 +36,6 @@ tra="$($msg2po/bgforge-config.py tra_dir)"
 gha="$($msg2po/bgforge-config.py ettu_gha)"
 mods="$($msg2po/bgforge-config.py ettu_mods)"
 
-git fetch origin master:master
-git submodule update --init
 pip3 install $($msg2po/bgforge-config.py ettu_pip)
 
 rm -fr $tra $mods
