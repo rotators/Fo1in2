@@ -2,7 +2,7 @@
 
 # FALLOUT ET TU
 
-This project brings the first FALLOUT 1 into the engine of the FALLOUT 2.
+This project brings the first FALLOUT 1 into the engine of FALLOUT 2.
 
 ## Features
 - Replicates FALLOUT 1 in 2 almost 1:1.
