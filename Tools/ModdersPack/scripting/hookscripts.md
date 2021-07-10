@@ -250,7 +250,7 @@ Critter ret3 - The fourth choice of target
 #### `HOOK_USEOBJON (hs_useobjon.int)`
 
 Runs when:
-1) a critter uses an object on another critter. (Or themselves)
+1) a critter uses an object on another critter (or themselves).
 2) a critter uses an object from inventory screen AND this object does not have "Use" action flag set and it's not active flare or explosive.
 3) player or AI uses any drug
 

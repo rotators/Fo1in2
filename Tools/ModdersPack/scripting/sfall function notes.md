@@ -1001,7 +1001,7 @@ sfall_funcX metarule functions
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**)
 - `x/y`: offset relative to the top-left corner of the window
 - `color`: the color index in the game palette. Pass 0 if the text color was previously set by vanilla `SetTextColor` function. It can also take additional flags (via `bwor`) for displaying text:<br>
-    `0x0010000` - adds a shadow to the text, the 'textshadow' compiler constant<br>
+    `0x0010000` - adds a shadow to the text, the `textshadow` compiler constant<br>
     `0x1000000` - prevents immediate redrawing of the interface window, the `textdirect` compiler constant (works the other way around)<br>
     `0x2000000` - fills the background of the text with black color, the `textnofill` compiler constant (works the other way around)
 
