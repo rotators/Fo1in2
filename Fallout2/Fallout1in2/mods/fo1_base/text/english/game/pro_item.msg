@@ -637,7 +637,7 @@
 {32400}{}{Abnormal Brain}
 {32401}{}{Quite possibly a human brain. The color doesn't seem quite right and the left hemisphere of the brain has caved in on itself.}
 {32500}{}{Dice}
-{32501}{}{A standard pair of gambling dice. It'd be cool to get a fuzzy pair for your car.}
+{32501}{}{A standard pair of gambling dice.}
 {32600}{}{Loaded Dice}
 {32601}{}{A pair of loaded dice. Don't be flashing these around the casino.}
 {32700}{}{Easter Egg}
