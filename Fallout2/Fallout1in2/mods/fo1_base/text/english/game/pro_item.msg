@@ -19,9 +19,9 @@
 {1000}{}{Hunting Rifle}
 {1001}{}{A Colt Rangemaster semi-automatic rifle, in .223 caliber. Single-shot only. Min ST: 5.}
 {1100}{}{Flamer}
-{1101}{}{A Flambe 450 model flamethrower, varmiter variation. Fires a short spray of extremely hot, flamable liquid. Requires specialized fuel to work properly. Min ST: 6.}
+{1101}{}{A Flambe 450 model flamethrower, varmiter variation. Fires a short spray of extremely hot, flammable liquid. Requires specialized fuel to work properly. Min ST: 6.}
 {1200}{}{Minigun}
-{1201}{}{A Rockwell CZ53 Personal Minigun. A multi-barrelled chaingun firing 5mm ammunition at over 60,000 RPM. Min ST: 7.}
+{1201}{}{A Rockwell CZ53 Personal Minigun. A multi-barreled chaingun firing 5mm ammunition at over 60,000 RPM. Min ST: 7.}
 {1300}{}{Rocket Launcher}
 {1301}{}{A Rockwell BigBazooka rocket launcher. With the deluxe 3 lb. trigger. Fires AP or Explosive Rockets. Min ST: 6.}
 {1400}{}{Explosive Rocket}
@@ -33,7 +33,7 @@
 {1700}{}{Combat Armor}
 {1701}{}{High tech armor, made out of advanced defensive polymers.}
 {1800}{}{Desert Eagle .44}
-{1801}{}{An ancient Desert Eagle pistol, in .44 magnum. Interest in late 20th century films made this one of the most popular handguns of all times. Min ST: 4.}
+{1801}{}{An ancient Desert Eagle pistol, in .44 Magnum. Interest in late 20th century films made this one of the most popular handguns of all times. Min ST: 4.}
 {1900}{}{Rock}
 {1901}{}{It's a rock. The Granite-Inc. model is an upgraded version. Min ST: 1.}
 {2000}{}{Crowbar}
@@ -41,7 +41,7 @@
 {2100}{}{Brass Knuckles}
 {2101}{}{Hardened knuckle grip that is actually made out of steel. They protect your hand, and do more damage, in unarmed combat. Min ST: 1.}
 {2200}{}{14mm Pistol}
-{2201}{}{A Sig-Sauer 14mm Auto Pistol. Large, single shot handgun. Excellent craftmanship. Min ST: 4.}
+{2201}{}{A Sig-Sauer 14mm Auto Pistol. Large, single shot handgun. Excellent craftsmanship. Min ST: 4.}
 {2300}{}{Assault Rifle}
 {2301}{}{An AK-112 5mm Assault Rifle. An old military model, out of use around the time of the war. Can fire single-shot or burst, using the high velocity 5mm rounds. Min ST: 5.}
 {2400}{}{Plasma Pistol}
@@ -55,21 +55,21 @@
 {2800}{}{Gatling Laser}
 {2801}{}{An H&K L30 Gatling Laser. Designed specifically for military use, these were in the prototype stage at the beginning of the War. Multiple barrels allow longer firing before overheating. Powered by Micro Fusion Cells. Min ST: 6.}
 {2900}{}{10mm JHP}
-{2901}{}{Ammunition. Caliber: 10mm, jacketed hollow-points}
+{2901}{}{Ammunition. Caliber: 10mm, jacketed hollow-point.}
 {3000}{}{10mm AP}
 {3001}{}{Ammunition. Caliber: 10mm, armor piercing.}
 {3100}{}{.44 Magnum JHP}
-{3101}{}{A brick of ammunition, .44 magnum caliber, hollow-points.}
+{3101}{}{A brick of ammunition, .44 Magnum caliber, jacketed hollow-point.}
 {3200}{}{Flamethrower Fuel}
 {3201}{}{A cylinder containing an extremely flammable liquid fuel for flamethrowers.}
 {3300}{}{14mm AP}
 {3301}{}{Large caliber ammunition. 14mm armor piercing.}
 {3400}{}{.223 FMJ}
-{3401}{}{A case of ammunition, .223 caliber, Full Metal Jacket.}
+{3401}{}{A case of ammunition, .223 caliber, full metal jacket.}
 {3500}{}{5mm JHP}
 {3501}{}{A brick of small, lightweight ammunition. Caliber: 5mm, jacketed hollow-point.}
 {3600}{}{5mm AP}
-{3601}{}{A brick of small caliber ammunition. 5mm armor piercing.}
+{3601}{}{A brick of small, lightweight ammunition. Caliber: 5mm, armor piercing.}
 {3700}{}{Rocket AP}
 {3701}{}{A rocket shell, with a smaller explosive, but designed to pierce armor plating.}
 {3800}{}{Small Energy Cell}
@@ -99,11 +99,11 @@
 {5000}{}{Reserved Item}
 {5001}{}{This is a reserved item. DO NOT USE.}
 {5100}{}{Dynamite}
-{5101}{}{A high explosive, consisting of nitroglycerin mixed with the absorbent substance kiselguhr. Includes a timer.}
+{5101}{}{A high explosive, consisting of nitroglycerin mixed with the absorbent substance kieselguhr. Includes a timer.}
 {5200}{}{Geiger Counter}
 {5201}{}{A Wattz Electronics C-Radz model Geiger Counter. Detects the presence and strength of radiation fields.}
 {5300}{}{Mentats}
-{5301}{}{A pillbox of mind-altering chems. Increases memory related functions, and speeds other mental processes. Highly habit-forming.}
+{5301}{}{A pillbox of mind-altering chems. Increases memory related functions, and speeds other mental processes. Highly addictive.}
 {5400}{}{Stealth Boy}
 {5401}{}{A RobCo Stealth Boy 3001 personal stealth device. Generates a modulating field that transmits the reflected light from one side of an object to the other.}
 {5500}{}{Water Chip}
@@ -159,7 +159,7 @@
 {8000}{}{First Aid Book}
 {8001}{}{A study book on the concepts and practical use of first aid skills.}
 {8100}{}{Iguana-on-a-stick}
-{8101}{}{A cooked iguana, roasted in it's own skin.}
+{8101}{}{A cooked iguana, roasted in its own skin.}
 {8200}{}{Key}
 {8201}{}{A key. A key will open a particular lock.}
 {8300}{}{Key Ring}
@@ -171,7 +171,7 @@
 {8600}{}{Scout Handbook}
 {8601}{}{A book on the methods and ideals of Scouting. Very practical information regarding outdoor life.}
 {8700}{}{Buffout}
-{8701}{}{Highly advanced steroids. While in effect, they increase strength and reflexes. Very habit-forming.}
+{8701}{}{Highly advanced steroids. While in effect, they increase strength and reflexes. Very addictive.}
 {8800}{}{Watch}
 {8801}{}{An expensive watch. Not really working, but it still looks nice.}
 {8900}{}{Motor}
@@ -218,8 +218,8 @@
 {10901}{}{Anti-radiation chems to be taken before exposure. No known side effects.}
 {11000}{}{Psycho}
 {11001}{}{An unique delivery system filled with strange and unknown chemicals of probably military origin. It is supposed to increase the combat potential of a soldier.}
-{11100}{}{.44 magnum FMJ}
-{11101}{}{A brick of ammunition, .44 magnum caliber, full metal jacket.}
+{11100}{}{.44 Magnum FMJ}
+{11101}{}{A brick of ammunition, .44 Magnum caliber, full metal jacket.}
 {11200}{}{Urn}
 {11201}{}{A beautiful golden urn, with the name "Harriet" inscribed on the front and ashes inside.}
 {11300}{}{Robes}
@@ -285,7 +285,7 @@
 {14300}{}{Sniper Rifle}
 {14301}{}{A DKS-501 Sniper Rifle. Excellent long range projectile weapon. Originally .308, this one is chambered in the more common .223 caliber. Min ST: 5.}
 {14400}{}{Super Stimpak}
-{14401}{}{An advanced healing chem. Very powerful. Superstims will cause a small amount of damage after a period of time due to powerful nature of the chemicals used.}
+{14401}{}{An advanced healing chem. Very powerful. Superstims will cause a small amount of damage after a period of time due to the powerful nature of the chemicals used.}
 {14500}{}{Bookshelf}
 {14501}{}{A wooden bookshelf.}
 {14600}{}{Bookshelf}
@@ -401,7 +401,7 @@
 {20500}{}{Flare}
 {20501}{}{A flare. Creates light for a short period of time. The paper is a little worn, but otherwise it is in good condition. It is lit.}
 {20600}{}{Dynamite}
-{20601}{}{A high explosive, consisting of nitroglycerin mixed with the absorbent substance kiselguhr. Includes a timer, which is ticking.}
+{20601}{}{A high explosive, consisting of nitroglycerin mixed with the absorbent substance kieselguhr. Includes a timer, which is ticking.}
 {20700}{}{Geiger Counter}
 {20701}{}{A Wattz Electronics C-Radz model Geiger Counter. Detects the presence and strength of radiation fields. It is on.}
 {20800}{}{Motion Sensor}
@@ -495,7 +495,7 @@
 {25300}{}{Fuel Cell Controller}
 {25301}{}{This chip controls the flow of power into a car's electric engines. Many drivers quickly burnt out this chip through frequent rapid acceleration. Still a valuable part to have-- if you only had a car to install it in.}
 {25400}{}{Fuel Cell Regulator}
-{25401}{}{Some car-owners installed this regulator, that doubles your car's mileage between charges, but most drivers didn't care how much juice their cars consumed, after all, power's cheap and plentiful so why worry.}
+{25401}{}{Some car-owners installed this regulator, which doubles your car's mileage between charges, but most drivers didn't care how much juice their cars consumed, after all, power's cheap and plentiful so why worry?}
 {25500}{}{Zip Gun}
 {25501}{}{A handmade laser pistol. Min ST: 3.}
 {25600}{}{False Citizenship Papers}
@@ -505,9 +505,9 @@
 {25800}{}{Hydroelectric Part}
 {25801}{}{This is a Hydroelectric Magnetosphere Regulator.}
 {25900}{}{Jet}
-{25901}{}{Jet is a powerful metamphetamine that stimulates the central nervous system. The initial euphoric rush rarely lasts more than a few minutes, but during that time, the user is filled with a rush of energy & strength.}
+{25901}{}{Jet is a powerful methamphetamine that stimulates the central nervous system. The initial euphoric rush rarely lasts more than a few minutes, but during that time, the user is filled with a rush of energy & strength.}
 {26000}{}{Jet Antidote}
-{26001}{}{This antidote cures the reliant effects of Jet.}
+{26001}{}{This antidote cures the Jet addiction.}
 {26100}{}{Jonny's BB Gun}
 {26101}{}{A Red Ryder BB gun with the name 'Jonny' scratched on the stock. Min ST: 3.}
 {26200}{}{Rubber Boots}
@@ -523,7 +523,7 @@
 {26700}{}{Vic's Water Flask}
 {26701}{}{This relic of the Vault was probably used to contain some sacred sacrament. The Holy number 13 is emblazoned on the side of this precious link to your people's past, and hopeful future.}
 {26800}{}{Assault Shotgun}
-{26801}{}{A H&K Military Assault Weapon, one of the many imported weapons on US soil. It has been a favoured weapon of military pacification units worldwide, though its cost meant it never displaced US Army's own designs. Min ST: 6.}
+{26801}{}{An H&K Military Assault Weapon, one of the many imported weapons on US soil. It has been a favored weapon of military pacification units worldwide, though its cost meant it never displaced US Army's own designs. Min ST: 6.}
 {26900}{}{Robot Parts}
 {26901}{}{A pile of damaged robot parts.}
 {27000}{}{Robo Rocket Launcher}
@@ -619,13 +619,13 @@
 {31500}{}{Condom (Green package)}
 {31501}{}{This is a Jimmy Hats brand condom, a very reliable brand. This one contains phosphorous green dye #2 and is slathered in spermicidal lubricant for added protection.}
 {31600}{}{Condom (Red Package)}
-{31601}{}{This is a Jimmy Hats brand condom, a very reliable brand. This one contains phosophorous red dye #5 and has a yummy cinnamon bun flavor... or so you heard.}
+{31601}{}{This is a Jimmy Hats brand condom, a very reliable brand. This one contains phosphorous red dye #5 and has a yummy cinnamon bun flavor... or so you heard.}
 {31700}{}{Cosmetics Case}
 {31701}{}{This is a genuine Mary May brand cosmetics case.}
 {31800}{}{Empty Hypodermic}
 {31801}{}{This is an empty hypodermic.}
 {31900}{}{Switchblade}
-{31901}{}{The blade of this small knife is held by a spring. When a button on the handle is pressed, the blades shoots out with a satisfying "Sssssshk" sound. Min ST: 1.}
+{31901}{}{The blade of this small knife is held by a spring. When a button on the handle is pressed, the blade shoots out with a satisfying "Sssssshk" sound. Min ST: 1.}
 {32000}{}{Sharpened Pole}
 {32001}{}{A wood pole sharpened at one end. Min ST: 4.}
 {32100}{}{Cybernetic Brain}
@@ -647,7 +647,7 @@
 {32900}{}{Mutagenic Serum}
 {32901}{}{A strange organic concoction that could possibly reverse the Mutation Factor in humans.}
 {33000}{}{Crashed Verti-Bird}
-{33001}{}{This is wreakage from a verti-bird. Looks like it crashed here months ago.}
+{33001}{}{This is wreckage from a verti-bird. Looks like it crashed here months ago.}
 {33100}{}{Cat's Paw Issue #5}
 {33101}{}{This is the hard to find Issue 5 of Cat's Paw magazine. The pictures aside, this issue has a wonderful article on energy weapons.}
 {33200}{}{.45 SMG}
@@ -756,13 +756,13 @@
 {38900}{}{Avenger Minigun}
 {38901}{}{Rockwell designed the Avenger as the replacement for their aging CZ53 Personal Minigun. The Avenger's design improvements include improved, gel-fin, cooling and chromium plated barrel-bores. This gives it a greater range and lethality. Min ST: 7.}
 {39000}{}{Solar Scorcher}
-{39001}{}{Without the sun's rays to charge this weapon's cpacitors this gun can't light a match. However, in full daylight, the experimental photo-electric cells that power the Scorcher allow it to turn almost anything into a crispy critter. Min ST: 3.}
+{39001}{}{Without the sun's rays to charge this weapon's capacitors this gun can't light a match. However, in full daylight, the experimental photo-electric cells that power the Scorcher allow it to turn almost anything into a crispy critter. Min ST: 3.}
 {39100}{}{EC Assault Rifle Mk II}
 {39101}{}{An advanced version of the G66, this imported European rifle was employed by forces battling domestic threats. A compact, powerful design deemed too finicky for the Chinese front. Min ST: 6.}
 {39200}{}{M72 Gauss Rifle}
 {39201}{}{The M72 rifle is of German design. It uses an electromagnetic field to propel rounds at tremendous speed... and pierce almost any obstacle. Its range, accuracy and stopping power is almost unparalleled. Min ST: 6.}
 {39300}{}{Phazer}
-{39301}{}{NEED LONG DESCRIPTION. Min ST: 3.}
+{39301}{}{This mysterious high tech weapon appears to have some sort of energy generator inside. If it wasn't damaged, this gun could be the ultimate weapon against any enemy. The backup energy module consists of replaceable small energy cell. Min ST: 3.}
 {39400}{}{PPK12 Gauss Pistol}
 {39401}{}{Praised for its range and stopping power, the PPK12 Gauss Pistol is of German design. The pistol uses an electromagnetic field to propel rounds at tremendous speed and punch through almost any armor. Min ST: 4.}
 {39500}{}{Vindicator Minigun}
@@ -808,7 +808,7 @@
 {41500}{}{Spectacles}
 {41501}{}{A set of spectacles for eye correction.}
 {41600}{}{Empty Jet Canister}
-{41601}{}{This empty jet canister was found in Richard Wright's room. It still has traces of Jet inside.}
+{41601}{}{This empty Jet canister was found in Richard Wright's room. It still has traces of Jet inside.}
 {41700}{}{Oxygen Tank}
 {41701}{}{This is the oxygen tank for Salvatore's breathing apparatus.}
 {41800}{}{Poison Tank}
@@ -854,7 +854,7 @@
 {43801}{}{A key for the Arroyo Temple door.}
 {43900}{}{Pocket Lint}
 {43901}{}{Some fuzz you found in a pocket.}
-{44000}{}{Bio Med Gel}
+{44000}{}{Biomed Gel}
 {44001}{}{A jar of Bio Gel used in the biomedical field.}
 {44100}{}{Blondie's Dog Tags}
 {44101}{}{These dog tags have the owner's name scratched off and the name "Blondie" scrawled on the back. Beneath the name is the number "11."}
@@ -883,7 +883,7 @@
 {45300}{}{Password Paper}
 {45301}{}{This is three pieces of a single page that, when assembled, reveal three passwords. The text reads: 1. Physics Password KSLJKJ: Ken-Lee-97313, 2. Chemistry Password TIUASPO- Lo-Shi-S12908, 3. Biology Password INTLVR- Dnky-Pnch-98790}
 {45400}{}{Explosive Switch}
-{45401}{}{This toggle switch is the final conponent of an explosive device.}
+{45401}{}{This toggle switch is the final component of an explosive device.}
 {45500}{}{Car Trunk}
 {45501}{}{The trunk is a great place to store your stuff.}
 {45600}{}{Cell Door Key}
@@ -893,7 +893,7 @@
 {45800}{}{M.B. Holodisk 5}
 {45801}{}{The label reads: Message to CHQ- Confidential.}
 {45900}{}{M.B. Holodisk 1}
-{45901}{}{The label reads: Radio Transmission log checkpoint 1.}
+{45901}{}{The label reads: Radio transmission log checkpoint 1.}
 {46000}{}{M.B. Holodisk 2}
 {46001}{}{The label reads: Radio transmission log checkpoint 2.}
 {46100}{}{M.B. Holodisk 3}
@@ -909,6 +909,7 @@
 {46600}{}{Password Paper}
 {46601}{}{A sheet of folded paper with the word "TCHAIKOVSKY" written on it.}
 {46700}{}{Jesse's Container}
+{46701}{}{}
 {46800}{}{Smitty's Meal}
 {46801}{}{It's some kind of salad and a sandwich made out of what you think is Brahmin meat covered in a thick dark yellow sauce. There is also a strange pickled green vegetable on the side.}
 {46900}{}{Rot Gut}
@@ -932,7 +933,7 @@
 {47800}{}{Sierra Mission Holodisk}
 {47801}{}{The label reads: "Mission Statement."}
 {47900}{}{NavCom Parts}
-{47901}{}{These are computer parts that look like they slot into the interior of a machine. The fact that they say "Poseidon Oil" and "Navigational Computer" on them lead you to believe they fit into a Poseidon Oil Navigational Computer.}
+{47901}{}{These are computer parts that look like they slot into the interior of a machine. The fact that they say "Poseidon Oil" and "Navigation Computer" on them lead you to believe they fit into a Poseidon Oil Navigation Computer.}
 {48000}{}{Bonus +1 Agility}
 {48100}{}{Bonus +1 Intelligence}
 {48200}{}{Bonus +1 Strength}
