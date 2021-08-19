@@ -762,8 +762,8 @@
 {39801}{}{These barrels are probably empty from their hollow sound.}
 {39900}{}{Metal Barrels}
 {39901}{}{These barrels are probably empty from their hollow sound.}
-{40000}{}{Air Vent}
-{40001}{}{This air vent appears to be for an underground structure.}
+{40000}{}{Dome}
+{40001}{}{You find a small label that reads: "Property of Area-51. Return if found."}
 {40100}{}{Crate}
 {40101}{}{A wooden crate. It doesn't look in that bad of shape.}
 {40200}{}{Crate}
