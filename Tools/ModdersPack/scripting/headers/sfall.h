@@ -283,15 +283,9 @@
                                                         if (get_flags(obj1) bwand FLAG_MULTIHEX) then distance--; \
                                                         if (get_flags(obj2) bwand FLAG_MULTIHEX) then distance--
 
-
-/* sfall metarule3 function macros */
-// sets the number of days (range 1...127) for the Frank Horrigan encounter, or disable the encounter if days is set to 0
-#define set_horrigan_days(day)                          metarule3(200, day, 0, 0)
-// clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling functions that are waiting for keyboard input
-#define clear_keyboard_buffer                           metarule3(201, 0, 0, 0)
-
 // checks if the specified PID number exists in the list of registered protos
 #define check_pid(pid)                                  (get_proto_data(pid, 0) != -1)
+
 
 /* sfall_funcX macros */
 #define add_extra_msg_file(name)                                sfall_func1("add_extra_msg_file", name)
@@ -406,5 +400,20 @@
 #define set_fake_perk_npc(npc, perk, level, image, desc)        sfall_func5("set_fake_perk_npc", npc, perk, level, image, desc)
 #define set_fake_trait_npc(npc, trait, active, image, desc)     sfall_func5("set_fake_trait_npc", npc, trait, active, image, desc)
 #define set_selectable_perk_npc(npc, perk, active, image, desc) sfall_func5("set_selectable_perk_npc", npc, perk, active, image, desc)
+
+
+/* sfall metarule3 function macros */
+// sets the number of days (range 1...127) for the Frank Horrigan encounter, or disable the encounter if days is set to 0
+#define set_horrigan_days(day)                                  metarule3(200, day, 0, 0)
+// clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling functions that are waiting for keyboard input
+#define clear_keyboard_buffer                                   metarule3(201, 0, 0, 0)
+
+// functions to control the save slot
+// Note: slot value here is 0-indexed instead of 1-indexed displayed in game and used for folder names
+#define get_current_save_slot                                   metarule3(210, 0, 0, 0) // returns the amount: page + slot
+#define set_current_save_slot(page, slot)                       metarule3(211, page, slot, 0)
+#define get_current_quick_save_page                             metarule3(212, 0, 0, 0)
+#define get_current_quick_save_slot                             metarule3(213, 0, 0, 0)
+#define set_current_quick_save_slot(page, slot, check)          metarule3(214, page, slot, check) // check: 1 - don't check slot when saving
 
 #endif
