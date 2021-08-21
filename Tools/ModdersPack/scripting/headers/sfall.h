@@ -126,9 +126,9 @@
 #define ATKTYPE_PIERCINGKICK   (19)
 
 //Some possible values for the 4th argument to hs_removeinvobj
-#define RMOBJ_DROP      (0x49B875)  //If the object is dropped manually by the player from the inventory screen
-#define RMOBJ_TRADE     (0x47761D)  //If the object is offered up as a trade
-#define RMOBJ_DROPMULTI (0x45C1CF)  //When dropping a part of a stack (RMOBJ_DROP occures first)
+#define RMOBJ_DROP             (0x49B875)  // If the object is dropped manually by the player from the inventory screen
+#define RMOBJ_TRADE            (0x47761D)  // If the object is offered up as a trade
+#define RMOBJ_DROPMULTI        (0x45C1CF)  // When dropping a part of a stack (RMOBJ_DROP occurs first)
 
 //Return values for "typeof"
 #define VALTYPE_NONE  (0) // not used yet

@@ -120,26 +120,29 @@
 #define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
-//remove inven obj defines
-#define RMOBJ_CONSUME_DRUG        4666772
-#define RMOBJ_CONTAINER           4683293  // same as RMOBJ_TRADE
-#define RMOBJ_USE_OBJ             4666865
-#define RMOBJ_EQUIP_ARMOR         4658121
-#define RMOBJ_EQUIP_WEAPON        4658675
-#define RMOBJ_UNLOAD_WEAPON       4667030
-//#define RMOBJ_LOAD_WEAPON       4831349  // same as RMOBJ_DROP
-#define RMOBJ_USE_DRUG_ON         4834866
-#define RMOBJ_STEAL_VIEW          4668206
-//#define RMOBJ_DROP_DYNAMITE     4666865  // same as USE_OBJ
-#define RMOBJ_ITEM_DESTROYED      4543215
-#define RMOBJ_ITEM_REMOVED        4548572
-#define RMOBJ_ARMOR_EQUIPED       4651961
-#define RMOBJ_LEFT_HAND_EQUIPED   4651899
-#define RMOBJ_RIGHT_HAND_EQUIPED  4651934
-#define RMOBJ_RM_MULT_OBJS        4563866
-#define RMOBJ_REPLACE_WEAPON      4658526
-#define RMOBJ_THROW               4266040
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
+//remove inven obj defines for the 4th argument to hs_removeinvobj
+#define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
+#define RMOBJ_CONTAINER           4683293  // same as RMOBJ_TRADE (item_move_func_)
+#define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
+#define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
+#define RMOBJ_EQUIP_WEAPON        4658675  // (switch_hand_)
+#define RMOBJ_UNLOAD_WEAPON       4667030  // (inven_action_cursor_)
+//#define RMOBJ_LOAD_WEAPON       4831349  // same as RMOBJ_DROP (obj_remove_from_inven_)
+#define RMOBJ_USE_DRUG_ON         4834866  // (obj_use_item_on_)
+#define RMOBJ_STEAL_VIEW          4668206  // (loot_container_)
+//#define RMOBJ_DROP_DYNAMITE     4666865  // same as RMOBJ_USE_OBJ
+#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
+#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
+#define RMOBJ_ARMOR_EQUIPED       4651961  // (setup_inventory_)
+#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // (setup_inventory_)
+#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // (setup_inventory_)
+#define RMOBJ_RM_MULT_OBJS        4563866  // (op_rm_mult_objs_from_inven_)
+#define RMOBJ_REPLACE_WEAPON      4658526  // (switch_hand_)
+#define RMOBJ_THROW               4266040  // (action_ranged_)
+#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory (item_remove_mult_)
+#define RMOBJ_AI_USE_DRUG_ON      4359920  // remove before AI uses the drug in combat (ai_check_drugs_)
+//#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1)
+//#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1)
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
