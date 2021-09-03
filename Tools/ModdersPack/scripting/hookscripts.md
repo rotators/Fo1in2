@@ -87,7 +87,7 @@ The defines to use for the hookID are in **sfall.h**.
 
 #### `HOOK_TOHIT (hs_tohit.int)`
 
-Runs when Fallout is calculating the chances of an attack striking a target.
+Runs when Fallout is calculating the chances of an attack striking a target.<br>
 Runs after the hit chance is fully calculated normally, including applying the 95% cap.
 
 ```
@@ -125,8 +125,8 @@ Critter ret2 - Override the target of the attack
 
 #### `HOOK_CALCAPCOST (hs_calcapcost.int)`
 
-Runs whenever Fallout is calculating the AP cost of using the weapon (or unarmed attack). Doesn't run for using other item types or moving.
-Note that the first time a game is loaded, this script doesn't run before the initial interface is drawn, so if the script effects the AP cost of whatever is in the player's hands at the time the wrong AP cost will be shown. It will be fixed the next time the interface is redrawn.
+Runs whenever Fallout is calculating the AP cost of using the weapon (or unarmed attack). Doesn't run for using other item types or moving.<br>
+Note that the first time a game is loaded, this script doesn't run before the initial interface is drawn, so if the script effects the AP cost of whatever is in the player's hands at the time the wrong AP cost will be shown. It will be fixed the next time the interface is redrawn.<br>
 You can get the weapon object by checking item slot based on attack type (`ATKTYPE_LWEP1`, `ATKTYPE_LWEP2`, etc) and then calling `critter_inven_obj`.
 
 ```
@@ -143,7 +143,7 @@ int     ret0 - The new AP cost
 
 #### `HOOK_DEATHANIM1 (hs_deathanim1.int)`
 
-Runs before Fallout tries to calculate the death animation. Lets you switch out which weapon Fallout sees.
+Runs before Fallout tries to calculate the death animation. Lets you switch out which weapon Fallout sees.<br>
 Does not run for critters in the knockdown/out state.
 
 ```
@@ -160,8 +160,8 @@ int     ret0 - The pid of an object to override the attacking weapon with
 
 #### `HOOK_DEATHANIM2 (hs_deathanim2.int)`
 
-Runs after Fallout has calculated the death animation. Lets you set your own custom frame id, so more powerful than `HOOK_DEATHANIM1`, but performs no validation.
-When using `critter_dmg` function, this script will also run. In that case weapon pid will be -1 and attacker will point to an object with `obj_art_fid == 0x20001F5`.
+Runs after Fallout has calculated the death animation. Lets you set your own custom frame id, so more powerful than `HOOK_DEATHANIM1`, but performs no validation.<br>
+When using `critter_dmg` function, this script will also run. In that case weapon pid will be -1 and attacker will point to an object with `obj_art_fid == 0x20001F5`.<br>
 Does not run for critters in the knockdown/out state.
 
 ```
@@ -220,7 +220,7 @@ Critter arg0 - The critter that just died
 
 #### `HOOK_FINDTARGET (hs_findtarget.int)`
 
-Runs when the AI is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the AI caps of the attacker.
+Runs when the AI is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the AI caps of the attacker.<br>
 This hook replaces that sorting function, allowing you to sort the targets in some arbitrary way.
 
 The return values can include critters that weren't in the list of possible targets, but the additional targets may still be discarded later on in the combat turn if they are out of the attackers perception or the chance of a successful hit is too low. The list of possible targets often includes duplicated entries, but this is fixed in sfall 4.2.3/3.8.23.
@@ -340,10 +340,10 @@ int     ret0 - the new AP cost
 -------------------------------------------
 
 #### DEPRECATED HOOKS:
-* `HOOK_HEXMOVEBLOCKING  (hs_hexmoveblocking.int)`
-* `HOOK_HEXAIBLOCKING    (hs_hexaiblocking.int)`
-* `HOOK_HEXSHOOTBLOCKING (hs_hexshootblocking.int)`
-* `HOOK_HEXSIGHTBLOCKING (hs_hexsightblocking.int)`
+##### `HOOK_HEXMOVEBLOCKING  (hs_hexmoveblocking.int)`
+##### `HOOK_HEXAIBLOCKING    (hs_hexaiblocking.int)`
+##### `HOOK_HEXSHOOTBLOCKING (hs_hexshootblocking.int)`
+##### `HOOK_HEXSIGHTBLOCKING (hs_hexsightblocking.int)`
 
 Run when checking to see if a hex blocks movement or shooting. (or ai-ing, presumably...)
 
@@ -501,7 +501,7 @@ int     ret0 - overrides the returned result of the function:
 
 #### `HOOK_INVENTORYMOVE (hs_inventorymove.int)`
 
-Runs before moving items between inventory slots in dude interface. You can override the action.
+Runs before moving items between inventory slots in dude interface. You can override the action.<br>
 What you can NOT do with this hook:
 - force moving items to inappropriate slots (like gun in armor slot)
 
@@ -531,7 +531,7 @@ int     ret0 - Override setting (-1 - use engine handler, any other value - prev
 
 #### `HOOK_INVENWIELD (hs_invenwield.int)`
 
-Runs before causing a critter or the player to wield/unwield an armor or a weapon (except when using the inventory by PC).
+Runs before causing a critter or the player to wield/unwield an armor or a weapon (except when using the inventory by PC).<br>
 An example usage would be to change critter art depending on armor being used or to dynamically customize weapon animations.
 
 __NOTE:__ When replacing a previously wielded armor or weapon, the unwielding hook will not be executed.
@@ -551,7 +551,7 @@ int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other 
 
 #### `HOOK_ADJUSTFID (hs_adjustfid.int)`
 
-Runs after calculating character figure FID on the inventory screen, whenever the game decides that character appearance might change.
+Runs after calculating character figure FID on the inventory screen, whenever the game decides that character appearance might change.<br>
 Also happens on other screens, like barter.
 
 __NOTE:__ FID has following format: `0x0ABBCDDD`, where: `A` - object type, `BB` - animation code (always 0 in this case), `C` - weapon code, `DDD` - FRM index in LST file.
@@ -699,7 +699,7 @@ int     ret1 - pass 1 to allow the skill being used in combat (only for dude_obj
 
 #### `HOOK_ONEXPLOSION (hs_onexplosion.int)`
 
-Runs when Fallout is checking all the tiles within the explosion radius for targets before an explosion occurs.
+Runs when Fallout is checking all the tiles within the explosion radius for targets before an explosion occurs.<br>
 The tile checking will be interrupted when 6 additional targets (critters) are received.
 
 ```
@@ -762,7 +762,7 @@ int     ret1 - overrides the light radius. Radius range is from 0 to 8 (works on
 
 #### `HOOK_SNEAK (hs_sneak.int)`
 
-Runs when the Sneak skill is activated, or when the game rolls another Sneak check after the duration for the current one is over.
+Runs when the Sneak skill is activated, or when the game rolls another Sneak check after the duration for the current one is over.<br>
 You can override the result of a random Sneak check or the duration time for the current result.
 
 ```
@@ -795,7 +795,7 @@ int     ret0 - pass -1 to cancel the execution of the handler (only for HOOK_STD
 
 #### `HOOK_TARGETOBJECT (hs_targetobject.int)`
 
-Runs when the targeting cursor hovers over an object, or when the player tries to attack the target object.
+Runs when the targeting cursor hovers over an object, or when the player tries to attack the target object.<br>
 You can override the target object or prevent the player from attacking the chosen target.
 
 ```
@@ -810,7 +810,7 @@ mixed   ret0 - overrides the target object, or pass -1 to prevent the player fro
 
 #### `HOOK_ENCOUNTER (hs_encounter.int)`
 
-Runs whenever a random encounter occurs (except the Horrigan meeting and scripted encounters), or when the player enters a local map from the world map.
+Runs whenever a random encounter occurs (except the Horrigan meeting and scripted encounters), or when the player enters a local map from the world map.<br>
 You can override the map for loading or the encounter.
 
 ```
@@ -880,7 +880,7 @@ int     ret0 - overrides the roll result
 
 #### `HOOK_BESTWEAPON (hs_bestweapon.int)`
 
-Runs when the AI decides which weapon is the best while searching the inventory for a weapon to equip in combat.
+Runs when the AI decides which weapon is the best while searching the inventory for a weapon to equip in combat.<br>
 This also runs when the player presses the "Use Best Weapon" button on the party member control panel.
 
 ```
@@ -897,13 +897,14 @@ Item    ret0 - overrides the chosen best weapon
 
 #### `HOOK_CANUSEWEAPON (hs_canuseweapon.int)`
 
-Run when the AI checks whether it can use a weapon.
-This mostly happens when NPCs try to find weapons in their inventory or on the map.
+Run when the AI checks whether it can use a weapon, or when the game checks whether the player can use an item (weapon) in hand slot.<br>
+For AI, this mostly happens when NPCs try to find weapons in their inventory or on the map.<br>
+For the player, this happens when the game updates the item data for active item slots on the interface bar.
 
 ```
 Critter arg0 - the critter doing the check
-Item    arg1 - the weapon being checked
-int     arg2 - attack type (see ATKTYPE_* constants)
+Item    arg1 - the item being checked
+int     arg2 - attack type (see ATKTYPE_* constants), or -1 for dude_obj
 int     arg3 - original result of engine function: 1 - can use, 0 - can't use
 
 int     ret0 - overrides the result of engine function. Any non-zero value allows using the weapon

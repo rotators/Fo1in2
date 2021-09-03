@@ -141,8 +141,8 @@
 #define RMOBJ_THROW               4266040  // (action_ranged_)
 #define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory (item_remove_mult_)
 #define RMOBJ_AI_USE_DRUG_ON      4359920  // remove before AI uses the drug in combat (ai_check_drugs_)
-//#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1)
-//#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1)
+//#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
+//#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
@@ -406,9 +406,11 @@
 #define OBJ_DATA_CUR_FRM            (0x18) // current frame number
 #define OBJ_DATA_ROTATION           (0x1C)
 #define OBJ_DATA_FID                (0x20)
+//#define OBJ_DATA_FLAGS            (0x24) // the same flags set in prototypes (PROTO_FLAG)
 #define OBJ_DATA_ELEVATION          (0x28)
+#define OBJ_DATA_MISC_FLAGS         (0x38)
 #define OBJ_DATA_PID                (0x64)
-#define OBJ_DATA_CID                (0x68) // combat ID, used for savegame
+#define OBJ_DATA_CID                (0x68) // combat ID, used by critters in savegame (don't change while in combat)
 #define OBJ_DATA_SID                (0x78) // script ID
 #define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items

@@ -9,7 +9,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.2
+   version 1.4
 
 */
 
@@ -78,13 +78,13 @@ procedure check_weapon_change(variable critter, variable weapon, variable isWiel
 end
 
 /*
-   Finds the first weapon which can be used by the party member in the inventory
+   Finds the first weapon that can be used by the party member in the inventory
 */
 procedure search_alt_weapon(variable critter) begin
    variable obj, res, i := 0;
    obj := inven_ptr(critter, 0);
    while (obj) do begin
-      if (obj_item_subtype(obj) == item_type_weapon) then begin
+      if (obj_item_subtype(obj) == item_type_weapon and weapon_is_unusable(obj) == false) then begin
          if (unWieldWeapon == 0 or unWieldWeapon != obj_pid(obj)) then begin
             res := check_weapon_change(critter, obj, 1);
             if (res == -1) then begin
@@ -226,10 +226,10 @@ end
 procedure canuseweapon_handler begin
    variable critter, canWield;
    critter := get_sfall_arg;
-   //if (critter) then begin
+   if (critter != dude_obj and get_sfall_arg_at(3)) then begin
       canWield := check_weapon_change(critter, get_sfall_arg, true);
       // override result
       set_sfall_arg(3, canWield);
       set_sfall_return(canWield);
-   //end
+   end
 end
