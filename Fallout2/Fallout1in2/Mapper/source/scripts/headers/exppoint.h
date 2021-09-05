@@ -201,6 +201,8 @@
 #define EXP_JOB_KILLED_HIGHTOWER                (600)
 #define EXP_JOB_KILLED_JAIN                     (700)
 #define EXP_MISSING_CARAVAN_MUTANT_ARMY         (1000)
+#define EXP_SUPPORT_BILLY                       (250)
+#define EXP_BILLY_RUNAWAY                       (100)
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS                 (1000)
