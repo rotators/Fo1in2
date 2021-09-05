@@ -4054,9 +4054,9 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4912)
 #define RESERVED_FOR_FALLOUT_FIXT               (4913)
 #define RESERVED_FOR_FALLOUT_FIXT               (4914)
-#define RESERVED_FOR_FALLOUT_FIXT               (4915)
-#define RESERVED_FOR_FALLOUT_FIXT               (4916)
-#define RESERVED_FOR_FALLOUT_FIXT               (4917)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4915)*/
+#define GVAR_QUEST_PIPBOY_HIGHTOWER             (4916)
+#define GVAR_QUEST_PIPBOY_JAIN                  (4917)
 #define GVAR_ENABLE_CUT_CHARACTERS              (4918)
 #define GVAR_GLOW_ROBOT_EXP                     (4919)
 #define GVAR_ENABLE_EYEBOT_HIRELING             (4920)

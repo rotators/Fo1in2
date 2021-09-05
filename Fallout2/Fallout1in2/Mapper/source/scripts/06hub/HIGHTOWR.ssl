@@ -6,6 +6,7 @@
 
 /* Include Files */
 #include "define.h"
+#include "area/hub.h"
 #include "maps/hubheigt.h"
 
 #define NAME                    SCRIPT_HIGHTOWR
@@ -37,6 +38,8 @@ procedure Daren07;
 procedure DarenCombat;
 procedure DarenEndLeon;
 
+#define LVAR_Herebefore          (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable visible := 1;
@@ -44,7 +47,7 @@ variable visible := 1;
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
-      if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
+      if get_quest_merchant_attacked then begin
          if not(is_loading_game) then set_self_invisible;
          visible := 0;
       end
@@ -57,8 +60,7 @@ procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (visible == 0) then begin
       script_overrides;
    end
@@ -77,14 +79,12 @@ begin
             if (self_tile != 25125) then begin
                self_walk_to_tile(25125);
             end
-            else if ((dude_tile == 24522) or self_can_see_dude and (map_var(1) == 0)) then begin
+            else if ((dude_tile == 24522) or self_can_see_dude and (map_var(MVAR_Leon_Show_Player_Out) == 0)) then begin
                dialogue_system_enter;
             end
          end
-         else begin
-            if (self_tile != 24708) then begin
-               self_walk_to_tile(24708);
-            end
+         else if (self_tile != 24708) then begin
+            self_walk_to_tile(24708);
          end
       end
    end
@@ -111,13 +111,9 @@ procedure talk_p_proc begin
          call combat;
       end
       else begin
-         if (local_var(4) == 0) then begin
-            set_local_var(4, 1);
-            start_gdialog(582, self_obj, 4, -1, -1);
-            gsay_start;
-            call Daren01;
-            gsay_end;
-            end_dialogue;
+         if (local_var(LVAR_Herebefore) == 0) then begin
+            set_local_var(LVAR_Herebefore, 1);
+            start_dialog_at_node(Daren01);
          end
          else begin
             float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
@@ -132,7 +128,7 @@ procedure destroy_p_proc begin
    inc_hub_rep(REP_BONUS_KILLED_HIGHTOWER);
    set_map_var(MVAR_Merchants, map_var(MVAR_Merchants) + 1);
    if (map_var(MVAR_Merchants) > 1) then begin
-      set_global_var(GVAR_KILL_MERCHANT, 2);
+      set_quest_merchant_killed;
    end
    set_global_var(GVAR_HIGHTOWER_STATUS, 1);
 end
@@ -144,7 +140,7 @@ end
 
 procedure damage_p_proc begin
    set_map_var(MVAR_Hightower_Hostile, 1);
-   set_global_var(GVAR_KILL_MERCHANT, 5);
+   set_quest_merchant_attacked;
 end
 
 procedure combat_p_proc begin
@@ -154,7 +150,7 @@ end
 procedure Daren01 begin
    Reply(101);
    NOption(102, Daren02, 4);
-   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+   if get_quest_kill_merchant then begin
       NOption(103, Daren03, 4);
    end
    NOption(mstr(104) + dude_name + mstr(105), Daren04, 4);
@@ -165,7 +161,7 @@ end
 
 procedure Daren02 begin
    Reply(109);
-   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+   if get_quest_kill_merchant then begin
       BOption(110, DarenCombat, 4);
    end
    NOption(111, Daren05, 4);
@@ -217,5 +213,5 @@ procedure DarenCombat begin
 end
 
 procedure DarenEndLeon begin
-   set_map_var(1, 1);
+   set_map_var(MVAR_Leon_Show_Player_Out, 1);
 end
