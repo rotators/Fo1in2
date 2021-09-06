@@ -143,7 +143,8 @@ int     ret0 - The new AP cost
 
 #### `HOOK_DEATHANIM1 (hs_deathanim1.int)`
 
-Runs before Fallout tries to calculate the death animation. Lets you switch out which weapon Fallout sees.<br>
+Runs before Fallout tries to calculate the death animation. Lets you switch out which weapon Fallout sees.
+
 Does not run for critters in the knockdown/out state.
 
 ```
@@ -161,7 +162,8 @@ int     ret0 - The pid of an object to override the attacking weapon with
 #### `HOOK_DEATHANIM2 (hs_deathanim2.int)`
 
 Runs after Fallout has calculated the death animation. Lets you set your own custom frame id, so more powerful than `HOOK_DEATHANIM1`, but performs no validation.<br>
-When using `critter_dmg` function, this script will also run. In that case weapon pid will be -1 and attacker will point to an object with `obj_art_fid == 0x20001F5`.<br>
+When using `critter_dmg` function, this script will also run. In that case weapon pid will be -1 and attacker will point to an object with `obj_art_fid == 0x20001F5`.
+
 Does not run for critters in the knockdown/out state.
 
 ```

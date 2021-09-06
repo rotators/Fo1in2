@@ -8,3 +8,5 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Fixed**: The Combat Shotgun (Ext. Mag) was set as 1-handed weapon.
 - **Fixed**: The optional Shady Sands merchant and his bodyguard had no armor values set.
 - **Fixed**: Wrong First Aid-skill formula in the skill description.
+- **Tweaked**: Dealing with Billy in the Hub now gives a few experience points.
+- **Tweaked**: Streamlined PipBoy entry code for the Hub Merchant and Jain quests.
