@@ -20,6 +20,7 @@
 {163}{}{The robot might not be as effective anymore as 100 years ago, but it works.}
 {164}{}{You have no idea what you are doing here and destroy the robot in the process.}
 {165}{}{You failed to improvise a battery.}
+{166}{}{ experience for replacing the built-in battery with a modified small energy cell.}
 
 # Dialog after fixing the robot
 {200}{}{[Click] SYSTEM ERROR. [Beep] Unit unable to process the last active task. Task manager is not responding. Orders?}
