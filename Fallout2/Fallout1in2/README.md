@@ -34,7 +34,9 @@ MOD INSTALLATION
 - Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
   - If you are using a (pre)release package, `UNDAT.EXE` can be found in the `Fallout1in2` folder.
   - If you are using the repository, `UNDAT.EXE` can be found in the `Tools\UndatUI` folder.
-  - If you are using Linux, `UNDAT.SH` in the `Tools\UndatCLI` folder can be used instead (requires `WINE` installed)
+  - If you are using Linux, `UNDAT.SH` can be used instead (requires `WINE` installed).
+  - If you are using a (pre)release package, `UNDAT.SH` can be found in the `Fallout1in2` folder.
+  - If you are using the repository, `UNDAT.SH` can be found in the `Tools/UndatCLI` folder.
 
 - Select the `Fallout1in2` folder as extraction target.
 
