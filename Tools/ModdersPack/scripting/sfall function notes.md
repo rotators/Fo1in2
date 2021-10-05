@@ -1040,6 +1040,14 @@ sfall_funcX metarule functions
 - `gvarNumber`: the number of the global variable controlling the quest
 - `thresholdValue`: the value of the global variable at which the quest is counted as a failure
 
+----
+#### set_scr_name
+`void sfall_func1("set_scr_name", string name)`
+- Overrides the name of the script object that was set from **scrname.msg**
+- The changed name will be reset each time the player leaves the map or reloads the game
+- Passing an empty string ("") to the `name` argument or omitting it will allow the game to get the name for the object from pro_*.msg files
+- __NOTE:__ this function is intended for use in normal game scripts
+
 
 ****
 _See other documentation files (arrays.md, hookscripts.md) for related functions reference._
