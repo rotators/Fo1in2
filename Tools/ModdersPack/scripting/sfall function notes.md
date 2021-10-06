@@ -1046,6 +1046,7 @@ sfall_funcX metarule functions
 - Overrides the name of the script object that was set from **scrname.msg**
 - The changed name will be reset each time the player leaves the map or reloads the game
 - Passing an empty string ("") to the `name` argument or omitting it will allow the game to get the name for the object from pro_*.msg files
+- The function can override the name only once for the same object until reset
 - __NOTE:__ this function is intended for use in normal game scripts
 
 
