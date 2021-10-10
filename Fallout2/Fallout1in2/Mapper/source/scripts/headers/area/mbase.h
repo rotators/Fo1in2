@@ -35,3 +35,14 @@ variable ff_emitter;
                                     ff_emitter := create_object(PID_EMITTER_DESTROYED_EW, self_tile, self_elevation);  \
                                     destroy_object(self_obj);                                                          \
                                  end
+
+// Mutant combat alert check
+#define alert_check \
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin \
+      round_counter := round_counter + 1;             \
+      if (round_counter > 2) then begin               \
+         call GenSuprAlert;                           \
+      end                                             \
+   end                                                \
+   noop
+
