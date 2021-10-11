@@ -365,6 +365,7 @@
 #define message_box(text)                                       sfall_func1("message_box", text)
 #define metarule_exist(metaruleName)                            sfall_func1("metarule_exist", metaruleName)
 #define npc_engine_level_up(toggle)                             sfall_func1("npc_engine_level_up", toggle)
+#define obj_is_openable(obj)                                    sfall_func1("obj_is_openable", obj)
 #define obj_under_cursor(onlyCritter, includeDude)              sfall_func2("obj_under_cursor", onlyCritter, includeDude)
 #define objects_in_radius(tile, radius, elev, type)             sfall_func4("objects_in_radius", tile, radius, elev, type)
 #define outlined_object                                         sfall_func0("outlined_object")
