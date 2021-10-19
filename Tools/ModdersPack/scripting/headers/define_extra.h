@@ -35,16 +35,17 @@
 #define WEAPON_TYPE_THROWN  (3)
 #define WEAPON_TYPE_GUNS    (4)
 
-/* Item Common Flags */
-#define HIDDEN_ITEM     134217728  // 0x08000000 - Hidden Item
+/* Item Flags (FlagsExt in proto) */
+#define HEALING_ITEM          0x04000000  // Healing Item (item will be used by NPCs for healing in combat) [sfall 4.3.1/3.8.31]
+#define HIDDEN_ITEM           0x08000000  // Hidden Item
 
-#define ITEM_ACTION_USE      2048  // 0x00000800 - Use (can be used)
-#define ITEM_ACTION_USEON    4096  // 0x00001000 - Use On Smth (can be used on anything)
-#define ITEM_ACTION_PICKUP  32768  // 0x00008000 - PickUp
+#define ITEM_ACTION_USE       0x00000800  // Use (can be used)
+#define ITEM_ACTION_USEON     0x00001000  // Use On Smth (can be used on anything)
+#define ITEM_ACTION_PICKUP    0x00008000  // PickUp
 
-#define WEAPON_BIGGUN         256  // 0x00000100 - Big Gun
-#define WEAPON_2HAND          512  // 0x00000200 - 2Hnd (weapon is two-handed)
-#define WEAPON_ENERGY        1024  // 0x00000400 - Energy Weapon (forces weapon to use Energy Weapons skill)
+#define WEAPON_BIGGUN         0x00000100  // Big Gun
+#define WEAPON_2HAND          0x00000200  // 2Hnd (weapon is two-handed)
+#define WEAPON_ENERGY         0x00000400  // Energy Weapon (forces weapon to use Energy Weapons skill) [sfall 4.2/3.8.20]
 
 #define ATKMODE_PRI_NONE        0
 #define ATKMODE_PRI_PUNCH       1  // 0001
@@ -84,7 +85,7 @@
 #define FLAG_LEFT_HAND     (0x1000000)
 #define FLAG_RIGHT_HAND    (0x2000000)
 #define FLAG_WORN          (0x4000000)
-#define FLAG_HIDDENITEM    (0x8000000)
+#define FLAG_RESERVED      (0x8000000)
 #define FLAG_WALLTRANSEND (0x10000000)
 #define FLAG_LIGHTTHRU    (0x20000000)
 #define FLAG_SEEN         (0x40000000)
@@ -120,7 +121,7 @@
 #define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
-//remove inven obj defines for the 4th argument to hs_removeinvobj
+// remove inven obj defines for the 4th argument to HOOK_REMOVEINVOBJ
 #define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
 #define RMOBJ_CONTAINER           4683293  // same as RMOBJ_TRADE (item_move_func_)
 #define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
@@ -368,7 +369,7 @@
 #define ai_run_away_never              (7)
 
 // AI disposition values
-#define ai_disposition_none            (-1)
+#define ai_disposition_none           (-1)
 #define ai_disposition_custom          (0)
 #define ai_disposition_coward          (1)
 #define ai_disposition_defensive       (2)
@@ -406,7 +407,7 @@
 #define OBJ_DATA_CUR_FRM            (0x18) // current frame number
 #define OBJ_DATA_ROTATION           (0x1C)
 #define OBJ_DATA_FID                (0x20)
-//#define OBJ_DATA_FLAGS            (0x24) // the same flags set in prototypes (PROTO_FLAG)
+#define OBJ_DATA_FLAGS              (0x24) // the same flags set in prototypes (PROTO_FLAG)
 #define OBJ_DATA_ELEVATION          (0x28)
 #define OBJ_DATA_MISC_FLAGS         (0x38)
 #define OBJ_DATA_PID                (0x64)

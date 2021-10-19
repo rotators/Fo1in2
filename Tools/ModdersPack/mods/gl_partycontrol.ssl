@@ -7,7 +7,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.1
+   version 1.2
 
 */
 
@@ -17,9 +17,11 @@
 
 #define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
 #define OBJ_DATA_LIGHT_INTENSITY    (0x70)
+#define PID_PLAYER                  (16777216)
 
 procedure start;
 procedure AllowControl(variable pid);
+procedure SetLight(variable critter, variable int, variable dist);
 procedure CombatTurn_Handler;
 procedure GameModeChange_Handler;
 procedure InventoryMove_Handler;
@@ -31,12 +33,17 @@ variable
    pidList, perksList,
    lightInt, lightDist, npcControl,
    displayName, displayNameColor, isShowTag,
-   inControl := false;
+   inControl := false,
+   dudeLightInt, dudeLightDist;
 
 
 procedure AllowControl(variable pid) begin
-   if (noCheckArray or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)) then return true;
-   return false;
+   return ((pidList == 0 or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)));
+end
+
+procedure SetLight(variable critter, variable lInt, variable lDist) begin
+   if (lInt) then lInt := round((lInt / 65536.0) * 100); // calc percent of intensity
+   obj_set_light_level(critter, lInt, lDist); // TODO: make sfall obj_set_light_level function
 end
 
 procedure CombatTurn_Handler begin
@@ -46,67 +53,82 @@ procedure CombatTurn_Handler begin
       pid, perkID, level;
 
    //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
-   if npcControl then begin
-      if lightInt then lightInt := round((lightInt / 65536.0) * 100); // calc percent of intensity
-      obj_set_light_level(npcControl, lightInt, lightDist);           // restore light for prev. controlled NPC
-   end
 
    pid := obj_pid(critter);
-   if (status == 1 and (AllowControl(pid) or controlMode == 1)) then begin
+   if (pid == PID_PLAYER and inControl == false) then return;
+   if (pid != PID_PLAYER and controlMode != 1 and AllowControl(pid) == false) then return;
+
+   if (status == 1) then begin
       set_dude_obj(critter);
       //display_msg("Take control of: " + obj_name(critter));
+
       if (critter != real_dude_obj) then begin
-         if not(npcControl) then obj_set_light_level(real_dude_obj, 0, 0); // dude off light
+         if (npcControl == 0) then begin
+            dudeLightDist := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_DISTANCE);
+            dudeLightInt  := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_INTENSITY);
+            obj_set_light_level(real_dude_obj, 0, 0); // dude off light
+         end
          npcControl := critter;
+
+         lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
+         lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+
          // set perks (only work with 4.1.8+)
          foreach (perkID in perksList) begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
          intface_redraw;
-         lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
-         lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+
          obj_set_light_level(critter, 100, 4);
          inControl := true;
-      end else if npcControl then begin
-         obj_set_light_level(dude_obj, 100, 4); // set dude default light
+      end else if (npcControl) then begin
+         call SetLight(dude_obj, dudeLightInt, dudeLightDist); // restore dude light
          npcControl := 0; // dude control
       end
-      if inControl then begin
+
+      if (inControl) then begin
          // check preference setting _combat_highlight
-         if (read_byte(0x56D38C)) then set_outline(critter, OUTLINE_GREY);
+         if (read_byte(0x56D38C)) then set_outline(critter, OUTLINE_GREY); // TODO: replace read_byte with normal function
+
          // center the screen on the controlled critter/dude and remove roof tiles
          move_to(dude_obj, dude_tile, dude_elevation);
+
          if (displayName and critter != real_dude_obj) then begin
             set_iface_tag_text(displayName, obj_name(critter), displayNameColor);
             show_iface_tag(displayName);
             isShowTag := true;
          end
       end
-   end else if inControl then begin
+   end else begin
+      if (npcControl) then begin
+         call SetLight(critter, lightInt, lightDist); // restore light for controlled NPC
+      end
+      if (isShowTag) then begin
+         hide_iface_tag(displayName);
+         isShowTag := false;
+      end
+
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          foreach (perkID in perksList) begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
+
+         set_dude_obj(0); // w/o redraw interface bar
+         //display_msg("Return control to real dude!");
       end
-      if isShowTag then begin
-         hide_iface_tag(displayName);
-         isShowTag := false;
-      end
-      if (status < 0 or AllowControl(pid) == false) then begin
-         if (dude_obj != real_dude_obj) then begin
-            set_dude_obj(real_dude_obj);
-            obj_set_light_level(dude_obj, 100, 4);
-            npcControl := 0;
-         end
+
+      if (status < 0) then begin
+         set_dude_obj(real_dude_obj);
+         call SetLight(dude_obj, dudeLightInt, dudeLightDist); //obj_set_light_level(dude_obj, 100, 4);
       end
    end
 end
 
 procedure GameModeChange_Handler begin
-   if (inControl and not(get_game_mode BWAND COMBAT)) then begin
+   if (inControl and (get_game_mode bwand COMBAT) == 0) then begin
       inControl := false;
       npcControl := 0;
       move_to(dude_obj, dude_tile, dude_elevation);
@@ -150,7 +172,7 @@ procedure start begin
       if (controlMode > 0) then begin
          displayName := GetConfig("CombatControl", "DisplayName", 0);
 
-         if displayName then begin
+         if (displayName) then begin
             variable nameTag := add_iface_tag;
             debug_msg("NPC control - added new box: " + nameTag);
             if (nameTag <= 0) then begin // box added?
@@ -165,8 +187,10 @@ procedure start begin
          end
 
          pidList := GetConfigListInt("CombatControl", "PIDList");
-         fix_array(pidList);
-         noCheckArray := (len_array(pidList) == 0);
+         if (len_array(pidList) > 0) then
+            fix_array(pidList);
+         else
+            pidList := 0;
 
          perksList := GetConfigListInt("CombatControl", "PerksList");
          fix_array(perksList);
@@ -175,6 +199,8 @@ procedure start begin
          register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
          register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_Handler);
          register_hook_proc(HOOK_INVENWIELD, InvenWield_Handler);
+      end else begin
+         exit;
       end
    end
 end
