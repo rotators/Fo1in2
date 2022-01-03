@@ -801,8 +801,8 @@
 {41101}{}{This is the second generation Wattz Electronics Micromanipulator FingerStuff electronic lockpick. For defeating electronic locks and security devices. This Mark II version includes updated software and interface tools.}
 {41200}{}{Oil Can}
 {41201}{}{You see a can of Armor-Go. A space-age, polymer, lubricant for powered armor.}
-{41300}{}{Stables ID Badge}
-{41301}{}{This is a temporary ID badge. It has a red stripe through it, which seems to indicate that you are a "Stables Researcher."}
+{41300}{}{Shock Spear}
+{41301}{}{An electrified polearm. The shaft is made of metal, and the tip has been upgraded with some sort of high-powered tazer. Min ST: 4.}
 {41400}{}{Vault 15 Shack Key}
 {41401}{}{A standard key.}
 {41500}{}{Spectacles}

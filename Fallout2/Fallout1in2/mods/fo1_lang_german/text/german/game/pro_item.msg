@@ -802,8 +802,8 @@
 {41101}{}{Zweite Generation des elektronischen Dietrichs Mikromanipulator FingerStuff von Wattz Electronics. Zum Überwinden elektronischer Schlösser und Sicherheitseinrichtungen. Die Version Mark II besitzt verbesserte Software- und Interface-Werkzeuge.}
 {41200}{}{Ölkanister}
 {41201}{}{Du siehst einen Kanister Armor-Go. Ein polymerisiertes Schmiermittel des Raumfahrtzeitalters für Powerrüstungen.}
-{41300}{}{Stall-Kennmarke}
-{41301}{}{Temporärer Ausweis mit rotem Streifen, der vermutlich angibt, dass du ein "Forscher der Ställe" bist. }
+{41300}{}{Shock Spear}
+{41301}{}{An electrified polearm. The shaft is made of metal, and the tip has been upgraded with some sort of high-powered tazer. Min ST: 4.}
 {41400}{}{Barackenschlüssel für Bunker 15}
 {41401}{}{Ein gewöhnlicher Schlüssel.}
 {41500}{}{Brille}
