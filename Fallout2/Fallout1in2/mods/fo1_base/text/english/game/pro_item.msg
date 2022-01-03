@@ -581,7 +581,7 @@
 {29600}{}{10mm Carbine}
 {29601}{}{The Heckler & Koch MP10 was designed to be a replacement for the aging MP9, informed by experience of the Resource Wars. Made to endure the hostile environment of Arabian deserts. Min ST: 4.}
 {29700}{}{Metal Pole}
-{29701}{}{It's a long metal pole. What did you expect?}
+{29701}{}{It's a long metal pole. What did you expect? Min ST: 5.}
 {29800}{}{Trapper Town Key}
 {29801}{}{A standard key.}
 {29900}{}{Pipe Rifle}
