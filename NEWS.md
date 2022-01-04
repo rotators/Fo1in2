@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1in2/releases/tag/v1.6.2703))
 
 - **Added**: A new mini-mod that replaces the default premade characters and changes their starting equipment accordingly.
+- **Added**: New Shock Spear item (using Fallout Sonora graphics).
 - **Added**: Reverted trait text to the original Fo1 (US) version.
 - **Added**: Uncensored Addict, Chem Reliant, and Chem resistant skilldex images.
 - **Fixed**: Flying Saucer dome had the wrong description (Fo2 air vent text).
@@ -10,4 +11,5 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Fixed**: The optional Shady Sands merchant and his bodyguard had no armor values set.
 - **Fixed**: Wrong First Aid-skill formula in the skill description.
 - **Tweaked**: Dealing with Billy in the Hub now gives a few experience points.
+- **Tweaked**: Metal Pole is a usable weapon now.
 - **Tweaked**: Streamlined PipBoy entry code for the Hub Merchant and Jain quests.

@@ -73,7 +73,7 @@ The `list_xxx` functions can be used to loop over all items on a map. `list_begi
 The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an id which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. These functions do not require **AllowDShowSound** to be set to 1 in ddraw.ini.
 Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, You need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
 
-Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad id or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.<br>
+Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad id or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.\
 __NOTE:__ the above description only applies when **arraysBehavior** is set to 0 in ddraw.ini. Refer to **arrays.md** for detailed description of new arrays behavior.
 
 The `force_aimed_shots` and `disable_aimed_shots` allow overriding the normal rules regarding which weapons are allowed to make aimed attacks. (e.g. weapons that cause explosive damage normally cannot normally make aimed shots.) `force_aimed_shots` will allow a weapon to make aimed shots even if it normally couldn't, and `disable_aimed_shots` stops a weapon from making aimed shots even if it normally could. Both of these functions affect player and NPCs alike. `force_aimed_shots` does not override the effects of the fast shot trait. The list of edited weapons is not saved over game loads, so you need to call the functions once at each reload. Use a pid of 0 to represent unarmed.
@@ -483,7 +483,7 @@ sfall_funcX metarule functions
 
 ----
 #### intface_redraw
-`void sfall_func0("intface_redraw")`<br>
+`void sfall_func0("intface_redraw")`\
 `void sfall_func1("intface_redraw", int winType)`
 - Redraws main game interface, useful to reflect changes after directly changing current player weapons or stats
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**). Pass -1 to redraw all interface windows
@@ -679,14 +679,14 @@ sfall_funcX metarule functions
 
 ----
 #### inventory_redraw
-`void sfall_func0("inventory_redraw")`<br>
+`void sfall_func0("inventory_redraw")`\
 `void sfall_func1("inventory_redraw", int invSide)`
 - Redraws inventory list in the inventory/use inventory item on/loot/barter screens
 - `invSide` specifies which side needs to be redrawn: 0 - the player, 1 - target (container/NPC in loot/barter screens), -1 - both sides (same as without argument)
 
 ----
 #### item_make_explosive
-`void sfall_func3("item_make_explosive", int pid, int activePid, int damage)`<br>
+`void sfall_func3("item_make_explosive", int pid, int activePid, int damage)`\
 `void sfall_func4("item_make_explosive", int pid, int activePid, int min, int max)`
 - Makes the specified item (pid) an explosive item like Dynamite or Plastic Explosives
 - `activePid` is for an item with an active timer, can be the same as the pid argument
@@ -712,7 +712,7 @@ sfall_funcX metarule functions
 
 ----
 #### create_win
-`void sfall_func5("create_win", string winName, int x, int y, int width, int height)`<br>
+`void sfall_func5("create_win", string winName, int x, int y, int width, int height)`\
 `void sfall_func6("create_win", string winName, int x, int y, int width, int height, int flags)`
 - Works just like vanilla `CreateWin` function, but creates a window with `MoveOnTop` flag if the flags argument is not specified, and allows to set additional flags for the created window
 - `MoveOnTop` flag allows the created window to be placed on top of the game interface
@@ -741,8 +741,8 @@ sfall_funcX metarule functions
 #### obj_under_cursor
 `object sfall_func2("obj_under_cursor", bool onlyCritter, bool includeDude)`
 - Returns the object under the cursor on the main game screen
-- `onlyCritter`:<br>
-    True - only checks critters and ignores their cover (roof tiles, walls, scenery, etc.)<br>
+- `onlyCritter`:\
+    True - only checks critters and ignores their cover (roof tiles, walls, scenery, etc.)\
     False - checks all objects (can't check critters under objects)
 - Passing False to the `includeDude` argument will ignore `dude_obj`
 - __NOTE:__ to get an object located on a tile when the cursor is in movement mode (hexagon cursor), use the `tile_under_cursor` function
@@ -783,13 +783,13 @@ sfall_funcX metarule functions
 #### set_drugs_data
 `void sfall_func3("set_drugs_data", int type, int pid, int value)`
 - Overrides the parameters of drugs set in the configuration file (**DrugsFile** setting in ddraw.ini)
-- `type`:<br>
-    0 - changes the value of **NumEffects** for the drug (see **Drugs.ini** for the description of NumEffects)<br>
+- `type`:\
+    0 - changes the value of **NumEffects** for the drug (see **Drugs.ini** for the description of NumEffects)\
     1 - changes the duration of the addiction effect for the drug (a value of 1 = one game minute)
 
 ----
 #### set_unique_id
-`int sfall_func1("set_unique_id", object)`<br>
+`int sfall_func1("set_unique_id", object)`\
 `int sfall_func2("set_unique_id", object, int flag)`
 - Assigns a unique ID number to the object and returns it. If a unique ID number has already been assigned to an object, then ID number is returned without reassignment
 - Items with unique IDs will not stack with other items of the same type in the inventory
@@ -800,7 +800,7 @@ sfall_funcX metarule functions
 
 ----
 #### draw_image | draw_image_scaled
-`void sfall_func5("draw_image", string/int artFile/artId, int frame, int x, int y, bool noTransparent)`<br>
+`void sfall_func5("draw_image", string/int artFile/artId, int frame, int x, int y, bool noTransparent)`\
 `void sfall_func6("draw_image_scaled", string/int pathFile/artId, int frame, int x, int y, int width, int height)`
 - Displays the specified PCX or FRM image in the active window created by vanilla `CreateWin` or sfall's `create_win` script function
 - `artFile/artId`: path to the PCX/FRM file (e.g. `art\\inven\\5mmap.frm`), or its FRM ID number (e.g. `0x7000026`, see specification of the FID format)
@@ -815,16 +815,16 @@ sfall_funcX metarule functions
 
 ----
 #### set_fake_perk_npc | set_fake_trait_npc | set_selectable_perk_npc | has_fake_perk_npc | has_fake_trait_npc
-`void sfall_func5("set_fake_perk_npc", object npc, string namePerk, int level, int image, string desc)`<br>
-`void sfall_func5("set_fake_trait_npc", object npc, string nameTrait, int active, int image, string desc)`<br>
-`void sfall_func5("set_selectable_perk_npc", object npc, string namePerk, int active, int image, string desc)`<br>
-`int  sfall_func2("has_fake_perk_npc", object npc, string namePerk)`<br>
+`void sfall_func5("set_fake_perk_npc", object npc, string namePerk, int level, int image, string desc)`\
+`void sfall_func5("set_fake_trait_npc", object npc, string nameTrait, int active, int image, string desc)`\
+`void sfall_func5("set_selectable_perk_npc", object npc, string namePerk, int active, int image, string desc)`\
+`int  sfall_func2("has_fake_perk_npc", object npc, string namePerk)`\
 `int  sfall_func2("has_fake_trait_npc", object npc, string nameTrait)`
 - These functions are similar to `has_fake_perk`, `has_fake_trait`, `set_fake_perk`, `set_fake_trait`, `set_selectable_perk`, and `set_selectable_trait` functions, but apply to the specified party member NPC (including `dude_obj`)
 
 ----
 #### add_extra_msg_file
-`int sfall_func1("add_extra_msg_file", string fileName)`<br>
+`int sfall_func1("add_extra_msg_file", string fileName)`\
 `int sfall_func2("add_extra_msg_file", string fileName, int fileNumber)`
 - Loads the custom message file, and returns the file ID number assigned to it in range from `0x3000` to `0x3FFF` for the `message_str_game` function to get messages from the file
 - `fileName`: the name of the custom message file (including the **.msg** extension) in the `text\<language>\game\` directory
@@ -859,7 +859,7 @@ sfall_funcX metarule functions
 
 ----
 #### remove_timer_event
-`void sfall_func0("remove_timer_event")`<br>
+`void sfall_func0("remove_timer_event")`\
 `void sfall_func1("remove_timer_event", int fixedParam)`
 - Clears all set timer events for the current global script
 - `fixedParam`: removes all timer events with the specified value for the current global script
@@ -871,14 +871,14 @@ sfall_funcX metarule functions
 
 ----
 #### hide_window
-`void sfall_func0("hide_window")`<br>
+`void sfall_func0("hide_window")`\
 `void sfall_func1("hide_window", string winName)`
 - Hides the specified or currently active (selected) script window
 - `winName`: the window name, assigned to the window by the `CreateWin` or `create_win` function
 
 ----
 #### show_window
-`void sfall_func0("show_window")`<br>
+`void sfall_func0("show_window")`\
 `void sfall_func1("show_window", string winName)`
 - Displays the specified hidden script window or the one previously hidden with the `sfall_func0("hide_window")` function
 - `winName`: the window name, assigned to the window by the `CreateWin` or `create_win` function
@@ -899,7 +899,7 @@ sfall_funcX metarule functions
 
 ----
 #### string_compare
-`bool sfall_func2("string_compare", string str1, string str2)`<br>
+`bool sfall_func2("string_compare", string str1, string str2)`\
 `bool sfall_func3("string_compare", string str1, string str2, int codePage)`
 - Compares two strings case-insensitive, and returns True if the two strings are matched
 - `codePage`: code page number to properly compare national characters in the range 128-255 of the ASCII code table. Available encodings: 1250-1252, 866
@@ -912,7 +912,7 @@ sfall_funcX metarule functions
 
 ----
 #### objects_in_radius
-`array sfall_func3("objects_in_radius", int tile, int radius, int elevation)`<br>
+`array sfall_func3("objects_in_radius", int tile, int radius, int elevation)`\
 `array sfall_func4("objects_in_radius", int tile, int radius, int elevation, int type)`
 - Returns an array of objects of a type (see `OBJ_TYPE_*` constants in **define_extra.h**) within the specified radius from the given tile
 - Passing -1 to the `type` argument or not specifying it will return all objects within the radius
@@ -938,14 +938,14 @@ sfall_funcX metarule functions
 
 ----
 #### get_window_attribute
-`int sfall_func1("get_window_attribute", int winType)`<br>
+`int sfall_func1("get_window_attribute", int winType)`\
 `int sfall_func2("get_window_attribute", int winType, int attrType)`
 - Returns the attribute of the specified interface window by the `attrType` argument
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**)
-- `attrType:`<br>
-    0 - checks and returns a value of 1 if the specified interface window is created by the game (same as without the argument)<br>
-    1 - X position, 2 - Y position (relative to the top-left corner of the game screen)<br>
-    3 - interface width size, 4 - interface height size<br>
+- `attrType:`\
+    0 - checks and returns a value of 1 if the specified interface window is created by the game (same as without the argument)\
+    1 - X position, 2 - Y position (relative to the top-left corner of the game screen)\
+    3 - interface width size, 4 - interface height size\
     -1 - returns an associative array of keys (left, top, right, bottom) and values that define the position of the window rectangle (use standard syntax to access array values, e.g. `win.top`, `win.bottom`)
 - Returns -1 if the specified attribute cannot be obtained
 
@@ -968,17 +968,17 @@ sfall_funcX metarule functions
 
 ----
 #### get_stat_min | get_stat_max
-`int sfall_func1("get_stat_min", int stat)`<br>
-`int sfall_func1("get_stat_max", int stat)`<br>
-`int sfall_func2("get_stat_min", int stat, bool who)`<br>
+`int sfall_func1("get_stat_min", int stat)`\
+`int sfall_func1("get_stat_max", int stat)`\
+`int sfall_func2("get_stat_min", int stat, bool who)`\
 `int sfall_func2("get_stat_max", int stat, bool who)`
 - Returns the maximum or minimum set value of the specified stat (see `set_stat_min` and `set_stat_max` functions)
 - `who`: 0 (false) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
 
 ----
 #### interface_art_draw
-`int sfall_func4("interface_art_draw", int winType, string/int artFile/artId, int x, int y)`<br>
-`int sfall_func5("interface_art_draw", int winType, string/int artFile/artId, int x, int y, int frame)`<br>
+`int sfall_func4("interface_art_draw", int winType, string/int artFile/artId, int x, int y)`\
+`int sfall_func5("interface_art_draw", int winType, string/int artFile/artId, int x, int y, int frame)`\
 `int sfall_func6("interface_art_draw", int winType, string/int artFile/artId, int x, int y, int frame, array param)`
 - Draws the specified PCX or FRM image in the game interface window, returns -1 on any error
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**). This also takes the value of the flag `0x1000000` to prevent immediate redrawing of the interface window
@@ -987,22 +987,22 @@ sfall_funcX metarule functions
 
 **Optional arguments:**
 - `frame`: frame number, the first frame starts from zero
-- `param`: an array which specifies additional parameters, where:<br>
-    index 0 - sprite direction for multi-directional FRM<br>
+- `param`: an array which specifies additional parameters, where:\
+    index 0 - sprite direction for multi-directional FRM\
     index 1/index 2 - the new width/height to scale the image to. Pass -1 to use the original width/height
 
 ----
 #### interface_print
-`int sfall_func5("interface_print", string text, int winType, int x, int y, int color)`<br>
+`int sfall_func5("interface_print", string text, int winType, int x, int y, int color)`\
 `int sfall_func6("interface_print", string text, int winType, int x, int y, int color, int width)`
 - Displays the text in the specified interface window with the current font. Use vanilla `SetFont` function to set the font
 - Returns the count of lines printed, or -1 on any error
 - `text`: the text to be printed. Use the `\n` control character to move text to a new line (example: "Hello\nWorld!")
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**)
 - `x/y`: offset relative to the top-left corner of the window
-- `color`: the color index in the game palette. Pass 0 if the text color was previously set by vanilla `SetTextColor` function. It can also take additional flags (via `bwor`) for displaying text:<br>
-    `0x0010000` - adds a shadow to the text, the `textshadow` compiler constant<br>
-    `0x1000000` - prevents immediate redrawing of the interface window, the `textdirect` compiler constant (works the other way around)<br>
+- `color`: the color index in the game palette. Pass 0 if the text color was previously set by vanilla `SetTextColor` function. It can also take additional flags (via `bwor`) for displaying text:\
+    `0x0010000` - adds a shadow to the text, the `textshadow` compiler constant\
+    `0x1000000` - prevents immediate redrawing of the interface window, the `textdirect` compiler constant (works the other way around)\
     `0x2000000` - fills the background of the text with black color, the `textnofill` compiler constant (works the other way around)
 
 **Optional argument:**
@@ -1012,25 +1012,25 @@ sfall_funcX metarule functions
 #### combat_data
 `mixed sfall_func0("combat_data")`
 - Returns a pointer to the `C_ATTACK_*` data for the current combat attack turn (see defined constants in **define_extra.h**)
-- Can be used in conjunction with the `get_object_data` and `set_object_data` functions<br>
+- Can be used in conjunction with the `get_object_data` and `set_object_data` functions\
   Example: `sfall_func3("set_object_data", sfall_func0("combat_data"), C_ATTACK_UNUSED, 255);`
 
 ----
 #### win_fill_color
-`int sfall_func0("win_fill_color")`<br>
+`int sfall_func0("win_fill_color")`\
 `int sfall_func5("win_fill_color", int x, int y, int width, int height, int color)`
 - Fills the rectangle area of the currently selected script window with the specified color, or clears the window with transparent color (use index 0 or call the function without arguments)
 - `color`: the color index in the game palette (from 0 to 255)
 
 ----
 #### interface_overlay
-`int sfall_func2("interface_overlay", int winType, int mode)`<br>
+`int sfall_func2("interface_overlay", int winType, int mode)`\
 `int sfall_func6("interface_overlay", int winType, 2, int x, int y, int width, int height)`
 - Creates an additional drawing surface above the graphic layer of the specified interface window. All subsequent calls of `interface_art_draw` and `interface_print` functions will draw on it
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**)
-- `mode`:<br>
-    1 - creates a new overlay surface<br>
-    2 - clears the overlay area or the specified rectangle defined by the x, y, width, height arguments<br>
+- `mode`:\
+    1 - creates a new overlay surface\
+    2 - clears the overlay area or the specified rectangle defined by the x, y, width, height arguments\
     0 - destroys the created overlay surface (frees up the memory allocated to the surface)
 
 ----
