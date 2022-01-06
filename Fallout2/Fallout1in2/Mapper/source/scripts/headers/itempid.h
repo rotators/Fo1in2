@@ -451,7 +451,7 @@
 #define PID_V15_COMPUTER_PART               (377)
 #define PID_COOKIE                          (378)
 #define PID_OIL_CAN                         (412)
-#define PID_STABLES_ID_BADGE                (413)
+//#define PID_STABLES_ID_BADGE                (413)
 #define PID_VAULT_13_SHACK_KEY              (414)
 #define PID_SPECTACLES                      (415)     // DO NOT USE THIS IN YOUR SCRIPTS, THIS IS SPECIAL CASE
 #define PID_EMPTY_JET                       (416)     // DO NOT USE THIS IN YOUR SCRIPTS, THIS IS SPECIAL CASE
@@ -561,6 +561,7 @@
 #define PID_DRESSER                         (68)
 #define PID_GIZMO_REMAINS                   (213)
 #define PID_GIZMO_EMPTY_DESK                (214)
+#define PID_SHOCK_SPEAR                     (413)
 #define PID_MOTO1_TRUNK                     (532)
 #define PID_MOTO2_TRUNK                     (533)
 #define PID_MOTO_KEY                        (534)
