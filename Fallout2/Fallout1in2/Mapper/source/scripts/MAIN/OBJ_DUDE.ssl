@@ -6,6 +6,7 @@
 
 #include "define.h"
 #include "command.h"
+#include "sfall/sfall.h"
 
 #define NAME                    SCRIPT_OBJ_DUDE
 
@@ -113,6 +114,15 @@ procedure description_p_proc begin
    end
 end
 
+/*
+procedure map_enter_p_proc begin
+   // TEST
+   variable Item := create_object(PID_DEHYDRATION_STRONG, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
+   set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+end
+*/
+
 procedure map_update_p_proc begin
    variable days_since_exposed;
 
@@ -176,8 +186,33 @@ procedure map_update_p_proc begin
          rm_obj_from_inven(dude_obj, Drink);
          destroy_object(Drink);
       end
-      else
+      else begin
          use_obj_on_obj(Drink, dude_obj);
+         // Weak has 1 effect timer, strong has 2 effect timers. Added like this, so that in the future I will remember what I have done. :>
+         if (obj_pid(Drink) == PID_DEHYDRATION_WEAK) then
+            set_global_var(GVAR_DEHYDRATION_TIMER, game_time + (ONE_GAME_MINUTE * 4320));
+         else if (obj_pid(DRINK) == PID_DEHYDRATION_STRONG) then
+            set_global_var(GVAR_DEHYDRATION_TIMER, game_time + (ONE_GAME_MINUTE * 4320) + (ONE_GAME_MINUTE * 4320));
+      end
+   end
+
+   // Shows the status box on the main interface.
+   if (global_var(GVAR_DEHYDRATION_TIMER) > game_time) then begin
+      if not(is_iface_tag_active(global_var(GVAR_DEHYDRATION_BOX))) then begin
+
+         // TODO: Add check for available box
+         set_global_var(GVAR_DEHYDRATION_BOX, 5);
+
+         set_iface_tag_text(global_var(GVAR_DEHYDRATION_BOX), gen_mstr(305), 1);
+         show_iface_tag(global_var(GVAR_DEHYDRATION_BOX));
+      end
+   end
+   else begin
+      if is_iface_tag_active(global_var(GVAR_DEHYDRATION_BOX)) then begin
+         display_msg(gen_mstr(306));
+         hide_iface_tag(global_var(GVAR_DEHYDRATION_BOX));
+         set_global_var(GVAR_DEHYDRATION_BOX, -1);
+      end
    end
 end
 

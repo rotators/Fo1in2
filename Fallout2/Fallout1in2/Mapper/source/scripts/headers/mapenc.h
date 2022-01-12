@@ -567,16 +567,11 @@ procedure drink_water begin
 
    if (Item != 0) then begin
       party_remove_item(Item)
-
       Item := create_object(Item, 0, 0);
-      //add_obj_to_inven(dude_obj, Item);
-
       if (obj_pid(Item) == PID_WATER_FLASK) then
          display_msg(message_str(SCRIPT_RNDDESRT, 125));
       else
          display_msg(mstr_item_supply);
-
-      //set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
    end
    else
       debug("ERROR! Can't find item for dehydration encounter event!");
