@@ -5,6 +5,7 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Added**: Reverted trait text to the original Fo1 (US) version.
 - **Added**: Shock Spear to the Gun Runners arsenal (currently only available if "weapon upgrades" have been enabled).
 - **Added**: Uncensored Addict, Chem Reliant, and Chem resistant skilldex images.
+- **Added**: When the player is under the "dehydration effect" from random encounter, a new status box will show up on the interface now.
 - **Fixed**: Flying Saucer dome had the wrong description (Fo2 air vent text).
 - **Fixed**: It wasn't possible to bust Iguana Bob after taking down Decker, because the Sheriff's dialog would change to a floating text. Now it will turn into a regular dialog if the player knows about Bob.
 - **Fixed**: Missing string in the Eyebot companion dialog.
@@ -14,4 +15,6 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Tweaked**: Dealing with Billy in the Hub now gives a few experience points.
 - **Tweaked**: Metal Pole is a usable weapon now.
 - **Tweaked**: Streamlined PipBoy entry code for the Hub Merchant and Jain quests.
+- **Tweaked**: Strong dehydration effect now has a longer duration to wear off.
 - **Tweaked**: Super Cattle Prod price increased to 1.100 caps.
+- **Tweaked**: Tycho can now wield sledgehammers.

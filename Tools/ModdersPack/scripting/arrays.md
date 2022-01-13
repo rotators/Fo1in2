@@ -45,7 +45,7 @@ Both array types have their pros and cons and are suited for different tasks.
 ___
 ### ARRAYS SYNTAX
 
-Basically arrays are implemented using number of new operators (scripting functions). But for ease of use, there are some new syntax elements:
+Basically arrays are implemented using number of new operators (script functions). But for ease of use, there are some new syntax elements:
 
 * Accessing elements. Use square brackets:
   ```js
@@ -94,7 +94,7 @@ There a 3 types of arrays:
 Arrays of this type are auto-deleted at the end of the frame. So, for example, if you have a global script which runs at regular intervals, where you create a temporary array, it will not be available next time your global script is executed.
 
 * **Permanent**. They are created using `create_array` function or `fix_array` (from pre-existing temporary array).
-This type of arrays are always available (by their ID) until you start a new game or load a saved game (at which point they are deleted).
+This type of arrays are always available (by their IDs) until you start a new game or load a saved game (at which point they are deleted).
 
 * **Saved**. If you want your array to really stay for a while, use function `save_array` to make any array "saved". However, they are, like permanent arrays, "deleted" from memory when loading game. In order to use them properly, you must load them from the savegame using `load_array` whenever you want to use them.
 
@@ -236,9 +236,9 @@ ___
 
 For those who used arrays in their mods before sfall 3.4:
 
-* There is an INI parameter **arraysBehavior** in **Misc** section of ddraw.ini. If set to 0, all scripts which used sfall arrays before should work. This basically changes that `create_array` will create permanent arrays which are "saved" by default and their ID is also permanent. It is 1 by default.
+* Previously `create_array` would create permanent arrays which were "saved" by default and their IDs were also permanent. Now permanent arrays from `create_array` are not "saved" by default anymore. Make sure to review your scripts if you need to save arrays into savegames.
 
 * How savegame compatibility is handled?\
-  Saved arrays are stored in **sfallgv.sav** file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), game shouldn't crash, but all arrays will be lost.
+  Saved arrays are stored in **sfallgv.sav** file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), the game shouldn't crash, but all arrays will be lost.
 
 * Previously you had to specify size in bytes for array elements. This parameter is now ignored and you can store strings of arbitrary length in arrays.

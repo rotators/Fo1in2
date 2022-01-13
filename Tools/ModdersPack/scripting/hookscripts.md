@@ -496,7 +496,7 @@ int     arg3 - Type of hook:
 int     ret0 - overrides the returned result of the function:
                0 - not in range (can't see)
                1 - in range (will see if not blocked)
-               2 - forced detection (will see regardless, only used in obj_can_see_obj scripting function which is called by every critter in the game)
+               2 - forced detection (will see regardless, only used in obj_can_see_obj script function which is called by every critter in the game)
 ```
 
 -------------------------------------------
