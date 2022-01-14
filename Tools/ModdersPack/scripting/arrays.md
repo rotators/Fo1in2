@@ -67,8 +67,8 @@ Basically arrays are implemented using number of new operators (script functions
   // create map:
   {5: "Five", "health": 50, "speed": 0.252}
   ```
-  __NOTES:__
-  Make sure to call `fix_array` if you want new array to be available in the next frame or `save_array` if you want to use it for a longer period (see next section for details).
+  __NOTE:__
+  Make sure to call `fix_array` if you want the new array to be available in the next frame or `save_array` if you want to use it for a longer period (see next section for details).
 
 * Iterating in loop. Use `foreach` key word like this:
   ```js
@@ -82,7 +82,7 @@ Basically arrays are implemented using number of new operators (script functions
   end
   ```
 
-See **sslc_readme.txt** file for full information on new SSL syntax features.
+See **sslc_readme.md** file for full information on new SSL syntax features.
 
 ___
 ### STORING ARRAYS
@@ -236,7 +236,9 @@ ___
 
 For those who used arrays in their mods before sfall 3.4:
 
-* Previously `create_array` would create permanent arrays which were "saved" by default and their IDs were also permanent. Now permanent arrays from `create_array` are not "saved" by default anymore. Make sure to review your scripts if you need to save arrays into savegames.
+* There is an INI parameter **ArraysBehavior** in **Misc** section of ddraw.ini. If set to 0, all scripts which used sfall arrays before should work. This basically changes that `create_array` will create permanent arrays which are "saved" by default and their IDs are also permanent. It is 1 by default.
+
+* __NOTE:__ Starting from sfall 4.3.3/3.8.33, the **ArraysBehavior** option is removed, and arrays always work in **ArraysBehavior=1** mode. Make sure to review your scripts if you need to save arrays into savegames.
 
 * How savegame compatibility is handled?\
   Saved arrays are stored in **sfallgv.sav** file (in savegame) in new (more flexible) format, just after the old arrays. So basically, when you load older savegame, sfall will load arrays from old format and save them to new format on next game save. If you load savegame made with sfall 3.4 using sfall 3.3 (for example), the game shouldn't crash, but all arrays will be lost.
