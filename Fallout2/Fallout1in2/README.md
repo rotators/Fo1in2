@@ -128,7 +128,6 @@ For various other QoL features that aren't included in FALLOUT ET TU already, ch
 - [High quality music](https://github.com/BGforgeNet/Fallout2-HQ-music)
 - [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders)
 - [FO2tweaks](https://github.com/BGforgeNet/FO2tweaks)
-- [Inventory filter](https://nma-fallout.com/threads/inventory-filter.214445/)
 
 SPECIAL THANKS
 --------------
