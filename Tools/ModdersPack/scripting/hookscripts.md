@@ -167,7 +167,7 @@ When using `critter_dmg` function, this script will also run. In that case weapo
 Does not run for critters in the knockdown/out state.
 
 ```
-Item    arg0 - The pid of the weapon performing the attack. (May be -1 if the attack is unarmed)
+int     arg0 - The pid of the weapon performing the attack. (May be -1 if the attack is unarmed)
 Critter arg1 - The attacker
 Critter arg2 - The target
 int     arg3 - The amount of damage
