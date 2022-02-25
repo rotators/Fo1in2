@@ -74,7 +74,7 @@ The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** f
 Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, You need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
 
 Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad id or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.\
-__NOTE:__ the above description only applies when **arraysBehavior** is set to 0 in ddraw.ini. Refer to **arrays.md** for detailed description of new arrays behavior.
+__NOTE:__ refer to **arrays.md** for detailed description of the array behavior and function usage.
 
 The `force_aimed_shots` and `disable_aimed_shots` allow overriding the normal rules regarding which weapons are allowed to make aimed attacks. (e.g. weapons that cause explosive damage normally cannot normally make aimed shots.) `force_aimed_shots` will allow a weapon to make aimed shots even if it normally couldn't, and `disable_aimed_shots` stops a weapon from making aimed shots even if it normally could. Both of these functions affect player and NPCs alike. `force_aimed_shots` does not override the effects of the fast shot trait. The list of edited weapons is not saved over game loads, so you need to call the functions once at each reload. Use a pid of 0 to represent unarmed.
 
@@ -452,7 +452,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `any sfall_funcX(string funcName, ...)`
-- These opcodes allows to use additional scripting functions, that do not require new opcode.
+- These opcodes allows to use additional script functions, that do not require new opcode.
 - First argument is always function name (string).
 - There are 9 versions of this opcode for different number of additional arguments (for convenience).
 - Opcodes have return value, but it is not necessary to use it.
@@ -464,7 +464,7 @@ sfall_funcX metarule functions
 
 #### get_metarule_table
 `array sfall_func0("get_metarule_table")`
-- Returns names of all currently available scripting functions (via `sfall_funcX`)
+- Returns names of all currently available script functions (via `sfall_funcX`)
 
 ----
 #### metarule_exist
