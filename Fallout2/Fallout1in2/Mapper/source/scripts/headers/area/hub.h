@@ -49,5 +49,3 @@
 
 #define set_quest_kill_jain_completed     if (global_var(GVAR_QUEST_PIPBOY_JAIN) == 1) then \
                                              set_global_var(GVAR_QUEST_PIPBOY_JAIN, 2)
-
-   
