@@ -11,6 +11,7 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Fixed**: Fo2Tweaks trunk size option might fuck with the motorcycle trunk visuals.
 - **Fixed**: It wasn't possible to bust Iguana Bob after taking down Decker, because the Sheriff's dialog would change to a floating text. Now it will turn into a regular dialog if the player knows about Bob.
 - **Fixed**: Missing string in the Eyebot companion dialog.
+- **Fixed**: Original main menu panel only had 5 and not 6 slots.
 - **Fixed**: The Combat Shotgun (Ext. Mag) was set as 1-handed weapon.
 - **Fixed**: The optional Shady Sands merchant and his bodyguard had no armor values set.
 - **Fixed**: Wrong First Aid-skill formula in the skill description.

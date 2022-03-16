@@ -1,14 +1,14 @@
 /*
 
-Ammo INI Loader mod for Fallout 2 by NovaRain
----------------------------------------------
+Ammo INI Loader mod v1.1 for Fallout 2 by NovaRain
+--------------------------------------------------
 
 - modifies ammo protos with data from an INI file:
   * AmmoGlovz.ini if DamageFormula=1 or 2 in ddraw.ini
   * AmmoYAAM.ini if DamageFormula=5 in ddraw.ini
   * AmmoMod.ini if not using any bulit-in damage formula
 
-Requires sfall 3.5 or higher
+Requires sfall 4.0/3.8.29 or higher
 
 */
 
@@ -23,7 +23,7 @@ variable ammoData;
 variable enabled;
 
 procedure start begin
-   variable i := 1, ammo, ammoPid, dmgMod;
+   variable i := 1, ammo, ammoSection, dmgMod;
    if game_loaded then begin
       enabled := get_ini_setting("ddraw.ini|Misc|DamageFormula");
       if (enabled == 1 or enabled == 2) then
@@ -37,19 +37,19 @@ procedure start begin
       if (enabled <= 0) then return;
 
       ammoData := create_array_map;
-      ammoPid := enabled; // pid from the first section
-      while (ammoPid > 0) do begin
+      ammoSection := get_ini_section(ammoIni, "" + i);
+      while (ammoSection.pid > 0) do begin
          ammo := create_array_map; // create permanent arrays
-         ammo.ac_adjust := get_ini_setting(ammoIni + "|" + i + "|ac_adjust");
-         ammo.dr_adjust := get_ini_setting(ammoIni + "|" + i + "|dr_adjust");
+         ammo.ac_adjust := atoi(ammoSection.ac_adjust);
+         ammo.dr_adjust := atoi(ammoSection.dr_adjust);
          // dam_mult and dam_div must be positive integers
-         dmgMod := get_ini_setting(ammoIni + "|" + i + "|dam_mult");
+         dmgMod := atoi(ammoSection.dam_mult);
          ammo.dam_mult := dmgMod if (dmgMod > 0) else 1;
-         dmgMod := get_ini_setting(ammoIni + "|" + i + "|dam_div");
+         dmgMod := atoi(ammoSection.dam_div);
          ammo.dam_div := dmgMod if (dmgMod > 0) else 1;
-         ammoData[ammoPid] := ammo;
+         ammoData[atoi(ammoSection.pid)] := ammo;
          i++;
-         ammoPid := get_ini_setting(ammoIni + "|" + i + "|pid");
+         ammoSection := get_ini_section(ammoIni, "" + i);
       end
       call map_enter_p_proc;
       debug_msg("Ammo INI Loader mod: " + ammoIni + " - set " + (i - 1) + " ammo protos.");
