@@ -2,6 +2,10 @@
 
    Brotherhood - Thomas
 
+   NOTE:
+      Student_ptr is overwritten by MVAR_STUDENT_PTR because the temp var gets forgotten on map load, thus the whole fight sequence breaks (only ever runs once on first map enter).
+      We are overwriting Student_ptr in timed_event, because it always runs before the pointer is checked.
+
 */
 
 /* Include Files */
@@ -70,7 +74,6 @@ variable sound;
 procedure start begin
    if not(initial) then begin
       initial := 1;
-
       set_self_team(TEAM_BROTHERHOOD);
       set_self_ai(AI_BROTHERHOOD_KNIGHT);
 
@@ -90,6 +93,7 @@ procedure start begin
       end
       call prepare_for_combat;
       Student_ptr := 0;
+      set_map_var(MVAR_STUDENT_PTR, 0);
       valid := 1;
    end
 end
@@ -100,6 +104,8 @@ end
 
 procedure timed_event_p_proc begin
    if (global_var(GVAR_ENEMY_BROTHERHOOD) == 0) then begin
+      //debug("valid: " + valid + "   stundent: " + Student_ptr);
+      Student_ptr := map_var(MVAR_STUDENT_PTR);
       if ((valid == 1) and (Student_ptr != 0)) then begin
          call do_combat;
       end
@@ -128,6 +134,7 @@ procedure critter_p_proc begin
             set_local_var(0, 1);
             phase := 0;
             if (dude_can_see_self) then begin
+               //debug("start combat training");
                if (local_var(6) != 1) then begin
                   lesson_ptr := 1;
                   set_local_var(5, lesson_ptr);

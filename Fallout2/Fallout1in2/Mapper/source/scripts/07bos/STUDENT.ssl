@@ -2,11 +2,15 @@
 
    Brotherhood - Student
 
+   NOTE:
+      MVAR_STUDENT_PTR is used to remember Student_ptr on map load. Otherwise the fight scene will break.
+
 */
 
 /* Include Files */
 #include "define.h"
 #include "area/brotherhood.h"
+#include "maps/brohd12.h"
 
 #define NAME                    SCRIPT_STUDENT
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -45,17 +49,19 @@ procedure start begin
 
       my_knife := self_item(PID_KNIFE);
       if (local_var(0) != 0) then begin
-         if (map_var(4) == local_var(0)) then begin
+         if (map_var(MVAR_I_AM_ACTIVE) == local_var(0)) then begin
             Student_ptr := self_obj;
-            set_map_var(0, 1);
+            set_map_var(MVAR_STUDENT_PTR, self_obj);
+            set_map_var(MVAR_STUDENT_READY, 1);
          end
       end
       else begin
-         temp := map_var(5) + 1;
-         set_map_var(5, temp);
+         temp := map_var(MVAR_STUDENT_NUM) + 1;
+         set_map_var(MVAR_STUDENT_NUM, temp);
          set_local_var(0, temp);
          Student_ptr := self_obj;
-         set_map_var(0, 1);
+         set_map_var(MVAR_STUDENT_PTR, self_obj);
+         set_map_var(MVAR_STUDENT_READY, 1);
       end
       initial := 1;
    end
@@ -86,12 +92,12 @@ procedure critter_p_proc begin
    end
    else if (global_var(GVAR_ENEMY_BROTHERHOOD) == 0) then begin
       if (local_var(1) == 1) then begin
-         if (self_tile != map_var(1)) then begin
-            self_walk_to_tile(map_var(1));
+         if (self_tile != map_var(MVAR_STUDENT_HEX)) then begin
+            self_walk_to_tile(map_var(MVAR_STUDENT_HEX));
          end
          else begin
             set_local_var(1, 0);
-            set_map_var(0, 1);
+            set_map_var(MVAR_STUDENT_READY, 1);
             self_rotate(1);
          end
       end
@@ -104,15 +110,16 @@ procedure critter_p_proc begin
             self_rotate(home_face);
          end
       end
-      else if (map_var(2) == local_var(0)) then begin
-         set_map_var(2, 0);
+      else if (map_var(MVAR_SIGNAL_NEW_STUDENT) == local_var(0)) then begin
+         set_map_var(MVAR_SIGNAL_NEW_STUDENT, 0);
          Student_ptr := self_obj;
-         set_map_var(3, map_var(4));
-         set_map_var(4, local_var(0));
+         set_map_var(MVAR_STUDENT_PTR, self_obj);
+         set_map_var(MVAR_SIGNAL_OLD_STUDENT, map_var(MVAR_I_AM_ACTIVE));
+         set_map_var(MVAR_I_AM_ACTIVE, local_var(0));
          set_local_var(1, 1);
       end
-      else if (map_var(3) == local_var(0)) then begin
-         set_map_var(3, 0);
+      else if (map_var(MVAR_SIGNAL_OLD_STUDENT) == local_var(0)) then begin
+         set_map_var(MVAR_SIGNAL_OLD_STUDENT, 0);
          set_local_var(2, 1);
       end
    end

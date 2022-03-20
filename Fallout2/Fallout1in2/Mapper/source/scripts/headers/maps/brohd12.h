@@ -40,7 +40,7 @@
 #define MVAR_TOUCHING            (19)
 #define MVAR_SUPER_SLEDGE        (20)
 #define MVAR_MAGNETO_LASER       (21)
-#define MVAR_Fixt_PLACEHOLDER_1  (22) //  Adding for ass-covering and future-proofing
+#define MVAR_STUDENT_PTR         (22) //  replaced temp var
 #define MVAR_Fixt_PLACEHOLDER_2  (23) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (24) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (25) //  Adding for ass-covering and future-proofing
