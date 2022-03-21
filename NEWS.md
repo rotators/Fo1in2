@@ -14,6 +14,7 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Fixed**: Original main menu panel only had 5 and not 6 slots.
 - **Fixed**: The Combat Shotgun (Ext. Mag) was set as 1-handed weapon.
 - **Fixed**: The optional Shady Sands merchant and his bodyguard had no armor values set.
+- **Fixed**: The student fight training would only ever play once on first map enter. Map change or loading a savegame would break it. Vanilla Fo1 bug.
 - **Fixed**: Wrong First Aid-skill formula in the skill description.
 - **Tweaked**: Added momclaw quest failsafe to cross out the PipBoy entry after completion.
 - **Tweaked**: Dealing with Billy in the Hub now gives a few experience points.
