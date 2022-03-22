@@ -201,7 +201,7 @@ _*mixed means any type_
 
 #### `mixed scan_array(int arrayID, mixed value)`
 - searches for a first occurence of given value inside given array
-- if value is found, returns it's index (for lists) or key (for maps)
+- if value is found, returns its index (for lists) or key (for maps)
 - if value is not found, returns -1 (be careful, as -1 can be a valid key for a map)
 
 #### `int len_array(int arrayID)`

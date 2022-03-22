@@ -291,7 +291,7 @@ int     ret0 - overrides hard-coded handler and selects what should happen with 
 
 #### `HOOK_REMOVEINVENOBJ (hs_removeinvenobj.int)`
 
-Runs when an object is removed from a container or critter's inventory for any reason
+Runs when an object is removed from a container or critter's inventory for any reason.
 
 ```
 Obj     arg0 - the owner that the object is being removed from
@@ -439,8 +439,9 @@ int     arg1 - button number (0 - left, 1 - right, up to 7)
 Runs when using any skill on any object.
 
 This is fired before the default handlers are called, which you can override. In this case you should write your own skill use handler entirely, or otherwise nothing will happen (this includes fade in/fade out, time lapsing and messages - all of this can be scripted; to get vanilla text messages - use `message_str_game` along with `sprintf`).
-Suggested use - override first aid/doctor skills to buff/nerf them, override steal skill to disallow observing NPCs inventories in some cases.
-Doesn't seem to run when lock picking.
+Suggested use - override First Aid/Doctor skills to buff/nerf them, override Steal skill to disallow observing NPCs inventories in some cases.
+
+Does not run if the script of the object calls `script_overrides` for using the skill.
 
 ```
 Critter arg0 - The user critter
@@ -448,7 +449,7 @@ Obj     arg1 - The target object
 int     arg2 - skill being used
 int     arg3 - skill bonus from items such as first aid kits
 
-int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override)
+int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override, with a zero value having a 10% chance of removing the used medical item)
 ```
 
 -------------------------------------------
