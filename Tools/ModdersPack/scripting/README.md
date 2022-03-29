@@ -21,5 +21,5 @@ This folder contains documentation about sfall scripting extensions.
     hookscripts.md - detailed manual for using hook scripts to modify engine behavior
     arrays.md - manual for sfall arrays
 
-If you are/will be using sfall Script Editor, don't forget to check out new compiler documentation in **.\compiler\sslc_readme.txt**.
-There are numerious new syntax features and extensions to SSL (Star-Trek Scripting language).
+If you are/will be using sfall Script Editor, don't forget to check out new compiler documentation in **.\compiler\sslc_readme.md**.
+There are numerious new syntax features and extensions to SSL (Star-Trek Scripting Language).

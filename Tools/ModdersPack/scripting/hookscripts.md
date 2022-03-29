@@ -449,7 +449,7 @@ Obj     arg1 - The target object
 int     arg2 - skill being used
 int     arg3 - skill bonus from items such as first aid kits
 
-int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override, with a zero value having a 10% chance of removing the used medical item)
+int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override; if it is 0, there will be a 10% chance of removing the used medical item)
 ```
 
 -------------------------------------------
