@@ -214,7 +214,7 @@
 #define PID_MERCHENARY                    (16777420)
 #define PID_GUARD_10                      (16777421)
 #define PID_VAULT_DWELLER_2               (16777422)
-#define PID_GARLS                         (16777423)
+#define PID_GARL                          (16777423)
 #define PID_DOC_MORBID                    (16777424)
 #define PID_GRETCH                        (16777425)
 #define PID_TYCHO                         (16777426)
