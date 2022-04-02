@@ -21,7 +21,11 @@ procedure adjust_hp;
 #define hp_overkill        global_var(GVAR_ENABLE_TOUGH_RAIDERS)
 
 #define hp_base            get_proto_data(crit_pid, 64)
-#define inc_hp(x)          set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (x * hp_overkill)); \
+#define inc_hp(x)          base := x;                                                           \
+                           if (base <= 0 and hp_overkill > 1) then begin                        \
+                              base := 10;                                                       \
+                           end                                                                  \
+                           set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (base * hp_overkill));   \
                            if map_first_run then critter_heal(critter, crit_max_hp)
 #define new_hp(x)          inc_hp((x - hp_base))
 
@@ -35,6 +39,7 @@ end
 
 procedure adjust_hp begin
    variable critter;
+   variable base;
    if fo1in2_tough_raiders_enabled then begin
       if (CUR_MAP_RAIDERS) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
