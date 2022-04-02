@@ -522,6 +522,8 @@ variable get_wm_distance;
 #define map_is_mountain                   (CUR_MAP_MOUNTN1 or  \
                                           CUR_MAP_MOUNTN2 or   \
                                           CUR_MAP_RNDMOUNT)
+                                          
+#define map_is_encounter                  (map_is_desert or map_is_city or map_is_ocean or map_is_mountain)
 
 #define map_has_cavern                    (CUR_MAP_CAVE1 or    \
                                           CUR_MAP_CAVE2 or     \
