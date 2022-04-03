@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1in2/releases/tag/v1.6.2703))
 
 - **Added**: A new mini-mod that replaces the default premade characters and changes their starting equipment accordingly.
+- **Added**: New "Tougher Raiders" setting that will increase raider hitpoints to make the mid-game more challenging.
 - **Added**: New Shock Spear item (using Fallout Sonora graphics).
 - **Added**: Reverted trait text to the original Fo1 (US) version.
 - **Added**: Shock Spear to the Gun Runners arsenal (currently only available if "weapon upgrades" have been enabled).

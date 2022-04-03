@@ -40,12 +40,14 @@
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
 #define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
 #define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) >= 1) // we don't want 0.5, etc. values here
+#define fo1in2_tough_humans_enabled     (global_var(GVAR_ENABLE_TOUGH_HUMANS) >= 1) // we don't want 0.5, etc. values here
 #define fo1in2_red_dogmeat_enabled      (global_var(GVAR_ENABLE_RED_DOGMEAT) > 0)
 #define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
 #define fo1in2_scrapheap_enabled        (global_var(GVAR_ENABLE_SCRAPHEAP) > 0)
 #define fo1in2_expanded_slides_enabled  (global_var(GVAR_ENABLE_EXPANDED_ENDING) > 0)
 #define fo1in2_radiation_enabled        (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
 #define fo1in2_cut_characters_enabled   (global_var(GVAR_ENABLE_CUT_CHARACTERS) > 0)
+#define fo1in2_khan_art_fix_enabled     (global_var(GVAR_ENABLE_KHAN_ART_FIX) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -597,8 +599,8 @@ variable merch_slot_armor_flags;
       reg_anim_end();                                          \
    end                                                         \
    noop
-   
-   
+
+
 // Generic stuff
 #define source_is_dude           (source_obj == dude_obj)
 #define source_in_party          (source_obj == party_member_obj(obj_pid(source_obj)))

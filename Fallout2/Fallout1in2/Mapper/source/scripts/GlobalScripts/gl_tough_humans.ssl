@@ -1,0 +1,113 @@
+/*
+
+   Rebalances various humans in locations and encounters to make them tougher by overriding their base hp value.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure adjust_hp;
+
+#define crit_pid           obj_pid(critter)
+#define crit_max_hp        get_max_hp(critter)
+
+#define hp_overkill        global_var(GVAR_ENABLE_TOUGH_HUMANS)
+#define hp_base            get_proto_data(crit_pid, 64)
+
+#define inc_hp(x)          base := (x - hp_base);                                               \
+                           if (base <= 0 and hp_overkill > 1) then begin                        \
+                              base := 10;                                                       \
+                           end                                                                  \
+                           set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (base * hp_overkill));   \
+                           if map_first_run then critter_heal(critter, crit_max_hp)
+
+#define set_hp(obj,hp) \
+   if (crit_pid == obj) then begin  \
+      inc_hp(hp);                   \
+      if fo1in2_khan_art_fix_enabled then art_change_fid_num(critter, get_proto_data(crit_pid, PROTO_FID)); \
+      continue;                     \
+   end                              \
+   noop
+
+procedure start begin
+   call adjust_hp;
+end
+
+procedure map_enter_p_proc begin
+   call adjust_hp;
+end
+
+procedure adjust_hp begin
+   variable critter;
+   variable base;
+   if fo1in2_tough_humans_enabled then begin
+      //-- Khans
+      if (CUR_MAP_RAIDERS) then begin
+         foreach (critter in list_as_array(LIST_CRITTERS)) begin
+            set_hp(PID_GARL, 80); // No change to Garl, he is strong enough.
+            set_hp(PID_GARLS_ADVISOR, 55); // orig. hp is 33
+            set_hp(PID_RAIDER, 44); // orig. hp is 33
+            set_hp(PID_RAIDER_GUARD, 44); // orig. hp is 33
+
+            // "Citizen" Raider
+            set_hp(PID_CITIZEN_FEMALE_YELLOWPANTS, 30); // orig. hp is 15
+
+            // "Punk" Raider
+            set_hp(PID_CITIZEN_PUNK, 30); // orig. hp is 15
+
+            set_hp(PID_CITIZEN_LEATHER_FEMALE, 30); // orig. hp is 15
+         end
+      end
+
+      else if map_is_encounter then begin
+         //-- Encounter around The Hub
+         if (global_var(GVAR_WORLDMAP_TABLE) == 8) then begin
+            foreach (critter in list_as_array(LIST_CRITTERS)) begin
+               set_hp(PID_MAN_JEANS, 60); // orig. hp is 30
+               set_hp(PID_LEATHER_JACKET_WOMAN, 60); // orig. hp is 30
+               set_hp(PID_MALE_GUARD_METAL_BLACK, 60); // orig. hp is 30
+               set_hp(PID_WOMAN_YELLOW, 60); // orig. hp is 30
+            end
+         end
+
+         //-- Encounter around Necropolis
+         else if (global_var(GVAR_WORLDMAP_TABLE) == 9) then begin
+            foreach (critter in list_as_array(LIST_CRITTERS)) begin
+               set_hp(PID_ZOMBIE_GUARD, 55); // orig. hp is 36
+            end
+         end
+
+         //-- Encounter around Brotherhood
+         else if (global_var(GVAR_WORLDMAP_TABLE) == 10) then begin
+            foreach (critter in list_as_array(LIST_CRITTERS)) begin
+               set_hp(PID_PEASANT_ROBE, 40); // orig. hp is 30
+               set_hp(PID_MALE_GUARD_METAL_BLACK, 60); // orig. hp is 29
+               set_hp(PID_TOWNSWOMAN_METAL, 60); // orig. hp is 29
+
+               set_hp(PID_GEN_PALAIN_1, 100); // orig. hp is 50
+               set_hp(PID_GEN_PALAIN_2, 100); // orig. hp is 50
+               set_hp(PID_JUNIOR_PALADIN, 78); // orig. hp is 39
+               set_hp(PID_GEN_JUNIOR_PALADIN, 82); // orig. hp is 41
+
+               set_hp(PID_MAN_JEANS, 60); // orig. hp is 30
+            end
+         end
+
+         //-- Encounter around Boneyard
+         else if (global_var(GVAR_WORLDMAP_TABLE) == 13) then begin
+            foreach (critter in list_as_array(LIST_CRITTERS)) begin
+               set_hp(PID_GEN_THUG, 72); // orig. hp is 36
+               set_hp(PID_THUG_MALE_METAL, 78); // orig. hp is 39
+               set_hp(PID_MAN_JEANS, 60); // orig. hp is 30
+            end
+         end
+      end // map_is_encounter end
+   end
+end

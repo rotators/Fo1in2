@@ -26,6 +26,7 @@ procedure night_person;
 procedure gecko_skinning;
 procedure skilled;
 procedure motion_scanner;
+procedure mrhandy_fix;
 
 procedure DescriptionObj_handler;
 procedure AfterHitRoll_handler;
@@ -112,6 +113,9 @@ procedure GameModeChange_handler begin
    // The Eyebot has a built-in motion scanner function
    if Eyebot_In_Party then
       call motion_scanner;
+
+   if MrHandyC_In_Party then
+      call mrhandy_fix;
 
    // Activate special radiation death if > 1000 rem. See data/enddeath.txt
    set_global_var(GVAR_SPECIAL_RADIATION_DEATH, dude_rads);
@@ -249,6 +253,19 @@ procedure motion_scanner begin
          tmpScanner := false;
          item := 0;
       end
+   end
+end
+
+procedure mrhandy_fix begin
+   // Because Mr.Handy has the "robot" bodytype, it's not possible to transfer items via the stealing skill.
+   // So we switch him to a human once the loot interface is open, and revert him back to robot once done.
+   if (get_game_mode bwand INTFACELOOT) then begin
+      if (loot_obj == Handy_ptr) then begin
+         set_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE, 0);
+      end
+   end
+   else if (get_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE) == 0) then begin
+      set_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE, 2);
    end
 end
 
