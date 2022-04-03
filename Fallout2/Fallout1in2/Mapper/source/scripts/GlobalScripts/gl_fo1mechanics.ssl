@@ -26,6 +26,7 @@ procedure night_person;
 procedure gecko_skinning;
 procedure skilled;
 procedure motion_scanner;
+procedure mrhandy_fix;
 
 procedure DescriptionObj_handler;
 procedure AfterHitRoll_handler;
@@ -112,6 +113,9 @@ procedure GameModeChange_handler begin
    // The Eyebot has a built-in motion scanner function
    if Eyebot_In_Party then
       call motion_scanner;
+
+   if MrHandyC_In_Party then
+      call mrhandy_fix;
 
    // Activate special radiation death if > 1000 rem. See data/enddeath.txt
    set_global_var(GVAR_SPECIAL_RADIATION_DEATH, dude_rads);
@@ -252,6 +256,17 @@ procedure motion_scanner begin
    end
 end
 
+procedure mrhandy_fix begin
+   if (get_game_mode bwand INTFACELOOT) then begin
+      if (loot_obj == Handy_ptr) then begin
+         set_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE, 0);
+      end
+   end
+   else if (get_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE) == 0) then begin
+      set_proto_data(obj_pid(Handy_ptr), PROTO_CR_BODY_TYPE, 2);
+   end
+end
+
 procedure DescriptionObj_handler begin
    variable
       item := obj_pid(get_sfall_arg),
@@ -326,6 +341,14 @@ procedure UseSkillOn_handler begin
       skill := get_sfall_arg;
 
    if (skill == SKILL_STEAL) then begin
+      /*if (target == Handy_ptr) then begin
+         //set_critter_stat
+         //set_proto_data(target, PROTO_CR_BODY_TYPE, );
+         //get_proto_data(obj_pid(target), 388);
+         set_proto_data(obj_pid(target), PROTO_CR_BODY_TYPE, 0);
+         debug("mr handy! " + get_proto_data(obj_pid(target), PROTO_CR_BODY_TYPE));
+      end*/
+
       if (obj_type(target) == OBJ_TYPE_SCENERY and obj_pid(target) == PID_TROPHY) then begin
          set_cursor_mode(0);
          reg_anim_begin();
