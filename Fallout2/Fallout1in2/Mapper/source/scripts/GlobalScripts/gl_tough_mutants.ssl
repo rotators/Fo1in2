@@ -25,6 +25,13 @@ procedure adjust_hp;
                            if map_first_run then critter_heal(critter, crit_max_hp)
 #define new_hp(x)          inc_hp((x - hp_base))
 
+#define set_hp(critter,hp) \
+   if (crit_pid == critter) then begin \
+      new_hp(hp);                      \
+      continue;                        \
+   end                                 \
+   noop
+
 #define inc_plasma_res(x)  set_proto_data(crit_pid, PROTO_AR_DR_PLASMA, x)
 
 procedure start begin
@@ -37,70 +44,39 @@ end
 
 procedure adjust_hp begin
    variable critter;
+   variable base;
    if fo1in2_tough_mutants_enabled then begin
       if (cur_map_index > MAP_DESERT0) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
-            /*
-               Calculation: inc_hp = wanted HP - (orig hp - bonus)
-            */
-
             // No change to the Master, he is strong enough.
-            if (crit_pid == PID_MASTER) then begin
-               new_hp(500); // orig. hp is 500
-            end
+            set_hp(PID_MASTER, 500); // orig. hp is 500
 
             // No change to the Lou, he is strong enough with his guards.
-            else if (crit_pid == PID_LOU) then begin
-               new_hp(250); // orig. hp is 250
-            end
+            set_hp(PID_LOU, 250); // orig. hp is 250
 
             // No change to Harry for early game balance
-            else if (crit_pid == PID_HARRY) then begin
-               new_hp(120); // orig. hp is 120
-            end
-
-            else if (crit_pid == PID_NIGHTKIN) then begin
-               //debug("plasma: " + get_proto_data(crit_pid, PROTO_AR_DR_PLASMA));
-               new_hp(100); // orig. hp is 50
-            end
-            else if (crit_pid == PID_NIGHTKIN_GUARD) then begin
-               new_hp(125); // orig. hp is 60
-            end
+            set_hp(PID_HARRY, 120); // orig. hp is 120
 
             // Don't change the Watershed mutants, for early game balance
-            else if (crit_pid == PID_SUPER_MUTANT and not(CUR_MAP_WATRSHD)) then begin
-               new_hp(80); // orig. hp is 40
-            end
-            else if (crit_pid == PID_TOUGH_SUPER_MUTANT) then begin
-               new_hp(115); // orig. hp is 75
+            if not(CUR_MAP_WATRSHD) then begin
+               set_hp(PID_SUPER_MUTANT, 80); // orig. hp is 40
             end
 
-            else if (crit_pid == PID_SUPER_MUTANT_GUARD) then begin
-               new_hp(90); // orig. hp is 50
-            end
-            else if (crit_pid == PID_MEAN_SUPER_MUTANT) then begin
-               new_hp(100); // orig. hp is 60
-            end
             // Don't change the Necropolis invasion mutants, for early game balance
-            else if ((crit_pid == PID_MAD_SUPER_MUTANT) and not(CUR_AREA_NECROPOLIS)) then begin
-               new_hp(150); // orig. hp is 100
-            end
-            else if (crit_pid == PID_DEADLY_SUPER_MUTANT) then begin
-               new_hp(175); // orig. hp is 125
+            if not(CUR_AREA_NECROPOLIS) then begin
+               set_hp(PID_MAD_SUPER_MUTANT, 150); // orig. hp is 100
             end
 
-            else if (crit_pid == PID_TOUGH_NIGHTKIN) then begin
-               new_hp(140); // orig. hp is 70
-            end
-            else if (crit_pid == PID_DEADLY_NIGHTKIN) then begin
-               new_hp(160); // orig. hp is 90
-            end
-            else if (crit_pid == PID_SUPER_NIGHTKIN) then begin
-               new_hp(180); // orig. hp is 1101
-            end
-            else if (crit_pid == PID_MASTER_NIGHTKIN) then begin
-               new_hp(200); // orig. hp is 140
-            end
+            set_hp(PID_NIGHTKIN, 100); // orig. hp is 50
+            set_hp(PID_NIGHTKIN_GUARD, 125); // orig. hp is 60
+            set_hp(PID_TOUGH_SUPER_MUTANT, 115); // orig. hp is 75
+            set_hp(PID_SUPER_MUTANT_GUARD, 90); // orig. hp is 50
+            set_hp(PID_MEAN_SUPER_MUTANT, 100); // orig. hp is 60
+            set_hp(PID_DEADLY_SUPER_MUTANT, 175); // orig. hp is 125
+            set_hp(PID_TOUGH_NIGHTKIN, 140); // orig. hp is 70
+            set_hp(PID_DEADLY_NIGHTKIN, 160); // orig. hp is 90
+            set_hp(PID_SUPER_NIGHTKIN, 180); // orig. hp is 110
+            set_hp(PID_MASTER_NIGHTKIN, 200); // orig. hp is 140
          end
       end
    end
