@@ -19,19 +19,18 @@ procedure adjust_hp;
 #define crit_max_hp        get_max_hp(critter)
 
 #define hp_overkill        global_var(GVAR_ENABLE_TOUGH_HUMANS)
-
 #define hp_base            get_proto_data(crit_pid, 64)
-#define inc_hp(x)          base := x;                                                           \
+
+#define inc_hp(x)          base := (x - hp_base);                                               \
                            if (base <= 0 and hp_overkill > 1) then begin                        \
                               base := 10;                                                       \
                            end                                                                  \
                            set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (base * hp_overkill));   \
                            if map_first_run then critter_heal(critter, crit_max_hp)
-#define new_hp(x)          inc_hp((x - hp_base))
 
 #define set_hp(critter,hp) \
    if (crit_pid == critter) then begin \
-      new_hp(hp);                      \
+      inc_hp(hp);                      \
       continue;                        \
    end                                 \
    noop
@@ -51,9 +50,7 @@ procedure adjust_hp begin
       //-- Khans
       if (CUR_MAP_RAIDERS) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
-            // No change to Garl, he is strong enough.
-            set_hp(PID_GARL, 80); // orig. hp is 80
-
+            set_hp(PID_GARL, 80); // No change to Garl, he is strong enough.
             set_hp(PID_GARLS_ADVISOR, 55); // orig. hp is 33
             set_hp(PID_RAIDER, 44); // orig. hp is 33
             set_hp(PID_RAIDER_GUARD, 44); // orig. hp is 33
@@ -110,6 +107,6 @@ procedure adjust_hp begin
                set_hp(PID_MAN_JEANS, 60); // orig. hp is 30
             end
          end
-      end // is encounter end
+      end // map_is_encounter end
    end
 end
