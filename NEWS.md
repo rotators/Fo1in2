@@ -2,6 +2,7 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 
 - **Added**: A new mini-mod that replaces the default premade characters and changes their starting equipment accordingly.
 - **Added**: New "Tougher Raiders" setting that will increase raider hitpoints to make the mid-game more challenging.
+- **Added**: New "alternative Khan armor styles" setting. This will fix (or restore, however one looks at it) the correct visuals to the Khan critters.
 - **Added**: New Shock Spear item (using Fallout Sonora graphics).
 - **Added**: Reverted trait text to the original Fo1 (US) version.
 - **Added**: Shock Spear to the Gun Runners arsenal (currently only available if "weapon upgrades" have been enabled).
@@ -11,6 +12,7 @@ Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1i
 - **Fixed**: Flying Saucer dome had the wrong description (Fo2 air vent text).
 - **Fixed**: Fo2Tweaks trunk size option might fuck with the motorcycle trunk visuals.
 - **Fixed**: It wasn't possible to bust Iguana Bob after taking down Decker, because the Sheriff's dialog would change to a floating text. Now it will turn into a regular dialog if the player knows about Bob.
+- **Fixed**: It wasn't possible to transfer items via the stealing skill for the Mr. Handy party member.
 - **Fixed**: Missing string in the Eyebot companion dialog.
 - **Fixed**: Original main menu panel only had 5 and not 6 slots.
 - **Fixed**: The Combat Shotgun (Ext. Mag) was set as 1-handed weapon.
