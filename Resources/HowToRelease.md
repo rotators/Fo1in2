@@ -8,13 +8,13 @@
   
   When `MOD_VERSION` is set to `1.207`, expected filename is `release_v1.207.png`
 
-- Run Actions -> [Schedule](../../../actions?query=workflow%3ASchedule) workflow with following options, and wait until it finishes
+- Run Actions -> [Schedule](../../../actions/workflows/schedule.yml) workflow with following options, and wait until it finishes
 
   - `Push results`: `true`
 
   - `Force running minor tasks`: `true`
 
-- Run Actions -> [Package](../../../actions?query=workflow%3APackage) workflow with following options, and wait until it finishes
+- Run Actions -> [Package](../../../actions/workflows/package.yml) workflow with following options, and wait until it finishes
 
   - `Release`: `true`
 
