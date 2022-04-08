@@ -776,7 +776,7 @@
 {39900}{}{Super Cattle Prod}
 {39901}{}{A Farmer's Best Friend model cattle prod from Wattz Electronics. This model has been upgraded to increase the electrical discharge. Min ST: 4.}
 {40000}{}{Improved Flamer}
-{40001}{}{A Flambe 450 model flamethrower, varmiter variation. Fires a short spray of extremely hot, flamable liquid. Requires specialized fuel to work properly. This model has been modified to fire a hotter mixture which causes greater combustibility. Min ST: 6.}
+{40001}{}{A Flambe 450 model flamethrower, varmiter variation. Fires a short spray of extremely hot, flammable liquid. Requires specialized fuel to work properly. This model has been modified to fire a hotter mixture which causes greater combustibility. Min ST: 6.}
 {40100}{}{Laser Rifle (Ext. Cap.)}
 {40101}{}{This Wattz 2000 laser rifle has had its recharging system upgraded and a special recycling chip installed that reduces the drain on the micro fusion cell by 50%. Min ST: 6.}
 {40200}{}{Magneto-Laser Pistol}
