@@ -1,28 +1,4 @@
-Notable changes since last release ([v1.6.2703](https://github.com/rotators/Fo1in2/releases/tag/v1.6.2703))
+Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1in2/releases/tag/v1.7.2828))
 
-- **Added**: A new mini-mod that replaces the default premade characters and changes their starting equipment accordingly.
-- **Added**: New "Tougher Raiders" setting that will increase raider hitpoints to make the mid-game more challenging.
-- **Added**: New "alternative Khan armor styles" setting. This will fix (or restore, however one looks at it) the correct visuals to the Khan critters.
-- **Added**: New Shock Spear item (using Fallout Sonora graphics).
-- **Added**: Reverted trait text to the original Fo1 (US) version.
-- **Added**: Shock Spear to the Gun Runners arsenal (currently only available if "weapon upgrades" have been enabled).
-- **Added**: Uncensored Addict, Chem Reliant, and Chem resistant skilldex images.
-- **Added**: When the player is under the "dehydration effect" from random encounter, a new status box will show up on the interface now.
-- **Fixed**: "Steal the urn" PipBoy entry will be crossed out if the quest is active and Neal dies.
-- **Fixed**: Flying Saucer dome had the wrong description (Fo2 air vent text).
-- **Fixed**: Fo2Tweaks trunk size option might fuck with the motorcycle trunk visuals.
-- **Fixed**: It wasn't possible to bust Iguana Bob after taking down Decker, because the Sheriff's dialog would change to a floating text. Now it will turn into a regular dialog if the player knows about Bob.
-- **Fixed**: It wasn't possible to transfer items via the stealing skill for the Mr. Handy party member.
-- **Fixed**: Missing string in the Eyebot companion dialog.
-- **Fixed**: Original main menu panel only had 5 and not 6 slots.
-- **Fixed**: The Combat Shotgun (Ext. Mag) was set as 1-handed weapon.
-- **Fixed**: The optional Shady Sands merchant and his bodyguard had no armor values set.
-- **Fixed**: The student fight training would only ever play once on first map enter. Map change or loading a savegame would break it. Vanilla Fo1 bug.
-- **Fixed**: Wrong First Aid-skill formula in the skill description.
-- **Tweaked**: Added momclaw quest failsafe to cross out the PipBoy entry after completion.
-- **Tweaked**: Dealing with Billy in the Hub now gives a few experience points.
-- **Tweaked**: Metal Pole is a usable weapon now.
-- **Tweaked**: Streamlined PipBoy entry code for the Hub Merchant and Jain quests.
-- **Tweaked**: Strong dehydration effect now has a longer duration to wear off.
-- **Tweaked**: Super Cattle Prod price increased to 1.100 caps.
-- **Tweaked**: Tycho can now wield sledgehammers.
+- **Fixed**: Typo in english Flambe 450 item description.
+- **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
