@@ -62,7 +62,7 @@
 #define TEAM_HUB_FLC                (73)
 #define TEAM_HUB_VANCE              (81)
 #define TEAM_PATRICK                (82)
-#define TEAM_85                     (85)
+#define TEAM_ROBOBRAINS             (85)
 #define TEAM_86                     (86)
 #define TEAM_V13_REBELS             (87)
 #define TEAM_LA_REGULATORS          (89)
