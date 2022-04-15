@@ -12,7 +12,7 @@
 #define TEAM_PLAYER                 (0)
 #define TEAM_VAULT13                (1)
 #define TEAM_SHADY_SANDS            (2)
-//#define TEAM_                     (3)
+#define TEAM_RAIDERS_OTHER          (3) // Raiders think you are Garl's father
 #define TEAM_BRAHMIN                (4)
 #define TEAM_RADSCORPIONS           (5)
 #define TEAM_RAIDERS                (6)
@@ -61,9 +61,10 @@
 #define TEAM_HUB_CATHEDRAL          (72)
 #define TEAM_HUB_FLC                (73)
 #define TEAM_HUB_VANCE              (81)
+#define TEAM_PATRICK                (82)
 #define TEAM_85                     (85)
 #define TEAM_86                     (86)
-#define TEAM_87                     (87)
+#define TEAM_V13_REBELS             (87)
 #define TEAM_LA_REGULATORS          (89)
 
 // Fo1in2:
@@ -76,3 +77,4 @@
 #define TEAM_DEMO_FOOLS             (96)
 #define TEAM_DEMO_CRYPTS            (97)
 #define TEAM_DEMO_PEASANT           (98)
+#define TEAM_GENERIC_GHOULS         (99)

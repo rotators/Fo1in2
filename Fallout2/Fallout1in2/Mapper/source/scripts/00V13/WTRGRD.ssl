@@ -24,15 +24,15 @@ procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
 
-procedure WtrGrd01;
-procedure WtrGrd02;
-procedure WtrGrd03;
-procedure WtrGrd04;
-procedure WtrGrd05;
-procedure WtrGrd06;
-procedure WtrGRd07;
-procedure WtrGRd08;
-procedure WtrGrd09;
+procedure WtrGrdHello; // WtrGrd01
+procedure WtrGrdStupidNeverLearnedToSpeak; // WtrGrd02
+procedure WtrGrdNotFeelingWell;   // WtrGrd03
+procedure WtrGrdWhyDidTheyAttack; // WtrGrd04
+procedure WtrGrdGoodDay; // WtrGrd05
+procedure WtrGrdHowAreThings; // WtrGrd06
+procedure WtrGrdWhatDoingHere; // WtrGRd07
+procedure WtrGrdKeepUpGoodWork; // WtrGRd08
+procedure WtrGrdCanTakeSupplies; // WtrGrd09
 procedure WtrGrdEnd;
 procedure WtrGrdQuest;
 
@@ -47,14 +47,17 @@ variable going_up;
 variable going_down;
 variable initial := 0;
 
+#define LVAR_Hometile       (5)
+#define LVAR_DontTakeSoMany (4) // Player has taken more than 3 water flasks and gotten a warning
+
 procedure start begin
    if not(initial) then begin
       initial := 1;
       WtrGrd_ptr := self_obj;
-      if (local_var(5) == 0) then begin
-         set_local_var(5, self_tile);
+      if (local_var(LVAR_Hometile) == 0) then begin
+         set_local_var(LVAR_Hometile, self_tile);
       end
-      dest_tile := local_var(5);
+      dest_tile := local_var(LVAR_Hometile);
       recipient := 0;
       if not(day) then begin
          move_to(self_obj, 7000, 2);
@@ -78,8 +81,8 @@ procedure critter_p_proc begin
 
       if (self_can_see_dude) then begin
          if (dude_item_count(PID_WATER_FLASK) > 3) then begin
-            if (local_var(4) == 0) then begin
-               set_local_var(4, 1);
+            if (local_var(LVAR_DontTakeSoMany) == 0) then begin
+               set_local_var(LVAR_DontTakeSoMany, 1);
                float_msg(self_obj, mstr(116), FLOAT_MSG_NORMAL);
             end
          end
@@ -117,7 +120,7 @@ procedure critter_p_proc begin
          end
       end
       else if ((game_time_hour > 630) and asleep) then begin
-         move_to(self_obj, local_var(5), 2);
+         move_to(self_obj, local_var(LVAR_Hometile), 2);
          asleep := 0;
       end
       else if ((game_time_hour > 620) and asleep) then begin
@@ -180,22 +183,22 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    if REP_ENEMY_VAULT13 then begin
-      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 102), FLOAT_MSG_RED);
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 102), FLOAT_MSG_RED); // Traitor!
    end
    else if waterchip_returned then begin
-      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 109), FLOAT_MSG_NORMAL);
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 109), FLOAT_MSG_NORMAL); // Thank you for saving us
    end
-   else if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
-      float_msg(self_obj, message_str(SCRIPT_LYLE, 113), FLOAT_MSG_NORMAL);
+   else if waterthief_captured then begin
+      float_msg(self_obj, message_str(SCRIPT_LYLE, 113), FLOAT_MSG_NORMAL); // Thanks for catching that thief.
    end
    else begin
       start_gdialog(163, self_obj, 4, -1, -1);
       gsay_start;
       if ((GAME_TIME_IN_DAYS) < 30) then begin
-         call WtrGrd05;
+         call WtrGrdGoodDay;
       end
       else begin
-         call WtrGrd01;
+         call WtrGrdHello;
       end
       gsay_end;
       end_dialogue;
@@ -232,7 +235,7 @@ procedure timed_event_p_proc begin
          add_timer_event(self_obj, game_ticks(60), 7);
       end
       else if (fixed_param == 7) then begin
-         dest_tile := local_var(5);
+         dest_tile := local_var(LVAR_Hometile);
       end
    end
    else begin
@@ -241,55 +244,55 @@ procedure timed_event_p_proc begin
    end
 end
 
-procedure WtrGrd01 begin
+procedure WtrGrdHello begin // WtrGrd01
    Reply(mstr(101) + dude_name + mstr(102));
-   NOption(103, WtrGrd03, 4);
-   NOption(127, WtrGrd09, 4);
-   NLowOption(104, WtrGrd02);
+   NOption(103, WtrGrdNotFeelingWell, 4);
+   NOption(127, WtrGrdCanTakeSupplies, 4);
+   NLowOption(104, WtrGrdStupidNeverLearnedToSpeak);
 end
 
-procedure WtrGrd02 begin
+procedure WtrGrdStupidNeverLearnedToSpeak begin // WtrGrd02
    Reply(105);
-   NLowOption(106, WtrGrd03);
+   NLowOption(106, WtrGrdNotFeelingWell);
 end
 
-procedure WtrGrd03 begin
+procedure WtrGrdNotFeelingWell begin // WtrGrd03
    Reply(107);
-   NOption(108, WtrGrd04, 4);
-   NOption(127, WtrGrd09, 4);
+   NOption(108, WtrGrdWhyDidTheyAttack, 4);
+   NOption(127, WtrGrdCanTakeSupplies, 4);
    NLowOption(109, WtrGrdEnd);
 end
 
-procedure WtrGrd04 begin
+procedure WtrGrdWhyDidTheyAttack begin // WtrGrd04
    Reply(110);
    NOption(111, WtrGrdQuest, 4);
    NOption(112, WtrGrdEnd, 4);
 end
 
-procedure WtrGrd05 begin
+procedure WtrGrdGoodDay begin // WtrGrd05
    Reply(mstr(118) + dude_name + mstr(119));
-   NOption(120, WtrGrd06, 4);
-   NOption(121, WtrGRd07, 6);
-   NOption(127, WtrGrd09, 4);
-   NLowOption(104, WtrGrd02);
+   NOption(120, WtrGrdHowAreThings, 4);
+   NOption(121, WtrGrdWhatDoingHere, 6);
+   NOption(127, WtrGrdCanTakeSupplies, 4);
+   NLowOption(104, WtrGrdStupidNeverLearnedToSpeak);
 end
 
-procedure WtrGrd06 begin
+procedure WtrGrdHowAreThings begin // WtrGrd06
    Reply(122);
-   NOption(121, WtrGRd07, 4);
+   NOption(121, WtrGrdWhatDoingHere, 4);
    giq_option(4, SCRIPT_MODREACT, 105, WtrGrdEnd, NEUTRAL_REACTION);
 end
 
-procedure WtrGRd07 begin
+procedure WtrGrdWhatDoingHere begin // WtrGRd07
    Reply(123);
-   NOption(124, WtrGRd08, 4);
+   NOption(124, WtrGrdKeepUpGoodWork, 4);
 end
 
-procedure WtrGRd08 begin
+procedure WtrGrdKeepUpGoodWork begin // WtrGRd08
    NMessage(125);
 end
 
-procedure WtrGrd09 begin
+procedure WtrGrdCanTakeSupplies begin // WtrGrd09
    NMessage(126);
 end
 
@@ -297,7 +300,7 @@ procedure WtrGrdEnd begin
 end
 
 procedure WtrGrdQuest begin
-   if (not(global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF))) then begin
-      set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 1);
+   if waterthief_not_started then begin
+      set_waterthief_started;
    end
 end
