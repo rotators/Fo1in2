@@ -75,11 +75,13 @@ variable home_tile   := 13084;// was 13881
 
 variable Only_Once := 0;
 
+
 #define LVAR_RefuseToHelp        (4)  // The doctor refuses to help the player
 #define LVAR_HostileBehavior     (5)  // Has attacked or stolen
 #define LVAR_HasTalkedBefore     (6)  // Set after talked for the first time
 #define LVAR_ReceivedSupplies    (7)  // 0 = No, 1 = Once, 2 = Twice or more, 3 = Failed request with speech check
 #define LVAR_DayReceivedSupplies (8)  // GAME_TIME_IN_DAYS when the player received drugs or stimpaks last time
+#define LVAR_Rotated            (10)
 #define LVAR_Had_Toe_Removed    (11)  // Mutated toe war removed from the player
 
 #define HasTalkedBefore (local_var(LVAR_HasTalkedBefore))
@@ -107,11 +109,11 @@ procedure critter_p_proc begin
       self_walk_to_tile(home_tile);
    end
    else begin
-      // Why is it checking for 2?
-      if local_var(10) != 2 then begin
+      // Set correct rotation, but only once
+      if local_var(LVAR_Rotated) == 0 then begin
          if self_tile == home_tile then begin
             self_rotate(2);
-            set_local_var(10, 2);
+            set_local_var(LVAR_Rotated, 1);
          end
       end
    end
@@ -290,7 +292,7 @@ procedure MedicPoisonedHealRequest// poisoned heal request
 begin
    poison(dude_obj, -PoisAmt);
    gfade_out(1);
-   game_time_advance(10 * 60 * PoisAmt * 3);
+   game_time_advance_minutes(PoisAmt * 3); // 3 minutes per poison
    gfade_in(1);
    NMessage(156);
    if (player_damage) <= 3 then begin
@@ -385,12 +387,12 @@ begin
    end
    gfade_out(1);
    if is_poisoned then begin
-      game_time_advance(10 * 60 * PoisAmt * 3);
+      game_time_advance_minutes(PoisAmt * 3);
    end
    critter_heal(dude_obj, player_damage);
    // Added, in the vanilla script, broken limbs aren't healed
    critter_uninjure(dude_obj, (DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT));
-   game_time_advance(10 * 60 * player_damage * 5);
+   game_time_advance_minutes(player_damage * 5);
    gfade_in(1);
    NMessage(131);
    if (player_damage) <= 3 then begin
@@ -402,7 +404,7 @@ begin
 end
 
 procedure MedicRediationCheck begin // Medic18
-   game_time_advance(10 * 60);
+   game_time_advance_minutes(1);
    if (rads > 400) then begin
       intensity := mstr(132);
    end
@@ -515,7 +517,7 @@ begin
    // time fade & increase for removal
    gfade_out(1);
    radiation_inc(dude_obj, -removal);
-   game_time_advance(10 * 60 * Minutes);
+   game_time_advance_minutes(Minutes);
    gfade_in(1);
    NMessage(156);
 end

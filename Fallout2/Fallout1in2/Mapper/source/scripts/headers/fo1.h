@@ -602,9 +602,18 @@ variable merch_slot_armor_flags;
 
 
 // Generic stuff
-#define source_is_dude           (source_obj == dude_obj)
-#define source_in_party          (source_obj == party_member_obj(obj_pid(source_obj)))
+#define source_is_dude               (source_obj == dude_obj)
+#define source_in_party              (source_obj == party_member_obj(obj_pid(source_obj)))
+#define game_time_advance_minutes(x) game_time_advance(ONE_GAME_MINUTE * x)
 
+// Used to display message in spatial scripts once
+#define display_spatial_once(x)     if source_is_dude then begin \
+                                     if not(local_var(0)) then begin \
+                                        set_local_var(0, 1);         \
+                                        display_msg(x);              \
+                                        end                          \
+                                     end                             \
+                                     noop
 
 // Calculate the bounty on players head
 #define childkiller_bounty       (global_var(GVAR_CHILDKILLER_REPUTATION) * 500)
