@@ -5,7 +5,7 @@
 #pragma once
 
 /**********************************************************
-   Filename: Condtion.h
+   Filename: Condition.h
 
    Purpose: This file is used to map the conditionals used
             within the scripting tool which the designers
