@@ -22,26 +22,26 @@ procedure look_at_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 
-procedure Medic00;
-procedure Medic01;
-procedure Medic02;
-procedure Medic03;
-procedure Medic04;
-procedure Medic04a;
-procedure Medic05;
+procedure MedicBadPlayer; // Medic00
+procedure MedicIDontCare; // Medic01
+procedure MedicLowIntelligenceBadPlayer; // Medic02
+procedure MedicSeriouslyWounded; // Medic03
+procedure MedicMainMenu; // Medic04
+procedure MedicCheckPlayerInjuries; // Medic04a
+procedure MedicStupidGiveStimpaks; // Medic05
 procedure Medic06;
-procedure Medic07;
+procedure MedicPoisonedHealRequest; // Medic07
 procedure Medic08;
 procedure Medic08a;
 procedure Medic09;
 procedure Medic10;
 procedure Medic11;
-procedure Medic12;
-procedure Medic13;
+procedure MedicRequestHealing; // Medic12
+procedure MedicYouSeemOk; // Medic13
 procedure Medic14;
 procedure Medic15;
-procedure Medic16;
-procedure Medic17;
+procedure MedicStartHealing; // Medic16
+procedure MedicHealPlayer; // Medic17
 procedure Medic18;
 procedure Medic19;
 procedure Medic20;
@@ -49,36 +49,45 @@ procedure Medic21;
 procedure Medic22;
 procedure Medic23;
 procedure Medic24;
-procedure Medic25;
-procedure Medic26;
+procedure MedicRadiationFadeOutIn; // Medic25
+procedure MedicRadiationHealRequest; // Medic26
 procedure Medic27;
 procedure Medic28;
 procedure Medic29;
 
-procedure pushstims;
-procedure pushdrugs;
-procedure medicend;
+procedure GiveStimpaks;
+procedure GiveDrugs;
+procedure MedicEnd;
 
 procedure Node2000;
 procedure Node3000;
 
-variable damage := 0;
 variable intensity := 0;
 variable removal := 0;
 variable Minutes := 0;
 variable Hours := 0;
 variable TempMinutes := 0;
-variable rads := 0;
-variable player_hits := 0;
-variable player_max_hits := 0;
-variable PoisAmt := 0;
+variable rads := 0;    // Not sure if we really need to save this in a variable?
+variable PoisAmt := 0; // Not sure if we really need to save this in a variable?
 variable rounded := 0;
 variable IfRounded := 0;
 variable home_tile := 13084;// was 13881
 
 variable Only_Once := 0;
 
-#define LVAR_Had_Toe_Removed   (11)
+#define LVAR_RefuseToHelp        (4)  // The doctor refuses to help the player
+#define LVAR_HostileBehavior     (5)  // Has attacked or stolen
+#define LVAR_HasTalkedBefore     (6)  // Set after talked for the first time
+#define LVAR_ReceivedSupplies    (7)  // 0 = No, 1 = Once, 2 = Twice or more
+#define LVAR_DayReceivedSupplies (8)  // GAME_TIME_IN_DAYS when the player received drugs or stimpaks last time
+#define LVAR_Had_Toe_Removed    (11)  // Mutated toe war removed from the player
+
+#define HasTalkedBefore (local_var(LVAR_HasTalkedBefore))
+#define RefusesToHelp   (local_var(LVAR_RefuseToHelp)) // The doctor refuses to help the player
+
+#define player_damage (dude_max_hp - dude_cur_hp)
+#define is_poisoned   (PoisAmt > 0)
+#define is_irradiated (rads > 0)
 
 procedure start begin
    if (Only_Once == 0) then begin
@@ -98,6 +107,7 @@ procedure critter_p_proc begin
       self_walk_to_tile(home_tile);
    end
    else begin
+      // Why is it checking for 2?
       if local_var(10) != 2 then begin
          if self_tile == home_tile then begin
             self_rotate(2);
@@ -109,8 +119,8 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_local_var(4, 1);
-      set_local_var(5, 1);
+      set_local_var(LVAR_RefuseToHelp, 1);
+      set_local_var(LVAR_HostileBehavior, 1);
    end
 end
 
@@ -126,101 +136,99 @@ end
 
 procedure pickup_p_proc begin
    float_msg(self_obj, mstr(160), FLOAT_MSG_RED);
-   set_local_var(5, 1);
+   set_local_var(LVAR_HostileBehavior, 1);
 end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_VAULT13);
 
+   debug("Current damage: " + player_damage);
    debug("Current poison: " + dude_poison_stat + ". " + "Current rads: " + dude_rads + ". " + "Current time: " + game_time_hour + ". ");
 
    dude_look_at_self;
-   if not(local_var(4)) then begin
+   if not(RefusesToHelp) then begin
       get_reaction
       start_gdialog(184, self_obj, 4, -1, -1);
       gsay_start;
       if (local_var(5) == 1) or REP_ENEMY_VAULT13 then begin
-         call Medic00;// bad player
+         call MedicBadPlayer;// bad player
       end
       else begin
-         player_hits := dude_cur_hp;
-         player_max_hits := dude_max_hp;
-         damage := player_max_hits - player_hits;
          PoisAmt := dude_poison_stat;
          rads := dude_rads;
-         if (damage > 7) then begin
-            call Medic03;// go right to healing
+         if (player_damage > 7) then begin
+            call MedicSeriouslyWounded;// go right to healing
          end
          else begin
-            call Medic04;// MAIN MENU
+            call MedicMainMenu;// MAIN MENU
          end
       end
       gsay_end;
       end_dialogue;
    end
-   else begin
-      display_msg(mstr(159));
+   else begin // RefusesToHelp, LVAR_RefuseToHelp = 1
+      display_msg(mstr(159)); // The medic refuses to speak to you
    end
-   if not(local_var(6)) then begin
-      set_local_var(6, 1);
+   if not(local_var(LVAR_HasTalkedBefore)) then begin
+      set_local_var(LVAR_HasTalkedBefore, 1);
    end
    if debug_mode then begin
       display_msg("Current poison: " + dude_poison_stat + ". " + "Current rads: " + dude_rads + ". " + "Current time: " + game_time_hour + ". ");
    end
 end
 
-procedure Medic00 begin
-   Reply(100);
-   BOption(101, Medic01, 4);
-   BLowOption(102, Medic02);
+procedure MedicBadPlayer begin
+   Reply(100); // I can't believe what you've done
+   BOption(101, MedicIDontCare, 4); // I don't care. I'm hurt, heal me
+   BLowOption(102, MedicLowIntelligenceBadPlayer);
 end
 
-procedure Medic01 begin
-   set_local_var(4, 1);
+procedure MedicIDontCare begin
+   set_local_var(LVAR_RefuseToHelp, 1);
    BigDownReact
-   BMessage(103);
+   BMessage(103); // I will not help you
 end
 
-procedure Medic02 begin
-   set_local_var(4, 1);
+procedure MedicLowIntelligenceBadPlayer begin
+   set_local_var(LVAR_RefuseToHelp, 1);
    BigDownReact
-   BMessage(104);
+   BMessage(104); // Go away
 end
 
-procedure Medic03 begin
-   Reply(105);
-   NOption(164, Medic16, 1);
+procedure MedicSeriouslyWounded begin
+   Reply(105); // Oh my, you're seriously wounded
+   NOption(164, MedicStartHealing, 1);
 end
 
-procedure Medic04 begin
+procedure MedicMainMenu begin
    if waterchip_returned then begin
       Reply(157);// thanks for saving us
    end
    else begin
-      if not(local_var(6)) then begin
-         Reply(113);// what can i do for you?
-         NOption(114, Medic12, 4);
+      if not(HasTalkedBefore) then begin // The first time we talk to the doctor
+         Reply(113);// What can i do for you?
+         NOption(114, MedicRequestHealing, 4); // I need healin
       end
       else begin// hello again!
          Reply(mstr(106) + dude_name + mstr(107));
-         NOption(108, Medic06, 4);
-         NOption(109, Medic12, 4);
+         NOption(108, Medic06, 4); // It's going ok
+         NOption(109, MedicRequestHealing, 4); // I need help
       end
 
       if(global_var(GVAR_HAVE_MUTATED) == 1) then
          NOption(2000, Node2000, 004);
    end
-   if PoisAmt > 0 then begin// i've been poisoned
-      NOption(161, Medic07, 5);
+   if is_poisoned then begin// i've been poisoned
+      NOption(161, MedicPoisonedHealRequest, 5);
    end
-   if rads > 0 then begin// i'm irradiated
-      NOption(162, Medic26, 5);
+   if is_irradiated then begin// i'm irradiated
+      NOption(162, MedicRadiationHealRequest, 5);
    end
    if waterchip_returned then begin// you're welcome. bye.
-      NOption(163, medicend, 4);
+      NOption(163, MedicEnd, 4);
    end
    if dude_is_stupid then begin// STUPID
-      NLowOption(117, Medic12);// need healing
+      NLowOption(117, MedicRequestHealing); // Need healing
       if not(local_var(6)) then begin
          BLowOption(118, Medic15);// info on healing STUPID
       end
@@ -228,19 +236,20 @@ procedure Medic04 begin
          BLowOption(171, Medic15);// info on healing
       end
    end
-   if (local_var(7) == 0) then begin
-      set_local_var(8, GAME_TIME_IN_DAYS);
-      NLowOption(110, Medic05);// i want drugs (STUPID)
+   if (local_var(LVAR_ReceivedSupplies) == 0) then begin
+      set_local_var(LVAR_DayReceivedSupplies, GAME_TIME_IN_DAYS);
+      NLowOption(110, MedicStupidGiveStimpaks);// i want drugs (STUPID)
       NOption(115, Medic08, 5);// i want drugs
    end
-   else if (local_var(7) == 1) then begin
-      set_local_var(8, GAME_TIME_IN_DAYS);
+   else if (local_var(LVAR_ReceivedSupplies) == 1) then begin
+      set_local_var(LVAR_DayReceivedSupplies, GAME_TIME_IN_DAYS);
       NLowOption(110, Medic28);// i want drugs (STUPID)
       NOption(116, Medic11, 5);// i want more stimpaks
    end
-   else if (local_var(7) == 2) then begin
-      if ((GAME_TIME_IN_DAYS) - local_var(8)) >= 30 then begin
-         set_local_var(8, GAME_TIME_IN_DAYS);
+   else if (local_var(LVAR_ReceivedSupplies) == 2) then begin
+      // Check if 30 days or more have elapsed since we last asked for stimpaks.
+      if ((GAME_TIME_IN_DAYS) - local_var(LVAR_DayReceivedSupplies)) >= 30 then begin
+         set_local_var(LVAR_DayReceivedSupplies, GAME_TIME_IN_DAYS);
          NLowOption(110, Medic29);// i want drugs (STUPID)
          NOption(116, Medic29, 5);// i want more stimpaks
       end
@@ -251,22 +260,22 @@ procedure Medic04 begin
    end
 end
 
-procedure Medic04a begin
-   if (damage > 3) or (PoisAmt > 0) then begin
+procedure MedicCheckPlayerInjuries begin
+   if (player_damage > 3) or is_poisoned then begin
       call Medic14;
    end
    else begin
-      call Medic13;
+      call MedicYouSeemOk;
    end
 end
 
-procedure Medic05// STUPID CHARACTER, GIVE SIMPAKS
+procedure MedicStupidGiveStimpaks// STUPID CHARACTER, GIVE SIMPAKS
 begin
-   if local_var(7) == 0 then begin
-      set_local_var(7, 1);
+   if local_var(LVAR_ReceivedSupplies) == 0 then begin
+      set_local_var(LVAR_ReceivedSupplies, 1);
    end
    NMessage(111);
-   call pushstims;
+   call GiveStimpaks;
 end
 
 procedure Medic06//{112}{}{Good, keep up the good work. And let me know if you need anything.}
@@ -274,22 +283,22 @@ begin
    NMessage(112);
 end
 
-procedure Medic07// poisoned heal request
+procedure MedicPoisonedHealRequest// poisoned heal request
 begin
    poison(dude_obj, -PoisAmt);
    gfade_out(1);
    game_time_advance(10 * 60 * PoisAmt * 3);
    gfade_in(1);
    NMessage(156);
-   if (player_max_hits - player_hits) <= 3 then begin
-      critter_heal(dude_obj, player_max_hits);
+   if (player_damage) <= 3 then begin
+      critter_heal(dude_obj, dude_max_hp);
    end
 end
 
 procedure Medic08//{119}{}{I'm not authorized to give you any. Sorry.}
 begin
    Reply(119);
-   BOption(120, medicend, 4);
+   BOption(120, MedicEnd, 4); // Thanks for nothing
    NOption(121, Medic08a, 6);
 end
 
@@ -315,10 +324,10 @@ end
 procedure Medic10//{123}{}{Well, since you put it that way. But don't tell anyone that I let you have these. They are extremely addictive and dangerous to use.
 begin
    Reply(123);
-   NOption(124, pushdrugs, 4);
+   NOption(124, GiveDrugs, 4);
 end
 
-procedure pushstims begin
+procedure GiveStimpaks begin
    variable Stimpak := 0;
    Stimpak := create_object(PID_STIMPAK, 0, 0);
    add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
@@ -336,13 +345,13 @@ procedure Medic11 begin
    end
 end
 
-procedure Medic12// "hmm let's see..."
+procedure MedicRequestHealing // "hmm let's see..."
 begin
    Reply(126);
-   NOption(164, Medic04a, 1);
+   NOption(164, MedicCheckPlayerInjuries, 1);
 end
 
-procedure Medic13// don't need healing if small dmg
+procedure MedicYouSeemOk// don't need healing if small dmg
 begin
    NMessage(127);
 end
@@ -350,7 +359,7 @@ end
 procedure Medic14//"{128}{}{You look hurt. Here, let me help you.}"
 begin
    Reply(128);
-   NOption(164, Medic16, 1);
+   NOption(164, MedicStartHealing, 1);
 end
 
 procedure Medic15//{129}{}{If you need healing, come back here to me or use some of the stimpaks we have. You can get more stimpaks from the wall.}
@@ -358,28 +367,28 @@ begin
    NMessage(129);
 end
 
-procedure Medic16// "lie down and we'll start"
+procedure MedicStartHealing// "lie down and we'll start"
 begin
    Reply(130);
-   NOption(164, Medic17, 1);
+   NOption(164, MedicHealPlayer, 1);
 end
 
-procedure Medic17// healing
+procedure MedicHealPlayer// healing
 begin
-   if PoisAmt > 0 then begin
+   if is_poisoned then begin
       poison(dude_obj, -PoisAmt);
    end
    gfade_out(1);
-   if PoisAmt > 0 then begin
+   if is_poisoned then begin
       game_time_advance(10 * 60 * PoisAmt * 3);
    end
-   critter_heal(dude_obj, damage);
+   critter_heal(dude_obj, player_damage);
    critter_uninjure(dude_obj, (DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT));
-   game_time_advance(10 * 60 * damage * 5);
+   game_time_advance(10 * 60 * player_damage * 5);
    gfade_in(1);
    NMessage(131);
-   if (player_max_hits - player_hits) <= 3 then begin
-      critter_heal(dude_obj, player_max_hits);
+   if (player_damage) <= 3 then begin
+      critter_heal(dude_obj, dude_max_hp);
    end
    if rads then begin
       call Medic18;
@@ -524,30 +533,30 @@ begin
    end
 end
 
-procedure Medic25 begin
+procedure MedicRadiationFadeOutIn begin
    gfade_out(1);
    gfade_in(1);
    call Medic18;
 end
 
-procedure Medic26// irradiated heal request
+procedure MedicRadiationHealRequest// irradiated heal request
 begin
    Reply(137);
-   NOption(164, Medic25, 1);
+   NOption(164, MedicRadiationFadeOutIn, 1);
 end
 
 procedure Medic27// Lol dumb if already got drugs twice
 begin
-   BMessage(125);
+   BMessage(125); // Stimpaks are being rationed.
 end
 
 procedure Medic28//stupid character, give drugs
 begin
-   if local_var(7) == 1 then begin
-      set_local_var(7, 2);
+   if local_var(LVAR_ReceivedSupplies) == 1 then begin
+      set_local_var(LVAR_ReceivedSupplies, 2);
    end
    NMessage(172);
-   call pushdrugs;
+   call GiveDrugs;
 end
 
 procedure Medic29 begin
@@ -557,23 +566,22 @@ procedure Medic29 begin
    NMessage(111);
 end
 
-procedure pushdrugs begin
-   variable drugs := 0;
-   variable LVar0 := 0;
-   LVar0 := 2 - difficulty_level;
-   if LVar0 then begin
-      drugs := create_object(PID_STIMPAK, 0, 0);
-      add_mult_objs_to_inven(dude_obj, drugs, LVar0);
-      drugs := create_object(PID_BUFFOUT, 0, 0);
-      add_mult_objs_to_inven(dude_obj, drugs, LVar0);
+#define give_drug(_pid, _amount) drugPtr := create_object(PID_STIMPAK, 0, 0); \
+                                 add_mult_objs_to_inven(dude_obj, drugPtr, _amount)
+
+procedure GiveDrugs begin
+   variable drugPtr := 0;
+   variable amount  := 0;
+   amount := 2 - difficulty_level;
+   if amount then begin
+      give_drug(PID_STIMPAK, amount);
+      give_drug(PID_BUFFOUT, amount);
    end
-   drugs := create_object(PID_SUPER_STIMPAK, 0, 0);
-   add_mult_objs_to_inven(dude_obj, drugs, 1);
-   drugs := create_object(PID_PSYCHO, 0, 0);
-   add_mult_objs_to_inven(dude_obj, drugs, 1);
+   give_drug(PID_SUPER_STIMPAK, 1);
+   give_drug(PID_PSYCHO, 1);
 end
 
-procedure medicend begin
+procedure MedicEnd begin
 end
 
 procedure Node2000 begin
@@ -586,7 +594,7 @@ procedure Node2000 begin
    end
 
    NOption(2010, Node3000, 004);
-   NOption(2020, Medic04, 004);
+   NOption(2020, MedicMainMenu, 004);
    NOption(2030, medicend, 004);
 end
 
@@ -617,9 +625,9 @@ variable toe;
 
    if (local_var(LVAR_Had_Toe_Removed) == 0) then begin
       set_local_var(LVAR_Had_Toe_Removed, 1);
-      NOption(3010, Medic04, 004);
+      NOption(3010, MedicMainMenu, 004);
    end
    else
-      NOption(3020, medicend, 004);
-   NOption(3030, medicend, 004);
+      NOption(3020, MedicEnd, 004);
+   NOption(3030, MedicEnd, 004);
 end
