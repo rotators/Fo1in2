@@ -190,8 +190,9 @@
 #define inc_good_critter        if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_GOOD_MONSTER, (global_var(GVAR_GOOD_MONSTER) + 1));     \
                                     CHECK_REP_CHAMPION                                                          \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_GOOD_CRITTER);                             \
                                     set_global_var(TOWN_REP_VAR,(global_var(TOWN_REP_VAR)+REP_TOWN_KILL_GOOD)); \
@@ -201,8 +202,9 @@
 #define inc_inv_good_crit       if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_GOOD_MONSTER, (global_var(GVAR_GOOD_MONSTER) + 1));     \
                                     CHECK_REP_CHAMPION                                                          \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_GOOD_CRITTER);                             \
                                     set_global_var(TOWN_REP_VAR,(global_var(TOWN_REP_VAR)+REP_TOWN_KILL_EVIL)); \
@@ -212,8 +214,9 @@
 #else
 #define inc_good_critter        if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_GOOD_MONSTER, (global_var(GVAR_GOOD_MONSTER) + 1));     \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_CHAMPION                                                          \
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_GOOD_CRITTER);                             \
@@ -223,8 +226,9 @@
 
 #define inc_neutral_critter     if (source_obj == dude_obj) then begin                                          \
                                     CHECK_REP_CHAMPION                                                          \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_NEUTRAL_CRITTER);                          \
                                 end
@@ -238,8 +242,9 @@
 #ifdef TOWN_REP_VAR
 #define inc_evil_critter        if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_BAD_MONSTER, (global_var(GVAR_BAD_MONSTER) + 1));       \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     CHECK_REP_CHAMPION                                                          \
                                     inc_general_rep(REP_BONUS_KILLED_EVIL_CRITTER);                             \
@@ -249,8 +254,9 @@
 
 #define inc_inv_evil_crit       if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_BAD_MONSTER, (global_var(GVAR_BAD_MONSTER) + 1));       \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     CHECK_REP_CHAMPION                                                          \
                                     inc_general_rep(REP_BONUS_KILLED_EVIL_CRITTER);                             \
@@ -261,8 +267,9 @@
 #else
 #define inc_evil_critter        if (source_obj == dude_obj) then begin                                          \
                                     set_global_var(GVAR_BAD_MONSTER, (global_var(GVAR_BAD_MONSTER) + 1));       \
-                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then           \
+                                    if (critter_kill_type(self_obj) == KILL_TYPE_children_kills) then begin     \
                                         inc_childkiller                                                         \
+                                    end                                                                         \
                                     CHECK_REP_BERSERKER                                                         \
                                     CHECK_REP_CHAMPION                                                          \
                                     inc_general_rep(REP_BONUS_KILLED_EVIL_CRITTER);                             \
