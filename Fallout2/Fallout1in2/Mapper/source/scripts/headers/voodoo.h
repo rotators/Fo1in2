@@ -18,6 +18,9 @@
 variable $addr;
 
 // sfall-asm:defines-begin //
+
+#define VOODOO_ID_sound_on_wm_patch  1
+
 // sfall-asm:defines-end //
 
 #include "sfall/sfall.rotators.h"
@@ -72,6 +75,49 @@ variable $addr;
 // This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
+
+// Button sound when clicking on the worldmap for the ultimate Fallout 1 experience.
+#define VOODOO_sound_on_wm \
+              begin                                                         \
+               $addr := VOODOO_Alloc(VOODOO_ID_sound_on_wm_patch, 79);      \
+               write_byte ($addr,    0x60);       /* pushad */              \
+               call VOODOO_MakeCall($addr+1, 0x004CAAA0);                   \
+               write_int  ($addr+6,  0x0000158b); /* mov edx,ds:[530000] */ \
+               write_short($addr+10, 0x0053);                               \
+               write_short($addr+12, 0xfa83);     /* cmp edx,0 */           \
+               write_byte ($addr+14, 0x00);                                 \
+               write_short($addr+15, 0x1d74);     /* je 410086 */           \
+               write_short($addr+17, 0xfa83);     /* cmp edx,1 */           \
+               write_byte ($addr+19, 0x01);                                 \
+               write_short($addr+20, 0x2e75);     /* jne 41009C */          \
+               write_short($addr+22, 0xf883);     /* cmp eax,0 */           \
+               write_byte ($addr+24, 0x00);                                 \
+               write_short($addr+25, 0x2975);     /* jne 41009C */          \
+               write_int  ($addr+27, 0x503e20b8); /* mov eax,503E20 */      \
+               write_byte ($addr+31, 0x00);                                 \
+               call VOODOO_MakeCall($addr+32, 0x004519A8);                  \
+               write_int  ($addr+37, 0x000005c6); /* mov ds:[530000],0 */   \
+               write_short($addr+41, 0x0053);                               \
+               write_byte ($addr+43, 0x00);                                 \
+               write_short($addr+44, 0x16eb);     /* jmp 41009C */          \
+               write_short($addr+46, 0xf883);     /* cmp eax,1 */           \
+               write_byte ($addr+48, 0x01);                                 \
+               write_short($addr+49, 0x1175);     /* jne 41009C */          \
+               write_int  ($addr+51, 0x503e14b8); /* mov eax,503E14 */      \
+               write_byte ($addr+55, 0x00);                                 \
+               call VOODOO_MakeCall($addr+56, 0x004519A8);                  \
+               write_int  ($addr+61, 0x000005c6); /* mov ds:[530000],1 */   \
+               write_short($addr+65, 0x0053);                               \
+               write_byte ($addr+67, 0x01);                                 \
+               write_byte ($addr+68, 0x61);       /* popad */               \
+               write_short($addr+69, 0xc501);     /* add ebp,eax */         \
+               write_short($addr+71, 0xef83);     /* sub edi,16 */          \
+               write_byte ($addr+73, 0x16);                                 \
+               call VOODOO_MakeJump($addr+74, 0x004BFE94);                  \
+               /* END */                                                    \
+               call VOODOO_MakeJump(0x004BFE8F, $addr);                     \
+              end                                                           \
+              noop
 
 // sfall-asm:code-end //
 //
