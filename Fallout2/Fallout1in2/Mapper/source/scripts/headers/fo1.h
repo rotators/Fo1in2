@@ -85,12 +85,6 @@
 #define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
 #define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
 
-#define waterthief_not_started              (not(global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF)))
-#define waterthief_started                  (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 1)
-#define set_waterthief_started              set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 1)
-#define waterthief_captured                 (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2)
-#define set_waterthief_captured             set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 2)
-
 #define get_quest_vats_active               ((global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) > 0) and not(military_base_destroyed))
 #define get_quest_master_active             ((global_var(GVAR_QUEST_VAULT13_2_MASTER) > 0) and not(cathedral_destroyed))
 

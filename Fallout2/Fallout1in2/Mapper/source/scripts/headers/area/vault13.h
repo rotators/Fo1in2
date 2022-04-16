@@ -11,6 +11,12 @@
     Generic Defines
 ************************************************/
 
+#define waterthief_not_started              (not(global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF)))
+#define waterthief_started                  (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 1)
+#define set_waterthief_started              set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 1)
+#define waterthief_captured                 (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2)
+#define set_waterthief_captured             set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 2)
+
 // Use Vault door
 #define toggle_v13_door    if obj_is_open(vault_door_ptr) then begin \
                               obj_close(vault_door_ptr);             \
