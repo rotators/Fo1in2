@@ -152,7 +152,7 @@
 #define PID_LUCY                          (16777358)
 #define PID_WIGGUP                        (16777359)
 #define PID_VISCIOUS                      (16777360)
-#define PID_SUPER_MUTANT_LIEUTENANT_2     (16777361)  // (145)
+#define PID_SUPER_MUTANT_LIEUTENANT_2     (16777361)  // (145) UNUSED -- no idea why Lou is duplicated
 #define PID_LAURA                         (16777362)
 #define PID_MORPHEUS                      (16777363)
 #define PID_NICOLE                        (16777364)
