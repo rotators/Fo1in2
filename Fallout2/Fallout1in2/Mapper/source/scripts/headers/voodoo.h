@@ -49,6 +49,14 @@ variable $addr;
 //
 // sfall-asm:code-begin //
 
+// Disables the "Encounter! Investigate?" dialog
+#define VOODOO_disable_encounter_dialog \
+              begin                                          \
+               write_short(0x4c0b9d, 0x01b0); /* mov al,1 */ \
+               call VOODOO_WriteNop(0x4C0B75, 40, true);     \
+              end                                            \
+              noop
+
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
               begin                               \

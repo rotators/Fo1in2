@@ -70,7 +70,7 @@ procedure VOODOO_TempClear(variable slow := false)
 begin
    variable a, address := 0x4b1554; // fallout2.refresh_mapper_
 
-   for(a := address; a < 0x4b15e8; a += 4) // 
+   for(a := address; a < 0x4b15e8; a += 4) //
    begin
       if(slow == false and read_int(a) == 0xcccccccc) then
          break;
@@ -135,7 +135,8 @@ begin
   if(goBackTo90s) then
    n := 0x90;
   // x86 instructions can't be longer than 15 bytes.
-  length := cap_number(length, 1, 15);
+  if not goBackTo90s then
+    length := cap_number(length, 1, 15);
   for(i := 0; i < length-1; i++) begin
    write_byte(address+i, n);
   end
