@@ -22,10 +22,10 @@ procedure map_enter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 
-procedure Lyle01;
-procedure Lyle02;
-procedure Lyle03;
-procedure Lyle04;
+procedure LyleHello;       // Lyle01
+procedure LyleHowsItGoing; // Lyle02
+procedure LyleIHopeSo;     // Lyle03
+procedure LyleWaterThiefQuest; // Lyle04
 procedure LyleEnd;
 
 variable night_person;
@@ -35,10 +35,10 @@ variable home_tile;
 variable sleep_tile;
 
 variable tmp_hostile;
-variable initial := 0;
-variable DeathType := 57;
+variable DeathType := 57; // Can be removed?
 
-#define LVAR_Sleeping                     (4)
+#define LVAR_Sleeping        (4)
+#define LVAR_HostileBehavior (5)  // Has attacked or stolen
 
 procedure start begin
 end
@@ -49,12 +49,12 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if (local_var(5)) then begin
+      if (local_var(LVAR_HostileBehavior)) then begin
          if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
             call flee_dude;
          end
          else if (tile_distance(dude_tile, home_tile) > 4) then begin
-            if (local_var(4) == 0) then begin
+            if (local_var(LVAR_Sleeping) == 0) then begin
                self_walk_to_tile(home_tile);
             end
          end
@@ -65,7 +65,7 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_local_var(5, 1);
+      set_local_var(LVAR_HostileBehavior, 1);
    end
 end
 
@@ -105,7 +105,7 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_VAULT13);
 
    dude_look_at_self;
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Sleeping) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else if (REP_ENEMY_VAULT13 or local_var(5)) then begin
@@ -114,40 +114,40 @@ procedure talk_p_proc begin
    else if waterchip_returned then begin
       float_msg(self_obj, mstr(102), FLOAT_MSG_NORMAL);
    end
-   else if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
+   else if waterthief_captured then begin
       float_msg(self_obj, mstr(113), FLOAT_MSG_NORMAL);
    end
    else begin
-      start_dialog_at_node(Lyle01);
+      start_dialog_at_node(LyleHello);
    end
 end
 
-procedure Lyle01 begin
+procedure LyleHello begin // Lyle01
    Reply(mstr(103) + dude_name + mstr(104));
-   NOption(105, Lyle02, 4);
+   NOption(105, LyleHowsItGoing, 4);
    NLowOption(107, LyleEnd);
 end
 
-procedure Lyle02 begin
+procedure LyleHowsItGoing begin // Lyle02
    if ((GAME_TIME_IN_DAYS) < 30) then begin
       NMessage(106);
    end
    else begin
       Reply(108);
-      NOption(109, Lyle03, 4);
-      GOption(110, Lyle04, 4);
+      NOption(109, LyleIHopeSo, 4);
+      GOption(110, LyleWaterThiefQuest, 4);
    end
 end
 
-procedure Lyle03 begin
+procedure LyleIHopeSo begin // Lyle03
    NMessage(111);
 end
 
-procedure Lyle04 begin
-   set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 1);
+procedure LyleWaterThiefQuest begin // Lyle04
+   set_waterthief_started;
    GMessage(112);
-
 end
+
 
 procedure LyleEnd begin
 end

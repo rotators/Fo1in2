@@ -43,8 +43,9 @@ variable sleeping_disabled;
 import variable recipient;
 import variable WtrGrd_ptr;
 
-#define LVAR_Sleeping                     (5)
-#define LVAR_Hostile                      (6)
+#define LVAR_Crying        (4)  // 1 = Cindy is crying and refuses to talk
+#define LVAR_Sleeping      (5)
+#define LVAR_Hostile       (6)
 
 variable night_person;
 variable sleep_tile;
@@ -98,7 +99,7 @@ procedure damage_p_proc begin
 end
 
 procedure description_p_proc begin
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Crying)) then begin
       display_msg(mstr(101));
    end
 end
@@ -137,15 +138,15 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_VAULT13);
 
    dude_look_at_self;
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Crying) == 0) then begin
       if (REP_ENEMY_VAULT13 or (local_var(LVAR_Hostile) == 1)) then begin
          float_msg(self_obj, mstr(125), FLOAT_MSG_NORMAL);
-         set_local_var(4, 1);
+         set_local_var(LVAR_Crying, 1);
       end
       else if waterchip_returned then begin
          float_msg(self_obj, mstr(123), FLOAT_MSG_NORMAL);
       end
-      else if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
+      else if waterthief_captured then begin
          float_msg(self_obj, mstr(124), FLOAT_MSG_NORMAL);
       end
       else begin
@@ -195,7 +196,7 @@ procedure Cindy06 begin
 end
 
 procedure Cindy07 begin
-   set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 1);
+   set_waterthief_started;
    Reply(120);
    NOption(121, CindyEnd, 4);
    NOption(112, Cindy05, 4);
