@@ -15,6 +15,7 @@
 
 procedure start;
 procedure critter_p_proc;
+procedure timed_event_p_proc;
 procedure damage_p_proc;
 procedure description_p_proc;
 procedure destroy_p_proc;
@@ -46,6 +47,7 @@ import variable WtrGrd_ptr;
 #define LVAR_Crying        (4)  // 1 = Cindy is crying and refuses to talk
 #define LVAR_Sleeping      (5)
 #define LVAR_Hostile       (6)
+#define LVAR_WaterRations  (7)
 
 variable night_person;
 variable sleep_tile;
@@ -73,22 +75,19 @@ procedure critter_p_proc begin
          end
       end
       else begin
-         if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) then begin
-            if (local_var(7) == 0) then begin
-               if ((self_elevation == elevation(WtrGrd_ptr)) and (self_elevation == dude_elevation)) then begin
-                  if ((game_time_hour > 700) and (game_time_hour < 900)) then begin
-                     call get_rations;
-                  end
-               end
-            end
-         end
          if not(day) then begin
-            set_local_var(7, 0);
+            set_local_var(LVAR_WaterRations, 0);
          end
          if (sleeping_disabled == 0) then begin
             call do_sleep;
          end
       end
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_WaterRation) then begin
+      water_rations;
    end
 end
 
@@ -119,6 +118,8 @@ procedure map_enter_p_proc begin
    if (v13_invaded) then begin
       invasion_kill_critter_V13;
    end
+
+   flush_add_timer_event(self_obj, game_ticks(random(1,5)), EVENT_WaterRation);
 
    set_self_team(TEAM_VAULT13);
    sleep_tile := 24683;
@@ -219,7 +220,7 @@ procedure get_rations begin
       if (not(recipient)) then begin
          recipient := self_obj;
          add_timer_event(self_obj, game_ticks(3), 1);
-         set_local_var(7, 1);
+         set_local_var(LVAR_WaterRations, 1);
          sleeping_disabled := 0;
       end
    end

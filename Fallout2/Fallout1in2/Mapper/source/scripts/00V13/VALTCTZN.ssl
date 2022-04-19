@@ -45,7 +45,9 @@ variable tmp_hostile;
 variable sleeping_disabled;
 variable ration_tile;
 
-#define LVAR_Sleeping                     (6)
+#define LVAR_HomeTile         (4)
+#define LVAR_WaterRations     (5)
+#define LVAR_Sleeping         (6)
 
 procedure push_p_proc begin
 end
@@ -59,17 +61,8 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) then begin // TODO: Maybe this should be changed to x days of water left?
-         if (local_var(5) == 0) then begin
-            if ((self_elevation == elevation(WtrGrd_ptr)) and (self_elevation == dude_elevation)) then begin
-               if ((game_time_hour > 700) and (game_time_hour < 900)) then begin
-                  call get_rations;
-               end
-            end
-         end
-      end
       if not(day) then begin
-         set_local_var(5, 0);
+         set_local_var(LVAR_WaterRations, 0);
          sleeping_disabled := 0;
       end
       if (sleeping_disabled == 0) then begin
@@ -96,10 +89,12 @@ procedure map_enter_p_proc begin
       invasion_kill_critter_V13;
    end
 
-   if (not(local_var(4))) then begin
-      set_local_var(4, self_tile);
+   flush_add_timer_event(self_obj, game_ticks(random(1,5)), EVENT_WaterRation);
+
+   if (not(local_var(LVAR_HomeTile))) then begin
+      set_local_var(LVAR_HomeTile, self_tile);
    end
-   home_tile := local_var(4);
+   home_tile := local_var(LVAR_HomeTile);
    set_self_team(TEAM_VAULT13);
    call set_ration_tile;
    call set_sleep_tile;
@@ -150,6 +145,9 @@ procedure timed_event_p_proc begin
       recipient := 0;
       self_walk_to_tile(home_tile);
    end
+   else if (fixed_param == EVENT_WaterRation) then begin
+      water_rations;
+   end
 end
 
 procedure get_rations begin
@@ -172,7 +170,7 @@ procedure get_rations begin
       if (not(recipient)) then begin
          recipient := self_obj;
          add_timer_event(self_obj, game_ticks(3), 1);
-         set_local_var(5, 1);
+         set_local_var(LVAR_WaterRations, 1);
          sleeping_disabled := 0;
       end
    end

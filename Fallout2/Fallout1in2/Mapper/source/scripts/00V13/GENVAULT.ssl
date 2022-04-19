@@ -56,7 +56,8 @@ import variable recipient;
 import variable WtrGrd_ptr;
 import variable getting_ration;
 
-#define LVAR_Sleeping                     (6)
+#define LVAR_WaterRations     (5)
+#define LVAR_Sleeping         (6)
 
 procedure push_p_proc begin
 end
@@ -72,15 +73,6 @@ procedure critter_p_proc begin
    else begin
       if (local_var(7) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
          call flee_dude;
-      end
-      if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) then begin
-         if (local_var(5) == 0) then begin
-            if ((self_elevation == elevation(WtrGrd_ptr)) and (self_elevation == dude_elevation)) then begin
-               if ((game_time_hour > 700) and (game_time_hour < 900)) then begin
-                  call get_rations;
-               end
-            end
-         end
       end
    end
 end
@@ -103,6 +95,8 @@ procedure map_enter_p_proc begin
       invasion_kill_critter_V13;
    end
 
+   flush_add_timer_event(self_obj, game_ticks(1), EVENT_WaterRation);
+
    if (local_var(4) == 0) then begin
       set_local_var(4, self_tile);
    end
@@ -116,7 +110,7 @@ procedure map_update_p_proc begin
    if (not(combat_is_initialized)) then begin
       if not(day) then begin
          sleeping_disabled := 0;
-         set_local_var(5, 0);
+         set_local_var(LVAR_WaterRations, 0);
       end
       if (sleeping_disabled == 0) then begin
          sleeping
@@ -176,6 +170,9 @@ procedure timed_event_p_proc begin
    else if (fixed_param == 3) then begin
       recipient := 0;
       self_walk_to_tile(home_tile);
+   end
+   else if (fixed_param == EVENT_WaterRation) then begin
+      water_rations;
    end
 end
 
@@ -362,7 +359,7 @@ procedure get_rations begin
       if (not(recipient)) then begin
          recipient := self_obj;
          add_timer_event(self_obj, game_ticks(3), 1);
-         set_local_var(5, 1);
+         set_local_var(LVAR_WaterRations, 1);
          sleeping_disabled := 0;
       end
    end

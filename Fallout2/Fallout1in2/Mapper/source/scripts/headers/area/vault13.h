@@ -17,6 +17,23 @@
 #define waterthief_captured                 (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2)
 #define set_waterthief_captured             set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 2)
 
+// Water rations scene
+#define EVENT_WaterRation  (4)
+
+// Changed condition from GVAR_QUEST_VAULT13_4_WATERCHIP == 0 to days-check, because it would be false if the player has send water from the water merchants once.
+#define water_rations \
+   if (not(waterchip_returned) and (get_water_days_left < 90))  then begin          \
+      if (local_var(LVAR_WaterRations) == 0) then begin                             \
+         if ((self_elevation == elevation(WtrGrd_ptr)) and (self_elevation == dude_elevation)) then begin \
+            if ((game_time_hour > 700) and (game_time_hour < 900)) then begin       \
+               call get_rations;                                                    \
+            end                                                                     \
+         end                                                                        \
+      end                                                                           \
+      flush_add_timer_event(self_obj, game_ticks(random(1,5)), EVENT_WaterRation);  \
+   end                                                                              \
+   noop
+
 // Use Vault door
 #define toggle_v13_door    if obj_is_open(vault_door_ptr) then begin \
                               obj_close(vault_door_ptr);             \
