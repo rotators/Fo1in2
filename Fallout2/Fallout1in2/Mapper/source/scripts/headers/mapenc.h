@@ -350,7 +350,7 @@ critical procedure Scenes(variable scenery_elevation) begin
       //debug("finished moving item!");
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   debug("Tot_Critter_A is completed!");
+   //debug("Tot_Critter_A is completed!");
 end
 
 /************************************************
