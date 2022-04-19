@@ -742,9 +742,11 @@ procedure LoadChests begin
       end
    end
    else if (special_spawn_container == 1) then begin
-      Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
-                      PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
-                      PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD, PID_SHOCK_SPEAR ];
+      Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK, PID_RADAWAY,
+                      PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL, PID_FLAMETHROWER_FUEL, PID_SHOTGUN_SHELLS, PID_9MM_BALL,
+                      PID_SPEAR, PID_SLEDGEHAMMER, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD, PID_SHOCK_SPEAR,
+                      PID_SHIV, PID_SWITCHBLADE,
+                      PID_LEATHER_JACKET, PID_LEATHER_ARMOR_MK_II];
 
       Scenery_Creation_Hex := array_random_value(Chest_List);
       container_type := [PID_CHEST, PID_BAG, PID_BACKPACK, PID_BROWN_BAG];
