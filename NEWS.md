@@ -7,4 +7,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Typo in english Flambe 450 item description.
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
 - **Tweaked**: Adjusted laser resistance of ant critters.
+- **Tweaked**: Contents of crates in cavern encounters have more item variation now.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
+- **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
+- **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
