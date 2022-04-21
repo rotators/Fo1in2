@@ -325,7 +325,7 @@ _^ - These functions require AllowUnsafeScripting to be enabled in ddraw.ini_
 
 0x824b - `int tile_under_cursor()`\
 0x824c - `int gdialog_get_barter_mod()`\
-0x824d - `void set_inven_ap_cost()`
+0x824d - `void set_inven_ap_cost(int cost)`
 
 0x825c - `void reg_anim_combat_check(int enable)`\
 0x825a - `void reg_anim_destroy(object object)`\
