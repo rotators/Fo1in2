@@ -18,9 +18,6 @@
 variable $addr;
 
 // sfall-asm:defines-begin //
-
-#define VOODOO_ID_sound_on_wm_patch  1
-
 // sfall-asm:defines-end //
 
 #include "sfall/sfall.rotators.h"
@@ -83,67 +80,6 @@ variable $addr;
 // This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
-
-// Sound when clicking to move on WM, when clicking the player location/hotspot button and inside the town interface.
-// See https://www.youtube.com/watch?v=dGZjse7uC_0&t=50m for reference on how it works in the original.
-#define VOODOO_sound_on_wm \
-              begin                                                                             \
-               /* Sound when clicking location/hotspot */                                       \
-               $addr := VOODOO_Alloc(VOODOO_ID_sound_on_wm_patch, 119);                         \
-               write_byte ($addr,     0x60);       /* pushad */                                 \
-               write_int  ($addr+1,   0x503e34b8); /* mov eax,<fallout2.Ib2p1xx1_1> */          \
-               write_byte ($addr+5,   0x00);                                                    \
-               call VOODOO_MakeCall($addr+6, 0x004519A8);                                       \
-               write_int  ($addr+11,  0x000005c6); /* mov ds:[<bool pressed>],1 */              \
-               write_short($addr+15,  0x0053);                                                  \
-               write_byte ($addr+17,  0x01);                                                    \
-               write_byte ($addr+18,  0x61);       /* popad */                                  \
-               write_int  ($addr+19,  0x2e90a13e); /* mov eax,ds:[<hotspot2_pic>] */            \
-               write_short($addr+23,  0x0067);                                                  \
-               call VOODOO_MakeJump($addr+25, 0x4C425C);                                        \
-               /* Sound when releasing mouse while clicking location/hotspot */                 \
-               write_byte ($addr+30,  0x60);       /* pushad */                                 \
-               write_int  ($addr+31,  0x530000a0); /* mov al, ds:[<bool pressed>] */            \
-               write_byte ($addr+35,  0x00);                                                    \
-               write_short($addr+36,  0x013c);     /* cmp al,1 */                               \
-               write_short($addr+38,  0x1175);     /* jne <exit> */                             \
-               write_int  ($addr+40,  0x503e40b8); /* mov eax,<fallout2.Ib2lu1x1_1> */          \
-               write_byte ($addr+44,  0x00);                                                    \
-               call VOODOO_MakeCall($addr+45, 0x004519A8);                                      \
-               write_int  ($addr+50,  0x000005c6); /* mov ds:[<bool pressed>],0 */              \
-               write_short($addr+54,  0x0053);                                                  \
-               write_byte ($addr+56,  0x00);                                                    \
-               write_byte ($addr+57,  0x61);       /* popad */                                  \
-               write_int  ($addr+58,  0x2e88a13e); /* mov eax,ds:[<hotspot1_pic>] */            \
-               write_short($addr+62,  0x0067);                                                  \
-               call VOODOO_MakeJump($addr+64, 0x4C425C);                                        \
-               /* wmPartyInitWalking_ - sound when clicking on the WM to walk. */               \
-               write_byte ($addr+69,  0x60);       /* pushad */                                 \
-               write_int  ($addr+70,  0x503e14b8); /* mov eax,<fallout2.Ib1p1xx1_7> */          \
-               write_byte ($addr+74,  0x00);                                                    \
-               call VOODOO_MakeCall($addr+75, 0x004519A8);                                      \
-               write_byte ($addr+80,  0x61);       /* popad */                                  \
-               call VOODOO_MakeCall($addr+81, 0x004C1E54);                                      \
-               call VOODOO_MakeJump($addr+86, 0x004C02DF);                                      \
-               /* Register sound for townmap buttons */                                         \
-               write_int  ($addr+91,  0x2dd88789); /* mov ds:[edi+<_wmTownMapButtonId>],eax */  \
-               write_short($addr+95,  0x0067);                                                  \
-               write_byte ($addr+97,  0x50);       /* push eax */                               \
-               write_int  ($addr+98,  0x451990bb); /* mov ebx,<fallout2.gsound_med_butt_rele */ \
-               write_byte ($addr+102, 0x00);                                                    \
-               write_int  ($addr+103, 0x451988ba); /* mov edx,<fallout2.gsound_med_butt_pres */ \
-               write_byte ($addr+107, 0x00);                                                    \
-               call VOODOO_MakeCall($addr+108, 0x004D87F8);                                     \
-               write_byte ($addr+113, 0x58);       /* pop eax */                                \
-               call VOODOO_MakeJump($addr+114, 0x004C4B9A);                                     \
-               call VOODOO_MakeJump(0x4C4257, $addr);                                           \
-               call VOODOO_MakeJump(0x4C4250, $addr+30);                                        \
-               call VOODOO_MakeJump(0x4C02DA, $addr+69);                                        \
-               call VOODOO_MakeJump(0x4C4B94, $addr+91);                                        \
-               write_byte (0x4C4B99, 0x90);                                                     \
-               /* END */                                                                        \
-              end                                                                               \
-              noop
 
 // sfall-asm:code-end //
 //
