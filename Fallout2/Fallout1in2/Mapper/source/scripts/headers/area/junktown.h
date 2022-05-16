@@ -63,3 +63,6 @@
       give_xp_msg(EXP_TRISH_SAUL_RELATIONSHIP, message_str(SCRIPT_TRISH, 204));  \
    end                                                                           \
    noop
+
+#define dog_is_angry                      (map_var(MVAR_dog_is_angry) != 0)
+#define dog_is_killed                     (global_var(GVAR_DOGMEAT_KILLED))

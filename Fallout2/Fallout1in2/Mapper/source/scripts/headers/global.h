@@ -328,7 +328,7 @@
 #define GVAR_ARADESH_NICER_ROBES_GFX            (1183)
 #define GVAR_ARADESH_REFRESH_GFX_FLAG           (1184)
 #define GVAR_IS_PATRICK_KNOWN                   (1185)
-#define GVAR_DOGMEAT_SOMETHING_0                (1186)
+#define GVAR_DOGMEAT_KILLED                     (1186)
 #define GVAR_DOGMEAT_SOMETHING_1                (1187)
 #define GVAR_QUEST_VAULT13_5_WTR_THIEF          (1188)
 //  moved to top of this file
