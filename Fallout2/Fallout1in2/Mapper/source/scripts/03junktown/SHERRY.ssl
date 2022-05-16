@@ -57,6 +57,7 @@ procedure Sherry28;
 procedure Sherry29;
 procedure SherryCombat;
 procedure SherryCook;
+procedure SherryTurns;
 procedure SherryEnd;
 
 variable tmp_hostile;
@@ -88,11 +89,7 @@ procedure critter_p_proc begin
    else begin
       if (global_var(GVAR_SHERRY_TURNS) == 1) then begin
          if ((game_time - local_var(LVAR_LeaveTimer)) > (ONE_GAME_DAY)) then begin
-            set_self_team(TEAM_JUNKTOWNER);
-            set_global_var(GVAR_SHERRY_TURNS, 2);
-            set_local_var(LVAR_LeaveTimer, 0);
-            home_tile := 18125;
-            sleep_tile := 17924;
+            call SherryTurns;
          end
       end
       if ((game_time_hour >= 700) and (game_time_hour <= 1930)) then begin
@@ -146,10 +143,14 @@ end
 procedure map_enter_p_proc begin
    sleep_time := 2000;
    wake_time := 630;
-   // No clue why TeamX added this.
-   /*if ((global_var(GVAR_BUST_SKULZ) == 2) and (global_var(GVAR_SHERRY_TURNS) != 2)) then begin
-      destroy_object(self_obj);
-   end*/
+   if ((global_var(GVAR_BUST_SKULZ) == 2) and (global_var(GVAR_SHERRY_TURNS) != 2)) then begin
+      if ((global_var(GVAR_SHERRY_TURNS) == 1) and ((game_time - local_var(LVAR_LeaveTimer)) > (ONE_GAME_DAY))) then begin
+         call SherryTurns;
+      end
+      else begin
+         destroy_object(self_obj);
+      end
+   end
    if (global_var(GVAR_SHERRY_TURNS) != 2) then begin
       set_self_team(TEAM_JUNKTOWN_SKULZ);
       home_tile := 15513;
@@ -397,6 +398,14 @@ procedure SherryCook begin
    float_msg(self_obj, mstr(158), FLOAT_MSG_NORMAL);
    critter_heal(dude_obj, 1);
    feed_dude := 0;
+end
+
+procedure SherryTurns begin
+   set_self_team(TEAM_JUNKTOWNER);
+   set_global_var(GVAR_SHERRY_TURNS, 2);
+   set_local_var(LVAR_LeaveTimer, 0);
+   home_tile := 18125;
+   sleep_tile := 17924;
 end
 
 procedure SherryEnd begin
