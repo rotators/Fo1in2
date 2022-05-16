@@ -38,7 +38,7 @@ variable
 
 
 procedure AllowControl(variable pid) begin
-   return ((pidList == 0 or is_in_array(pid bwand 0xFFFFFF, pidList)) and (party_member_obj(pid)));
+   return ((pidList == 0 or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)));
 end
 
 procedure SetLight(variable critter, variable lInt, variable lDist) begin
@@ -65,17 +65,17 @@ procedure CombatTurn_Handler begin
       if (critter != real_dude_obj) then begin
          if (npcControl == 0) then begin
             dudeLightDist := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_DISTANCE);
-            dudeLightInt := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_INTENSITY);
+            dudeLightInt  := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_INTENSITY);
             obj_set_light_level(real_dude_obj, 0, 0); // dude off light
          end
          npcControl := critter;
 
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
-         lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+         lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
 
          // set perks (only work with 4.1.8+)
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
          intface_redraw;
@@ -112,7 +112,7 @@ procedure CombatTurn_Handler begin
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
 
@@ -147,8 +147,8 @@ end
 procedure InvenWield_Handler begin
    variable
       critter := get_sfall_arg,
-      item := get_sfall_arg,
-      slot := get_sfall_arg,
+      item  := get_sfall_arg,
+      slot  := get_sfall_arg,
       event := get_sfall_arg;
 
    // Fix weapon duplication when equipping in combat
