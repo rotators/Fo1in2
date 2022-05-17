@@ -1,8 +1,11 @@
 Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1in2/releases/tag/v1.7.2828))
 
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
+- **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
+- **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: Motorcycle key had a weight of 10 pounds. Changed to 0.
 - **Fixed**: Removed unnecessary "Special Death"-flag from Brotherhood Paladin proto files.
+- **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
 - **Fixed**: Typo in english Flambe 450 item description.
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
@@ -10,4 +13,5 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
+- **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
