@@ -57,9 +57,30 @@ procedure ClearInputBox;
 #define SoundDown          "IB1P1XX1"
 #define SoundError         "IISXXXX1"
 
-//Default paths
+// Default paths
 #define key_map_path       "config\\keymap.ini"
 #define lang_ini_str       "fallout2.cfg|system|language"
+
+//
+#define searchKeyword(source) \
+   for (i := 0; (i < 100 and found == 0); i++) begin                       \
+      input_check := message_str(source, i + msg_offset);                  \
+      if (input_check != "Error" and input_check != "") then begin         \
+         split := string_split(input_check, "|");                          \
+         foreach (word : keyword in split) begin                           \
+            keyword := " " + keyword + " ";                                \
+            convert_to_lower(keyword);                                     \
+            if (len_array(string_split(input, keyword)) > 1) then begin    \
+               reply_final := message_str(source, (i + msg_offset) + 100); \
+               found := 1;                                                 \
+               break;                                                      \
+            end                                                            \
+         end                                                               \
+      end                                                                  \
+      else                                                                 \
+         break;                                                            \
+   end                                                                     \
+   noop
 
 variable tellme_button;
 variable fetch_input;
@@ -388,31 +409,7 @@ critical procedure GenerateReply begin
       end
    end
 
-   for (i := 0; (i < 100 and found == 0); i++) begin
-      input_check := message_str(reply_source, i + msg_offset);
-      if (input_check != "Error" and input_check != "") then begin
-         //debug("input_check: " + input_check);
-         split := string_split(input_check, "|");
-
-         foreach (word : keyword in split) begin
-            //debug("keyword: " + keyword);
-            keyword := " " + keyword + " "; // If keyword with spaces is in the sentence, we know it won't be "xShadyx"
-            convert_to_lower(keyword);
-
-            if (len_array(string_split(input, keyword)) > 1) then begin
-               reply_final := message_str(reply_source, (i + msg_offset) + 100);
-               found := 1;
-
-               if ((i + msg_offset) == tma_var_line) then
-                  set_global_var(tma_var_gvar, tma_var_state);
-
-               break;
-            end
-         end
-      end
-      else
-         break;
-   end
+   searchKeyword(reply_source);
 
    debug_msg("input: <" + input + ">");
 
@@ -449,26 +446,7 @@ critical procedure GenerateReply begin
          if (cur_map_index == map) then begin
             msg_offset := msg;
 
-            for (i := 0; (i < 100 and found == 0); i++) begin
-               input_check := message_str(tma_source_generic, i + msg_offset);
-               if (input_check != "Error" and input_check != "") then begin
-                  split := string_split(input_check, "|");
-
-                  foreach (word : keyword in split) begin
-                     keyword := " " + keyword + " ";
-                     convert_to_lower(keyword);
-
-                     if (len_array(string_split(input, keyword)) > 1) then begin
-                        reply_final := message_str(tma_source_generic, (i + msg_offset) + 100);
-                        found := 1;
-
-                        break;
-                     end
-                  end
-               end
-               else
-                  break;
-            end
+            searchKeyword(tma_source_generic);
 
             break;
          end
