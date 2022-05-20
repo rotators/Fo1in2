@@ -416,7 +416,66 @@ critical procedure GenerateReply begin
 
    debug_msg("input: <" + input + ">");
 
-   // No valid reply found
+   // No valid unique reply found, try generic keywords
+   if (reply_final == 0) then begin
+      variable curMapList, map, msg;
+
+      // Check current map and set generic response
+      curMapList := {MAP_HALLDED: TMA_MSG_HALLDED,
+                     MAP_HOTEL: TMA_MSG_HOTEL,
+                     MAP_WATRSHD: TMA_MSG_WATRSHD,
+                     MAP_VAULT13: TMA_MSG_VAULT13,
+                     MAP_JUNKENT: TMA_MSG_JUNKENT,
+                     MAP_JUNKCSNO: TMA_MSG_JUNKCSNO,
+                     MAP_JUNKKILL: TMA_MSG_JUNKKILL,
+                     MAP_BROHD12: TMA_MSG_BOS,
+                     MAP_BROHD34: TMA_MSG_BOS,
+                     MAP_BROHDENT: TMA_MSG_BOS,
+                     MAP_CHILDRN1: TMA_MSG_COC,
+                     MAP_CHILDRN2: TMA_MSG_COC,
+                     MAP_RAIDERS: TMA_MSG_RAIDERS,
+                     MAP_SHADYE: TMA_MSG_SHADYE,
+                     MAP_SHADYW: TMA_MSG_SHADYW,
+                     MAP_HUBENT: TMA_MSG_HUBENT,
+                     MAP_HUBDWNTN: TMA_MSG_HUBDWNTN,
+                     MAP_HUBHEIGT: TMA_MSG_HUBHEIGT,
+                     MAP_HUBOLDTN: TMA_MSG_HUBOLDTN,
+                     MAP_HUBWATER: TMA_MSG_HUBWATER,
+                     MAP_LAADYTUM: TMA_MSG_ADYTUM_LVL1,
+                     MAP_LAFOLLWR: TMA_MSG_FOLLOWER_LVL1,
+                     MAP_LABLADES: TMA_MSG_BLADES_LVL1,
+                     MAP_LAGUNRUN: TMA_MSG_GUNRUNNR_LVL1};
+      foreach (map: msg in curMapList) begin
+         if (cur_map_index == map) then begin
+            msg_offset := msg;
+
+            for (i := 0; (i < 100 and found == 0); i++) begin
+               input_check := message_str(tma_source_generic, i + msg_offset);
+               if (input_check != "Error" and input_check != "") then begin
+                  split := string_split(input_check, "|");
+
+                  foreach (word : keyword in split) begin
+                     keyword := " " + keyword + " ";
+                     convert_to_lower(keyword);
+
+                     if (len_array(string_split(input, keyword)) > 1) then begin
+                        reply_final := message_str(tma_source_generic, (i + msg_offset) + 100);
+                        found := 1;
+
+                        break;
+                     end
+                  end
+               end
+               else
+                  break;
+            end
+
+            break;
+         end
+      end
+   end
+
+   // Still no reply found
    if (reply_final <= 0) then reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
 
    // Print reply
