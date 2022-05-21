@@ -11,6 +11,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
 - **Tweaked**: Adjusted laser resistance of ant critters.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
+- **Tweaked**: Improved the TMA-system. If a keyword is not found in the character specific unique responses, the game will now try to find a keyword in the generic map-based responses instead.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
