@@ -40,6 +40,11 @@ variable $addr;
                write_string(0x501A40, "maybe");    \
                write_string(0x50F790, "03WORLD")
 
+// This will change the resting strings in the PipBoy to start at 320.
+// This is used in combination with VOODOO_rest_till_0600 to change the resting times.
+#define VOODOO_rest_strings \
+               write_int(0x499746, 320)
+
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST

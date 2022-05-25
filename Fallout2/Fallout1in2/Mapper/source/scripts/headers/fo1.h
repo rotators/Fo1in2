@@ -48,6 +48,7 @@
 #define fo1in2_radiation_enabled        (global_var(GVAR_ENABLE_EXPANDED_RADIATION) > 0)
 #define fo1in2_cut_characters_enabled   (global_var(GVAR_ENABLE_CUT_CHARACTERS) > 0)
 #define fo1in2_khan_art_fix_enabled     (global_var(GVAR_ENABLE_KHAN_ART_FIX) > 0)
+#define fo1in2_0800_resting_enabled     (global_var(GVAR_ENABLE_FO2_0800_RESTING) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -605,6 +606,8 @@ variable merch_slot_armor_flags;
 #define source_is_dude               (source_obj == dude_obj)
 #define source_in_party              (source_obj == party_member_obj(obj_pid(source_obj)))
 #define game_time_advance_minutes(x) game_time_advance(ONE_GAME_MINUTE * x)
+
+#define roll3d6   (random(1, 6) + random(1, 6) + random(1, 6))
 
 // Used to display message in spatial scripts once
 #define display_spatial_once(x)     if source_is_dude then begin \

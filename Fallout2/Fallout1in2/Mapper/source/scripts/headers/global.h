@@ -4049,8 +4049,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4907)
 #define RESERVED_FOR_FALLOUT_FIXT               (4908)
 #define RESERVED_FOR_FALLOUT_FIXT               (4909)
-#define RESERVED_FOR_FALLOUT_FIXT               (4910)
-#define RESERVED_FOR_FALLOUT_FIXT               (4911)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4910)*/
+#define GVAR_ENABLE_FO2_0800_RESTING            (4911)
 #define GVAR_ENABLE_KHAN_ART_FIX                (4912)
 #define GVAR_ENABLE_TOUGH_HUMANS                (4913)
 #define GVAR_DEHYDRATION_BOX                    (4914)
