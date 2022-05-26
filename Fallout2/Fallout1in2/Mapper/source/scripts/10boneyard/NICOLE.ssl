@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/boneyard.h"
+#include "maps/lafollwr.h"
 
 #define NAME                    SCRIPT_NICOLE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -74,13 +75,26 @@ procedure NicoleMore;
 procedure NicoleShowOut;
 procedure NicoleEnd;
 
+// Fo1in2
+procedure NicoleIsBusy;
+procedure NicoleCaughtStealing;
+procedure NicoleGetOutHere;
+procedure NicoleAngry;
+procedure NicoleApologize;
+procedure NicoleApologyAccepted;
+procedure NicoleJustLeave;
+
 procedure NicoleCut01;
 
-#define LVAR_TALKED_TO_NICOLE       (4)
+#define LVAR_Herebefore       (4)
+#define LVAR_ShowOut          (5)
+#define LVAR_Apologize        (6)
 
 variable Only_Once := 1;
 variable ThiefFlag;
 variable DisplayMessage := 100;
+
+#define NicoleIsAngry      (local_var(LVAR_Apologize) >= 2)
 
 procedure Start begin
    if Only_Once then begin
@@ -115,30 +129,43 @@ procedure talk_p_proc begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 104)), FLOAT_MSG_RED);
    end
    else begin
-      if ((local_var(LVAR_TALKED_TO_NICOLE) == 1) and (dude_iq < 4)) then begin
-         float_msg(self_obj, mstr(286), FLOAT_MSG_NORMAL);
+      if (local_var(2) == 0) then begin
+         set_local_var(2, 1);
+         set_local_var(1, 3);
+         LevelToReact
+      end
+      start_gdialog(54, self_obj, 4, HEAD_NICOLE, BACKGROUND_FOLLOWER);
+      gsay_start;
+
+      if (ThiefFlag) then begin
+          ThiefFlag := 0;
+          if (local_var(LVAR_Herebefore) == 0) then begin
+              set_local_var(LVAR_Herebefore, 1);
+          end
+          call NicoleCaughtStealing;
+      end
+      else if ((local_var(LVAR_Herebefore) == 1) and (dude_iq < 4)) then begin
+         //float_msg(self_obj, mstr(286), FLOAT_MSG_NORMAL);
+         call NicoleIsBusy;
+      end
+      else if (local_var(LVAR_Herebefore) == 0) then begin
+         call Nicole01;
       end
       else begin
-         if (local_var(2) == 0) then begin
-            set_local_var(2, 1);
-            set_local_var(1, 3);
-            LevelToReact
-         end
-         start_gdialog(54, self_obj, 4, HEAD_NICOLE, BACKGROUND_FOLLOWER);
-         gsay_start;
-         if (local_var(LVAR_TALKED_TO_NICOLE) == 0) then begin
-            call Nicole01;
+         if NicoleIsAngry then begin
+            call NicoleAngry;
          end
          else begin
-            DisplayMessage := 132;
+            DisplayMessage := 275;
             call Nicole00;
          end
-         gsay_end;
-         end_dialogue;
-         if (local_var(5) == 1) then begin
-            gfade_in(1);
-            set_local_var(5, 0);
-         end
+      end
+
+      gsay_end;
+      end_dialogue;
+      if (local_var(LVAR_ShowOut) == 1) then begin
+         gfade_in(1);
+         set_local_var(LVAR_ShowOut, 0);
       end
    end
 end
@@ -167,7 +194,7 @@ procedure critter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   //ThiefFlag := 1;
+   ThiefFlag := 1;
    dialogue_system_enter;
    //set_global_var(ENEMY_FOLLOWERS, 1);
 end
@@ -189,7 +216,7 @@ procedure Nicole01 begin
    NOption(108, Nicole09, 4);
    NOption(109, Nicole15, 4);
    NLowOption(110, Nicole78);
-   set_local_var(LVAR_TALKED_TO_NICOLE, 1);
+   set_local_var(LVAR_Herebefore, 1);
 end
 
 procedure Nicole02 begin
@@ -509,7 +536,9 @@ end
 procedure NicoleShowOut begin
    gfade_out(1);
    move_to(dude_obj, 23883, 0);
-   set_local_var(5, 1);
+   set_local_var(LVAR_ShowOut, 1);
+
+   inc_local_var(LVAR_Apologize);
 end
 
 procedure NicoleEnd begin
@@ -522,6 +551,48 @@ end
 procedure NicoleCut01 begin
    Reply(227);
    NOption(228, Nicole09, 4);
-   NOption(229, Nicole09, 4);
+   BOption(229, Nicole09, 4);
    NOption(230, Nicole09, 4);
+end
+
+procedure NicoleIsBusy begin
+   NMessage(286);
+end
+
+procedure NicoleGetOutHere begin
+   NMessage(290);
+   call NicoleShowOut;
+end
+
+procedure NicoleCaughtStealing begin
+   inc_local_var(LVAR_Apologize);
+
+   BigDownReact
+   if NicoleIsAngry then begin
+      call NicoleGetOutHere;
+   end
+   else begin
+      BMessage(random(287, 289));
+   end
+end
+
+procedure NicoleAngry begin
+   Reply(279);
+   GOption(280, NicoleApologize, 4);
+   BOption(281, NicoleJustLeave, 4);
+end
+
+procedure NicoleApologize begin
+   set_local_var(LVAR_Apologize, 0);
+   UpReactLevel
+
+   DisplayMessage := 132;
+
+   Reply(283);
+   NOption(284, Nicole00, 4);
+   NOption(285, NicoleEnd, 4);
+end
+
+procedure NicoleJustLeave begin
+   BMessage(282);
 end
