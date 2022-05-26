@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1in2/releases/tag/v1.7.2828))
 
+- **Added**: A new option to switch between Fo1-style "rest until 06:00" and Fo2-style "rest until 08:00" in the PipBoy.
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.

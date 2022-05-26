@@ -11,7 +11,7 @@ When compiling global or hook scripts for sfall 3.4 or below, you _must_ include
 
 This version of compiler was designed primarily for new sfall functions, but it can safely (and is recommended) to be used with non-sfall scripts as well, as long as you don't use any of the arrays syntax and any sfall script functions.
 
-The original unmodified sslc source is over here: [http://www.teamx.ru/site_arc/utils/index.html](http://www.teamx.ru/site_arc/utils/index.html)
+The original unmodified sslc source is over here: [https://teamx.ru/site_arc/utils/index.html](https://teamx.ru/site_arc/utils/index.html)
 
 ### Command line options
 
@@ -121,7 +121,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
     ```
   __NOTE:__ If your expression starts with a constant (eg. `2 + 2`), enclose it in parentheses, otherwise compiler will be confused and give you errors.
 
-- Hexadecimal numerical constants: Simply prefix a number with `0x` to create a hexadecimal. The numbers 0 to 9 and A-F are allowed in the number. The number may not have a decimal point.
+- Hexadecimal numerical constants: Simply prefix a number with `0x` to create a hexadecimal. The numbers 0 to 9 and letters A to F are allowed in the number. The number may not have a decimal point.
   - new:
     ```
     a := 0x1000;
