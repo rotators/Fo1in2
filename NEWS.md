@@ -2,13 +2,16 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 
 - **Added**: A new option to switch between Fo1-style "rest until 06:00" and Fo2-style "rest until 08:00" in the PipBoy.
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
+- **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
+- **Fixed**: Laura in the Cathedral had a voiced line linked to a non-existing sound file.
 - **Fixed**: Motorcycle key had a weight of 10 pounds. Changed to 0.
 - **Fixed**: Removed unnecessary "Special Death"-flag from Brotherhood Paladin proto files.
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
 - **Fixed**: Typo in english Flambe 450 item description.
+- **Fixed**: Typos in Set's dialog.
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
 - **Tweaked**: Adjusted laser resistance of ant critters.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
