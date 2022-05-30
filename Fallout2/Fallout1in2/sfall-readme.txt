@@ -1,8 +1,8 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributers
-version 4.3.4, built for Fallout 2 v1.02 US
+version 4.3.5, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
-Code Repository on GitHub:   https://github.com/phobos2077/sfall
+Code Repository on GitHub:   https://github.com/sfall-team/sfall
 Additional materials at:     http://timeslip.users.sourceforge.net/
 
 This was a quick Fallout mod which I originally stuck together to try and fix a few minor annoyances that I had with the games, but which then turned into a slightly bigger mod which fixed some other peoples annoyances and some of the bugs in the original Fallout engine too, and has since turned into a bloody huge mod with code contributions from a double figured number of people and with which modders could practically write a whole new game. The features are too numerous to list these days, so you'll have to read through the changelog instead.
@@ -54,6 +54,19 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ** Changelog **
 ***************
 
+v4.3.5
+>HRP: Fixed movie subtitles not showing up when setting MOVIE_SIZE=1 with certain combinations of screen and movie aspect ratios
+>HRP: Disabled IFACE_BAR_WIDTH and SCALE_BUTTONS_AND_TEXT_MENU for a modified fallout2.exe with Chinese/Japanese support to prevent garbled text
+>HRP: Added support for SPLASH_SCRN_TIME option in f2_res.ini
+>Fixed the handling of obsolete script functions that are still recognized by script compiler and decompiler
+>Fixed NPC combat control mod not redrawing the interface bar properly when it's the player's turn again
+>Improved the fix for updating the HP stats of critters on the map when loaded for the first time
+>Removed DivisionOperatorFix from ddraw.ini because there is little reason to turn it off
+>Removed ComputeSprayMod from ddraw.ini. Now ComputeSpray_* options no longer require a master switch
+>Added a fix for a crash when the player equips a weapon overloaded with ammo
+>Added a fix for being able to use the 'Push' action on members of the player's team in combat when they are knocked down
+>Added missing sounds for the markers on the world map interface (similar to Fallout 1, from Ghosthack)
+
 v4.3.4
 >HRP: Fixed a few issues with the main menu
 >HRP: Added support for LocalMapXLimit/LocalMapYLimit options in ddraw.ini
@@ -79,7 +92,7 @@ v4.3.3
 >Fixed incorrect display of name and damage values for unarmed attacks in the inventory in some cases
 >Fixed the black screen issue in DX9 mode when returning to the game after using Alt+Tab
 >Fixed the mouse cursor lag in the save/load game screens
->Fixed broken object descriptions for a modified version of fallout2.exe that supports Chinese characters
+>Fixed broken object descriptions for a modified fallout2.exe with Chinese/Japanese support
 >Fixed and expanded the mouse drop area for the PC's and NPC's inventory on the barter screen
 >Changed the 'Radiated' on the character screen to be highlighted in gray when the player still has an impending radiation effect
 >Changed SkipCompatModeCheck to not require sfall debugging mode
@@ -112,7 +125,7 @@ v4.3.1
 >Excluded the walking animation from the debug message about a missing critter art file for stationary critters
 >Excluded the animated colors from TravelMarkerColor (same as in 3.8.x)
 >Removed unnecessary check on action points when AI reloads a weapon (added in 4.3)
->Removed AffectPlayback from ddraw.ini because it's not practical
+>Removed AffectPlayback option because it's not practical
 >Added a fix for a crash when opening a file with name containing a '%' character
 >Added a fix to prevent the main menu music from stopping when entering the load game screen
 >Added a fix to display the palette color with index 255 correctly in DX9 mode when using the hi-res patch
@@ -201,12 +214,12 @@ v4.2.9
 >Changed the filename of the debug editor to FalloutDebug.exe (in the modders pack)
 >Excluded SFX sounds from the search for alternative formats
 >Removed the tweak that adds the city name in the description for empty save slots (added in 4.2.7)
+>Added a fix to update the maximum HP stat of critters on the map when loaded for the first time
 >Added a fix to the poison/radiation-related engine functions when taking control of an NPC
 >Added a fix to AI weapon switching when not having enough AP to make an attack. Now AI will try to change attack mode before deciding to switch weapon
 >Added a fix for the carry weight penalty of the Small Frame trait not being applied to bonus Strength points
 >Added a fix for the flags of non-door objects being set/unset when using obj_close/open script functions
 >Added a fix for the 'Leave' event procedure in AddRegionProc function not being triggered when the cursor moves to a non-scripted window
->Added a tweak to update the maximum HP stat of critters when the map is loaded for the first time
 >Added support for ACM files at 44.1 kHz sample rate
 >Added stereo support for SFX and speech ACM files at 44.1 kHz sample rate
 >Added support for panning SFX sounds and reduced the volume for objects located on a different elevation of the map
@@ -883,7 +896,7 @@ v3.7b
 >Fixed potential undefined behavior and crashes in sfall arrays (from Vennor)
 >Optimized some code to make the compiled DLLs about 10 KB smaller in size
 >Switched to using the precomputed CRC table instead of creating the CRC table at runtime. This could potentially improve startup time in emulated or partially emulated environments (from Oppen)
->Added rounding calculation to ComputeSprayMod for more balanced bullet distribution in burst attacks
+>Added rounding calculation to ComputeSprayMod for a more balanced bullet distribution in burst attacks
 >Re-added CarChargingFix option to ddraw.ini for mods that have custom vehicles
 >Removed MultiHexPathingFix from ddraw.ini because there is little reason to turn it off
 
@@ -990,7 +1003,7 @@ v3.4
 >Added a fix for the obj_can_see_obj script function (from Mash)
 >Readded Windows 2000 support
 >Code refactoring, and all rest of the changes are from phobos2077
->Added options to modify bullet distribution in burst attacks
+>Added options to modify the bullet distribution in burst attacks
 >Added an option to make explosions and projectiles emit light
 >Added options to change explosives damage
 >Fixed unstable problems in the string_split script function
