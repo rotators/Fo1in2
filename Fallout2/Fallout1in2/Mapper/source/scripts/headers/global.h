@@ -4048,8 +4048,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4906)
 #define RESERVED_FOR_FALLOUT_FIXT               (4907)
 #define RESERVED_FOR_FALLOUT_FIXT               (4908)
-#define RESERVED_FOR_FALLOUT_FIXT               (4909)
-#define RESERVED_FOR_FALLOUT_FIXT               (4910)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4909)*/
+#define GVAR_GRIFFITH_HAS_KEY                   (4910)
 #define GVAR_ENABLE_FO2_0800_RESTING            (4911)
 #define GVAR_ENABLE_KHAN_ART_FIX                (4912)
 #define GVAR_ENABLE_TOUGH_HUMANS                (4913)

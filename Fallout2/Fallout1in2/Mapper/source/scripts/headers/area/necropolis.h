@@ -104,8 +104,12 @@ variable Critter,
    anim(Critter, ANIMATE_ROTATION, random(0, 5));
    Item := create_object(PID_WAKIZASHI_BLADE, 0, 0);
    add_obj_to_inven(Critter, Item);
-   Item := create_object(PID_MOTO_KEY, 0, 0);
-   add_obj_to_inven(Critter, Item);
+
+   if (global_var(GVAR_GRIFFITH_HAS_KEY) == 1) then begin
+      Item := create_object(PID_MOTO_KEY, 0, 0);
+      add_obj_to_inven(Critter, Item);
+   end
+
    Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
    add_obj_to_inven(Critter, Item);
    item_caps_adjust(Critter, random(10, 40));
