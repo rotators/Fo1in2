@@ -317,7 +317,7 @@
 #define obj_is_visible_flag(WHO)  has_trait(TRAIT_OBJECT,WHO,OBJECT_VISIBILITY)
 // Trait Types
 #define TRAIT_fast_metabolism  (0)
-#define TRAIT_gifted           (1)
+#define TRAIT_bruiser          (1)
 #define TRAIT_small_frame      (2)
 #define TRAIT_one_hander       (3)
 #define TRAIT_finesse          (4)
@@ -332,7 +332,7 @@
 //#define TRAIT_sex_appeal      (13) // Deprecated Fo2 stuff
 #define TRAIT_night_person    (13)
 #define TRAIT_skilled         (14)
-#define TRAIT_bruiser         (15)
+#define TRAIT_gifted          (15)
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
