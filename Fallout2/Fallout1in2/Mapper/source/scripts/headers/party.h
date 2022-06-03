@@ -281,8 +281,7 @@ variable PartyHealingItem;
             the_var := gvar_bit(GVAR_PARTY_MEMBERS_HIDDEN, the_bit);    \
          end
 #define     get_p_hidden_flag(x, hidden)                                            \
-            get_p_hidden_flag_obj(x, Vic_Ptr, hidden_vic_bit, hidden)               \
-            else get_p_hidden_flag_obj(x, Ian_ptr, hidden_ian_bit, hidden)          \
+            get_p_hidden_flag_obj(x, Ian_ptr, hidden_ian_bit, hidden)               \
             else get_p_hidden_flag_obj(x, Dog_ptr, hidden_dog_bit, hidden)          \
             else get_p_hidden_flag_obj(x, Tycho_ptr, hidden_tycho_bit, hidden)      \
             else get_p_hidden_flag_obj(x, Katja_ptr, hidden_katja_bit, hidden)      \
