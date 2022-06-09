@@ -26,10 +26,10 @@ procedure CombatTurn_Handler;
 procedure GameModeChange_Handler;
 procedure InventoryMove_Handler;
 procedure InvenWield_Handler;
+procedure SetGlobalVar_Handler;
 
 variable
    controlMode,
-   noCheckArray,
    pidList, perksList,
    lightInt, lightDist, npcControl,
    displayName, displayNameColor, isShowTag,
@@ -157,6 +157,16 @@ procedure InvenWield_Handler begin
    end
 end
 
+procedure SetGlobalVar_Handler begin
+   if (npcControl and get_sfall_arg == GVAR_PLAYER_REPUTATION and obj_pid(dude_obj) != PID_PLAYER) then begin
+      variable value := global_var(GVAR_PLAYER_REPUTATION);
+      if (get_sfall_arg > value) then begin
+         set_sfall_arg(1, value);
+         set_sfall_return(value);
+      end
+   end
+end
+
 procedure start begin
    if (game_loaded and sfall_ver_major >= 4) then begin
       //variable configSection := "CombatControl";
@@ -199,6 +209,10 @@ procedure start begin
          register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
          register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_Handler);
          register_hook_proc(HOOK_INVENWIELD, InvenWield_Handler);
+
+         if (GetConfig("CombatControl", "GainReputation", 0) == 0) then begin
+             register_hook_proc(HOOK_SETGLOBALVAR, SetGlobalVar_Handler);
+         end
       end else begin
          exit;
       end
