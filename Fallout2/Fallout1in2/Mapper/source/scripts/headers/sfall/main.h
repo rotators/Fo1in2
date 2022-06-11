@@ -2,9 +2,9 @@
 #define MAIN_H
 
 #include "sfall.h"
-#include "define_lite.h"
+//#include "define_lite.h"
 #include "define_extra.h"
-#include "command_lite.h"
+//#include "command_lite.h"
 #include "dik.h"
 
 #include "lib.arrays.h"
