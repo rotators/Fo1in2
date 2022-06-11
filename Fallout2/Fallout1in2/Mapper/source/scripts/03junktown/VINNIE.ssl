@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "area/junktown.h"
+#include "maps/junkcsno.h" // Vinnie is actually in junkkill, but he shows up in junkcsno when attacking Neal
 
 #define NAME                    SCRIPT_VINNIE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -58,6 +59,10 @@ procedure set_sleep_time;
 import variable Neal_ptr;
 import variable removal_ptr;
 
+#define LVAR_Herebefore    (4)
+#define LVAR_StealUrn      (5)
+#define LVAR_GaveUrn       (6)
+
 variable tmp_hostile;
 variable line160flag;
 variable line162flag;
@@ -74,7 +79,7 @@ end
 procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       game_ui_enable;
-      if (map_var(1) != 0) then begin
+      if (map_var(MVAR_guards_left) != 0) then begin
          set_global_var(GVAR_DUDE_ENEMY_SKULZ, 1);
          float_msg(self_obj, mstr(162), FLOAT_MSG_RED);
          attack(dude_obj);
@@ -107,7 +112,7 @@ end
 
 procedure destroy_p_proc begin
    if (CUR_MAP_JUNKCSNO) then begin
-      dec_map_var(0);
+      dec_map_var(MVAR_Skulz_left);
    end
 
    if source_is_dude then begin
@@ -121,7 +126,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(LVAR_reaction)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -161,10 +166,10 @@ procedure talk_p_proc begin
       if (global_var(GVAR_BUST_NEAL_STATE) == 1) then begin
          call Vinnie24;
       end
-      else if (local_var(LVAR_got_reaction) == BAD) then begin
+      else if (local_var(LVAR_StealUrn) == 1) then begin
          call Vinnie19;
       end
-      else if (local_var(LVAR_reaction) == BAD) then begin
+      else if (local_var(LVAR_Herebefore) == BAD) then begin
          call Vinnie10;
       end
       else begin
@@ -174,10 +179,10 @@ procedure talk_p_proc begin
       end_dialogue;
    end
 
-   if bad_critter_reaction then begin
+   if (local_var(LVAR_GaveUrn) == 1) then begin
       give_xp_msg(EXP_STEAL_URN, mstr(163));
       dec_general_rep(1);
-      set_local_var(LVAR_reaction_level, NEUTRAL);
+      set_local_var(LVAR_GaveUrn, 2);
       if (global_var(GVAR_IS_NEAL_DEAD) == 0) then begin
          set_global_var(GVAR_BUST_NEAL_TIMER, (GAME_TIME_IN_DAYS) + 2);
       end
@@ -194,7 +199,7 @@ procedure talk_p_proc begin
 end
 
 procedure Vinnie01 begin
-   set_local_var(LVAR_reaction, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(103);
    NOption(104, Vinnie02, 4);
    NOption(105, Vinnie03, 4);
@@ -320,7 +325,7 @@ procedure Vinnie16 begin
 end
 
 procedure Vinnie17 begin
-   set_local_var(LVAR_got_reaction, BAD);
+   set_local_var(LVAR_StealUrn, 1);
    GMessage(146);
 end
 
@@ -342,9 +347,9 @@ procedure Vinnie19 begin
 end
 
 procedure Vinnie20 begin
-   set_local_var(LVAR_got_reaction, NO_REACTION);
-   if horrible_critter_reaction then begin
-      set_local_var(LVAR_reaction_level, BAD);
+   set_local_var(LVAR_StealUrn, 0);
+   if (local_var(LVAR_GaveUrn) == 0) then begin
+      set_local_var(LVAR_GaveUrn, 1);
    end
    if (global_var(GVAR_IS_NEAL_DEAD) == 1) then begin
       call Vinnie22;
@@ -366,7 +371,7 @@ end
 procedure Vinnie22 begin
    set_quest_join_skullz_completed;
 
-   set_local_var(LVAR_got_reaction, NO_REACTION);
+   set_local_var(LVAR_StealUrn, 0);
    set_global_var(GVAR_BUST_NEAL_STATE, 2);
    GMessage(157);
 end

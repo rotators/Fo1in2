@@ -43,6 +43,9 @@ procedure give_cola;
 import variable Fridge_ptr;
 import variable Garret_ptr;
 
+#define LVAR_Herebefore    (4)
+#define LVAR_Fridge        (5)
+
 variable Shotgun_ptr;
 variable Shells_ptr;
 variable Cola_ptr;
@@ -99,34 +102,34 @@ procedure critter_p_proc begin
       end
 
       if (global_var(GVAR_SIGNAL_REWARD) bwand 1) then begin
-         if (local_var(5) == 0) then begin
+         if (local_var(LVAR_Fridge) == 0) then begin
             moving := 1;
             float_msg(self_obj, mstr(114), FLOAT_MSG_NORMAL);
-            set_local_var(5, 1);
+            set_local_var(LVAR_Fridge, 1);
          end
-         else if (local_var(5) == 1) then begin
+         else if (local_var(LVAR_Fridge) == 1) then begin
             moving := 1;
             if (my_hex != target_hex) then begin
                self_walk_to_tile(target_hex);
             end
             else begin
-               set_local_var(5, 2);
+               set_local_var(LVAR_Fridge, 2);
                obj_unlock(Fridge_ptr);
                obj_open(Fridge_ptr);
                use_obj(Fridge_ptr);
             end
          end
-         else if (local_var(5) == 2) then begin
+         else if (local_var(LVAR_Fridge) == 2) then begin
             moving := 1;
             if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
                call reward;
-               set_local_var(5, 3);
+               set_local_var(LVAR_Fridge, 3);
                use_obj(Fridge_ptr);
                obj_close(Fridge_ptr);
                obj_lock(Fridge_ptr);
             end
          end
-         else if (local_var(5) == 3) then begin
+         else if (local_var(LVAR_Fridge) == 3) then begin
             moving := 1;
             target_hex := local_var(7);
             if (my_hex != target_hex) then begin
@@ -155,46 +158,11 @@ procedure talk_p_proc begin
       set_local_var(8, 1);
       float_msg(self_obj, mstr(201), FLOAT_MSG_NORMAL);
       display_msg(mstr(202));
-      stuff := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_MICRO_FUSION_CELL, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_BUFFOUT, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_MENTATS, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_STIMPAK, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_STIMPAK, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_FRAG_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_FRAG_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_PLASMA_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_PLASMA_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_PULSE_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_PULSE_GRENADE, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_JHP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_JHP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_JHP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_JHP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_AP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_AP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_AP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
-      stuff := create_object(PID_5MM_AP, 0, 0);
-      add_obj_to_inven(dude_obj, stuff);
+      call give_item(dude_obj, {
+         PID_SMALL_ENERGY_CELL: 1, PID_MICRO_FUSION_CELL: 1,
+         PID_BUFFOUT: 1, PID_MENTATS: 1, PID_STIMPAK: 2,
+         PID_FRAG_GRENADE: 2, PID_PLASMA_GRENADE: 2, PID_PULSE_GRENADE: 2,
+         PID_5MM_JHP: 4, PID_5MM_AP: 4});
    end
    else begin
       if (moving) then begin
@@ -203,11 +171,11 @@ procedure talk_p_proc begin
       else begin
          if day then begin
             get_reaction
-            if (local_var(4)) then begin
+            if (local_var(LVAR_Herebefore)) then begin
                call garret02a;
             end
             else begin
-               set_local_var(4, 1);
+               set_local_var(LVAR_Herebefore, 1);
                if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
                   call garret04;
                end
@@ -287,17 +255,17 @@ procedure reward begin
    CASH := 0;
    robbed := 0;
    display_msg(mstr(203));
+
    if good_critter_reaction then begin
       call goodstuff;
    end
-   else begin
-      if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
-         call neutstuff;
-      end
-      else begin
-         call badstuff;
-      end
+   else if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
+      call neutstuff;
    end
+   else begin
+      call badstuff;
+   end
+
    if (flare_count) then begin
       if (flare_count > 1) then begin
          display_msg(mstr(206));
@@ -325,7 +293,7 @@ end
 
 procedure done begin
    moving := 0;
-   set_local_var(5, 4);
+   set_local_var(LVAR_Fridge, 4);
 end
 
 procedure garret00a begin
