@@ -4,6 +4,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
+- **Fixed**: Aradesh in Shady Sands had a wrong reaction condition.
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
@@ -14,6 +15,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
 - **Fixed**: The backpack of the combat armor animations would clip through the rocket launcher.
+- **Fixed**: Tine ("Taylor") in Adytum had a wrong reaction condition.
 - **Fixed**: Typo in english Flambe 450 item description.
 - **Fixed**: Typos in Set's dialog.
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
