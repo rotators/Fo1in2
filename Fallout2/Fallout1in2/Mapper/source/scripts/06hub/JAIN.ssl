@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "area/hub.h"
+#include "maps/hubwater.h"
 
 #define NAME                    SCRIPT_JAIN
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -67,6 +68,8 @@ procedure Jain39;
 procedure JainEnd;
 procedure JainEndCombat;
 
+#define LVAR_Herebefore       (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
@@ -87,7 +90,7 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if ((map_var(6) == 1) and (self_can_see_dude)) then begin
+   if ((map_var(MVAR_CHILDREN_ANGRY) == 1) and (self_can_see_dude)) then begin
       call combat;
    end
 end
@@ -106,17 +109,17 @@ procedure talk_p_proc begin
 
    start_gdialog(46, self_obj, 4, HEAD_JAIN, BACKGROUND_HUB);
    gsay_start;
-   if (map_var(0) == 1) then begin
+   if (map_var(MVAR_JAIN_DISMISSES) == 1) then begin
       call Jain29;
    end
    else if cathedral_destroyed then begin
       call Jain30;
    end
-   else if (local_var(4) == 0) then begin
-      set_local_var(4, 1);
+   else if (local_var(LVAR_Herebefore) == 0) then begin
+      set_local_var(LVAR_Herebefore, 1);
       call Jain00;
    end
-   else if (local_var(1) >= 2) then begin
+   else if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
       call Jain27;
    end
    else begin
@@ -144,12 +147,11 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_map_var(6, 1);
+      set_map_var(MVAR_CHILDREN_ANGRY, 1);
    end
 end
 
-procedure Jain00
-begin
+procedure Jain00 begin
    Reply(101);
    NOption(102, Jain04, 4);
    NOption(103, Jain07, 4);
@@ -157,44 +159,37 @@ begin
    NLowOption(105, Jain02);
 end
 
-procedure Jain01
-begin
+procedure Jain01 begin
    Reply(106);
    NLowOption(107, Jain03);
    NLowOption(108, Jain02);
 end
 
-procedure Jain02
-begin
+procedure Jain02 begin
    BMessage(109);
    call JainEndCombat;
 end
 
-procedure Jain03
-begin
-   set_map_var(0, 1);
+procedure Jain03 begin
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    NMessage(110);
 end
 
-procedure Jain04
-begin
+procedure Jain04 begin
    Reply(111);
    NOption(112, Jain05, 4);
    NOption(113, Jain03, 4);
 end
 
-procedure Jain05
-begin
-   set_map_var(0, 1);
+procedure Jain05 begin
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    BMessage(114);
 end
 
-procedure Jain06
-begin
+procedure Jain06 begin
 end
 
-procedure Jain07
-begin
+procedure Jain07 begin
    Reply(115);
    NOption(116, Jain10, 4);
    NOption(117, Jain09, 4);
@@ -202,29 +197,25 @@ begin
    NOption(119, JainEnd, 4);
 end
 
-procedure Jain08
-begin
+procedure Jain08 begin
    BMessage(120);
    call JainEndCombat;
 end
 
-procedure Jain09
-begin
+procedure Jain09 begin
    BigDownReact
    BMessage(121);
    call JainEndCombat;
 end
 
-procedure Jain10
-begin
+procedure Jain10 begin
    Reply(122);
    GOption(123, Jain11, 4);
    BOption(124, Jain26, 4);
    NOption(125, Jain20, 4);
 end
 
-procedure Jain11
-begin
+procedure Jain11 begin
    UpReact
    Reply(126);
    BOption(127, Jain17, 4);
@@ -232,69 +223,59 @@ begin
    NOption(129, Jain12, 4);
 end
 
-procedure Jain12
-begin
-   set_map_var(0, 1);
+procedure Jain12 begin
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    Reply(130);
    NOption(131, JainEnd, 4);
    BOption(132, JainEndCombat, 4);
 end
 
-procedure Jain13
-begin
+procedure Jain13 begin
    Reply(133);
    NOption(134, Jain14, 4);
    BOption(135, Jain15, 4);
 end
 
-procedure Jain14
-begin
+procedure Jain14 begin
    Reply(136);
    GOption(137, Jain20, 4);
    BOption(138, Jain09, 4);
    BOption(139, Jain15, 4);
 end
 
-procedure Jain15
-begin
+procedure Jain15 begin
    DownReact
    NMessage(140);
 end
 
-procedure Jain16
-begin
+procedure Jain16 begin
 end
 
-procedure Jain17
-begin
+procedure Jain17 begin
    Reply(141);
    BOption(142, Jain18, 4);
    NOption(143, Jain19, 4);
 end
 
-procedure Jain18
-begin
+procedure Jain18 begin
    DownReact
    BMessage(144);
 end
 
-procedure Jain19
-begin
+procedure Jain19 begin
    Reply(145);
    NOption(146, Jain13, 4);
    NOption(147, JainEnd, 4);
 end
 
-procedure Jain20
-begin
+procedure Jain20 begin
    UpReact
    Reply(148);
    NOption(149, Jain21, 4);
    NOption(150, Jain22, 4);
 end
 
-procedure Jain21
-begin
+procedure Jain21 begin
    Reply(151);
    NOption(152, Jain38, 4);
    BOption(153, JainEndCombat, 4);
@@ -302,36 +283,30 @@ begin
    NOption(155, JainEnd, 4);
 end
 
-procedure Jain22
-begin
+procedure Jain22 begin
    Reply(156);
    NOption(157, Jain37, 4);
    BOption(158, Jain15, 4);
    NOption(159, JainEnd, 4);
 end
 
-procedure Jain23
-begin
+procedure Jain23 begin
 end
 
-procedure Jain24
-begin
+procedure Jain24 begin
 end
 
-procedure Jain25
-begin
+procedure Jain25 begin
 end
 
-procedure Jain26
-begin
+procedure Jain26 begin
    BigDownReact
    Reply(160);
    NOption(161, Jain19, 4);
    NOption(162, JainEndCombat, 4);
 end
 
-procedure Jain27
-begin
+procedure Jain27 begin
    Reply(163);
    NOption(164, Jain36, 4);
    BOption(165, Jain28, 4);
@@ -340,20 +315,17 @@ begin
    NLowOption(168, Jain34);
 end
 
-procedure Jain28
-begin
+procedure Jain28 begin
    BigDownReact
-   set_map_var(0, 1);
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    NMessage(169);
 end
 
-procedure Jain29
-begin
+procedure Jain29 begin
    NMessage(170);
 end
 
-procedure Jain30
-begin
+procedure Jain30 begin
    Reply(171);
    NOption(172, Jain31, 4);
    NOption(173, Jain32, 4);
@@ -361,66 +333,55 @@ begin
    NLowOption(175, JainEnd);
 end
 
-procedure Jain31
-begin
+procedure Jain31 begin
    BMessage(176);
    call JainEndCombat;
 end
 
-procedure Jain32
-begin
+procedure Jain32 begin
    Reply(177);
    NOption(178, Jain33, 4);
    NOption(179, JainEnd, 4);
 end
 
-procedure Jain33
-begin
+procedure Jain33 begin
    NMessage(180);
 end
 
-procedure Jain34
-begin
-   set_map_var(0, 1);
+procedure Jain34 begin
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    BMessage(181);
 end
 
-procedure Jain35
-begin
-   set_map_var(0, 1);
+procedure Jain35 begin
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    BMessage(182);
 end
 
-procedure Jain36
-begin
+procedure Jain36 begin
    Reply(183);
    NOption(184, Jain14, 4);
    NOption(185, JainEnd, 4);
 end
 
-procedure Jain37
-begin
+procedure Jain37 begin
    UpReact
    GMessage(186);
 end
 
-procedure Jain38
-begin
+procedure Jain38 begin
    NMessage(187);
 end
 
-procedure Jain39
-begin
+procedure Jain39 begin
    NMessage(188);
 end
 
-procedure JainEnd
-begin
+procedure JainEnd begin
 end
 
-procedure JainEndCombat
-begin
+procedure JainEndCombat begin
    BottomReact
-   set_map_var(0, 1);
+   set_map_var(MVAR_JAIN_DISMISSES, 1);
    call combat;
 end
