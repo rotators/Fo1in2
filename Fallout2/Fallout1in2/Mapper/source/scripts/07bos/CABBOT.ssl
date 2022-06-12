@@ -105,7 +105,10 @@ procedure combat;
 
 procedure cheat_1;
 
-#define LVAR_Here_Before            (4)
+#define LVAR_Herebefore             (4)
+#define LVAR_ReturnToHomeTile       (5)
+#define LVAR_AskedToJoin            (6)
+#define LVAR_BecomeInititate        (7)
 
 import variable Door_ptr;
 import variable Cabbot_Ptr;
@@ -132,8 +135,8 @@ procedure damage_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if local_var(7) == 1 then begin
-      set_local_var(7, 2);
+   if local_var(LVAR_BecomeInititate) == 1 then begin
+      set_local_var(LVAR_BecomeInititate, 2);
       inc_general_rep(1);
       give_xp_msg(EXP_BECOME_INITITAT, mstr(232));
    end
@@ -149,20 +152,18 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if (local_var(5) == 0) then begin
+      if (local_var(LVAR_ReturnToHomeTile) == 0) then begin
          if joined_bos then begin
             add_timer_event(self_obj, game_ticks(1), 1);
          end
       end
-      else begin
-         if (local_var(5) == 1) then begin
-            if (self_tile == 20706) then begin//20906) then begin
-               set_local_var(5, 2);
-               self_rotate(2);
-            end
-            else begin
-               self_walk_to_tile(20706);//20906, 0);
-            end
+      else if (local_var(LVAR_ReturnToHomeTile) == 1) then begin
+         if (self_tile == 20706) then begin
+            set_local_var(LVAR_ReturnToHomeTile, 2);
+            self_rotate(2);
+         end
+         else begin
+            self_walk_to_tile(20706);
          end
       end
    end
@@ -185,7 +186,7 @@ procedure talk_p_proc begin
       get_reaction
       start_gdialog(NAME, self_obj, 4, HEAD_CABBOT, BACKGROUND_BHOOD);
       gsay_start;
-      if (local_var(LVAR_Here_Before) == 1) then begin
+      if (local_var(LVAR_Herebefore) == 1) then begin
          if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 1) then begin
             call cabbot24;
          end
@@ -196,7 +197,7 @@ procedure talk_p_proc begin
             call cabbot33;
          end
          else begin
-            if (local_var(LVAR_reaction) >= BASE_REACTION) then begin // Was 50!
+            if (local_var(LVAR_reaction) >= BASE_REACTION) then begin
                call cabbot19;
             end
             else begin
@@ -225,12 +226,12 @@ procedure look_at_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   set_local_var(5, 1);
+   set_local_var(LVAR_ReturnToHomeTile, 1);
    use_obj(Door_ptr);
 end
 
 procedure cabbot01 begin
-   set_local_var(LVAR_Here_Before, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(101);
    NOption(103, cabbot17, 4);
    NOption(105, cabbot04, 4);
@@ -251,8 +252,7 @@ procedure cheat_1 begin
    call cabbot27;
 end
 
-procedure cabbot02
-begin
+procedure cabbot02 begin
    Reply(108);
    NOption(109, cabbot17, 5);
    NOption(110, cabbot16, 4);
@@ -263,23 +263,22 @@ end
 
 procedure cabbot04 begin
    NMessage(114);
-   set_local_var(6, 1);
    gfade_out(1);
    game_time_advance(game_ticks(600));
    gfade_in(1);
    call cabbot05;
 end
 
-procedure cabbot05
-begin
+procedure cabbot05 begin
    Reply(115);
    NOption(116, cabbot06, 4);
    NOption(117, cabbot10, 4);
    NOption(118, cabbot05a, 6);
+
+   set_local_var(LVAR_AskedToJoin, 1);
 end
 
-procedure cabbot05a
-begin
+procedure cabbot05a begin
    Reply(119);
    NOption(120, cabbot06, 4);
    NOption(121, cabbot17, 6);
@@ -326,8 +325,7 @@ procedure cabbot10 begin
    NMessage(131);
 end
 
-procedure cabbot12
-begin
+procedure cabbot12 begin
    Reply(132);
    NOption(133, cabbot04, 5);
    NOption(134, cabbot10, 4);
@@ -342,34 +340,33 @@ procedure cabbot16 begin
    NOption(140, cabbot10, 4);
 end
 
-procedure cabbot17
-begin
+procedure cabbot17 begin
    BMessage(141);
    call cabbotx;
 end
 
-procedure cabbot18
-begin
+procedure cabbot18 begin
    BMessage(142);
    call cabbotx;
 end
 
-procedure cabbot19
-begin
-   if (local_var(1) >= 3) then begin
+procedure cabbot19 begin
+   if good_critter_reaction then begin
       Reply(143);
    end
    else begin
       Reply(144);
    end
-   NOption(145, cabbot05, 5);
+   if (local_var(LVAR_AskedToJoin) == 0) then
+      NOption(105, cabbot04, 5);
+   else
+      NOption(145, cabbot05, 5);
    NOption(146, cabbot17, 5);
    BOption(147, cabbot19a, 4);
    NLowOption(104, cabbot46);
 end
 
-procedure cabbot20
-begin
+procedure cabbot20 begin
    NMessage(148);
    call cabbotx;
 end
@@ -380,8 +377,7 @@ procedure cabbot21 begin
    NOption(151, cabbotx, 4);
 end
 
-procedure cabbot21_1
-begin
+procedure cabbot21_1 begin
    if (dude_is_male) then begin
       if (dude_skill_success(SKILL_SPEECH, 0)) then begin
          call cabbot23;
@@ -395,20 +391,21 @@ begin
    end
 end
 
-procedure cabbot22
-begin
+procedure cabbot22 begin
    NMessage(152);
    call cabbotx;
 end
 
-procedure cabbot23
-begin
-   if (local_var(1) < 2) then begin
-      set_local_var(1, 2);
+procedure cabbot23 begin
+   if bad_critter_reaction then begin
+      set_local_var(LVAR_reaction_level, NEUTRAL);
       LevelToReact
    end
    Reply(153);
-   NOption(154, cabbot05, 5);
+   if (local_var(LVAR_AskedToJoin) == 0) then
+      NOption(105, cabbot04, 5);
+   else
+      NOption(154, cabbot05, 5);
    NOption(155, cabbot17, 5);
    BOption(156, cabbot23a, 4);
 end
@@ -419,8 +416,7 @@ procedure cabbot24 begin
    NOption(159, cabbot32, 4);
 end
 
-procedure cabbot25
-begin
+procedure cabbot25 begin
    Reply(160);
    NOption(161, cabbotx3, 4);
    NOption(162, cabbot32, 4);
@@ -431,8 +427,7 @@ procedure cabbot27 begin
    NOption(164, cabbotopen, 4);
 end
 
-procedure cabbot28
-begin
+procedure cabbot28 begin
    Reply(165);
    NOption(166, cabbot31, 4);
 end
@@ -442,39 +437,34 @@ procedure cabbot31 begin
    call cabbotx;
 end
 
-procedure cabbot32
-begin
+procedure cabbot32 begin
    NMessage(169);
    call cabbotx;
 end
 
 procedure cabbot33 begin
-   if (local_var(1) >= 3) then begin
+   if good_critter_reaction then begin
       Reply(170);
    end
+   else if bad_critter_reaction then begin
+      Reply(171);
+   end
    else begin
-      if (local_var(1) <= 1) then begin
-         Reply(171);
-      end
-      else begin
-         Reply(172);
-      end
+      Reply(172);
    end
    NOption(173, cabbot34, 4);
    BOption(174, cabbot33a, 4);
 end
 
 procedure cabbot34 begin
-   if (local_var(1) >= 3) then begin
+   if good_critter_reaction then begin
       GMessage(175);
    end
+   else if bad_critter_reaction then begin
+      BMessage(176);
+   end
    else begin
-      if (local_var(1) <= 1) then begin
-         BMessage(176);
-      end
-      else begin
-         NMessage(177);
-      end
+      NMessage(177);
    end
    call cabbotx6;
 end
@@ -486,81 +476,70 @@ procedure cabbot35 begin
 end
 
 procedure cabbot36 begin
-   if (local_var(1) >= 3) then begin
+   if good_critter_reaction then begin
       Reply(182);
    end
+   else if bad_critter_reaction then begin
+      Reply(183);
+   end
    else begin
-      if (local_var(1) <= 1) then begin
-         Reply(183);
-      end
-      else begin
-         Reply(184);
-      end
+      Reply(184);
    end
    NOption(185, cabbot35a, 5);
    NOption(186, cabbot37, 4);
 end
 
-procedure cabbot37
-begin
+procedure cabbot37 begin
    NMessage(187);
    call cabbotx7;
 end
 
-procedure cabbot38
-begin
+procedure cabbot38 begin
    Reply(188);
    NOption(189, cabbot39, 5);
    NOption(190, cabbot40, 5);
 end
 
-procedure cabbot39
-begin
+procedure cabbot39 begin
    Reply(191);
    NOption(192, cabbot35a, 5);
    NOption(193, cabbot37, 4);
 end
 
-procedure cabbot40
-begin
+procedure cabbot40 begin
    Reply(194);
    NOption(195, cabbot41, 6);
    NOption(196, cabbot35a, 5);
    NOption(197, cabbot37, 4);
 end
 
-procedure cabbot41
-begin
+procedure cabbot41 begin
    Reply(198);
    NOption(199, cabbot35a, 4);
    NOption(200, cabbot37, 4);
 end
 
-procedure cabbot42
-begin
+procedure cabbot42 begin
    Reply(201);
    NOption(202, cabbot39, 4);
    NOption(203, cabbot35a, 5);
    NOption(204, cabbot37, 4);
 end
 
-procedure cabbot43
-begin
+procedure cabbot43 begin
    DownReactLevel
    ILLEGAL := 1;
    float_msg(self_obj, mstr(205), FLOAT_MSG_RED);
 end
 
-procedure cabbot44
-begin
+procedure cabbot44 begin
    DownReactLevel
    ILLEGAL := 1;
    float_msg(self_obj, mstr(206), FLOAT_MSG_RED);
    call cabbotx8;
 end
 
-procedure cabbot45
-begin
+procedure cabbot45 begin
    DownReactLevel
    ILLEGAL := 1;
    float_msg(self_obj, mstr(207), FLOAT_MSG_RED);
@@ -571,67 +550,57 @@ procedure cabbot46 begin
    call cabbotx;
 end
 
-procedure cabbot47
-begin
+procedure cabbot47 begin
    NMessage(209);
 end
 
-procedure cabbot48
-begin
+procedure cabbot48 begin
    NMessage(210);
 end
 
-procedure cabbot06a
-begin
+procedure cabbot06a begin
    DownReactLevel
    call cabbot10;
 end
 
-procedure cabbot07a
-begin
+procedure cabbot07a begin
    DownReactLevel
    LevelToReact
    call cabbot10;
 end
 
-procedure cabbot16a
-begin
+procedure cabbot16a begin
    BottomReact
    call cabbot18;
 end
 
-procedure cabbot19a
-begin
+procedure cabbot19a begin
    DownReactLevel
    LevelToReact
    call cabbot20;
 end
 
-procedure cabbot23a
-begin
+procedure cabbot23a begin
    DownReactLevel
    call cabbot20;
 end
 
-procedure cabbot33a
-begin
+procedure cabbot33a begin
    DownReactLevel
    call cabbot34;
 end
 
-procedure cabbotx
-begin
+procedure cabbotx begin
 end
 
-procedure cabbotx1
-begin
+procedure cabbotx1 begin
    call cabbot05;
 end
 
 procedure cabbotx3 begin
    if party_has_item(PID_BOS_HOLODISK) then begin
-      if local_var(7) == 0 then begin
-         set_local_var(7, 1);
+      if local_var(LVAR_BecomeInititate) == 0 then begin
+         set_local_var(LVAR_BecomeInititate, 1);
       end
       set_global_var(GVAR_ARTIFACT_DISK_FOUND_GIVEN, 2);
       set_joined_bos;
@@ -644,138 +613,110 @@ procedure cabbotx3 begin
    end
 end
 
-procedure cabbotx6
-begin
+procedure cabbotx6 begin
 end
 
-procedure cabbotx7
-begin
+procedure cabbotx7 begin
 end
 
-procedure cabbotx8
-begin
+procedure cabbotx8 begin
 end
 
-procedure cabbot35a
-begin
+procedure cabbot35a begin
    NMessage(181);
    call cabbot35;
 end
 
-procedure cabbot49
-begin
+procedure cabbot49 begin
    NMessage(211);
 end
 
-procedure cabbot50
-begin
+procedure cabbot50 begin
    NMessage(212);
 end
 
-procedure cabbot51
-begin
+procedure cabbot51 begin
    NMessage(213);
 end
 
-procedure cabbot52
-begin
+procedure cabbot52 begin
    NMessage(214);
 end
 
-procedure cabbot53
-begin
+procedure cabbot53 begin
    NMessage(215);
 end
 
-procedure cabbot54
-begin
+procedure cabbot54 begin
    NMessage(216);
 end
 
-procedure cabbot55
-begin
+procedure cabbot55 begin
    NMessage(217);
 end
 
-procedure cabbot56
-begin
+procedure cabbot56 begin
    NMessage(218);
 end
 
-procedure cabbot57
-begin
+procedure cabbot57 begin
    NMessage(219);
 end
 
-procedure cabbot58
-begin
+procedure cabbot58 begin
    NMessage(220);
 end
 
-procedure cabbot59
-begin
+procedure cabbot59 begin
    NMessage(221);
 end
 
-procedure cabbot60
-begin
+procedure cabbot60 begin
    NMessage(222);
 end
 
-procedure cabbot61
-begin
+procedure cabbot61 begin
    NMessage(223);
 end
 
-procedure cabbot62
-begin
+procedure cabbot62 begin
    NMessage(224);
 end
 
-procedure cabbot63
-begin
+procedure cabbot63 begin
    NMessage(225);
 end
 
-procedure cabbot64
-begin
+procedure cabbot64 begin
    NMessage(226);
 end
 
-procedure cabbot65
-begin
+procedure cabbot65 begin
    NMessage(227);
 end
 
-procedure cabbot66
-begin
+procedure cabbot66 begin
    NMessage(228);
 end
 
-procedure cabbot67
-begin
+procedure cabbot67 begin
    NMessage(229);
 end
 
-procedure cabbot68
-begin
+procedure cabbot68 begin
    NMessage(230);
 end
 
-procedure cabbot69
-begin
+procedure cabbot69 begin
    NMessage(231);
 end
 
-procedure cabbotend
-begin
+procedure cabbotend begin
 end
 
-procedure cabbotopen
-begin
+procedure cabbotopen begin
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
