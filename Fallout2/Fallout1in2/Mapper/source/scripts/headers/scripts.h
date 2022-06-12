@@ -641,7 +641,7 @@
 #define SCRIPT_HDTUP2DN  (629)  //  HDtUp2Dn.int    ; Hub, Downtown, ladder going up to down                                      
 #define SCRIPT_HDTVAULT  (630)  //  HDtVault.int    ; Vault to FLC in the Hub                                           
 #define SCRIPT_MRHANDYC  (631)  //  MrHandyC.int    ; Mr. Handy for cleaning up the Vats.                                         
-#define SCRIPT_DEPRECATED_1   (632) //SCRIPT_STUDENT   (632)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_HDTMSTRD  (632)  //  HDtMSTRD.int    ; Elevator door in the Masters Lair. Splitted from HDtVault
 #define SCRIPT_THOMAS    (633)  //  Thomas.int      ; trainer in the Brotherhood
 #define SCRIPT_MODREACT  (634)  //  ModReact.int    ; DO NOT ATTACH TO ANYTHING. JUST IN TO MAKE THINGS COMPILE                   
 #define SCRIPT_ADY2FARM  (635)  //  Ady2Farm.int    ; Moves dude from Adytum to hydroponic farms                                  

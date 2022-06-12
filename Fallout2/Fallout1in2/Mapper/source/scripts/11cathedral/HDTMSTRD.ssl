@@ -1,0 +1,141 @@
+/*
+
+   Used in Master's Lair as elevator door.
+
+   Was combined with HDTVAULT.ssl before, splitted into its own file for clarity.
+
+*/
+
+#include "define.h"
+#include "command.h"
+#include "maps/hubdwntn.h"
+
+#define NAME                     SCRIPT_DOOR
+
+procedure start;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_update_p_proc;
+procedure damage_p_proc;
+procedure OpenDoor;
+
+#define LVAR_DoorStatus       (0)
+#define LVAR_DoorDestroyed    (1)
+#define LVAR_DoorHP           (2)
+#define LVAR_Gave_Locks_XP    (3)
+
+#define DOOR_LOCKED           (0)
+#define DOOR_UNLOCKED         (1)
+
+import variable Cur_Door_Ptr;
+
+procedure start begin
+end
+
+procedure use_p_proc begin
+   if ((local_var(LVAR_DoorStatus) == DOOR_LOCKED) and source_is_dude) then begin
+      script_overrides;
+      display_msg(mstr(104));
+   end
+end
+
+procedure use_skill_on_p_proc begin
+   variable LVar0 := 0;
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
+      if (action_being_used == SKILL_LOCKPICK) then begin
+         script_overrides;
+         LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
+
+         if (is_success(LVar0)) then begin
+            call OpenDoor;
+         end
+         else begin
+            if (is_critical(LVar0)) then begin
+               jam_lock(self_obj);
+               display_msg(mstr(110)); // Can't pick lock
+            end
+            else begin
+               display_msg(mstr(103)); // Failed to pick lock
+            end
+         end
+      end
+   end
+   else begin
+      display_msg(mstr(109)); // Door is already unlocked
+   end
+end
+
+procedure description_p_proc begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
+      display_msg(mstr(104));
+   end
+end
+
+procedure use_obj_on_p_proc begin
+   variable Item := 0;
+   variable Skill := 0;
+   Item := obj_being_used_with;
+   Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
+
+   if (obj_pid(Item) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Item) == PID_ELEC_LOCKPICK_MKII) then begin
+      script_overrides;
+
+      if (obj_pid(Item) == PID_ELEC_LOCKPICK_MKII) then
+         Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -10);
+
+      if (is_success(Skill)) then begin
+         call OpenDoor;
+      end
+      else begin
+         if (is_critical(Skill)) then begin
+            rm_obj_from_inven(dude_obj, Item);
+            destroy_object(Item);
+            jam_lock(self_obj);
+            display_msg(mstr(110)); // Skill not high enough
+            display_msg(mstr(101)); // Lockpicks broken
+         end
+         else begin
+            display_msg(mstr(103)); // Failed to pick the lock
+         end
+      end
+   end
+end
+
+procedure map_update_p_proc begin
+   if (local_var(LVAR_DoorStatus) == DOOR_UNLOCKED) then begin
+      obj_unlock(self_obj);
+   end
+   else begin
+      obj_lock(self_obj);
+   end
+end
+
+procedure damage_p_proc begin
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      if (local_var(LVAR_DoorHP) == 2) then begin
+         if not(is_loading_game) then begin
+            set_self_invisible;
+         end
+         set_local_var(LVAR_DoorDestroyed, 1);
+      end
+      else begin
+         inc_local_var(LVAR_DoorHP);
+      end
+   end
+   else begin
+      display_msg(mstr(193));
+   end
+end
+
+procedure OpenDoor begin
+   obj_unlock(self_obj);
+   set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
+
+   display_msg(mstr(100));
+   if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+      set_local_var(LVAR_Gave_Locks_XP, 1);
+      give_xp(EXP_LOCKPICK_NEG_20);
+   end
+end

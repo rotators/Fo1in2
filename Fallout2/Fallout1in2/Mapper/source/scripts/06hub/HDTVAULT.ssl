@@ -1,7 +1,7 @@
 /*
 
    Big fucking bank vault door
-   Used in Hub Downtown but also in Master's Lair as elevators door.
+   Used in Hub Downtown FLC bank.
 
 */
 
@@ -20,8 +20,13 @@ procedure map_update_p_proc;
 procedure damage_p_proc;
 procedure OpenDoor;
 
+#define LVAR_DoorStatus       (0)
+#define LVAR_DoorDestroyed    (1)
 #define LVAR_DoorHP           (2)
 #define LVAR_Gave_Locks_XP    (3)
+
+#define DOOR_LOCKED           (0)
+#define DOOR_UNLOCKED         (1)
 
 import variable Cur_Door_Ptr;
 
@@ -29,51 +34,46 @@ procedure start begin
 end
 
 procedure use_p_proc begin
-   if ((local_var(0) == 0) and source_is_dude) then begin
+   if ((local_var(LVAR_DoorStatus) == DOOR_LOCKED) and source_is_dude) then begin
       script_overrides;
       display_msg(mstr(104));
-      if CUR_MAP_HUBDWNTN then begin
-         set_map_var(MVAR_VAULT_OPEN, 1);
-      end
+      set_map_var(MVAR_VAULT_OPEN, 1);
    end
    else begin
-      if CUR_MAP_HUBDWNTN then begin
-         set_map_var(MVAR_VAULT_OPEN, 2);
-      end
+      set_map_var(MVAR_VAULT_OPEN, 2);
    end
 end
 
 procedure use_skill_on_p_proc begin
    variable LVar0 := 0;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
-         if CUR_MAP_HUBDWNTN then begin
-            set_map_var(MVAR_VAULT_OPEN, 1);
-         end
+         set_map_var(MVAR_VAULT_OPEN, 1);
+
          if (is_success(LVar0)) then begin
             call OpenDoor;
          end
          else begin
             if (is_critical(LVar0)) then begin
                jam_lock(self_obj);
-               display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
+               display_msg(mstr(110)); // Can't pick lock
             end
             else begin
-               display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+               display_msg(mstr(103)); // Failed to pick lock
             end
          end
       end
    end
    else begin
-      display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      display_msg(mstr(109)); // Door is already unlocked
    end
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
-      display_msg(mstr(104));//{104}{}{The door is locked.}
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
+      display_msg(mstr(104));
    end
 end
 
@@ -83,11 +83,9 @@ procedure use_obj_on_p_proc begin
    Item := obj_being_used_with;
    Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
 
-   if CUR_MAP_HUBDWNTN then begin
-      set_map_var(MVAR_VAULT_OPEN, 1);
-   end
+   set_map_var(MVAR_VAULT_OPEN, 1);
 
-   if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET /*or obj_pid(Item) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Item) == PID_ELEC_LOCKPICK_MKII*/) then begin
+   if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
 
       if (obj_pid(Item) == PID_EXP_LOCKPICK_SET) then
@@ -101,18 +99,18 @@ procedure use_obj_on_p_proc begin
             rm_obj_from_inven(dude_obj, Item);
             destroy_object(Item);
             jam_lock(self_obj);
-            display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
-            display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
+            display_msg(mstr(110)); // Skill not high enough
+            display_msg(mstr(101)); // Lockpicks broken
          end
          else begin
-            display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+            display_msg(mstr(103)); // Failed to pick the lock
          end
       end
    end
 end
 
 procedure map_update_p_proc begin
-   if (local_var(0) == 1) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_UNLOCKED) then begin
       obj_unlock(self_obj);
    end
    else begin
@@ -126,16 +124,12 @@ procedure damage_p_proc begin
          if not(is_loading_game) then begin
             set_self_invisible;
          end
-         set_local_var(1, 1);
-         if CUR_MAP_HUBDWNTN then begin
-            set_map_var(MVAR_VAULT_OPEN, 2);
-         end
+         set_local_var(LVAR_DoorDestroyed, 1);
+         set_map_var(MVAR_VAULT_OPEN, 2);
       end
       else begin
          inc_local_var(LVAR_DoorHP);
-         if CUR_MAP_HUBDWNTN then begin
-            set_map_var(MVAR_VAULT_OPEN, 2);
-         end
+         set_map_var(MVAR_VAULT_OPEN, 2);
       end
    end
    else begin
@@ -145,11 +139,9 @@ end
 
 procedure OpenDoor begin
    obj_unlock(self_obj);
-   set_local_var(0, 1);
+   set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
 
-   if CUR_MAP_HUBDWNTN then begin
-      set_map_var(MVAR_VAULT_OPEN, 2);
-   end
+   set_map_var(MVAR_VAULT_OPEN, 2);
 
    display_msg(mstr(100));
    if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
