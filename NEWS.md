@@ -15,6 +15,8 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
 - **Fixed**: The backpack of the combat armor animations would clip through the rocket launcher.
+- **Fixed**: The dialog option to ask Cabbot at the Brotherhood about joining would change to "I have changed my mind..." without the player ever asking him to join.
+- **Fixed**: The elevator door to elevation 3 in the Master's Lair wanted normal lockpicks instead of electronic lockpicks.
 - **Fixed**: Tine ("Taylor") in Adytum had a wrong reaction condition.
 - **Fixed**: Typo in english Flambe 450 item description.
 - **Fixed**: Typos in Set's dialog.
