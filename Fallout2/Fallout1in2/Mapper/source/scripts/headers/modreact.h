@@ -46,13 +46,6 @@ It will also write in how to modify the reaction level by a level. */
 #define REACTION_BONUS_CHAMPION         (20)
 #define REACTION_BONUS_CHILDKILLER      (30)
 
-variable Static_Reaction:=0;            // This adds in Reputations, Perks, Karma, and such
-variable Evil_Critter:=0;               // 0 == Good Critter, 1 == Bad Critter
-variable Slavery_Tolerant:=2;           // 0 == very intolerant, 1 == intolerant, 2 == tolerant, 3 == Happy
-variable Karma_Perception:=0;           // see defines for values
-variable reaction_bonus_town_rep:=0;
-variable reaction_bonus_karma:=0;
-
 // LOCAL VARS WHICH WILL BE SAVED FOR EACH CRITTER
 
 #define LVAR_reaction                   (0)             // Holds reaction number value.
