@@ -937,6 +937,12 @@ sfall_funcX metarule functions
 - Overrides the terrain type name for the sub-tile on the world map by the specified coordinates
 
 ----
+#### get_terrain_name
+`string sfall_func0("get_terrain_name")`\
+`string sfall_func2("get_terrain_name", int x, int y)`
+- Returns the terrain type name for the sub-tile on the world map by the specified coordinates, or by the player's current position if called without arguments
+
+----
 #### get_window_attribute
 `int sfall_func1("get_window_attribute", int winType)`\
 `int sfall_func2("get_window_attribute", int winType, int attrType)`

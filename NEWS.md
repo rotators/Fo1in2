@@ -28,3 +28,4 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
+- **Tweaked**: The ENABLE_FO2_CRITTERS setting will now also affect critters spawned in caravan encounters.
