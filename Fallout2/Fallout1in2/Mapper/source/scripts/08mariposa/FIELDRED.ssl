@@ -1,0 +1,43 @@
+/*
+
+   Military Base - Red Force Field
+
+   NOTE:
+
+      Used together with PAINFELD.SSL
+
+*/
+
+#include "define.h"
+#define NAME                    SCRIPT_FIELDRED
+#include "command.h"
+
+procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure timed_event_p_proc;
+
+#define EVENT_CHECK_STATUS      (1)
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
+end
+
+procedure map_update_p_proc begin
+   // If pixote's animated force field mod is enabled
+   if (anim_busy(self_obj) == false) then begin
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_CHECK_STATUS) then begin
+      call map_update_p_proc;
+   end
+   add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
+end

@@ -667,7 +667,7 @@
 #define SCRIPT_THFD2U    (655)  //  ThfD2U.int      ; ladder to go from cellar to ground of the Thieves' Circle
 #define SCRIPT_MVNEWS    (656)  //  MVNews.int      ; Newspaper machine in the Master's Vault
 #define SCRIPT_DEALER    (657)  //  Dealer.int      ; Insane used car dealer.
-#define SCRIPT_DEPRECATED_2 (658) //SCRIPT_USEDCAR   (658)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_FIELDRED  (658)  //  fieldred.int    ; Mariposa - Red force fields
 #define SCRIPT_BRODEAD   (659)  //  BroDead.int     ; Map script for Brotherhood of Steel, destroyed version.
 #define SCRIPT_CHILDEAD  (660)  //  ChilDead.int    ; Map script for Cathedral, destroyed version.                                
 #define SCRIPT_MBDEAD    (661)  //  MBDead.int      ; Map script for Military Base, destroyed version.

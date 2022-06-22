@@ -8,7 +8,11 @@
 #include "area/mbase.h"
 //#include "maps/mbstrg12.h"
 
-#define NAME                    SCRIPT_FIELDH
+#ifndef NAME
+   #define NAME                     SCRIPT_FIELDH
+   #define FField_Ptr               FieldH_Ptr
+   #define FField_MVAR              18
+#endif
 
 #include "command.h"
 
@@ -21,6 +25,11 @@ procedure map_enter_p_proc;
 procedure turn_field_off;
 procedure turn_field_on;
 procedure toggle_field;
+
+#define DISABLED     (0)
+#define ENABLED      (1)
+
+#define LVAR_Initial          (0)
 
 variable initial := 0;
 
@@ -59,27 +68,44 @@ end
 
 procedure map_update_p_proc begin
    FieldH_Ptr := self_obj;
+
+   // If pixote's force field mod is enabled
+   if (anim_busy(self_obj) == false) then begin
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
 end
 
 procedure map_enter_p_proc begin
    FieldH_Ptr := self_obj;
+
+   // If pixote's force field mod is enabled
+   if (anim_busy(self_obj) == false) then begin
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
 end
 
 procedure turn_field_off begin
    if not(is_loading_game) then set_self_invisible;
-   set_local_var(0, 1);
+   set_local_var(LVAR_Initial, 1);
+   set_map_var(FField_MVAR, DISABLED);
 end
 
 procedure turn_field_on begin
    if not(is_loading_game) then set_self_visible;
-   set_local_var(0, 0);
+   set_local_var(LVAR_Initial, 0);
+   set_map_var(FField_MVAR, ENABLED);
 end
 
 procedure toggle_field begin
-   if (local_var(0)) then begin
+   if (local_var(LVAR_Initial)) then begin
       call turn_field_on;
    end
    else begin
       call turn_field_off;
    end
+   call map_update_p_proc;
 end
