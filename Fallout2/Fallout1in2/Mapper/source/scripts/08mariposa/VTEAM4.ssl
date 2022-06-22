@@ -39,6 +39,8 @@ procedure GenSuprxx;
 
 procedure set_alert_tile;
 
+#define LVAR_MoveHex       (4)
+
 #define elevator_hex          (14520)
 #define ElevDoor_hex          (14720)
 
@@ -62,13 +64,7 @@ end
 
 procedure combat_p_proc begin
    alert_check;
-   if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
-      if (global_var(GVAR_DESTROY_VATS_4)) then begin
-         if (random(0, 3) == 3) then begin
-            critter_injure(dude_obj, DAM_KNOCKED_OUT);
-         end
-      end
-   end
+   knock_out_player_check;
 end
 
 procedure critter_p_proc begin
@@ -87,7 +83,7 @@ procedure critter_p_proc begin
             end
          end
       end
-      if ((global_var(GVAR_DESTROY_VATS_1) >= 1) and (global_var(GVAR_DESTROY_VATS_1) <= 3) and (self_elevation == 0)) then begin
+      if ((global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) >= 1) and (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) <= 3) and (self_elevation == 0)) then begin
          kill_critter(self_obj, ANIM_fall_front_blood);
       end
       else begin
@@ -131,8 +127,8 @@ procedure critter_p_proc begin
                   move_to(self_obj, elevator_hex, 0);
                end
             end
-            else if (self_tile != local_var(4)) then begin
-               self_walk_to_tile(local_var(4));
+            else if (self_tile != local_var(LVAR_MoveHex)) then begin
+               self_walk_to_tile(local_var(LVAR_MoveHex));
             end
          end
       end
@@ -184,7 +180,7 @@ procedure map_enter_p_proc begin
    set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
    call set_alert_tile;
    if not(is_loading_game) then begin
-      if (not((global_var(GVAR_DESTROY_VATS_1) >= 1) and (global_var(GVAR_DESTROY_VATS_1) <= 3))) then begin
+      if (not((global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) >= 1) and (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) <= 3))) then begin
          if (global_var(GVAR_VATS_ALERT)) then begin
             move_to(self_obj, alert_tile, 1);
          end
@@ -193,7 +189,7 @@ procedure map_enter_p_proc begin
                move_to(self_obj, night_tile, 1);
             end
             else begin
-               move_to(self_obj, local_var(4), 0);
+               move_to(self_obj, local_var(LVAR_MoveHex), 0);
             end
          end
       end
@@ -287,18 +283,18 @@ procedure GenSuprxx begin
 end
 
 procedure set_alert_tile begin
-   if (not(local_var(4))) then begin
-      set_local_var(4, self_tile);
+   if (not(local_var(LVAR_MoveHex))) then begin
+      set_local_var(LVAR_MoveHex, self_tile);
    end
-   if (local_var(4) == 23065) then begin
+   if (local_var(LVAR_MoveHex) == 23065) then begin
       alert_tile := 21917;
       night_tile := 26274;
    end
-   else if (local_var(4) == 22466) then begin
+   else if (local_var(LVAR_MoveHex) == 22466) then begin
       alert_tile := 21922;
       night_tile := 27476;
    end
-   else if (local_var(4) == 22470) then begin
+   else if (local_var(LVAR_MoveHex) == 22470) then begin
       alert_tile := 22318;
       night_tile := 27072;
    end

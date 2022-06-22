@@ -1,22 +1,34 @@
+/*
+
+   Mariposa - two-armed brainbots in Military Base, Vats level 2
+
+*/
+
+/* Include Files */
 #include "define.h"
-#include "command.h"
 #include "area/mbase.h"
+
+#define NAME                    SCRIPT_MRHANDYA
+
+#include "command.h"
 
 procedure start;
 procedure critter_p_proc;
 procedure description_p_proc;
 procedure use_skill_on_p_proc;
+
 procedure Repair_Attempt;
+
+#define LVAR_RobotStatus   (0)
+#define LVAR_RobotBroken   (1)
+
 import variable valid_target;
 
 variable tmp_hostile;
 variable initial := 0;
-///////////////////////////////////////////////////////////////////
-// For two-armed brainbots in Military Base, Vats level 2
-///////////////////////////////////////////////////////////////////
 
 procedure start begin
-   if (global_var(GVAR_DESTROY_VATS_1) == 2) then begin
+   if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) == 2) then begin
       set_self_team(TEAM_ROBOBRAINS);
    end
    if not(initial) then begin
@@ -31,7 +43,7 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if (global_var(GVAR_DESTROY_VATS_3) != 0) then begin
+   if (global_var(GVAR_ROBCTRL_SENSORS_HOWMUCH) != 0) then begin
       if ((critter_state(self_obj) bwand 64) == 0) then begin
          critter_injure(self_obj, DAM_BLIND);
       end
@@ -47,23 +59,23 @@ procedure critter_p_proc begin
       end
    end
    if mbase_full_alert then begin
-      if (global_var(GVAR_DESTROY_VATS_3) == 0) then begin
-         if (global_var(GVAR_DESTROY_VATS_1) == 0) then begin
+      if (global_var(GVAR_ROBCTRL_SENSORS_HOWMUCH) == 0) then begin
+         if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) == 0) then begin
             if (self_can_see_dude) then begin
                tmp_hostile := 1;
             end
          end
-         else if (global_var(GVAR_DESTROY_VATS_1) == 1) then begin
+         else if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) == 1) then begin
             if (obj_can_see_obj(self_obj, valid_target)) then begin
                attack(valid_target);
             end
          end
-         else if (global_var(GVAR_DESTROY_VATS_1) == 2) then begin
+         else if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) == 2) then begin
             if (obj_can_see_obj(self_obj, valid_target)) then begin
                attack(valid_target);
             end
          end
-         else if (global_var(GVAR_DESTROY_VATS_1) == 3) then begin
+         else if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH) == 3) then begin
             if (self_can_see_dude) then begin
                tmp_hostile := 1;
             end
@@ -77,7 +89,7 @@ end
 
 procedure description_p_proc begin
    script_overrides;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_RobotStatus)) then begin
       display_msg(message_str(SCRIPT_MRHANDYA, 100));
    end
    else begin
@@ -87,7 +99,7 @@ end
 
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_REPAIR) then begin
-      if (local_var(0) == 0) then begin
+      if (local_var(LVAR_RobotStatus) == 0) then begin
          call Repair_Attempt;
       end
    end
@@ -97,12 +109,12 @@ procedure Repair_Attempt begin
    variable LVar0 := 0;
    game_time_advance(game_ticks(1200));
    LVar0 := roll_vs_skill(dude_obj, SKILL_REPAIR, 0);
-   if (not(local_var(1)) and is_success(LVar0)) then begin
+   if (not(local_var(LVAR_RobotBroken)) and is_success(LVar0)) then begin
       display_msg(message_str(SCRIPT_MRHANDYA, 102));
-      set_local_var(0, 1);
+      set_local_var(LVAR_RobotStatus, 1);
    end
    else begin
       display_msg(message_str(SCRIPT_MRHANDYA, 103));
-      set_local_var(1, 1);
+      set_local_var(LVAR_RobotBroken, 1);
    end
 end

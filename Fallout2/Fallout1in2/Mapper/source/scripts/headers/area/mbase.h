@@ -46,3 +46,12 @@ variable ff_emitter;
    end                                                \
    noop
 
+#define knock_out_player_check \
+   if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin \
+      if (global_var(GVAR_ROBCTRL_PESTS_HOWMUCH)) then begin   \
+         if (random(0, 3) == 3) then begin                     \
+            critter_injure(dude_obj, DAM_KNOCKED_OUT);         \
+         end                                                   \
+      end                                                      \
+   end                                                         \
+   noop
