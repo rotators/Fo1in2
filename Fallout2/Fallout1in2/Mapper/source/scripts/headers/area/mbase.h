@@ -17,8 +17,31 @@
 #define get_force_fields_on      (global_var(GVAR_MBASE_FORCE_FIELD_STATE) == 1)
 #define get_force_fields_off     (global_var(GVAR_MBASE_FORCE_FIELD_STATE) == 0)
 
-#define set_force_fields_on      set_global_var(GVAR_MBASE_FORCE_FIELD_STATE, 1)
-#define set_force_fields_off     set_global_var(GVAR_MBASE_FORCE_FIELD_STATE, 0)
+// We have to make a hard-reset on the force field MVARs. It basically acts as a toggle / reset
+#define set_force_fields_on      set_global_var(GVAR_MBASE_FORCE_FIELD_STATE, 1);\
+                                 set_map_var(MVAR_Field1a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field2a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field3a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field4a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field5a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field6a_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field1b_Status, ENABLED);      \
+                                 set_map_var(MVAR_Field2b_Status, ENABLED)
+#define set_force_fields_off     set_global_var(GVAR_MBASE_FORCE_FIELD_STATE, 0);\
+                                 set_map_var(MVAR_Field1a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field2a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field3a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field4a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field5a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field6a_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field1b_Status, DISABLED);     \
+                                 set_map_var(MVAR_Field2b_Status, DISABLED)
+
+// Force Field status
+#define DISABLED              (0)
+#define ENABLED               (1)
+#define FORCE_DISABLED        (2)
+#define FORCE_ENABLED         (3)
 
 // Destroyed emitter:
 variable ff_emitter;

@@ -7,17 +7,11 @@
       Template script!
       This is included in other MBase Force Field (field) scripts.
 
-   FIXME:
-
-      If global force fields are disabled and the player uses repair on an
-      emitter, the force field will boot up, but disappear again on next
-      natural map_update cycle. No idea why this is happening.
-
 */
 
 #include "define.h"
 #include "area/mbase.h"
-//#include "maps/mbstrg12.h"
+#include "maps/mbstrg12.h"
 
 #ifndef NAME
    #define NAME                     SCRIPT_FIELD1A
@@ -30,11 +24,6 @@
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
-
-#define DISABLED              (0)
-#define ENABLED               (1)
-#define FORCE_DISABLED        (2)
-#define FORCE_ENABLED         (3)
 
 #define EVENT_CHECK_STATUS    (1)
 
@@ -80,11 +69,11 @@ variable FField_State := DISABLED;
 
    if (FField_State == ENABLED) and not(self_visible) then begin
       set_self_visible;
-      if (map_var(FField_MVAR) != FORCE_ENABLED) then set_map_var(FField_MVAR, ENABLED);
+      set_map_var(FField_MVAR, ENABLED);
    end
    else if (FField_State == DISABLED) and self_visible then begin
       set_self_invisible;
-      if (map_var(FField_MVAR) != FORCE_DISABLED) then set_map_var(FField_MVAR, DISABLED);
+      set_map_var(FField_MVAR, DISABLED);
    end
 
    // If pixote's animated force field mod is enabled
@@ -101,4 +90,3 @@ procedure timed_event_p_proc begin
    end
    flush_add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
 end
-
