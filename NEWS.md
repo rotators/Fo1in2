@@ -3,6 +3,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: A new option to switch between Fo1-style "rest until 06:00" and Fo2-style "rest until 08:00" in the PipBoy.
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
+- **Added**: New Alternative Force Fields mod with graphics made by .Pixote.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
 - **Fixed**: Aradesh in Shady Sands had a wrong reaction condition.
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
@@ -10,6 +11,8 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
 - **Fixed**: Laura in the Cathedral had a voiced line linked to a non-existing sound file.
 - **Fixed**: Leather Armor had 20% plasma resistance (old Fixt value). Reverted to 10% Fo1 vanilla value.
+- **Fixed**: Mariposa command terminal was printing a "This does nothing."-message after using a radio on it.
+- **Fixed**: Mariposa force fields had some issues when triggering them on/off via radio. Rewrote the script to be more robust.
 - **Fixed**: Motorcycle key had a weight of 10 pounds. Changed to 0.
 - **Fixed**: Removed unnecessary "Special Death"-flag from Brotherhood Paladin proto files.
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
@@ -24,6 +27,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Adjusted laser resistance of ant critters.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
 - **Tweaked**: Improved the TMA-system. If a keyword is not found in the character specific unique responses, the game will now try to find a keyword in the generic map-based responses instead.
+- **Tweaked**: Manually disabled force fields in Mariposa will now stay off for a little bit longer.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
