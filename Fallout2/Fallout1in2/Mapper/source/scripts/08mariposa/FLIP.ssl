@@ -1,12 +1,13 @@
 /*
 
-   Mariposa - Prisoner?
+   Mariposa - Flip, moving guard in Vats level 1.
 
 */
 
 /* Include Files */
 #include "define.h"
 #include "area/mbase.h"
+#include "maps/mbvats12.h"
 
 #define NAME                    SCRIPT_FLIP
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -35,6 +36,8 @@ procedure FlipCombat;
 procedure transit;
 procedure FlipLeave;
 
+#define LVAR_Herebefore       (4)
+
 variable known;
 variable tmp_hostile;
 variable initial := 0;
@@ -57,7 +60,7 @@ procedure combat_p_proc begin
    if (round_counter > 2) then begin
       if (global_var(GVAR_VATS_ALERT) == 0) then begin
          set_global_var(GVAR_VATS_ALERT, 1);
-         set_map_var(7, 1);
+         set_map_var(MVAR_corridor_active, 1);
       end
    end
 end
@@ -74,7 +77,7 @@ procedure critter_p_proc begin
          end
          else begin
             coc_disguise_check;
-            if (not(DISGUISED) and (local_var(4) == 0)) then begin
+            if (not(DISGUISED) and (local_var(LVAR_Herebefore) == 0)) then begin
                dialogue_system_enter;
             end
          end
@@ -89,13 +92,13 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   set_map_var(8, 3);
+   set_map_var(MVAR_Flip_status, 3);
    inc_inv_evil_crit
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -120,7 +123,7 @@ procedure talk_p_proc begin
       call Flip01;
    end
    else begin
-      if (local_var(4) == 1) then begin
+      if (local_var(LVAR_Herebefore) == 1) then begin
          call Flip05;
       end
       else begin
@@ -153,7 +156,7 @@ procedure Flip01 begin
 end
 
 procedure Flip02 begin
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(104);
    NOption(105, FlipCombat, 4);
    NOption(106, transit, 4);

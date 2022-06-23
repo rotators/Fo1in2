@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/mbase.h"
+#include "maps/mbvats12.h"
 
 #define NAME                    SCRIPT_SARAH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -33,6 +34,8 @@ procedure Sarah09;
 procedure Sarah10;
 procedure SarahEnd;
 
+#define LVAR_Herebefore       (4)
+
 variable initial := 0;
 
 procedure start begin
@@ -43,10 +46,9 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
-   if (map_var(8) == 3) then begin
-      if (local_var(4) == 0) then begin
+procedure critter_p_proc begin
+   if (map_var(MVAR_Flip_status) == 3) then begin
+      if (local_var(LVAR_Herebefore) == 0) then begin
          if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
             if (self_can_see_dude) then begin
                dialogue_system_enter;
@@ -60,32 +62,27 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
-   if (local_var(4)) then begin
-      if (map_var(8) == 3) then begin
+   if (local_var(LVAR_Herebefore)) then begin
+      if (map_var(MVAR_Flip_status) == 3) then begin
          float_msg(self_obj, mstr(105), FLOAT_MSG_NORMAL);
       end
+      else if ((dude_iq < 4) and (dude_is_male)) then begin
+         float_msg(self_obj, mstr(117), FLOAT_MSG_NORMAL);
+      end
+      else if night then begin
+         call Sarah10;
+      end
       else begin
-         if ((dude_iq < 4) and (dude_is_male)) then begin
-            float_msg(self_obj, mstr(117), FLOAT_MSG_NORMAL);
-         end
-         else begin
-            if night then begin
-               call Sarah10;
-            end
-            else begin
-               float_msg(self_obj, mstr(118), FLOAT_MSG_NORMAL);
-            end
-         end
+         float_msg(self_obj, mstr(118), FLOAT_MSG_NORMAL);
       end
    end
    else begin
-      set_local_var(4, 1);
+      set_local_var(LVAR_Herebefore, 1);
       start_gdialog(662, self_obj, 4, -1, -1);
       gsay_start;
-      if (map_var(8) == 3) then begin
+      if (map_var(MVAR_Flip_status) == 3) then begin
          call Sarah00;
       end
       else begin
@@ -96,8 +93,7 @@ begin
    end
 end
 
-procedure Sarah00
-begin
+procedure Sarah00 begin
    Reply(100);
    BLowOption(101, Sarah01);
    BOption(102, SarahEnd, 4);
@@ -105,45 +101,38 @@ begin
    BOption(104, sarah02, 7);
 end
 
-procedure Sarah01
-begin
+procedure Sarah01 begin
    BMessage(105);
 end
 
-procedure sarah02
-begin
+procedure sarah02 begin
    Reply(106);
    BOption(107, Sarah03, 7);
    BOption(108, Sarah04, 7);
 end
 
-procedure Sarah03
-begin
+procedure Sarah03 begin
    Reply(109);
    BOption(110, Sarah01, 7);
    BOption(111, Sarah04, 7);
 end
 
-procedure Sarah04
-begin
+procedure Sarah04 begin
    BMessage(112);
 end
 
-procedure Sarah05
-begin
+procedure Sarah05 begin
    Reply(113);
    NLowOption(114, Sarah06);
    NOption(115, Sarah07, 4);
    NOption(116, Sarah09, 6);
 end
 
-procedure Sarah06
-begin
+procedure Sarah06 begin
    NMessage(117);
 end
 
-procedure Sarah07
-begin
+procedure Sarah07 begin
    Reply(118);
    NOption(119, SarahEnd, 4);
    NOption(120, Sarah08, 6);
@@ -155,16 +144,13 @@ begin
    BOption(119, SarahEnd, 4);
 end
 
-procedure Sarah09
-begin
+procedure Sarah09 begin
    NMessage(122);
 end
 
-procedure Sarah10
-begin
+procedure Sarah10 begin
    float_msg(self_obj, mstr(123), FLOAT_MSG_NORMAL);
 end
 
-procedure SarahEnd
-begin
+procedure SarahEnd begin
 end

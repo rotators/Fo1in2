@@ -1,6 +1,6 @@
 /*
 
-   ?? - Abel, super mutant
+   Mariposa - Abel, super mutant in the barracks. Has the force field switch item.
 
 */
 
@@ -10,7 +10,7 @@
 #include "maps/mbstrg12.h"
 
 #define NAME                    SCRIPT_ABEL
-//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
 
 #include "command.h"
 #include "modreact.h"
@@ -33,6 +33,9 @@ procedure Abel07;
 procedure Abel08;
 procedure AbelCombat;
 
+#define LVAR_Herebefore       (4)
+#define LVAR_SpawnToggle      (5)
+
 import variable field_change
 
 variable tmp_hostile;
@@ -53,11 +56,13 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if (self_can_see_dude or (((dude_tile / 200) > 134) and ((dude_tile % 200) > 108) and (tile_distance_objs(self_obj, dude_obj) <= 10)) and (local_var(4) == 0)) then begin
+   if (self_can_see_dude or (((dude_tile / 200) > 134) and ((dude_tile % 200) > 108) and (tile_distance_objs(self_obj, dude_obj) <= 10)) and (local_var(LVAR_Herebefore) == 0)) then begin
       dialogue_system_enter;
    end
-   if ((self_item_count(PID_TOGGLE_SWITCH) == 0) and (local_var(5) == 0)) then begin
-      set_local_var(5, 1);
+
+   // Cut-content. Item isn't used in vanilla Fo1.
+   if ((self_item_count(PID_TOGGLE_SWITCH) == 0) and (local_var(LVAR_SpawnToggle) == 0)) then begin
+      set_local_var(LVAR_SpawnToggle, 1);
       toggle := create_object(PID_TOGGLE_SWITCH, 0, 0);
       add_obj_to_inven(self_obj, toggle);
    end
@@ -77,20 +82,20 @@ procedure talk_p_proc begin
       call Abel06;
    end
    else begin
-      if (local_var(4) == 1) then begin
+      if (local_var(LVAR_Herebefore) == 1) then begin
          call Abel08;
       end
       else begin
          call Abel00;
       end
    end
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    gsay_end;
    end_dialogue;
 end
 
 procedure destroy_p_proc begin
-   inc_evil_critter
+   inc_inv_evil_crit
 end
 
 procedure Abel00 begin
