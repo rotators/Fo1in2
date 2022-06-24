@@ -9,6 +9,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
+- **Fixed**: Klaxon lights in Mariposa would show the wrong description text when in alarm-mode.
 - **Fixed**: Laura in the Cathedral had a voiced line linked to a non-existing sound file.
 - **Fixed**: Leather Armor had 20% plasma resistance (old Fixt value). Reverted to 10% Fo1 vanilla value.
 - **Fixed**: Mariposa command terminal was printing a "This does nothing."-message after using a radio on it.
