@@ -1,3 +1,10 @@
+/*
+
+   Mariposa - Vats Control computer
+
+*/
+
+/* Include Files */
 #include "define.h"
 
 #define NAME                    SCRIPT_VCONCOMP
@@ -63,6 +70,10 @@ procedure VConCompEnd;
 procedure VatsGoBoom_SETVARS;// added by Sduibek
 procedure Update_Invasion;
 
+#define LVAR_TerminalStatus         (0)
+#define LVAR_InvalidCommand         (1)
+#define LVAR_LockedOut              (2)
+
 #define set_days_left(gvar)         days := (global_var(gvar) - (GAME_TIME_IN_DAYS)) / 2; \
                                     if (days > 0) then set_global_var(gvar, days)
 
@@ -87,7 +98,7 @@ procedure VatsGoBoom_SETVARS begin
    add_timer_event(dude_obj, 0, 12); // tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
    inc_general_rep(5);
    set_vats_destruction; // "VATS_BLOWN"
-   set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2); // "DESTROY_MASTER_4"
+   set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2);
 end
 
 procedure description_p_proc begin
@@ -103,7 +114,7 @@ end
 procedure talk_p_proc begin
    dude_look_at_self;
    if (global_var(GVAR_VATS_COUNTDOWN) == 0) then begin
-      if (local_var(0) == 1) and not(local_var(2)) then
+      if (local_var(LVAR_TerminalStatus) == 1) and not(local_var(LVAR_LockedOut)) then
          start_dialog_at_node(VConComp01);
       else
          start_dialog_at_node(VConComp00);
@@ -112,7 +123,7 @@ end
 
 procedure use_p_proc begin
    script_overrides;
-   if (local_var(0) == 0) then
+   if (local_var(LVAR_TerminalStatus) == 0) then
       display_msg(mstr(177));
    else
       dialogue_system_enter;
@@ -120,10 +131,10 @@ end
 
 procedure use_obj_on_p_proc begin
    if (obj_pid(obj_being_used_with) == PID_SECURITY_CARD) then begin
-      if (local_var(0) == 0) then begin
+      if (local_var(LVAR_TerminalStatus) == 0) then begin
          script_overrides;
          display_msg(mstr(180));
-         set_local_var(0, 1);
+         set_local_var(LVAR_TerminalStatus, 1);
          dialogue_system_enter;
       end
    end
@@ -133,7 +144,7 @@ procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_SCIENCE) then begin
       script_overrides;
       if (dude_skill_success(SKILL_SCIENCE, 0)) then begin
-         set_local_var(0, 1);
+         set_local_var(LVAR_TerminalStatus, 1);
          display_msg(mstr(176));
       end
       else
@@ -143,12 +154,10 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure VConComp00 begin
-   //play_sfx("SLDOORSO");
    BMessage(101);
 end
 
 procedure VConComp01 begin
-   //play_sfx("SLDOORSO");
    Reply(102);
    GOption(203, VConComp01a, 1);
 end
@@ -160,14 +169,14 @@ procedure VConComp01a begin
    NOption(103, VConComp02, 4);
    NOption(104, VConComp11, 4);
    if fixt_disabled then begin
-      NOption(106, VConComp05, 4);//set base to alert status
+      NOption(106, VConComp05, 4); // set base to alert status
    end
    else begin
-      NOption(105, VConComp16, 4);//medical uplink
-      NOption(106, VConComp05, 4);//SAME AS ABOVE
-      NOption(182, VConComp35, 4);//set base to alert status, disable console
+      NOption(105, VConComp16, 4); // medical uplink
+      NOption(106, VConComp05, 4); // SAME AS ABOVE
+      NOption(182, VConComp35, 4); // set base to alert status, disable console
       if (has_skill(dude_obj, SKILL_SCIENCE) >= 75) then begin
-         NOption(201, VConComp32, 8);//disable alarms
+         NOption(201, VConComp32, 8); // disable alarms
       end
    end
    NOption(181, VConCompEnd, 1);
@@ -176,10 +185,10 @@ end
 ///////////////////////////////// ENCRYPTED BOMB CODES /////////////////////////////////////////
 
 procedure VConComp02 begin
+   Reply(140);
+   NOption(107, VConComp03, 4);// silent, 1 min (SAME AS BELOW)
+   NOption(108, VConComp04, 4);// loud, 30 sec (SAME AS BELOW)
    if fixt_disabled then begin
-      Reply(140);
-      NOption(107, VConComp03, 4);// silent, 1 min (SAME AS BELOW)
-      NOption(108, VConComp04, 4);// loud, 30 sec (SAME AS BELOW)
       NOption(109, VConComp05, 4);// alert
       NOption(110, VConComp06, 4);// silent, 3 min
       NOption(111, VConComp07, 4);// loud, 3 min (SAME AS BELOW)
@@ -188,25 +197,21 @@ procedure VConComp02 begin
       NOption(204, VConComp01a, 1);
    end
    else begin
-      Reply(140);
-      NOption(107, VConComp03, 4);// silent, 1 min (SAME AS ABOVE)
-      NOption(108, VConComp04, 4);// loud, 30 sec (SAME AS ABOVE)
       NOption(185, VConComp35, 4);// alert & lockout console
       NOption(110, VConComp36, 4);// silent, 5 min
       NOption(111, VConComp07, 4);// loud, 3 min (SAME AS ABOVE)
-//    giq_option(4, 371, 186, VConComp37, 50);// loud, 1 min
       NOption(112, VConComp08, 4);// instant -bad idea  (SAME AS ABOVE)
       NOption(113, VConComp02a, 6);// int required 6 instead of 5
-      NOption(204, VConComp01a, 1);
    end
+   NOption(204, VConComp01a, 1);
 end
 
 ////////////////////////////////// HACKED BOMB CODES ///////////////////////////////////////////
 
 procedure VConComp09 begin
    Reply(120);
+   NOption(121, VConComp03, 4);// silent, 1 min
    if fixt_disabled then begin
-      NOption(121, VConComp03, 4);// silent, 1 min
       NOption(122, VConComp04, 4);// loud, 30 sec
       NOption(123, VConComp05, 4);// alert
       NOption(124, VConComp06, 4);// silent, 3 min
@@ -214,7 +219,6 @@ procedure VConComp09 begin
       NOption(126, VConComp08, 4);// instant - bad idea  (SAME AS BELOW)
    end
    else begin
-      NOption(121, VConComp03, 4);// silent, 1 min
       NOption(187, VConComp37, 4);// loud, 1 min
       NOption(183, VConComp35, 4);// alert & lockout console
       NOption(184, VConComp36, 4);// silent, 5 min
@@ -225,19 +229,19 @@ procedure VConComp09 begin
       end
       NOption(301, VConComp33, 4);// 5 min   (entry added by Sduibek)
    end
-   NOption(208, VConComp01a, 1);//exit
+   NOption(208, VConComp01a, 1);
 end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 procedure VConComp32 begin
-   set_global_var(GVAR_VATS_ALERT, 0);//  disable "VATS_ALARM_ALERT" (disable it)
+   set_global_var(GVAR_VATS_ALERT, 0);//  disable "VATS_ALARM_ALERT"
    NMessage(205);
 end
 
 procedure VConComp33 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 300);
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(302);
    call VatsGoBoom_SETVARS;
 end
@@ -250,7 +254,7 @@ end
 
 procedure VConComp37 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 60);
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(188);
    call VatsGoBoom_SETVARS;
 end
@@ -272,19 +276,19 @@ end
 
 procedure VConComp04 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 30);
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(115);
    call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp05 begin
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(116);
 end
 
 procedure VConComp35 begin
-   set_local_var(2, 1);//  <-- lock out console
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_local_var(LVAR_LockedOut, 1);
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(206);
 end
 
@@ -302,23 +306,23 @@ end
 
 procedure VConComp07 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 180);
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(118);
    call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp08 begin
-   set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10));// plus nothing because it's instant boom
-   set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
+   set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10)); // plus nothing because it's instant boom
+   set_global_var(GVAR_VATS_ALERT, 1);
    NMessage(119);
    call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp10 begin
-   if (local_var(1) == 1) then
+   if (local_var(LVAR_InvalidCommand) == 1) then
       set_global_var(GVAR_VATS_ALERT, 1);
    else
-      set_local_var(1, 1);
+      set_local_var(LVAR_InvalidCommand, 1);
    BMessage(127);
 end
 
