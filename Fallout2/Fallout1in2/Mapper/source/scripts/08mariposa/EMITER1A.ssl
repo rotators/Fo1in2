@@ -28,6 +28,8 @@ procedure use_skill_on_p_proc;
 procedure damage_p_proc;
 procedure timed_event_p_proc;
 
+procedure repair_emitter;
+
 #define ACTIVE       (0)
 #define DESTROYED    (1)
 
@@ -45,6 +47,8 @@ procedure timed_event_p_proc;
 
 import variable FField_Ptr;
 
+variable bonus := 0;
+
 procedure start begin
 end
 
@@ -58,30 +62,8 @@ procedure use_obj_on_p_proc begin
 
    if (local_var(LVAR_FF_Status) == ACTIVE) then begin
       if (Item == PID_MULTI_TOOL or Item == PID_SUPER_TOOL_KIT) then begin
-         script_overrides;
-         if (dude_skill_success(SKILL_REPAIR, 0)) then begin
-            if ((map_var(FField_MVAR) == ENABLED) or (map_var(FField_MVAR) == FORCE_ENABLED)) then begin
-               set_obj_invisible(FField_Ptr);
-               display_msg(message_str(SCRIPT_EMITER1A, 103));
-
-               give_disable_exp
-
-               if get_force_fields_on then
-                  set_map_var(FField_MVAR, FORCE_DISABLED);
-               else
-                  set_map_var(FField_MVAR, DISABLED);
-
-               flush_add_timer_event(self_obj, game_ticks(FIELD_DOWN_TIME), EVENT_REENABLE_FIELD);
-            end
-            else begin
-               set_obj_visible(FField_Ptr);
-               display_msg(message_str(SCRIPT_EMITER1A, 105));
-               set_map_var(FField_MVAR, FORCE_ENABLED);
-            end
-         end
-         else begin
-            display_msg(message_str(SCRIPT_EMITER1A, 104));
-         end
+         bonus := 0;
+         call repair_emitter;
       end
    end
 end
@@ -89,30 +71,8 @@ end
 procedure use_skill_on_p_proc begin
    if (local_var(LVAR_FF_Status) == 0) then begin
       if (action_being_used == SKILL_REPAIR) then begin
-         script_overrides;
-         if (dude_skill_success(SKILL_REPAIR, -20)) then begin
-            if ((map_var(FField_MVAR) == ENABLED) or (map_var(FField_MVAR) == FORCE_ENABLED)) then begin
-               display_msg(message_str(SCRIPT_EMITER1A, 103));
-               set_obj_invisible(FField_Ptr);
-
-               give_disable_exp
-
-               if get_force_fields_on then
-                  set_map_var(FField_MVAR, FORCE_DISABLED);
-               else
-                  set_map_var(FField_MVAR, DISABLED);
-
-               flush_add_timer_event(self_obj, game_ticks(FIELD_DOWN_TIME), EVENT_REENABLE_FIELD);
-            end
-            else begin
-               set_obj_visible(FField_Ptr);
-               display_msg(message_str(SCRIPT_EMITER1A, 105));
-               set_map_var(FField_MVAR, FORCE_ENABLED);
-            end
-         end
-         else begin
-            display_msg(message_str(SCRIPT_EMITER1A, 104));
-         end
+         bonus := -20;
+         call repair_emitter;
       end
    end
 end
@@ -141,5 +101,32 @@ procedure timed_event_p_proc begin
             set_map_var(FField_MVAR, ENABLED);
          end
       end
+   end
+end
+
+procedure repair_emitter begin
+   script_overrides;
+   if (dude_skill_success(SKILL_REPAIR, bonus)) then begin
+      if ((map_var(FField_MVAR) == ENABLED) or (map_var(FField_MVAR) == FORCE_ENABLED)) then begin
+         display_msg(message_str(SCRIPT_EMITER1A, 103));
+         set_obj_invisible(FField_Ptr);
+
+         give_disable_exp
+
+         if get_force_fields_on then
+            set_map_var(FField_MVAR, FORCE_DISABLED);
+         else
+            set_map_var(FField_MVAR, DISABLED);
+
+         flush_add_timer_event(self_obj, game_ticks(FIELD_DOWN_TIME), EVENT_REENABLE_FIELD);
+      end
+      else begin
+         set_obj_visible(FField_Ptr);
+         display_msg(message_str(SCRIPT_EMITER1A, 105));
+         set_map_var(FField_MVAR, FORCE_ENABLED);
+      end
+   end
+   else begin
+      display_msg(message_str(SCRIPT_EMITER1A, 104));
    end
 end

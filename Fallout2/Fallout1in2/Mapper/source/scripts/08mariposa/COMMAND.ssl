@@ -21,6 +21,10 @@ procedure Command01;
 procedure use_all_fields_on;
 procedure use_all_fields_off;
 
+#define LVAR_BaseAlert        (0)
+#define LVAR_HackedTerminal   (1)
+#define LVAR_ToggleFields     (2)
+
 variable skill_roll;
 variable stat_roll;
 variable initial := 0;
@@ -33,7 +37,7 @@ procedure map_enter_p_proc;
 procedure start begin
    if not(initial) then begin
       if (global_var(GVAR_VATS_ALERT)) then begin
-         set_local_var(0, 1);
+         set_local_var(LVAR_BaseAlert, 1);
       end
       initial := 1;
    end
@@ -43,25 +47,25 @@ procedure description_p_proc begin
    script_overrides;
    display_msg(mstr(100));
    display_msg(mstr(101));
-   if (local_var(0) and not(local_var(2))) then begin
+   if (local_var(LVAR_BaseAlert) and not(local_var(LVAR_ToggleFields))) then begin
       call Command01;
    end
 end
 
 procedure use_p_proc begin
    variable LVar0 := 0;
-   if (local_var(0) and not(local_var(1))) then begin
-      script_overrides;
+   if (local_var(LVAR_BaseAlert) and not(local_var(LVAR_HackedTerminal))) then begin
       LVar0 := roll_vs_skill(dude_obj, SKILL_GAMBLING, 0);
       if (is_success(LVar0)) then begin
          display_msg(mstr(109));
-         set_local_var(1, 1);
+         set_local_var(LVAR_HackedTerminal, 1);
          give_xp_msg(EXP_BONUS_HACKING, mstr(116));
       end
       else begin
          display_msg(mstr(110));
       end
       game_time_advance(game_ticks(1200));
+      script_overrides;
    end
 end
 
@@ -83,24 +87,23 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-   variable LVar0 := 0;
+   variable skill_roll := 0;
    if (action_being_used == SKILL_SCIENCE) then begin
-      script_overrides;
-      LVar0 := roll_vs_skill(dude_obj, action_being_used, 0);
-      if (not(local_var(0))) then begin
-         if (is_success(LVar0)) then begin
+      skill_roll := roll_vs_skill(dude_obj, action_being_used, 0);
+      if (not(local_var(LVAR_BaseAlert))) then begin
+         if (is_success(skill_roll)) then begin
             display_msg(mstr(102));
             field_change := "on";
             call use_all_fields_on;
-            set_local_var(0, 1);
+            set_local_var(LVAR_BaseAlert, 1);
          end
          else begin
             display_msg(mstr(103));
          end
          game_time_advance(game_ticks(300));
       end
-      else if (not(local_var(1))) then begin
-         if (is_success(LVar0)) then begin
+      else if (not(local_var(LVAR_HackedTerminal))) then begin
+         if (is_success(skill_roll)) then begin
             display_msg(mstr(104));
          end
          else begin
@@ -109,8 +112,8 @@ procedure use_skill_on_p_proc begin
          game_time_advance(game_ticks(300));
          call Command01;
       end
-      else if (not(local_var(2))) then begin
-         if (is_success(LVar0)) then begin
+      else if (not(local_var(LVAR_ToggleFields))) then begin
+         if (is_success(skill_roll)) then begin
             display_msg(mstr(106));
             field_change := "off";
             call use_all_fields_off;
@@ -119,14 +122,15 @@ procedure use_skill_on_p_proc begin
             display_msg(mstr(108));
          end
          game_time_advance(game_ticks(1800));
-         set_local_var(2, 1);
+         set_local_var(LVAR_ToggleFields, 1);
       end
+      script_overrides;
    end
 end
 
 procedure Command01 begin
    stat_roll := do_check(dude_obj, STAT_pe, dude_perk(PERK_bonus_awareness));
-   if (not(local_var(1))) then begin
+   if (not(local_var(LVAR_HackedTerminal))) then begin
       if (is_success(stat_roll)) then begin
          if (is_critical(stat_roll)) then begin
             display_msg(mstr(111));
