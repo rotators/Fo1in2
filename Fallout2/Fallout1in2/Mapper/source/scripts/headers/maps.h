@@ -396,7 +396,7 @@
 
 #define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin             \
                                                debug_msg("  mark_on_map("+x+")");                           \
-                                               if fo1in2_classic_wm_enabled then                            \
+                                               if not(fo1in2_fo2_wm_enabled) then                           \
                                                   mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN_FO1); \
                                                else                                                         \
                                                   mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN);     \
@@ -509,20 +509,20 @@ variable get_wm_distance;
                                           CUR_MAP_DESERT2 or   \
                                           CUR_MAP_DESERT3 or   \
                                           CUR_MAP_RNDDESER)    \
-                                    
+
 #define map_is_city                       (CUR_MAP_CITY1 or    \
                                           CUR_MAP_CITY2 or     \
                                           CUR_MAP_CITY3 or     \
                                           CUR_MAP_RNDCITY)
-                                    
+
 #define map_is_ocean                      (CUR_MAP_COAST1 or   \
                                           CUR_MAP_COAST2 or    \
                                           CUR_MAP_RNDCOAST)
-                                          
+
 #define map_is_mountain                   (CUR_MAP_MOUNTN1 or  \
                                           CUR_MAP_MOUNTN2 or   \
                                           CUR_MAP_RNDMOUNT)
-                                          
+
 #define map_is_encounter                  (map_is_desert or map_is_city or map_is_ocean or map_is_mountain)
 
 #define map_has_cavern                    (CUR_MAP_CAVE1 or    \
