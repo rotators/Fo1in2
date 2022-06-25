@@ -1,0 +1,69 @@
+/*
+
+   Classic Worldmap Mod - Add town titles to the green city circles
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+#include "sfall/sfall.rotators.h"
+#include "voodoo.h"
+
+procedure start;
+procedure mark_locations;
+procedure swap_interface;
+
+#define mstr_unknown       mstr_worldmap(1004)
+
+variable i;
+variable town_list;
+variable special_list;
+
+procedure start begin
+   if not(fo1in2_fo2_wm_enabled) then begin
+      debug("classic wm enabled!");
+      if (game_loaded) then begin
+         set_global_script_type(0);
+         register_hook_proc(HOOK_GAMEMODECHANGE, mark_locations);
+
+         // Removes the location names under green circles
+         VOODOO_remove_circle_name;
+
+         town_list := [ AREA_VAULT_13, AREA_VAULT_15, AREA_SHADY_SANDS, AREA_JUNKTOWN, AREA_RAIDERS, AREA_NECROPOLIS,
+                        AREA_HUB, AREA_BROTHERHOOD, AREA_MILITARY_BASE, AREA_GLOW, AREA_BONEYARD, AREA_CATHEDRAL,
+                        AREA_SCRAPHEAP, AREA_SHADY_CAVES, AREA_HUB_FARM, AREA_HUB_LAIR, AREA_VIPERS ];
+         fix_array(town_list);
+
+         // Overwrite Fo2 interface graphics with files from Fo1.
+         call swap_interface;
+      end
+   end
+end
+
+procedure mark_locations begin
+   if (get_game_mode == WORLDMAP) then begin
+      set_town_title(AREA_CAR_OUTTA_GAS, mstr_map(1521)); // Car location needs to be named at all times
+
+      foreach (i in town_list) begin
+         if (town_known(i) >= MARK_STATE_KNOWN) then
+            set_town_title(i, mstr_map(1500 + i));
+         else
+            set_town_title(i, mstr_unknown);
+      end
+   end
+end
+
+procedure swap_interface begin
+   variable file,
+   fileList,
+   pathOld := "art\\INTRFACE\\",
+   pathNew := "art\\INTRFACE\\classicWM\\";
+
+   fileList := ["WMRNDEN2","WMRNDEN3","WRLDSPR0","WRLDSPR1","wrldspr2",
+                "wrldmp00","wrldmp02","wrldmp03","wrldmp05","wrldmp06","wrldmp10","wrldmp11","wrldmp14","wrldmp19"];
+
+   foreach (file in fileList) begin
+      file = fs_copy(pathOld + file + ".frm", pathNew + file + ".frm");
+   end
+end

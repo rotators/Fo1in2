@@ -4107,7 +4107,7 @@
 #define GVAR_ENABLE_FO2_SEASONAL_LIGHTING       (4965)
 #define GVAR_ENABLE_SHADY_SANDS_MERCHANT        (4966)
 #define GVAR_ENABLE_ALTERNATIVE_BOS_REWARD      (4967)
-#define GVAR_ENABLE_CLASSIC_WM                  (4968)
+#define GVAR_ENABLE_FO2_WORLDMAP                (4968)
 #define GVAR_GECKO_HUNTER_WARPARTY              (4969)
 #define GVAR_GECKO_HUNTER_STATUS                (4970)
 #define GVAR_ENABLE_FO2_CRITTERS                (4971)

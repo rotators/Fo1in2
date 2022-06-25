@@ -1,0 +1,51 @@
+/*
+
+   Classic Worldmap Mod - Add town titles to the green city circles
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+#include "sfall/sfall.rotators.h"
+#include "voodoo.h"
+
+procedure start;
+procedure mark_locations;
+
+#define mstr_unknown       mstr_worldmap(1004)
+
+variable i;
+variable town_list;
+variable special_list;
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      register_hook_proc(HOOK_GAMEMODECHANGE, mark_locations);
+
+      debug_msg("MOD: Classic WM enabled!");
+      set_global_var(GVAR_ENABLE_CLASSIC_WM, 1);
+
+      // Removes the location names under green circles
+      VOODOO_remove_circle_name;
+
+      town_list := [ AREA_VAULT_13, AREA_VAULT_15, AREA_SHADY_SANDS, AREA_JUNKTOWN, AREA_RAIDERS, AREA_NECROPOLIS,
+                     AREA_HUB, AREA_BROTHERHOOD, AREA_MILITARY_BASE, AREA_GLOW, AREA_BONEYARD, AREA_CATHEDRAL,
+                     AREA_SCRAPHEAP, AREA_SHADY_CAVES, AREA_HUB_FARM, AREA_HUB_LAIR, AREA_VIPERS ];
+      fix_array(town_list);
+   end
+end
+
+procedure mark_locations begin
+   if (get_game_mode == WORLDMAP) then begin
+      set_town_title(AREA_CAR_OUTTA_GAS, mstr_map(1521)); // Car location needs to be named at all times
+
+      foreach (i in town_list) begin
+         if (town_known(i) >= MARK_STATE_KNOWN) then
+            set_town_title(i, mstr_map(1500 + i));
+         else
+            set_town_title(i, mstr_unknown);
+      end
+   end
+end
