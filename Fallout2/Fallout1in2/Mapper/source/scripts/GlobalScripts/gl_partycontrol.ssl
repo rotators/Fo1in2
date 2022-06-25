@@ -26,10 +26,10 @@ procedure CombatTurn_Handler;
 procedure GameModeChange_Handler;
 procedure InventoryMove_Handler;
 procedure InvenWield_Handler;
+procedure SetGlobalVar_Handler;
 
 variable
    controlMode,
-   noCheckArray,
    pidList, perksList,
    lightInt, lightDist, npcControl,
    displayName, displayNameColor, isShowTag,
@@ -38,7 +38,7 @@ variable
 
 
 procedure AllowControl(variable pid) begin
-   return ((pidList == 0 or is_in_array(pid bwand 0xFFFFFF, pidList)) and (party_member_obj(pid)));
+   return ((pidList == 0 or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)));
 end
 
 procedure SetLight(variable critter, variable lInt, variable lDist) begin
@@ -66,17 +66,17 @@ procedure CombatTurn_Handler begin
       if (critter != real_dude_obj) then begin
          if (npcControl == 0) then begin
             dudeLightDist := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_DISTANCE);
-            dudeLightInt := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_INTENSITY);
+            dudeLightInt  := get_object_data(real_dude_obj, OBJ_DATA_LIGHT_INTENSITY);
             obj_set_light_level(real_dude_obj, 0, 0); // dude off light
          end
          npcControl := critter;
 
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
-         lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+         lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
 
          // set perks (only work with 4.1.8+)
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
 
@@ -112,7 +112,7 @@ procedure CombatTurn_Handler begin
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
 
@@ -147,13 +147,23 @@ end
 procedure InvenWield_Handler begin
    variable
       critter := get_sfall_arg,
-      item := get_sfall_arg,
-      slot := get_sfall_arg,
+      item  := get_sfall_arg,
+      slot  := get_sfall_arg,
       event := get_sfall_arg;
 
    // Fix weapon duplication when equipping in combat
    if (event and slot == INVEN_TYPE_RIGHT_HAND and AllowControl(obj_pid(critter))) then begin
       set_flags(item, get_flags(item) bwand bwnot(FLAG_LEFT_HAND));
+   end
+end
+
+procedure SetGlobalVar_Handler begin
+   if (npcControl and get_sfall_arg == GVAR_PLAYER_REPUTATION and obj_pid(dude_obj) != PID_PLAYER) then begin
+      variable value := global_var(GVAR_PLAYER_REPUTATION);
+      if (get_sfall_arg > value) then begin
+         set_sfall_arg(1, value);
+         set_sfall_return(value);
+      end
    end
 end
 
@@ -199,6 +209,10 @@ procedure start begin
          register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
          register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_Handler);
          register_hook_proc(HOOK_INVENWIELD, InvenWield_Handler);
+
+         if (GetConfig("CombatControl", "GainReputation", 0) == 0) then begin
+             register_hook_proc(HOOK_SETGLOBALVAR, SetGlobalVar_Handler);
+         end
       end else begin
          exit;
       end
