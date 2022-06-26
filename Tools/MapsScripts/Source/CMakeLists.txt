@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.23 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.22 FATAL_ERROR )
 
 set( CMAKE_CONFIGURATION_TYPES    "Release" )
 set( CMAKE_SKIP_INSTALL_RULES     TRUE )
@@ -19,6 +19,41 @@ target_sources( ${PROJECT_NAME}
 
         subtypes.h
 )
+
+if( MSVC )
+    set_property( TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS "/OPT:REF " )
+elseif( UNIX )
+    set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
+    include( CheckCXXCompilerFlag )
+    check_cxx_compiler_flag( -Wall      COMPILER_FLAG_WALL )
+    check_cxx_compiler_flag( -Werror    COMPILER_FLAG_WERROR )
+    check_cxx_compiler_flag( -Wextra    COMPILER_FLAG_WEXTRA )
+    check_cxx_compiler_flag( -Wpedantic COMPILER_FLAG_WPEDANTIC )
+
+    if( COMPILER_FLAG_WALL )
+        target_compile_options( ${PROJECT_NAME} PRIVATE -Wall )
+    endif()
+    if( COMPILER_FLAG_WERROR )
+        target_compile_options( ${PROJECT_NAME} PRIVATE -Werror )
+    endif()
+    if( COMPILER_FLAG_WEXTRA )
+        target_compile_options( ${PROJECT_NAME} PRIVATE -Wextra )
+    endif()
+    if( COMPILER_FLAG_WPEDANTIC )
+        target_compile_options( ${PROJECT_NAME} PRIVATE -Wpedantic )
+    endif()
+
+    check_cxx_compiler_flag( -static-libgcc    COMPILER_FLAG_STATIC_LIBGCC )
+    check_cxx_compiler_flag( -static-libstdc++ COMPILER_FLAG_STATIC_LIBSTDCPP )
+
+    if( COMPILER_FLAG_STATIC_LIBGCC )
+        target_link_libraries( ${PROJECT_NAME} PRIVATE -static-libgcc )
+    endif()
+    if( COMPILER_FLAG_STATIC_LIBSTDCPP )
+        target_link_libraries( ${PROJECT_NAME} PRIVATE -static-libstdc++ )
+    endif()
+endif()
 
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 set_property( GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake" )

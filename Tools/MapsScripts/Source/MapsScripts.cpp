@@ -106,10 +106,8 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
     readUINT32(stream); // light radius
     readUINT32(stream); // light intensity
     readUINT32(stream); // outline
-    uint32_t SID1 = readUINT32(stream); // SID
-    uint32_t SID2 = readUINT32(stream); // SID
-
-    //std::cout << "Object PID " << PID << " SID1 " << SID1 << " SID2" << SID2 << std::endl;
+    readUINT32(stream); // SID1
+    readUINT32(stream); // SID2
 
     int32_t inventorySize = readINT32(stream);
 
@@ -224,7 +222,7 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
 
     if (inventorySize > 0)
     {
-        for (unsigned i = 0; i != inventorySize; ++i)
+        for (int32_t i = 0; i != inventorySize; ++i)
         {
             readUINT32(stream); // ammount
             ReadMapObject(stream, verbose);
@@ -319,7 +317,7 @@ int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
                     default:
                         break;
                     }
-                    readUINT32(in); //unknown 4 
+                    readUINT32(in); //unknown 4
                     uint32_t SID = readUINT32(in); // scriptId
                     readUINT32(in); //unknown 5
                     readUINT32(in); //unknown 6
@@ -362,7 +360,7 @@ int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
     if (true == false && !info.ItemsDir.empty())
     {
         // OBJECTS section
-        uint32_t objectsTotal = readUINT32(in);
+        readUINT32(in);
 
         //std::cout << "Objects: " << objectsTotal << std::endl;
 
@@ -394,7 +392,6 @@ std::vector<std::string> GetMaps(const std::string& path, const std::string& ext
             continue;
 
         result.push_back(file.path().string());
-        result.back().erase(0, result.back().find_first_not_of("\\/"));  // trim left
     }
 
     std::sort(result.begin(), result.end());
@@ -428,7 +425,7 @@ int main(int argc, char** argv)
         info.ItemsDir = cmd.GetStr("items");
     else
         std::cout << "WARNING : items prototypes directory not set, skipping all objects" << std::endl << std::endl;
-        
+
     if (!std::filesystem::is_directory(info.MapsDir))
     {
         std::cout << "ERROR : directory <" << info.MapsDir << "> does not exits" << std::endl;
