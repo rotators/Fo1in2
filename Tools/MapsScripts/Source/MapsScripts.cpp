@@ -40,6 +40,8 @@
 
 struct MapsScripts
 {
+    bool Verbose = false;
+
     std::string MapsDir;
     std::string ItemsDir;
 
@@ -51,6 +53,21 @@ struct MapsScripts
     std::map<std::string, std::set<uint32_t>> ByMap;
     std::map<uint32_t, std::set<std::string>> ByScript;
 };
+
+int Usage(int returnCode = EXIT_FAILURE)
+{
+    std::cout << "Usage: MapsScripts [options]" << std::endl;
+    std::cout << std::endl;
+    std::cout << "OPTIONS" << std::endl;
+    std::cout << std::endl;
+    std::cout << "  --maps [path]     Path to directory with .map files (required)" << std::endl;
+    std::cout << "  --scripts [path]  Path to SCRIPTS.LST, can be file or directory (required)" << std::endl;
+    std::cout << "  --items [path]    Path to directory with .map files" << std::endl;
+    std::cout << "  --verbose         Enables extra debug messages" << std::endl;
+    std::cout << std::endl;
+
+    return returnCode;
+}
 
 uint32_t readUINT32(std::ifstream& stream)
 {
@@ -66,54 +83,30 @@ int32_t readINT32(std::ifstream& stream)
     return readUINT32(stream);
 }
 
-int usage(int returnCode = EXIT_FAILURE)
+void skipUINT32(std::ifstream& stream, size_t count = 1)
 {
-    std::cout << "Usage: MapsScripts [options]" << std::endl;
-    std::cout << std::endl;
-    std::cout << "OPTIONS" << std::endl;
-    std::cout << std::endl;
-    std::cout << "  --maps [path]     Path to directory with .map files (required)" << std::endl;
-    std::cout << "  --scripts [path]  Path to SCRIPTS.LST, can be file or directory (required)" << std::endl;
-    std::cout << "  --items [path]    Path to directory with .map files" << std::endl;
-    std::cout << "  --verbose         Enables extra debug messages" << std::endl;
-    std::cout << std::endl;
-
-    return returnCode;
+    stream.seekg(count * 4, std::ios::cur);
 }
 
-void ReadMapObject(std::ifstream& stream, bool verbose)
+void ReadMapObject(std::ifstream& stream, MapsScripts& info)
 {
-    readUINT32(stream); // oid
-    readINT32(stream);  // position
-    readUINT32(stream); // hexX
-    readUINT32(stream); // hexY
-    readUINT32(stream); // sX
-    readUINT32(stream); // sY
-    readUINT32(stream); // frame number
-    readUINT32(stream); // orientation
-    readUINT32(stream); // FID
-    readUINT32(stream); // FLAGS
-    readUINT32(stream); // elevation
+    skipUINT32(stream, 11);
     uint32_t PID = readUINT32(stream);
 
     uint32_t type = PID >> 24;
     uint32_t id  = PID & 0x00FFFFFF;
 
-    if (verbose)
+    if (info.Verbose)
         std::cout << "Read object PID " << PID << " type " << type << "" << id << std::endl;
 
-    readUINT32(stream); // combat id
-    readUINT32(stream); // light radius
-    readUINT32(stream); // light intensity
-    readUINT32(stream); // outline
+    skipUINT32(stream, 4);
+
     readUINT32(stream); // SID1
     readUINT32(stream); // SID2
 
     int32_t inventorySize = readINT32(stream);
 
-    readUINT32(stream); // max inventorySize
-    readUINT32(stream); // unknown 10
-    readUINT32(stream); // unknown 11
+    skipUINT32(stream, 3);
 
     switch (type)
     {
@@ -123,9 +116,7 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
             switch (subtype)
             {
                 case 0: // armor
-                    break;
                 case 1: // container
-                    break;
                 case 2: // drug
                     break;
                 case 3: // weapon
@@ -133,28 +124,15 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
                     readUINT32(stream);
                     break;
                 case 4: // ammo
-                    readUINT32(stream);
-                    break;
                 case 5: // misc
-                    readUINT32(stream);
-                    break;
                 case 6: // key
-                    readUINT32(stream);
+                    skipUINT32(stream);
                     break;
             }
             break;
         }
         case 1: // critters:
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
-            readUINT32(stream);
+            skipUINT32(stream, 10);
             break;
         case 2: // scenery
         {
@@ -162,23 +140,13 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
             switch (subtype)
             {
                 case 0: // door
-                    readUINT32(stream);
+                    skipUINT32(stream);
                     break;
                 case 1: // stairs
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    break;
                 case 2: // elevator
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    break;
                 case 3: // ladder bottom
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    break;
                 case 4: // ladder top
-                    readUINT32(stream);
-                    readUINT32(stream);
+                    skipUINT32(stream, 2);
                     break;
                 case 5: // generic
                     break;
@@ -204,16 +172,8 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
                 case 21:
                 case 22:
                 case 23:
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    break;
                 default:
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    readUINT32(stream);
-                    readUINT32(stream);
+                    skipUINT32(stream, 4);
                     break;
             }
             break;
@@ -224,13 +184,14 @@ void ReadMapObject(std::ifstream& stream, bool verbose)
     {
         for (int32_t i = 0; i != inventorySize; ++i)
         {
-            readUINT32(stream); // ammount
-            ReadMapObject(stream, verbose);
+            skipUINT32(stream);
+
+            ReadMapObject(stream, info);
         }
     }
 }
 
-int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
+int ReadMap(const std::string& filename, MapsScripts& info)
 {
     std::ifstream in;
 
@@ -241,51 +202,30 @@ int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
         return 1;
     }
 
-    // 4 - version
-    readUINT32(in);
-    // 16 - name
-    readUINT32(in);
-    readUINT32(in);
-    readUINT32(in);
-    readUINT32(in);
-    // 4 - default position
-    readUINT32(in);
-    // 4 - default elevation
-    readUINT32(in);
-    // 4 - default orientation
-    readUINT32(in);
-    // 4 - local vars
+    readUINT32(in); // version
+
+    skipUINT32(in, 7);
+
     uint32_t localVars = readUINT32(in);
+
     // 4 - SID
     readUINT32(in);
-    // 4 - flags
-    uint32_t flags = readUINT32(in);
-    // 4 - elevations
-    uint32_t elevations = 0;
-    if ((flags & 2) == 0) elevations++;
-    if ((flags & 4) == 0) elevations++;
-    if ((flags & 8) == 0) elevations++;
 
-    // 4 - unknown
-    readUINT32(in);
-    // 4 - global vars
+    uint32_t flags = readUINT32(in);
+
+    uint32_t elevations = 0;
+    if ((flags & 2) == 0)
+        elevations++;
+    if ((flags & 4) == 0)
+        elevations++;
+    if ((flags & 8) == 0)
+        elevations++;
+
+    skipUINT32(in);
+
     uint32_t globalVars = readUINT32(in);
-    // 4 - map id
-    readUINT32(in);
-    // 4 - time
-    readUINT32(in);
-    // 4*44 - unknown
-    for (unsigned i = 0; i != 44; ++i)
-        readUINT32(in);
-    // 4 * NUM-GLOBAL-VARS
-    for (unsigned i = 0; i != globalVars; ++i)
-        readUINT32(in);
-    // 4 * NUM-LOCAL-VARS
-    for (unsigned i = 0; i != localVars; ++i)
-        readUINT32(in);
-    // 100*100 * 2 * 2 * elevations  - tiles
-    for (unsigned i = 0; i != 100 * 100 * elevations; ++i)
-        readUINT32(in);
+
+    skipUINT32(in, 46 + globalVars + localVars + (100 * 100 * elevations));
 
     // SCRIPTS SECTION
     for (unsigned int i = 0; i < 5; i++)
@@ -346,7 +286,7 @@ int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
                     uint32_t v = readUINT32(in);
                     check += v;
 
-                    readUINT32(in); // skip 4
+                    skipUINT32(in);
                 }
             }
             if (check != count)
@@ -357,19 +297,18 @@ int ReadMap(const std::string& filename, MapsScripts& info, bool verbose)
         }
     }
 
-    if (true == false && !info.ItemsDir.empty())
+    if (!info.ItemsDir.empty())
     {
         // OBJECTS section
-        readUINT32(in);
 
-        //std::cout << "Objects: " << objectsTotal << std::endl;
+        skipUINT32(in);
 
         for (unsigned int i = 0; i != elevations; ++i)
         {
             uint32_t objectsOnElevation = readUINT32(in);
             for (unsigned int j = 0; j != objectsOnElevation; ++j)
             {
-                ReadMapObject(in, verbose);
+                ReadMapObject(in, info);
             }
         }
     }
@@ -407,13 +346,13 @@ int main(int argc, char** argv)
     // Handle command line arguments //
 
     CommandLine cmd(argc, argv);
-    bool verbose = cmd.IsOption("verbose");
+    info.Verbose = cmd.IsOption("verbose");
 
     if (cmd.IsOption("help"))
-        return usage(EXIT_SUCCESS);
+        return Usage(EXIT_SUCCESS);
 
     if (cmd.IsOptionEmpty("maps") || cmd.IsOptionEmpty("scripts"))
-        return usage();
+        return Usage();
 
     std::string scriptsLst;
     std::vector<std::string> content;
@@ -446,7 +385,7 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    if (verbose)
+    if (info.Verbose)
         std::cout << "Loading SCRIPTS.LST" << std::endl;
 
     if (!TextReadFile(scriptsLst, content))
@@ -466,14 +405,14 @@ int main(int argc, char** argv)
 
     for (const auto& filename : mapFiles)
     {
-        if (verbose)
+        if (info.Verbose)
             std::cout << "Loading " << TextGetWithoutPath(info.MapsDir, filename) << std::endl;
 
-        if (ReadMap(filename, info, verbose) != 0)
+        if (ReadMap(filename, info) != 0)
             return EXIT_FAILURE;
     }
 
-    if (verbose)
+    if (info.Verbose)
         std::cout << std::endl;
 
     for (const auto& it : info.ByMap)
