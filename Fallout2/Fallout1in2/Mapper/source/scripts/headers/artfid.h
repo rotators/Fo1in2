@@ -153,3 +153,7 @@
 #define FID_HMLHMX        (16777347) // Long hair leather jacket
 #define FID_HMBMAX        (16777348) // Black dude leather jacket
 #define FID_HMBLTR        (16777349) // Black dude leather armor
+#define FID_HMMET2        (16777350) // Black dude brown pants
+#define FID_HMCMB2        (16777351) // Black dude Combat Armor
+#define FID_HMCMB3        (16777352) // Black dude, Dark ("Black") Combat Armor
+#define FID_HAROBB        (16777353) // Black dude purple robe

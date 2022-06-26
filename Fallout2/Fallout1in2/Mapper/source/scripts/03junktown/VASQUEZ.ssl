@@ -1,12 +1,18 @@
 /*
 
-   Cathedral - Junktown mercenary (Cut NPC)
+   Junktown - Mercenary (Cut NPC)
+
+   NOTE:
+
+      Originally 500 caps / week, but reduced to 100.
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/junktown.h"
+#include "maps/junkcsno.h"
+#include "maps/junkkill.h"
 
 #define NAME                    SCRIPT_VASQUEZ
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -14,19 +20,41 @@
 #include "command.h"
 #include "modreact.h"
 
+#define PARTY_NODE_X                         Node1000
+#undef  set_default_party_follow
+#define set_default_party_follow             set_follow_close
+
+#undef  def_weapon_use_msg
+#define def_weapon_use_msg                   mstr(206)
+#undef  def_wait_msg
+#define def_wait_msg                         mstr(210)
+#undef  def_nowait_msg
+#define def_nowait_msg                       mstr(209)
+#undef  def_end_msg
+#define def_end_msg                          mstr(208)
+#undef  def_gear_msg
+#define def_gear_msg                         mstr(2000)
+
 /* Standard Script Procedures */
 procedure start;
-procedure damage_p_proc;
+procedure push_p_proc;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 procedure talk_p_proc;
+procedure damage_p_proc;
+procedure combat_p_proc;
 procedure destroy_p_proc;
 
 procedure end_employment;
 procedure hiring;
-procedure follow_player;
-procedure vasquez01;
+procedure map_commentary;
+
 procedure vasquez00;
-procedure vasquezend;
-procedure vasquez10;
+procedure vasquez01;
 procedure vasquez02;
 procedure vasquez03;
 procedure vasquez04;
@@ -35,184 +63,512 @@ procedure vasquez06;
 procedure vasquez07;
 procedure vasquez08;
 procedure vasquez09;
+procedure vasquez10;
 
-variable known;
-variable warned;
-variable following;
-variable hire_date;
+procedure Node998;
+procedure Node999;
+
+procedure Node1000;
+procedure Node1001;
+procedure Node1002;
+procedure Node1003;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+procedure Node1008;
+procedure Node1009;
+procedure Node1010;
+procedure Node1100;
+
+#define LVAR_Herebefore                   (4)
+#define LVAR_Warned                       (5)
+#define LVAR_Following                    (6)
+#define LVAR_HireDate                     (7)
+#define LVAR_LeftJunktown                 (8)
+
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
+
+#define float_vasquez(x)                  float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+#define vasquez_joins_party               party_add_self;                              \
+                                          add_timer_event(self_obj, game_ticks(1), 2); \
+                                          set_self_team(TEAM_PLAYER)
+#define dude_has_free_slot_for_vasquez    fo1in2_party_limit_disabled or ((dude_at_max_party_size == false) and (Vasquez_In_Party == false))
+
+#define EVENT_FLOAT_JOIN                  (2)
+#define EVENT_FLOAT_INJURED               (3)
+
+#define is_junktown_enemy                 (REP_ENEMY_JUNKTOWN_CITIZENS or REP_ENEMY_JUNKTOWN_BOXER or REP_ENEMY_JUNKTOWN)
+#define under_contract                    (((GAME_TIME_IN_DAYS) - local_var(LVAR_HireDate)) < 7)
+
+#define hex_jail        (18668)
+#define hex_hospital    (15508)
+#define hex_coc         (16267)
+#define hex_killian     (27883)
+#define hex_gizmo       (27919)
+#define hex_boxing      (17495)
+#define hex_hotel       (21700)
+#define hex_skum        (22083)
+#define hex_skullz1     (15915)
+#define hex_skullz2     (13686)
+#define hex_dogmeat     (30890)
+#define hex_sinthia     (17687)
+
+variable tmp_hostile;
+variable line151flag;
+variable line152flag;
+variable line153flag;
+variable line154flag;
+variable line155flag;
+variable line156flag;
+variable line157flag;
+variable line158flag;
+variable line159flag;
+variable line162flag;
+variable line163flag;
+
+procedure Node998 begin
+end
+
+procedure Node999 begin
+end
 
 procedure start begin
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore)) then begin
+      display_msg(mstr(100));
    end
    else begin
-      if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-         call destroy_p_proc;
+      display_msg(mstr(101));
+   end
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore)) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
+end
+
+procedure push_p_proc begin
+   if (Vasquez_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      if (random(0, 1) == 1) then
+         float_vasquez(random(310, 313));
+   end
+end
+
+procedure map_enter_p_proc begin
+   if not(Vasquez_In_Party) then begin
+      set_self_team(TEAM_JUNKTOWNER);
+   end
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
+
+   if CUR_AREA_JUNKTOWN then begin
+      if not(self_visible) and (local_var(LVAR_LeftJunktown) > 0) then begin
+         if CUR_MAP_JUNKENT then begin
+            set_local_var(LVAR_LeftJunktown, 0);
+            set_self_abandon_party;
+            critter_attempt_placement(self_obj, 21680, 0);
+            self_rotate(3);
+         end
       end
-      else begin
-         if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-            script_overrides;
-            if (known) then begin
-               display_msg(mstr(100));
-            end
-            else begin
-               display_msg(mstr(101));
-            end
+   end
+
+   if junktown_invaded and CUR_AREA_JUNKTOWN and not(Vasquez_In_Party) then begin
+      invasion_kill_critter;
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_FLOAT_JOIN) then begin
+      debug("Vasquez is joining!");
+   end
+   else if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Vasquez_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then float_vasquez(3500);
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
+   end
+end
+
+procedure critter_p_proc begin
+   if (Vasquez_In_Party) then begin
+      party_member_follow_dude
+   end
+   else if (self_team == TEAM_PLAYER) then begin
+      set_self_abandon_party;
+   end
+
+   if not(CUR_AREA_JUNKTOWN) and self_visible then begin
+      set_local_var(LVAR_LeftJunktown, 1);
+      party_member_hide(Vasquez_ptr, hidden_vasquez_bit)
+   end
+
+   if ((Vasquez_In_Party or party_is_waiting) and CUR_AREA_JUNKTOWN and not(combat_is_initialized)) then begin
+      if self_visible and not(under_contract) then begin
+         if party_is_waiting then begin
+            end_party_waiting;
+            set_local_var(LVAR_LeftJunktown, 1);
+            party_member_hide(Vasquez_ptr, hidden_vasquez_bit)
          end
          else begin
-            if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-               if (following) then begin
-                  if (((GAME_TIME_IN_DAYS) - hire_date) > 7) then begin
-                     call end_employment;
-                  end
-                  else begin
-                     call follow_player;
-                  end
-               end
+            call end_employment;
+         end
+      end
+   end
+
+   if (self_can_see_dude) and is_junktown_enemy then begin
+      tmp_hostile := 1;
+   end
+
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      set_self_abandon_party;
+      attack(dude_obj);
+   end
+   else if not(combat_is_initialized) then begin
+      call map_commentary;
+   end
+end
+
+procedure pickup_p_proc begin
+   if not(Vasquez_In_Party) then begin
+      tmp_hostile := 1;
+   end
+   else begin
+      script_overrides;
+   end
+end
+
+procedure talk_p_proc begin
+   set_tma_data_default;
+
+   if (Vasquez_In_Party or party_is_waiting) then begin
+      //call vasquez06;
+
+      self_look_at_dude;
+      dude_look_at_self;
+
+      start_dialog_at_node(Node1000);
+   end
+   else if (under_contract and global_var(GVAR_VASQUEZ_HIRELING_STATUS) == 2) then begin
+      call vasquez06;
+      vasquez_joins_party;
+   end
+   else begin
+      dude_look_at_self;
+      if (local_var(LVAR_Herebefore)) then begin
+         start_dialog_at_node(vasquez07);
+      end
+      else begin
+         start_dialog_at_node(vasquez00);
+      end
+   end
+end
+
+procedure end_employment begin
+   debug("end employment!");
+
+   if CUR_MAP_JUNKENT then begin
+      set_self_abandon_party;
+      gfade_out(1);
+         critter_attempt_placement(self_obj, 21680, 0);
+         self_rotate(3);
+      gfade_in(1);
+   end
+   else begin
+      gfade_out(1);
+         set_local_var(LVAR_LeftJunktown, 1);
+         party_member_hide(Vasquez_ptr, hidden_vasquez_bit)
+      gfade_in(1);
+   end
+end
+
+procedure hiring begin
+   if (dude_caps >= 100) then
+      call vasquez05;
+   else
+      call vasquez04;
+end
+
+procedure map_commentary begin
+   if (CUR_MAP_JUNKENT) then begin
+      if (tile_distance(self_tile, hex_jail) < 5)  then begin
+         if (not(line154flag)) then begin
+            float_msg(self_obj, mstr(154), FLOAT_MSG_NORMAL);
+            line154flag := 1;
+         end
+      end
+      else if (tile_distance(self_tile, hex_hospital) < 5)  then begin
+         if (not(line155flag)) then begin
+            float_msg(self_obj, mstr(155), FLOAT_MSG_NORMAL);
+            line155flag := 1;
+         end
+      end
+      else if ((tile_distance(self_tile, hex_coc) < 4) and (GAME_TIME_IN_DAYS) >= 80)  then begin
+         if (not(line156flag)) then begin
+            float_msg(self_obj, mstr(156), FLOAT_MSG_NORMAL);
+            line156flag := 1;
+         end
+      end
+   end
+   else if (CUR_MAP_JUNKKILL) then begin
+      if not(Ian_In_Party) and is_killian_alive and (tile_distance(self_tile, hex_killian) < 4)  then begin
+         if (not(line151flag)) then begin
+            float_msg(self_obj, mstr(151), FLOAT_MSG_NORMAL);
+            line151flag := 1;
+         end
+      end
+      else if (tile_distance(self_tile, hex_hotel) < 6)  then begin
+         if (not(line153flag)) then begin
+            float_msg(self_obj, mstr(153), FLOAT_MSG_NORMAL);
+            line153flag := 1;
+         end
+      end
+      else if (tile_distance(self_tile, hex_skullz1) < 4) or (tile_distance(self_tile, hex_skullz2) < 4)  then begin
+         if (not(line158flag)) then begin
+            if (global_var(GVAR_BUST_SKULZ) < 2) then begin
+               float_msg(self_obj, mstr(158), FLOAT_MSG_NORMAL);
             end
+            else begin
+               float_msg(self_obj, mstr(161), FLOAT_MSG_NORMAL);
+            end
+            line158flag := 1;
+         end
+      end
+      else if ((tile_distance(self_tile, hex_sinthia) < 4) and (map_var(MVAR_Sinthia_dead) != 2))  then begin
+         if (not(line163flag)) then begin
+            float_msg(self_obj, mstr(163), FLOAT_MSG_NORMAL);
+            line163flag := 1;
+         end
+      end
+   end
+   else if (CUR_MAP_JUNKCSNO) then begin
+      if not(Ian_In_Party) and is_gizmo_alive and (tile_distance(self_tile, hex_gizmo) < 4) then begin
+         if (not(line152flag)) then begin
+            float_msg(self_obj, mstr(152), FLOAT_MSG_NORMAL);
+            line152flag := 1;
+         end
+      end
+      else if (tile_distance(self_tile, hex_boxing) < 4) then begin
+         if (not(line157flag)) then begin
+            float_msg(self_obj, mstr(157), FLOAT_MSG_NORMAL);
+            line157flag := 1;
+         end
+      end
+      else if (tile_distance(self_tile, hex_skum) < 6) then begin
+         if (not(line159flag)) then begin
+            if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
+               float_msg(self_obj, mstr(159), FLOAT_MSG_NORMAL);
+            end
+            else begin
+               float_msg(self_obj, mstr(160), FLOAT_MSG_NORMAL);
+            end
+            line159flag := 1;
+         end
+      end
+      else if ((tile_distance(self_tile, hex_dogmeat) < 4) and dog_is_angry) then begin
+         if (not(line162flag)) then begin
+            float_msg(self_obj, mstr(162), FLOAT_MSG_NORMAL);
+            line162flag := 1;
          end
       end
    end
 end
 
-procedure talk_p_proc
-begin
-   dude_look_at_self;
-   start_gdialog(436, self_obj, 4, -1, -1);
-   gsay_start;
-   if (following) then begin
-      call vasquez06;
-   end
-   else begin
-      if (known) then begin
-         call vasquez07;
-      end
-      else begin
-         call vasquez00;
-      end
-   end
-   gsay_end;
-   end_dialogue;
-end
-
-procedure end_employment
-begin
-   following := 0;
-end
-
-procedure hiring
-begin
-   call vasquez05;
-end
-
-procedure follow_player
-begin
-   if (tile_distance_objs(self_obj, dude_obj) > 3) then begin
-      self_walk_to_tile(dude_tile);
-   end
-   else begin
-      if (anim_busy(self_obj)) then begin
-         self_walk_to_tile(self_tile);
-      end
-   end
-end
-
-procedure vasquez01
-begin
-   NMessage(105);
-end
-
-procedure vasquez00
-begin
+procedure vasquez00 begin
    Reply(102);
    NOption(103, vasquez02, 4);
    NLowOption(104, vasquez01);
 end
 
-procedure vasquezend
-begin
+procedure vasquez01 begin
+   NMessage(105);
 end
 
-procedure vasquez10
-begin
-   float_msg(self_obj, mstr(126), FLOAT_MSG_NORMAL);
-   warned := 1;
-end
-
-procedure vasquez02
-begin
-   known := 1;
+procedure vasquez02 begin
+   set_local_var(LVAR_Herebefore, 1);
    Reply(106);
    NOption(107, vasquez03, 4);
-   NOption(108, vasquezend, 4);
+   NOption(108, Node999, 4);
 end
 
-procedure vasquez03
-begin
+procedure vasquez03 begin
    Reply(109);
    NOption(110, hiring, 4);
-   NOption(111, vasquezend, 4);
+   NOption(111, Node999, 4);
 end
 
-procedure vasquez04
-begin
+procedure vasquez04 begin
    NMessage(112);
 end
 
-procedure vasquez05
-begin
-   NMessage(113);
-   following := 1;
-   hire_date := GAME_TIME_IN_DAYS;
+procedure vasquez05 begin
+   if dude_has_free_slot_for_vasquez then begin
+      dude_caps_adjust(-100);
+
+      NMessage(113);
+      set_local_var(LVAR_Following, 1);
+      set_local_var(LVAR_HireDate, GAME_TIME_IN_DAYS);
+
+      set_global_var(GVAR_VASQUEZ_HIRELING_STATUS, 2);
+      vasquez_joins_party;
+   end
+   else begin
+      Reply(200);
+      NOption(g_bye, Node999, 004);
+   end
 end
 
 procedure vasquez06 begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := random(1, 5);
-   if (LVar0 == 1) then begin
-      LVar1 := mstr(114);
-   end
-   else if (LVar0 == 2) then begin
-      LVar1 := mstr(115);
-   end
-   else if (LVar0 == 3) then begin
-      LVar1 := mstr(116);
-   end
-   else if (LVar0 == 4) then begin
-      LVar1 := mstr(117);
-   end
-   else if (LVar0 == 5) then begin
-      LVar1 := mstr(118);
-   end
-   float_msg(self_obj, LVar1, FLOAT_MSG_NORMAL);
+   float_msg(self_obj, mstr(random(114,118)), FLOAT_MSG_NORMAL);
 end
 
-procedure vasquez07
-begin
+procedure vasquez07 begin
    Reply(119);
    NOption(120, vasquez09, 4);
-   NOption(121, vasquezend, 4);
+   NOption(121, Node999, 4);
    NLowOption(122, vasquez08);
 end
 
-procedure vasquez08
-begin
+procedure vasquez08 begin
    NMessage(123);
 end
 
-procedure vasquez09
-begin
+procedure vasquez09 begin
    Reply(124);
    NOption(125, hiring, 4);
 end
 
-procedure damage_p_proc
-begin
-   if source_is_dude then begin
-      if (not(warned)) then begin
+procedure vasquez10 begin
+   float_msg(self_obj, mstr(126), FLOAT_MSG_NORMAL);
+   set_local_var(LVAR_Warned, 1);
+end
+
+procedure vasquezInParty begin
+   Reply(random(114,118));
+   NOption(g_bye, Node999, 4);
+end
+
+// party stuff
+procedure Node1000 begin
+   Reply(102);
+   party_member_default_options;
+end
+
+procedure Node1001 begin
+   // heal yourself
+   obj_heal(self_obj)
+   global_temp := 0;
+   if (party_healed_max) then begin
+      Reply(300);
+   end else if (party_healed_good) then begin
+      Reply(301);
+   end else if (party_healed_hurt) then begin
+      Reply(302);
+   end else begin
+      Reply(303);
+   end
+
+   party_member_default_options;
+end
+procedure Node1002 begin
+   set_global_var(GVAR_TYCHO_HIRELING_STATUS, 3);
+
+   // wait here
+   set_party_waiting;
+   Reply(211);
+   party_member_default_options;
+end
+procedure Node1003 begin
+   // put your weapon away
+   inven_unwield(self_obj);
+   Reply(random(2100, 2101));
+   party_member_default_options;
+end
+procedure Node1004 begin
+   // follow close
+   set_follow_close;
+   Reply(random(2100, 2101));
+   party_member_default_options;
+end
+procedure Node1005 begin
+   // follow medium
+   set_follow_medium;
+   Reply(random(2100, 2101));
+   party_member_default_options;
+end
+procedure Node1006 begin
+   // follow far
+   set_follow_far;
+   Reply(random(2100, 2101));
+   party_member_default_options;
+end
+procedure Node1007 begin
+   // distance
+   Reply(202);
+   party_member_def_follow_options;
+end
+procedure Node1008 begin
+   // gear
+   Reply(102);
+   party_member_def_gear_options;
+end
+procedure Node1009 begin
+   // remove armor
+   remove_armor(self_obj)
+   Reply(random(2100, 2101));
+   party_member_default_options;
+end
+procedure Node1010 begin
+   // weapons that can be used
+   Reply(207);
+   party_member_default_options;
+end
+procedure Node1100 begin
+   // join me
+   if fo1in2_party_limit_disabled or not(dude_at_max_party_size) then begin
+      set_global_var(GVAR_VASQUEZ_HIRELING_STATUS, 2);
+      end_party_waiting;
+      Reply(2102);
+      party_member_default_options;
+   end
+   else begin
+      set_self_abandon_party;
+      Reply(200);
+      NOption(g_mstr(10007), Node999, 001);
+   end
+end
+
+procedure damage_p_proc begin
+   if source_is_dude and not(Vasquez_In_Party) then begin
+      tmp_hostile := 1;
+      if not(local_var(LVAR_Warned)) then begin
          call vasquez10;
       end
+   end
+end
+
+procedure combat_p_proc begin
+   if Vasquez_In_Party and (REP_ENEMY_JUNKTOWN_CITIZENS or REP_ENEMY_JUNKTOWN_BOXER or REP_ENEMY_JUNKTOWN) then begin
+      tmp_hostile := 1;
+      party_remove(self_obj);
+      attack_setup(self_obj, dude_obj);
+      attack(dude_obj);
    end
 end
 
