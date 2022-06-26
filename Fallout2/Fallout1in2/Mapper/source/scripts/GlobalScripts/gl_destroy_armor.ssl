@@ -12,27 +12,32 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure map_enter_p_proc;
+procedure destroy_armor;
 
 // Script would delete default armor from Ian, Tycho, and Katja on map_enter
 #define not_possible_partymember    (obj_pid(critter) != PID_IAN and obj_pid(critter) != PID_TYCHO and obj_pid(critter) != PID_KATJA and obj_pid(critter) != PID_VASQUEZ)
 
 procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      if fo1in2_destroy_armor_enabled then begin
+         register_hook_proc(HOOK_STDPROCEDURE, destroy_armor);
+      end
+   end
 end
 
-procedure map_enter_p_proc begin
-   variable critter, item;
+procedure destroy_armor begin
+   variable
+      proc := get_sfall_arg,
+      critter := get_sfall_arg;
 
-   if fo1in2_destroy_armor_enabled then begin
-      if (cur_map_index > MAP_DESERT0 and not is_loading_game and map_first_run) then begin
-         foreach (critter in list_as_array(LIST_CRITTERS)) begin
-            if critter_wearing_armor(critter) and (critter != dude_obj) and not(obj_in_party(critter)) and not_possible_partymember then begin
-               Item := get_armor(critter);
-               set_flags(item, get_flags(item) bwand bwnot(FLAG_WORN));
-               rm_obj_from_inven(critter, item);
-               debug_msg("destroying critter armor!");
-            end
-         end
+   if proc != destroy_proc then return;
+   if (obj_type(critter) == OBJ_TYPE_CRITTER) then begin
+      if critter_wearing_armor(critter) and (critter != dude_obj) and not(obj_in_party(critter)) and not_possible_partymember then begin
+         variable Item := get_armor(critter);
+         set_flags(item, get_flags(item) bwand bwnot(FLAG_WORN));
+         rm_obj_from_inven(critter, item);
+         debug_msg("destroying critter armor!");
       end
    end
 end
