@@ -1,6 +1,5 @@
 cmake_minimum_required( VERSION 3.22 FATAL_ERROR )
 
-set( CMAKE_CONFIGURATION_TYPES    "Release" )
 set( CMAKE_SKIP_INSTALL_RULES     TRUE )
 set( CMAKE_CXX_STANDARD           20 )
 set( CMAKE_CXX_STANDARD_REQUIRED  YES )
@@ -21,7 +20,7 @@ target_sources( ${PROJECT_NAME}
 )
 
 if( MSVC )
-    set_property( TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS "/OPT:REF " )
+    set_property( TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS "/INCREMENTAL:NO /OPT:REF " )
 elseif( UNIX )
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
 

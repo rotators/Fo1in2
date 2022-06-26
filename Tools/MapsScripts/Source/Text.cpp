@@ -26,18 +26,13 @@ std::string TextGetReplaced(const std::string& text, const std::string& from, co
     return result;
 }
 
-std::string TextGetLower(const std::string& text)
+std::string TextGetUpper(const std::string& text)
 {
     std::string result = text;
 
-    transform(result.begin(), result.end(), result.begin(), ::tolower);
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return std::toupper(c); });
 
     return result;
-}
-
-std::string TextGetWithoutPath(const std::string& path, const std::string& filename)
-{
-    return filename.substr(path.length(), filename.length() - path.length());
 }
 
 bool TextReadFile(const std::string& filename, std::vector<std::string>& lines)

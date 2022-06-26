@@ -11,13 +11,11 @@
 
 #include "CommandLine.hpp"
 
-using namespace std;
-
 CommandLine::CommandLine( int argc, char** argv ) : App( argv[0] )
 {
     for( int arg = 1; arg < argc; arg++ )
     {
-        Cache.push_back( string( argv[arg] ) );
+        Cache.push_back( std::string( argv[arg] ) );
     }
 }
 
@@ -28,21 +26,21 @@ CommandLine::~CommandLine()
 
 //
 
-bool CommandLine::IsOption( const string& option )
+bool CommandLine::IsOption( const std::string& option )
 {
     return find( Cache.begin(), Cache.end(), "--" + option ) != Cache.end();
 }
 
-bool CommandLine::IsOptionEmpty( const string& option )
+bool CommandLine::IsOptionEmpty( const std::string& option )
 {
     return GetStr( option ).empty();
 }
 
 //
 
-string CommandLine::Get()
+std::string CommandLine::Get()
 {
-    static const string empty;
+    static const std::string empty;
 
     switch( Cache.size() )
     {
@@ -51,16 +49,16 @@ string CommandLine::Get()
         case 1:
             return Cache[0];
         default:
-            ostringstream os;
-            copy( Cache.begin(), Cache.end() - 1, ostream_iterator<string>( os, " " ) );
+            std::ostringstream os;
+            copy( Cache.begin(), Cache.end() - 1, std::ostream_iterator<std::string>( os, " " ) );
             os << *Cache.rbegin();
             return os.str();
     }
 }
 
-string CommandLine::GetArg( unsigned int arg )
+std::string CommandLine::GetArg( unsigned int arg )
 {
-    static const string empty;
+    static const std::string empty;
 
     if( Cache.size() > arg )
         return Cache[arg];
@@ -68,10 +66,10 @@ string CommandLine::GetArg( unsigned int arg )
     return empty;
 }
 
-int CommandLine::GetInt( const string& option, const int& default_value, const unsigned char& base /* = 10 */ )
+int CommandLine::GetInt( const std::string& option, const int& default_value, const unsigned char& base /* = 10 */ )
 {
     int    result = default_value;
-    string str = GetStr( option );
+    std::string str = GetStr( option );
 
     if( !str.empty() )
     {
@@ -91,20 +89,20 @@ int CommandLine::GetInt( const string& option, const int& default_value, const u
     return result;
 }
 
-string CommandLine::GetStr( const string& option )
+std::string CommandLine::GetStr( const std::string& option )
 {
-    static const string empty;
+    static const std::string empty;
 
     return GetStr( option, empty );
 }
 
-string CommandLine::GetStr( const string& option, const string& default_value )
+std::string CommandLine::GetStr( const std::string& option, const std::string& default_value )
 {
-    vector<string>::const_iterator it = find( Cache.begin(), Cache.end(), "--" + option );
+    std::vector<std::string>::const_iterator it = std::find( Cache.begin(), Cache.end(), "--" + option );
 
     if( it != Cache.end() && ++it != Cache.end() )
     {
-        string value = *it;
+        std::string value = *it;
 
         if( value.size() >= 2 && value[0] == '-' && value[1] == '-' )
             return default_value;
@@ -115,16 +113,16 @@ string CommandLine::GetStr( const string& option, const string& default_value )
     return default_value;
 }
 
-vector<string> CommandLine::GetStrVec( const string& option, char separator )
+std::vector<std::string> CommandLine::GetStrVec( const std::string& option, char separator )
 {
-    string         value = GetStr( option );
-    vector<string> result;
+    std::string              value = GetStr(option);
+    std::vector<std::string> result;
 
     if( !value.empty() )
     {
-        string        tmp;
-        istringstream f( value );
-        while( getline( f, tmp, separator ) )
+        std::string        tmp;
+        std::istringstream f( value );
+        while(std::getline( f, tmp, separator ) )
         {
             result.push_back( tmp );
         }

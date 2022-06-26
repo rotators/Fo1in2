@@ -38,20 +38,49 @@
 #include "CommandLine.hpp"
 #include "Text.hpp"
 
-struct MapsScripts
+class MapsScripts
 {
-    bool Verbose = false;
+private:
+    std::map<uint32_t, std::string> Script;
+    std::map<uint32_t, uint32_t> Proto;
+
+public:
+    bool Verbose;
 
     std::string MapsDir;
     std::string ItemsDir;
 
-    std::map<uint32_t, std::string> Script;
-    std::set<uint32_t> ScriptUnused;
+    std::map<std::string, std::set<std::string>> ByMap, ByScript;
+    std::set<std::string> ScriptUnused;
 
-    std::map<uint32_t, uint32_t> Proto;
+    void AddSID(uint32_t sid, std::string script)
+    {
+        Script[sid] = script;
+        ScriptUnused.insert(Script[sid]);
+    }
 
-    std::map<std::string, std::set<uint32_t>> ByMap;
-    std::map<uint32_t, std::set<std::string>> ByScript;
+    void UseSID(const int32_t& sid, const std::string& mapName)
+    {
+        if (Script.count(sid))
+        {
+            ByScript[Script[sid]].insert(mapName);
+            ByMap[mapName].insert(Script[sid]);
+
+            if (ScriptUnused.contains(Script[sid]))
+            {
+                if (Verbose)
+                    std::cout << "  ~ " << Script[sid] << std::endl;
+                ScriptUnused.erase(Script[sid]);
+            }
+        }
+        else
+        {
+            std::string name = "?!? UNKNOWN SCRIPT !?! (" + std::to_string(sid) + ")";
+            ByScript[name].insert(mapName);
+            ByMap[mapName].insert(name);
+        }
+
+    }
 };
 
 int Usage(int returnCode = EXIT_FAILURE)
@@ -69,7 +98,7 @@ int Usage(int returnCode = EXIT_FAILURE)
     return returnCode;
 }
 
-uint32_t readUINT32(std::ifstream& stream)
+uint32_t ReadUInt32(std::ifstream& stream)
 {
     uint32_t value;
     char * buff = reinterpret_cast<char *>(&value);
@@ -78,20 +107,31 @@ uint32_t readUINT32(std::ifstream& stream)
     return value;
 }
 
-int32_t readINT32(std::ifstream& stream)
+int32_t ReadInt32(std::ifstream& stream)
 {
-    return readUINT32(stream);
+    return ReadUInt32(stream);
 }
 
-void skipUINT32(std::ifstream& stream, size_t count = 1)
+std::string ReadString(std::ifstream& stream, size_t size)
+{
+    size_t pos = stream.tellg();
+
+    std::string result;
+    std::getline(stream, result, '\0');
+    stream.seekg(pos + size);
+
+    return result;
+}
+
+void SkipUInt32(std::ifstream& stream, size_t count = 1)
 {
     stream.seekg(count * 4, std::ios::cur);
 }
 
 void ReadMapObject(std::ifstream& stream, MapsScripts& info)
 {
-    skipUINT32(stream, 11);
-    uint32_t PID = readUINT32(stream);
+    SkipUInt32(stream, 11);
+    uint32_t PID = ReadUInt32(stream);
 
     uint32_t type = PID >> 24;
     uint32_t id  = PID & 0x00FFFFFF;
@@ -99,14 +139,13 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
     if (info.Verbose)
         std::cout << "Read object PID " << PID << " type " << type << "" << id << std::endl;
 
-    skipUINT32(stream, 4);
+    SkipUInt32(stream, 5);
 
-    readUINT32(stream); // SID1
-    readUINT32(stream); // SID2
+    ReadInt32(stream); // SID
 
-    int32_t inventorySize = readINT32(stream);
+    uint32_t inventorySize = ReadUInt32(stream);
 
-    skipUINT32(stream, 3);
+    SkipUInt32(stream, 3);
 
     switch (type)
     {
@@ -120,19 +159,18 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
                 case 2: // drug
                     break;
                 case 3: // weapon
-                    readUINT32(stream);
-                    readUINT32(stream);
+                    SkipUInt32(stream, 2);
                     break;
                 case 4: // ammo
                 case 5: // misc
                 case 6: // key
-                    skipUINT32(stream);
+                    SkipUInt32(stream);
                     break;
             }
             break;
         }
         case 1: // critters:
-            skipUINT32(stream, 10);
+            SkipUInt32(stream, 10);
             break;
         case 2: // scenery
         {
@@ -140,13 +178,13 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
             switch (subtype)
             {
                 case 0: // door
-                    skipUINT32(stream);
+                    SkipUInt32(stream);
                     break;
                 case 1: // stairs
                 case 2: // elevator
                 case 3: // ladder bottom
                 case 4: // ladder top
-                    skipUINT32(stream, 2);
+                    SkipUInt32(stream, 2);
                     break;
                 case 5: // generic
                     break;
@@ -154,7 +192,6 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
             break;
         }
         case 3:
-            break;
         case 4:
             break;
         case 5:
@@ -173,7 +210,7 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
                 case 22:
                 case 23:
                 default:
-                    skipUINT32(stream, 4);
+                    SkipUInt32(stream, 4);
                     break;
             }
             break;
@@ -182,9 +219,9 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
 
     if (inventorySize > 0)
     {
-        for (int32_t i = 0; i != inventorySize; ++i)
+        for (uint32_t i = 0; i != inventorySize; ++i)
         {
-            skipUINT32(stream);
+            SkipUInt32(stream);
 
             ReadMapObject(stream, info);
         }
@@ -202,16 +239,19 @@ int ReadMap(const std::string& filename, MapsScripts& info)
         return 1;
     }
 
-    readUINT32(in); // version
+    ReadUInt32(in); // version
 
-    skipUINT32(in, 7);
+    std::string mapName = ReadString(in, 16);
 
-    uint32_t localVars = readUINT32(in);
+    SkipUInt32(in, 3);
 
-    // 4 - SID
-    readUINT32(in);
+    uint32_t localVars = ReadUInt32(in);
 
-    uint32_t flags = readUINT32(in);
+    int32_t SID = ReadInt32(in);
+    if(SID > 0)
+        info.UseSID(SID, mapName);
+
+    uint32_t flags = ReadUInt32(in);
 
     uint32_t elevations = 0;
     if ((flags & 2) == 0)
@@ -221,16 +261,16 @@ int ReadMap(const std::string& filename, MapsScripts& info)
     if ((flags & 8) == 0)
         elevations++;
 
-    skipUINT32(in);
+    SkipUInt32(in);
 
-    uint32_t globalVars = readUINT32(in);
+    uint32_t globalVars = ReadUInt32(in);
 
-    skipUINT32(in, 46 + globalVars + localVars + (100 * 100 * elevations));
+    SkipUInt32(in, 46 + globalVars + localVars + (100 * 100 * elevations));
 
     // SCRIPTS SECTION
     for (unsigned int i = 0; i < 5; i++)
     {
-        uint32_t count = readUINT32(in);
+        uint32_t count = ReadUInt32(in);
         if (count > 0)
         {
             short loop = count;
@@ -241,52 +281,39 @@ int ReadMap(const std::string& filename, MapsScripts& info)
             for (unsigned short j = 0; j < loop; j++)
             {
                 {
-                    uint32_t PID = readUINT32(in);
+                    uint32_t PID = ReadUInt32(in);
 
-                    readUINT32(in); // unknown1
+                    SkipUInt32(in);
 
                     switch ((PID & 0xFF000000) >> 24)
                     {
                     case 1:
-                        readUINT32(in); //unknown 2
-                        readUINT32(in); //unknown 3
+                        SkipUInt32(in, 2);
                         break;
                     case 2:
-                        readUINT32(in); //unknown 2 next
+                        SkipUInt32(in);
                         break;
                     default:
                         break;
                     }
-                    readUINT32(in); //unknown 4
-                    uint32_t SID = readUINT32(in); // scriptId
-                    readUINT32(in); //unknown 5
-                    readUINT32(in); //unknown 6
-                    readUINT32(in); //unknown 7
-                    readUINT32(in); //unknown 8
-                    readUINT32(in); //unknown 9
-                    readUINT32(in); //unknown 10
-                    readUINT32(in); //unknown 11
-                    readUINT32(in); //unknown 12
-                    readUINT32(in); //unknown 13
-                    readUINT32(in); //unknown 14
-                    readUINT32(in); //unknown 15
-                    readUINT32(in); //unknown 16
+                    SkipUInt32(in); //unknown 4
+                    SID = ReadUInt32(in); // scriptId
 
                     if (j < count)
                     {
                         SID++;
-                        info.ByScript[SID].insert(TextGetWithoutPath(info.MapsDir, filename));
-                        info.ByMap[TextGetWithoutPath(info.MapsDir, filename)].insert(SID);
-                        info.ScriptUnused.erase(SID);
+                        info.UseSID(SID, mapName);
                     }
+
+                    SkipUInt32(in, 12); //unknown 5
                 }
 
                 if ((j % 16) == 15)
                 {
-                    uint32_t v = readUINT32(in);
+                    uint32_t v = ReadUInt32(in);
                     check += v;
 
-                    skipUINT32(in);
+                    SkipUInt32(in);
                 }
             }
             if (check != count)
@@ -301,11 +328,11 @@ int ReadMap(const std::string& filename, MapsScripts& info)
     {
         // OBJECTS section
 
-        skipUINT32(in);
+        SkipUInt32(in);
 
         for (unsigned int i = 0; i != elevations; ++i)
         {
-            uint32_t objectsOnElevation = readUINT32(in);
+            uint32_t objectsOnElevation = ReadUInt32(in);
             for (unsigned int j = 0; j != objectsOnElevation; ++j)
             {
                 ReadMapObject(in, info);
@@ -327,7 +354,7 @@ std::vector<std::string> GetMaps(const std::string& path, const std::string& ext
         if (!std::filesystem::is_regular_file(file))
             continue;
 
-        if (!extension.empty() && TextGetLower(file.path().extension().string()) != TextGetLower(extension))
+        if (!extension.empty() && TextGetUpper(file.path().extension().string()) != TextGetUpper(extension))
             continue;
 
         result.push_back(file.path().string());
@@ -340,6 +367,8 @@ std::vector<std::string> GetMaps(const std::string& path, const std::string& ext
 
 int main(int argc, char** argv)
 {
+    std::setvbuf(stdout, nullptr, _IONBF, 0);
+
     MapsScripts info;
     std::cout << "MapsScripts <3 FO1@2" << std::endl << std::endl;
 
@@ -356,7 +385,6 @@ int main(int argc, char** argv)
 
     std::string scriptsLst;
     std::vector<std::string> content;
-    uint32_t scriptId = 0;
 
     info.MapsDir = cmd.GetStr("maps");
     scriptsLst = cmd.GetStr("scripts");
@@ -391,22 +419,25 @@ int main(int argc, char** argv)
     if (!TextReadFile(scriptsLst, content))
         return 1;
 
+    int32_t SID = 1;
     for (auto& line : content)
     {
+
+        line = TextGetUpper(line);
+
         line = line.substr(0, line.find('#'));
         line = line.substr(0, line.find(';'));
 
         auto begin = line.find_first_not_of("\t ");
         auto end = line.find_last_not_of("\t ;#");
 
-        info.Script[++scriptId] = line.substr(begin, end - begin + 1);
-        info.ScriptUnused.insert(scriptId);
+        info.AddSID(SID++, line.substr(begin, end - begin + 1));
     }
 
     for (const auto& filename : mapFiles)
     {
         if (info.Verbose)
-            std::cout << "Loading " << TextGetWithoutPath(info.MapsDir, filename) << std::endl;
+            std::cout << "Loading " << filename << std::endl;
 
         if (ReadMap(filename, info) != 0)
             return EXIT_FAILURE;
@@ -417,18 +448,18 @@ int main(int argc, char** argv)
 
     for (const auto& it : info.ByMap)
     {
-        std::cout << "Map " << it.first << std::endl;
+        std::cout << it.first << std::endl;
         for (const auto& ti : it.second)
         {
-            std::cout << "  " << std::setfill(' ') << std::setw(4) << ti << " " << info.Script[ti] << std::endl;
+            std::cout << "  " << ti << std::endl;
         }
     }
 
-    std::cout << std::endl;
+    std::cout << std::endl << std::string(16, '-') << std::endl << std::endl;
 
     for (const auto& it : info.ByScript)
     {
-        std::cout << "Script " << it.first << " " << info.Script[it.first] << std::endl;
+        std::cout << it.first << std::endl;
         for (const auto& ti : it.second)
         {
             std::cout << "  " << ti << std::endl;
@@ -437,10 +468,10 @@ int main(int argc, char** argv)
 
     if (!info.ScriptUnused.empty())
     {
-        std::cout << std::endl << "Unused" << std::endl;
+        std::cout << std::endl << "Possibly unused" << std::endl;
         for (const auto& it : info.ScriptUnused)
         {
-            std::cout << "  " << std::setfill(' ') << std::setw(4) << it << " " << info.Script[it] << std::endl;
+            std::cout << "  " << it << std::endl;
         }
     }
 
