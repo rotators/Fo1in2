@@ -5,10 +5,12 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
 - **Added**: New Alternative Force Fields mod with graphics made by .Pixote.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
+- **Added**: Vasquez the mercenary can now be hired in Junktown (restored / remade cut-content).
 - **Fixed**: Aradesh in Shady Sands had a wrong reaction condition.
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
+- **Fixed**: Killing Gizmo without Killian would result in a teleport back to Lars.
 - **Fixed**: Klaxon lights in Mariposa would show the wrong description text when in alarm-mode.
 - **Fixed**: Laura in the Cathedral had a voiced line linked to a non-existing sound file.
 - **Fixed**: Leather Armor had 20% plasma resistance (old Fixt value). Reverted to 10% Fo1 vanilla value.
@@ -18,6 +20,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Removed unnecessary "Special Death"-flag from Brotherhood Paladin proto files.
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
+- **Fixed**: The Junktown Crash House raider would still drop armor, even if armor dropping was disabled.
 - **Fixed**: The backpack of the combat armor animations would clip through the rocket launcher.
 - **Fixed**: The dialog option to ask Cabbot at the Brotherhood about joining would change to "I have changed my mind..." without the player ever asking him to join.
 - **Fixed**: The elevator door to elevation 3 in the Master's Lair wanted normal lockpicks instead of electronic lockpicks.
