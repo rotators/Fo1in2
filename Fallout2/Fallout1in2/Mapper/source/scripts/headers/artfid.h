@@ -157,3 +157,4 @@
 #define FID_HMCMB2        (16777351) // Black dude Combat Armor
 #define FID_HMCMB3        (16777352) // Black dude, Dark ("Black") Combat Armor
 #define FID_HAROBB        (16777353) // Black dude purple robe
+#define FID_NMMETL        (16777354) // Tycho metal armor
