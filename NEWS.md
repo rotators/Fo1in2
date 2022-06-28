@@ -4,6 +4,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
 - **Added**: New Alternative Force Fields mod with graphics made by .Pixote.
+- **Added**: New Tycho metal armor animations.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
 - **Added**: Vasquez the mercenary can now be hired in Junktown (restored / remade cut-content).
 - **Fixed**: Aradesh in Shady Sands had a wrong reaction condition.
