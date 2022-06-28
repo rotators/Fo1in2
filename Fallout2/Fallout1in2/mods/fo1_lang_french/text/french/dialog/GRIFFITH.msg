@@ -4,9 +4,7 @@
 {101}{}{Cette goule porte une vieille veste de moto rapiécée. Tu peux voir des anciennes trace de tatouages sur sa peau pourrie.}
 
 {125}{}{Tu gagnes  }
-{126}{}{ points d'expérience pour avoir aidé Griffith à quitter Necropolis.}
-{127}{}{ points d'expérience pour avoir volé la moto.}
-{128}{}{ points d'expérience pour avoir obtenu la moto.}
+{127}{}{ points d'expérience pour avoir obtenu la moto.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {160}{}{Tu es une enflure de VOLEUR !}

@@ -4,9 +4,7 @@
 {101}{}{Der Ghul trägt eine alte, geflickte Motorradjacke. Du siehst Spuren von Tätowierungen auf seiner verfaulten Haut.}
 
 {125}{}{Du erhältst }
-{126}{}{ Erfahrungspunkte dafür, dass du Griffith geholfen hast Necropolis zu verlassen.}
-{127}{}{ Erfahrungspunkte für das stehlen des Motorrads.}
-{128}{}{ Erfahrungspunkte für die Übernahme des Motorrads.}
+{127}{}{ Erfahrungspunkte für die Übernahme des Motorrads.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {160}{}{Du bist ein verdammter DIEB!}
