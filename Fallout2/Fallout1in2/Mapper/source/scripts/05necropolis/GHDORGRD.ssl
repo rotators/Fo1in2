@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/necropolis.h"
+#include "maps/hallded.h"
 
 #define NAME                    SCRIPT_GHDORGRD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
@@ -16,6 +17,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure combat_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
@@ -34,6 +36,12 @@ procedure ghoulendFade;
 procedure timed_event_p_proc;
 procedure combat_rads_inc;
 
+#define LVAR_Herebefore          (4)
+#define LVAR_MoveRandom          (5)
+#define LVAR_OldTile             (6)
+#define LVAR_HomeTile            (7)
+#define LVAR_LockedInfo          (8)
+
 variable tmp_hostile;
 variable init := 0;
 variable maxleash := 9;
@@ -45,13 +53,20 @@ variable Warned;
 procedure start begin
    if (init == 0) then begin
       init := 1;
-      if (local_var(7) == 0) then begin
-         set_local_var(7, self_tile);
-         set_local_var(5, 0);
+      if (local_var(LVAR_HomeTile) == 0) then begin
+         set_local_var(LVAR_HomeTile, self_tile);
+         set_local_var(LVAR_MoveRandom, 0);
       end
       set_self_team(TEAM_NECROPOLIS_GANGER);
       set_self_ai(AI_GHOUL_COWARD);
       GhDorGrd_Ptr := self_obj;
+   end
+end
+
+procedure map_enter_p_proc begin
+   // Reset the door warning
+   if (days_since_visited > 1) then begin
+      set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 0);
    end
 end
 
@@ -68,43 +83,43 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_HALLDED);
 
    get_reaction
-   if (map_var(12) == 1) then begin
+   if (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1) then begin
       display_msg(mstr(120));
    end
    else begin
-      start_gdialog(70, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
-      if (local_var(4)) then begin
-         set_map_var(11, 1);
+      if (local_var(LVAR_Herebefore)) then begin
+         set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
          call ghoul02;// "I told you to leave. Your kind is not wanted here."
       end
       else begin
          if night then begin
             if good_critter_reaction then begin
-               set_map_var(11, 0);
+               set_map_var(MVAR_Fixt_DOOR_LOCKED, 0);
                call ghoul00b;
             end
             else begin
-               set_local_var(4, 1);
-               set_map_var(11, 1);
+               set_local_var(LVAR_Herebefore, 1);
+               set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
                call ghoul03;
-               end
+            end
          end
          else begin
             if good_critter_reaction then begin
-               if (local_var(8) == 0) then begin
-                  set_local_var(8, 1);
-                  set_map_var(11, 1);
+               if (local_var(LVAR_LockedInfo) == 0) then begin
+                  set_local_var(LVAR_LockedInfo, 1);
+                  set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
                   call ghoul01;
                end
                else begin
-                  set_map_var(11, 1);
+                  set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
                   call ghoul00a;
                end
             end
             else begin
-               set_local_var(4, 1);
-               set_map_var(11, 1);
+               set_local_var(LVAR_Herebefore, 1);
+               set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
                call ghoul03;
             end
          end
@@ -142,7 +157,7 @@ end
 
 procedure ghoul03 begin
    Reply(101);
-   if (map_var(12) == 0) then begin
+   if (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 0) then begin
       NOption(112, ghoul03a, 5);
    end
    NOption(113, ghoulend, 4);
@@ -151,26 +166,27 @@ end
 
 procedure ghoul03a begin
    if dude_skill_success(SKILL_SPEECH, 0) then begin
-      set_map_var(11, 0);
-      set_map_var(12, 1);
+      set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 0);
+      set_map_var(MVAR_Fixt_DOOR_LOCKED, 0);
+      set_map_var(MVAR_FIxt_CHARMED_IN_DOOR, 1);
       Reply(115);
       NOption(118, ghoulendFade, 5);
    end
    else begin
-      set_map_var(11, 1);
-      set_map_var(12, 2);
+      set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
+      set_map_var(MVAR_FIxt_CHARMED_IN_DOOR, 2);
       Reply(116);
       NOption(117, ghoulend, 5);
-      set_map_var(11, 1);
-      set_map_var(12, 2);
+      set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
+      set_map_var(MVAR_FIxt_CHARMED_IN_DOOR, 2);
    end
 end
 
 procedure ghoulendFade begin
    gfade_out(1);
    gfade_in(1);
-   set_map_var(11, 0);
-   set_map_var(12, 1);
+   set_map_var(MVAR_Fixt_DOOR_LOCKED, 0);
+   set_map_var(MVAR_FIxt_CHARMED_IN_DOOR, 1);
 end
 
 procedure critter_p_proc begin
@@ -190,7 +206,7 @@ procedure critter_p_proc begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      else if (local_var(5)) then begin
+      else if (local_var(LVAR_MoveRandom)) then begin
          loopcount := loopcount + 1;
          if (loopcount > 40) then begin
             loopcount := 0;
@@ -205,9 +221,9 @@ end
 
 procedure timed_event_p_proc begin
    noevent := 0;
-   set_local_var(6, self_tile);
-   new_tile := tile_num_in_direction(local_var(6), random(0, 5), 2);
-   if (tile_distance(local_var(7), new_tile) < maxleash) then begin
+   set_local_var(LVAR_OldTile, self_tile);
+   new_tile := tile_num_in_direction(local_var(LVAR_OldTile), random(0, 5), 2);
+   if (tile_distance(local_var(LVAR_HomeTile), new_tile) < maxleash) then begin
       self_walk_to_tile(new_tile);
    end
 end
