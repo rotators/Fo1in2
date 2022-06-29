@@ -423,6 +423,7 @@ variable step_tile;
 
 #define skill_success(x,y,z)                is_success(roll_vs_skill(x,y,z))
 #define dude_skill_success(y,z)             skill_success(dude_obj,y,z)
+#define source_skill_success(y,z)           skill_success(source_obj,y,z)
 
 #define stat_success(x,y,z)                 is_success(do_check(x,y,z))
 #define dude_stat_success(y,z)              stat_success(dude_obj,y,z)

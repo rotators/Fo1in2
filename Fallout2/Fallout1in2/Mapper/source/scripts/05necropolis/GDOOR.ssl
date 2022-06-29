@@ -1,10 +1,19 @@
+/*
+
+   Necropolis - Watershed door
+
+*/
+
+/* Include Files */
 #include "define.h"
 #include "command.h"
+
+#define NAME                     SCRIPT_DOOR
 
 procedure start;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
-procedure look_at_p_proc;
+procedure description_p_proc;
 procedure use_obj_on_p_proc;
 procedure map_update_p_proc;
 procedure damage_p_proc;
@@ -12,6 +21,12 @@ procedure damage_p_proc;
 import variable Cur_Door_Ptr;
 
 procedure start begin
+end
+
+procedure description_p_proc begin
+   if (local_var(0) == 0) then begin
+      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+   end
 end
 
 procedure use_p_proc begin
@@ -25,6 +40,9 @@ procedure use_p_proc begin
       script_overrides;
       display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
    end
+   else begin
+      set_map_var(6, 1);
+   end
 end
 
 procedure use_skill_on_p_proc begin
@@ -35,7 +53,11 @@ procedure use_skill_on_p_proc begin
          LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
          if (is_success(LVar0)) then begin
             set_local_var(0, 1);
-            display_msg(message_str(SCRIPT_DOOR, 100));//{100}{}{You unlock the door.}
+            // Unlocks door
+            if (source_obj == dude_obj) then
+               display_msg(message_str(SCRIPT_DOOR, 100));
+            else
+               display_msg(obj_name(source_obj) + message_str(SCRIPT_DOOR, 173));
             give_xp(EXP_LOCKPICK_NORMAL);
          end
          else begin
@@ -54,28 +76,26 @@ procedure use_skill_on_p_proc begin
    end
 end
 
-procedure look_at_p_proc begin
-   if (local_var(0) == 0) then begin
-      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-   end
-end
-
 procedure use_obj_on_p_proc begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-   if ((obj_pid(LVar0) == PID_LOCKPICKS) and (local_var(0) == 0)) then begin
+   variable Item := 0;
+   variable Skill := 0;
+   Item := obj_being_used_with;
+   Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+   if ((obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET) and (local_var(0) == 0)) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+
+      if (obj_pid(Item) == PID_EXP_LOCKPICK_SET) then
+         Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
+
+      if (is_success(Skill)) then begin
          set_local_var(0, 1);
          display_msg(message_str(SCRIPT_DOOR, 100));//{100}{}{You unlock the door.}
          give_xp(EXP_LOCKPICK_NORMAL);
       end
       else begin
-         if (is_critical(LVar1)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
+         if (is_critical(Skill)) then begin
+            rm_obj_from_inven(dude_obj, Item);
+            destroy_object(Item);
             display_msg(message_str(SCRIPT_DOOR, 101));//{101}{}{You broke your lockpicks!}
          end
          else begin
@@ -95,6 +115,12 @@ procedure map_update_p_proc begin
 end
 
 procedure damage_p_proc begin
-   if not(is_loading_game) then set_self_invisible;
-   set_local_var(1, 1);
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      if not(is_loading_game) then set_self_invisible;
+      set_local_var(1, 1);
+      set_map_var(6, 1);
+   end
+   else begin
+       display_msg(mstr(193));
+   end
 end
