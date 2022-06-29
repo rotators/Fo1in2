@@ -437,7 +437,7 @@
 #define GVAR_RND_ENC_PEASANTS_INIT              (1292)
 #define GVAR_NECRO_30_DAYS_GVAR225              (1293)
 #define GVAR_CHILD_RUNS_HOW_OFTEN               (1294)
-#define GVAR_RANDOM_ENC_SOMETHING               (1295)
+#define GVAR_RANDOM_ENC_OVERRIDE                (1295)
 #define GVAR_ENABLE_DEBUG_MENU                  (1296)
 #define GVAR_IS_PATRICK_DEAD                    (1297)
 #define GVAR_MBASE_DECRYPTION_CODES             (1298)

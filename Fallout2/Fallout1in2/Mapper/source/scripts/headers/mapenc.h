@@ -64,6 +64,16 @@
 #define set_tribesman_count         if (global_var(GVAR_GECKO_HUNTER_WARPARTY) == 0) then \
                                        set_global_var(GVAR_GECKO_HUNTER_WARPARTY, GHUNTER_REVENGE_COUNT)
 
+//==================================================================
+// Debug stuff. Override the next encounter table.
+#define enc_override \
+   if (global_var(GVAR_RANDOM_ENC_OVERRIDE) > 0) then begin                                  \
+      Encounter_Num := global_var(GVAR_RANDOM_ENC_OVERRIDE);                                 \
+      debug_msg("Overridding encounter with type " + global_var(GVAR_RANDOM_ENC_OVERRIDE));  \
+      set_global_var(GVAR_RANDOM_ENC_OVERRIDE, 0);                                           \
+   end                                                                                       \
+   noop
+
 
 //==================================================================
 #define spawn_dead_critter(x,y,z)      \
