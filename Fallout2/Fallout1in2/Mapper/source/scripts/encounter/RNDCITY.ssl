@@ -14,8 +14,10 @@
 
 procedure start;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure map_exit_p_proc;
 
+procedure roll_encounter;
 procedure Place_critter;
 
 procedure CITY_North_VANILLA_table;
@@ -26,8 +28,6 @@ procedure CITY_North_VANILLA_4;
 procedure CITY_North_VANILLA_5;
 procedure CITY_North_VANILLA_6;
 
-variable party_elevation;
-variable dude_start_hex;
 variable start_attack;
 
 //////////////////// ENTRIES FROM RNDDESRT: /////////////////////
@@ -57,61 +57,9 @@ procedure Vats_4;
 procedure Vats_5;
 procedure Vats_6;
 
-variable money;
-variable random_seed_1;
-variable random_seed_2;
-variable random_seed_3;
-variable random_seed_4;
-variable random_seed_5;
-
-variable Scorpions_Killed;
-
 export variable signal_mutants;
 
 procedure start begin
-end
-
-procedure roll_encounter begin
-   Encounter_Num := random(1, 18);
-   if (dude_luck >= 9) then begin
-      Encounter_Num := Encounter_Num + 2;
-   end
-   else if (dude_luck >= 7) then begin
-      Encounter_Num := Encounter_Num + 1;
-   end
-   else if (dude_luck == 3) then begin
-      Encounter_Num := Encounter_Num - 1;
-   end
-   else if (dude_luck == 2) then begin
-      Encounter_Num := Encounter_Num - 2;
-   end
-   else if (dude_luck == 1) then begin
-      Encounter_Num := Encounter_Num - 3;
-   end
-
-   if (not(bounty_hunter_killed) and has_rep_childkiller and random(0, 1)) then begin
-      Encounter_Num := 99;
-   end
-   else begin
-      if (Encounter_Num <= 5) then begin
-         Encounter_Num := 1;
-      end
-      else if (Encounter_Num <= 8) then begin
-         Encounter_Num := 2;
-      end
-      else if (Encounter_Num <= 11) then begin
-         Encounter_Num := 3;
-      end
-      else if (Encounter_Num <= 14) then begin
-         Encounter_Num := 4;
-      end
-      else if (Encounter_Num <= 17) then begin
-         Encounter_Num := 5;
-      end
-      else begin
-         Encounter_Num := 6;
-      end
-   end
 end
 
 procedure map_enter_p_proc begin
@@ -168,6 +116,49 @@ end
 
 procedure map_exit_p_proc begin
    set_car_exit_map
+end
+
+procedure roll_encounter begin
+   Encounter_Num := random(1, 18);
+   if (dude_luck >= 9) then begin
+      Encounter_Num := Encounter_Num + 2;
+   end
+   else if (dude_luck >= 7) then begin
+      Encounter_Num := Encounter_Num + 1;
+   end
+   else if (dude_luck == 3) then begin
+      Encounter_Num := Encounter_Num - 1;
+   end
+   else if (dude_luck == 2) then begin
+      Encounter_Num := Encounter_Num - 2;
+   end
+   else if (dude_luck == 1) then begin
+      Encounter_Num := Encounter_Num - 3;
+   end
+
+   if (not(bounty_hunter_killed) and has_rep_childkiller and random(0, 1)) then begin
+      Encounter_Num := 99;
+   end
+   else begin
+      if (Encounter_Num <= 5) then begin
+         Encounter_Num := 1;
+      end
+      else if (Encounter_Num <= 8) then begin
+         Encounter_Num := 2;
+      end
+      else if (Encounter_Num <= 11) then begin
+         Encounter_Num := 3;
+      end
+      else if (Encounter_Num <= 14) then begin
+         Encounter_Num := 4;
+      end
+      else if (Encounter_Num <= 17) then begin
+         Encounter_Num := 5;
+      end
+      else begin
+         Encounter_Num := 6;
+      end
+   end
 end
 
 procedure Place_critter begin
@@ -1062,21 +1053,9 @@ procedure choose_start begin
             override_map_start(80, 86, 0, dude_rot);
       end
    end
-   else begin
-      if (global_var(GVAR_WORLDMAP_TABLE) == 10) then begin
-         if ((Encounter_Num == 1) or (Encounter_Num == 5) or (Encounter_Num == 6)) then begin
-            override_map_start(100, 100, 0, dude_rot);
-         end
-         else begin
-            if (dude_pos == 0) then
-               override_map_start(109, 72, 0, dude_rot);
-            else if (dude_pos == 1) then
-               override_map_start(131, 102, 0, dude_rot);
-            else if (dude_pos == 2) then
-               override_map_start(90, 112, 0, dude_rot);
-            else
-               override_map_start(80, 86, 0, dude_rot);
-         end
+   else if (global_var(GVAR_WORLDMAP_TABLE) == 10) then begin
+      if ((Encounter_Num == 1) or (Encounter_Num == 5) or (Encounter_Num == 6)) then begin
+         override_map_start(100, 100, 0, dude_rot);
       end
       else begin
          if (dude_pos == 0) then
@@ -1088,6 +1067,16 @@ procedure choose_start begin
          else
             override_map_start(80, 86, 0, dude_rot);
       end
+   end
+   else begin
+      if (dude_pos == 0) then
+         override_map_start(109, 72, 0, dude_rot);
+      else if (dude_pos == 1) then
+         override_map_start(131, 102, 0, dude_rot);
+      else if (dude_pos == 2) then
+         override_map_start(90, 112, 0, dude_rot);
+      else
+         override_map_start(80, 86, 0, dude_rot);
    end
    Critter_spawn_hex := dude_tile;
 end

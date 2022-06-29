@@ -23,38 +23,20 @@ procedure map_update_p_proc;
 procedure map_exit_p_proc;
 procedure timed_event_p_proc;
 
-export variable random_seed_1;//FROM RNDDESRT
-export variable random_seed_2;//FROM RNDDESRT
-export variable random_seed_3;//FROM RNDDESRT
-
+procedure roll_encounter;
+procedure SpecialMapPos;
+procedure LoadCritters;
+procedure Place_critter;
 procedure choose_start;
+
 procedure Patrick;
 
-procedure Glow_table;//FROM RNDDESRT
-procedure Glow1;//FROM RNDDESRT
-procedure Glow2;//FROM RNDDESRT
-procedure Glow3;//FROM RNDDESRT
-procedure Glow4;//FROM RNDDESRT
-procedure Glow5;//FROM RNDDESRT
-procedure Glow6;//FROM RNDDESRT
-
 procedure NORTH_table;
-procedure NORTH1;
-procedure NORTH2;
-procedure NORTH3;
-procedure NORTH4;
-procedure NORTH5;
-procedure NORTH6;
-
 procedure South_table;
-procedure South1;
-procedure South2;
-procedure South3;
-procedure South4;
-procedure South5;
-procedure South6;
-
 procedure Vats_table;//FROM RNDDESRT
+procedure Glow_table;//FROM RNDDESRT
+procedure VAULT_table;// ---------------RNDMTN ONLY
+
 procedure Vats1;//FROM RNDDESRT
 procedure Vats2;//FROM RNDDESRT
 procedure Vats3;//FROM RNDDESRT
@@ -62,7 +44,20 @@ procedure Vats4;//FROM RNDDESRT
 procedure Vats5;//FROM RNDDESRT
 procedure Vats6;//FROM RNDDESRT
 
-procedure VAULT_table;// ---------------RNDMTN ONLY
+procedure Glow1;//FROM RNDDESRT
+procedure Glow2;//FROM RNDDESRT
+procedure Glow3;//FROM RNDDESRT
+procedure Glow4;//FROM RNDDESRT
+procedure Glow5;//FROM RNDDESRT
+procedure Glow6;//FROM RNDDESRT
+
+procedure NORTH1;
+procedure NORTH2;
+procedure NORTH3;
+procedure NORTH4;
+procedure NORTH5;
+procedure NORTH6;
+
 procedure VAULT1;// ---------------RNDMTN ONLY
 procedure VAULT2;// ---------------RNDMTN ONLY
 procedure VAULT3;// ---------------RNDMTN ONLY
@@ -70,8 +65,19 @@ procedure VAULT4;// ---------------RNDMTN ONLY
 procedure VAULT5;// ---------------RNDMTN ONLY
 procedure VAULT6;// ---------------RNDMTN ONLY
 
+procedure South1;
+procedure South2;
+procedure South3;
+procedure South4;
+procedure South5;
+procedure South6;
+
 #define EVENT_RADS         (1)
 #define EVENT_GLOW_RADS    (2)
+
+export variable random_seed_1;//FROM RNDDESRT
+export variable random_seed_2;//FROM RNDDESRT
+export variable random_seed_3;//FROM RNDDESRT
 
 export variable signal_mutants;
 
@@ -79,84 +85,6 @@ variable rnd_critter;
 variable RadsTimer;
 
 procedure start begin
-end
-
-procedure roll_encounter begin
-   Encounter_Num := random(1, 18);
-   if (dude_luck > 8) then
-      Encounter_Num := Encounter_Num + 2;
-   else if (dude_luck > 7) then
-      Encounter_Num := Encounter_Num + 1;
-   else if (dude_luck < 3) then
-      Encounter_Num := Encounter_Num - 1;
-
-   if not(bounty_hunter_killed) and has_rep_childkiller and random(0, 1) then
-      Encounter_Num := 7;
-   else if (Encounter_Num <= 3) then
-      Encounter_Num := 1;
-   else if (Encounter_Num <= 5) then
-      Encounter_Num := 2;
-   else if (Encounter_Num <= 8) then
-      Encounter_Num := 3;
-   else if (Encounter_Num <= 12) then
-      Encounter_Num := 4;
-   else if (Encounter_Num <= 15) then
-      Encounter_Num := 5;
-   else
-      Encounter_Num := 6;
-end
-
-procedure SpecialMapPos begin
-   // Area_List is where mobs will spawn.
-   // Chest_List is where loot containers can spawn.
-   // Exit_List is where ladder objects can spawn (access to elevation 2).
-   // SceneryPos_List will determine where ... scenery can spawn.
-   if CUR_MAP_CAVE1 then begin
-      Area_List := [12666, 16067, 20266, 21888, 28901, 24506, 20326, 14300];
-      Chest_List := [19929, 29304, 19863];
-   end else if CUR_MAP_CAVE2 then begin
-      Area_List := [24065, 26067, 18890, 18112, 19710, 25497];
-      Chest_List := [18089, 17314, 27067];
-      SceneryPos_List := [18913, 19510, 18490, 25268, 24275];
-   end else if CUR_MAP_CAVE3 then begin
-      Area_List := [19108, 19492, 20689];
-      Chest_List := [21675, 18092, 17908];
-   end else if CUR_MAP_CAVE4 then begin
-      Area_List := [20896, 23902, 21320];
-      Chest_List := [21491, 24301, 19697];
-      SceneryPos_List := [21497, 24304, 24509, 22322, 22117, 21305, 21100];
-   end else if CUR_MAP_CAVE5 then begin
-      Area_List := [12666, 16067, 20265, 21888, 28901, 24506, 20326, 14899];
-      Exit_List := [25318, 25306, 25896];
-      Chest_List := [19929, 29304, 19863];
-   end
-   else if CUR_MAP_MINE1 then begin
-      Area_List := [14514, 17899, 20707, 19889, 18271];
-      Exit_List := [22527, 17112, 25309, 19888];
-      Chest_List := [16498, 17268, 18887];
-      SceneryPos_List := [14311, 14315, 14718, 17116, 17100, 17899, 20308, 20291, 20690, 18075, 17872, 18065, 18868, 20503];
-   end
-   else if CUR_MAP_MINE2 then begin
-      Area_List := [22322, 22505, 18694, 17702, 15105, 21284, 19873, 17682, 14282];
-      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
-      Chest_List := [13906, 19477, 12880];
-      SceneryPos_List := [14505, 17502, 18494, 20102, 22322, 19882, 21484, 19671, 20477, 17482, 13882];
-   end
-   else if CUR_MAP_MINE3 then begin
-      Area_List := [21474, 18895, 21111, 15505, 16881, 14691];
-      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
-      Chest_List := [19682, 14708, 17122];
-      SceneryPos_List := [15307, 17502, 17898, 18895, 19702, 22122, 17482, 19871, 21473, 22678];
-   end
-end
-
-procedure LoadCritters begin
-   variable tile, count, obj;
-   baseElevation := 1;
-   call Choose_Encounter;
-   foreach i in Area_List begin
-      AREABLK(i)
-   end
 end
 
 procedure map_enter_p_proc begin
@@ -241,6 +169,84 @@ procedure timed_event_p_proc begin
    end
    else if (fixed_param == EVENT_GLOW_RADS) then begin
       SetGlowEncRads;
+   end
+end
+
+procedure roll_encounter begin
+   Encounter_Num := random(1, 18);
+   if (dude_luck > 8) then
+      Encounter_Num := Encounter_Num + 2;
+   else if (dude_luck > 7) then
+      Encounter_Num := Encounter_Num + 1;
+   else if (dude_luck < 3) then
+      Encounter_Num := Encounter_Num - 1;
+
+   if not(bounty_hunter_killed) and has_rep_childkiller and random(0, 1) then
+      Encounter_Num := 7;
+   else if (Encounter_Num <= 3) then
+      Encounter_Num := 1;
+   else if (Encounter_Num <= 5) then
+      Encounter_Num := 2;
+   else if (Encounter_Num <= 8) then
+      Encounter_Num := 3;
+   else if (Encounter_Num <= 12) then
+      Encounter_Num := 4;
+   else if (Encounter_Num <= 15) then
+      Encounter_Num := 5;
+   else
+      Encounter_Num := 6;
+end
+
+procedure SpecialMapPos begin
+   // Area_List is where mobs will spawn.
+   // Chest_List is where loot containers can spawn.
+   // Exit_List is where ladder objects can spawn (access to elevation 2).
+   // SceneryPos_List will determine where ... scenery can spawn.
+   if CUR_MAP_CAVE1 then begin
+      Area_List := [12666, 16067, 20266, 21888, 28901, 24506, 20326, 14300];
+      Chest_List := [19929, 29304, 19863];
+   end else if CUR_MAP_CAVE2 then begin
+      Area_List := [24065, 26067, 18890, 18112, 19710, 25497];
+      Chest_List := [18089, 17314, 27067];
+      SceneryPos_List := [18913, 19510, 18490, 25268, 24275];
+   end else if CUR_MAP_CAVE3 then begin
+      Area_List := [19108, 19492, 20689];
+      Chest_List := [21675, 18092, 17908];
+   end else if CUR_MAP_CAVE4 then begin
+      Area_List := [20896, 23902, 21320];
+      Chest_List := [21491, 24301, 19697];
+      SceneryPos_List := [21497, 24304, 24509, 22322, 22117, 21305, 21100];
+   end else if CUR_MAP_CAVE5 then begin
+      Area_List := [12666, 16067, 20265, 21888, 28901, 24506, 20326, 14899];
+      Exit_List := [25318, 25306, 25896];
+      Chest_List := [19929, 29304, 19863];
+   end
+   else if CUR_MAP_MINE1 then begin
+      Area_List := [14514, 17899, 20707, 19889, 18271];
+      Exit_List := [22527, 17112, 25309, 19888];
+      Chest_List := [16498, 17268, 18887];
+      SceneryPos_List := [14311, 14315, 14718, 17116, 17100, 17899, 20308, 20291, 20690, 18075, 17872, 18065, 18868, 20503];
+   end
+   else if CUR_MAP_MINE2 then begin
+      Area_List := [22322, 22505, 18694, 17702, 15105, 21284, 19873, 17682, 14282];
+      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
+      Chest_List := [13906, 19477, 12880];
+      SceneryPos_List := [14505, 17502, 18494, 20102, 22322, 19882, 21484, 19671, 20477, 17482, 13882];
+   end
+   else if CUR_MAP_MINE3 then begin
+      Area_List := [21474, 18895, 21111, 15505, 16881, 14691];
+      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
+      Chest_List := [19682, 14708, 17122];
+      SceneryPos_List := [15307, 17502, 17898, 18895, 19702, 22122, 17482, 19871, 21473, 22678];
+   end
+end
+
+procedure LoadCritters begin
+   variable tile, count, obj;
+   baseElevation := 1;
+   call Choose_Encounter;
+   foreach i in Area_List begin
+      AREABLK(i)
    end
 end
 
@@ -406,9 +412,6 @@ procedure NORTH_table begin
 end
 
 procedure South_table begin
-   if ((Encounter_Num == 4) and (global_var(GVAR_RANDOM_ENC_OVERRIDE) != 0)) then begin
-      Encounter_Num := 5;
-   end
    ranger_perk_reroll_enc(1, 2, 5, 6, 7);
 
    enc_override;
@@ -443,9 +446,6 @@ procedure Vats_table begin
 
    enc_override;
    if (Encounter_Num) then begin
-      if debug_mode then begin
-         debug_msg(" ");    display_msg("Mountain VATS loading Encounter_Num == " + Encounter_Num + " ");    debug_msg(" ");  debug_msg(" ");  debug_msg(" ");
-      end
       call choose_start;
       if (Encounter_Num == 1) then begin
          call Vats1;
@@ -494,6 +494,36 @@ procedure Glow_table begin
       end
       else if (Encounter_Num == 6) then begin
          call Glow6;
+      end
+      else begin
+         call hunters;
+      end
+   end
+end
+
+procedure VAULT_table begin
+   ranger_perk_reroll_enc(1, 3, 5, 6, 7);
+
+   enc_override;
+   if (Encounter_Num) then begin
+      call choose_start;
+      if (Encounter_Num == 1) then begin
+         call VAULT1;
+      end
+      else if (Encounter_Num == 2) then begin
+         call VAULT2;
+      end
+      else if (Encounter_Num == 3) then begin
+         call VAULT3;
+      end
+      else if (Encounter_Num == 4) then begin
+         call VAULT4;
+      end
+      else if (Encounter_Num == 5) then begin
+         call VAULT5;
+      end
+      else if (Encounter_Num == 6) then begin
+         call VAULT6;
       end
       else begin
          call hunters;
@@ -1159,36 +1189,6 @@ procedure Glow6 begin
 
    set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
-end
-
-procedure VAULT_table begin
-   ranger_perk_reroll_enc(1, 3, 5, 6, 7);
-
-   enc_override;
-   if (Encounter_Num) then begin
-      call choose_start;
-      if (Encounter_Num == 1) then begin
-         call VAULT1;
-      end
-      else if (Encounter_Num == 2) then begin
-         call VAULT2;
-      end
-      else if (Encounter_Num == 3) then begin
-         call VAULT3;
-      end
-      else if (Encounter_Num == 4) then begin
-         call VAULT4;
-      end
-      else if (Encounter_Num == 5) then begin
-         call VAULT5;
-      end
-      else if (Encounter_Num == 6) then begin
-         call VAULT6;
-      end
-      else begin
-         call hunters;
-      end
-   end
 end
 
 procedure NORTH1 begin
