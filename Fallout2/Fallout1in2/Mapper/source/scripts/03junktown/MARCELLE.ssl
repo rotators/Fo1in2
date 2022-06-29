@@ -83,7 +83,6 @@ import variable Sinthia_ptr;
 import variable Marcelle_ptr;
 import variable messing_with_fridge;
 
-variable night_person;
 variable wake_time;
 variable home_tile;
 variable Bessy;
@@ -103,8 +102,9 @@ variable line29flag;
 variable Shooting;
 variable sfx_name;
 
-#define LVAR_Home_Tile                  (8)
-#define LVAR_Home_Rotation              (9)
+#define LVAR_Herebefore             (4)
+#define LVAR_Home_Tile              (8)
+#define LVAR_Home_Rotation          (9)
 
 procedure start begin
    Marcelle_ptr := self_obj;
@@ -124,7 +124,7 @@ procedure critter_p_proc begin
    else begin
 
       if (Shooting == 0) then begin
-         if ((global_var(GVAR_SAVE_SINTHIA) != 2) and (map_var(3) != 0)) then begin
+         if ((global_var(GVAR_SAVE_SINTHIA) != 2) and (map_var(MVAR_save_da_ho) != 0)) then begin
             dest_tile := waiting_tile;
             if (self_tile != waiting_tile) then begin
                if (local_var(5)) then begin
@@ -144,7 +144,7 @@ procedure critter_p_proc begin
                end
             end
          end
-         else if ((global_var(GVAR_SAVE_SINTHIA) == 2) or (map_var(0) == 2)) then begin
+         else if ((global_var(GVAR_SAVE_SINTHIA) == 2) or (map_var(MVAR_Sinthia_dead) == 2)) then begin
             if (self_tile == waiting_tile) then begin
                moving_disabled := 0;
                dest_tile := tmp_dest_tile;
@@ -201,7 +201,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -210,7 +210,7 @@ procedure look_at_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if ((global_var(GVAR_SAVE_SINTHIA) == 0) and (line00flag == 0) and (map_var(3) != 0)) then begin
+   if ((global_var(GVAR_SAVE_SINTHIA) == 0) and (line00flag == 0) and (map_var(MVAR_save_da_ho) != 0)) then begin
       move_to(self_obj, waiting_tile, 0);
       dest_tile := waiting_tile;
       showing_room := 0;
@@ -233,7 +233,7 @@ procedure map_enter_p_proc begin
    set_self_team(TEAM_JUNKTOWNER);
    home_tile := 19901;
    wake_time := 600;
-   dest_tile := home_tile; // Added to fix Marcelle leaving them map if NumPathNodes > 6 in f2_res.ini
+   dest_tile := home_tile; // Added to fix Marcelle leaving the map if NumPathNodes > 6 in f2_res.ini
 end
 
 procedure pickup_p_proc begin
@@ -253,27 +253,27 @@ procedure talk_p_proc begin
       end
       else begin
          get_reaction
-         start_gdialog(339, self_obj, 4, -1, -1);
+         start_gdialog(NAME, self_obj, 4, -1, -1);
          gsay_start;
-         if ((global_var(GVAR_SAVE_SINTHIA) == 0) and not(line00flag) and (map_var(3) != 0)) then begin
+         if ((global_var(GVAR_SAVE_SINTHIA) == 0) and not(line00flag) and (map_var(MVAR_save_da_ho) != 0)) then begin
             call Marcelles00;
          end
          else if (global_var(GVAR_SAVE_SINTHIA) == 1) then begin
             call Marcelles03;
          end
-         else if ((global_var(GVAR_SAVE_SINTHIA) == 2) and not(line04flag) and (map_var(0) != 2) and (local_var(7) == 0)) then begin
+         else if ((global_var(GVAR_SAVE_SINTHIA) == 2) and not(line04flag) and (map_var(MVAR_Sinthia_dead) != 2) and (local_var(7) == 0)) then begin
             call Marcelles04;
          end
-         else if ((map_var(0) == 2) and not(line06flag)) then begin
+         else if ((map_var(MVAR_Sinthia_dead) == 2) and not(line06flag)) then begin
             call Marcelles06;
          end
          else if ((global_var(GVAR_KILL_KILLIAN) == 2) and not(line29flag)) then begin
             call Marcelles29;
          end
-         else if (not(local_var(4))) then begin
+         else if (not(local_var(LVAR_Herebefore))) then begin
             call Marcelles07;
          end
-         else if (local_var(1) < 2) then begin
+         else if bad_critter_reaction then begin
             call Marcelles22;
          end
          else begin
@@ -405,7 +405,7 @@ procedure Marcelles06 begin
 end
 
 procedure Marcelles07 begin
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(119);
    NOption(120, Marcelles12, 4);
    NOption(121, Marcelles13, 4);
@@ -653,7 +653,7 @@ procedure Marcelles29 begin
 end
 
 procedure Marcelles29a begin
-   if (dude_skill_success(SKILL_SPEECH, 0)) then begin
+   if dude_skill_success(SKILL_SPEECH, 0) then begin
       call Marcelles32;
    end
    else begin

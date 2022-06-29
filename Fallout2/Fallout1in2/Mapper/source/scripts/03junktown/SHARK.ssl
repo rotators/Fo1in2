@@ -1,12 +1,13 @@
 /*
 
-   Junktown - Shark
+   Junktown - Shark, Skum Pitt skullz ganger.
 
 */
 
 /* Include Files */
 #include "define.h"
 #include "area/junktown.h"
+#include "maps/junkcsno.h"
 
 #define NAME                    SCRIPT_SHARK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -40,6 +41,10 @@ procedure SharkEnd;
 
 procedure SharkCombat;
 
+#define LVAR_Herebefore             (4)
+#define LVAR_Sleeping               (5)
+#define LVAR_LeaveBar               (6)
+
 import variable removal_ptr;
 import variable Trish_ptr;
 
@@ -49,19 +54,16 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
-variable tmp_deset_tile := 7000;
+variable tmp_dest_tile := 7000;
 variable tmp_hostile;
 variable timer_set;
 variable sleeping_disabled;
 variable waypoint;
 
-#define LVAR_Sleeping                     (5)
-
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if REP_ENEMY_JUNKTOWN_SKULZ then begin
       if (self_can_see_dude) then begin
          attack(dude_obj);
@@ -72,33 +74,30 @@ begin
       attack(dude_obj);
    end
    else begin
-      if (quest_join_skullz_active and (local_var(6) == 0)) then begin
+      if (quest_join_skullz_active and (local_var(LVAR_LeaveBar) == 0)) then begin
          add_timer_event(self_obj, game_ticks(3), 3);
-         set_local_var(6, 1);
+         set_local_var(LVAR_LeaveBar, 1);
       end
-      else begin
-         if (global_var(GVAR_BUST_SKULZ) != 2) then begin
-            if (self_tile != tmp_deset_tile) then begin
-               self_walk_to_tile(tmp_deset_tile);
+      else if (global_var(GVAR_BUST_SKULZ) != 2) then begin
+         if (self_tile != tmp_dest_tile) then begin
+            self_walk_to_tile(tmp_dest_tile);
+         end
+         else begin
+            if (waypoint == 1) then begin
+               waypoint := 0;
+               tmp_dest_tile := 33519;
             end
-            else begin
-               if (waypoint == 1) then begin
-                  waypoint := 0;
-                  tmp_deset_tile := 33519;
-               end
-            end
-            if (sleeping_disabled == 0) then begin
-               sleeping
-            end
+         end
+         if (sleeping_disabled == 0) then begin
+            sleeping
          end
       end
    end
 end
 
-procedure damage_p_proc
-begin
-   if (source_is_dude and (map_var(0) == 1)) then begin
-      set_map_var(1, 1);
+procedure damage_p_proc begin
+   if (source_is_dude and (map_var(MVAR_Skulz_left) == 1)) then begin
+      set_map_var(MVAR_guards_left, 1);
    end
 end
 
@@ -109,10 +108,9 @@ procedure destroy_p_proc begin
    inc_evil_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -120,8 +118,7 @@ begin
    end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
    sleep_time := 2230;
    wake_time := 1530;
    home_tile := 20486;
@@ -135,12 +132,11 @@ begin
       removal_ptr := self_obj;
    end
    else begin
-      tmp_deset_tile := home_tile;
+      tmp_dest_tile := home_tile;
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
@@ -150,11 +146,11 @@ procedure talk_p_proc begin
    dude_look_at_self;
    start_gdialog(387, self_obj, 4, -1, -1);
    gsay_start;
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       call Shark01;
    end
    else begin
-      if (local_var(1) < 2) then begin
+      if bad_critter_reaction then begin
          call Shark08;
       end
       else begin
@@ -165,31 +161,25 @@ procedure talk_p_proc begin
    end_dialogue;
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       waypoint := 1;
-      tmp_deset_tile := 26495;
+      tmp_dest_tile := 26495;
    end
-   else begin
-      if (fixed_param == 2) then begin
-         if (Trish_ptr != 0) then begin
-            attack(Trish_ptr);
-         end
+   else if (fixed_param == 2) then begin
+      if (Trish_ptr != 0) then begin
+         attack(Trish_ptr);
       end
-      else begin
-         if (fixed_param == 3) then begin
-            float_msg(self_obj, mstr(126), FLOAT_MSG_RED);
-            add_timer_event(self_obj, game_ticks(5), 1);
-            sleeping_disabled := 1;
-         end
-      end
+   end
+   else if (fixed_param == 3) then begin
+      float_msg(self_obj, mstr(126), FLOAT_MSG_RED);
+      add_timer_event(self_obj, game_ticks(5), 1);
+      sleeping_disabled := 1;
    end
 end
 
-procedure Shark01
-begin
-   set_local_var(4, 1);
+procedure Shark01 begin
+   set_local_var(LVAR_Herebefore, 1);
    Reply(103);
    BOption(104, SharkCombat, 4);
    NOption(105, Shark02, 4);
@@ -198,8 +188,7 @@ begin
    NLowOption(108, Shark05);
 end
 
-procedure Shark01a
-begin
+procedure Shark01a begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
       call Shark04;
    end
@@ -208,14 +197,12 @@ begin
    end
 end
 
-procedure Shark02
-begin
+procedure Shark02 begin
    BMessage(109);
    call SharkCombat;
 end
 
-procedure Shark03
-begin
+procedure Shark03 begin
    variable LVar0 := 0;
    LVar0 := mstr(110);
    if (dude_is_female) then begin
@@ -228,8 +215,7 @@ begin
    NOption(113, SharkCombat, 4);
 end
 
-procedure Shark04
-begin
+procedure Shark04 begin
    UpReactLevel
    Reply(114);
    NOption(115, timed_event_p_proc, 4);
@@ -238,50 +224,42 @@ begin
    BOption(118, SharkCombat, 4);
 end
 
-procedure Shark04a
-begin
+procedure Shark04a begin
    if (not(dude_skill_success(SKILL_SPEECH, 0))) then begin
       DownReactLevel
    end
    call Shark05;
 end
 
-procedure Shark04b
-begin
+procedure Shark04b begin
    UpReactLevel
    add_timer_event(self_obj, game_ticks(3), 2);
 end
 
-procedure Shark05
-begin
+procedure Shark05 begin
    NMessage(119);
 end
 
-procedure Shark06
-begin
+procedure Shark06 begin
    Reply(120);
    NOption(121, Shark07, 4);
    NOption(122, Shark03, 4);
    NLowOption(123, Shark05);
 end
 
-procedure Shark07
-begin
+procedure Shark07 begin
    NMessage(124);
    call SharkCombat;
 end
 
-procedure Shark08
-begin
+procedure Shark08 begin
    NMessage(125);
    call SharkCombat;
 end
 
-procedure SharkCombat
-begin
+procedure SharkCombat begin
    tmp_hostile := 1;
 end
 
-procedure SharkEnd
-begin
+procedure SharkEnd begin
 end

@@ -6,13 +6,13 @@
 
 /* Include Files */
 #include "define.h"
-#include "area/necropolis.h"
+#include "area/junktown.h"
 
 #define NAME                    SCRIPT_IZO
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
 
 #include "command.h"
-#include "modreact.h"
+//#include "modreact.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -27,6 +27,9 @@ procedure map_enter_p_proc;
 procedure ShowToDoor_talk;
 procedure PayPlayer_talk;
 procedure IzoEnd;
+
+#define LVAR_GaveReward       (3)
+#define LVAR_Herebefore       (4)
 
 import variable Gizmo_ptr;
 import variable Gizmo_is_angry;
@@ -65,35 +68,32 @@ procedure critter_p_proc begin
          Gizmo_is_angry := 0;
          attack(dude_obj);
       end
-      else begin
-         if (show_to_door) then begin
-            if (tile_distance_objs(dude_obj, Gizmo_ptr) > 8) then begin
-               if (self_tile != home_hex) then begin
-                  self_walk_to_tile(home_hex);
-               end
-               else begin
-                  self_rotate(2);
-                  line103flag := 0;
-                  show_to_door := 0;
-               end
-            end
-            else if (self_tile != 18720) then begin
-               self_walk_to_tile(18720);
+      else if (show_to_door) then begin
+         if (tile_distance_objs(dude_obj, Gizmo_ptr) > 8) then begin
+            if (self_tile != home_hex) then begin
+               self_walk_to_tile(home_hex);
             end
             else begin
-               if (not(line103flag)) then begin
-                  line103flag := 1;
-                  display_msg(mstr(103));
-               end
+               self_rotate(2);
+               line103flag := 0;
+               show_to_door := 0;
             end
          end
-
+         else if (self_tile != 18720) then begin
+            self_walk_to_tile(18720);
+         end
+         else begin
+            if (not(line103flag)) then begin
+               line103flag := 1;
+               display_msg(mstr(103));
+            end
+         end
       end
    end
 end
 
 procedure map_enter_p_proc begin
-   set_local_var(4, 0);
+   set_local_var(LVAR_Herebefore, 0);
    //if (self_tile == 27719) then begin
    //   self_run_to_tile(16720);
    //end
@@ -104,8 +104,8 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if ((self_tile == 16720) and (local_var(4) == 0)) then begin
-      set_local_var(4, 1);
+   if ((self_tile == 16720) and (local_var(LVAR_Herebefore) == 0)) then begin
+      set_local_var(LVAR_Herebefore, 1);
       self_rotate(rotation_to_tile(self_tile, 16920));
    end
 end
@@ -129,13 +129,13 @@ end
 procedure talk_p_proc begin
    dude_look_at_self;
    display_msg(mstr(101));
-   if ((payment > 0) and (local_var(3) == 0)) then begin
+   if ((payment > 0) and (local_var(LVAR_GaveReward) == 0)) then begin
       use_obj(dude_obj);
       dude_caps_adjust(payment);
       start_dialog_at_node(PayPlayer_talk);
 
       payment := 0;
-      set_local_var(3, 1);
+      set_local_var(LVAR_GaveReward, 1);
    end
 end
 

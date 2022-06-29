@@ -43,12 +43,10 @@ procedure Pry_Door;
    prepended by LVAR_
 *****************************************************************/
 
-//local_var(LVAR_HALLDED_Door) == HALLDED | self is Hallded locked door
-//local_var(5) == HALLDED | Hallded lock was picked?
 //local_var(6) == HALLDED | has init Hallded door?
-//local_var(7) == GotExpForPicking (NOT USED)
 
 #define LVAR_HALLDED_Door           (4)
+#define LVAR_DoorStatus             (5)
 #define LVAR_Explosion_Attempts     (8)
 
 /*******************************************************************
@@ -74,6 +72,8 @@ variable last_source_obj;
    first entered. Any initial information that needs to be set up
    should be placed in here.
 *******************************************************************/
+
+#define Hex_Inside         (17127)
 
 procedure start begin
 end
@@ -105,7 +105,7 @@ end
 
 procedure map_enter_p_proc begin
    if (local_var(6) != 1) and (map_first_run) then begin
-      set_local_var(5, 0);
+      set_local_var(LVAR_DoorStatus, 0);
       set_map_var(MVAR_Fixt_DOOR_LOCKED, 1);
       set_local_var(6, 1);
    end
@@ -115,14 +115,14 @@ procedure map_enter_p_proc begin
    end
 
    if night then begin
-      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(5) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
+      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(LVAR_DoorStatus) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
          obj_unlock(self_obj);
       end
    end
-   else if (local_var(5) == 1) then begin
+   else if (local_var(LVAR_DoorStatus) == 1) then begin
       obj_unlock(self_obj);
    end
-   else if (local_var(5) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
+   else if (local_var(LVAR_DoorStatus) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
       obj_close(self_obj);
       obj_lock(self_obj);
    end
@@ -130,14 +130,14 @@ end
 
 procedure map_update_p_proc begin
    if night then begin
-      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(5) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
+      if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 0) or (local_var(LVAR_DoorStatus) == 1) or (map_var(MVAR_FIxt_CHARMED_IN_DOOR) == 1)) then begin
          obj_unlock(self_obj);
       end
    end
-   else if (local_var(5) == 1) then begin
+   else if (local_var(LVAR_DoorStatus) == 1) then begin
       obj_unlock(self_obj);
    end
-   else if (local_var(5) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
+   else if (local_var(LVAR_DoorStatus) == 0) and (map_var(MVAR_FIxt_CHARMED_IN_DOOR) != 1) then begin
       obj_close(self_obj);
       obj_lock(self_obj);
    end
@@ -145,7 +145,7 @@ end
 
 procedure use_p_proc begin
    if ((map_var(MVAR_Fixt_DOOR_LOCKED) == 1) and source_is_dude) then begin
-      if (local_var(5) == 0) then begin
+      if (local_var(LVAR_DoorStatus) == 0) then begin
          if (GhDorGrd_Ptr != 0) and not(combat_is_initialized) then begin
             if obj_can_see_obj(dude_obj, GhDorGrd_Ptr) then
                float_msg(GhDorGrd_Ptr, message_str(SCRIPT_GHDORGRD, 101), FLOAT_MSG_NORMAL);
@@ -160,22 +160,28 @@ procedure use_p_proc begin
             display_msg(mstr(104));//{104}{}{The door is locked.}
          end
       end
-      else begin
-         if (local_var(5) == 1) then begin
-            if (GhDorGrd_Ptr != 0) then begin
-               if not(dude_is_sneaking) and source_is_dude then begin
+      else if (local_var(LVAR_DoorStatus) == 1) then begin
+         if (GhDorGrd_Ptr != 0) then begin
+            if not(dude_is_sneaking) and source_is_dude then begin
+               if (tile_distance(dude_tile, Hex_Inside) > 1) then begin
                   script_overrides;
-                  set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 1);
-               end
-               else begin
-                  if dude_is_sneaking and dude_skill_success(SKILL_SNEAK, 0) and source_is_dude then begin
-                     obj_unlock(self_obj);
+                  if (global_var(GVAR_SET_DOOR_GUARD_WARNING) == 0) then begin
+                     set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 1);
+                     float_msg(GhDorGrd_Ptr, message_str(SCRIPT_GHDORGRD, 101), FLOAT_MSG_NORMAL);
+                     if (obj_is_open(self_obj)) then obj_close(self_obj);
                   end
+                  else
+                     set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 2);
                end
             end
             else begin
-               obj_unlock(self_obj);
+               if dude_is_sneaking and dude_skill_success(SKILL_SNEAK, 0) and source_is_dude then begin
+                  obj_unlock(self_obj);
+               end
             end
+         end
+         else begin
+            obj_unlock(self_obj);
          end
       end
    end
@@ -189,7 +195,7 @@ end
 procedure use_skill_on_p_proc begin
 variable Skills_Roll;
 
-   if (map_var(MVAR_Fixt_DOOR_LOCKED) == 1) and (local_var(5) == 0) then begin
+   if (map_var(MVAR_Fixt_DOOR_LOCKED) == 1) and (local_var(LVAR_DoorStatus) == 0) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          Skills_Roll := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
@@ -197,7 +203,7 @@ variable Skills_Roll;
          // Unlock the door:
          if (is_success(Skills_Roll)) then begin
             obj_unlock(self_obj);
-            set_local_var(5, 1);
+            set_local_var(LVAR_DoorStatus, 1);
             display_msg(mstr(100));
             give_xp(EXP_LOCKPICK_NORMAL);
          end
@@ -229,7 +235,7 @@ procedure use_obj_on_p_proc begin
    Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 
    if ((Tool == PID_LOCKPICKS or Tool == PID_EXP_LOCKPICK_SET) and (map_var(MVAR_Fixt_DOOR_LOCKED) == 1)) then begin
-      if (local_var(5) == 0) then begin
+      if (local_var(LVAR_DoorStatus) == 0) then begin
          script_overrides;
 
          if (Tool == PID_EXP_LOCKPICK_SET) then
@@ -238,7 +244,7 @@ procedure use_obj_on_p_proc begin
          // Door unlocked:
          if (is_success(Skills_Roll)) then begin
             obj_unlock(self_obj);
-            set_local_var(5, 1);
+            set_local_var(LVAR_DoorStatus, 1);
             display_msg(mstr(100));
             give_xp(EXP_LOCKPICK_NORMAL);
          end

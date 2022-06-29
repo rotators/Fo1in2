@@ -77,25 +77,21 @@ procedure RaiderCombat;
 procedure RaiderSnap;
 procedure safe;
 
+#define LVAR_Herebefore          (4)
+
 import variable JTRaider_ptr;
 import variable Sinthia_ptr;
 import variable award;
 
-variable tmp_hostile;//from old version of script
-variable known;//from old version of script
-variable pissed;//from old version of script
 variable sfx_name;
 variable Sinthia_is_safe;
 variable shoot_Sinthia;
-variable will_negotiate;//from old version of script
 variable initial := 0;
-variable line184flag;//from old version of script
 
 procedure start begin
    if (initial == 0) then begin
       initial := 1;
       JTRaider_ptr := self_obj;
-      set_self_team(TEAM_JUNKTOWN_RAIDER);
       set_self_ai(AI_GENERIC_RAIDER);
       set_self_team(TEAM_JUNKTOWN_BOXER);
    end
@@ -113,32 +109,26 @@ procedure critter_p_proc begin
             set_local_var(6, 1);
             attack(dude_obj);
          end
-         else begin
-            if ((local_var(6) == 1) and (tile_distance_objs(dude_obj, self_obj) < 4)) then begin
-               if (not(dude_is_sneaking)) then begin
-                  set_local_var(5, 2);
-               end
-            end
-            else begin
-               if (self_can_see_dude and (local_var(4) == 0) and (dude_is_sneaking == 0)) then begin
-                  dialogue_system_enter;
-               end
+         else if ((local_var(6) == 1) and (tile_distance_objs(dude_obj, self_obj) < 4)) then begin
+            if (not(dude_is_sneaking)) then begin
+               set_local_var(5, 2);
             end
          end
+         else if (self_can_see_dude and (local_var(LVAR_Herebefore) == 0) and (dude_is_sneaking == 0)) then begin
+            dialogue_system_enter;
+         end
       end
-      else begin
-         if (map_var(MVAR_raider_status) == 1) then begin
-            if (local_var(9) == 0) then begin
-               rm_timer_event(Sinthia_ptr);
-               add_timer_event(Sinthia_ptr, game_ticks(2), 2);
+      else if (map_var(MVAR_raider_status) == 1) then begin
+         if (local_var(9) == 0) then begin
+            rm_timer_event(Sinthia_ptr);
+            add_timer_event(Sinthia_ptr, game_ticks(2), 2);
 
-               reg_anim_clear(self_obj);
-               reg_anim_begin();
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
                reg_anim_animate(self_obj, ANIM_fall_front, -1);
                reg_anim_animate(self_obj, ANIM_fall_front_sf, -1);
-               reg_anim_end();
-               set_local_var(9, 1);
-            end
+            reg_anim_end();
+            set_local_var(9, 1);
          end
       end
    end
@@ -181,8 +171,8 @@ procedure destroy_p_proc begin
    end
 
    set_global_var(GVAR_SAVE_SINTHIA, 2);
-   set_map_var(3, 3);
-   if (map_var(0) != 2) then begin
+   set_map_var(MVAR_save_da_ho, 3);
+   if (map_var(MVAR_Sinthia_dead) != 2) then begin
       award := 400;
    end
    inc_evil_critter
@@ -200,18 +190,16 @@ procedure map_enter_p_proc begin
          JTRaider_ptr := 0;
          destroy_object(self_obj);
       end
-      else begin
-         if (map_var(MVAR_raider_status) == 1) then begin
-            set_map_var(MVAR_raider_status, 0);
-            set_local_var(5, 2);
-            set_local_var(6, 1);
-            set_local_var(7, 0);
-            if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
-               reg_anim_clear(self_obj);
-               reg_anim_begin();
+      else if (map_var(MVAR_raider_status) == 1) then begin
+         set_map_var(MVAR_raider_status, 0);
+         set_local_var(5, 2);
+         set_local_var(6, 1);
+         set_local_var(7, 0);
+         if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
                reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
-               reg_anim_end();
-            end
+            reg_anim_end();
          end
       end
    end
@@ -233,18 +221,18 @@ procedure talk_p_proc begin
       if ((global_var(GVAR_SAVE_SINTHIA) == 1) and (map_var(MVAR_raider_status) == 0)) then begin
          start_gdialog(337, self_obj, 4, -1, -1);
          gsay_start;
-         if (local_var(4) == 0) then begin
+         if (local_var(LVAR_Herebefore) == 0) then begin
             call Raider0;
          end
          else begin
-            if (map_var(3) == 1) then begin
-               if (local_var(1) < 2) then begin
+            if (map_var(MVAR_save_da_ho) == 1) then begin
+               if bad_critter_reaction then begin
                   call Raider17;
                end
                else begin
                   call Raider9;
                end
-               set_map_var(3, 2);
+               set_map_var(MVAR_save_da_ho, 2);
             end
             else begin
                if (local_var(7) == 1) then begin
@@ -267,18 +255,18 @@ procedure talk_p_proc begin
 
       reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_animate(self_obj, ANIM_point, -1);
-      reg_anim_animate(self_obj, ANIM_fire_single, -1);
-      sfx_name := sfx_build_weapon_name(1, self_item(PID_10MM_PISTOL), 0, Sinthia_ptr);
-      reg_anim_play_sfx(self_obj, sfx_name, 0);
-      reg_anim_animate(self_obj, ANIM_unpoint, -1);
+         reg_anim_animate(self_obj, ANIM_point, -1);
+         reg_anim_animate(self_obj, ANIM_fire_single, -1);
+         sfx_name := sfx_build_weapon_name(1, self_item(PID_10MM_PISTOL), 0, Sinthia_ptr);
+         reg_anim_play_sfx(self_obj, sfx_name, 0);
+         reg_anim_animate(self_obj, ANIM_unpoint, -1);
       reg_anim_end();
 
       shoot_Sinthia := 0;
       add_timer_event(self_obj, 5, 2);
    end
    if (Sinthia_is_safe == 1) then begin
-      set_map_var(3, 3);
+      set_map_var(MVAR_save_da_ho, 3);
       set_global_var(GVAR_SAVE_SINTHIA, 2);
       gfade_out(1);
       gfade_in(1);
@@ -303,21 +291,21 @@ procedure timed_event_p_proc begin
       if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
          reg_anim_clear(self_obj);
          reg_anim_begin();
-         reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+            reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
       end
    end
 end
 
 procedure combat_p_proc begin
-   if ((map_var(MVAR_raider_status) == 1) and (map_var(3) > 0) and (map_var(3) < 3) and (tile_distance_objs(self_obj, dude_obj) < 4)) then begin
+   if ((map_var(MVAR_raider_status) == 1) and (map_var(MVAR_save_da_ho) > 0) and (map_var(MVAR_save_da_ho) < 3) and (tile_distance_objs(self_obj, dude_obj) < 4)) then begin
       script_overrides;
       terminate_combat;
    end
 end
 
 procedure Raider0 begin
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(101);
    NLowOption(102, Raider1);
    NOption(103, Raider2, 4);
