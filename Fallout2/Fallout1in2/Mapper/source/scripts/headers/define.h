@@ -99,11 +99,11 @@
 #define FLOAT_MSG_WARNING    (-2)
 #define FLOAT_MSG_SEQUENTIAL (-1)
 #define FLOAT_MSG_NORMAL      (0)
-#define FLOAT_MSG_BLACK       (1)
+#define FLOAT_MSG_BLACK       (1) // Shows Grey (10)
 #define FLOAT_MSG_RED         (2)
 #define FLOAT_MSG_GREEN       (3)
 #define FLOAT_MSG_BLUE        (4)
-#define FLOAT_MSG_PURPLE      (5)
+#define FLOAT_MSG_PURPLE      (5) // Shows Grey (10) - use floater_purple(WHO,MSG) macro instead
 #define FLOAT_MSG_NEAR_WHITE  (6)
 #define FLOAT_MSG_LIGHT_RED   (7)
 #define FLOAT_MSG_YELLOW      (8)

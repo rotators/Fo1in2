@@ -5,6 +5,8 @@
 */
 
 #include "define.h"
+#include "maps/mbent.h"
+#include "maps/junkent.h"
 
 #define NAME                    SCRIPT_KATJA
 
@@ -90,15 +92,7 @@ procedure pick_lock;
 procedure set_lock;
 procedure KatjaCombatTactics;
 
-procedure KatjaSniper;
-procedure KatjaNearCombat;
-procedure KatjaFreeCombat;
-
-procedure KatjaHolsterWeapon;
-procedure KatjaRemoveArmor;
-
 variable tmp_hostile;
-variable item;
 variable lock;
 
 variable line173flag;
@@ -210,7 +204,7 @@ procedure use_obj_on_p_proc begin
             add_obj_to_inven(self_obj, obj_being_used_with);
          end
          else begin
-            float_msg(self_obj, message_str(SCRIPT_MODREACT, 109), FLOAT_MSG_PURPLE);
+            floater_purple(self_obj, message_str(SCRIPT_MODREACT, 109));
          end
       end
    end
@@ -234,29 +228,26 @@ procedure talk_p_proc begin
    dude_look_at_self;
 
    start_gdialog(623, self_obj, 4, -1, -1);
-
-   if (Katja_In_Party or party_is_waiting) then begin
-      gdialog_set_barter_mod(255);
-   end
-
    gsay_start;
+      if (Katja_In_Party or party_is_waiting) then begin
+         gdialog_set_barter_mod(255);
+      end
 
-   if katja_is_prisoner then begin
-      float_katja(3503);
-      set_katja_prisoner(false);
-      katja_joins_party;
-   end
-   else if (Katja_In_Party or party_is_waiting) then begin
-      //call Katja24;
-      call Node1000;
-   end
-   else if (global_var(GVAR_KATJA_HIRELING_STATUS) == 1) then begin
-      call Katja25;
-   end
-   else begin
-      call Katja01;
-   end
-
+      if katja_is_prisoner then begin
+         float_katja(3503);
+         set_katja_prisoner(false);
+         katja_joins_party;
+      end
+      else if (Katja_In_Party or party_is_waiting) then begin
+         //call Katja24;
+         call Node1000;
+      end
+      else if (global_var(GVAR_KATJA_HIRELING_STATUS) == 1) then begin
+         call Katja25;
+      end
+      else begin
+         call Katja01;
+      end
    gsay_end;
    end_dialogue;
 
@@ -449,19 +440,18 @@ end
 procedure Katja24 begin
    Reply(163);
    if (CUR_MAP_MBENT) then begin
-      if (map_var(3)) then begin
+      if (map_var(MVAR_MBDoor_ptr)) then begin
          NOption(164, set_lock, 4);
       end
    end
    if ((CUR_MAP_JUNKENT) and (dude_elevation == 1)) then begin
-      if (map_var(4)) then begin
+      if (map_var(MVAR_DocLocker_ptr)) then begin
          NOption(164, set_lock, 4);
       end
    end
    NOption(167, KatjaLeave, 4);
    NOption(177, Katja26, 4);
    giq_option(4, SCRIPT_TYCHO, 159, KatjaTactics, GOOD_REACTION);
-   NOption(2000, KatjaCombatTactics, 4);
    NOption(168, Node999, 4);
    NLowOption(189, KatjaExit);
 end
@@ -545,7 +535,7 @@ end
 procedure map_commentary begin
    if (CUR_MAP_MSTRLR12) then begin
       if ((tile_distance(self_tile, 27317) < 4) and (line173flag == 0)) then begin
-         float_msg(self_obj, mstr(173), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(173));
          line173flag := 1;
       end
    end
@@ -553,7 +543,7 @@ procedure map_commentary begin
       if (self_elevation == 1) then begin
          if (tile_distance(self_tile, 19111) < 4) then begin
             if ((line174flag == 0) and (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (Ian_ptr != 0)) then begin
-               float_msg(self_obj, mstr(172), FLOAT_MSG_PURPLE);
+               floater_purple(self_obj, mstr(172));
                line174flag := 1;
             end
          end
@@ -561,7 +551,7 @@ procedure map_commentary begin
    end
    else if (CUR_MAP_HUBDWNTN) then begin
       if ((tile_distance(self_tile, 28104) < 5) and (line176flag == 0)) then begin
-         float_msg(self_obj, mstr(176), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(176));
          if (global_var(GVAR_TYCHO_HIRELING_STATUS) == 2) then begin
             float_msg(Tycho_ptr, message_str(SCRIPT_TYCHO, 167), FLOAT_MSG_LIGHT_GREY);
          end
@@ -570,7 +560,7 @@ procedure map_commentary begin
    end
    else if (CUR_MAP_MBVATS12) then begin
       if (line184flag == 0) then begin
-         float_msg(self_obj, mstr(184), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(184));
          if (Ian_In_Party) then begin
             float_msg(Ian_ptr, message_str(SCRIPT_IAN, 175), FLOAT_MSG_NORMAL);
          end
@@ -579,19 +569,19 @@ procedure map_commentary begin
    end
    else if (CUR_MAP_MSTRLR34) then begin
       if (line186flag == 0) then begin
-         float_msg(self_obj, mstr(186), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(186));
          line186flag := 1;
       end
    end
    else if (CUR_MAP_HALLDED) then begin
       if ((tile_distance(self_tile, 17274) < 4) and (line187flag == 0)) then begin
-         float_msg(self_obj, mstr(187), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(187));
          line187flag := 1;
       end
    end
    else if (CUR_MAP_LARIPPER) then begin
       if (line188flag == 0) then begin
-         float_msg(self_obj, mstr(188), FLOAT_MSG_PURPLE);
+         floater_purple(self_obj, mstr(188));
          line188flag := 1;
       end
    end
@@ -600,8 +590,8 @@ end
 procedure pick_lock begin
    reg_anim_clear(self_obj);
    reg_anim_begin();
-   reg_anim_obj_move_to_obj(self_obj, lock, -1);
-   reg_anim_animate(self_obj, ANIM_magic_hands_middle, -1);
+      reg_anim_obj_move_to_obj(self_obj, lock, -1);
+      reg_anim_animate(self_obj, ANIM_magic_hands_middle, -1);
    reg_anim_end();
    use_obj(lock);
    obj_unlock(lock);
@@ -609,59 +599,13 @@ procedure pick_lock begin
 end
 
 procedure set_lock begin
-   if (CUR_MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
-      lock := map_var(3);
+   if (CUR_MAP_MBENT) then begin
+      lock := map_var(MVAR_MBDoor_ptr);
    end
-   else if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-      lock := map_var(4);
+   else if (CUR_MAP_JUNKENT) then begin
+      lock := map_var(MVAR_DocLocker_ptr);
    end
 end
-
-procedure KatjaCombatTactics begin
-   Reply(2001);
-
-   if (self_is_armed) then
-      GOption(2010, KatjaHolsterWeapon, 4);
-
-   if (self_wearing_armor) then
-      GOption(2011, KatjaRemoveArmor, 4);
-
-   GOption(2012, KatjaSniper, 4);
-   GOption(2013, KatjaNearCombat, 4);
-   GOption(2014, KatjaFreeCombat, 4);
-   GOption(2015, Katja24, 4);
-end
-
-procedure KatjaHolsterWeapon begin
-   inven_unwield(self_obj);
-   Reply(2100);
-   call KatjaCombatTactics;
-end
-
-procedure KatjaRemoveArmor begin
-   remove_armor(self_obj)
-   Reply(2100);
-   call KatjaCombatTactics;
-end
-
-procedure KatjaSniper begin
-   GMessage(2100);
-   //set_self_ai( AI_PARTY_KATJA_AGGRESSIVE );
-   call KatjaCombatTactics;
-end
-
-procedure KatjaNearCombat begin
-   GMessage(2100);
-   //set_self_ai( AI_PARTY_KATJA_BERSERK );
-   call KatjaCombatTactics;
-end
-
-procedure KatjaFreeCombat begin
-   GMessage(2100);
-   //set_self_ai( AI_GUARD );
-   call KatjaCombatTactics;
-end
-
 
 // party stuff
 procedure Node1000 begin
@@ -670,14 +614,20 @@ procedure Node1000 begin
    end
    else begin
       Reply(mstr(163));
-      // Lockpick
-      if (CUR_MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
-         if (map_var(3)) then begin
+      /*
+         TODO:
+         Decide if this stays or goes. Kinda useless function that nobody ever knows about. Also, if player uses
+         his own lockpick skill on the doors, it automatically uses Katja's in the calculation if hers is higher.
+      */
+      if CUR_MAP_MBENT then begin
+         // Mariposa entrance door
+         if (map_var(MVAR_MBDoor_ptr) and obj_is_locked(map_var(MVAR_MBDoor_ptr))) then begin
             NOption(164, set_lock, 4);
          end
       end
-      if ((CUR_MAP_JUNKENT) and (dude_elevation == 1)) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-         if (map_var(4)) then begin
+      if CUR_MAP_JUNKENT then begin
+         // Junktown, Doc Morbid locker
+         if (dude_elevation == 1) and map_var(MVAR_DocLocker_ptr) and obj_is_locked(map_var(MVAR_DocLocker_ptr)) then begin
             NOption(164, set_lock, 4);
          end
       end
