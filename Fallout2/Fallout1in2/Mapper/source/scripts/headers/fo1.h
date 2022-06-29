@@ -17,9 +17,9 @@
 #define TRAIT_TRAIT  (2)
    
 // Float in purple fix
-#define floater_purple(x, y) \
+#define floater_purple(WHO, MSG) \
    write_int(0x459418, 0x6AB4EF); \
-   float_msg(x, y, FLOAT_MSG_PURPLE); \
+   float_msg(WHO, MSG, FLOAT_MSG_PURPLE); \
    write_int(0x459418, 0x6A621A)
    
 /*********************************************************
