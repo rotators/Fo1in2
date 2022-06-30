@@ -4,8 +4,6 @@
 {101}{}{The ghoul is wearing an old, patched up motorcycle jacket. You see traces of tattoos on his rotten skin.}
 
 {125}{}{You gain }
-{126}{}{ experience for helping Griffith leaving Necropolis.}
-{127}{}{ experience for stealing the motorcycle.}
 {128}{}{ experience for obtaining the motorcycle.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
