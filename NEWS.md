@@ -11,6 +11,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
+- **Fixed**: Katja's "can you open that door"-dialog option would also show up if the object was already unlocked (barely used in the game, but whatever I guess).
 - **Fixed**: Killing Gizmo without Killian would result in a teleport back to Lars.
 - **Fixed**: Klaxon lights in Mariposa would show the wrong description text when in alarm-mode.
 - **Fixed**: Laura in the Cathedral had a voiced line linked to a non-existing sound file.
@@ -18,9 +19,11 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Mariposa command terminal was printing a "This does nothing."-message after using a radio on it.
 - **Fixed**: Mariposa force fields had some issues when triggering them on/off via radio. Rewrote the script to be more robust.
 - **Fixed**: Motorcycle key had a weight of 10 pounds. Changed to 0.
+- **Fixed**: Purple floating text color now shows correctly (primarily used by Katja).
 - **Fixed**: Removed unnecessary "Special Death"-flag from Brotherhood Paladin proto files.
 - **Fixed**: Restored dialog for Phil and Lenore in Junktown when Dogmeat is killed instead of recruited.
 - **Fixed**: Script issue when checking the childkiller reputation.
+- **Fixed**: The Hall of the Dead entrance guard will not attack the player anymore if he opened the door from inside to leave the building. Also he would attack instantly and not give a warning if the player would mess with it right after leaving the building.
 - **Fixed**: The Junktown Crash House raider would still drop armor, even if armor dropping was disabled.
 - **Fixed**: The backpack of the combat armor animations would clip through the rocket launcher.
 - **Fixed**: The dialog option to ask Cabbot at the Brotherhood about joining would change to "I have changed my mind..." without the player ever asking him to join.
@@ -38,3 +41,4 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
 - **Tweaked**: The ENABLE_FO2_CRITTERS setting will now also affect critters spawned in caravan encounters.
+- **Tweaked**: The Fo2 party member combat control interface fits better to the rest of the Fo1 interface now.
