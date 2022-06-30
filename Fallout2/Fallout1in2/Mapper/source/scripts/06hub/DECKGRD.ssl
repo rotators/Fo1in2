@@ -16,7 +16,6 @@
 #include "sfall/main.h"
 
 /* Standard Script Procedures */
-
 procedure start;
 procedure combat;
 procedure critter_p_proc;
@@ -28,7 +27,6 @@ procedure combat_p_proc;
 
 variable tmp_hostile;
 variable Only_Once := 1;
-variable surrendered;
 
 procedure start begin
    if Only_Once then begin
@@ -72,7 +70,7 @@ end
 procedure destroy_p_proc begin
    inc_evil_critter
 
-   if (surrendered == 1 and source_is_dude) then begin
+   if ((map_var(MVAR_UNDERGROUND_SURRENDERED) == 1) and source_is_dude) then begin
       inc_general_rep(-1);
    end
 end
@@ -83,16 +81,15 @@ procedure look_at_p_proc begin
 end
 
 procedure combat_p_proc begin
-   if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (surrendered == 0)) then begin
+   if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (map_var(MVAR_UNDERGROUND_SURRENDERED) == 0)) then begin
       script_overrides;
       set_map_var(MVAR_UNDERGROUND_SURRENDERED, 1);
-      surrendered := 1;
       inven_unwield;
       float_msg(self_obj, mstr(107), FLOAT_MSG_RED);
    end
-   else if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (surrendered == 1)) then begin
+   else if ((global_var(GVAR_UNDERGROUND_STATUS) == 1) and (map_var(MVAR_UNDERGROUND_SURRENDERED) == 1)) then begin
       script_overrides;
-      // TODO: We are forcing to end the combat now. In vanilla Fo1, player can decide for himself when to end the combat.
+      // We are forcing to end the combat now. In vanilla Fo1, player can decide for himself when to end the combat.
       //terminate_combat;
       //critter_stop_attacking(self_obj);
    end

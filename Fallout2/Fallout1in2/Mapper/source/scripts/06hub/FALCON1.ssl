@@ -1,3 +1,10 @@
+/*
+
+   Hub - Bartender in the Maltese Falcon
+
+*/
+
+/* Include Files */
 #include "define.h"
 
 #define NAME                    SCRIPT_FALCON1
@@ -12,6 +19,7 @@ procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
+
 procedure Falcon00;
 procedure Falcon01;
 procedure Falcon02;
@@ -33,8 +41,6 @@ procedure FalconEnd;
 variable tmp_hostile;
 variable Only_Once := 1;
 variable First_Water;
-variable Money_Pack;
-variable Money_Count;
 variable item;
 
 procedure start begin
@@ -56,36 +62,28 @@ procedure critter_p_proc begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
-   start_gdialog(697, self_obj, 4, -1, -1);
-   gsay_start;
-   call Falcon00;
-   gsay_end;
-   end_dialogue;
+   start_dialog_at_node(Falcon00);
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Falcon00
-begin
+procedure Falcon00 begin
    Reply(101);
    NOption(102, Falcon05, 4);
    NOption(103, Falcon06, 4);
@@ -94,18 +92,15 @@ begin
    NLowOption(107, Falcon03);
 end
 
-procedure Falcon01
-begin
+procedure Falcon01 begin
    NMessage(108);
 end
 
-procedure Falcon02
-begin
+procedure Falcon02 begin
    NMessage(109);
 end
 
-procedure Falcon03
-begin
+procedure Falcon03 begin
    if (dude_is_male) then begin
       NMessage(110);
    end
@@ -114,20 +109,17 @@ begin
    end
 end
 
-procedure Falcon04
-begin
+procedure Falcon04 begin
    NMessage(112);
 end
 
-procedure Falcon05
-begin
+procedure Falcon05 begin
    Reply(113);
    NOption(114, Falcon05a, 4);
    NOption(115, Falcon11, 4);
 end
 
-procedure Falcon05a
-begin
+procedure Falcon05a begin
    if (dude_caps >= 2) then begin
       call Falcon09;
    end
@@ -136,15 +128,13 @@ begin
    end
 end
 
-procedure Falcon06
-begin
+procedure Falcon06 begin
    Reply(116);
    NOption(117, Falcon06a, 4);
    NOption(115, Falcon11, 4);
 end
 
-procedure Falcon06a
-begin
+procedure Falcon06a begin
    if (dude_caps < 5) then begin
       call Falcon01;
    end
@@ -168,23 +158,19 @@ procedure Falcon07a begin
    end
 end
 
-procedure Falcon09
-begin
+procedure Falcon09 begin
    if (First_Water) then begin
       Reply(mstr(139) + mstr(140) + mstr(141));
    end
    else begin
       Reply(mstr(136) + mstr(137) + mstr(138));
    end
-   Money_Pack := dude_item(PID_BOTTLE_CAPS);
-   Money_Count := rm_mult_objs_from_inven(dude_obj, Money_Pack, 2);
-   destroy_object(Money_Pack);
+   dude_caps_adjust(-2);
    First_Water := 1;
    call Falcon15;
 end
 
-procedure Falcon11
-begin
+procedure Falcon11 begin
    if (random(0, 1)) then begin
       NMessage(mstr(151) + mstr(152));
    end
@@ -193,19 +179,15 @@ begin
    end
 end
 
-procedure Falcon14
-begin
-   Money_Pack := dude_item(PID_BOTTLE_CAPS);
-   Money_Count := rm_mult_objs_from_inven(dude_obj, Money_Pack, 5);
-   destroy_object(Money_Pack);
+procedure Falcon14 begin
+   dude_caps_adjust(-5);
    item := create_object(PID_BEER, 0, 0);
    add_obj_to_inven(dude_obj, item);
    Reply(mstr(160) + mstr(161));
    call Falcon15;
 end
 
-procedure Falcon15
-begin
+procedure Falcon15 begin
    NOption(102, Falcon05, 4);
    NOption(103, Falcon06, 4);
    NOption(104, Falcon07, 4);
@@ -213,17 +195,13 @@ begin
    NLowOption(107, Falcon03);
 end
 
-procedure Falcon16
-begin
-   Money_Pack := dude_item(PID_BOTTLE_CAPS);
-   Money_Count := rm_mult_objs_from_inven(dude_obj, Money_Pack, 10);
-   destroy_object(Money_Pack);
+procedure Falcon16 begin
+   dude_caps_adjust(-10);
    item := create_object(PID_BOOZE, 0, 0);
    add_obj_to_inven(dude_obj, item);
    Reply(mstr(163) + mstr(164));
    call Falcon15;
 end
 
-procedure FalconEnd
-begin
+procedure FalconEnd begin
 end

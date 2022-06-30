@@ -1,10 +1,11 @@
 /*
 
-   Hub - Thorndyke
+   Hub - Thorndyke, CoC doctor
 
 */
 
 #include "define.h"
+#include "maps/hubwater.h"
 
 #define NAME                    SCRIPT_THORNDYK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -59,6 +60,8 @@ procedure Thorn27;
 procedure Thorn28;
 procedure Thorn29;
 
+#define LVAR_Insulted         (5)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable PlayerYellsOuch;
@@ -85,7 +88,7 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if ((map_var(6) == 1) and (self_can_see_dude)) then begin
+   if ((map_var(MVAR_CHILDREN_ANGRY) == 1) and (self_can_see_dude)) then begin
       call combat;
    end
 end
@@ -103,31 +106,23 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
+
    if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
       call Thorn00;
    end
-   else begin
-      if (local_var(5) == 1) then begin
-         call Thorn28;
-      end
-      else begin
-         if (map_var(0) == 1) then begin
-            call Thorn29;
-         end
-         else begin
-            if has_rep_childkiller or global_var(GVAR_BERSERKER_REPUTATION) then begin
-               call Thorn01;
-            end
-            else begin
-               start_gdialog(603, self_obj, 4, -1, -1);
-               gsay_start;
-               call Thorn02;
-               gsay_end;
-               end_dialogue;
-            end
-         end
-      end
+   else if (local_var(LVAR_Insulted) == 1) then begin
+      call Thorn28;
    end
+   else if (map_var(MVAR_JAIN_DISMISSES) == 1) then begin
+      call Thorn29;
+   end
+   else if has_rep_childkiller or global_var(GVAR_BERSERKER_REPUTATION) then begin
+      call Thorn01;
+   end
+   else begin
+      start_dialog_at_node(Thorn02);
+   end
+
    if (HealPlayer == 1) then begin
       HealPlayer := 0;
       set_local_var(6, GAME_TIME_IN_HOURS);
@@ -432,12 +427,12 @@ procedure Thorn22b begin
 end
 
 procedure Thorn23 begin
-   set_local_var(5, 1);
+   set_local_var(LVAR_Insulted, 1);
    BMessage(200);
 end
 
 procedure Thorn24 begin
-   set_local_var(5, 1);
+   set_local_var(LVAR_Insulted, 1);
    BMessage(201);
 end
 

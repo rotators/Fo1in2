@@ -347,6 +347,7 @@
 #define REP_BONUS_NECKLACE_STOLEN               (-3)
 #define REP_BONUS_KIND_TO_HAROLD                (1)
 #define REP_BONUS_DAN_AND_BILLY                 (1)
+#define REP_BONUS_SPARED_DEADGUY                (1)
 #define inc_hub_rep(x)                          inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard

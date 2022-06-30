@@ -49,6 +49,7 @@ variable tmp_hostile;
 variable Only_Once := 1;
 
 procedure start begin
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_HUB_SKAG);
@@ -56,17 +57,23 @@ procedure start begin
       critter_attempt_placement(self_obj, self_tile, 2);
    end
 
-   // Critter dialog doesn't make much sense if there are still surrendered thugs in the cellar.
-   // Remove critter for now.
-   destroy_object(self_obj);
+   if (global_var(GVAR_UNDERGROUND_STATUS) == 1) then begin
+      if not(is_loading_game) then begin
+         set_self_visible;
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
    if not(is_loading_game) then begin
       if (local_var(LVAR_Disappear) == 1) then begin
+         if (local_var(LVAR_StealMoney) == 0) then begin
+            inc_general_rep(5);
+            inc_hub_rep(REP_BONUS_SPARED_DEADGUY);
+         end
          destroy_object(self_obj);
       end
-      else if ((map_var(MVAR_REWARD_FOR_DECKER) > 0) and (local_var(LVAR_Disappear) == 0)) then begin
+      else if ((map_var(MVAR_REWARD_FOR_DECKER) > 2) and (local_var(LVAR_Disappear) == 0)) then begin
          critter_attempt_placement(self_obj, self_tile, 1);
       end
       else begin
@@ -76,9 +83,6 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if ((self_elevation != 1) and (map_var(MVAR_REWARD_FOR_DECKER) > 0) and (local_var(LVAR_Disappear) == 0)) then begin
-      critter_attempt_placement(self_obj, self_tile, 1);
-   end
 end
 
 procedure critter_p_proc begin

@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+//#include "area/hub.h"
+#include "maps/hubwater.h"
 
 #define NAME                    SCRIPT_HCHDGRD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -64,6 +65,9 @@ procedure ChildGuard35;
 procedure ChildGuard36;
 procedure ChildGuard37;
 
+#define LVAR_Herebefore       (5)
+#define LVAR_UsedDoor         (6)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
@@ -84,10 +88,10 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if ((map_var(6) == 1) and (self_can_see_dude)) then begin
+   if ((map_var(MVAR_CHILDREN_ANGRY) == 1) and (self_can_see_dude)) then begin
       call combat;
    end
-   if (map_var(4) == 1) then begin
+   if (map_var(MVAR_DOOR_UNLOCK_FAILED) == 1) then begin
       dialogue_system_enter;
    end
 end
@@ -103,10 +107,10 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if (map_var(4) == 1) then begin
-      set_map_var(4, 0);
-      if (local_var(6) == 0) then begin
-         start_gdialog(579, self_obj, 4, -1, -1);
+   if (map_var(MVAR_DOOR_UNLOCK_FAILED) == 1) then begin
+      set_map_var(MVAR_DOOR_UNLOCK_FAILED, 0);
+      if (local_var(LVAR_UsedDoor) == 0) then begin
+         start_gdialog(NAME, self_obj, 4, -1, -1);
          gsay_start;
          call ChildGuard32;
          gsay_end;
@@ -116,37 +120,31 @@ procedure talk_p_proc begin
          call ChildGuard37;
       end
    end
+   else if (global_var(GVAR_ENEMY_CATHEDRAL) == 1) then begin
+      call ChildGuard00;
+   end
+   else if (map_var(MVAR_JAIN_DISMISSES) == 1) then begin
+      call ChildGuard36;
+   end
+   else if has_rep_childkiller or (global_var(GVAR_BERSERKER_REPUTATION) == 1) then begin
+      call ChildGuard01;
+   end
    else begin
-      if (global_var(GVAR_ENEMY_CATHEDRAL) == 1) then begin
-         call ChildGuard00;
+      if (local_var(LVAR_Herebefore) == 0) then begin
+         start_gdialog(NAME, self_obj, 4, -1, -1);
+         gsay_start;
+         call ChildGuard02;
+         gsay_end;
+         end_dialogue;
       end
       else begin
-         if (map_var(0) == 1) then begin
-            call ChildGuard36;
-         end
-         else begin
-            if has_rep_childkiller or (global_var(GVAR_BERSERKER_REPUTATION) == 1) then begin
-               call ChildGuard01;
-            end
-            else begin
-               if (local_var(5) == 0) then begin
-                  start_gdialog(579, self_obj, 4, -1, -1);
-                  gsay_start;
-                  call ChildGuard02;
-                  gsay_end;
-                  end_dialogue;
-               end
-               else begin
-                  call ChildGuard30;
-               end
-            end
-         end
+         call ChildGuard30;
       end
    end
 end
 
 procedure destroy_p_proc begin
-   set_map_var(5, 1);
+   set_map_var(MVAR_GUARD_DEAD, 1);
    inc_good_critter
 end
 
@@ -167,14 +165,12 @@ procedure ChildGuard00 begin
    call combat;
 end
 
-procedure ChildGuard01
-begin
+procedure ChildGuard01 begin
    float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
 end
 
-procedure ChildGuard02
-begin
-   set_local_var(5, 1);
+procedure ChildGuard02 begin
+   set_local_var(LVAR_Herebefore, 1);
    Reply(103);
    NOption(104, ChildGuard03, 7);
    NOption(105, ChildGuard04, 4);
@@ -188,8 +184,7 @@ begin
    NLowOption(109, ChildGuard09);
 end
 
-procedure ChildGuard02a
-begin
+procedure ChildGuard02a begin
    if (dude_skill_success(SKILL_SPEECH, 0) == 1) then begin
       call ChildGuard07;
    end
@@ -198,8 +193,7 @@ begin
    end
 end
 
-procedure ChildGuard03
-begin
+procedure ChildGuard03 begin
    Reply(110);
    NOption(111, ChildGuard10, 7);
    NOption(112, ChildGuard11, 4);
@@ -209,8 +203,7 @@ begin
    NOption(116, ChildGuard15, 4);
 end
 
-procedure ChildGuard04
-begin
+procedure ChildGuard04 begin
    Reply(117);
    NOption(118, ChildGuard16, 7);
    NOption(119, ChildGuard17, 4);
@@ -218,8 +211,7 @@ begin
    NOption(121, ChildGuard18, 4);
 end
 
-procedure ChildGuard05
-begin
+procedure ChildGuard05 begin
    Reply(122);
    NOption(123, ChildGuard19, 4);
    BOption(124, ChildGuard20, 4);
@@ -227,8 +219,7 @@ begin
    NOption(126, ChildGuard22, 4);
 end
 
-procedure ChildGuard06
-begin
+procedure ChildGuard06 begin
    Reply(127);
    NOption(128, ChildGuard23, 4);
    NOption(129, ChildGuard24, 4);
@@ -236,8 +227,7 @@ begin
    NOption(131, ChildGuard21, 4);
 end
 
-procedure ChildGuard07
-begin
+procedure ChildGuard07 begin
    Reply(132);
    NOption(133, ChildGuard26, 7);
    NOption(134, ChildGuard27, 4);
@@ -250,134 +240,109 @@ begin
    end
 end
 
-procedure ChildGuard08
-begin
+procedure ChildGuard08 begin
    NMessage(138);
 end
 
-procedure ChildGuard09
-begin
+procedure ChildGuard09 begin
    NMessage(139);
 end
 
-procedure ChildGuard10
-begin
+procedure ChildGuard10 begin
    NMessage(140);
 end
 
-procedure ChildGuard11
-begin
+procedure ChildGuard11 begin
    NMessage(141);
 end
 
-procedure ChildGuard12
-begin
+procedure ChildGuard12 begin
    NMessage(142);
 end
 
-procedure ChildGuard13
-begin
+procedure ChildGuard13 begin
    NMessage(143);
 end
 
-procedure ChildGuard14
-begin
+procedure ChildGuard14 begin
    set_global_var(GVAR_ENEMY_CATHEDRAL, 1);
    NMessage(144);
    call combat;
 end
 
-procedure ChildGuard15
-begin
+procedure ChildGuard15 begin
    NMessage(145);
 end
 
-procedure ChildGuard16
-begin
+procedure ChildGuard16 begin
    NMessage(146);
 end
 
-procedure ChildGuard17
-begin
+procedure ChildGuard17 begin
    NMessage(147);
 end
 
-procedure ChildGuard18
-begin
+procedure ChildGuard18 begin
    NMessage(148);
 end
 
-procedure ChildGuard19
-begin
+procedure ChildGuard19 begin
    NMessage(149);
 end
 
-procedure ChildGuard20
-begin
+procedure ChildGuard20 begin
    NMessage(150);
 end
 
-procedure ChildGuard21
-begin
+procedure ChildGuard21 begin
    NMessage(151);
 end
 
-procedure ChildGuard22
-begin
+procedure ChildGuard22 begin
    NMessage(152);
 end
 
-procedure ChildGuard23
-begin
+procedure ChildGuard23 begin
    NMessage(153);
 end
 
-procedure ChildGuard24
-begin
+procedure ChildGuard24 begin
    NMessage(154);
 end
 
-procedure ChildGuard25
-begin
+procedure ChildGuard25 begin
    NMessage(155);
 end
 
-procedure ChildGuard26
-begin
+procedure ChildGuard26 begin
    NMessage(156);
 end
 
-procedure ChildGuard27
-begin
+procedure ChildGuard27 begin
    NMessage(157);
 end
 
-procedure ChildGuard28
-begin
+procedure ChildGuard28 begin
    set_global_var(GVAR_DECKER_KNOWN, 1);
    NMessage(158);
 end
 
-procedure ChildGuard29
-begin
+procedure ChildGuard29 begin
    NMessage(159);
 end
 
-procedure ChildGuard30
-begin
+procedure ChildGuard30 begin
    float_msg(self_obj, mstr(160), FLOAT_MSG_RED);
 end
 
-procedure ChildGuard31
-begin
+procedure ChildGuard31 begin
    set_global_var(GVAR_ENEMY_CATHEDRAL, 1);
    NMessage(161);
    call combat;
 end
 
-procedure ChildGuard32
-begin
-   set_local_var(6, 1);
+procedure ChildGuard32 begin
+   set_local_var(LVAR_UsedDoor, 1);
    Reply(162);
    NOption(163, ChildGuard33, 4);
    NOption(164, ChildGuard34, 4);
@@ -385,28 +350,23 @@ begin
    NOption(166, ChildGuard37, 4);
 end
 
-procedure ChildGuard33
-begin
+procedure ChildGuard33 begin
    NMessage(167);
 end
 
-procedure ChildGuard34
-begin
+procedure ChildGuard34 begin
    NMessage(168);
 end
 
-procedure ChildGuard35
-begin
+procedure ChildGuard35 begin
    NMessage(169);
 end
 
-procedure ChildGuard36
-begin
+procedure ChildGuard36 begin
    float_msg(self_obj, mstr(170), FLOAT_MSG_RED);
 end
 
-procedure ChildGuard37
-begin
+procedure ChildGuard37 begin
    set_global_var(GVAR_ENEMY_CATHEDRAL, 1);
    call combat;
 end

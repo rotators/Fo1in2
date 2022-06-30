@@ -1,12 +1,13 @@
 /*
 
-   Hub - Mike, Old Town guard
+   Hub - Mike, Old Town guard - cut-content
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+//#include "area/hub.h"
+#include "sfall/sfall.h"
 
 #define NAME                    SCRIPT_MIKE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -21,6 +22,8 @@ procedure critter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure combat_p_proc;
 procedure look_at_p_proc;
 
 procedure Mike01;
@@ -39,67 +42,73 @@ procedure start begin
       set_self_team(TEAM_HUB_POLICE);
       set_self_ai(AI_GUARD);
    end
+   art_change_fid_num(self_obj, FID_HMGLCM);
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_HUBOLDTN);
+
    dude_look_at_self;
    get_reaction
-   start_gdialog(821, self_obj, 4, -1, -1);
-   gsay_start;
-   call Mike01;
-   gsay_end;
-   end_dialogue;
+   start_dialog_at_node(Mike01);
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure damage_p_proc begin
+   if source_is_dude then begin
+      set_global_var(GVAR_ENEMY_HUB, 1);
+      tmp_hostile := 1;
+   end
+end
+
+procedure combat_p_proc begin
+   if REP_ENEMY_HUB then begin
+      tmp_hostile := 1;
+      attack(dude_obj);
+   end
+end
+
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Mike01
-begin
+procedure Mike01 begin
+   set_scr_name(mstr(200));
    Reply(101);
    NLowOption(102, Mike02);
    NOption(103, Mike03, 4);
    if looking_for_waterchip then begin
       NOption(104, Mike04, 4);
    end
-   NOption(105, Mike05, 4);
+   GOption(105, Mike05, 4);
 end
 
-procedure Mike02
-begin
+procedure Mike02 begin
    NMessage(106);
 end
 
-procedure Mike03
-begin
+procedure Mike03 begin
    Reply(107);
    if looking_for_waterchip then begin
       NOption(108, Mike04, 4);
@@ -107,19 +116,16 @@ begin
    NOption(109, Mike05, 4);
 end
 
-procedure Mike04
-begin
+procedure Mike04 begin
    Reply(110);
-   NOption(111, Mike06, 4);
+   BOption(111, Mike06, 4);
    NOption(112, Mike03, 4);
-   NOption(113, Mike05, 4);
+   GOption(113, Mike05, 4);
 end
 
-procedure Mike05
-begin
+procedure Mike05 begin
 end
 
-procedure Mike06
-begin
+procedure Mike06 begin
    call combat;
 end

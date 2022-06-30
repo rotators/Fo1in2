@@ -11,6 +11,8 @@ export variable Jake_Desk_Ptr;
 export variable Vance_Box_Ptr;
 
 variable dude_start_hex;
+variable Critter;
+variable Item;
 
 procedure Invasion;
 
@@ -24,9 +26,23 @@ procedure map_enter_p_proc begin
    Lighting;
    call Invasion;
 
-   override_map_start(125, 85, 0, 1);
+   if map_first_run then begin
+      // Replace one of the Old Town guards with Mike
+      if fo1in2_cut_characters_enabled then begin
+         Critter := tile_contains_pid_obj(15928, 0, PID_GABRIEL);
+         destroy_object(Critter);
 
-   set_global_var(GVAR_LOAD_MAP_INDEX, 0);
+         Critter := create_object_sid(PID_GABRIEL, 0, 0, SCRIPT_MIKE);
+         call give_item(Critter, {PID_5MM_AP: 3, PID_5MM_JHP: 3, PID_STIMPAK: 4});
+         Item := create_object(PID_ASSAULT_RIFLE, 0, 0);
+         add_obj_to_inven(Critter, Item);
+         wield_obj_critter(Critter, Item);
+         critter_attempt_placement(Critter, 15928, 0);
+         obj_rotate(Critter, 2);
+      end
+   end
+
+   override_map_start(125, 85, 0, 1);
 end
 
 procedure map_update_p_proc begin

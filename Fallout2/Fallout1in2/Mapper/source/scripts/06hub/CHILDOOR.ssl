@@ -6,6 +6,7 @@
 
 #include "define.h"
 #include "command.h"
+#include "maps\hubwater.h"
 
 #define NAME                     SCRIPT_DOOR
 
@@ -17,6 +18,8 @@ procedure map_update_p_proc;
 procedure use_p_proc;
 procedure description_p_proc;
 
+#define LVAR_DoorState              (0)
+#define LVAR_DoorDestroyed          (1)
 
 procedure start begin
 end
@@ -24,8 +27,8 @@ end
 procedure damage_p_proc begin
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
       if not(is_loading_game) then set_self_invisible;
-      set_local_var(1, 1);
-      set_map_var(4, 1);
+      set_local_var(LVAR_DoorDestroyed, 1);
+      set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
    end
    else begin
       display_msg(mstr(193));
@@ -34,22 +37,22 @@ end
 
 procedure use_skill_on_p_proc begin
    variable LVar0 := 0;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorState) == 0) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
-         if (map_var(5) == 0) then begin
+         if (map_var(MVAR_GUARD_DEAD) == 0) then begin
             if (dude_is_sneaking != 1) then begin
-               set_map_var(4, 1);
+               set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
             end
             else begin
                LVar0 := roll_vs_skill(source_obj, SKILL_SNEAK, 0);
                if (is_success(LVar0) != 1) then begin
-                  set_map_var(4, 1);
+                  set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
                end
                else begin
                   LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
                   if (is_success(LVar0)) then begin
-                     set_local_var(0, 1);
+                     set_local_var(LVAR_DoorState, 1);
                      display_msg(mstr(100));//{100}{}{You unlock the door.}
                   end
                   else begin
@@ -61,7 +64,7 @@ procedure use_skill_on_p_proc begin
          else begin
             LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
             if (is_success(LVar0)) then begin
-               set_local_var(0, 1);
+               set_local_var(LVAR_DoorState, 1);
                display_msg(mstr(100));//{100}{}{You unlock the door.}
             end
             else begin
@@ -79,26 +82,26 @@ procedure use_obj_on_p_proc begin
    variable LVar0 := 0;
    variable test := 0;
    variable item := obj_being_used_with;
-   
+
    if (obj_pid(item) == PID_LOCKPICKS or obj_pid(item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
-      if (map_var(5) == 0) then begin
+      if (map_var(MVAR_GUARD_DEAD) == 0) then begin
          if (dude_is_sneaking != 1) then begin
-            set_map_var(4, 1);
+            set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
          end
          else begin
             test := roll_vs_skill(dude_obj, SKILL_SNEAK, 0);
             if (is_success(test) != 1) then begin
-               set_map_var(4, 1);
+               set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
             end
             else begin
-               if (obj_pid(item) == PID_EXP_LOCKPICK_SET) then 
+               if (obj_pid(item) == PID_EXP_LOCKPICK_SET) then
                   test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
                else
                   test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-                  
+
                if (is_success(test)) then begin
-                  set_local_var(0, 1);
+                  set_local_var(LVAR_DoorState, 1);
                   display_msg(mstr(100));//{100}{}{You unlock the door.}
                end
                else if (is_critical(test)) then begin
@@ -112,7 +115,7 @@ procedure use_obj_on_p_proc begin
       else begin
          test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
          if (is_success(test)) then begin
-            set_local_var(0, 1);
+            set_local_var(LVAR_DoorState, 1);
             display_msg(mstr(100));//{100}{}{You unlock the door.}
          end
          else if (is_critical(test)) then begin
@@ -128,7 +131,7 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorState) == 0) then begin
       obj_lock(self_obj);
    end
    else begin
@@ -138,13 +141,13 @@ end
 
 procedure use_p_proc begin
    variable LVar0 := 0;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorState) == 0) then begin
       obj_lock(self_obj);
    end
    else begin
-      if (map_var(5) == 0) then begin
+      if (map_var(MVAR_GUARD_DEAD) == 0) then begin
          if (dude_is_sneaking != 1) then begin
-            set_map_var(4, 1);
+            set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
          end
          else begin
             LVar0 := roll_vs_skill(dude_obj, SKILL_SNEAK, 0);
@@ -152,7 +155,7 @@ procedure use_p_proc begin
                obj_unlock(self_obj);
             end
             else begin
-               set_map_var(4, 1);
+               set_map_var(MVAR_DOOR_UNLOCK_FAILED, 1);
             end
          end
       end
@@ -160,14 +163,14 @@ procedure use_p_proc begin
          obj_unlock(self_obj);
       end
    end
-   if ((local_var(0) == 0) and source_is_dude) then begin
+   if ((local_var(LVAR_DoorState) == 0) and source_is_dude) then begin
       script_overrides;
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorState) == 0) then begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
