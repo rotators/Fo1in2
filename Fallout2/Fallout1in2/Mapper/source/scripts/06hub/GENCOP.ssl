@@ -29,6 +29,9 @@ procedure Cop01;
 procedure Cop02;
 procedure spawn_items;
 
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Home_Rotation              (6)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
@@ -40,7 +43,15 @@ procedure map_enter_p_proc begin
       set_self_team(TEAM_HUB_POLICE);
       set_self_ai(AI_HUB_POLICE);
 
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+
       if fixt_enabled then call spawn_items;
+   end
+
+   if (days_since_visited > 2) then begin
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
    end
 end
 
@@ -157,6 +168,7 @@ procedure combat_p_proc begin
       tmp_hostile := 1;
       attack(dude_obj);
    end
+   if not(CUR_MAP_HUBDWNTN) then set_global_var(GVAR_PC_WANTED, 1);
 end
 
 procedure look_at_p_proc begin
