@@ -1,6 +1,6 @@
 /*
 
-   Brotherhood - Paladin, lone sentry
+   Brotherhood - Paladin, lone sentry - cut content
 
 */
 
@@ -12,7 +12,7 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
 
 #include "command.h"
-#include "modreact.h"
+//#include "modreact.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -36,39 +36,28 @@ procedure node11;
 procedure node12;
 procedure node_exit;
 
+#define LVAR_Herebefore          (1)
+
 variable initial := 0;
 variable tmp_hostile;
-variable weaponPtr;
-
 
 procedure start begin
    if not(initial) then begin
       set_self_team(TEAM_BROTHERHOOD);
       set_self_ai(AI_BROTHERHOOD_PALADIN);
-      self_rotate(2);
-      if (local_var(0) == 0) then begin
-         set_local_var(0, 1);
-         weaponPtr := create_object(PID_GATLING_LASER, 0, 0);
-         add_obj_to_inven(self_obj, weaponPtr);
-         wield_obj_critter(self_obj, weaponPtr);
-         add_obj_to_inven(self_obj, create_object(PID_MICRO_FUSION_CELL, 0, 0));
-      end
       initial := 1;
    end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
@@ -78,9 +67,9 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_BOS);
 
    dude_look_at_self;
-   if (local_var(1) == 0) then begin
-      set_local_var(1, 1);
-      start_gdialog(324, self_obj, 4, -1, -1);
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      set_local_var(LVAR_Herebefore, 1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
          call node01;
@@ -96,8 +85,7 @@ procedure talk_p_proc begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -108,48 +96,41 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure node01
-begin
+procedure node01 begin
    Reply(101);
    NLowOption(mstr(102) + dude_name + mstr(103), node02);
    NOption(mstr(104) + dude_name + mstr(105), node04, 4);
    NOption(106, node12, 4);
 end
 
-procedure node02
-begin
+procedure node02 begin
    Reply(mstr(107) + dude_name + mstr(108));
    NLowOption(109, node03);
 end
 
-procedure node03
-begin
+procedure node03 begin
    Reply(110);
    NLowOption(111, node_exit);
 end
 
-procedure node04
-begin
+procedure node04 begin
    Reply(112);
    NOption(113, node05, 4);
 end
 
-procedure node05
-begin
+procedure node05 begin
    Reply(114);
    NOption(115, node06, 4);
    NOption(116, node07, 4);
 end
 
-procedure node06
-begin
+procedure node06 begin
    Reply(117);
    NOption(118, node_exit, 4);
    NOption(119, node07, 4);
 end
 
-procedure node07
-begin
+procedure node07 begin
    Reply(120);
    if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
       NOption(121, node08, 4);
@@ -159,29 +140,24 @@ begin
    end
 end
 
-procedure node08
-begin
+procedure node08 begin
    NMessage(mstr(122) + dude_name + mstr(123));
 end
 
-procedure node09
-begin
+procedure node09 begin
    Reply(mstr(124) + dude_name + mstr(125));
    NLowOption(126, node02);
    NOption(127, node04, 4);
 end
 
-procedure node11
-begin
+procedure node11 begin
    Reply(mstr(130) + dude_name + mstr(131));
    NOption(132, node_exit, 4);
 end
 
-procedure node12
-begin
+procedure node12 begin
    NMessage(133);
 end
 
-procedure node_exit
-begin
+procedure node_exit begin
 end
