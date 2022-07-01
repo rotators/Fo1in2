@@ -1,8 +1,10 @@
 Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1in2/releases/tag/v1.7.2828))
 
+- **Added**: "Deadguy" will show up in Decker's hideout after the player cleared the place and cut characters are enabled.
 - **Added**: A new option to switch between Fo1-style "rest until 06:00" and Fo2-style "rest until 08:00" in the PipBoy.
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
+- **Added**: Mike, the Old Town guard shows up in the Hub Old Town district if cut characters are enabled.
 - **Added**: New Alternative Force Fields mod with graphics made by .Pixote.
 - **Added**: New Tycho metal armor animations.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
@@ -34,7 +36,9 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
 - **Tweaked**: Adjusted laser resistance of ant critters.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
+- **Tweaked**: If Hub cops walked away from their default position (ex: player started a fight), they will now reset after a couple ingame days.
 - **Tweaked**: Improved the TMA-system. If a keyword is not found in the character specific unique responses, the game will now try to find a keyword in the generic map-based responses instead.
+- **Tweaked**: Improved the way the Brotherhood sentry spawns into the map once the BoS has been invaded. Now he has his weapon drawn and won't play the wielding animation on map enter.
 - **Tweaked**: Manually disabled force fields in Mariposa will now stay off for a little bit longer.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
