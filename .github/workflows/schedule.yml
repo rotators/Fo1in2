@@ -260,6 +260,15 @@ jobs:
           echo "MOD_SCRIPTS_DIR=$scripts" >> $GITHUB_ENV
           echo "MOD_HEADERS_DIR=$headers" >> $GITHUB_ENV
 
+  # updates list of scripts used on maps
+  - name: MapsScripts run
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          cmake -S Tools/MapsScripts/Source/ -B Tools/MapsScripts/Build/
+          cmake --build Tools/MapsScripts/Build/ --config Release
+          Tools/MapsScripts/Build/Release/MapsScripts.exe > Resources/MapsScripts.txt
+          git diff --quiet || (git add --update && echo "- MapsScripts run" >> $HOME/gha.commit)
+
   # updates unsafe scripting header
   - name: Voodoo regeneration
     if:   env.GHA_REPO_ALIVE == 'true'

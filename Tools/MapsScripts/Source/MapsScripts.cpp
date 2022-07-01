@@ -38,70 +38,18 @@
 #include "CommandLine.hpp"
 #include "Text.hpp"
 
-class MapsScripts
+uint32_t ReadUInt8(std::ifstream& stream)
 {
-private:
-    std::map<uint32_t, std::string> Script;
-    std::map<uint32_t, uint32_t> Proto;
-
-public:
-    bool Verbose;
-
-    std::string MapsDir;
-    std::string ItemsDir;
-
-    std::map<std::string, std::set<std::string>> ByMap, ByScript;
-    std::set<std::string> ScriptUnused;
-
-    void AddSID(uint32_t sid, std::string script)
-    {
-        Script[sid] = script;
-        ScriptUnused.insert(Script[sid]);
-    }
-
-    void UseSID(const int32_t& sid, const std::string& mapName)
-    {
-        if (Script.count(sid))
-        {
-            ByScript[Script[sid]].insert(mapName);
-            ByMap[mapName].insert(Script[sid]);
-
-            if (ScriptUnused.contains(Script[sid]))
-            {
-                if (Verbose)
-                    std::cout << "  ~ " << Script[sid] << std::endl;
-                ScriptUnused.erase(Script[sid]);
-            }
-        }
-        else
-        {
-            std::string name = "?!? UNKNOWN SCRIPT !?! (" + std::to_string(sid) + ")";
-            ByScript[name].insert(mapName);
-            ByMap[mapName].insert(name);
-        }
-
-    }
-};
-
-int Usage(int returnCode = EXIT_FAILURE)
-{
-    std::cout << "Usage: MapsScripts [options]" << std::endl;
-    std::cout << std::endl;
-    std::cout << "OPTIONS" << std::endl;
-    std::cout << std::endl;
-    std::cout << "  --maps [path]     Path to directory with .map files (required)" << std::endl;
-    std::cout << "  --scripts [path]  Path to SCRIPTS.LST, can be file or directory (required)" << std::endl;
-    std::cout << "  --items [path]    Path to directory with .map files" << std::endl;
-    std::cout << "  --verbose         Enables extra debug messages" << std::endl;
-    std::cout << std::endl;
-
-    return returnCode;
+    uint8_t value;
+    char* buff = reinterpret_cast<char*>(&value);
+    stream.read(buff, 1);
+    return value;
 }
 
 uint32_t ReadUInt32(std::ifstream& stream)
 {
     uint32_t value;
-    char * buff = reinterpret_cast<char *>(&value);
+    char* buff = reinterpret_cast<char*>(&value);
     stream.read(buff, 4);
     std::reverse(buff, buff + 4);
     return value;
@@ -123,25 +71,153 @@ std::string ReadString(std::ifstream& stream, size_t size)
     return result;
 }
 
-void SkipUInt32(std::ifstream& stream, size_t count = 1)
+void SkipUInt8(std::ifstream& stream, size_t count = 1)
 {
-    stream.seekg(count * 4, std::ios::cur);
+    stream.seekg(count, std::ios::cur);
 }
 
-void ReadMapObject(std::ifstream& stream, MapsScripts& info)
+void SkipUInt16(std::ifstream& stream, size_t count = 1)
 {
-    SkipUInt32(stream, 11);
+    SkipUInt8(stream, count * 2);
+}
+
+
+void SkipUInt32(std::ifstream& stream, size_t count = 1)
+{
+    SkipUInt8(stream, count * 4);
+}
+
+class MapsScripts
+{
+private:
+    std::map<uint32_t, std::string> Script;
+
+    std::map<uint32_t, uint32_t> ProtoItem;
+    std::map<uint32_t, uint32_t> ProtoScenery;
+
+public:
+    bool Verbose;
+
+    std::string MapsDir;
+    std::string ProtoDir;
+
+    std::map<std::string, std::set<std::string>> ByMap, ByScript;
+    std::set<std::string> ScriptUnused;
+
+    void AddSID(uint32_t sid, std::string script)
+    {
+        Script[sid] = script;
+        ScriptUnused.insert(Script[sid]);
+    }
+
+    void UseSID(const int32_t& sid, const std::string& mapName, const std::string& suffix = "")
+    {
+        if (Script.count(sid))
+        {
+            ByScript[Script[sid] + suffix].insert(mapName);
+            ByMap[mapName].insert(Script[sid] + suffix);
+
+            if (ScriptUnused.contains(Script[sid]))
+            {
+                if (Verbose)
+                    std::cout << "  ~ " << Script[sid] << std::endl;
+                ScriptUnused.erase(Script[sid]);
+            }
+        }
+        else
+        {
+            std::string name = "?!? UNKNOWN SCRIPT !?! (" + std::to_string(sid) + ")";
+            ByScript[name].insert(mapName);
+            ByMap[mapName].insert(name);
+        }
+
+    }
+
+    uint32_t GetSubtype(uint32_t pid, std::map<uint32_t,uint32_t>& proto, const std::string& dir)
+    {
+        if (!proto.count(pid))
+        {
+            std::string filename = std::to_string(pid);
+            filename = ProtoDir + "/" + dir + "/" + std::string(8 - filename.length(), '0') + filename;
+
+            if (std::filesystem::is_regular_file(filename + ".PRO"))
+                filename += ".PRO";
+            else if (std::filesystem::is_regular_file(filename + ".pro"))
+                filename += ".pro";
+            else
+            {
+                if (dir == "items" && itemSubtype.count(pid))
+                    return itemSubtype.at(pid);
+                else if (dir == "scenery"&&scenerySubtype.count(pid))
+                    return scenerySubtype.at(pid);
+
+                return uint32_t(-1);
+            }
+
+            if (Verbose)
+                std::cout << "  Loading " << filename << std::endl;
+
+            std::ifstream stream;
+            stream.open(filename.c_str(), std::ios_base::binary | std::ios_base::in);
+            if (!stream.is_open())
+            {
+                std::cout << "Can't open file: " << filename << std::endl;
+                return uint32_t(-1);
+            }
+
+            SkipUInt8(stream, 0x20);
+            proto[pid] = ReadUInt32(stream);
+
+        }
+
+        return proto[pid];
+    }
+
+    uint32_t GetItemSubtype(uint32_t pid)
+    {
+        return GetSubtype(pid, ProtoItem, "items");
+    }
+
+    uint32_t GetScenerySubtype(uint32_t pid)
+    {
+        return GetSubtype(pid, ProtoScenery, "scenery");
+    }
+};
+
+int Usage(int returnCode = EXIT_FAILURE)
+{
+    std::cout << "Usage: MapsScripts [options]" << std::endl;
+    std::cout << std::endl;
+    std::cout << "OPTIONS" << std::endl;
+    std::cout << std::endl;
+    std::cout << "  --maps [path]     Path to directory with .map files (required)" << std::endl;
+    std::cout << "  --scripts [path]  Path to SCRIPTS.LST, can be file or directory (required)" << std::endl;
+    std::cout << "  --proto [path]    Path to directory with .pro files" << std::endl;
+    std::cout << "  --verbose         Enables extra debug messages" << std::endl;
+    std::cout << std::endl;
+
+    return returnCode;
+}
+
+int ReadMapObject(std::ifstream& stream, MapsScripts& info, const std::string& mapName)
+{
+    SkipUInt32(stream, 1);
+    uint32_t pos = ReadInt32(stream);
+    pos = pos;
+    SkipUInt32(stream, 9);
     uint32_t PID = ReadUInt32(stream);
 
     uint32_t type = PID >> 24;
     uint32_t id  = PID & 0x00FFFFFF;
 
-    if (info.Verbose)
-        std::cout << "Read object PID " << PID << " type " << type << "" << id << std::endl;
+    //if (info.Verbose)
+    //    std::cout << "Read object PID " << PID << " type " << type << "" << id << std::endl;
 
-    SkipUInt32(stream, 5);
+    SkipUInt32(stream, 5);  
 
-    ReadInt32(stream); // SID
+    int32_t SID = ReadInt32(stream); // SID
+    if (SID >= 0)
+        info.UseSID(SID + 1, mapName, " (object data)");
 
     uint32_t inventorySize = ReadUInt32(stream);
 
@@ -151,7 +227,10 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
     {
         case 0: // items
         {
-            uint32_t subtype = itemSubtype.at(id);
+            //uint32_t subtype = itemSubtype.at(id);
+            uint32_t subtype = info.GetItemSubtype(id);
+            if (subtype == uint32_t(-1))
+                return -1;
             switch (subtype)
             {
                 case 0: // armor
@@ -174,7 +253,11 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
             break;
         case 2: // scenery
         {
-            uint32_t subtype = scenerySubtype.at(id);
+            //uint32_t subtype = scenerySubtype.at(id);
+            uint32_t subtype = info.GetScenerySubtype(id);
+            if (subtype == uint32_t(-1))
+                return -1;
+
             switch (subtype)
             {
                 case 0: // door
@@ -223,9 +306,12 @@ void ReadMapObject(std::ifstream& stream, MapsScripts& info)
         {
             SkipUInt32(stream);
 
-            ReadMapObject(stream, info);
+            if (ReadMapObject(stream, info, mapName) < 0)
+                return -1;
         }
     }
+
+    return 0;
 }
 
 int ReadMap(const std::string& filename, MapsScripts& info)
@@ -236,7 +322,7 @@ int ReadMap(const std::string& filename, MapsScripts& info)
     if (!in.is_open())
     {
         std::cout << "Can't open file: " << filename << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     }
 
     ReadUInt32(in); // version
@@ -324,7 +410,7 @@ int ReadMap(const std::string& filename, MapsScripts& info)
         }
     }
 
-    if (!info.ItemsDir.empty())
+    if (!info.ProtoDir.empty())
     {
         // OBJECTS section
 
@@ -335,8 +421,9 @@ int ReadMap(const std::string& filename, MapsScripts& info)
             uint32_t objectsOnElevation = ReadUInt32(in);
             for (unsigned int j = 0; j != objectsOnElevation; ++j)
             {
-                ReadMapObject(in, info);
-            }
+                if (ReadMapObject(in, info, mapName) < 0)
+                    break;
+            }   
         }
     }
 
@@ -388,10 +475,10 @@ int main(int argc, char** argv)
 
     info.MapsDir = cmd.GetStr("maps");
     scriptsLst = cmd.GetStr("scripts");
-    if (cmd.IsOption("items"))
-        info.ItemsDir = cmd.GetStr("items");
+    if (cmd.IsOption("proto"))
+        info.ProtoDir = cmd.GetStr("proto");
     else
-        std::cout << "WARNING : items prototypes directory not set, skipping all objects" << std::endl << std::endl;
+        std::cout << "WARNING : prototypes directory not set, skipping all objects" << std::endl << std::endl;
 
     if (!std::filesystem::is_directory(info.MapsDir))
     {
