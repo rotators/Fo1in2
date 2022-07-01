@@ -17,6 +17,8 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
 procedure map_enter_p_proc;
 procedure combat;
 procedure critter_p_proc;
@@ -34,8 +36,9 @@ procedure Mike04;
 procedure Mike05;
 procedure Mike06;
 
-#define LVAR_Home_Tile                  (5)
-#define LVAR_Home_Rotation              (6)
+#define LVAR_Herebefore          (4)
+#define LVAR_Home_Tile           (5)
+#define LVAR_Home_Rotation       (6)
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -47,6 +50,19 @@ procedure start begin
       set_self_ai(AI_GUARD);
    end
    art_change_fid_num(self_obj, FID_HMGLCM);
+   set_scr_name(mstr(200));
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(SCRIPT_GENCOP, 100));
+end
+
+procedure description_p_proc begin
+   if local_var(LVAR_Herebefore) then begin
+      script_overrides;
+      display_msg(mstr(100));
+   end
 end
 
 procedure map_enter_p_proc begin
@@ -84,6 +100,8 @@ procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    start_dialog_at_node(Mike01);
+
+   set_local_var(LVAR_Herebefore, 1);
 end
 
 procedure destroy_p_proc begin
@@ -105,13 +123,7 @@ procedure combat_p_proc begin
    set_global_var(GVAR_PC_WANTED, 1);
 end
 
-procedure look_at_p_proc begin
-   script_overrides;
-   display_msg(mstr(100));
-end
-
 procedure Mike01 begin
-   set_scr_name(mstr(200));
    Reply(101);
    NLowOption(102, Mike02);
    NOption(103, Mike03, 4);
