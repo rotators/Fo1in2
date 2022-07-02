@@ -312,6 +312,18 @@ jobs:
 
           git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
 
+  - name: Language changes
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          rm -fR $GENERATED_DIR/LangChanges
+          $GHA_SCRIPTS/diff2dir.sh "$MOD_DIR/mods/fo1_base/text/english/" "$GENERATED_DIR/LangChanges" "$(git describe --tags --abbrev=0)"
+
+          if [[ -n $(git status --short --untracked-files=all $GENERATED_DIR/LangChanges) ]]; then
+             git add $GENERATED_DIR/LangChanges
+             echo "- Language changes" >> $HOME/gha.commit
+          fi
+
 ### Validation
 ### checks if any of major tasks wants to generate commit
 ### prepares commit message header
