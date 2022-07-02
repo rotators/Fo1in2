@@ -6,6 +6,8 @@
 
 /* Include Files */
 #include "define.h"
+#include "area/cathedral.h"
+#include "maps/mstrlr12.h"
 
 #define NAME                    SCRIPT_DOOR
 
@@ -21,16 +23,31 @@ procedure map_update_p_proc;
 procedure map_enter_p_proc;
 procedure damage_p_proc;
 
+#define LVAR_DoorState        (0)
+#define LVAR_DoorDestroyed    (1)
+#define LVAR_DoorIdentified   (2)
+
 import variable J_Door_Ptr;
 
 variable cantopen;
 
+#define EVENT_CLOSEDOOR       (1)
+#define EVENT_CHECK_STATE     (2)
+
 procedure start begin
+   flush_add_timer_event(self_obj, 1, EVENT_CHECK_STATE);
 end
 
 procedure timed_event_p_proc begin
-   if (not(combat_is_initialized)) then begin
-      obj_close(self_obj);
+   if (fixed_param == EVENT_CLOSEDOOR) then begin
+      if (not(combat_is_initialized)) then begin
+         obj_close(self_obj);
+         set_blocker_state;
+      end
+   end
+   else if (fixed_param == EVENT_CHECK_STATE) then begin
+      set_blocker_state;
+      add_timer_event(self_obj, 2, EVENT_CHECK_STATE);
    end
 end
 
@@ -38,26 +55,36 @@ procedure use_p_proc begin
    cantopen := 0;
    if source_is_dude then begin
       cantopen := 1;
-      if (dude_tile == 27913) then begin
+
+      // Trying to open the door from "inside" the hideout
+      if ((dude_tile == 27913) or (dude_tile == 28113) or (dude_tile == 28313)) then begin
          cantopen := 0;
-      end
-      else if (dude_tile == 28113) then begin
-         cantopen := 0;
-      end
-      else if (dude_tile == 28313) then begin
-         cantopen := 0;
+         delete_blocker;
       end
    end
-   if ((local_var(0) == 0) and cantopen) then begin
+
+
+   if ((local_var(LVAR_DoorState) == 0) and cantopen) then begin
+      // Identify that the door is locked ... if you know it's a door
       script_overrides;
-      display_msg(mstr(104));//{104}{}{The door is locked.}
+      if (local_var(LVAR_DoorIdentified) > 0) then begin
+         display_msg(mstr(104));
+      end
    end
-   add_timer_event(self_obj, game_ticks(20), 1);
+
+   add_timer_event(self_obj, game_ticks(20), EVENT_CLOSEDOOR);
+
+   if combat_is_initialized then begin
+      delete_blocker;
+   end
+   else begin
+      set_blocker_state;
+   end
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   display_msg(mstr(201));//{201}{}{You notice some irregularities in the wall.}
+   display_msg(mstr(201));
 end
 
 procedure use_obj_on_p_proc begin
@@ -68,13 +95,13 @@ procedure use_obj_on_p_proc begin
    Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
    if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
-      display_msg(mstr(200));//{200}{}{There is no lock on this door to pick.}
+      display_msg(mstr(200)); // no lock on this door
    end
 end
 
 procedure use_skill_on_p_proc begin
    script_overrides;
-   display_msg(mstr(200));//{200}{}{There is no lock on this door to pick.}
+   display_msg(mstr(200)); // no lock on this door
 end
 
 procedure map_update_p_proc begin
@@ -83,6 +110,7 @@ end
 
 procedure map_enter_p_proc begin
    J_Door_Ptr := self_obj;
+   set_blocker_state;
 end
 
 procedure damage_p_proc begin
@@ -90,8 +118,9 @@ procedure damage_p_proc begin
       if not(is_loading_game) then begin
          set_self_invisible;
       end
-      set_local_var(1, 1);
+      set_local_var(LVAR_DoorDestroyed, 1);
       rm_timer_event(self_obj);
+      delete_blocker;
    end
    else begin
       display_msg(mstr(193));

@@ -6,13 +6,14 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/cathedral.h"
+#include "maps/mstrlr12.h"
 
 #define NAME                    SCRIPT_JEREM
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
 
 #include "command.h"
-#include "modreact.h"
+//#include "modreact.h"
 #include "sfall/main.h"
 
 /* Standard Script Procedures */
@@ -71,9 +72,11 @@ procedure jeremcbt;
 procedure jeremret;
 procedure checkarea;
 
+#define LVAR_MoveTo           (3)
+#define LVAR_MoveHex          (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
-variable Weapons;
 variable again;
 variable area;
 variable here;
@@ -81,13 +84,15 @@ variable moving := 1;
 variable my_hex;
 variable home_tile;
 
+import variable J_Door_Ptr;
+
 procedure start begin
    if (local_var(0) == 0) then begin
       set_local_var(0, 1);
       set_local_var(1, 0);
       set_local_var(2, 0);
-      set_local_var(3, 7);
-      set_local_var(4, 12098);
+      set_local_var(LVAR_MoveTo, 7);
+      set_local_var(LVAR_MoveHex, 12098);
    end
    if Only_Once then begin
       Only_Once := 0;
@@ -521,8 +526,8 @@ procedure timed_event_p_proc begin
       set_global_var(GVAR_JEREMIAH_MOVING, 0);
       if (local_var(1) == 0) then begin
          move_to(self_obj, home_tile, 0);
-         set_local_var(3, 7);
-         set_local_var(4, 12098);
+         set_local_var(LVAR_MoveTo, 7);
+         set_local_var(LVAR_MoveHex, 12098);
          if not(is_loading_game) then set_self_visible;
       end
    end
@@ -531,17 +536,17 @@ procedure timed_event_p_proc begin
    end
    else if (fixed_param == 3) then begin
       moving := 1;
-      set_local_var(4, 19685);
-      set_local_var(3, 4);
+      set_local_var(LVAR_MoveHex, 19685);
+      set_local_var(LVAR_MoveTo, 4);
       set_local_var(1, 0);
-      self_walk_to_tile(local_var(4));
+      self_walk_to_tile(local_var(LVAR_MoveHex));
    end
 end
 
 procedure critter_p_proc begin
-   set_map_var(1, 0);
+   set_map_var(MVAR_JERNEAR, 0);
    if (tile_distance_objs(dude_obj, self_obj) < 8) then begin
-      set_map_var(1, 1);
+      set_map_var(MVAR_JERNEAR, 1);
    end
    if (tmp_hostile) then begin
       tmp_hostile := 0;
@@ -549,64 +554,74 @@ procedure critter_p_proc begin
    end
    if (moving) then begin
       my_hex := self_tile;
-      if (my_hex == local_var(4)) then begin
+      if (my_hex == local_var(LVAR_MoveHex)) then begin
          if (local_var(1)) then
-            set_local_var(3, local_var(3) + 1);
+            set_local_var(LVAR_MoveTo, local_var(LVAR_MoveTo) + 1);
          else
-            set_local_var(3, local_var(3) - 1);
+            set_local_var(LVAR_MoveTo, local_var(LVAR_MoveTo) - 1);
 
-         if (local_var(3) > 7) then begin
+         if (local_var(LVAR_MoveTo) > 7) then begin
             moving := 0;
             set_local_var(1, 0);
-            set_local_var(3, 6);
+            set_local_var(LVAR_MoveTo, 6);
             if not(is_loading_game) then set_self_invisible;
             set_global_var(GVAR_JEREMIAH_MOVING, 1);
             move_to(self_obj, 7000, 0);
             add_timer_event(self_obj, game_ticks(300), 1);
          end
-         else if (local_var(3) < 0) then begin
+         else if (local_var(LVAR_MoveTo) < 0) then begin
             moving := 0;
             set_local_var(1, 1);
-            set_local_var(3, 1);
+            set_local_var(LVAR_MoveTo, 1);
             add_timer_event(self_obj, game_ticks(300), 1);
          end
-         else if ((local_var(3) == 5) and (local_var(1) == 0)) then begin
+         else if ((local_var(LVAR_MoveTo) == 5) and (local_var(1) == 0)) then begin
             moving := 0;
             add_timer_event(self_obj, game_ticks(60), 3);
          end
 
-         if (local_var(3) == 0) then begin
-            set_local_var(4, 20936);
+         if (local_var(LVAR_MoveTo) == 0) then begin
+            set_local_var(LVAR_MoveHex, 20936); // Near staircase
          end
-         else if (local_var(3) == 1) then begin
-            set_local_var(4, 25336);
+         else if (local_var(LVAR_MoveTo) == 1) then begin
+            set_local_var(LVAR_MoveHex, 25336); // Middle of cellar
          end
-         else if (local_var(3) == 2) then begin
-            set_local_var(4, 25721);
+         else if (local_var(LVAR_MoveTo) == 2) then begin
+            set_local_var(LVAR_MoveHex, 25721);
          end
-         else if (local_var(3) == 3) then begin
-            set_local_var(4, 27915);
+         else if (local_var(LVAR_MoveTo) == 3) then begin
+            set_local_var(LVAR_MoveHex, 27915); // Inside cellar, near secret door
          end
-         else if (local_var(3) == 4) then begin
-            set_local_var(4, 26094);
+         else if (local_var(LVAR_MoveTo) == 4) then begin
+            set_local_var(LVAR_MoveHex, 26094); // Tunnel, near secret door
          end
-         else if (local_var(3) == 5) then begin
-            set_local_var(4, 19685);
+         else if (local_var(LVAR_MoveTo) == 5) then begin
+            set_local_var(LVAR_MoveHex, 19685);
          end
-         else if (local_var(3) == 6) then begin
+         else if (local_var(LVAR_MoveTo) == 6) then begin
             if (local_var(1) == 0) then begin
-               set_local_var(4, 12889);
+               set_local_var(LVAR_MoveHex, 12889);
             end
             else begin
-               set_local_var(4, 14689);
+               set_local_var(LVAR_MoveHex, 14689);
             end
          end
-         else if (local_var(3) == 7) then begin
-            set_local_var(4, 12098);
+         else if (local_var(LVAR_MoveTo) == 7) then begin
+            set_local_var(LVAR_MoveHex, 12098); // Elevator to the Master
          end
       end
       else begin
-         self_walk_to_tile(local_var(4));
+         // We need to delete the door blocker if Jerem is near, or he can't walk through it
+         if (local_var(LVAR_MoveHex) == 19685) then begin
+            set_map_var(MVAR_SECRET_DOOR, 1);
+         end
+         else if (tile_distance(self_tile, 28114) <= 20) and ((local_var(LVAR_MoveHex) == 27915) or (local_var(LVAR_MoveHex) == 26094)) then begin
+            set_map_var(MVAR_SECRET_DOOR, 1);
+         end
+         else if (map_var(MVAR_SECRET_DOOR) > 0) then begin
+            set_map_var(MVAR_SECRET_DOOR, 0);
+         end
+         self_walk_to_tile(local_var(LVAR_MoveHex));
       end
       if (self_can_see_dude) then begin
          coc_disguise_check;

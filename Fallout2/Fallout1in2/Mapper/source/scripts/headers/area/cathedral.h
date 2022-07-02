@@ -21,3 +21,23 @@
 
 #define set_invad_status(x)         set_gvar_bit_on(GVAR_CATHEDRAL_INVADER_STATES, x)
 #define invad_status(x)             (gvar_bit(GVAR_CATHEDRAL_INVADER_STATES, x))
+
+// For Master's Lair hidden door
+// We use this because the autodoor script would still try to make the player run through the door (but fail)
+// Creating / deleting the blockers hides the fact there is a door in the wall.
+#define create_blocker     if is_visible(J_Door_Ptr) and not(tile_contains_pid_obj(tile_num(J_Door_Ptr), 0, PID_BLOCKING_HEX)) then begin \
+                              Scenery_Creation := create_object(PID_BLOCKING_HEX, self_tile, self_elevation); \
+                           end \
+                           noop
+
+#define delete_blocker     Scenery_Creation_Ptr := tile_contains_pid_obj(tile_num(J_Door_Ptr), 0, PID_BLOCKING_HEX); \
+                           destroy_object(Scenery_Creation_Ptr)
+
+#define set_blocker_state \
+   if ((obj_is_open(J_Door_Ptr) == false) and (map_var(MVAR_SECRET_DOOR) == 0)) then begin  \
+      create_blocker;                                 \
+   end                                                \
+   else begin                                         \
+      delete_blocker;                                 \
+   end                                                \
+   noop

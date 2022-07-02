@@ -6,6 +6,8 @@
 
 /* Include Files */
 #include "define.h"
+#include "area/cathedral.h"
+#include "maps/mstrlr12.h"
 
 #define NAME                    SCRIPT_BOOKCASE
 
@@ -25,6 +27,7 @@ import variable J_Door_Ptr;
 variable Door_Test;
 
 #define LVAR_Latch_Found         (0)
+#define LVAR_DoorIdentified      (2)
 
 procedure start begin
 end
@@ -43,6 +46,8 @@ procedure use_p_proc begin
    else begin
       display_msg(mstr(101));
    end
+
+   delete_blocker;
 end
 
 procedure pickup_p_proc begin
@@ -54,12 +59,12 @@ procedure use_skill_on_p_proc begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          if (dude_skill_success(SKILL_LOCKPICK, 0)) then begin
-            set_local_var(LVAR_Latch_Found, 1);
             Door_Test := 1;
             if (source_obj == dude_obj) then
                display_msg(mstr(102));
             else
                display_msg(obj_name(source_obj) + mstr(202));
+            call secret;
          end
          else begin
             if (source_obj == dude_obj) then
@@ -71,7 +76,7 @@ procedure use_skill_on_p_proc begin
       else if (action_being_used == SKILL_TRAPS) then begin
          script_overrides;
          if (dude_skill_success(SKILL_TRAPS, 0)) then begin
-            set_local_var(LVAR_Latch_Found, 1);
+            call secret;
             Door_Test := 1;
             display_msg(mstr(102));
          end
@@ -86,9 +91,15 @@ procedure use_skill_on_p_proc begin
    else begin
       display_msg(message_str(SCRIPT_BOOKCASE, 103));
    end
+
+   set_blocker_state;
 end
 
 procedure secret begin
    set_local_var(LVAR_Latch_Found, 1);
-   display_msg(mstr(102));
+
+   // Funny trick to change LVAR in another script
+   set_self(J_Door_Ptr);
+   set_self(J_Door_Ptr);
+   set_local_var(LVAR_DoorIdentified, 1);
 end
