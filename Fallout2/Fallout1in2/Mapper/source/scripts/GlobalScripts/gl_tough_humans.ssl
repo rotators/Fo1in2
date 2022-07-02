@@ -21,16 +21,14 @@ procedure adjust_hp;
 #define hp_overkill        global_var(GVAR_ENABLE_TOUGH_HUMANS)
 #define hp_base            get_proto_data(crit_pid, 64)
 
-#define inc_hp(x)          base := (x - hp_base);                                               \
-                           if (base <= 0 and hp_overkill > 1) then begin                        \
-                              base := 10;                                                       \
-                           end                                                                  \
-                           set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (base * hp_overkill));   \
-                           if map_first_run then critter_heal(critter, crit_max_hp)
-
 #define set_hp(obj, hp) \
    if (crit_pid == obj) then begin  \
-      inc_hp(hp);                   \
+      base := (hp - hp_base);                                              \
+      if (base <= 0 and hp_overkill > 1) then begin                        \
+         base := 10;                                                       \
+      end                                                                  \
+      set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (base * hp_overkill));   \
+      if map_first_run then critter_heal(critter, crit_max_hp);            \
       continue;                     \
    end                              \
    noop

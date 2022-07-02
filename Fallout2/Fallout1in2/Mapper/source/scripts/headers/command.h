@@ -763,6 +763,25 @@ FLOAT_MSG_BLUE
 #define dec_local_var_amt(x,y)      set_local_var(x,local_var(x)-y)
 #define dec_local_var(x)            dec_local_var_amt(x,1)
 
+// Sfall workaround to influence local variables in other scripts 
+#define set_local_var_obj(obj,x,y) \
+   set_self(obj);       \
+   set_self(obj);       \
+   set_local_var(x, y); \
+   set_self(0)
+   
+#define inc_local_var_obj(obj,x) \
+   set_self(obj);       \
+   set_self(obj);       \
+   inc_local_var(x);    \
+   set_self(0)
+   
+#define dec_local_var_obj(obj,x) \
+   set_self(obj);       \
+   set_self(obj);       \
+   dec_local_var(x);    \
+   set_self(0)
+
 /***************************************************************
 **************** Bit Manipulation Macros ***********************
 ***************************************************************/
