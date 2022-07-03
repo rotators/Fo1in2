@@ -184,10 +184,10 @@ FUNCTION REFERENCE
 ##### `void set_self(int obj)`
 - Overrides the script's `self_obj` for the next function call.
 - It is primarily used to allow the calling of functions which take an implicit `self_obj` parameter (e.g. `drop_obj`) from global scripts, but it can also be used from normal scripts.
-- `self_obj` will revert back to its original value after the next function call.
-- Calling `self_obj(0)` will also revert `self_obj` to original value. It is recommended to call this after each use of `set_self` in normal scripts in order to avoid unforeseen side effects.
+- `self_obj` will be reverted to its original value after the next function call.
+- Calling `set_self(0)` will also revert `self_obj` to its original value. It is recommended to call this after each use of `set_self` in normal scripts in order to avoid unforeseen side effects.
 - `source_obj`, `target_obj`, and similar functions will not work if preceded by `set_self`.
-- __NOTE:__ for `use_obj` and `use_obj_on_obj` vanilla functions to work correctly, it is required to call `set_self` twice.
+- __NOTE:__ for `use_obj` and `use_obj_on_obj` vanilla functions to work correctly, it is required to call `set_self` twice. You can also access the local variables in the script of an object after calling `set_self` twice.
 
 -----
 ##### `void mod_skill_points_per_level(int x)`
