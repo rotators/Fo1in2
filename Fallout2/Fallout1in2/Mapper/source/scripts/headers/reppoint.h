@@ -320,6 +320,8 @@
 #define REP_BONUS_HELPING_JARVIS                (3)
 #define REP_BONUS_RADSCORPIONS_GONE             (15)
 #define REP_BONUS_TANDI_RESCUED                 (30)
+#define REP_BONUS_CROP_ROTATION                 (5)
+#define REP_BONUS_COMPLIMENT_FOOD               (1)
 #define inc_shady_rep(x)                        inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
