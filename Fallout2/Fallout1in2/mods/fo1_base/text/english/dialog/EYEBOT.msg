@@ -71,7 +71,7 @@
 {1007}{}{Tasks?}
 {1008}{}{Tasks?}
 {1009}{}{Confirmed.}
-{1010}{}{[Click] This unit is programmed to follow an automated parameter and / or VIP security protocoll. This unit also has a built-in long range scanner system for early threat recognition.}
+{1010}{}{[Click] This unit is programmed to follow an automated parameter and / or VIP security protocol. This unit also has a built-in long range scanner system for early threat recognition.}
 {1011}{}{[Beep] This unit is equipped with an improved Wattz 2.4 taser-system for fast melee engagements.}
 
 {1100}{}{This eyebot is fully repaired and ready to go.}
@@ -89,7 +89,7 @@
 {1900}{}{Long range formation mode confirmed.}
 
 # Too many party members
-{2000}{}{Task failed to process. ERROR: Sensory overload. due to exceeding group size. Remaining standby.}
+{2000}{}{Task failed to process. ERROR: Sensory overload. Group size exceeding parameters. Remaining in standby.}
 {2001}{}{Task confirmed. Cancel standby.}
 {2002}{}{Loading ... Recursive task created ... Terminating input.}
 	{2010}{}{Oh yeah, whatever then.}

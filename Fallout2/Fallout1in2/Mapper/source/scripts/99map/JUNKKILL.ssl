@@ -18,7 +18,8 @@ procedure map_update_p_proc;
 
 procedure Invasion;
 
-#define store_out_of_business_hex     (29295)
+#define store_out_of_business1_hex    (29295)
+#define store_out_of_business2_hex    (25708)
 
 variable party_elevation;
 variable dude_start_hex;
@@ -67,8 +68,18 @@ procedure map_enter_p_proc begin
          display_msg(message_str(SCRIPT_SINTHIA, random(139, 140)));
       end
 
-      if (not(is_killian_alive) and (global_var(GVAR_HIRED_BY_GIZMO) >= 2)) then
-         create_north_out_of_business(store_out_of_business_hex, 0);
+      if (not(is_killian_alive) /*and (global_var(GVAR_HIRED_BY_GIZMO) >= 2)*/) then begin
+         if (tile_contains_pid_obj(store_out_of_business1_hex, 0, PID_OUT_OF_BUSINESS_NORTH) == 0) then begin
+            variable KillianLights_List, hex;
+            KillianLights_List := [25301,25693, 25685, 28098, 26079, 25871, 27472, 27883];
+            foreach hex in KillianLights_List begin
+               Scenery_Creation_Ptr := tile_contains_pid_obj(hex, 0, PID_LIGHT_SOURCE);
+               destroy_object(Scenery_Creation_Ptr);
+            end
+         end
+         create_north_out_of_business(store_out_of_business1_hex, 0);
+         create_east_out_of_business(store_out_of_business2_hex, 0);
+      end
    end
 end
 

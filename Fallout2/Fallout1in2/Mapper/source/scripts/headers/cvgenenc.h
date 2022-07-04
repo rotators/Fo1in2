@@ -328,7 +328,10 @@ procedure toxic_cave begin
       Critter := create_object(PID_MRHANDY, 0, 0);
       critter_attempt_placement(Critter, Scenery_Creation_Hex, 1);
       obj_rotate(Critter, random(0,5));
-      kill_critter(Critter, ANIM_exploded_to_nothing_sf);
+      if random(0, 1) then
+         kill_critter(Critter, ANIM_exploded_to_nothing_sf);
+      else
+         kill_critter(Critter, ANIM_fall_back_sf);
       Item := array_random_value(Items_List);
       Item := create_object(Item, Critter_spawn_hex, 1);
       add_mult_objs_to_inven(Critter, Item, fortune_finder(1));
@@ -491,13 +494,13 @@ procedure LoadScenery begin
       end else if (Choose_Scenery >= 4 and Choose_Scenery <= 5) then begin
          set_hideout_1;
          call abandoned_hideout;
-      end else if (Choose_Scenery == 6) then begin
+      end else if (Choose_Scenery >= 6 and Choose_Scenery <= 7) then begin
          set_dead_bodies;
          call dead_bodies;
-      end else if (Choose_Scenery == 7) then begin
+      end else if (Choose_Scenery >= 8 and Choose_Scenery <= 9) then begin
          set_robot_cleaner;
          call cleaning_robot;
-      end else if (Choose_Scenery == 8 and global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+      end else if (Choose_Scenery == 10 and global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
          set_centaur_handler;
          call centaur_handler;
          call dead_bodies;
