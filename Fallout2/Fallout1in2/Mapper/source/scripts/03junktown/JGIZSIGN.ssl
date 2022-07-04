@@ -6,6 +6,8 @@
 */
 
 #include "define.h"
+#include "area/junktown.h"
+#include "sfall/lib.arrays.h"
 
 #define NAME                    SCRIPT_JGIZSIGN
 
@@ -25,7 +27,17 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
+variable CasinoLights_List, hex;
+
+   // Disable lights in the casino and stop the advertisement sign.
    if ((global_var(GVAR_CAPTURE_GIZMO) == 2) or not(is_gizmo_alive)) then begin
+      CasinoLights_List := [16723,16512,18510,18325,20123,20514,21317,21325,20930,21912,24104,25905,25711,23512,25719,23923,23731,24335,25727,25936,27920];
+      foreach hex in CasinoLights_List begin
+         Scenery_Creation_Ptr := tile_contains_pid_obj(hex, 0, PID_LIGHT_SOURCE);
+         destroy_object(Scenery_Creation_Ptr);
+         debug("delete light");
+      end
+
       scenery := create_object(PID_GIZMO_SIGN_OFF, self_tile, 0);
       destroy_object(self_obj);
    end

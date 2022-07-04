@@ -29,6 +29,7 @@ variable Scenery_Creation_Ptr;
 #define PID_33555119 (33555119)
 
 #define PID_BLOCKING_HEX                    (33554499)
+#define PID_LIGHT_SOURCE                    (33554573)
 #define PID_BLOWN_ARROYO_CAVE_DOOR          (33555365)
 #define PID_ARROYO_CAVE_DOOR                (33555366)
 #define PID_TEMPLE_SKULL_POLE               (33555374)
