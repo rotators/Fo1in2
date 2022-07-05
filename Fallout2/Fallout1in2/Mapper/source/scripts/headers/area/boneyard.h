@@ -91,7 +91,8 @@
                                         if quest_kill_razor_inactive then set_quest_kill_razor_active
 #define get_task_kill_razor             (global_var(GVAR_ZIMMERMAN_STATUS) == 9001)
 
-#define set_razor_killed                set_global_var(GVAR_ZIMMERMAN_STATUS, 9002); \
+#define set_razor_killed                set_global_var(GVAR_RAZOR_DEAD, 1);          \
+                                        set_global_var(GVAR_ZIMMERMAN_STATUS, 9002); \
                                         set_quest_kill_razor_completed
 #define get_razor_killed                (global_var(GVAR_ZIMMERMAN_STATUS) == 9002)
 

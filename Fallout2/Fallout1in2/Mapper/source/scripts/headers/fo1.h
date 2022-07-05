@@ -119,7 +119,7 @@
 #define is_rhombus_alive                    (global_var(GVAR_RHOMBUS_STATUS) == 0)
 #define is_garl_alive                       (global_var(GVAR_GARL_DEAD) == 0)
 #define is_nicole_alive                     (global_var(GVAR_NICOLE_DEAD) == 0)
-#define is_razor_alive                      (global_var(GVAR_ZIMMERMAN_STATUS) < 9002)
+#define is_razor_alive                      (global_var(GVAR_RAZOR_DEAD) == 0)
 #define is_decker_alive                     (global_var(GVAR_DECKER_STATUS) == 0)
 #define is_hightower_alive                  (global_var(GVAR_HIGHTOWER_STATUS) == 0)
 #define is_harold_alive                     (global_var(GVAR_IS_HAROLD_ALIVE) == 1)
@@ -482,21 +482,19 @@ variable COC_TRESPASSING;
           end                                                                             \
       end               \
    end                  \
-   else begin           \
-      if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
-          if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
-              if (tile_num(self_obj) != sleep_tile) then                \
-                  animate_move_obj_to_tile(self_obj, self_obj, 0);      \
-              else                                                      \
-                  set_local_var(LVAR_Sleeping, 1);                      \
-          end                                                           \
-          else begin                                                    \
-              if (tile_num(self_obj) != sleep_tile) then                \
-                  move_to(self_obj, sleep_tile, elevation(self_obj));   \
-              else                                                      \
-                  set_local_var(LVAR_Sleeping, 1);                      \
-          end \
-      end \
+   else if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
+       if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
+           if (tile_num(self_obj) != sleep_tile) then                \
+               animate_move_obj_to_tile(self_obj, self_obj, 0);      \
+           else                                                      \
+               set_local_var(LVAR_Sleeping, 1);                      \
+       end                                                           \
+       else begin                                                    \
+           if (tile_num(self_obj) != sleep_tile) then                \
+               move_to(self_obj, sleep_tile, elevation(self_obj));   \
+           else                                                      \
+               set_local_var(LVAR_Sleeping, 1);                      \
+       end \
    end
 
 procedure flee_dude begin
