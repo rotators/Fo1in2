@@ -9,8 +9,10 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: New Tycho metal armor animations.
 - **Added**: Restored a couple dialog lines for Nicole in the Boneyard. She will now also correctly react to the player stealing from her.
 - **Added**: Vasquez the mercenary can now be hired in Junktown (restored / remade cut-content).
+- **Fixed**: "You gain You Gain.." in Thomas dialog at the Brotherhood.
 - **Fixed**: Aradesh in Shady Sands had a wrong reaction condition.
 - **Fixed**: Asking Ian for "Killian" via TMA would return a reply about Ian's name.
+- **Fixed**: Fire Gecko pelt inventory graphic was missing.
 - **Fixed**: Improved the way Sherry in Junktown stays/leaves town after dealing with the Skulz.
 - **Fixed**: It was possible to get two motorcycle keys from Griffith.
 - **Fixed**: Katja's "can you open that door"-dialog option would also show up if the object was already unlocked (barely used in the game, but whatever I guess).
@@ -35,14 +37,19 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Fixed**: Typos in Set's dialog.
 - **Tweaked**: Added more encounters to the "tougher humans" setting and increased the chance of grease gun spawns.
 - **Tweaked**: Adjusted laser resistance of ant critters.
+- **Tweaked**: After taking down Gizmo, the lights inside in the casino will be off.
+- **Tweaked**: Complimenting the cook or helping Curtis in Shady Sands will now grant a few town reputation points.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
 - **Tweaked**: If Hub cops walked away from their default position (ex: player started a fight), they will now reset after a couple ingame days.
 - **Tweaked**: Improved the TMA-system. If a keyword is not found in the character specific unique responses, the game will now try to find a keyword in the generic map-based responses instead.
 - **Tweaked**: Improved the way the Brotherhood sentry spawns into the map once the BoS has been invaded. Now he has his weapon drawn and won't play the wielding animation on map enter.
+- **Tweaked**: Junktown Scout "goodbye"-dialog felt weird after asking any question. Shows an alternative goodbye-string now.
 - **Tweaked**: Manually disabled force fields in Mariposa will now stay off for a little bit longer.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
+- **Tweaked**: Taking down Gizmo or Junktown will shut down the lights in their houses.
 - **Tweaked**: The ENABLE_FO2_CRITTERS setting will now also affect critters spawned in caravan encounters.
 - **Tweaked**: The Fo2 party member combat control interface fits better to the rest of the Fo1 interface now.
+- **Tweaked**: The gecko hunters are not giving a random outdoorsman-skill reward anymore.
