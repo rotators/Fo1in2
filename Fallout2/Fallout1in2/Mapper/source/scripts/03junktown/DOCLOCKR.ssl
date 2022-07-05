@@ -146,9 +146,13 @@ procedure use_skill_on_p_proc begin
       if (obj_is_locked(self_obj)) then begin
          script_overrides;
          SkillCheck := roll_vs_skill(source_obj, SKILL_LOCKPICK, -60);
-         if (is_success(SkillCheck)) then begin
+         // Note: Katja can open the door in any case (can do it via dialog as well)
+         if (is_success(SkillCheck) or (source_obj == Katja_ptr)) then begin
             obj_unlock(self_obj);
-            display_msg(mstr(107));
+            if (source_obj == dude_obj) then
+               display_msg(mstr(107));
+            else
+               display_msg(obj_name(source_obj) + mstr(200));
          end
          else if (is_critical(SkillCheck)) then begin
             jam_lock(self_obj);
