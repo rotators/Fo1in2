@@ -41,12 +41,14 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Complimenting the cook or helping Curtis in Shady Sands will now grant a few town reputation points.
 - **Tweaked**: Contents of crates in cavern encounters have more item variation now.
 - **Tweaked**: If Hub cops walked away from their default position (ex: player started a fight), they will now reset after a couple ingame days.
+- **Tweaked**: If Katja attempts to lockpick the Mariposa entrance door, or Doc Morbids locker while Katja is in the party, she has a 100% chance to succeed (the same as if the player asks her via dialog).
 - **Tweaked**: Improved the TMA-system. If a keyword is not found in the character specific unique responses, the game will now try to find a keyword in the generic map-based responses instead.
 - **Tweaked**: Improved the way the Brotherhood sentry spawns into the map once the BoS has been invaded. Now he has his weapon drawn and won't play the wielding animation on map enter.
 - **Tweaked**: Junktown Scout "goodbye"-dialog felt weird after asking any question. Shows an alternative goodbye-string now.
 - **Tweaked**: Manually disabled force fields in Mariposa will now stay off for a little bit longer.
 - **Tweaked**: Masters Lair cut content supermutant exchanged with "supermutant medic" proto and tweaked his loadout.
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
+- **Tweaked**: Party member hitpoints reduced a bit per levelup (was +10, now +7). Also tweaked skill increases to make them less godly in higher levels.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
 - **Tweaked**: Taking down Gizmo or Junktown will shut down the lights in their houses.
