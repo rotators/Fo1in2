@@ -17,6 +17,9 @@ procedure timed_event_p_proc;
 procedure pickup_p_proc;
 procedure push_p_proc;
 
+#define LVAR_Home_Tile           (4)
+#define LVAR_Home_Rotation       (5)
+
 variable Only_Once := 1;
 variable PsstTime;
 
@@ -29,15 +32,21 @@ procedure Start begin
       set_self_team(TEAM_LA_BLADES);
       set_self_ai(AI_BLADES);
       add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-      if (local_var(4) == 0) then begin
-         set_local_var(4, self_tile);
-      end
    end
 end
 
 procedure map_enter_p_proc begin
-   if map_first_run then
+   if (map_first_run) then begin
       self_caps_adjust(random(10, 100));
+
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+
+   if (days_since_visited > 2) then begin
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
 end
 
 procedure look_at_p_proc begin
@@ -100,7 +109,7 @@ procedure timed_event_p_proc begin
    variable LVar0 := 0;
 
    if not(combat_is_initialized) then begin
-      LVar0 := tile_num_in_direction(local_var(4), random(0, 5), random(1, 5));
+      LVar0 := tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 5), random(1, 5));
       self_walk_to_tile(LVar0);
    end
    add_timer_event(self_obj, game_ticks(random(8, 25)), 1); // was random(3, 5)

@@ -1,6 +1,6 @@
 /*
 
-   Brotherhood - Jonathan
+   Brotherhood - Jonathan - unused
 
 */
 
@@ -16,9 +16,11 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure spar;
-procedure weapon_check;
+procedure critter_p_proc;
+procedure timed_event_p_proc;
 procedure destroy_p_proc;
+
+procedure spar;
 
 import variable Student_ptr;
 
@@ -33,78 +35,54 @@ procedure start begin
       set_self_team(TEAM_BROTHERHOOD);
       set_self_ai(AI_BROTHERHOOD_KNIGHT);
    end
-   if ((script_action == timed_event_proc) and (tmp_round < 7)) then begin//<-- timed_event_p_proc , is this called specifically, or running constantly?
+end
+
+procedure critter_p_proc begin
+   if (tmp_round < 1) then begin
+      tmp_round := (tmp_round + 1);
+      add_timer_event(self_obj, game_ticks(5), 0);
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (tmp_round < 7) then begin
       call spar;
-   end
-   else begin
-      if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-         call destroy_p_proc;
-      end
-      else begin
-         if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-            if (tmp_round < 1) then begin
-               tmp_round := (tmp_round + 1);
-               add_timer_event(self_obj, game_ticks(5), 0);
-            end
-         end
-      end
-   end
-end
-
-procedure spar
-begin
-   if (tmp_round == 1) then begin
-      anim(Student_ptr, ANIM_throw_punch, 0);
-      anim(self_obj, ANIM_dodge_anim, 0);
-      v := 2;
-   end
-   else begin
-      if (tmp_round == 2) then begin
-         anim(self_obj, ANIM_throw_punch, 0);
-         anim(Student_ptr, ANIM_hit_from_front, 0);
-         v := 2;
-      end
-      else begin
-         if (tmp_round == 3) then begin
-            anim(self_obj, ANIM_throw_punch, 0);
-            anim(Student_ptr, ANIM_dodge_anim, 0);
-            v := 2;
-         end
-         else begin
-            if (tmp_round == 4) then begin
-               anim(self_obj, ANIM_kick_leg, 0);
-               v := 1;
-            end
-            else begin
-               if (tmp_round == 5) then begin
-                  anim(Student_ptr, ANIM_fall_back, 0);
-                  v := 2;
-               end
-               else begin
-                  if (tmp_round == 6) then begin
-                     anim(self_obj, ANIM_stand, 0);
-                     anim(Student_ptr, ANIM_back_to_standing, 0);
-                     v := 2;
-                  end
-               end
-            end
-         end
-      end
-   end
-   tmp_round := tmp_round + 1;
-   add_timer_event(self_obj, game_ticks(v), 0);
-end
-
-procedure weapon_check
-begin
-   if ((obj_item_subtype(get_right_hand(Student_ptr)) == item_type_weapon) or (obj_item_subtype(get_left_hand(Student_ptr)) == item_type_weapon)) then begin
-      armed := 1;
-   end
-   else begin
-      armed := 0;
    end
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
+end
+
+procedure spar begin
+   if (tmp_round == 1) then begin
+      anim(Student_ptr, ANIM_throw_punch, 0);
+      anim(self_obj, ANIM_dodge_anim, 0);
+      v := 2;
+   end
+   else if (tmp_round == 2) then begin
+      anim(self_obj, ANIM_throw_punch, 0);
+      anim(Student_ptr, ANIM_hit_from_front, 0);
+      v := 2;
+   end
+   else if (tmp_round == 3) then begin
+      anim(self_obj, ANIM_throw_punch, 0);
+      anim(Student_ptr, ANIM_dodge_anim, 0);
+      v := 2;
+   end
+   else if (tmp_round == 4) then begin
+      anim(self_obj, ANIM_kick_leg, 0);
+      v := 1;
+   end
+   else if (tmp_round == 5) then begin
+      anim(Student_ptr, ANIM_fall_back, 0);
+      v := 2;
+   end
+   else if (tmp_round == 6) then begin
+      anim(self_obj, ANIM_stand, 0);
+      anim(Student_ptr, ANIM_back_to_standing, 0);
+      v := 2;
+   end
+   tmp_round := tmp_round + 1;
+   add_timer_event(self_obj, game_ticks(v), 0);
 end

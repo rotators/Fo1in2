@@ -54,7 +54,6 @@ variable home_tile;
 variable sleep_tile;
 
 variable tmp_hostile;
-variable initial := 0;
 variable round_counter;
 variable Warned_Tile;
 
@@ -62,22 +61,27 @@ variable Warned_Tile;
 #define LVAR_Invasion            (6)
 #define LVAR_Sleeping            (9)
 #define LVAR_Home_Tile           (10)
+#define LVAR_Home_Rotation       (11)
 
 procedure start begin
-   if not(initial) then begin
-      initial := 1;
-      set_self_team(TEAM_SHADY_SANDS);
-      set_self_ai(AI_GUARD);
-      if (local_var(LVAR_Home_Tile) == 0) then begin
-         set_local_var(LVAR_Home_Tile, self_tile);
-      end
-      home_tile := local_var(LVAR_Home_Tile);
-   end
 end
 
 procedure map_enter_p_proc begin
    if shady_invaded then begin
       invasion_kill_critter;
+   end
+
+   if (map_first_run) then begin
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_GUARD);
+
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+
+   if (days_since_visited > 2) then begin
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
    end
 end
 
@@ -146,7 +150,7 @@ procedure talk_p_proc begin
    end
 
    get_reaction
-   if (local_var(9) == 1) then begin
+   if (local_var(LVAR_Sleeping) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else begin
@@ -192,7 +196,8 @@ procedure timed_event_p_proc begin
    end
    else if (dude_is_armed) then begin
       // Repeat if dude is still armed, but guard can't see him right now
-      flush_add_timer_event(self_obj, game_ticks(10), 1);
+      // disabled for now, to make it a bit more forgiving
+      //flush_add_timer_event(self_obj, game_ticks(10), 1);
    end
    else begin
       set_map_var(MVAR_WARNED, 0);
