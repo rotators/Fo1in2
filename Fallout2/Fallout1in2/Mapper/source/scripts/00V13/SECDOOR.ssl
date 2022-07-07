@@ -15,6 +15,7 @@ procedure use_obj_on_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 
+procedure lockpicking;
 procedure dude_use_door;
 procedure give_exps;
 procedure Officer_use_door;
@@ -54,8 +55,7 @@ procedure map_enter_p_proc begin
    SecDoor_ptr := self_obj;
 
    if not(is_loading_game) then begin
-      if obj_is_open(self_obj) then
-         obj_close(self_obj);
+      if obj_is_open(self_obj) then obj_close(self_obj);
    end
 end
 
@@ -72,64 +72,52 @@ procedure use_obj_on_p_proc begin
    variable Item := obj_pid(obj_being_used_with);
 
    if (Item == PID_ELECTRONIC_LOCKPICKS or Item == PID_ELEC_LOCKPICK_MKII) then begin
-      script_overrides;
-      if (not(obj_is_locked(self_obj))) then begin
-         display_msg(mstr(101));
-      end
-      else begin
-         test := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
-         if (is_success(test)) then begin
-            display_msg(mstr(102));
-            obj_unlock(self_obj);
-            call give_exps;
-         end
-         else begin
-            if (is_critical(test)) then begin
-               jam_lock(self_obj);
-               display_msg(mstr(104));
-            end
-            else begin
-               display_msg(mstr(103));
-            end
-         end
-      end
-      if (tile_distance_objs(Officer_ptr, dude_obj) < 4) then begin
-         if (not(armory_access)) then begin
-            armory_access := 2;
-            set_map_var(1, armory_access);
-         end
-      end
+      test := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
+      call lockpicking;
    end
 end
 
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_LOCKPICK) then begin
-      script_overrides;
-      if (not(obj_is_locked(self_obj))) then begin
-         display_msg(mstr(101));
+      test := roll_vs_skill(source_obj, SKILL_LOCKPICK, -20);
+      call lockpicking;
+   end
+end
+
+procedure lockpicking begin
+   script_overrides;
+   if (not(obj_is_locked(self_obj))) then begin
+      display_msg(mstr(101));
+   end
+   else begin
+      if (is_success(test)) then begin
+         if source_is_dude then
+            display_msg(mstr(102));
+         else
+            display_msg(obj_name(source_obj) + mstr(200));
+         obj_unlock(self_obj);
+         call give_exps;
       end
       else begin
-         test := roll_vs_skill(source_obj, SKILL_LOCKPICK, -20);
-         if (is_success(test)) then begin
-            display_msg(mstr(102));
-            obj_unlock(self_obj);
-            call give_exps;
+         if (is_critical(test)) then begin
+            jam_lock(self_obj);
+            if source_is_dude then
+               display_msg(mstr(104));
+            else
+               display_msg(obj_name(source_obj) + mstr(202));
          end
          else begin
-            if (is_critical(test)) then begin
-               jam_lock(self_obj);
-               display_msg(mstr(104));
-            end
-            else begin
+            if source_is_dude then
                display_msg(mstr(103));
-            end
+            else
+               display_msg(obj_name(source_obj) + mstr(201));
          end
       end
-      if (tile_distance_objs(Officer_ptr, dude_obj) < 4) then begin
-         if (not(armory_access)) then begin
-            armory_access := 2;
-            set_map_var(1, armory_access);
-         end
+   end
+   if (tile_distance_objs(Officer_ptr, dude_obj) < 4) then begin
+      if not(armory_access) then begin
+         armory_access := 2;
+         set_map_var(1, armory_access);
       end
    end
 end
