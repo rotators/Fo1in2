@@ -4,6 +4,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Added**: A new option to switch between Fo1-style "rest until 06:00" and Fo2-style "rest until 08:00" in the PipBoy.
 - **Added**: Clicking on the worldmap now produces the same sounds as in Fo1 (traveling and green triangles).
 - **Added**: Created missing animations for Black Dude Purple Robe / Hero Appearance mod.
+- **Added**: Expanded ending slides.
 - **Added**: Mike, the Old Town guard shows up in the Hub Old Town district if cut characters are enabled.
 - **Added**: New Alternative Force Fields mod with graphics made by .Pixote.
 - **Added**: New Tycho metal armor animations.
@@ -50,6 +51,7 @@ Notable changes since last release ([v1.7.2828](https://github.com/rotators/Fo1i
 - **Tweaked**: Moved the Vault 13 water ration scene into a timer event, to improve performance.
 - **Tweaked**: Party member hitpoints reduced a bit per levelup (was +10, now +7). Also tweaked skill increases to make them less godly in higher levels.
 - **Tweaked**: Saul and Trish dialog options are a bit more forgiving now.
+- **Tweaked**: Some endgame encounter critters will now randomly spawn with AP instead of JHP ammo.
 - **Tweaked**: Southern / Boneyard encounters now have a chance to spawn with sharpened instead of normal spears.
 - **Tweaked**: Taking down Gizmo or Junktown will shut down the lights in their houses.
 - **Tweaked**: The ENABLE_FO2_CRITTERS setting will now also affect critters spawned in caravan encounters.
