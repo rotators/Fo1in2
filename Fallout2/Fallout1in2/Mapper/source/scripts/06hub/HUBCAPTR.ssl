@@ -16,7 +16,6 @@
 #include "modreact.h"
 
 /* Standard Script Procedures */
-
 procedure start;
 procedure combat;
 procedure critter_p_proc;
@@ -28,6 +27,10 @@ procedure look_at_p_proc;
 #define LVAR_Talked                     (4)
 #define LVAR_Home_Tile                  (5)
 #define LVAR_Home_Rotation              (6)
+
+// Is the player inside the house?
+// coords: top left, top right, bottom left, bottom right
+#define dude_inside     tile_in_tile_rect(18740, 18728, 21140, 21128, dude_tile)
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -50,6 +53,7 @@ procedure map_enter_p_proc begin
       critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
       self_rotate(local_var(LVAR_Home_Rotation));
    end
+   set_map_var(MVAR_Captor_Float, 0);
 end
 
 procedure combat begin
@@ -62,13 +66,16 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
 
-   if (self_can_see_dude) then begin
+   if (dude_inside and self_can_see_dude) then begin
       tmp_hostile := 1;
-      GunLine := random(105, 108);
-      if (GunLine == 108) then begin
-         if (dude_is_female) then GunLine := 109;
+      if (map_var(MVAR_Captor_Float) == 0) then begin
+         set_map_var(MVAR_Captor_Float, 1);
+         GunLine := random(105, 108);
+         if (GunLine == 108) then begin
+            if (dude_is_female) then GunLine := 109;
+         end
+         float_msg(self_obj, mstr(GunLine), FLOAT_MSG_YELLOW);
       end
-      float_msg(self_obj, mstr(GunLine), FLOAT_MSG_YELLOW);
    end
 end
 

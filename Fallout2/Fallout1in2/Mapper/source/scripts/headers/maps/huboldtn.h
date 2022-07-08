@@ -23,7 +23,7 @@
 #define MVAR_Know_Vance          (9)  
 #define MVAR_Once_DeathClaw      (10)  
 #define MVAR_Invasion            (11) // Has this map been invaded by Super Mutants?
-#define MVAR_Fixt_PLACEHOLDER_0  (12) //  Adding for ass-covering and future-proofing
+#define MVAR_Captor_Float        (12) // Old Town Captors will only float once
 #define MVAR_Fixt_PLACEHOLDER_1  (13) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_2  (14) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (15) //  Adding for ass-covering and future-proofing
