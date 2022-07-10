@@ -39,6 +39,7 @@ procedure MouseClick_Handler;
 
 procedure OpenInput;
 procedure CloseInput;
+procedure FindReply(variable source, variable msg_offset);
 procedure GenerateReply;
 procedure PrintReply(variable text);
 procedure ClearInputBox;
@@ -61,30 +62,10 @@ procedure ClearInputBox;
 #define key_map_path       "config\\keymap.ini"
 #define lang_ini_str       "fallout2.cfg|system|language"
 
-//
-#define searchKeyword(source) \
-   for (i := 0; (i < 100 and found == 0); i++) begin                       \
-      input_check := message_str(source, i + msg_offset);                  \
-      if (input_check != "Error" and input_check != "") then begin         \
-         split := string_split(input_check, "|");                          \
-         foreach (word : keyword in split) begin                           \
-            keyword := " " + keyword + " ";                                \
-            convert_to_lower(keyword);                                     \
-            if (len_array(string_split(input, keyword)) > 1) then begin    \
-               reply_final := message_str(source, (i + msg_offset) + 100); \
-               found := 1;                                                 \
-               break;                                                      \
-            end                                                            \
-         end                                                               \
-      end                                                                  \
-      else                                                                 \
-         break;                                                            \
-   end                                                                     \
-   noop
-
 variable tellme_button;
 variable fetch_input;
 variable input;
+variable rnd_reply;
 
 variable Scr_Width;
 variable Scr_Height;
@@ -363,6 +344,29 @@ procedure CloseInput begin
    DeleteWin("tellme_reply");
 end
 
+procedure FindReply(variable source, variable msg_offset) begin
+   variable i, input_check, reply_final, split, word, keyword, found := 0;
+
+   for (i := 0; (i < 100 and found == 0); i++) begin
+      input_check := message_str(source, i + msg_offset);
+      if (input_check != "Error" and input_check != "") then begin
+         split := string_split(input_check, "|");
+         foreach (word : keyword in split) begin
+            keyword := " " + keyword + " ";
+            convert_to_lower(keyword);
+            if (len_array(string_split(input, keyword)) > 1) then begin
+               reply_final := message_str(source, (i + msg_offset) + 100);
+               found := 1;
+               break;
+            end
+         end
+      end
+      else
+         break;
+   end
+   return reply_final;
+end
+
 // "critical" keyword
 // "ensure [procedure] works reliably. AFAIK it basically tells the engine "just stop what you're doing and focus on running this procedure first" -NovaRain
 critical procedure GenerateReply begin
@@ -375,7 +379,7 @@ critical procedure GenerateReply begin
       reply_unknown_start := tma_data_array[4],
       reply_unknown_end := tma_data_array[5],
 
-      i, input_check, reply_final, split, word, keyword, split_sentence, found := 0,
+      i, reply_final,
 
       // Testcode for the future: Set variable if player hits a specific reply
       tma_var_line := tma_gvar_array[0],
@@ -404,14 +408,17 @@ critical procedure GenerateReply begin
 
       convert_to_lower(crit_name);
       if (len_array(string_split(input, crit_name)) > 1) then begin
-         reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
-         found := 1;
+         rnd_reply := random(reply_name_start, reply_name_end);
+         if (message_str(reply_source, rnd_reply) == "Error") then
+            reply_final := message_str(tma_source_generic, rnd_reply);
+         else
+            reply_final := message_str(reply_source, rnd_reply);
       end
    end
 
-   searchKeyword(reply_source);
-
-   debug_msg("input: <" + input + ">");
+   if (reply_final == 0) then begin
+      reply_final := FindReply(reply_source, msg_offset);
+   end
 
    // No valid unique reply found, try generic keywords
    if (reply_final == 0) then begin
@@ -446,7 +453,7 @@ critical procedure GenerateReply begin
          if (cur_map_index == map) then begin /*ReDefine::IgnoreLine*/
             msg_offset := msg;
 
-            searchKeyword(tma_source_generic);
+            reply_final := FindReply(tma_source_generic, msg_offset);
 
             break;
          end
@@ -454,7 +461,13 @@ critical procedure GenerateReply begin
    end
 
    // Still no reply found
-   if (reply_final <= 0) then reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
+   if (reply_final <= 0) then begin
+      rnd_reply := random(reply_unknown_start, reply_unknown_end);
+      if (message_str(reply_source, rnd_reply) == "Error") then
+         reply_final := message_str(tma_source_generic, rnd_reply);
+      else
+         reply_final := message_str(reply_source, rnd_reply);
+   end
 
    // Print reply
    call PrintReply(reply_final);
