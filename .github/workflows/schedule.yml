@@ -9,16 +9,37 @@ on:
   - '.github/workflows/scripts/compile-ssl.sh'
   - '.github/workflows/scripts/ddraw.sh'
   - '.github/workflows/scripts/ddraw.merge.awk'
+  - '.github/workflows/scripts/format-msg.sh'
   - '.github/workflows/scripts/format-ssl.sh'
   - '.github/workflows/scripts/news.sh'
  workflow_dispatch:
   inputs:
+   release:
+    type:        boolean
+    description: 'Release candidate'
+    required:    true
+    default:     false
    push:
     type:        boolean
     description: 'Push results'
     required:    true
     default:     false
-   full:
+   daily:
+    type:        boolean
+    description: 'Run daily tasks'
+    required:    true
+    default:     true
+   weekly:
+    type:        boolean
+    description: 'Run weekly tasks'
+    required:    true
+    default:     false
+   monthly:
+    type:        boolean
+    description: 'Run monthly tasks'
+    required:    true
+    default:     false
+   minor:
     type:        boolean
     description: 'Force running minor tasks'
     required:    true
@@ -41,17 +62,20 @@ jobs:
  Maintenance:
   if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
-  outputs:     # used by dependant jobs
-   event:      ${{ steps.preparations.outputs.event }}
-   repo-alive: ${{ steps.activity-check.outputs.repo-alive }}
+  outputs:       # used by dependant jobs
+   event:        ${{ steps.configure.outputs.event }}
+   task-any:     ${{ steps.configure.outputs.task-any }}
+   task-daily:   ${{ steps.configure.outputs.task-daily }}
+   task-weekly:  ${{ steps.configure.outputs.task-weekly }}
+   task-monthly: ${{ steps.configure.outputs.task-monthly }}
   steps:
 
 ### Activity check
-### uses GitHub API to check last non-automagic commit in repository
-### if it's older than a week, all other steps are skipped
+### uses GitHub API to check last non-automagic commit in repository; if it's older than few days (exact value might change from time to time), all other steps are skipped
+### weekly/monthly tasks will always run on first day of week/month, even on stale repository
 
-  - name: Activity check
-    id:   activity-check
+  - name: Configure
+    id:   configure
     run:  |
           :
           # old check, requires already cloned repository; left for reference
@@ -66,55 +90,127 @@ jobs:
           days=$(( ( $(date --utc +%s) - $timestamp ) / 86400 ))
           rm -f $HOME/commit.json
 
-          echo "Repository activity : $timestamp $author $url"
+          # simplifies checking/displaying which event triggered workflow (especially dispatches)
+          event="${{ github.event_name }}"
+          if [[ "$event" == "workflow_dispatch" ]]; then
+               if [[ "${{ github.event.inputs.push }}" == "true" ]]; then
+                  event="${event}:push"
+               fi
+          fi
+          echo GHA_EVENT=$event >> $GITHUB_ENV
+          echo "::set-output name=event::$event"
+          echo "GitHub event : $event"
 
-          alive=0
+          release=0
+          daily=0
+          weekly="$(date +'%u')"
+          weekly_run=1 # monday
+          monthly="$(date +'%-d')"
+          monthly_run=1 # first day of month
+          minor=1
+          push=""
 
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          # schedule run
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+             echo "Repository activity : $timestamp $author $url"
+             if [[ $days -lt 2 ]]; then
+               daily=1
+               push=1
+             fi
+          # manual run
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
-             alive=1
-          else
-             #if [ $days -gt 2 ]; then
-             #   echo "[WARNING] Repository activity : ${days}d ago"
-             #fi
 
-             if [ $days -lt 2 ]; then
-                echo Repository active : ${days}d
-                alive=1
-             else
-                echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
+             if [[ "${{ github.even.inputs.release }}" == "true" ]]; then
+                echo "Release candidate"
+                release=1
+             fi
+
+             if [[ "${{ github.event.inputs.push }}" == "true" ]; then
+                push=1
+             fi
+
+             if [[ $release -eq 1 ]] || [[ "${{ github.event.inputs.daily }}" == "true" ]; then
+                daily=1
+             fi
+
+             if [[ $release -eq 1 ]] || [[ "${{ github.event.inputs.weekly }}" == "true" ]; then
+                weekly=$weekly_run
+             fi
+
+             if [[ $release -eq 1 ]] || [[ "${{ github.event.inputs.monthly }}" == "true" ]; then
+                monthly=$monthly_run
+             fi
+
+             if [[ $release -eq 1 ]] || [[ "${{ github.event.inputs.minor }}" == "true" ]; then
+                minor=1
              fi
           fi
 
-          if [ $alive -eq 1 ]; then
-             echo GHA_REPO_ALIVE=true >> $GITHUB_ENV
-             echo "::set-output name=repo-alive::true
+          if [[ $daily -eq 1 ]]; then
+             echo "Running daily tasks"
+             echo GHA_TASK_DAILY=true >> $GITHUB_ENV
+             echo "::set-output name=task-daily::true"
+             any=1
           else
-             echo "::set-output name=repo-alive::false
+             echo "::set-output name=task-daily::false"
           fi
+
+          if [[ $weekly -eq $weekly_run ]]; then
+             echo "Running weekly tasks"
+             echo GHA_TASK_WEEKLY=true >> $GITHUB_ENV
+             echo "::set-output name=task-weekly::true
+             any=1
+          else
+             echo "::set-output name=task-weekly::false"
+          fi
+
+          if [[ $monthly -eq $monthly_run ]]; then
+             echo "Running monthly tasks"
+             echo GHA_TASK_MONTHLY=true >> $GITHUB_ENV
+             echo "::set-output name=task-monthly::true"
+             any=1
+          else
+             echo "::set-output name=task-monthly::false"
+          fi
+
+          if [[ $any -eq 1 ]]; then
+             echo "GHA_TASK_ANY=true" >> $GITHUB_ENV
+             echo "::set-output name=task-any::true"
+          else
+             echo "::set-output name=task-any::false"
+          fi
+
+          if [[ $minor -eq 1 ]]; then
+             echo "Force running minor tasks"
+             echo "GHA_TASK_MINOR=true" >> $GITHUB_ENV
+          fi
+
+          if [[ $push -eq 1 ]]; then
+             echo "Pushing results"
+             echo "GHA_PUSH=true" >> $GITHUB_ENV
+          fi
+
+          echo MSBUILD_EXE="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" >> $GITHUB_ENV
 
 ### Preparations
 ### clones all interesting repositories used by tasks
 ### restores/creates cache used by tasks
 
   - name: Clone sfall-develop
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true' || env.GHA_TASK_MONTHLY == 'true'
     run:  git clone --branch=develop https://github.com/sfall-team/sfall.git $HOME/sfall-develop
 
-  - name: Clone sfall-rotators
-    if:   env.GHA_REPO_ALIVE == 'true'
-    run:  git clone --branch=rotators https://github.com/rotators/sfall.git $HOME/sfall-rotators
-
   - name: Clone sfall-asm
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  git clone --branch=master https://github.com/ghost2238/sfall-asm.git $HOME/sfall-asm
 
   - name: Clone ScanMsg
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true' || env.GHA_TASK_MONTHLY == 'true'
     run:  git clone --branch=master https://github.com/wipe2238/ScanMsg.git $HOME/ScanMsg
 
   - name: Clone FO1@2
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_ANY == 'true'
     uses: actions/checkout@v3
     with:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
@@ -122,7 +218,7 @@ jobs:
 
   - name: Preparations
     id:   preparations
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true' || env.GHA_TASK_MONTHLY == 'true'
     run:  |
           :
           echo "::group::Get tags"
@@ -132,41 +228,24 @@ jobs:
           echo "::group::Get old SHA"
           git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
           set +e
-          OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
           OLD_SCANMSG=$(grep --max-count=1 "\- ScanMsg" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
           OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
           set -e
-          echo "sfall-rotators $OLD_SFALL_ROTATORS"
           echo "ScanMsg        $OLD_SCANMSG"
           echo "ModdersPack    $OLD_ARTIFACTS"
           rm -f $HOME/git.log
           echo ::endgroup::
 
           echo "::group::Get new SHA"
-          NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
           NEW_SCANMSG=$(git -C $HOME/ScanMsg --no-pager log --pretty=format:%H -1 ScanMsg README.md LICENSE.md)
           NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
-          echo "sfall-rotators $NEW_SFALL_ROTATORS"
           echo "ScanMsg        $NEW_SCANMSG"
           echo "ModdersPack    $NEW_ARTIFACTS"
           echo ::endgroup::
 
-          set_dxsdk_dir=0
-
-          echo "sfall-rotators..."
-          if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
-             echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
-             echo GHA_TASK_SFALL_ROTATORS=true >> $GITHUB_ENV
-             set_dxsdk_dir=1
-          fi
-
           if [ "$OLD_SCANMSG" != "$NEW_SCANMSG" ]; then
              echo "ScanMsg... $OLD_SCANMSG -> $NEW_SCANMSG"
              echo GHA_TASK_SCANMSG=true >> $GITHUB_ENV
-          fi
-
-          if [ $set_dxsdk_dir -eq 1 ]; then
-             echo DXSDK_DIR=$HOME/cache-dx/ >> $GITHUB_ENV
           fi
 
           echo "ModdersPack..."
@@ -175,40 +254,8 @@ jobs:
              echo GHA_TASK_SFALL_ARTIFACTS=true >> $GITHUB_ENV
           fi
 
-          echo MSBUILD_EXE="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" >> $GITHUB_ENV
-
-          # simplifies checking/displaying which event triggered workflow (especially dispatches)
-          event="${{ github.event_name }}"
-          if [ "$event" == "workflow_dispatch" ]; then
-               if [ "${{ github.event.inputs.push }}" == "true" ]; then
-                  event="${event}:push"
-               fi
-          fi
-          echo GHA_EVENT=$event >> $GITHUB_ENV
-          echo "::set-output name=event::$event"
-          echo "GitHub event... $event"
-
 ### Major tasks
 ### always generates commit (if needed)
-
-  # updates customized version of sfall (rotators branch, ReleaseXP configuration)
-  # name: sfall-rotators update
-  # if:   env.GHA_TASK_SFALL_ROTATORS == 'true'
-  # run:  |
-  #       :
-  #       echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
-  #       sed -ri 's!(0x[0]*501|_WIN32_WINNT_WINXP)!0x0600!' $HOME/sfall-rotators/sfall/stdafx.h
-  #       ok=1
-  #       "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
-  #       if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
-  #          cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
-  #       fi
-  #       SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1 sfall)
-  #       SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
-  #       echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
-  #       ls -sh $MOD_DIR/ddraw.rotators.dll
-  #
-  #       git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
 
   # updates .msg files scanner
   - name: ScanMsg update
@@ -246,7 +293,7 @@ jobs:
 
   # updates scripts sources to Rotators standards
   - name: ReDefine run
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  |
           :
           scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
@@ -263,7 +310,7 @@ jobs:
 
   # updates unsafe scripting header
   - name: Voodoo regeneration
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  |
           :
           SFASM=$HOME/sfall-asm
@@ -285,7 +332,7 @@ jobs:
 
   # updates scripts sources to be consistent
   - name: Scripts formatting
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_WEEKLY == 'true'
     run:  |
           :
           $GHA_SCRIPTS/format-ssl.sh
@@ -295,7 +342,7 @@ jobs:
 
   # updates scripts bytecode
   - name: Scripts recompilation
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  |
           :
           $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1
@@ -304,7 +351,7 @@ jobs:
           git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
 
   - name: Text formatting
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_WEEKLY == 'true'
     run:  |
           :
           $GHA_SCRIPTS/format-msg.sh
@@ -313,7 +360,7 @@ jobs:
 
   # updates changes in fo1_base/text/english/ since latest release (read: last added git tag)
   - name: Generate default language changes
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_WEEKLY == 'true'
     run:  |
           :
           rm -fR $GENERATED_DIR/LangChanges
@@ -329,7 +376,7 @@ jobs:
 
   # updates list of scripts used on maps
   - name: Generate maps scripts list
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  |
           cmake -S Tools/MapsScripts/Source/ -B Tools/MapsScripts/Build/
           cmake --build Tools/MapsScripts/Build/ --config Release
@@ -341,7 +388,7 @@ jobs:
 ### prepares commit message header
 
   - name: Validation
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_ANY == 'true'
     run:  |
           :
           echo ::group::git status
@@ -349,14 +396,14 @@ jobs:
           echo ::endgroup::
 
           # allow full run; forces minor tasks to run even if major tasks does not generate commit
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.full }}" == "true" ]; then
+          if [[ "$GHA_TASK_MINOR" == "true" ]; then
              echo "# Minor tasks forced to run" >> $HOME/gha.commit
           fi
 
-          if [ -f "$HOME/gha.commit" ]; then
+          if [[ -f "$HOME/gha.commit" ]]; then
              sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
              dos2unix $HOME/gha.commit
-             echo GHA_COMMIT=true >> $GITHUB_ENV
+             echo "GHA_COMMIT=true" >> $GITHUB_ENV
              cat $HOME/gha.commit
           fi
 
@@ -368,7 +415,7 @@ jobs:
   # synch ddraw.ini with sfall changes
   # update all config files to use dos line endings
   - name: Configuration refresh
-    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    if:   env.GHA_COMMIT == 'true'
     run:  |
           :
           dos2unix $MOD_DIR/ddraw.fo1in2.ini
@@ -399,7 +446,7 @@ jobs:
 
   # update news list
   - name: News update
-    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    if:   env.GHA_COMMIT == 'true'
     run:  |
           $GHA_SCRIPTS/news.sh $GITHUB_REPOSITORY NEWS.md [Aa]dded [Cc]hanged [Ff]ixed [Rr]emoved [Tt]weaked
           git diff --quiet || (git add --update && echo "- News update" >> $HOME/gha.commit)
@@ -411,7 +458,7 @@ jobs:
 ### - workflow_dispatch:push
 
   - name: Push
-    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    if:   env.GHA_COMMIT == 'true'
     run:  |
           :
           echo ::group::git commit
@@ -427,7 +474,7 @@ jobs:
           git log -p -n 1 2>&1
           echo ::endgroup::
 
-          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
+          if [[ "$GHA_PUSH" == "true" ]; then
              echo ::group::git push
              git push 2>&1
              echo ::endgroup::
@@ -435,24 +482,6 @@ jobs:
              echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
           fi
     continue-on-error: true
-
-### Cleanup
-
-  - name: Post Clone sfall-develop
-    if:   env.GHA_REPO_ALIVE == 'true'
-    run:  rm -fR $HOME/sfall-develop
-
-  - name: Post Clone sfall-rotators
-    if:   env.GHA_REPO_ALIVE == 'true'
-    run:  rm -fR $HOME/sfall-rotators
-
-  - name: Post Clone sfall-asm
-    if:   env.GHA_REPO_ALIVE == 'true'
-    run:  rm -fR $HOME/sfall-asm
-
-  - name: Post Clone ScanMsg
-    if:   env.GHA_REPO_ALIVE == 'true'
-    run:  rm -fR $HOME/ScanMsg
 
  Synchronize:
   if: github.repository == 'DISABLED/rotators/Fo1in2'
@@ -468,10 +497,13 @@ jobs:
     run:  |
           :
           echo "GHA_EVENT=${{ needs.Maintenance.outputs.event }}" >> $GITHUB_ENV
-          echo "GHA_REPO_ALIVE=${{ needs.Maintenance.outputs.repo-alive }}" >> $GITHUB_ENV
+          echo "GHA_TASK_ANY=${{ needs.Maintenance.outputs.task-any }}" >> $GITHUB_ENV
+          echo "GHA_TASK_DAILY=${{ needs.Maintenance.outputs.task-daily }}" >> $GITHUB_ENV
+          echo "GHA_TASK_WEEKLY=${{ needs.Maintenance.outputs.task-weekly }}" >> $GITHUB_ENV
+          echo "GHA_TASK_MONTHLY=${{ needs.Maintenance.outputs.task-monthly }}" >> $GITHUB_ENV
 
   - name: Clone FO1@2
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_ANY == 'true'
     uses: actions/checkout@v3
     with:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
@@ -481,14 +513,14 @@ jobs:
     run:  git fetch origin master:master
 
   - name: Synch fo1_base/text/english/
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_DAILY == 'true'
     run:  |
           :
           git checkout master -- $MOD_DIR/mods/fo1_base/text/english/
           git diff --cached --quiet || echo "- Synchronize english .msg files with master branch" >> $HOME/gha.commit
 
   - name: Validation
-    if:   env.GHA_REPO_ALIVE == 'true'
+    if:   env.GHA_TASK_ANY == 'true'
     run:  |
           :
           echo ::group::git status
@@ -503,7 +535,7 @@ jobs:
           fi
 
   - name: Push
-    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    if:   env.GHA_COMMIT == 'true'
     run:  |
           :
           echo ::group::git commit

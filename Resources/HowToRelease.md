@@ -10,9 +10,9 @@
 
 - Run Actions -> [Schedule](../../../actions/workflows/schedule.yml) workflow with following options, and wait until it finishes
 
-  - `Push results`: `true`
+  - `Release candidate`: `true`
 
-  - `Force running minor tasks`: `true`
+  - `Push results`: `true`
 
 - Run Actions -> [Package](../../../actions/workflows/package.yml) workflow with following options, and wait until it finishes
 
