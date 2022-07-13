@@ -1,0 +1,131 @@
+/*
+
+   Adds a quick-dialog button to the loot interface of party members.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure GameModeChange_handler;
+procedure UseSkillOn_handler;
+
+procedure run_dialog;
+procedure create_button;
+procedure delete_button;
+procedure do_on;
+procedure do_off;
+procedure do_down;
+procedure do_up;
+
+// Button sfx
+#define SoundP             "butin4"
+#define SoundR             "butout4"
+#define SoundOff           "IB2LU1X1"
+#define SoundDown          "IB1P1XX1"
+
+variable Scr_Width;
+variable Scr_Height;
+variable MousonBut;
+variable ButPres;
+variable dialog_button;
+variable critter;
+
+variable armor := 0;
+
+procedure start begin
+   if (game_loaded) then begin
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_handler);
+      register_hook_proc(HOOK_USESKILLON, UseSkillOn_handler);
+
+   end
+end
+
+procedure GameModeChange_handler begin
+   if ((dialog_button == 0) AndAlso get_game_mode bwand (INTFACELOOT)) then
+      call create_button;
+   else if dialog_button AndAlso (get_game_mode bwand (INTFACELOOT) == false) then begin
+      call delete_button;
+   end
+end
+
+procedure UseSkillOn_handler begin
+   variable
+      critter := get_sfall_arg,
+      target := get_sfall_arg,
+      skill := get_sfall_arg;
+
+   if (skill == SKILL_STEAL) then begin
+      if (obj_in_party(critter) and critter_wearing_armor(critter)) then begin
+         armor := get_armor(critter);
+         debug("set armor  " + obj_pid(armor));
+      end
+   end
+end
+
+procedure run_dialog begin
+   critter := loot_obj;
+
+   if (armor != 0) then begin
+      debug("i have armor");
+      rm_obj_from_inven(critter, armor);
+      add_obj_to_inven(critter, armor);
+      debug("armor now: " + obj_pid(armor));
+      interface_redraw_all;
+      inventory_redraw(1);
+   end
+   if critter_is_armed(loot_obj) then begin
+      debug("i am armed");
+   end
+
+end
+
+procedure create_button begin
+   if obj_in_party(loot_obj) then begin
+      dialog_button := true;
+
+      create_win("win_dialog", (Scr_Width + 815), (Scr_Height + 340), 15, 15);
+      SelectWin("win_dialog");
+      AddButton("button_input", 0, 0, 15, 15);
+      AddButtonGFX("button_input", "PCX\\DI_RDBT1.pcx", "PCX\\DI_RDBT2.pcx", "PCX\\DI_RDBT2.pcx");
+      AddButtonProc("button_input", do_on, do_off, do_down, do_up);
+      ShowWin;
+   end
+end
+
+procedure delete_button begin
+   if (dialog_button) then begin
+      dialog_button := false;
+      DeleteWin("win_dialog");
+   end
+end
+
+procedure do_on begin
+   MousonBut := true;
+end
+
+procedure do_off begin
+   if (ButPres) then play_sfx(SoundOff);
+   MousonBut := false;
+   ButPres := false;
+end
+
+procedure do_down begin
+   if (ButPres == false) then begin
+      ButPres := true;
+      play_sfx(SoundP);
+   end
+end
+
+procedure do_up begin
+   ButPres := false;
+   play_sfx(SoundOff);
+   call run_dialog;
+end
+
