@@ -108,17 +108,23 @@ jobs:
           weekly_run=1 # monday
           monthly="$(date +'%-d')"
           monthly_run=1 # first day of month
-          minor=1
-          push=""
+          minor=0
+          push=0
 
-          # schedule run
+          # 'schedule' event
+          #  run daily task
+          #  push changes
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
              echo "Repository activity : $timestamp $author $url"
              if [[ $days -lt 2 ]]; then
                daily=1
                push=1
              fi
-          # manual run
+          # 'push' event
+          #  run daily tasks
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+             daily=1
+          # 'workflow_dispatch' event (manual run)
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
 
