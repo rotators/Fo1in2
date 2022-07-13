@@ -232,4 +232,3 @@
 {1111}{laura74}{Das sind schreckliche Leute. Ich will über sie nicht reden!}
 {1112}{laura81}{Wie bitte?}
 {1113}{laura80}{Nightkin? Ich weiß nicht, wovon du sprichst.}
-

@@ -554,4 +554,3 @@
 
 # default join me again message
 {10100}{}{Gehn wir.}
-

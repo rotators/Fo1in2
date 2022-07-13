@@ -13,4 +13,3 @@
 #
 # Received from MRS STAPLETON in The Hub
 {127}{}{Diese Disk ist in ausgezeichnetem Zustand. Das Label sagt: "Vault Standorte v34.129".}
-

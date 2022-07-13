@@ -154,7 +154,3 @@
 	{401}{}{I've changed my mind. You have to deal with this on your own.}
 	{402}{}{It's not worth it. We should attack the Regulators now.}
 	{403}{}{Not yet. I'm on my way now.}
-
-
-
-

@@ -41,4 +41,3 @@
 {1101}{}{Je m'occupe des rations d'eau le matin. Tu ne devrais pas en avoir besoin puisque tu t'en vas.}
 {1102}{}{Il ne nous reste que très peu de réserves. Tu peux en prendre quelques-unes si tu en as besoin pour ta mission, mais pas trop.}
 {1103}{}{Je m'occupe des rations d'eau le matin. Tu ne devrais pas en avoir besoin puisque tu t'en vas.}
-

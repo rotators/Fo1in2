@@ -154,4 +154,3 @@
 	{401}{}{Ich hab' meine Meinung geändert. Ihr müsst mit der Sache selbst klar kommen.}
 	{402}{}{Das ist es nicht wert. Wir sollten die Regulatoren jetzt angreifen.}
 	{403}{}{Noch nicht, ich bin gerade auf dem Weg.}
-   

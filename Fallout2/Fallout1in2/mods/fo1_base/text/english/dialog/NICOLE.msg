@@ -282,4 +282,3 @@
 {1116}{Nic_96}{The Blades fight the Rippers down south. They're the most agreeable of the two gangs, though that's not saying much. We've converted a few of them.}
 {1117}{Nic_99}{That's the trading city to the north. We're trying to set up a table there.}
 {1118}{Nic_100}{We're not sure about them. They sell guns, we sell peace. But their motives...}
-

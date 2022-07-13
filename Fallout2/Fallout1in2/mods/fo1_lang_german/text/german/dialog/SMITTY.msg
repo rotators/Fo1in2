@@ -53,5 +53,3 @@
 
 {1500}{}{Wenn du mich brauchst, ich bin hier!}
     {1510}{}{Kannst du mein Motorrad verbessern?}
-
-

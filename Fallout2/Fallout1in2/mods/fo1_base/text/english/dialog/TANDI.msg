@@ -187,6 +187,3 @@
 {3500}{}{I think I broke a limb. Better take a look.}
 {3501}{}{I feel feverish. I think I am radiated.}
 {3502}{}{I feel very sick. I think I am poisoned.}
-
-
-

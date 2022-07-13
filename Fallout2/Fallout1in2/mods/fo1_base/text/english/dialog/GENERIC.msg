@@ -542,4 +542,3 @@
 
 # default join me again message
 {10100}{}{Let's go.}
-

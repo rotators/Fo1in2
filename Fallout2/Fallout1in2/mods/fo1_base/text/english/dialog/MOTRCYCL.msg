@@ -15,5 +15,3 @@
 {513}{}{% power.}
 
 {520}{}{The fuel cell regulator is missing.}
-
-

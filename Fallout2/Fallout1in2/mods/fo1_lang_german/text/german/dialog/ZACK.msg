@@ -26,11 +26,11 @@
 # Fo1in2
    {998}{}{Zack, deine Ausrüstung ist von höchster Qualität, aber ich suche nach etwas *sehr* speziellem.}
    {999}{}{Können wir erneut über die *spezielle* Ausrüstung reden?}
-   
+
 {1000}{}{Sorry, aber das ist alles was ich zur Zeit habe.}
 {1001}{}{Hm, könnte versuchen wieder an besere Materialen zu kommen, jetzt wo die Deathclaw uns nich mehr behelligt. Würde jedoch einige Zeit dauern.}
    {1010}{}{Irgendwas wo du Hilfe bei brauchst?}
-   
+
 {1100}{}{Neue Scavs zu bezahlen ist teuer. Wenn du den Prozess beschleunigen willst... eine Investition von 10.000 Deckel würde das sicherlich beschleunigen.}
    {1110}{}{So viel Geld habe ich nicht...}
    {1120}{}{Dann hoffe ich mal, dass es sich auch lohnt, Zack! [Zahle 10.000 Deckel].}
@@ -89,4 +89,3 @@
 
 {2600}{}{Warte hier.}
 {2601}{}{Hier hast du. Noch irgendetwas?}
-

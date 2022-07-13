@@ -26,6 +26,3 @@
 {203}{}{ finds a trap on the strongbox and successfully disarms it.}
 {204}{}{ finds a trap on the strongbox.}
 {205}{}{ successfully unlocked the strongbox.}
-
-
-

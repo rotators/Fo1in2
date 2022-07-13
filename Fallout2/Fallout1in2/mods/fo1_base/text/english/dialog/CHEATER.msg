@@ -189,4 +189,3 @@
 {1011}{}{Vault 13 Water Timer.}
 {1020}{}{Add 100 days.}
 {1030}{}{Remove 100 days.}
-

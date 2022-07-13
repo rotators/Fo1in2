@@ -130,4 +130,3 @@
 
 {1100}{Mast200}{I am the Master. I don't have to answer to you.}
 {1101}{Mast201}{I am not here to answer your questions. You are here to answer mine.}
-

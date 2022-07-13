@@ -107,10 +107,3 @@
 
 {2200}{}{Mir wäre lieber, du würdest erst Tandi befreien, Fremder. Aber wenn du uns mit den Radscorpions helfen willst ...}
 {2210}{}{Ich bin bald wieder zurück. Tschüss!}
-
-
-
-
-
-
-

@@ -41,4 +41,3 @@
 {1101}{}{I hand out water rations in the morning. You shouldn't need them, now that you are going to be Outside.}
 {1102}{}{We only have a few supplies left. You can take some if you need them for your mission, but please don't take too much.}
 {1103}{}{I hand out water rations in the morning. You shouldn't need them, now that you are going to be Outside.}
-

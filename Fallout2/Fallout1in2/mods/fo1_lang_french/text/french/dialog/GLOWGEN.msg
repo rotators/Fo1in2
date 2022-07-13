@@ -8,4 +8,3 @@
 
 ###Reaching LVL5 exp msg, by Sduibek, for Fallout Fixt
 {107}{}{Tu entends un bourdonnement mécanique constant, cela te rappelle quelque chose mais tu ne sais plus quoi...}
-

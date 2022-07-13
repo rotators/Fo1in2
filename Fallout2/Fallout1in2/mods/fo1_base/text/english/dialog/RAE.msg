@@ -71,7 +71,7 @@
 {166}{}{AAAUGH!!! (Grabs his head in pain and confusion) I.. can't...}
 {167}{}{That's right, your friend the Master stripped you of everything you had in this world, including your humanity.}
 {168}{}{You know that it's true... that's why you're so confused. You're fighting the mutation. Help me avenge you by destroying the Master!}
-{169}{}{Sure you can. C'mon, let's kill the Master, it will be fun.} 
+{169}{}{Sure you can. C'mon, let's kill the Master, it will be fun.}
 {170}{}{I'd better leave.}
 {171}{}{I'm sorry you're in such pain, but it's the Master's fault.}
 {172}{}{I will pull his eye out!! I'll tear his slimy little head from its cables!!!! You, get out of here... I'll take care of the Master.}
@@ -84,4 +84,3 @@
 {200}{}{ for convincnig Rae to destroy the Master.}
 {201}{}{ for convincing Rae to fight with you against the Master.}
 {202}{}{It is done. Leave now.}
-

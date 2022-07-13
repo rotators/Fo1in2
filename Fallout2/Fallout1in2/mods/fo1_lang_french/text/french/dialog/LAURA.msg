@@ -235,4 +235,3 @@
 {1111}{laura74}{Oh, des gens horribles. Je veux pas en parler !}
 {1112}{laura81}{Quoi ?}
 {1113}{laura80}{Ténébreux ? Je vois pas de quoi tu parles.}
-

@@ -33,5 +33,3 @@
 {513}{}{%.}
 
 {520}{}{Le controleur de carburant est manquant.}
-
-

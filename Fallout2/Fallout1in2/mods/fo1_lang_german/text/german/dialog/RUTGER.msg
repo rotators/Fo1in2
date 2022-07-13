@@ -213,4 +213,3 @@
 {313}{}{Großartig! Geh zu Butch und erzähle ihm, was du herausgefunden hast. Er wird mich dann informieren, wenn du dir deine Belohnung verdient hast.}
 {314}{}{Grdddle Snpp!!!}
 {315}{}{Bedaure, aber wir befassen uns nicht mit den... hm... geistig Minderbemittelten.}
-

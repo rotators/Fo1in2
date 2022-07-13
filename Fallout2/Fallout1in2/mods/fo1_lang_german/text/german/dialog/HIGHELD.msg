@@ -69,4 +69,3 @@
 
 # Fo1in2
 {168}{}{ experience for convincing the Brotherhood of Steel to help you take out the Boneyard Cathedral.}
-

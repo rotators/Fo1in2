@@ -73,5 +73,3 @@
 #
 {1000}{}{Sorry, the preferences menu is not}  # 1
 {1001}{}{available in the demo version.}      # 2
-
-

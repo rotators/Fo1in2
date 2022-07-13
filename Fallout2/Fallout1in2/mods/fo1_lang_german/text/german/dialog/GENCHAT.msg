@@ -150,4 +150,3 @@
 {700}{}{ Erfahrungspunkte!}
 {701}{}{ Erfahrungspunkte für die Zerstörung der Militärbasis.}
 {702}{}{ Erfahrungspunkte für die vernichtung des Meisters.}
-

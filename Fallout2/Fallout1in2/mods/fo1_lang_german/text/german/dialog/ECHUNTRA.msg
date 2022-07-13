@@ -55,4 +55,3 @@
 {1900}{}{... Nein, nicht so. Siehst du diesen Schnitt hier? Du hast die Haut ruiniert und sie ist jetzt wertlos.}
 {1901}{}{Keine Sorge, diese Haut war von vornherein nicht viel wert. Aber du must mehr den Weg des Naturburschen üben. Im Moment glaube ich nicht, dass ich dir helfen kann.}
     {1910}{}{Oh, okay. Ich denke, ich werde dann noch etwas üben gehen. Tschüss.}
-

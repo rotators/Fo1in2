@@ -216,4 +216,3 @@
 {1113}{Ara_57}{Hinterlistig sind die. Hüte dich vor ihrem Schwanz! Ihr Gift kann tödlich sein, wenn man nicht aufpasst.}
 {1114}{Ara_62}{Du findest ihn vor der Stadt. Seth wird wahrscheinlich dort sein.}
 {1115}{Ara_52}{Hmm, ein feiner Mann - Seth. Captain unserer Wachen. Wahrscheinlich ist er im Wachhaus.}
-

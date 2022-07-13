@@ -128,5 +128,3 @@
 {1104}{}{Set's so-called palace.}
 {1105}{}{City of the Dead, where we would like to live peacefully, if Set or the Mutants will let us.}
 {1106}{}{We get our water from the place under the Watershed. It might have something to do with that.}
-
-

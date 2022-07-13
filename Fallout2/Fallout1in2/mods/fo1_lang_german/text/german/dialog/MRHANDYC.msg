@@ -114,5 +114,3 @@
 
 # Fo1in2
 {3500}{}{[Klick] Wartungsstatus: Beschädigt. Reparatur notwendig.}
-
-

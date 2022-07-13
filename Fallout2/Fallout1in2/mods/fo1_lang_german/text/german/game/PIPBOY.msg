@@ -1311,5 +1311,3 @@
 {18028}{}{**END-PAR**}
 {18029}{}{Ende der Übertragung.}
 {18030}{}{**END-DISK**}
-
-

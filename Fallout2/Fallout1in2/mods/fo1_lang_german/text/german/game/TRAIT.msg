@@ -39,4 +39,3 @@
 {213}{}{Als Nachtmensch bist du dann in deinem Element, wenn die Sonne untergegangen ist. Deine Intelligenz und Wahrnehmung sind nachts besonders gut, dafür aber tagsüber beeinträchtigt.}
 {214}{}{Du hast viel Zeit in die Ausbildung deiner Fähigkeiten gesteckt, so dass du mit höheren Anfangswerten beginnst. Dafür erhältst du weniger zusätzliche Fähigkeiten und nur alle vier Level einen Bonus.}
 {215}{}{Du verfügst über mehr angeborene Fähigkeiten als andere. Daher sind alle deine Anfangswerte um einen Punkt höher, aber du verlierst am Anfang bei allen Fähigkeiten 10 % und erhältst pro Level 5 Fähigkeitspunkte weniger.}
-

@@ -5,7 +5,7 @@
 {102}{}{You see a snake oil merchant.}
 
 # dumb dude
-{103}{}{You see a great medicine man.} 
+{103}{}{You see a great medicine man.}
 
 # map enter
 {110}{}{You see a lone traveler with a colorfully painted wagon in the distance.}
@@ -35,8 +35,7 @@ and I guarante you won't be able to get this any cheaper elsewhere around!}
 	{1211}{}{Uhm...}
 	{1220}{}{Alright, I get it. Goodbye.}
 	{1221}{}{Bye!}
-	
+
 {1300}{}{Wasting your time?! Dear good sir! Taking this medicine will give you plenty more time!}
 {1301}{}{Wasting your time?! Dear good madam! Taking this medicine will give you plenty more time!}
 	{1310}{}{[MORE]}
-	

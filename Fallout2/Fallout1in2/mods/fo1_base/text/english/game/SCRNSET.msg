@@ -106,5 +106,3 @@
 {523}{}{Click below to cycle the in-game interface Side Bar options.}
 {524}{}{Apply any changes and Exit.}
 {525}{}{Exit without saving.}
-
-

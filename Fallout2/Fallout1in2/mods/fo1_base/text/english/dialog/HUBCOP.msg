@@ -62,4 +62,3 @@
 
 {126}{}{This town would be safer with Decker out of the picture.}
 # == "This town would be safer with Decker dead."
-

@@ -144,4 +144,3 @@
 {228}{}{ victoires, }
 {229}{}{ nuls, }
 {230}{}{ défaites. Veuillez choisir votre couleur.}
-

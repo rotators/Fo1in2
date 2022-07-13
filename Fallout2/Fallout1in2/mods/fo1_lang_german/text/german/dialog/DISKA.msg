@@ -6,4 +6,3 @@
 #
 {103}{}{Du bemerkst ein verblichenes Etikett auf der Disk, worauf "Alpha Experiment Log" steht.}
 {104}{}{Du siehst: Alpha Experiment-Disk.}
-

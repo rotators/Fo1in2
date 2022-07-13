@@ -97,10 +97,10 @@
 {181}{}{Les membres de la Confrérie t'ont surpris en train de voler.}
 
 # Mysterious Stranger messages
-{182}{}{}  
-{183}{}{}  
-{184}{}{}  
-{185}{}{}  
+{182}{}{}
+{183}{}{}
+{184}{}{}
+{185}{}{}
 
 {186}{}{Le haut-parleur se met à hurler : "Alerte ! Intrus détecté." }
 {187}{}{La substance gluante a ralenti la transmission de ta frappe.}
@@ -275,10 +275,9 @@
 
 {800}{}{Tu crois que ces rats vont te répondre ?}
 
-    
+
 # Used to replace "Days Left: #" Post-It note in PIP-Boy 2000, since that cannot be available in Fallout 2 engine.
 # These messages will appear in the console window (bottom-left of game screen) at regular intervals.
 {900}{}{Le PIP-Boy 2000 affiche "EAU DE L'ABRI 13: }
 {901}{}{}
 {902}{}{ JOURS RESTANTS."}
-

@@ -55,4 +55,3 @@
 #
 # space is intentional
 {303}{}{ Blöder Köter!}
-

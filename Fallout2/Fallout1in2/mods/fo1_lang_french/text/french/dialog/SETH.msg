@@ -107,6 +107,3 @@
 
 {2200}{}{J'aurais préféré que tu sauve Tandi en premier, étranger, mais si tu veux nous aider avec les radscorpions ...}
 {2210}{}{Je reviendrais rapidement. Au revoir.}
-
-
-

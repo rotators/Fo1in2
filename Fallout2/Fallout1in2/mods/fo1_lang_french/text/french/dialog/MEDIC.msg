@@ -97,5 +97,3 @@
 {3010}{}{Je suis ravi que ce soit réglé. Il y avait autre chose...}
 {3020}{}{J'espère qu'il ne repoussera pas cette fois. Et je le pense.}
 {3030}{}{Merci c'est parfait. Je reviendrais.}
-
-

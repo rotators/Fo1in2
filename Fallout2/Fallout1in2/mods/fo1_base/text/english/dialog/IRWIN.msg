@@ -56,4 +56,3 @@
 {2508}{}{Getting my farm running again will take a while.}
 {2509}{}{Good to see you.}
 {2510}{}{How's it going?}
-

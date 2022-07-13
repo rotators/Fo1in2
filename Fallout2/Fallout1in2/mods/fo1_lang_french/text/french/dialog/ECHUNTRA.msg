@@ -55,4 +55,3 @@
 {1900}{}{... Non, non pas comme ça. Tu vois cette coupure ici ? Tu as ruiné la peau et ça la rend inutile.}
 {1901}{}{Ne t'inquiète pas, cette peau ne valait pas grand chose. Mais tu devrais t'entrainer à la vie en plein air. Pour le moment, je ne crois pas que je puisse vous aider.}
 	{1910}{}{Euh, okay. Je vais m'entrainer encore un peu alors. Au revoir.}
-

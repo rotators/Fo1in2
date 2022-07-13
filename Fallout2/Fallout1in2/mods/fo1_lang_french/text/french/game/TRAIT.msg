@@ -50,4 +50,3 @@
 {213}{}{En tant que véritable noctambule, tous tes sens se mettent en éveil à la nuit tombée.   +1 INT et +1 PE entre 18:01 et 6:00, mais -1 en INT et -1 en PE entre 6:01 et 18:00.}
 {214}{}{Tu as moins de potentiel que la moyenne mais tu as beaucoup étudié.  +10% à toutes les compétences et +5 points de compétence par niveau, mais tu gagneras un nouvelle aptitude tous les 4 niveaux au lieu de 3.}
 {215}{}{Tu as plus de potentiel que la moyenne mais tu as délaissé les études.  Tes statistiques de base sont toutes augmentées d'un point, mais tu perds 10% sur tes compétences et tu recevras 5 points de moins par niveau.}
-

@@ -95,4 +95,3 @@
 {194}{}{Et bien toi non plus, dans un instant.}
 {195}{}{C'est bien de là que je te connais. C'est l'heure de la vengeance !}
 {196}{}{C'est encore toi. Je pensais que tu avais compris la dernière fois. On dirait que tu comprends pas.}
-

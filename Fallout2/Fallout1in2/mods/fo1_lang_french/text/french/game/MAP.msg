@@ -607,13 +607,13 @@
 {1511}{}{Cathédrale}
 {1512}{}{unused} # Crater
 {1513}{}{unused} # Ruins
-{1514}{}{unused} 
-{1515}{}{unused} 
-{1516}{}{unused} 
-{1517}{}{unused} 
-{1518}{}{unused} 
-{1519}{}{unused} 
-{1520}{}{unused} 
+{1514}{}{unused}
+{1515}{}{unused}
+{1516}{}{unused}
+{1517}{}{unused}
+{1518}{}{unused}
+{1519}{}{unused}
+{1520}{}{unused}
 {1521}{}{Moto en Panne}
 {1522}{}{unused}
 {1523}{}{unused}
@@ -623,20 +623,20 @@
 {1527}{}{ }                   # Holds all mountain encounter maps
 {1528}{}{ }                   # Holds all city encounter maps
 {1529}{}{ }                   # Holds all coast encounter maps
-{1530}{}{unused} 
-{1531}{}{unused} 
-{1532}{}{unused} 
-{1533}{}{unused} 
-{1534}{}{unused} 
-{1535}{}{unused} 
-{1536}{}{unused} 
-{1537}{}{unused} 
-{1538}{}{unused} 
-{1539}{}{unused} 
-{1540}{}{unused} 
-{1541}{}{unused} 
-{1542}{}{unused} 
-{1543}{}{unused} 
+{1530}{}{unused}
+{1531}{}{unused}
+{1532}{}{unused}
+{1533}{}{unused}
+{1534}{}{unused}
+{1535}{}{unused}
+{1536}{}{unused}
+{1537}{}{unused}
+{1538}{}{unused}
+{1539}{}{unused}
+{1540}{}{unused}
+{1541}{}{unused}
+{1542}{}{unused}
+{1543}{}{unused}
 {1544}{}{Caravane}		            # Holds all caravan encounter maps
 {1545}{}{unused}
 {1546}{}{unused}

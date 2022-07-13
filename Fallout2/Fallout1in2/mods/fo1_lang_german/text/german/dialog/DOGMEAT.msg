@@ -11,7 +11,7 @@
 {120}{}{Wuff?}
 
 {200}{}{Ich glaube wir sollten über unseren Abstand reden.}
-{201}{}{Eigentlich ist unser Abstand so gut wie er ist.} 
+{201}{}{Eigentlich ist unser Abstand so gut wie er ist.}
 
 # Too many party members
 {2500}{}{Grrrrr.}
@@ -22,4 +22,3 @@
 {3500}{}{*Wimmer*}
 {3501}{}{Awooooooooooo! *wimmer*}
 {3502}{}{}
-

@@ -110,7 +110,7 @@
 {505}{}{Dipped in the Vats}
 {506}{}{Vault 13 Invasion}
 {507}{}{ }
-{508}{}{ } 
+{508}{}{ }
 {509}{}{ }
 {510}{}{Leaving Vault} 					# Male
 {511}{}{Leaving Vault} 					# Female
@@ -1310,4 +1310,3 @@
 {18028}{}{**END-PAR**}
 {18029}{}{End transmission.}
 {18030}{}{**END-DISK**}
-

@@ -188,5 +188,3 @@
 {5100}{}{Désolé, cette table est fermée.}
 {5101}{}{Je suis désolé monsieur, mais cette table est fermée.}
 {5102}{}{Je suis désolé madame, mais cette table est fermée.}
-
-

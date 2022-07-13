@@ -169,4 +169,3 @@
 #TN# Leaving/Reentering the Building/Map doesn't seem to work anymore (Fixt only thing?) So I've rewritten it some more --fed
 {312}{}{Noch einen Kredit? Es gibt nur einen auf einmal, und pro Tag! Wie w‰rst, wenn du erstmal raus gehst und etwas Spaﬂ hast, zum Beispiel im Maltese Falcon? Komm sp‰ter wieder.}
 {313}{}{Jetzt schon? Stehst du immer noch hier 'rum? Ich bin besch‰ftigt, komm morgen wieder!}
-

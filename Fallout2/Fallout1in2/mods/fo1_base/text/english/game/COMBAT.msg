@@ -1022,4 +1022,3 @@
 {7104}{}{, causing an overload of cataclysmic proportions in the Master's systems}
 {7105}{}{. The attack against the Master seems to do less damage than it should have}
 {7106}{}{. The blow gets by the bio-organic defenses, actually blinding the Master}
-

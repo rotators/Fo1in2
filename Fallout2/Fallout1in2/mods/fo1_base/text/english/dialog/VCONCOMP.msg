@@ -120,5 +120,3 @@
 # Fo1in2
 {400}{}{ manages to get an interface screen out of the Vats Control computer.}
 {401}{}{ tries to use the computer, but the system is too complex to understand easily.}
-
-

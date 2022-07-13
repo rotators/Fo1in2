@@ -86,4 +86,3 @@
 	{4010}{}{Das ist alles, Danke.}
 
 {4100}{}{Oh, okay. Komm zu mir zurück wenn du die Deckel hast und dann reden wir erneut darüber.}
-

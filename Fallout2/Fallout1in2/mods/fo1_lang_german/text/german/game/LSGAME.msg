@@ -54,4 +54,3 @@
 #
 {200}{}{Speichern oder Laden ist in der} # 1
 {201}{}{Demoversion leider nicht möglich.}         # 2
-

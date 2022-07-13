@@ -189,4 +189,3 @@
 {1119}{Cab_62}{Sie tauschen bei uns Nahrung und so ein. Wir geben ihnen Waffen. Sie kommen nicht mehr oft vorbei. Warum weiß ich nicht.}
 {1120}{Cab_66}{Äh ... darüber weiß ich nichts.}
 {1121}{Cab_61}{Sprich mit Vree, sie wird dir davon erzählen.}
-

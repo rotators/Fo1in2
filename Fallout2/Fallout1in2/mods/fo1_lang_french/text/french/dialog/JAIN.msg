@@ -119,4 +119,3 @@
 {1111}{JAIN302}{La volonté du Saint apporte la renaissance sur cette planète. Nous sommes Ses Enfants et nous exécutons Son dessein.}
 {1112}{JAIN33}{Tu sembles délirer. Tu devrais voir un conseiller pour examiner tes problèmes.}
 {1113}{JAIN27}{La bénédiction de la Flamme Sacrée soit sur toi, mon Enfant.}
-

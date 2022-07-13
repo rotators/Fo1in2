@@ -120,4 +120,3 @@
 
 {2600}{}{Wait here, it'll take just a bit.}
 {2601}{}{There you go. Anything else?}
-

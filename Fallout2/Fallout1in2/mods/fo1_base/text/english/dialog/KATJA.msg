@@ -283,6 +283,3 @@
 
 # Mariposa prisoner
 {3503}{}{Let's get out of here.}
-
-
-

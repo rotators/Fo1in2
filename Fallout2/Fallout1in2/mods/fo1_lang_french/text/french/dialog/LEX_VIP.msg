@@ -15,4 +15,3 @@
 {112}{}{If you don't trust the words, you should trust our guns ! A wimp like you is not a match for the whole gang !}
 {113}{}{Then again, I'd rather kill you. To be sure that nobody'll chatter too much around. Farewell.}
 {114}{}{Nice guy. A wise decision that. You are free to go now.}
-

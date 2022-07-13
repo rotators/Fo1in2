@@ -255,6 +255,3 @@
 {402}{}{Bounty hunters!}
 {403}{}{You see hunters in the distance.}
 {404}{}{A tribal war party looking for revenge!}
-
-
-

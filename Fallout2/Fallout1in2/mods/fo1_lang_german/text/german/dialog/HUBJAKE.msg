@@ -109,7 +109,7 @@
 	{2320}{}{Erweitert das Magazin des AK-112-Sturmgewehrs.}
 	{2330}{}{Baut das Nachtsicht-Zielfernrohr in die AK-198 ein.}
 	{2340}{}{Erweitere das Magazin des Winchester City-Killer Kampfgewehrs.}
-   
+
 # Melee
 {2400}{}{Du willst, dass wir diesen Elektroschocker frisiere? Ich können ihn dir überladen, für }
 {2410}{}{Klar.}
@@ -120,4 +120,3 @@
 
 {2600}{}{Warte hier.}
 {2601}{}{Hier hast du. Noch irgendetwas?}
-

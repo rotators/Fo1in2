@@ -68,4 +68,3 @@
 {1117}{}{This place is the Angel's Boneyard, the remnants of the old city of Los Angeles.}
 {1120}{}{Junktown is a small city just north of the Hub.}
 {1121}{}{She's the leader of the Followers.}
-

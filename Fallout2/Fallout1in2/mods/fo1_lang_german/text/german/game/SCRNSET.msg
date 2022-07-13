@@ -106,5 +106,3 @@
 {523}{}{Klicken um die Seitengrafik der Benutzeroberfläche im Spiel zu wechseln.}
 {524}{}{Änderungen übernehmen und speichern.}
 {525}{}{Beenden ohne zu speichern.}
-
-

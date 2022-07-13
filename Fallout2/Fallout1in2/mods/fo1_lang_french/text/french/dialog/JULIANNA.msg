@@ -25,4 +25,3 @@
 {124}{}{Je ne peux vivre sans lui !}
 {125}{}{Julianna sort un couteau et l'enfonce dans sa poitrine !}
 {126}{}{ points d'expérience pour avoir aider les amoureux séparés avec la livraison du médaillon de Romero à Julianna.}
-

@@ -4,54 +4,54 @@
 	{103}{}{Excuse-moi mais je n'ai pas le temps.}
 	{104}{}{Avec plaisir.}
 	{105}{}{Que-Quoi ?}
-	
+
 {106}{}{Formidable. J'espère que tu ne vois pas d'inconvénient à déguster une boisson bien arrosée. Ils ne savent pas faire la bière ici.}
 	{107}{}{Eh bien, quelle est ton histoire ?}
 	{108}{}{Ouais, un verre d'eau. Qu'importe.}
-	
+
 {109}{}{Je pourrais te demander la même chose. Je pense que je devrais me présenter. Je m'appelle Tycho. Je suis originaire de l'Est, d'un endroit qui s'appelait autrefois le Nevada.}
 	{110}{}{Ton voyage pour arriver jusqu'ici a du être long...}
 	{111}{}{Comment as-tu fait pour survivre à tous les dangers ?}
-	
+
 {112}{}{Ouais, en effet. J'avais décidé de prendre du bon temps. Cet endroit peut être sympa... enfin il le sera quand quelqu'un l'aura débarrassé de ses ordures.}
 	{113}{}{Pourquoi ne t'en charges-tu pas ?}
 	{114}{}{Oui, j'ai remarqué. Que sais-tu sur ces connards ?}
-	
+
 {115}{}{Je suis bien entraîné et bien armé. Mon grand-père était guide et il a appris à mon père tout ce qu'il savait. Mon père me l'a ensuite appris à son tour. Alors j'en connais assez pour ne pas boire d'eau qui brille et pour ne pas trop parler.}
 	{116}{}{Intéressant. Merci pour le verre.}
 	{117}{}{Vraiment ? Difficile de survivre de nos jours. Tu dois connaître beaucoup de choses.}
-	
+
 {118}{}{Après tout, je préférerais ne pas croiser Killian. Il nettoiera cette ville lorsqu'il y viendra. C'est un homme bon, et je pèse mes mots. Mais méfie-toi de ce Gizmo. Il me fait penser à un autre sale type dont mon père m'avait parlé de retour de Las Vegas.}
 	{119}{}{Merci pour le conseil et pour le verre.}
-	
+
 {120}{}{Il y a deux types de vermines ici. Les Skulz sont une bande qui agissent pour le compte de Marcelles. Ce sont des andouilles de seconde zone. Mais les autres obéissent à un sale type dont tu devines sans doute le nom. Il tient le casino. Ces types sont organisés et dangereux.}
 	{121}{}{Je vois. Merci pour le renseignement.}
-	
+
 {122}{}{Ouais, eh bien, ma famille m'a appris tout ce qu'il fallait savoir pour survivre. Comme de ne pas boire de l'eau claire, exempte d'insectes et de mousse. Seules les eaux empoisonnées ou radioactives peuvent être si claires dans le désert ! Tout comme un tas d'autres petites choses auxquelles il faut faire gaffe.}
 	{123}{}{Comme quoi ?}
-	
+
 {124}{}{Eh bien, si tu as un peu de temps, je pourrais te donner quelques tuyaux.}
 	{125}{}{Certainement, ce serait formidable.}
 	{126}{}{Excuse-moi mais je n'ai pas vraiment le temps.}
-	
+
 {127}{}{Eh, pas si vite. Nous n'avons pas terminé les présentations, tu t'en souviens ? C'est quoi ton nom ?}
 	{128}{}{Je m'appelle }
 	{129}{}{.}
 	{130}{}{Cela ne te regarde pas, imbécile.}
-	
+
 {131}{}{Cette rencontre fut un plaisir ! Fais attention à toi.}
 {132}{}{Hé, hé, tu peux ranger ton impolitesse. Si tu continues comme ça, je te conseille de foutre le camp !}
 	{133}{}{Frappe-moi.}
 	{134}{}{Qu'importe. Au revoir.}
-	
+
 {135}{}{Que veux-tu ?}
 	{136}{}{Excuse-moi d'abuser de ton temps. Va te faire voir.}
 	{137}{}{J'ai besoin de renseignements sur les bandits dans le coin.}
 	{138}{}{J'ai besoin de renseignements sur la ville.}
-	
+
 {139}{}{Rebonjour. Que puis-je faire pour toi ?}
 	{140}{}{Killian veut que je nettoie cette ville et j'aimerais que tu m'aides.}
-	
+
 {141}{}{Eh bien, voici le Skum Pitt, la retraite des voyous. A l'Ouest d'ici se trouve le grand casino de Gizmo. On dit que les jeux y sont truqués. Au Sud se trouve la Crash House, tenue par Marcelles, où tu peux dormir pur pas trop cher. Ensuite, il y a chez Killian. Killian tient un magasin et il fait également régner la loi dans cette ville. C'est un homme bien. Encore au Sud vit Doc Morbide, un gars assez marrant, si tu vois ce que je veux dire.}
 {142}{}{J'espère que ces petites indications te seront utiles.}
 {143}{}{}

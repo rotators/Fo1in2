@@ -11,7 +11,7 @@
 {120}{}{Woof?}
 
 {200}{}{I think we have to talk about our distance.}
-{201}{}{Actually you're at a good distance for now.} 
+{201}{}{Actually you're at a good distance for now.}
 
 # Too many party members
 {2500}{}{Grrrrr.}
@@ -22,4 +22,3 @@
 {3500}{}{*Wimper*}
 {3501}{}{Awooooooooooo! *wimper*}
 {3502}{}{}
-

@@ -282,5 +282,3 @@
 
 # Mariposa prisoner
 {3503}{}{Partons d'ici.}
-
-

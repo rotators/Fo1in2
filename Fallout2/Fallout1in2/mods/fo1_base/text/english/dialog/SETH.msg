@@ -107,11 +107,3 @@
 
 {2200}{}{I wish you'd save Tandi first, stranger, but, if you're willing to help us with the radscorpions ...}
 {2210}{}{I'll be back soon. Goodbye.}
-
-
-
-
-
-
-
-

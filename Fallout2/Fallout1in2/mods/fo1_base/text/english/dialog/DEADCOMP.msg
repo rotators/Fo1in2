@@ -64,4 +64,3 @@
 
 #traitor/dipped
 {503}{}{503 You are dipped in FEV and join the Master's Unity, revealing the location of Vault 13. You are rewarded with leading the assault against your Vault, killing the Overseer with your bare fists. Thank you for playing Fallout.}
-

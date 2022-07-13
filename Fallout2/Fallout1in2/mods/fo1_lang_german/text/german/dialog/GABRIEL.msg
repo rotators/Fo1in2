@@ -102,4 +102,3 @@
 
 # Fo1in2
 {300}{}{Großartig. Falls du noch was brauchst, Zack da drüben schließt gerne noch einen Deal mit dir ab.}
-

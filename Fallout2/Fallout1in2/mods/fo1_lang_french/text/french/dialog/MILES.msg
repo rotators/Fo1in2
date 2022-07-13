@@ -85,7 +85,3 @@
 	{4010}{}{Non, c'est tout. Merci.}
 
 {4100}{}{D'accord. Reviens me voir quand tu auras les caps.}
-
-
-
-

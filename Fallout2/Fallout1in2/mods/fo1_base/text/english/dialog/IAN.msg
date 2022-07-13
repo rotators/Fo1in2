@@ -301,5 +301,3 @@
 {3500}{}{Hey bud, I think I might have a broken limb.}
 {3501}{}{I feel like I am burning up, bud! I think I might be radiated.}
 {3502}{}{Think I might be poisoned.}
-
-

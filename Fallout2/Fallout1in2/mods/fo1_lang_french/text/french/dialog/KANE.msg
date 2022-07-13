@@ -363,4 +363,3 @@
 {464}{}{Je me fiche de tes excuses. Tu as mis Decker en danger et c'est inacceptable. Tu fais désormais partie de nos ennemis. Je ne veux plus te voir ici.}
 
 {465}{}{Tu ne peux pas franchir cette porte si Kane est ici.}
-

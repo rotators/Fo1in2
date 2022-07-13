@@ -62,4 +62,3 @@
 
 {126}{}{Débarrassée de Decker, cette ville serait plus sûre.}
 # == "This town would be safer with Decker dead."
-

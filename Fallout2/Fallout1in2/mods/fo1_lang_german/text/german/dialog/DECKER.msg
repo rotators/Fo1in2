@@ -229,4 +229,3 @@
 {1136}{DECK_65}{Old Town erstreckt sich über die Ostseite. Die Skags leben dort.}
 {1137}{DECK_67}{Eine lästige Organisation. Ich muss denen mal zeigen, wie man mit Macht umgeht.}
 {1138}{DECK_72}{Zur Tür raus und dann nach Norden. Ganz einfach.}
-

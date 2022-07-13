@@ -26,4 +26,3 @@
 {125}{}{Julianna draws a knife and plunges it into herself!}
 
 {126}{}{ experience for assisting the star-crossed lovers with the delivery of Romero's locket to Julianna.}
-

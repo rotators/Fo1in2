@@ -11,7 +11,7 @@
 {120}{}{Wouf ?}
 
 {200}{}{Je pense que nous devrions discuter de la distance.}
-{201}{}{En fait je pense que tu es à bonne distance pour le moment.} 
+{201}{}{En fait je pense que tu es à bonne distance pour le moment.}
 
 # Too many party members
 {2500}{}{Grrrrr.}
@@ -22,4 +22,3 @@
 {3500}{}{*Chouine*}
 {3501}{}{Aouuuuuuu ! *chouine*}
 {3502}{}{}
-

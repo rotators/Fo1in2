@@ -85,9 +85,3 @@
 	{4010}{}{That's all. Thanks.}
 
 {4100}{}{I see. Well, get back to me once you have the caps and we'll talk again.}
-
-
-
-
-
-

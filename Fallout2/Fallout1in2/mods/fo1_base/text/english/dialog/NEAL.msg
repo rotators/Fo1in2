@@ -61,6 +61,3 @@
 {210}{}{Nuka-Cola.}
 {211}{}{Beer.}
 {212}{}{The hard stuff.}
-
-
-

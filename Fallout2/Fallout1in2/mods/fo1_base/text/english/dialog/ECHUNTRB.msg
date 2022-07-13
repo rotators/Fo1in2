@@ -8,4 +8,3 @@
 {200}{}{FATHER!}
 
 {1000}{}{He doesn't talk to you.}
-

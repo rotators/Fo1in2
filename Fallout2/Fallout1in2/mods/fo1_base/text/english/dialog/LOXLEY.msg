@@ -259,4 +259,3 @@
 {1132}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
 {1133}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
 {1134}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
-

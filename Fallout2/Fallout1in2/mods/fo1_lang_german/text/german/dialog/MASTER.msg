@@ -126,4 +126,3 @@
 
 {1100}{Mast200}{Ich bin der Meister. Ich muss dir nicht antworten.}
 {1101}{Mast201}{Es ist nicht an dir, Fragen zu stellen. Du sollst mir nur antworten!}
-

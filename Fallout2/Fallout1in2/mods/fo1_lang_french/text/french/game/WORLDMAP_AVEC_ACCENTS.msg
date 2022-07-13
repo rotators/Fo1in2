@@ -368,7 +368,7 @@
 {3513}{}{des radscorpions se cachant parmi des plantes à spores.}
 {3514}{}{des plantes à spores.}
 {3515}{}{une famille de radscorpions.}
-{3516}{}{un groupe de rataupes.} 
+{3516}{}{un groupe de rataupes.}
 {3517}{}{un groupe de saints repoussant une expédition guerrière.}
 {3518}{}{une bande de nomades.}
 {3519}{}{un homme gardant un pont.}
@@ -414,7 +414,7 @@
 {3585}{}{une navette écrasée.}
 {3586}{}{un portail énigmatique.}
 {3587}{}{les Chevaliers de la Table Ronde.}
-{3588}{}{un homme en Fer-blanc.} 
+{3588}{}{un homme en Fer-blanc.}
 {3589}{}{les villageois mal lavés chassant un spammeur.}
 
 # Encounter Table 12
@@ -471,14 +471,14 @@
 {3665}{}{des bandits tendant une embuscade à des trappeurs.}
 {3666}{}{une famille de radscorpions attaquant un groupe de marchands.}
 {3667}{}{des trappeurs essayant d'attraper des radscorpions.}
-{3668}{}{un groupe de radscorpions.} 
+{3668}{}{un groupe de radscorpions.}
 {3669}{}{une famille de rataupes.}
 {3670}{}{des bandits.}
 {3671}{}{des trappeurs essayant d'attraper des geckos dorés.}
 {3672}{}{des radscorpions affrontant des geckos dorés.}
 {3673}{}{des radscorpions attaquant des rataupes et des rats-cochons.}
 {3674}{}{des trappeurs et des marchands repoussant des bandits.}
-{3675}{}{des geckos dorés.} 
+{3675}{}{des geckos dorés.}
 {3676}{}{des trappeurs affrontant des rataupes et des rats-cochons.}
 {3677}{}{des marchands repoussant des rataupes et des rats-cochons.}
 {3678}{}{les restes d'une baleine.}
@@ -675,7 +675,7 @@
 {4007}{}{des chasseurs de primes.}
 {4008}{}{des chasseurs de primes.}
 {4009}{}{des chasseurs de primes.}
-{4010}{}{des chasseurs de primes.} 
+{4010}{}{des chasseurs de primes.}
 {4011}{}{des chasseurs de primes.}
 {4012}{}{une bande de voyous menée par un des frères Morton.}
 {4013}{}{une nuée de mantes infestant des plantes à spores.}
@@ -726,7 +726,7 @@
 
 
 # Encounter Table 22
-{4100}{}{des geckos dorés.} 
+{4100}{}{des geckos dorés.}
 {4101}{}{une horde de mantes.}
 {4102}{}{des radscorpions.}
 {4103}{}{des Brahmines sauvages.}
@@ -793,7 +793,7 @@
 {4208}{}{des chasseurs de primes.}
 {4209}{}{des chasseurs de primes.}
 {4210}{}{des chasseurs de primes.}
-{4211}{}{des chasseurs de primes.} 
+{4211}{}{des chasseurs de primes.}
 {4212}{}{une bande de voyous menée par un des frères Morton.}
 {4213}{}{des rats-cochons.}
 {4214}{}{des plantes à spores.}

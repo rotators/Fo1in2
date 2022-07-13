@@ -81,5 +81,3 @@
 #
 {1000}{}{Das Optionenmen?ist in der}  # 1
 {1001}{}{Demoversion leider nicht verfügbar.}      # 2
-
-

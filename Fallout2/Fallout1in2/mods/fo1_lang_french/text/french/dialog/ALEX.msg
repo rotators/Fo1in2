@@ -15,5 +15,3 @@
 {112}{}{Essaie de revenir dans la matinée.}
 {113}{}{Hé oui. Les portes sont closes !}
 {114}{}{Gngngn.}
-
-

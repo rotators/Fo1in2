@@ -8,4 +8,3 @@
 {200}{}{VATER!}
 
 {1000}{}{Er spricht nicht mit dir.}
-

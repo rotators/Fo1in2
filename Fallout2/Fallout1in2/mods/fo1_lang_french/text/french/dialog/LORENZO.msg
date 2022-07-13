@@ -167,5 +167,3 @@
 	{311}{}{J'aimerai bien rembourser mon emprunt.}
 {312}{}{Un autre emprunt ? Est-ce que tu as quitté le building au moins ? Et si tu allait faire quelque chose d'autre d'abord ? Peut-être aller voir au Faucon Maltais ? Reviens me voir plus tard.}
 {313}{}{Déjà ? As-tu au mois quitté le building ? Je suis occupé, reviens me voir à un autre moment !}
-
-

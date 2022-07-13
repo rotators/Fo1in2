@@ -29,4 +29,3 @@
 {200}{}{ gets shocked by the security system for }
 {201}{}{ successfully unlocks the door.}
 {202}{}{ failed to pick the lock on the door.}
-

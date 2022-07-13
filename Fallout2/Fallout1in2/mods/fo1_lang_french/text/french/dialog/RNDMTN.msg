@@ -111,4 +111,3 @@
 # Fallout Fixt (Sduibek)
 #
 {137}{}{Tu vois le camp d'une bande de pillards. On dirait que tu es arrivé au mauvais endroit, au mauvais moment.}
-

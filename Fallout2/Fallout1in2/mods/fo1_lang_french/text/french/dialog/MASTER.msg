@@ -130,4 +130,3 @@
 
 {1100}{Mast200}{Je suis le Maître. Je n'ai pas à te répondre.}
 {1101}{Mast201}{Je ne suis pas là pour répondre à tes questions. C'est toi qui est là pour me répondre.}
-

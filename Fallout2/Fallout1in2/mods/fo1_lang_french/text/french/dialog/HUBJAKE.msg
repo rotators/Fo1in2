@@ -109,7 +109,7 @@
 	{2320}{}{Augmenter la taille du chargeur pour le fusil d'assaut AK-112.}
 	{2330}{}{Mettre un viseur de nuit sur l'AK-198.}
 	{2340}{}{Ajouter un chargeur tambour à ton Winchester City-Killer.}
-	
+
 # Melee
 {2400}{}{Tu veux booster un peu ton aiguillon à bétail ? Nous pouvons le Sur-alimenter pour }
 {2410}{}{D'accord.}
@@ -120,5 +120,3 @@
 
 {2600}{}{Attends ici.}
 {2601}{}{Et voilà. Autre chose ?}
-
-

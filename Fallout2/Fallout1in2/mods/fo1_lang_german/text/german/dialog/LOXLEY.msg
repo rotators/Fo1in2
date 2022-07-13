@@ -248,4 +248,3 @@
 {1132}{LOX_78}{Vor etwa drei Jahren ging einer der Händler nach Süden und suchte nach Städten. Er kam kahl und zahnlos zurück und brabbelte von Strahlungskonzentration. Wer weiß? Vielleicht gab's dort vorm Krieg was Besonderes.}
 {1133}{LOX_79}{Viele Arme, die für die Händler arbeiten, wohnen hier in miesen Gebäuden, die nicht mal vor der Sonne schützen. Und die reichen Ärsche sitzen bequem in ihren schönen Häusern in den Heights. Macht mich krank!}
 {1134}{LOX_79}{Viele Arme, die für die Händler arbeiten, wohnen hier in miesen Gebäuden, die nicht mal vor der Sonne schützen. Und die reichen Ärsche sitzen bequem in ihren schönen Häusern in den Heights. Macht mich krank!}
-

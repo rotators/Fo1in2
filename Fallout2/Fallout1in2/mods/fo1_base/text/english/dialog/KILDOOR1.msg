@@ -9,5 +9,3 @@
 {201}{}{ attempts to pick the lock, but fails.}
 {202}{}{While picking the lock, }
 {203}{}{ manages to tweak the tumblers and jams it.}
-
-

@@ -118,4 +118,3 @@
 {502}{}{Du siehst: Karawanenfahrer.}
 {503}{}{Du siehst: Karawanenfahrer.}
 {504}{}{Du siehst: Karawanenhändler.}
-

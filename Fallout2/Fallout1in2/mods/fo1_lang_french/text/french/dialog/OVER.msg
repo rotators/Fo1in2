@@ -203,4 +203,3 @@
 {1109}{Over_201}{C'est notre foyer. Sans lui, on serait tous morts. Si on en prend soin, il devrait nous durer.}
 {1110}{Over_21q}{Y'a pas l'temps pour ça !}
 {1111}{Over_200}{C'est une pièce indispensable pour purifier l'eau. Sans elle, on va être à court d'eau potable.}
-

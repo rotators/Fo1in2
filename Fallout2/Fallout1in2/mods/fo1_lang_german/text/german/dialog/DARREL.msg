@@ -108,4 +108,3 @@
 {211}{}{Schluck sie so! [Darrel zeigt dir, wie man die Pillen nimmt und reibt sich den Bauch.] Mmmmm, leeeeecker!}
 {212}{}{Warte, warte, noch nicht! [Darrel hält dich zurück, als du die Pillen nehmen willst.] Warte, bis du beim Glow bist.}
 {300}{}{[Mehr]}
-

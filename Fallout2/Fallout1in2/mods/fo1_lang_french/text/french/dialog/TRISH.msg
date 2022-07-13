@@ -73,11 +73,10 @@
 {172}{}{ points d'expérience pour avoir participé à la défaite des Skulz lors de la bataille du bar.}
 {173}{}{ points d'expérience pour avoir sauvé l'amitié entre Saul et Trish.}
 {174}{}{Allons-y et amuse-toi bien.}
- 
+
 # Fo1in2
 {200}{}{J'ai eu une conversation avec Saul.}
 {201}{}{Et donc ? }
 {202}{}{Il dit que tu n'aime pas sa boxe.}
 {203}{}{Bien sûr, je n'aime pas ça ! C'est un gars super, mais il doit vraiment se retirer avant qu'il ne finisse par se faire tuer.}
 {204}{}{ points d'experience pour avoir fait preuve de médiation dans la relation entre Saul et Trish.}
-

@@ -100,4 +100,3 @@
 {1104}{}{Il s'est perdu dans le passé. Il ne comprendra pas que l'heure est venue pour nous de prendre notre avenir à bras le corps.}
 {1105}{}{Sans elle, nous n'aurons plus d'eau potable. Nous devons mettre fin à cette dépendance et nous suffire à nous-mêmes.}
 {1106}{}{Sans elle, nous n'aurons plus d'eau potable. Nous devons mettre fin à cette dépendance et nous suffire à nous-mêmes.}
-

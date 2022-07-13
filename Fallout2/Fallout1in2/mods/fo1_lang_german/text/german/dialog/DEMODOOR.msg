@@ -7,4 +7,3 @@
 {106}{}{You see a refrigerator.}
 {107}{}{It is already unlocked.}
 {108}{}{That does nothing.}
-

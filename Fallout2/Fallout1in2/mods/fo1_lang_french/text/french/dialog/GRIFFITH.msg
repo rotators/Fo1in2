@@ -33,17 +33,17 @@
 {1100}{}{Il m'appellent Griffith.}
    {1110}{}{Qu'est-ce que tu fais là, Griffith ?}
    {1120}{}{Excellent. A plus tard, Griffith !}
-   
+
 {1200}{}{Qu'est-ce que tu crois que je fais ?}
    {1210}{}{Aucune idée. Tu attends quelqu'un ?}
-   
+
 {1300}{}{Exactement ! Et tu sais quoi ? J'ai trouvé la personne que j'attendais !}
    {1310}{}{Vraiment ?}
-   
+
 {1400}{}{Il y a quelque chose que je dois faire. Ça va me prendre quelques heures, et je ne peux pas laisser ma bécane sans surveillance.}
    {1410}{}{Tu veux que je garde ta moto ?}
-   {1420}{}{Que dois-je faire ?} 
-   
+   {1420}{}{Que dois-je faire ?}
+
 {1500}{}{Les autres goules ici, elles en ont rien à foutre et je peux pas leur faire confiance.}
 {1501}{}{Toi en revanche, on dirait bien que tu sais faire attention à ce qui t'entoure ! Et puis, je te paierai si tout est encore là à mon retour.}
    {1510}{}{C'est combien la paie ?}
@@ -52,10 +52,10 @@
 {1600}{}{Un sac de capsules. Ce n'est pas un travail si compliqué. Ça va juste te demander du temps.}
    {1610}{}{Je suppose que je peux faire ça.}
    {1620}{}{Désolé, mais je n'ai pas le temps pour ça. A plus tard.}
-   
+
 {1700}{}{Génial ! Je reviendrais dans quelques heures.}
    {1710}{}{[Tu observes la goule disparaitre dans les égouts non loin d'ici]}
-   
+
 {1800}{}{Peaudouce, tu es débile ou quoi ? J'ai besoin que quelqu'un garde ma bécane !}
    {1810}{}{Hé, pourquoi tu me traites de débile ?}
    {1820}{}{Oh.}
@@ -63,10 +63,10 @@
 {1900}{}{C'est ma bécane, ouais.}
    {1910}{}{Est-ce que tu peux m'en parler ?}
    {1920}{}{On dirait une Chryslus Motors Cruiser originale. J'en ai vu sur des vieilles holobandes !}
-   
+
 {2000}{}{Ce que tu vois c'est une Chryslus Motors Cruiser originale, fabriquée en... Euh... En fait j'en sais rien, mais c'est de la super tech d'Avant-Guerre ! J'ai réussi à la conserver et à la faire fonctionner toutes ces années déjà.}
    {2010}{}{Tu la vends ?}
-   
+
 {2100}{}{Si je ... quoi ? Est-ce que tu te fiche de moi, peaudouce ? Je ne vendrais jamais ma bécane !}
 
 {2200}{}{Et ben merde. Tu es aussi inutile que tout le monde ici.}

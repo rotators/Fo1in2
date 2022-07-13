@@ -621,4 +621,3 @@
 
 # default join me again message
 {10100}{}{Allons-y.}
-

@@ -188,8 +188,3 @@
 {5100}{}{Sorry, this table has been closed.}
 {5101}{}{I'm sorry sir, but this table has been closed.}
 {5102}{}{I'm sorry ma'am, but this table has been closed.}
-
-
-
-
-

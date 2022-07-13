@@ -8,8 +8,3 @@
 
 {200}{}{You earn }
 {201}{}{ experience points for finishing the Temple of Trials.}
-
-
-
-
-

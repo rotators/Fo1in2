@@ -104,5 +104,3 @@
 {202}{}{Du bemerkst einige Geckos, die hier herumsuchen.}
 {203}{}{Du läufst blindlings in ein Feld von Sporenpflanzen hinein!}
 {204}{}{Weil du beim Klettern ein Seil benutzt hast, vermeidest du schlimmere Verletzungen.}
-
-

@@ -274,4 +274,3 @@
 {1119}{Set310}{C'est le cadet de mes soucis.}
 {1120}{Set309}{Fais tout ce qui est nécessaire.}
 {1121}{Set309}{Fais tout ce qui est nécessaire.}
-

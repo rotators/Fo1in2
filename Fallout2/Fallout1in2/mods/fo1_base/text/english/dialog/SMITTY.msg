@@ -53,5 +53,3 @@ don't actually sell anything here; I trade it to Tine or the Hub merchants for g
 
 {1500}{}{Don't forget. I'll be here!}
 	{1510}{}{Can you upgrade my motorcycle?}
-	
-

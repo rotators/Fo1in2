@@ -8,8 +8,3 @@
 
 {200}{}{Du erhälst }
 {201}{}{ Erfahrungspunkte für das überleben des Tempels der Erprobungen.}
-
-
-
-
-

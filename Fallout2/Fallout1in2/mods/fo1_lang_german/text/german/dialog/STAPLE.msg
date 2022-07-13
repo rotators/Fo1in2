@@ -42,4 +42,3 @@
     {1111}{}{[Fertig]}
 
 {1200}{}{Nein danke! Ohne deine Hilfe wären wir wahrscheinlich alle schon tot oder wären in in diese ... Dinge verwandelt worden.}
-

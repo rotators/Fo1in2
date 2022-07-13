@@ -54,4 +54,3 @@
 #
 # space is intentional
 {303}{}{ Stupid mutt!}
-

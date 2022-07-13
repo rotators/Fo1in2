@@ -51,5 +51,3 @@
 
 {1100}{}{Yeah, Deathclaw, Deathclaw.}
 {1101}{}{They call me Slappy! ... Slappy, Slap-py!}
-
-

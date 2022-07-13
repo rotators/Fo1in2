@@ -13,4 +13,3 @@
 {201}{}{ locks the door.}
 {202}{}{ fails to unlock the door.}
 {203}{}{ fails to lock the door.}
-

@@ -79,4 +79,3 @@
 # You gain x experience ...
 {200}{}{ pour avoir convaincu Rae de déruire le Maître.}
 {201}{}{ pour avoir convaincu Rae de combattre avec toi contre le Maître.}
-

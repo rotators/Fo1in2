@@ -5,4 +5,3 @@
 {104}{}{Tu t'es pris dans un câble laser qui a déclenché une sorte de mécanisme de défense.}
 
 {105}{}{ s'est pris dans un câble laser qui a déclenché une sorte de mécanisme de défense.}
-

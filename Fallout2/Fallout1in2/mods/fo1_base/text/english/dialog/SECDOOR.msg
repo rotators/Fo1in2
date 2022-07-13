@@ -10,5 +10,3 @@
 {200}{}{ manages to unlock the security door.}
 {201}{}{ fails to unlock the security door.}
 {202}{}{ manages to trigger the passive alert on the door, clamping down the electronic lock.}
-
-

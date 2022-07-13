@@ -64,4 +64,3 @@
 
 #traitor/dipped
 {503}{}{503 Vous êtes plongé dans une cuve à FEV et vous rejoignez l'armée du Maitre. Vous révélez l'emplacement de l'Abri 13. Vous êtes récompensé en étant mis aux commandes de l'assaut contre votre Abri, et vous tuez le Dirigeant de vos propres mains. Merci d'avoir joué à Fallout.}
-

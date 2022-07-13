@@ -185,4 +185,3 @@
 {3500}{}{Ich glaube, ich hab' was gebrochen. Schau dir das mal an.}
 {3501}{}{Ich fühl' mich fiebrig. Ich glaube ich bin verstrahlt.}
 {3502}{}{Ich fühl' mich sehr krank. Ich glaube ich bin vergiftet.}
-

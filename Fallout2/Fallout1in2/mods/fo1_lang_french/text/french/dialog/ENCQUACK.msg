@@ -5,7 +5,7 @@
 {102}{}{Tu vois un marchand de poudre de perlimpinpin.}
 
 # dumb dude
-{103}{}{Tu vois un grand guerrisseur.} 
+{103}{}{Tu vois un grand guerrisseur.}
 
 # map enter
 {110}{}{Tu aperçois un voyageur solitaire sur un chariot coloré au loin.}
@@ -35,8 +35,7 @@ et je vous garanti que vous ne trouverez pas moins cher ailleurs !}
 	{1211}{}{Euh...}
 	{1220}{}{D'accord, j'ai compris. Allez salut.}
 	{1221}{}{Ciao !}
-	
+
 {1300}{}{Perdre votre temps ?! Mon cher monsieur ! En prenant ce médicament, vous aurez beaucoup plus de temps justement !}
 {1301}{}{Perdre votre temps ?! Ma chère madame ! En prenant ce médicament, vous aurez beaucoup plus de temps justement !}
 	{1310}{}{[PLUS]}
-	

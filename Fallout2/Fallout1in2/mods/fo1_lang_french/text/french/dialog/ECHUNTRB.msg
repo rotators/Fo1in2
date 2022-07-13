@@ -8,4 +8,3 @@
 {200}{}{Père !}
 
 {1000}{}{Il ne vous parle pas.}
-

@@ -56,4 +56,3 @@
 {2508}{}{Ca va me prendre du temps pour refaire tourner ma ferme.}
 {2509}{}{Content de te voir.}
 {2510}{}{Comment ça va ?}
-

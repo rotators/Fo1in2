@@ -275,4 +275,3 @@
 {1116}{Nic_96}{Die Blades kämpfen gegen die Ripper im Süden. Sie sind die angenehmste der beiden Banden, obwohl das nicht viel sagt. Wir haben einige davon konvertiert.}
 {1117}{Nic_99}{Das ist die Handelsstadt im Norden. Wir versuchen, dort Handel zu treiben.}
 {1118}{Nic_100}{Wir können sie nicht einschätzen. Sie verkaufen Waffen, wir Frieden. Ahh ... Aber ihre Motive?}
-

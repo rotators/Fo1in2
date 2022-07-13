@@ -52,4 +52,3 @@
 
 {1500}{}{N'oublie pas. Je reste ici !}
 	{1510}{}{Tu peux améliorer ma moto ?}
-	

@@ -41,4 +41,3 @@
 	{1111}{}{[Terminé]}
 
 {1200}{}{Non. Merci ! Sans ton aide, nous serions probablement tous mort ou transformé en ces... choses.}
-

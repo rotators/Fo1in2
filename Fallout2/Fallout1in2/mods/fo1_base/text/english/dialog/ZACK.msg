@@ -26,11 +26,11 @@
 # Fo1in2
    {998}{}{Zack, your gear is top quality, but I am looking for something *even more* special.}
    {999}{}{Can we talk about the *even more* special gear again?}
-   
+
 {1000}{}{Sorry, but that's all I got right now.}
 {1001}{}{Could try to get our hands on better materials again, now that the Deathclaws don't bother us anymore. It'll take a while, though.}
    {1010}{}{Anything you need help with?}
-   
+
 {1100}{}{Paying new scavs will cost. If you want to speed up the process, an investment of 10.000 caps would probably help.}
    {1110}{}{I don't have that kind of money.}
    {1120}{}{Really hope it'll be worth it, Zack! [Pay 10.000 caps]}
@@ -89,4 +89,3 @@
 
 {2600}{}{Wait here.}
 {2601}{}{There you go. Anything else?}
-

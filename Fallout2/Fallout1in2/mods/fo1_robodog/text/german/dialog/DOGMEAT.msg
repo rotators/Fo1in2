@@ -12,14 +12,14 @@
 {121}{}{Rowf! <tick-tick-tick> Rowf!}
 
 	{200}{}{Ich glaube wir sollten über unseren Abstand reden.}
-	{201}{}{Eigentlich ist unser Abstand so gut wie er ist.} 
+	{201}{}{Eigentlich ist unser Abstand so gut wie er ist.}
 
 # Light
 	{300}{}{Hey Robodog, was ist das für ein Knopf hier?}
 {301}{}{[Du drückst den Schalter und plötzlich wird der gesamte Bereich beleuchtet]}
 	{302}{}{Interessant. Lassen wir das Licht erstmal an.}
 	{303}{}{Ich wäre lieber kein Leuchtfeuer in der Wüste.}
-	
+
 	{304}{}{[Aktiviere Licht-Modus]}
 	{305}{}{[Deaktiviere Licht-Modus]}
 {306}{}{...bzzzzzz... <klick> Scheinwerfer aktiviert!}

@@ -118,8 +118,3 @@
 {3010}{}{Ich bin froh, dass diese Sache erledigt ist. Hör mal, da ist noch was, was ich bräuchte...}
 {3020}{}{Er sollte diesmal besser nicht nachwachsen. Und das ist mein Ernst.}
 {3030}{}{Recht herzlichen Dank. Ich komme vielleicht noch einmal wieder.}
-
-
-
-
-

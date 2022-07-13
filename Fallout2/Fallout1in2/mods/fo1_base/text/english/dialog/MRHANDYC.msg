@@ -107,12 +107,3 @@
 
 # Fo1in2
 {3500}{}{[Click] Maintenance status: Damaged. Additional repairs required.}
-
-
-
-
-
-
-
-
-	

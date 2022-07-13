@@ -41,8 +41,3 @@
 	{1111}{}{[Done]}
 
 {1200}{}{No. Thank you! Without your help, we all would probably be dead by now or turned into these ... things.}
-
-
-
-
-

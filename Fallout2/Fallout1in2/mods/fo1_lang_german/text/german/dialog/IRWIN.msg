@@ -57,4 +57,3 @@
 {2508}{}{Es wird eine Weile dauern, bis meine Farm wieder was abwirft. *seufz*}
 {2509}{}{Schön dich zu sehen.}
 {2510}{}{Wie geht's?}
-

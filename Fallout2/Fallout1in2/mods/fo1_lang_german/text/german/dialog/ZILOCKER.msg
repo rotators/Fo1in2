@@ -21,4 +21,3 @@
 # other critter
 {500}{}{ erfolgreich das Schloß an dem Objekt aufgebrochen.}
 {501}{}{ das Schloß an dem Objekt nicht aufbrechen können.}
-

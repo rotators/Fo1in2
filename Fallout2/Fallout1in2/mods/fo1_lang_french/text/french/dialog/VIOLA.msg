@@ -206,4 +206,3 @@
 {305}{}{Nous rendons beaucoup de services aux gens. Nous guérissons les malades, nous nourrissons les affamés, nous éduquons les plus jeunes. Nous pouvons être fiers d'eux. Si tu rencontres le Père Morpheus, il te dira comment tu peux travailler dans nos hospices. Adieu, camarade.}
 {306}{}{Si tu rencontres le Père Morpheus, il te dira comment tu peux travailler dans nos hospices. Adieu, camarade.}
 {307}{}{Si tu rencontres le Père Morpheus, il te dira comment tu peux travailler dans nos hospices. Adieu, camarade.}
-

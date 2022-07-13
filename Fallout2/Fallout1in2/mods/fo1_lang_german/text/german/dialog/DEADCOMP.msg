@@ -63,4 +63,3 @@
 
 #traitor/dipped
 {503}{}{Du wurdest in die Container getaucht und bist der Einheit des Meisters beigetreten, nachdem du den Standort von Vault 13 enthüllt hast. Deine Belohnung ist die Führung des Angriff gegen deine alte Vault, bei dem du den Aufseher mit deinen bloßen Fäusten tötest. Vielen Dank für das Spielen von Fallout.}
-

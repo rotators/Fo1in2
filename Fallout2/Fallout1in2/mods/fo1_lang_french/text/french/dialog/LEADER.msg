@@ -128,5 +128,3 @@
 {1104}{}{Le soi-disant palais de Set.}
 {1105}{}{La Cité des Morts, où nous voudrions vivre en paix, si Set ou les Mutants nous le permettaient.}
 {1106}{}{La source est située sous le réservoir. Il doit y avoir un rapport.}
-
-

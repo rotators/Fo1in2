@@ -74,7 +74,7 @@
  which you may be able to pry open.}
 {1170}{}{You see a sturdy door with an old, rusty lock, which
  you may be able to pry open.}
- 
+
 # Perception Check Success
 
 {1180}{}{You see a sturdy door with a lock (which can be picked with

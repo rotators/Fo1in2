@@ -167,8 +167,3 @@
 	{311}{}{I want to pay off my loan.}
 {312}{}{Another loan? Did you even leave the building? How about you do something fun first? Maybe over in the Maltese Falcon! Come back to me later.}
 {313}{}{Already? Did you even leave the building? I'm busy, come back another time!}
-
-
-
-
-

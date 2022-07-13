@@ -206,4 +206,3 @@
 {305}{}{We perform many services for people. Healing the sick, feeding the hungry, teaching the young. I am quite proud of them. If you corner Father Morpheus, he may be able to tell you how to get involved with our hospices. Farewell, friend.}
 {306}{}{If you corner Father Morpheus, he may be able to tell you how to get involved with our hospices. Farewell, friend.}
 {307}{}{If you corner Father Morpheus, he may be able to tell you how to get involved with our hospices. Farewell, friend.}
-

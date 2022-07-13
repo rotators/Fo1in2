@@ -100,4 +100,3 @@
 {1104}{}{He's lost in the past. He won't accept that it's time for us to make our own future.}
 {1105}{}{Without it, we won't have drinking water. We need to end our dependency upon such equipment and become self-sufficient instead.}
 {1106}{}{Without it, we won't have drinking water. We need to end our dependency upon such equipment and become self-sufficient instead.}
-

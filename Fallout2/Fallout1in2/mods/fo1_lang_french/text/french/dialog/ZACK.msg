@@ -26,11 +26,11 @@
 # Fo1in2
    {998}{}{Zack, ton stuff est de super qualité, mais je cherche quelque chose *d'encore plus* spécial..}
    {999}{}{Est-ce qu'on peut parler de cet équipement *encore plus* spécial à nouveau ?}
-   
+
 {1000}{}{Désolé, mais c'est tout ce que j'ai pour le moment.}
 {1001}{}{Je pourrais essayer de trouver du matériel encore meilleur, maintenant que les Griffemorts nous laissent tranquille. Ça va prendre un moment, par contre.}
    {1010}{}{Il y a quelque chose que je puis-je faire pour aider ?}
-   
+
 {1100}{}{Payer des nouveau mercenaires, ce n'est pas grauit. Si tu veux accélérer les choses, un investissement de 10000 caps pourrait éventuellement le faire.}
    {1110}{}{Je n'ai pas du tout cet argent.}
    {1120}{}{J'espère que ça vaudra le coup, Zack ! [Payer 10 000 caps]}

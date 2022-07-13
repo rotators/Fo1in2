@@ -178,7 +178,7 @@ your armor. Be sure to take care of it. I can't give out more than one set. Was 
 {254}{}{You know Michael, you're probably one of the brightest guys I've talked to here. But I don't understand why you're giving me such a hard time. I really need that part.}
 {255}{}{Oh... Well. I guess I understand. I don't know what I'm going to do, though.}
 {256}{}{Just give it to me.}
-{257}{}{If you don't have authorization you can't get replacement parts.} 
+{257}{}{If you don't have authorization you can't get replacement parts.}
 {258}{}{Come on? Please. I really need this part.}
 {259}{}{Okay. Sorry to bother you. Bye.}
 {260}{}{Kyle? Is this about that old junked Power Armor?}

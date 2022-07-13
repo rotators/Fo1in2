@@ -98,4 +98,3 @@
 
 # Mariposa prisoner
 {3503}{}{Let us go, this place bores me.}
-

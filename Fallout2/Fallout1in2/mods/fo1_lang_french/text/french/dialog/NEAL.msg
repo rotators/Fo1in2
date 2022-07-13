@@ -61,4 +61,3 @@
 {210}{}{Nuka-Cola.}
 {211}{}{Bière.}
 {212}{}{Un truc plus fort.}
-

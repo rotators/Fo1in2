@@ -108,4 +108,3 @@
 {523}{}{Cliquez ci-dessous pour faire defiler les differents visuels d'interface.}
 {524}{}{Appliquer les changements et quitter.}
 {525}{}{Quitter sans enregistrer les changements.}
-

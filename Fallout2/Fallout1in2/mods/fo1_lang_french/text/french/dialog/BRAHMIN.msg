@@ -24,5 +24,3 @@
 {206}{}{:: GROGNE ::}
 
 {210}{}{Tu es devenu un Expéditeur d'Excréments Expert !}
-
-
