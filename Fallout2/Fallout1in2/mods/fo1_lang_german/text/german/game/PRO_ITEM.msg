@@ -499,8 +499,8 @@
 {25401}{}{Einige Autobesitzer haben diesen Regulator eingebaut, mit dem sich die Kilometerleistung bis zum nächsten Laden verdoppeln lässt. Den meisten Autobesitzern ist es aber egal, wieviel ihr Wagen verbraucht, da Strom nicht teuer und reichlich vorhanden ist, also was soll's.}
 {25500}{}{Zip-Pistole}
 {25501}{}{Eine handgefertigte Laserpistole. Mindeststärke: 3.}
-{25600}{}{Falsche Bürgerschaftspapiere}
-{25601}{}{Gefälschte Bürgerschaftspapiere. Sie sehen ziemlich echt aus, aber du bezweifelst, dass sie eine sorgfältige Kontrolle überstehen würden.}
+{25600}{}{10mm Mauser}
+{25601}{}{A Mauser M/96, converted to the powerful 10mm round. In excellent condition. Extremely accurate. Min ST: 4.}
 {25700}{}{Cornelius' goldene Uhr}
 {25701}{}{Altertümlicher Zeitmesser, auch als Taschenuhr bekannt. Für dieses gute Stück ist die Zeit schon lange stehengeblieben.}
 {25800}{}{Hydroelektrisches Teil}

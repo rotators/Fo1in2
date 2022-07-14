@@ -97,8 +97,10 @@
 {2200}{}{Nous pouvons ajouter un rechargement rapide sur ce magnum pour }
 {2201}{}{Ce Desert Eagle que tu as... si tu veux, nous pouvons y ajouter une extension de chargeur pour }
 {2202}{}{ caps.}
+{2203}{}{Oh wow, I see you have a Mauser M/96 there! Not easy to get ammo for that nowadays. If you want, I can convert it to 10mm for }
 	{2210}{}{Mettez un chargeur rapide sur le Magnum.}
 	{2220}{}{Augmentez la taille du chargeur de ce Desert Eagle.}
+	{2230}{}{Convert the Mauser to 10mm.}
 
 # Rifles
 {2300}{}{Nous pouvons mettez une lunette sur ce fusil de chasse pour }

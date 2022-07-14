@@ -508,8 +508,8 @@
 {25401}{}{Certains propriétaires installaient ce régulateur qui double la distance que parcourt une voiture entre deux mises en charge, mais la plupart se fichaient du jus que leur bagnole consommait : on en aura toujours plein de toute façon, hein, pas vrai ?}
 {25500}{}{Pistolet Zip}
 {25501}{}{Un pistolet fait main avec tir au coup par coup. FO min. : 4.}
-{25600}{}{Faux papiers de citoyen}
-{25601}{}{Un jeu de faux papiers de citoyenneté. Ils ont l'air authentiques, mais tu doutes qu'ils trompent un examinateur attentif.}
+{25600}{}{10mm Mauser}
+{25601}{}{A Mauser M/96, converted to the powerful 10mm round. In excellent condition. Extremely accurate. Min ST: 4.}
 {25700}{}{Montre en or de Cornélius}
 {25701}{}{On appelle cet objet du temps jadis une montre de gousset. Le temps a rattrapé cette antiquité il y a déjà bien longtemps.}
 {25800}{}{Pièce hydroélectrique}

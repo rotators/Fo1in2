@@ -94,11 +94,13 @@
 	{2140}{}{Too rich for my blood. I'll be back when I have more cash.}
 
 # Pistols
-{2200}{}{I can rig a speed loader on that there magnum for }
+{2200}{}{I can rig a speed loader on that magnum for }
 {2201}{}{Hmm, that Desert Eagle would sure be a sweet rig with an expanded magazine. I can do that for }
 {2202}{}{ caps.}
+{2203}{}{Oh, wow!  I see you have a Mauser M/96 there! Not easy to get ammo for that thing nowadays. If you want, I can convert it to 10mm for }
 	{2210}{}{Put the speed loader on the magnum.}
 	{2220}{}{Expand the magazine in this Desert Eagle here.}
+	{2230}{}{Convert the Mauser to 10mm.}
 
 # Rifles
 {2300}{}{I can put a nice all-weather scope on that hunting rifle for }

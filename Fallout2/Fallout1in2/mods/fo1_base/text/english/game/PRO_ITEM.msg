@@ -498,8 +498,8 @@
 {25401}{}{Some car-owners installed this regulator, which doubles your car's mileage between charges, but most drivers didn't care how much juice their cars consumed, after all, power's cheap and plentiful so why worry?}
 {25500}{}{Zip Gun}
 {25501}{}{A handmade laser pistol. Min ST: 3.}
-{25600}{}{False Citizenship Papers}
-{25601}{}{This is a set of false Citizenship Papers. They look authentic enough, but you doubt they could pass a serious inspection.}
+{25600}{}{10mm Mauser}
+{25601}{}{A Mauser M/96, converted to the powerful 10mm round. In excellent condition. Extremely accurate. Min ST: 4.}
 {25700}{}{Cornelius' Gold Watch}
 {25701}{}{This is an ancient time-piece known as a pocket watch. Time ran out for this keepsake, many long years ago.}
 {25800}{}{Hydroelectric Part}

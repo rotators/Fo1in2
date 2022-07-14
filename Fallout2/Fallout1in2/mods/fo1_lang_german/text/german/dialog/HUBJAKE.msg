@@ -97,8 +97,10 @@
 {2200}{}{Die Magnum könnte ich mit einem Schnellader ausstaffieren. Kostet }
 {2201}{}{Hmm, die Desert Eagle da wäre mit 'nem extragroßen Magazin bestimmt der absolute Bringer. Das könnte ich hinkriegen...für }
 {2202}{}{ Deckel.}
+{2203}{}{Oh wow, I see you have a Mauser M/96 there! Not easy to get ammo for that nowadays. If you want, I can convert it to 10mm for }
 	{2210}{}{Baut einen Schnellader in die Magnum ein.}
 	{2220}{}{Erweitert das Magazin dieser Desert Eagle.}
+	{2230}{}{Convert the Mauser to 10mm.}
 
 # Rifles
 {2300}{}{Ich könnte ein nettes wetterfestes Zielfernrohr am Jagdgewehr anbringen. Kostet }
