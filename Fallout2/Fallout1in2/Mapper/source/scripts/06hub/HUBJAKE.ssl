@@ -63,6 +63,7 @@ procedure NodeUpgrade_CombatShotgun;
 procedure NodeUpgrade_FNFAL;
 procedure NodeUpgrade_Flamer;
 procedure NodeUpgrade_CattleProd;
+procedure NodeUpgrade_Mauser;
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -94,6 +95,7 @@ import variable Jake_Desk_Ptr;
 #define CSCOST                      upgrade_cost(4000)
 #define FNCOST                      upgrade_cost(5000)
 #define CPCOST                      upgrade_cost(1250)
+#define MauserCOST                  upgrade_cost(1000)
 
 #define give_money(x)               dude_caps_adjust(-x);  \
                                     self_caps_adjust(x)
@@ -368,7 +370,7 @@ variable has_pistol := false;
 variable has_rifle := false;
 variable has_other := false;
 
-   if (dude_item_count(PID_DESERT_EAGLE) or dude_item_count(PID_44_MAGNUM_REVOLVER)) then begin
+   if (dude_item_count(PID_DESERT_EAGLE) or dude_item_count(PID_44_MAGNUM_REVOLVER) or dude_item_count(PID_9MM_MAUSER)) then begin
       has_pistol := true;
    end
    if (dude_item_count(PID_HUNTING_RIFLE) or dude_item_count(PID_ASSAULT_RIFLE) or dude_item_count(PID_COMBAT_SHOTGUN)) then begin
@@ -415,6 +417,9 @@ variable afford := false;
    if (dude_item_count(PID_DESERT_EAGLE)) then begin
       temp_msg += mstr(2201) + DECOST + mstr(2202);
    end
+   if (dude_item_count(PID_9MM_MAUSER)) then begin
+      temp_msg += mstr(2203) + MauserCOST + mstr(2202);
+   end
 
    Reply(temp_msg);
    if ((dude_item_count(PID_44_MAGNUM_REVOLVER)) and (dude_caps >= MCOST)) then begin
@@ -423,6 +428,10 @@ variable afford := false;
    end
    if ((dude_item_count(PID_DESERT_EAGLE)) and (dude_caps >= DECOST)) then begin
       NOption(2220, NodeUpgrade_DesertEagle, 004);
+      afford := true;
+   end
+   if ((dude_item_count(PID_9MM_MAUSER)) and (dude_caps >= MauserCOST)) then begin
+      NOption(2230, NodeUpgrade_Mauser, 004);
       afford := true;
    end
    if (afford == false) then begin
@@ -512,4 +521,24 @@ procedure NodeUpgrade_CattleProd begin
    call upgrade_weapon(PID_CATTLE_PROD, PID_SUPER_CATTLE_PROD);
    call NodeUpgrade_Done;
 end
+
+procedure NodeUpgrade_Mauser begin
+   variable Item, countAmmo;
+
+   // Set weapon ammo to 0 and add it to the player inventory
+   Item := obj_carrying_pid_obj(dude_obj, PID_9MM_MAUSER);
+   countAmmo := get_weapon_ammo_count(Item);
+   if (countAmmo > 0) then begin
+      set_weapon_ammo_count(Item, 0);
+
+      Item := create_object(PID_9MM_BALL, 0, 0);
+      set_weapon_ammo_count(Item, countAmmo);
+      add_obj_to_inven(dude_obj, Item);
+   end
+
+   give_money(MauserCOST);
+   call upgrade_weapon(PID_9MM_MAUSER, PID_10MM_MAUSER);
+   call NodeUpgrade_Done;
+end
+
 

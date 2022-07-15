@@ -390,7 +390,7 @@
 #define PID_ANNA_GOLD_LOCKET                (252)
 //#define PID CAR_FUEL_CELL_CONTROLLER      (253) already used by moto key
 #define PID_CAR_FUEL_INJECTION              (254)
-#define PID_FAKE_CITIZENSHIP                (256)
+#define PID_10MM_MAUSER                     (256) // was PID_FAKE_CITIZENSHIP
 #define PID_CORNELIUS_GOLD_WATCH            (257)
 #define PID_HY_MAG_PART                     (258)
 #define PID_RUBBER_BOOTS                    (262)
