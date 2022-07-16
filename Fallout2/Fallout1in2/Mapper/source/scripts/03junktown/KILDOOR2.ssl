@@ -23,11 +23,14 @@ procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 procedure description_p_proc;
 
+procedure open_door;
+
 #define LVAR_Locked                     (0)
 
 #define EVENT_TRESPASS     (1)
 
 variable test;
+variable bonus;
 
 import variable Killian_ptr;
 
@@ -101,83 +104,65 @@ procedure use_obj_on_p_proc begin
 
    if (item == PID_LOCKPICKS or item == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
-      if (not(day) and not(obj_can_see_obj(Killian_ptr, dude_obj)) and not(obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
-         if (not(obj_is_locked(self_obj))) then begin
-            display_msg(mstr(104));
-         end
-         else begin
-            test := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
-            if (is_success(test)) then begin
-               if source_is_dude then
-                  display_msg(mstr(101));
-               else
-                  display_msg(obj_name(source_obj) + mstr(200));
-               obj_unlock(self_obj);
-               set_local_var(LVAR_Locked, 1);
-            end
-            else if (is_critical(test)) then begin
-               if source_is_dude then
-                  display_msg(mstr(103));
-               else
-                  display_msg(mstr(202) + obj_name(source_obj) + mstr(203));
-               jam_lock(self_obj);
-            end
-            else begin
-               if source_is_dude then
-                  display_msg(mstr(102));
-               else
-                  display_msg(obj_name(source_obj) + mstr(201));
-            end
-         end
-      end
-      else if (not(obj_is_locked(self_obj))) then begin
-         display_msg(message_str(SCRIPT_KILDOOR1, 104));
-      end
-      add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
+
+      bonus := 0;
+      call open_door;
    end
 end
 
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_LOCKPICK) then begin
       script_overrides;
-      if (not(day) and not(obj_can_see_obj(Killian_ptr, dude_obj)) and not(obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
-         if (not(obj_is_locked(self_obj))) then begin
-            display_msg(mstr(104));
-         end
-         else begin
-            test := roll_vs_skill(source_obj, SKILL_LOCKPICK, -20);
-            if (is_success(test)) then begin
-               if source_is_dude then
-                  display_msg(mstr(101));
-               else
-                  display_msg(obj_name(source_obj) + mstr(200));
-               obj_unlock(self_obj);
-               set_local_var(LVAR_Locked, 1);
-            end
-            else if (is_critical(test)) then begin
-               if source_is_dude then
-                  display_msg(mstr(103));
-               else
-                  display_msg(mstr(202) + obj_name(source_obj) + mstr(203));
-               jam_lock(self_obj);
-            end
-            else begin
-               if source_is_dude then
-                  display_msg(mstr(102));
-               else
-                  display_msg(obj_name(source_obj) + mstr(201));
-            end
-         end
-      end
-      else if (not(obj_is_locked(self_obj))) then begin
-         display_msg(mstr(104));
-      end
-      add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
+
+      bonus := -20;
+      call open_door;
    end
 end
 
 procedure description_p_proc begin
    if (local_var(LVAR_Locked) == 0) then begin
-      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+      display_msg(message_str(SCRIPT_DOOR, 104)); // Door is locked
+   end
+end
+
+procedure open_door begin
+   if (Killian_ptr != 0) then begin
+      if (obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj)) then begin
+         add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
+         return;
+      end
+   end
+
+   if not(day) then begin
+      if (not(obj_is_locked(self_obj))) then begin
+         display_msg(mstr(104));
+      end
+      else begin
+         test := roll_vs_skill(source_obj, SKILL_LOCKPICK, bonus);
+         if (is_success(test)) then begin
+            if source_is_dude then
+               display_msg(mstr(101));
+            else
+               display_msg(obj_name(source_obj) + mstr(200));
+            obj_unlock(self_obj);
+            set_local_var(LVAR_Locked, 1);
+         end
+         else if (is_critical(test)) then begin
+            if source_is_dude then
+               display_msg(mstr(103));
+            else
+               display_msg(mstr(202) + obj_name(source_obj) + mstr(203));
+            jam_lock(self_obj);
+         end
+         else begin
+            if source_is_dude then
+               display_msg(mstr(102));
+            else
+               display_msg(obj_name(source_obj) + mstr(201));
+         end
+      end
+   end
+   else if not(obj_is_locked(self_obj)) then begin
+      display_msg(mstr(104));
    end
 end
