@@ -166,7 +166,7 @@
                                        (car_current_town == AREA_SPECIAL_RND_TALKCOW))
 
 //        City Car is At                Tile Num For Car
-#define CAR_UNCLAIMED_HEX                    (18704)         // When you don't have the car
+#define CAR_UNCLAIMED_HEX                    (19095)         // When you don't have the car
 #define CAR_UNCLAIMED_ELEV                   (1)
 #define CAR_CAR_OUTTA_GAS_HEX                (19100)
 #define CAR_CAR_OUTTA_GAS_ELEV               (0)
@@ -190,7 +190,7 @@
 #define CAR_RAIDERS_HEX                      (27693)
 #define CAR_NECROPOLIS_HOTEL_HEX             (24079)
 #define CAR_NECROPOLIS_HALLDEAD_HEX          (19955)
-#define CAR_NECROPOLIS_WATERSHED_HEX         (8937)
+#define CAR_NECROPOLIS_WATERSHED_HEX         (9328)
 #define CAR_NECROPOLIS_ELEV                  (1)
 #define CAR_HUB_HEX                          (14698)
 #define CAR_BOS_HEX                          (26315)

@@ -38,8 +38,8 @@
                                         noop
 
 // Super Mutants are leaving after the Vats are destroyed
-#define sm_wp_1         (13128)
-#define sm_wp_2         (10162)
+#define sm_wp_1         (13519)
+#define sm_wp_2         (10553)
 
 #define sm_leave_watershed \
    if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile != sm_wp_1)) then               \

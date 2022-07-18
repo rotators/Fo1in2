@@ -217,29 +217,27 @@ procedure Encounter_handler begin
             rnd_cave := random(1, 100),
             Bonus := 0;
 
-         if ((mapID == MAP_MOUNTN1 or mapID == MAP_MOUNTN2) or (mapID >= MAP_CAVE0 AndAlso mapID <= MAP_MINE3)) then begin
-            if south_table then Bonus := 15;
-            else if glow_table then Bonus := 35;
+         if south_table then Bonus := 15;
+         else if glow_table then Bonus := 35;
+         else Bonus := 0;
+         Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20);
+         debug("Cavern chance is " + rnd_cave + " and cavern bonus is " + bonus + ".");
+
+         if (fo1in2_cave_maps_enabled AndAlso (rnd_cave <= (15 + Bonus))) then begin
+            if glow_table then Bonus := 35;
             else Bonus := 0;
             Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20);
-            debug("Cavern chance is " + rnd_cave + " and cavern bonus is " + bonus + ".");
 
-            if (fo1in2_cave_maps_enabled AndAlso (rnd_cave <= (15 + Bonus))) then begin
-               if glow_table then Bonus := 35;
-               else Bonus := 0;
-               Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20);
-
-               if (south_table or vats_table or glow_table) and (random(1, 100) <= (5 + Bonus)) then
-                  Maps_List := [MAP_MINE1, MAP_MINE2, MAP_MINE3];
-               else
-                  Maps_List := [MAP_CAVE0, MAP_CAVE1, MAP_CAVE2, MAP_CAVE3, MAP_CAVE4, MAP_CAVE5];
-            end
+            if (south_table or vats_table or glow_table) and (random(1, 100) <= (5 + Bonus)) then
+               Maps_List := [MAP_MINE1, MAP_MINE2, MAP_MINE3];
             else
-               Maps_List := [MAP_MOUNTN1, MAP_MOUNTN2];
-
-            mapID := array_random_value(Maps_List);
-            set_sfall_return(mapID);
+               Maps_List := [MAP_CAVE0, MAP_CAVE1, MAP_CAVE2, MAP_CAVE3, MAP_CAVE4, MAP_CAVE5];
          end
+         else
+            Maps_List := [MAP_MOUNTN1, MAP_MOUNTN2];
+
+         mapID := array_random_value(Maps_List);
+         set_sfall_return(mapID);
       end
    end
 end
