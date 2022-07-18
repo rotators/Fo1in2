@@ -566,6 +566,16 @@
 {471}{}{}
 {472}{}{}
 
+# 91: City Ruins, CITY4.MAP
+{473}{}{City Ruins}
+{474}{}{}
+{475}{}{}
+
+# 92: City Ruins, CITY5.MAP
+{476}{}{City Ruins}
+{477}{}{}
+{478}{}{}
+
 
 #
 #   Short City names (Visible on the worldmap under green circle)

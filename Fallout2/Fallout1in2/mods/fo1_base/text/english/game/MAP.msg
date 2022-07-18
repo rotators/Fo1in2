@@ -154,11 +154,11 @@
 {157}{}{Desert}                        # DESCRVN2.MAP
 {158}{}{Mountains}                     # MNTCRVN1.MAP
 {159}{}{Mountains}                     # MNTCRVN2.MAP
-{160}{}{Viper Camp}
-{161}{}{Desert}
-{162}{}{Mountains}
-{163}{}{Desert}
-{164}{}{Mountains}
+{160}{}{Desert}                        # DESCRVN3.MAP
+{161}{}{Mountains}                     # MNTCRVN3.MAP
+{162}{}{Desert}                        # DESCRVN4.MAP
+{163}{}{Mountains}                     # MNTCRVN4.MAP
+{164}{}{Desert}                        # DESERT1.MAP
 
 {165}{}{Desert}                        # FOOT.MAP
 {166}{}{Desert}                        # TARDIS.MAP
@@ -185,6 +185,9 @@
 {186}{}{Mountains}                     # MINE1.MAP
 {187}{}{Mountains}                     # MINE2.MAP
 {188}{}{Mountains}                     # MINE3.MAP
+{189}{}{Vipers}                        # VIPERS.MAP
+{190}{}{City Ruins}                    # CITY4.MAP
+{191}{}{City Ruins}                    # CITY5.MAP
 
 #
 # City elevation names
@@ -565,6 +568,16 @@
 {470}{}{Camp}
 {471}{}{}
 {472}{}{}
+
+# 91: City Ruins, CITY4.MAP
+{473}{}{City Ruins}
+{474}{}{}
+{475}{}{}
+
+# 92: City Ruins, CITY5.MAP
+{476}{}{City Ruins}
+{477}{}{}
+{478}{}{}
 
 #
 #  Short City names (Visible on the worldmap under green circle, Map, and Automaps interface)

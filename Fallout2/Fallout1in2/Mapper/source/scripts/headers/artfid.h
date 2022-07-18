@@ -16,7 +16,41 @@
    Created: April 28, 1998
 ******************************************************************/
 
+//--- Scenery
 
+// Car Wrecks
+#define FID_CAR2_BACK_1    (33556315)
+#define FID_CAR2_BACK_2    (33556316)
+#define FID_CAR2_BACK_3    (33556317)
+#define FID_CAR2_BACK_4    (33556318)
+#define FID_CAR2_BACK_5    (33556319)
+#define FID_CAR2_FRONT_1   (33556320)
+#define FID_CAR2_FRONT_2   (33556321)
+#define FID_CAR2_FRONT_3   (33556322)
+#define FID_CAR2_FRONT_4   (33556323)
+#define FID_CAR2_FRONT_5   (33556324)
+#define FID_CAR4_BACK_1    (33556325)
+#define FID_CAR4_BACK_2    (33556326)
+#define FID_CAR4_BACK_3    (33556327)
+#define FID_CAR4_FRONT_1   (33556328)
+#define FID_CAR4_FRONT_2   (33556329)
+#define FID_CAR4_FRONT_3   (33556330)
+#define FID_CAR3_BASE      (33554485)
+#define FID_CAR3_1         (33556331)
+#define FID_CAR3_2         (33556332)
+#define FID_CAR3_3         (33556333)
+#define FID_CAR5_BASE      (33554487)
+#define FID_CAR5_1         (33556334)
+#define FID_CAR5_2         (33556335)
+#define FID_CAR5_3         (33556336)
+#define FID_CAR5_4         (33556337)
+
+// Motorcycle Trunk
+#define FID_MOTOTRUNK1     (16777408)
+#define FID_MOTOTRUNK2     (16777409)
+
+
+//--- Critter
 // Take FID -10 to get the line number in critters.lst !
 
 

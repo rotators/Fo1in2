@@ -4045,8 +4045,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4903)
 #define RESERVED_FOR_FALLOUT_FIXT               (4904)
 #define RESERVED_FOR_FALLOUT_FIXT               (4905)
-#define RESERVED_FOR_FALLOUT_FIXT               (4906)
-#define RESERVED_FOR_FALLOUT_FIXT               (4907)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4906)*/
+#define GVAR_ENABLE_EXPANDED_WRECKS             (4907)
 #define GVAR_RAZOR_DEAD                         (4908)
 #define GVAR_VASQUEZ_HIRELING_STATUS            (4909)
 #define GVAR_GRIFFITH_HAS_KEY                   (4910)

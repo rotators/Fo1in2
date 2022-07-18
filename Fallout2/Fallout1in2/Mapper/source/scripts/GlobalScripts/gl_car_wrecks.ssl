@@ -1,0 +1,77 @@
+/*
+
+   Adds more car wreck variation to city encounter maps
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+#include "sfall/lib.arrays.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure swap_cars;
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then call swap_cars;
+end
+
+procedure swap_cars begin
+   variable scene_ptr, scene_pid, FID_List;
+
+   if fo1in2_expanded_wrecks_enabled then begin
+      if map_is_city then begin
+         foreach (scene_ptr in list_as_array(LIST_SCENERY)) begin
+            Scenery_Creation_Hex := tile_num(scene_ptr);
+            scene_pid := obj_pid(scene_ptr);
+
+            if (obj_pid(scene_ptr) == PID_CAR_WRECK_2) then begin
+               destroy_object(scene_ptr);
+
+               Scenery_Creation := create_object(scene_pid, Scenery_Creation_Hex, 0);
+
+               FID_List := [FID_CAR2_BACK_1, FID_CAR2_BACK_2, FID_CAR2_BACK_3, FID_CAR2_BACK_4, FID_CAR2_BACK_5];
+               FID_List := array_random_value(FID_List);
+               art_change_fid_num(Scenery_Creation, FID_List);
+
+               Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 2);
+               Scenery_Creation := create_object(scene_pid, Scenery_Creation_Hex, 0);
+
+               FID_List := [FID_CAR2_FRONT_1, FID_CAR2_FRONT_2, FID_CAR2_FRONT_3, FID_CAR2_FRONT_4, FID_CAR2_FRONT_5];
+               art_change_fid_num(Scenery_Creation, array_random_value(FID_List));
+            end
+            else if (obj_pid(scene_ptr) == PID_CAR_WRECK_3) then begin
+               FID_List := [FID_CAR3_BASE, FID_CAR3_1, FID_CAR3_2, FID_CAR3_3];
+               art_change_fid_num(scene_ptr, array_random_value(FID_List));
+            end
+            else if (obj_pid(scene_ptr) == PID_CAR_WRECK_4) then begin
+               destroy_object(scene_ptr);
+
+               Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+               Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+               Scenery_Creation := create_object(scene_pid,Scenery_Creation_Hex,0);
+
+               FID_List := [FID_CAR4_BACK_1, FID_CAR4_BACK_2, FID_CAR4_BACK_3];
+               FID_List := array_random_value(FID_List);
+               art_change_fid_num(Scenery_Creation, FID_List);
+
+               Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 2);
+               Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 2);
+               Scenery_Creation := create_object(scene_pid, Scenery_Creation_Hex, 0);
+
+               FID_List := [FID_CAR4_FRONT_1, FID_CAR4_FRONT_2, FID_CAR4_FRONT_3];
+               art_change_fid_num(Scenery_Creation, array_random_value(FID_List));
+            end
+            //else if (obj_pid(scene_ptr) == PID_CAR_WRECK_5) then begin
+            //end
+         end
+      end
+   end
+end

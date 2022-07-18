@@ -11,6 +11,7 @@
 #include "command.h"
 #include "mapenc.h"
 #include "updatmap.h"
+#include "sfall/lib.arrays.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -66,17 +67,17 @@ procedure map_enter_p_proc begin
    Lighting;
 
    if (map_first_run) then begin
-      dude_pos := random(0, 2);
       dude_rot := random(0, 5);
-      if (dude_pos == 0) then begin
-         override_map_start(100, 100, 0, dude_rot);
+
+      dude_pos := [20100, 16716, 22092];
+      dude_pos := array_random_value(dude_pos);
+
+      // Position fix, to not spawn inside a wall
+      if (CUR_MAP_CITY5 and dude_pos == 16716) then begin
+         dude_pos := 18316;
       end
-      else if (dude_pos == 1) then begin
-         override_map_start(116, 83, 0, dude_rot);
-      end
-      else begin
-         override_map_start(92, 110, 0, dude_rot);
-      end
+
+      override_map_start_hex(dude_pos, 0, dude_rot);
    end
 
    Critter_spawn_hex := dude_tile;
@@ -623,10 +624,10 @@ procedure Bone_table begin
 end
 
 procedure Bone_1 begin
-   display_msg(message_str(SCRIPT_RNDDESRT, 307));
+   display_msg(message_str(NAME, 100));
    Tot_Critter_A := random(2, 3);
    group_angle := random(0, 5);
-   Outer_ring := (dude_enc_perception / 2) + 6;
+   Outer_ring := (dude_enc_perception / 2) + 8;
    Inner_ring := (dude_enc_perception / 2) + 4;
    Critter_type := PID_MEAN_SUPER_MUTANT;
    Critter_script := SCRIPT_MUTAMBSH;
@@ -640,50 +641,53 @@ procedure Bone_1 begin
       end
       call Place_critter;
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      if (random(1, 4) == 1) then begin
-         Item := create_object(PID_FLAMER, 0, 0);
+
+      if (random(0, 2) == 0) then begin
+         if (random(0, 1) == 1) then begin
+            Item := create_object(PID_FLAMER, 0, 0);
+         end
+         else begin
+            Item := create_object(PID_MINIGUN, 0, 0);
+         end
       end
       else begin
-         Item := create_object(PID_MINIGUN, 0, 0);
+         Item := create_object(PID_SPIKED_KNUCKLES, 0, 0);
       end
       add_obj_to_inven(Critter, Item);
-      if (random(1, 5) == 1) then begin
-         Item := create_object(PID_ROCKET_LAUNCHER, 0, 0);
-         add_obj_to_inven(Critter, Item);
-      end
       wield_obj_critter(Critter, Item);
+
       if (random(0, 2) == 0) then begin
          item_caps_adjust(Critter, fortune_finder(random(5, 20)));
       end
+
+      Item := create_object(PID_5MM_JHP, 0, 0);
+      add_mult_objs_to_inven(Critter, Item, dude_perk(PERK_scrounger) + 1);
+
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   if (random(0, 1)) then begin
+   if (random(0, 2) == 0) then begin
       Critter_type := PID_NIGHTKIN;
       Critter_script := SCRIPT_SUPAMBSH;
-      Critter_direction := group_angle + (random(0, 4) - 2);
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-      call Place_critter;
+      Critter_direction := random(0, 5);
+      call Place_critter();
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+
       Item := create_object(PID_MINIGUN, 0, 0);
+      if (random(1, 4) == 1) then set_weapon_ammo_pid(Item, PID_5MM_AP);
+
       add_obj_to_inven(Critter, Item);
-      if (random(0, 2) == 0) then begin
-         item_caps_adjust(Critter, fortune_finder(random(5, 20)));
-      end
+      wield_obj_critter(Critter, Item);
+
+      item_caps_adjust(Critter, fortune_finder(random(5, 20)));
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end
 
 procedure Bone_2 begin
    variable LVar0 := 0;
-   display_msg(message_str(SCRIPT_RNDDESRT, 308));
+   display_msg(message_str(NAME, 101));
    group_angle := random(0, 5);
-   if ((game_time_hour >= 1900) or (game_time_hour < 600) and random(0, 1)) then begin
+   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
       Critter := create_object(PID_FIRE_PIT, 0, 0);
       Critter_tile := tile_num_in_direction(Critter_spawn_hex, group_angle, 4);
       critter_attempt_placement(Critter, Critter_tile, dude_elevation);
@@ -737,6 +741,7 @@ procedure Bone_2 begin
          end
          else begin
             Item := create_object(PID_10MM_PISTOL, 0, 0);
+            if (random(1, 3) > 1) then set_weapon_ammo_pid(Item, PID_10MM_AP);
          end
       end
       add_obj_to_inven(Critter, Item);
@@ -789,14 +794,13 @@ procedure Bone_2 begin
       Tot_Critter_B := Tot_Critter_B - 1;
    end
    attack_setup(Critter, victim);
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
    call Add_Mysterious_Stranger;
 end
 
 procedure Bone_3 begin
 variable rnd_weapon;
 
-   display_msg(message_str(SCRIPT_RNDDESRT, 309));
+   display_msg(message_str(NAME, 102));
    Outer_ring := (dude_enc_perception / 2) + 6;
    Inner_ring := (dude_enc_perception / 2) + 2;
    Tot_Critter_A := random(3, 7);
@@ -876,12 +880,53 @@ variable rnd_weapon;
       Item := create_object(PID_KNIFE, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
+
    call Add_Mysterious_Stranger;
 end
 
 procedure Bone_4 begin
-   display_msg(message_str(SCRIPT_RNDDESRT, 310));
+   display_msg(message_str(SCRIPT_RNDCITY, 103));
+   Tot_Critter_A := random(5, 15);
+   Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 4;
+   Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+   group_angle := random(0, 5);
+   Item := random(0, 1);
+   Critter_type := 16777264;
+   for (Critter_script := SCRIPT_WANRATS; Tot_Critter_A; Tot_Critter_A := Tot_Critter_A - 1) begin
+     Critter_direction := group_angle + random(0, 1 * 2) - 1;
+     while (Critter_direction < 0) do begin
+         Critter_direction := Critter_direction + 6;
+     end
+     if (Critter_direction > 5) then begin
+         Critter_direction := Critter_direction % 6;
+     end
+     call Place_critter();
+     if (Item) then begin
+         if (random(0, 1)) then begin
+             Critter_direction := 3;
+         end
+         else begin
+             Critter_direction := 4;
+         end
+         anim(Critter, 1000, Critter_direction);
+         continue;
+     end
+     if (random(0, 1)) then begin
+         Critter_direction := 1;
+     end
+     else begin
+         Critter_direction := 2;
+     end
+     anim(Critter, 1000, Critter_direction);
+   end
+   if (start_attack == 0) then begin
+     attack(dude_obj);
+   end
+   start_attack := 1;
+   call Add_Mysterious_Stranger;
+
+   // Fixt:
+   /*display_msg(message_str(SCRIPT_RNDDESRT, 310));
    Outer_ring := (dude_enc_perception / 2) + 6;
    Inner_ring := (dude_enc_perception / 2) + 2;
    Tot_Critter_A := random(2, 3);
@@ -944,15 +989,14 @@ procedure Bone_4 begin
       add_obj_to_inven(Critter, Item);
    end
 
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
-   call Add_Mysterious_Stranger;
+   call Add_Mysterious_Stranger;*/
 end
 
 procedure Bone_5 begin
-   display_msg(message_str(SCRIPT_RNDDESRT, 311));
+   display_msg(message_str(NAME, 104));
    Outer_ring := (dude_enc_perception / 2) + 6;
    Inner_ring := (dude_enc_perception / 2) + 2;
-   Tot_Critter_A := random(2, 3);
+   Tot_Critter_A := random(3, 5);
    group_angle := random(0, 5);
 
    Critter_type := PID_GEN_THUG;
@@ -1016,12 +1060,10 @@ procedure Bone_5 begin
       Item := create_object(PID_KNIFE, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
    call Add_Mysterious_Stranger;
 end
 
-procedure Bone_6 begin
+procedure Bone_6 begin // Was rats in vanilla, is mantis in Fixt
    display_msg(message_str(SCRIPT_RNDDESRT, 313));
    Tot_Critter_A := random(4, 6);
    if day then begin
@@ -1040,12 +1082,12 @@ procedure Bone_6 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
 procedure choose_start begin
-   dude_pos := random(0, 3);
+   // Added by Fixt for some reason
+   /*dude_pos := random(0, 3);
    if (global_var(GVAR_WORLDMAP_TABLE) == 1) then begin
       if (Encounter_Num == 1) then begin
          override_map_start(93, 91, 0, 1);
@@ -1086,7 +1128,7 @@ procedure choose_start begin
       else
          override_map_start(80, 86, 0, dude_rot);
    end
-   Critter_spawn_hex := dude_tile;
+   Critter_spawn_hex := dude_tile;*/
 end
 
 procedure CITY_North_VANILLA_table begin
@@ -1211,7 +1253,6 @@ procedure Necrop_1 begin
       Tot_Critter_B := Tot_Critter_B - 1;
    end
    attack_setup(Critter, victim);
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
@@ -1290,7 +1331,6 @@ procedure Necrop_2 begin
       Tot_Critter_B := Tot_Critter_B - 1;
    end
    attack_setup(Critter, victim);
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
@@ -1314,7 +1354,6 @@ procedure Necrop_3 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
@@ -1375,7 +1414,6 @@ procedure Necrop_4 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
@@ -1399,7 +1437,6 @@ procedure Necrop_5 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
 
@@ -1530,7 +1567,6 @@ procedure Vats_1 begin
       add_obj_to_inven(Critter, Item);
       Tot_Critter_B := Tot_Critter_B - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end
 
@@ -1554,7 +1590,6 @@ procedure Vats_2 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end
 
@@ -1610,7 +1645,6 @@ procedure Vats_3 begin
       add_obj_to_inven(Critter, Item);
    end
 
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end
 
@@ -1665,7 +1699,6 @@ procedure Vats_4 begin
    call Place_critter;
    obj_rotate(Critter, random(3, 4));
 
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end
 
@@ -1748,6 +1781,5 @@ procedure Vats_6 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
 end

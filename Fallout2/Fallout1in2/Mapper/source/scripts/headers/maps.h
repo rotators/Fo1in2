@@ -170,6 +170,9 @@
 
 #define MAP_CITY2           (79)
 #define MAP_CITY3           (80)
+#define MAP_CITY4           (91)
+#define MAP_CITY5           (92)
+
 #define MAP_CAVE0           (81)
 #define MAP_CAVE1           (82)
 #define MAP_CAVE2           (83)
@@ -342,6 +345,8 @@
 
 #define CUR_MAP_CITY2       (cur_map_index ==  MAP_CITY2)
 #define CUR_MAP_CITY3       (cur_map_index ==  MAP_CITY3)
+#define CUR_MAP_CITY4       (cur_map_index ==  MAP_CITY4)
+#define CUR_MAP_CITY5       (cur_map_index ==  MAP_CITY5)
 #define CUR_MAP_CAVE0       (cur_map_index ==  MAP_CAVE0)
 #define CUR_MAP_CAVE1       (cur_map_index ==  MAP_CAVE1)
 #define CUR_MAP_CAVE2       (cur_map_index ==  MAP_CAVE2)
@@ -513,6 +518,8 @@ variable get_wm_distance;
 #define map_is_city                       (CUR_MAP_CITY1 or    \
                                           CUR_MAP_CITY2 or     \
                                           CUR_MAP_CITY3 or     \
+                                          CUR_MAP_CITY4 or     \
+                                          CUR_MAP_CITY5 or     \
                                           CUR_MAP_RNDCITY)
 
 #define map_is_ocean                      (CUR_MAP_COAST1 or   \

@@ -49,6 +49,7 @@
 #define fo1in2_cut_characters_enabled   (global_var(GVAR_ENABLE_CUT_CHARACTERS) > 0)
 #define fo1in2_khan_art_fix_enabled     (global_var(GVAR_ENABLE_KHAN_ART_FIX) > 0)
 #define fo1in2_0800_resting_enabled     (global_var(GVAR_ENABLE_FO2_0800_RESTING) > 0)
+#define fo1in2_expanded_wrecks_enabled  (global_var(GVAR_ENABLE_EXPANDED_WRECKS) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)

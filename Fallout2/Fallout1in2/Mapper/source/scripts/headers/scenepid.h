@@ -114,6 +114,13 @@ variable Scenery_Creation_Ptr;
 // Car
 #define PID_DRIVABLE_CAR                    (33555441)
 
+// Car Wrecks
+#define PID_CAR_WRECK_1                     (33554656)
+#define PID_CAR_WRECK_2                     (33554657)
+#define PID_CAR_WRECK_3                     (33554658)
+#define PID_CAR_WRECK_4                     (33554659)
+#define PID_CAR_WRECK_5                     (33554660)
+
 // Caravans
 #define PID_EW_RED_CARAVAN                  (33554959)
 #define PID_EW_GREY_CARAVAN                 (33554960)
@@ -344,10 +351,6 @@ variable Scenery_Creation_Ptr;
 #define PID_DRIVABLE_MOTO1                  (33556292)
 #define PID_DRIVABLE_MOTO2                  (33556293)
 #define PID_SIDECAR                         (33556294)
-
-// Motorcycle Trunk
-#define FID_MOTOTRUNK1                      (16777408)
-#define FID_MOTOTRUNK2                      (16777409)
 
 // Misc Commands
 
