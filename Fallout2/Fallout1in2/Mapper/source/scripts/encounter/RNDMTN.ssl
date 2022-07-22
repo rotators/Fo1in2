@@ -116,31 +116,47 @@ procedure map_enter_p_proc begin
       Lighting;
       dude_rot := random(0, 5);
       set_global_var(GVAR_RANDOM_ENC_MERCS_COUNTER, 0);
-      if (map_first_run) and not(is_loading_game) then begin
-         Ranger_rerolls := dude_perk(PERK_ranger);
-         set_global_var(GVAR_ENEMY_RANDOM_ENC, 0);
+      
+      if (map_first_run) then begin
+         if (global_var(GVAR_LOAD_MAP_INDEX) != 1) then begin
+            Ranger_rerolls := dude_perk(PERK_ranger);
+            set_global_var(GVAR_ENEMY_RANDOM_ENC, 0);
 
-         while (Encounter_Num == 0) do begin
-            call roll_encounter;
-         end
+            while (Encounter_Num == 0) do begin
+               call roll_encounter;
+            end
 
-         if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
-            call North_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
-            call South_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
-            call Vats_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
-            call Glow_table;
+            if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
+               call North_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
+               call South_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+               call Vats_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
+               call Glow_table;
+            end
+            else begin
+               call Vault_table;
+            end
          end
          else begin
-            call Vault_table;
+            dude_pos := random(0, 2);
+            if (dude_pos == 0) then begin
+               override_map_start(78, 92, 0, dude_rot);
+            end
+            else if (dude_pos == 1) then begin
+               override_map_start(95, 86, 0, dude_rot);
+            end
+            else begin
+               override_map_start(94, 90, 0, dude_rot);
+            end
          end
       end
    end
+   set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
 
 procedure map_update_p_proc begin

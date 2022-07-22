@@ -30,10 +30,10 @@
 #define AREA_CARAVAN_ENCOUNTER    (44)
 #define AREA_SHADOW_MAPS          (47)
 
-#define AREA_RND_DESERT           (49) // "Manual" player encounter
-#define AREA_RND_MOUNTAIN         (50) // "Manual" player encounter
-#define AREA_RND_CITY             (51) // "Manual" player encounter
-#define AREA_RND_COAST            (52) // "Manual" player encounter
+#define AREA_RND_DESERT           (49) // "Manual" player encounter - DEPRECATED / UNUSED
+#define AREA_RND_MOUNTAIN         (50) // "Manual" player encounter - DEPRECATED / UNUSED
+#define AREA_RND_CITY             (51) // "Manual" player encounter - DEPRECATED / UNUSED
+#define AREA_RND_COAST            (52) // "Manual" player encounter - DEPRECATED / UNUSED
 
 #define AREA_SPECIAL_RND_FOOT     (53)
 #define AREA_SPECIAL_RND_TARDIS   (54)
@@ -158,10 +158,10 @@
 #define MAP_DESERT1         (64)
 #define MAP_HUBMIS0         (65)
 #define MAP_HUBMIS1         (66) // UNSUED!
-#define MAP_RNDDESER        (67)
-#define MAP_RNDMOUNT        (68)
-#define MAP_RNDCITY         (69)
-#define MAP_RNDCOAST        (70)
+#define MAP_RNDDESER        (67) // DEPRECATED / UNUSED
+#define MAP_RNDMOUNT        (68) // DEPRECATED / UNUSED
+#define MAP_RNDCITY         (69) // DEPRECATED / UNUSED
+#define MAP_RNDCOAST        (70) // DEPRECATED / UNUSED
 #define MAP_TALKCOW         (71)
 #define MAP_ARTEMPLE        (72)
 #define MAP_ARCAVES         (73)
@@ -512,23 +512,19 @@ variable get_wm_distance;
 
 #define map_is_desert                     (CUR_MAP_DESERT1 or  \
                                           CUR_MAP_DESERT2 or   \
-                                          CUR_MAP_DESERT3 or   \
-                                          CUR_MAP_RNDDESER)    \
+                                          CUR_MAP_DESERT3)
 
 #define map_is_city                       (CUR_MAP_CITY1 or    \
                                           CUR_MAP_CITY2 or     \
                                           CUR_MAP_CITY3 or     \
                                           CUR_MAP_CITY4 or     \
-                                          CUR_MAP_CITY5 or     \
-                                          CUR_MAP_RNDCITY)
+                                          CUR_MAP_CITY5)
 
 #define map_is_ocean                      (CUR_MAP_COAST1 or   \
-                                          CUR_MAP_COAST2 or    \
-                                          CUR_MAP_RNDCOAST)
+                                          CUR_MAP_COAST2)
 
 #define map_is_mountain                   (CUR_MAP_MOUNTN1 or  \
-                                          CUR_MAP_MOUNTN2 or   \
-                                          CUR_MAP_RNDMOUNT)
+                                          CUR_MAP_MOUNTN2)
 
 #define map_is_encounter                  (map_is_desert or map_is_city or map_is_ocean or map_is_mountain)
 
