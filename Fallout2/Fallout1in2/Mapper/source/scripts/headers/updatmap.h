@@ -149,11 +149,7 @@
                                            car_give_to_party;                                                        \
                                        end
 
-#define car_in_any_encounter           ((car_current_town == AREA_RND_DESERT) or          \
-                                       (car_current_town == AREA_RND_MOUNTAIN) or         \
-                                       (car_current_town == AREA_RND_CITY) or             \
-                                       (car_current_town == AREA_RND_COAST) or            \
-                                       (car_current_town == AREA_RND_ENC_DESERT) or       \
+#define car_in_any_encounter           ((car_current_town == AREA_RND_ENC_DESERT) or      \
                                        (car_current_town == AREA_RND_ENC_MOUNTAIN) or     \
                                        (car_current_town == AREA_RND_ENC_CAVERN) or       \
                                        (car_current_town == AREA_RND_ENC_CITY) or         \
