@@ -21,6 +21,22 @@
 // NOTE: We "secretly" tripple the PE bonus from 3 to 12, otherwise the effect is impossible to notice in the Fo1 encounter spawn system.
 #define dude_enc_perception            (dude_perception + (9 * dude_perk(PERK_cautious_nature_perk)))
 
+// Worldmap tile names - unused for now, maybe useful once wm parsing in gl_worldmap.ssl is deprecated
+/*
+#define is_terrain_desert              (get_current_terrain_name == mstr_worldmap(1000))
+#define is_terrain_mountains           (get_current_terrain_name == mstr_worldmap(1001))
+#define is_terrain_city                (get_current_terrain_name == mstr_worldmap(1002))
+#define is_terrain_coast               (get_current_terrain_name == mstr_worldmap(1003))
+*/
+
+// Where the player will get radiation on the worldmap
+#define is_terrain_radiated_mountains  (get_current_terrain_name == mstr_worldmap(1005))
+#define is_terrain_radiated_desert     (get_current_terrain_name == mstr_worldmap(1006))
+#define is_radiated_wm_tile            (is_terrain_radiated_mountains or is_terrain_radiated_desert)
+
+#define SetGlowEncRads     if (dude_elevation != 1) then radiation_inc(dude_obj, random(1, 3)); \
+                           add_timer_event(self_obj, game_ticks(random(5, 10)), EVENT_GLOW_RADS)
+
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
 #define GOLD_MINE          (2)
@@ -755,7 +771,3 @@ procedure falling_from_cliff begin
    end
 end
 
-// Where the player will get radiation on the worldmap
-#define in_glow_zone       ((worldmap_xpos >= 1150) and (worldmap_xpos <= 1300) and (worldmap_ypos >= 1200) and (worldmap_ypos <= 1350))
-#define SetGlowEncRads     if (dude_elevation != 1) then radiation_inc(dude_obj, random(1, 3)); \
-                           add_timer_event(self_obj, game_ticks(random(5, 10)), EVENT_GLOW_RADS)
