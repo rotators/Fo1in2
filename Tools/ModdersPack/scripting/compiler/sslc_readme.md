@@ -234,12 +234,12 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
   - old:
     ```
     callbackVar := "Node000";
-    callbackVar();
+    call callbackVar;
     ```
   - new:
     ```
     callbackVar := @Node000;
-    callbackVar();
+    call callbackVar;
     ```
   Not many people know that since vanilla Fallout you can call procedures by "calling a variable" containing it's name as a string value. There was a couple of problems using this:
   - optimizer wasn't aware that you are referencing a procedure, and could remove it, if you don't call it explicitly (can be solved by adding making procedure `critical`)
