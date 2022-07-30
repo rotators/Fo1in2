@@ -48,6 +48,11 @@ procedure ghoulend;
 procedure ghoulcbt;
 procedure timetomove;
 
+#define LVAR_Herebefore          (4)
+
+#define LVAR_NextTile            (6)
+#define LVAR_HomeTile            (7)
+
 variable tmp_hostile;
 variable init := 0;
 variable maxleash := 20;
@@ -59,8 +64,8 @@ variable HENRY;
 procedure start begin
    if (not(init)) then begin
       init := 1;
-      if (local_var(7) == 0) then begin
-         set_local_var(7, self_tile);
+      if (local_var(LVAR_HomeTile) == 0) then begin
+         set_local_var(LVAR_HomeTile, self_tile);
          set_local_var(5, 0);
       end
       set_self_team(TEAM_NECROPOLIS_GANGER);
@@ -86,20 +91,20 @@ procedure talk_p_proc begin
    get_reaction
    start_gdialog(74, self_obj, 4, -1, -1);
    gsay_start;
-   if (local_var(4)) then begin
-      if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_Herebefore)) then begin
+      if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
          call ghoul14;
       end
       else begin
          call ghoul03;
       end
    end
-   else if (local_var(1) >= 2) then begin
-      set_local_var(4, 1);
+   else if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
+      set_local_var(LVAR_Herebefore, 1);
       call ghoul00;
    end
    else begin
-      set_local_var(4, 1);
+      set_local_var(LVAR_Herebefore, 1);
       call ghoul03;
    end
    gsay_end;
@@ -109,13 +114,11 @@ end
 procedure ghoulend begin
 end
 
-procedure ghoulcbt
-begin
+procedure ghoulcbt begin
    tmp_hostile := 1;
 end
 
-procedure ghoul00
-begin
+procedure ghoul00 begin
    Reply(101);
    NOption(102, ghoul00a, 4);
    NOption(103, ghoulend, 4);
@@ -123,8 +126,7 @@ begin
    NLowOption(105, ghoul01);
 end
 
-procedure ghoul00a
-begin
+procedure ghoul00a begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
       call ghoul02;
    end
@@ -133,34 +135,29 @@ begin
    end
 end
 
-procedure ghoul01
-begin
+procedure ghoul01 begin
    NMessage(106);
    call ghoulcbt;
 end
 
-procedure ghoul02
-begin
+procedure ghoul02 begin
    Reply(107);
    NOption(108, ghoulend, 4);
    NOption(109, ghoul04, 4);
 end
 
-procedure ghoul03
-begin
+procedure ghoul03 begin
    NMessage(110);
    call ghoulcbt;
 end
 
-procedure ghoul04
-begin
+procedure ghoul04 begin
    Reply(111);
    NOption(112, ghoulcbt, 4);
    NOption(113, ghoul05, 4);
 end
 
-procedure ghoul05
-begin
+procedure ghoul05 begin
    if bad_critter_reaction then begin
       Reply(114);
    end
@@ -172,9 +169,8 @@ begin
    NOption(118, ghoul05a, 6);
 end
 
-procedure ghoul05a
-begin
-   if (HENRY == 0) then begin
+procedure ghoul05a begin
+   if (global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) then begin
       call ghoul07;
    end
    else begin
@@ -182,22 +178,19 @@ begin
    end
 end
 
-procedure ghoul06
-begin
+procedure ghoul06 begin
    Reply(119);
    NOption(120, ghoulend, 4);
    NOption(121, ghoul03, 4);
 end
 
-procedure ghoul07
-begin
+procedure ghoul07 begin
    Reply(122);
    NOption(123, ghoul07a, 4);
    NOption(124, ghoulend, 4);
 end
 
-procedure ghoul07a
-begin
+procedure ghoul07a begin
    if bad_critter_reaction then begin
       call ghoul08;
    end
@@ -206,22 +199,19 @@ begin
    end
 end
 
-procedure ghoul08
-begin
+procedure ghoul08 begin
    Reply(125);
    NOption(126, ghoulend, 4);
    NOption(127, ghoul03, 4);
 end
 
-procedure ghoul09
-begin
+procedure ghoul09 begin
    Reply(128);
    NOption(129, ghoulend, 4);
    NOption(130, ghoul09a, 4);
 end
 
-procedure ghoul09a
-begin
+procedure ghoul09a begin
    DownReact
    if bad_critter_reaction then begin
       call ghoul03;
@@ -231,53 +221,45 @@ begin
    end
 end
 
-procedure ghoul10
-begin
+procedure ghoul10 begin
    Reply(131);
    NOption(132, ghoulend, 4);
 end
 
-procedure ghoul11
-begin
+procedure ghoul11 begin
    Reply(133);
    NOption(134, ghoul05a, 4);
 end
 
-procedure ghoul12
-begin
+procedure ghoul12 begin
    Reply(135);
    NOption(136, ghoul05a, 4);
    NOption(137, ghoul13, 4);
 end
 
-procedure ghoul13
-begin
+procedure ghoul13 begin
    Reply(138);
    NOption(139, ghoulcbt, 4);
    NOption(140, ghoulend, 4);
 end
 
-procedure ghoul14
-begin
+procedure ghoul14 begin
    Reply(141);
    NOption(142, ghoul15, 4);
    NOption(143, ghoul16, 4);
    NLowOption(105, ghoul01);
 end
 
-procedure ghoul15
-begin
+procedure ghoul15 begin
    Reply(144);
    NOption(145, ghoulend, 4);
 end
 
-procedure ghoul16
-begin
+procedure ghoul16 begin
    NMessage(146);
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile > 0) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -296,18 +278,16 @@ begin
    end
 end
 
-procedure timetomove
-begin
+procedure timetomove begin
    noevent := 0;
-   set_local_var(6, self_tile);
-   new_tile := tile_num_in_direction(local_var(6), random(0, 5), 2);
-   if (tile_distance(local_var(7), new_tile) < maxleash) then begin
+   set_local_var(LVAR_NextTile, self_tile);
+   new_tile := tile_num_in_direction(local_var(LVAR_NextTile), random(0, 5), 2);
+   if (tile_distance(local_var(LVAR_HomeTile), new_tile) < maxleash) then begin
       self_walk_to_tile(new_tile);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
