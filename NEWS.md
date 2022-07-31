@@ -7,6 +7,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Crash when using the door inside of Darkwater's shop after killing Killian.
 - **Fixed**: Death screen had broken colors.
 - **Fixed**: Keri in the Hub wasn't using the sex-macro which tracks the players sex-level.
+- **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
 - **Tweaked**: All worldmap encounter chances have been adjusted to the Fo1 values.
 - **Tweaked**: Hi-Res patch encounter map edges visually improved.
