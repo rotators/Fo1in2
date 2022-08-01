@@ -1,0 +1,116 @@
+/*
+
+   Fallout et Tu - Settings
+
+   Reads data from the fo1_settings.ini file and switches GVAR's accordingly.
+
+*/
+
+#include "define.h"
+#include "sfall/sfall.rotators.h"
+
+#define ini_path                 "config\\fo1_settings.ini"
+#define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
+#define gvar_timers(gvar)        ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);  \
+                                 if (ini_val <= 0) then                                               \
+                                    set_global_var(gvar, 999999);                                     \
+                                 else                                                                 \
+                                    set_global_var(gvar, ini_val)
+
+//procedure warning_ddraw begin
+//   create_message_window("Warning:\nCustom ddraw.dll detected\nSome features will be disabled!");
+//end
+
+procedure settings begin
+   variable section, ini_val;
+
+   //===================================================
+   //    Debug
+   //===================================================
+   section := "DEBUG";
+   gvar_settings(GVAR_ENABLE_DEBUG_MENU);
+   gvar_settings(GVAR_ENABLE_DEBUG_MESSAGES);
+
+   //===================================================
+   //    Fo1in2
+   //===================================================
+   section := "Fo1in2";
+   gvar_settings(GVAR_ENABLE_MOTORCYCLE);
+   //gvar_settings(GVAR_DISABLE_FLUFF_ENCOUNTER);
+   gvar_settings(GVAR_ENABLE_FO2_PARTY_LIMIT);
+   gvar_settings(GVAR_ENABLE_MR_HANDY_HIRELING);
+   gvar_settings(GVAR_ENABLE_EYEBOT_HIRELING);
+   gvar_settings(GVAR_ENABLE_AUTO_DOORS_CLOSING);
+   gvar_settings(GVAR_ENABLE_ARMOR_DESTROY_MOD);
+   gvar_settings(GVAR_ENABLE_FO2_MERCHANT_RESTOCK);
+   gvar_settings(GVAR_ENABLE_UNLIMITED_HPA);
+   gvar_settings(GVAR_ENABLE_ALTERNATIVE_DISGUISE);
+   gvar_settings(GVAR_ENABLE_ARMOR_VAULT_SUIT);
+   gvar_settings(GVAR_ENABLE_BOS_CA);
+   gvar_settings(GVAR_ENABLE_CAVE_MAPS);
+   gvar_settings(GVAR_ENABLE_FO2_CRITTERS);
+   gvar_settings(GVAR_ENABLE_ALTERNATIVE_BOS_REWARD);
+   gvar_settings(GVAR_ENABLE_SHADY_SANDS_MERCHANT);
+   gvar_settings(GVAR_ENABLE_FO2_SEASONAL_LIGHTING);
+   gvar_settings(GVAR_ENABLE_TOUGH_MUTANTS);
+   gvar_settings(GVAR_ENABLE_TOUGH_HUMANS);
+   gvar_settings(GVAR_ENABLE_RED_DOGMEAT);
+   gvar_settings(GVAR_ENABLE_WEAPON_UPGRADES);
+   gvar_settings(GVAR_ENABLE_EXPANDED_ENDING);
+   gvar_settings(GVAR_ENABLE_EXPANDED_RADIATION);
+   gvar_settings(GVAR_ENABLE_CUT_CHARACTERS);
+   gvar_settings(GVAR_ENABLE_KHAN_ART_FIX);
+   gvar_settings(GVAR_ENABLE_FO2_0800_RESTING);
+   gvar_settings(GVAR_ENABLE_FO2_WORLDMAP);
+   gvar_settings(GVAR_ENABLE_EXPANDED_WRECKS);
+
+   //gvar_settings(GVAR_ENABLE_SCRAPHEAP);
+
+   // Satellite locations:
+   gvar_settings(GVAR_ENABLE_SATELLITE_LOCATIONS);
+   if fo1in2_satellite_loc_disabled then begin
+      invisible_on_map(AREA_SHADY_CAVES)
+      invisible_on_map(AREA_HUB_FARM)
+      invisible_on_map(AREA_HUB_LAIR)
+   end
+
+   // Changing the timers mid-game will fuck shit up
+   if (global_var(GVAR_SET_GAMESTART_TIMERS) == 0) then begin
+      set_global_var(GVAR_SET_GAMESTART_TIMERS, 1);
+
+      gvar_timers(GVAR_VAULT13_WATER_DAYS); // Start timer (150 days)
+
+      gvar_timers(GVAR_VAULT_13_INVASION_DAYS);
+      gvar_timers(GVAR_NECROPOLIS_INVASION_DAYS);
+      gvar_timers(GVAR_BONEYARD_INVASION_DAYS);
+      gvar_timers(GVAR_THE_HUB_INVASION_DAYS);
+      gvar_timers(GVAR_BROTHERHOOD_INVASION_DAYS);
+      gvar_timers(GVAR_JUNKTOWN_INVASION_DAYS);
+      gvar_timers(GVAR_SHADY_SANDS_INVASION_DAYS);
+   end
+
+   //===================================================
+   //    FIXT
+   //===================================================
+   section := "FIXT";
+   gvar_settings(GVAR_FIXT_ENABLED);
+
+   gvar_settings(GVAR_IRONMAN_MODE);
+   gvar_settings(GVAR_AGATHA_IS_ENABLED);
+   gvar_settings(GVAR_BOS_LORRI_CHA_ENABLED);
+   gvar_settings(GVAR_BOS_LORRI_SEX_ENABLED);
+   gvar_settings(GVAR_BOS_LORRI_NUM_OPS_ALLOWED);
+   gvar_settings(GVAR_ENABLE_HOOKERS);
+   gvar_settings(GVAR_HUNTER_RESPAWNS);
+end
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      call settings;
+
+      // unused right now
+      //if not(sfall_rotators) then
+      //   call warning_ddraw in 1;
+   end
+end
