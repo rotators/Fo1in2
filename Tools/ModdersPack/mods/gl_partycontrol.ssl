@@ -7,7 +7,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.2
+   version 1.3
 
 */
 
@@ -56,11 +56,20 @@ procedure CombatTurn_Handler begin
 
    pid := obj_pid(critter);
    if (pid == PID_PLAYER and inControl == false) then return;
-   if (pid != PID_PLAYER and controlMode != 1 and AllowControl(pid) == false) then return;
+
+   if (pid != PID_PLAYER and controlMode != 1 and AllowControl(pid) == false) then begin
+      if (npcControl) then begin
+         npcControl := 0;
+         call SetLight(dude_obj, dudeLightInt, dudeLightDist); // restore dude light
+         //move_to(dude_obj, dude_tile, dude_elevation);
+         intface_redraw;
+      end
+      //display_msg("Skip control.");
+      return;
+   end
 
    if (status == 1) then begin
       set_dude_obj(critter);
-      intface_redraw;
       //display_msg("Take control of: " + obj_name(critter));
 
       if (critter != real_dude_obj) then begin
@@ -79,12 +88,14 @@ procedure CombatTurn_Handler begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
+         intface_redraw;
 
          obj_set_light_level(critter, 100, 4);
          inControl := true;
       end else if (npcControl) then begin
          call SetLight(dude_obj, dudeLightInt, dudeLightDist); // restore dude light
-         npcControl := 0; // dude control
+         npcControl := 0; // for dude control
+         intface_redraw;
       end
 
       if (inControl) then begin
@@ -116,13 +127,13 @@ procedure CombatTurn_Handler begin
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
 
-         set_dude_obj(0); // w/o redraw interface bar
+         if (status == 0) then set_dude_obj(0); // w/o redraw interface bar (otherwise it flickers when switching from the player to NPCs)
          //display_msg("Return control to real dude!");
       end
 
       if (status < 0) then begin
          set_dude_obj(real_dude_obj);
-         call SetLight(dude_obj, dudeLightInt, dudeLightDist); //obj_set_light_level(dude_obj, 100, 4);
+         call SetLight(dude_obj, dudeLightInt, dudeLightDist);
       end
    end
 end

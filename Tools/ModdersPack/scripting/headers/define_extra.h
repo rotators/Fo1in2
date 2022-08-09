@@ -121,9 +121,12 @@
 #define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
-// remove inven obj defines for the 4th argument to HOOK_REMOVEINVOBJ
+// Some possible defines for the 4th argument to HOOK_REMOVEINVOBJ
+#define RMOBJ_DROP                4831349  // If the object is dropped manually by the player from the inventory screen
+#define RMOBJ_TRADE               4683293  // If the object is offered up as a trade
+#define RMOBJ_DROPMULTI           4571599  // When dropping a part of a stack (RMOBJ_DROP occurs first)
 #define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
-#define RMOBJ_CONTAINER           4683293  // same as RMOBJ_TRADE (item_move_func_)
+//#define RMOBJ_CONTAINER         4683293  // same as RMOBJ_TRADE (item_move_func_)
 #define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
 #define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
 #define RMOBJ_EQUIP_WEAPON        4658675  // (switch_hand_)

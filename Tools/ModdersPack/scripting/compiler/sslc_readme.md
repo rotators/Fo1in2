@@ -79,7 +79,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
 - Conditional expressions (Python-inspired), also known as ternary operator:
   - new:
     ```
-    X := value1 if condition else value2
+    X := value1 if (condition) else value2
     ```
   - old:
     ```

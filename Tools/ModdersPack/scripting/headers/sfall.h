@@ -125,11 +125,6 @@
 #define ATKTYPE_HOOKKICK       (18)
 #define ATKTYPE_PIERCINGKICK   (19)
 
-// Some possible values for the 4th argument to hs_removeinvobj
-#define RMOBJ_DROP             (0x49B875)  // If the object is dropped manually by the player from the inventory screen
-#define RMOBJ_TRADE            (0x47761D)  // If the object is offered up as a trade
-#define RMOBJ_DROPMULTI        (0x45C1CF)  // When dropping a part of a stack (RMOBJ_DROP occurs first)
-
 // Return values for "typeof"
 #define VALTYPE_NONE  (0) // not used yet
 #define VALTYPE_INT   (1)
@@ -212,6 +207,7 @@
 #define GAME_MSG_STAT       (17)
 #define GAME_MSG_TRAIT      (18)
 #define GAME_MSG_WORLDMAP   (19)
+#define GAME_MSG_EDITOR     (20)
 #define GAME_MSG_PRO_ITEM   (0x1000)
 #define GAME_MSG_PRO_CRIT   (0x1001)
 #define GAME_MSG_PRO_SCEN   (0x1002)
@@ -257,6 +253,7 @@
 #define mstr_stat(x)        (message_str_game(GAME_MSG_STAT, x))
 #define mstr_trait(x)       (message_str_game(GAME_MSG_TRAIT, x))
 #define mstr_worldmap(x)    (message_str_game(GAME_MSG_WORLDMAP, x))
+#define mstr_character(x)   (message_str_game(GAME_MSG_EDITOR, x))
 
 
 #define BLOCKING_TYPE_BLOCK     (0)
