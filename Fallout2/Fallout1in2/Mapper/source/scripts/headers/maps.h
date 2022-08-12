@@ -185,6 +185,8 @@
 
 #define MAP_VIPERS          (90)
 
+#define MAP_IN_GAME_MOVIE1  (149) // Frank Horrigan encounter - unused in Fo1in2, added here because it is hardcoded
+
 /*******************************************************************************
  Map Names (Strings)
 *******************************************************************************/

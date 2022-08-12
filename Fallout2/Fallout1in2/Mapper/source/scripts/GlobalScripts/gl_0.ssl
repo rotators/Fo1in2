@@ -10,19 +10,25 @@
 #include "sfall/define_lite.h"
 #include "sfall/sfall.rotators.h"
 
-procedure error_unsafe_scripting begin
-   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nFallout et Tu will not work correctly!");
-   //create_message_window("Warning:\n'AllowUnsafeScripting' disabled in ddraw.ini\nFallout et Tu will not work correctly!");
-   debug_msg("Fo1in2 SETTINGS - 'AllowUnsafeScripting' != 2 in ddraw.ini!");
-   signal_end_game;
-end
+procedure start;
+procedure error_AllowUnsafeScripting;
+procedure error_DisableHorrigan;
+procedure error_UseFileSystemOverride;
+procedure force_settings;
 
-procedure start
-begin
+procedure start begin
    variable init;
 
    if(get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") != 2) then begin
-      call error_unsafe_scripting in 1;
+      call error_AllowUnsafeScripting in 1;
+   end
+
+   if(get_ini_setting("ddraw.ini|Misc|DisableHorrigan") != 1) then begin
+      call error_DisableHorrigan in 1;
+   end
+
+   if(get_ini_setting("ddraw.ini|Misc|UseFileSystemOverride") != 1) then begin
+      call error_UseFileSystemOverride in 1;
    end
 
    init := VOODOO_Init(); // must be called before any other voodoo magick
@@ -32,4 +38,34 @@ begin
       // everything in this block will run only once per session
    //end
 
+end
+
+procedure error_AllowUnsafeScripting begin
+   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nFallout et Tu will not work correctly!");
+   //create_message_window("Warning:\n'AllowUnsafeScripting' disabled in ddraw.ini\nFallout et Tu will not work correctly!");
+   debug_msg("Fo1in2 SETTINGS - 'AllowUnsafeScripting' != 2 in ddraw.ini!");
+
+   call force_settings;
+end
+
+procedure error_DisableHorrigan begin
+   message_box_warning("ERROR\n\n'DisableHorrigan' not enabled\nFallout et Tu will not work correctly!");
+   debug_msg("Fo1in2 SETTINGS - 'DisableHorrigan' != 1 in ddraw.ini!");
+
+   call force_settings;
+end
+
+procedure error_UseFileSystemOverride begin
+   message_box_warning("WARNING:\n'UseFileSystemOverride' disabled\nSome features won't work correctly!");
+   debug_msg("Fo1in2 SETTINGS - 'UseFileSystemOverride' != 1 in ddraw.ini!");
+
+   call force_settings;
+end
+
+procedure force_settings begin
+   set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 2);
+   set_ini_setting("ddraw.ini|Misc|DisableHorrigan", 1);
+   set_ini_setting("ddraw.ini|Misc|UseFileSystemOverride", 1);
+
+   signal_end_game;
 end
