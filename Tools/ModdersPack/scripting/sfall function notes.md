@@ -36,8 +36,6 @@ The `force_graphics_refresh` forces the screen to redraw at times when it normal
 
 The mapper manual lists the functions `world_map_x_pos` and `world_map_y_pos`, which supposedly return the player's x and y positions on the world map. The `get_world_map_x_pos` and `get_world_map_y_pos` are included here anyway, because I was unable to get those original functions to work, or even to find any evidence that they existed in game.
 
-The `set_pipboy_available` will only accept 0 or 1 as an argument. Using any other value will cause the function to have no effect. Use 0 to disable the pipboy, and 1 to enable it.
-
 The `get_critter_current_ap` and `set_critter_current_ap` functions should only be used during the target critters turn while in combat. Calling them outside of combat typically returns the critters max AP, but don't rely on that behaviour. (Specifically, if the critter has never before entered combat, it will probably return the critters base AP ignoring any extra bonuses from perks etc.)
 
 The **type** value in the weapon knockback functions can be 0 or 1. If 0, the value becomes an absolute distance that targets will be knocked back. If 1, the value is multiplied by the distance they would normally have been knocked back. Weapon knockback modifiers are applied in the order `weapon -> attacker -> target`, so a x2 weapon wielded by an abs 6 attacker hitting a /2 target will knock the target back 3 squares. The knockback functions will not override the stonewall perk or knockdowns resulting from criticals. knockback values set on weapons or critters are not saved, and must be reset each time the player reloads.
@@ -105,6 +103,10 @@ FUNCTION REFERENCE
 - Returns 1 the first time it is called after a new game or game load, and 0 any time after. It works on an individual basis for each script, so one script wont interfere with others. Its primary use is for global scripts, so that they know when to call `set_global_script_repeat`, but it can be called from normal scripts too.
 
 -----
+##### `void set_pipboy_available(int available)`
+- Sets the availability of the pipboy in the game. Use 0 to disable the pipboy, and 1 or 2 to enable it (value 2 does not mark the `VSUIT_MOVIE` movie as "played").
+
+-----
 ##### `void inc_npc_level(int pid/string name)`
 - Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party.
 - This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** setting.
@@ -170,7 +172,7 @@ FUNCTION REFERENCE
 - Accepts a pointer to an object and will remove the script from that object.
 
 -----
-##### `void set_script(object, int scriptid)`
+##### `void set_script(object, int scriptID)`
 - Accepts a pointer to an object and **scriptID**, and applies the given script to an object (scriptID accepts the same values as `create_object_sid`)
 - If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided.
 - If you add `0x80000000` to the SID when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
