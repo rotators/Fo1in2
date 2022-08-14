@@ -137,16 +137,20 @@
 //#define RMOBJ_DROP_DYNAMITE     4666865  // same as RMOBJ_USE_OBJ
 #define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
 #define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
-#define RMOBJ_ARMOR_EQUIPED       4651961  // (setup_inventory_)
-#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // (setup_inventory_)
-#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // (setup_inventory_)
+#define RMOBJ_ARMOR_EQUIPED       4651961  // removing armor from the player's slot when entering INVENTORY/LOOT/BARTER/USE inventory
+#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // removing item from the player's left slot when entering INVENTORY/LOOT/BARTER/USE inventory
+#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // removing item from the player's right slot when entering INVENTORY/LOOT/BARTER/USE inventory
 #define RMOBJ_RM_MULT_OBJS        4563866  // (op_rm_mult_objs_from_inven_)
 #define RMOBJ_REPLACE_WEAPON      4658526  // (switch_hand_)
 #define RMOBJ_THROW               4266040  // (action_ranged_)
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory (item_remove_mult_)
-#define RMOBJ_AI_USE_DRUG_ON      4359920  // remove before AI uses the drug in combat (ai_check_drugs_)
+#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
+#define RMOBJ_AI_USE_DRUG_ON      4359920  // removing before AI uses the drug in combat
 //#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 //#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
+#define RMOBJ_BARTER_ARMOR        4675656  // removing armor from NPC's slot before entering the barter screen
+#define RMOBJ_BARTER_WEAPON       4675722  // removing weapon from NPC's slot before entering the barter screen
+#define RMOBJ_INVEN_DROP_CAPS     4667295  // if money/caps are dropped manually by the player from the inventory screen
+#define RMOBJ_DROP_INTO_CONTAINER 4678833  // when dropping items into a container item (bag/backpack)
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
