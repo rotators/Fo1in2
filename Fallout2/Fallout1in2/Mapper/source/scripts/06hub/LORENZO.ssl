@@ -87,7 +87,9 @@ variable VaultCount;
 
 #define LVAR_LoanTakenDate          (10)
 
-#define LOAN_TIMEOUT (4) // in hours
+#define LOAN_TIMEOUT          (4) // in hours
+
+#define EVENT_GoInside        (1)
 
 procedure start begin
    if Only_Once then begin
@@ -105,7 +107,7 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    if (SetDayNight == 0) then begin
-      add_timer_event(self_obj, game_ticks(random(5, 20)), 1);
+      add_timer_event(self_obj, game_ticks(random(5, 20)), EVENT_GoInside);
       SetDayNight := 1;
    end
 
@@ -218,7 +220,9 @@ procedure look_at_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   call SendInsideHouse;
+   if (fixed_param == EVENT_GoInside) then begin
+      call SendInsideHouse;
+   end
 end
 
 procedure SendInsideHouse begin
@@ -251,8 +255,9 @@ procedure SendInsideHouse begin
    reg_anim_begin();
    reg_anim_obj_move_to_tile(self_obj, Destination, -1);
    reg_anim_end();
-   rm_timer_event(self_obj);
-   add_timer_event(self_obj, game_ticks(LVar0), 1);
+
+   rm_fixed_timer_event(self_obj, EVENT_GoInside);
+   add_timer_event(self_obj, game_ticks(LVar0), EVENT_GoInside);
 end
 
 procedure Node998 begin
