@@ -39,12 +39,12 @@ procedure vincnight;
 procedure combat;
 procedure check_status;
 
+#define LVAR_FloatOnce              (5)
 #define LVAR_Home_Tile              (7)
 #define LVAR_Home_Rotation          (8)
 
 variable tmp_hostile;
 variable Only_Once := 1;
-variable ARMED;
 variable again;
 variable home_tile;
 variable sleep_tile;
@@ -105,7 +105,16 @@ procedure critter_p_proc begin
       end
       else begin
          if (self_can_see_dude) then begin
-            call talk_p_proc;
+            if (local_var(LVAR_FloatOnce) == 0) then begin
+               set_local_var(LVAR_FloatOnce, 1);
+               call talk_p_proc;
+            end
+            else begin
+               call check_status;
+               if (dude_is_armed or not(DISGUISED)) then begin
+                  call vincent02;
+               end
+            end
          end
          else if day then begin
             if (local_var(6)) then begin
@@ -138,7 +147,7 @@ end
 
 procedure talk_p_proc begin
    call check_status;
-   if ((ARMED == 1) or not(DISGUISED)) then begin
+   if (dude_is_armed or not(DISGUISED)) then begin
       call vincent02;
    end
    else begin
@@ -162,8 +171,6 @@ procedure look_at_p_proc begin
 end
 
 procedure check_status begin
-   ARMED := 0;
-   if (dude_is_armed) then ARMED := 1;
    coc_disguise_check;
 end
 
