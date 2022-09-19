@@ -11,5 +11,3 @@
 {105}{}{ successfully disarms the trap.}
 {106}{}{ fail to disarms the trap.}
 {107}{}{ accidentally sets off the trap.}
-
-
