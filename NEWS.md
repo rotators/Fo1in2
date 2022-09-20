@@ -22,4 +22,5 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: Motorcycle spawn position in mountain encounter maps.
 - **Tweaked**: Moved the Necropolis Watershed map around to fix shitty map edges.
 - **Tweaked**: The Hub Old Town Captors will only attack the player if he actually enters the house. No more unwanted attack from walking past the door that was just opened by a stupid child.
+- **Tweaked**: The garrison troops in the Master's Lair have a respawn delay now.
 - **Tweaked**: Vault 15 entrance hi-res patch screen edges.
