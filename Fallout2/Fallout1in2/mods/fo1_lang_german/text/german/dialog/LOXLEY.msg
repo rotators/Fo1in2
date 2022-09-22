@@ -184,6 +184,7 @@
 {1002}{}{Polizei}
 {1003}{}{Harold}
 {1004}{}{Kane}
+{1005}{}{Old Town}
 {1006}{}{Crimson Caravan}
 {1007}{}{Far Go Traders}
 {1008}{}{Caravans}
@@ -212,13 +213,13 @@
 {1031}{}{Claw}
 {1032}{}{Glow}
 {1033}{}{Oldtown}
-{1034}{}{Old Town}
 
 {1100}{LOX_66}{Nein, Decker ist aalglatt. Er hat die ganze Stadt in der Tasche, wirklich. Er gibt den Händlern seinen 'Schutz', während er sie gegeneinander aufhetzt. Keiner, mit dem man sich anlegt ... Aber er ist meistens im 'Maltese Falcon'.}
 {1101}{LOX_67}{Er ist Waffenhändler im Norden von Old Town. Verdammt gefährlich! Manche seiner Waren sind schlicht tödlich!}
 {1102}{LOX_68}{Mag uns nicht gerade sehr.}
 {1103}{LOX_69}{Harold? Er ist ziemlich in Ordnung für einen Ghul und so. Er lebt im Süden.}
 {1104}{LOX_70}{Deckers rechte Hand. Keiner, mit dem man sich anlegt. Er ist meistens im 'Maltese Falcon'.}
+{1105}{LOX_79}{Viele Arme, die für die Händler arbeiten, wohnen hier in miesen Gebäuden, die nicht mal vor der Sonne schützen. Und die reichen Ärsche sitzen bequem in ihren schönen Häusern in den Heights. Macht mich krank!}
 {1106}{LOX_72}{Sie haben einen kleinen Laden in Downtown. Ich trau' ihnen nicht. Verschanzen sich meistens in ihrem Lager. Sie verkaufen Arznei und Medizinkram. Viel billiger als die kranken Children of the Cathedral, das sag' ich dir.}
 {1107}{LOX_73}{Von den drei Caravans der vertrauenswürdigste. Hab' ihn nur knapp verfehlt.}
 {1108}{LOX_74}{Kriminelle! Alles Kriminelle! Sie drücken der Stadt die Luft ab. Die Far Go Traders, der Crimson Caravan und die allerschlimmsten, die Water Merchants. Alle!}
@@ -247,4 +248,3 @@
 {1131}{LOX_76}{Gibt nicht viel zu sagen. Abends erzählt man den Kindern von einem Biest, das im Norden lebt und überall böse kleine Kinder frisst.}
 {1132}{LOX_78}{Vor etwa drei Jahren ging einer der Händler nach Süden und suchte nach Städten. Er kam kahl und zahnlos zurück und brabbelte von Strahlungskonzentration. Wer weiß? Vielleicht gab's dort vorm Krieg was Besonderes.}
 {1133}{LOX_79}{Viele Arme, die für die Händler arbeiten, wohnen hier in miesen Gebäuden, die nicht mal vor der Sonne schützen. Und die reichen Ärsche sitzen bequem in ihren schönen Häusern in den Heights. Macht mich krank!}
-{1134}{LOX_79}{Viele Arme, die für die Händler arbeiten, wohnen hier in miesen Gebäuden, die nicht mal vor der Sonne schützen. Und die reichen Ärsche sitzen bequem in ihren schönen Häusern in den Heights. Macht mich krank!}

@@ -195,6 +195,7 @@
 {1002}{}{Police}
 {1003}{}{Harold}
 {1004}{}{Kane}
+{1005}{}{Vieille}
 {1006}{}{Caravane écarlate}
 {1007}{}{Lointain}
 {1008}{}{Caravanes}
@@ -223,13 +224,13 @@
 {1031}{}{Griffemort}
 {1032}{}{Rayon}
 {1033}{}{Vieille Ville}
-{1034}{}{Vieille}
 
 {1100}{LOX_66}{Decker est un malin qu'a toute la ville dans la poche. Il "protège" les marchands et en même temps, il les monte les uns cont'les autres. Vaut mieux pas s'frotter à lui mais si t'y tiens, tu le trouv'ras sûrement au Faucon Maltais.}
 {1101}{LOX_67}{C'est un trafiquant d'armes, au Nord de la Vieille Ville. Un type dang'reux... sa quincaillerie est un peu trop mortelle à mon goût.}
 {1102}{LOX_68}{J'crois pas qu'ils nous ont à la bonne.}
 {1103}{LOX_69}{Harold ? C'est pas un mauvais bougre, pour un Goule. Il vit du côté Sud.}
 {1104}{LOX_70}{L'bras droit de Decker... à éviter. Normalement, il est au Faucon Maltais.}
+{1105}{LOX_79}{Quasi tous les pôvr' qui bossent pour les marchands vivent là, dans des baraques si minces qu'on y crève de chaud. Pendant c'temps-là ces salauds de richards se prélassent dans leur 'sweet home', sur les Hauteurs. Ecœurant.}
 {1106}{LOX_72}{Ils ont une p'tite boutique en ville où on vend d'tout. Faut pas leur faire confiance. Toujours cachés au fond d'leur entrepôt. Mais bon ils vendent des stims et d'la méd'cine à bien moins cher qu'ces imbéciles d'Enfants d'la Cathédrale !}
 {1107}{LOX_73}{La meilleure des trois caravanes. Tu l'as loupée de quequ' kilomètres.}
 {1108}{LOX_74}{Des criminels. Y'a pas d'aut' mot. Ils sucent la ville, littéralement. Les Marchands du Lointain, la Caravane Ecarlate et, les pires du lot, les Marchands d'Eau. T'as l'choix.}
@@ -258,4 +259,4 @@
 {1131}{LOX_76}{Pas grand-chose à dire. Des contes pour faire peur aux mouflets... une bête qui vit au Nord et qui bouff'rait les p'tits enfants pas sages.}
 {1132}{LOX_78}{Il y a 3 ans, un marchand est parti vers l'Sud pour d'aut' villes. A son r'tour, les ch'veux et les dents lui tombaient et il bafouillait quequ'chose sur une immense zone radioactive. Qui sait ce qu'il y avait là-bas avant la guerre...}
 {1133}{LOX_79}{Quasi tous les pôvr' qui bossent pour les marchands vivent là, dans des baraques si minces qu'on y crève de chaud. Pendant c'temps-là ces salauds de richards se prélassent dans leur 'sweet home', sur les Hauteurs. Ecœurant.}
-{1134}{LOX_79}{Quasi tous les pôvr' qui bossent pour les marchands vivent là, dans des baraques si minces qu'on y crève de chaud. Pendant c'temps-là ces salauds de richards se prélassent dans leur 'sweet home', sur les Hauteurs. Ecœurant.}
+

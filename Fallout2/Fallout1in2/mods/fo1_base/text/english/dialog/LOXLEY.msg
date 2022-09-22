@@ -195,6 +195,7 @@
 {1002}{}{Police}
 {1003}{}{Harold}
 {1004}{}{Kane}
+{1005}{}{Old}
 {1006}{}{Crimson}
 {1007}{}{Traders}
 {1008}{}{Caravans}
@@ -223,13 +224,13 @@
 {1031}{}{Deathclaw}
 {1032}{}{Glow}
 {1033}{}{Old Town}
-{1034}{}{Old}
 
 {1100}{LOX_66}{No. Decker's a slick one. He's got the whole town in his pocket, he does. He gives his 'protection' to the merchants, all the while pitting them against each other. Not someone you want to mess with, but he can usually be found in the Maltese Falcon.}
 {1101}{LOX_67}{He's a gun dealer up in the north part of Old Town. Damn dangerous bloke, some of his hardware's a bit too lethal.}
 {1102}{LOX_68}{Not too fond of us actually.}
 {1103}{LOX_69}{Harold? He's a good enough sort, for being a ghoul an all. Lives on the south side.}
 {1104}{LOX_70}{Decker's right hand man, definitely not one to mess with. You can usually find him at the Maltese Falcon.}
+{1105}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
 {1106}{LOX_72}{They have a little general shop downtown. Can't trust'em, though. Hiding in their bloody warehouse most of the time. They do sell some mean drugs and medkits, though. A lot cheaper than the stupid Children of the Cathedral, I can tell you that.}
 {1107}{LOX_73}{The closest thing to decent of all the three caravans. Only missed it by a few miles.}
 {1108}{LOX_74}{Criminals. Absolute criminals. They're squeezing the life out of the town. The Far Go Traders, the Crimson Caravan, and the worst of the bunch, the Water Merchants. You can have the lot.}
@@ -258,4 +259,3 @@
 {1131}{LOX_76}{Not much to tell, really. Nighttime, scare your children stories about a beastie living up north and feeding on the flesh of bad little children everywhere.}
 {1132}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
 {1133}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
-{1134}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
