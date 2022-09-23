@@ -72,6 +72,13 @@ variable skill_pts;
 
 variable sound;
 
+#define inc_bonus_skill(skill, points, msg) \
+   critter_mod_skill(dude_obj, skill, (points + is_skill_tagged(skill)));              \
+   if is_skill_tagged(skill) then                                                      \
+      display_msg(gen_mstr(116) + (points + is_skill_tagged(skill)) + gen_mstr(msg));  \
+   else                                                                                \
+      display_msg(gen_mstr((msg + 18)))
+
 procedure start begin
    if not(initial) then begin
       initial := 1;
@@ -160,19 +167,8 @@ procedure give_skill begin
    set_local_var(11, local_var(11) + 1);
    skill_pts := 1;
 
-   // Unarmed++
-   critter_mod_skill(dude_obj, SKILL_UNARMED_COMBAT, (skill_pts + is_skill_tagged(SKILL_UNARMED_COMBAT)));
-   if is_skill_tagged(SKILL_UNARMED_COMBAT) then
-      display_msg(gen_mstr(116) + (skill_pts + is_skill_tagged(SKILL_UNARMED_COMBAT)) + gen_mstr(120));
-   else
-      display_msg(gen_mstr(138));
-
-   // Melee++
-   critter_mod_skill(dude_obj, SKILL_MELEE, (skill_pts + is_skill_tagged(SKILL_MELEE)));
-   if is_skill_tagged(SKILL_MELEE) then
-      display_msg(gen_mstr(116) + (skill_pts + is_skill_tagged(SKILL_MELEE)) + gen_mstr(121));
-   else
-      display_msg(gen_mstr(139));
+   inc_bonus_skill(SKILL_UNARMED_COMBAT, skill_pts, 120);
+   inc_bonus_skill(SKILL_MELEE, skill_pts, 121);
 end
 
 procedure prepare_for_combat begin
