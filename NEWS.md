@@ -10,8 +10,11 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: It was possible to break the ending slides when entering the crater-locations right after the Cathedral/Mariposa were destroyed. Added a fail-safe and improved the script to prevent this from happening.
 - **Fixed**: It wasn't possible to use super-stims or other drugs on Lorenzo in the Hub.
 - **Fixed**: Keri in the Hub wasn't using the sex-macro which tracks the players sex-level.
+- **Fixed**: Kidnappers in the Hub would get set back to their starting position when loading in combat. NOTE: Saving and loading the game in combat is not advised, since it can corrupt the savegame.
 - **Fixed**: Killian's store guard would attack the player for being in the store at night, even though the store is still open for another hour.
 - **Fixed**: Lone Centaur in Death-encounter table was called "Coyote".
+- **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
+- **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
 - **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Fixed**: Traps would show the wrong message log entry when trying to disarm them.
