@@ -16,6 +16,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
 - **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
+- **Fixed**: The combat training in the Brotherhood gym would not give bonus skill points if the skill is tagged. Also fixed the Skill+ message (shows +2 in message log now instead of +1).
 - **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Fixed**: Traps would show the wrong message log entry when trying to disarm them.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
