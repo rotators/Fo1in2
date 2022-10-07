@@ -7,6 +7,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Crash when using the door inside of Darkwater's shop after killing Killian.
 - **Fixed**: Death screen had broken colors.
 - **Fixed**: Error messages when interacting with the elevator doors in the Glow.
+- **Fixed**: Gizmo would keep repeating his initial dialog after the player accepted the task to take down Killian.
 - **Fixed**: It was possible to break the ending slides when entering the crater-locations right after the Cathedral/Mariposa were destroyed. Added a fail-safe and improved the script to prevent this from happening.
 - **Fixed**: It wasn't possible to use super-stims or other drugs on Lorenzo in the Hub.
 - **Fixed**: Keri in the Hub wasn't using the sex-macro which tracks the players sex-level.
