@@ -15,6 +15,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Killian's store guard would attack the player for being in the store at night, even though the store is still open for another hour.
 - **Fixed**: Lone Centaur in Death-encounter table was called "Coyote".
 - **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
+- **Fixed**: On death, Griffith's name would show "Zombie Guard" instead of his actual name.
 - **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
 - **Fixed**: The combat training in the Brotherhood gym would not give bonus skill points if the skill is tagged. Also fixed the Skill+ message (shows +2 in message log now instead of +1).
