@@ -84,6 +84,7 @@ variable How_Many_Party_Members_Armed;
                                                     How_Many_Party_Members_Are_Injured+=1;*/    \
                                             if (Rae_In_Party) then                              \
                                                 if (Is_Injured(Rae_ptr)) then                   \
+                                                    How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Vasquez_In_Party) then                          \
                                                 if (Is_Injured(Vasquez_ptr)) then               \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
