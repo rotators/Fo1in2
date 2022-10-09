@@ -29,8 +29,9 @@ variable party_elevation;
 variable Item := 0;
 variable NumItems := 0;
 
-#define EVENT_END_1        (1)
-#define EVENT_END_2        (2)
+#define EVENT_END_1           (1)
+#define EVENT_END_2           (2)
+#define EVENT_SetStartItems   (3)
 
 procedure start begin
 end
@@ -56,15 +57,9 @@ variable Item;
       // Give initial reputation
       inc_v13_rep(REP_BONUS_GAME_STARTED);
 
-      // Add starting inventory
-      if (global_var(GVAR_IRONMAN_MODE) == 0) then begin
-         call base_inventory;
-         call TagInven;
-      end
-      else if (global_var(GVAR_IRONMAN_MODE) == 1) then
-         call base_inventory;
-      else if (global_var(GVAR_IRONMAN_MODE) == 2) then
-         call TagInven;
+      // We have to run this in a timer event since otherwise the code executes to early
+      // and the fo1_settings.ini values aren't refreshed yet
+      add_timer_event(self_obj, 0, EVENT_SetStartItems);
    end
    else begin
       // Check if we should run the endgame scene
@@ -114,7 +109,17 @@ end
 procedure timed_event_p_proc begin
 variable Critter;
 
-   if (fixed_param == EVENT_END_1) then begin
+   if (fixed_param == EVENT_SetStartItems) then begin
+      if (global_var(GVAR_IRONMAN_MODE) == 0) then begin
+         call base_inventory;
+         call TagInven;
+      end
+      else if (global_var(GVAR_IRONMAN_MODE) == 1) then
+         call base_inventory;
+      else if (global_var(GVAR_IRONMAN_MODE) == 2) then
+         call TagInven;
+   end
+   else if (fixed_param == EVENT_END_1) then begin
       debug("EG Scene 1 - Setup");
       kill_critter_type(PID_RAT_CAVE, 0);
 
