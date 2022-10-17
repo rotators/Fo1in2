@@ -16,7 +16,7 @@ fi
 
 root_dir="$(dirname $0)"
 data_dir="$root_dir/data"
-dat2="wine $root_dir/dat2.exe"
+dat2="wine $root_dir/../Fallout2_ProtoManager/dat2.exe"
 undat_list="$root_dir/undat_files.txt"
 
 if ! $dat2 l $master_dat > /dev/null 2>&1; then
