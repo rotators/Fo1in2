@@ -129,6 +129,7 @@ For various other QoL features that aren't included in FALLOUT ET TU already, ch
 - [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders)
 - [FO2tweaks](https://github.com/BGforgeNet/FO2tweaks)
 - [Banjo's Fallout 2 Mods](https://www.nma-fallout.com/threads/banjos-fallout-2-mods.220413/)
+- [Upscaled videos](https://www.nma-fallout.com/threads/fallout-ettu-hd-videos-playable-ingame.221565/)
 
 SPECIAL THANKS
 --------------
