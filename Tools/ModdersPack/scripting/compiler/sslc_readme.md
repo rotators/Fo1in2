@@ -246,6 +246,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
   - you couldn't see all references of a procedure from a Script Editor
   - it was completely not obvious that you could do such a thing, it was a confusing syntax
 
+
 - (*) **Arrays**: In vanilla Fallout, arrays had to be constructed by reserving a block of global/map variables. Since sfall 2.7, specific array targeted functions have been available, but they are fairly messy and long winded to use. The compiler provides additional syntactic shorthand for accessing and setting array variables, as well as for array creation. When declaring an array variable, put a constant integer in `[]`` to give the number of elements in the array. (before sfall 3.4 you had to specify size in bytes for array elements, now it's not required, see **arrays.md** for more information)
   - new:
     ```

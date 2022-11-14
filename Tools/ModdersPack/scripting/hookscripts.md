@@ -7,7 +7,7 @@ In addition to the bit of code it overrides, the script will be run once when fi
 
 ### Hooks compatibility
 
-To aid in mods compatibility, avoid using `hs_xxx.int` scripts. Instead it is recommended to use a normal global script combined with `register_hook_proc` or `register_hook`.
+To aid in mods compatibility, avoid using the predefined `hs_<name>.int` scripts. Instead it is recommended to use a normal global script combined with `register_hook_proc` or `register_hook`.
 
 Example setup for a hook-script based mod:
 ```js
@@ -42,29 +42,37 @@ Returns all hook arguments as a new temp array.
 Used to return the new values from the script. Each time it's called it sets the next value, or if you've already set all return values it does nothing.
 
 #### `void set_sfall_arg(int argNum, int value)`
-Changes argument value. The argument number (argNum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see below).
+Changes argument value. The argument number (`argNum`) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see below).
 
 #### `void register_hook(int hookID)`
-Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` proc will be executed in the current global script. You can use all above functions like normal.
+Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` procedure will be executed in the current global script. You can use all above functions like normal.
 
 #### `void register_hook_proc(int hookID, procedure proc)`
-The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions.
-This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use `hs_*.int` scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
+The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass the procedure the same as how you use dialog option functions.
+This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script with no conflicts) and flexibility. You can place all related hook scripts for a specific mod in one global script!
 
 Use zero (0) as the second argument to unregister the hook from the current global script.
 
 #### `void register_hook_proc_spec(int hookID, procedure proc)`
-Works very similar to `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script). All scripts hooked to a single hook point with this function are executed in exact order of how they were registered, as opposed to the description below, which refers to using `register_hook` and `register_hook_proc` functions.
+Works the same as `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_<name>.int` script).
+In addition, all scripts hooked to a single hook point with this function are executed in the exact order of how they were registered. In the case of using `register_hook` and `register_hook_proc` functions, scripts are executed in reverse order of how they were registered.
 
-__NOTE:__ You can hook several scripts to a single hook point, for example, if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again. Sometimes you need to multiply certain value in a chain of hook scripts.
+**The execution chain of script procedures for a hook is as follows:**
+1. Procedures registered with `register_hook` and `register_hook_proc` functions (executed in reverse order of registration).
+2. The `hs_<name>.int` script.
+3. Procedures registered with the `register_hook_proc_spec` function (executed in the exact order of registration).
 
-Example: let's say we have a Mod A which reduces all "to hit" chances by 50%. The code might look like this:
+You can hook several scripts to a single hook point, for example, if it's different mods from different authors or just some different aspects of one larger mod.
+When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again.
+
+__Example:__ Sometimes you need to multiply certain value in a chain of hook scripts.
+Let's say we have a **Mod A** which reduces all "to hit" chances by 50%. The code might look like this:
 ```js
     original_chance = get_sfall_arg;
     set_sfall_return(original_chance / 2);
 ```
 
-Mod B also want to affect hit chances globally, by increasing them by 50%. Now in order for both mods to work well together, we need to add this line to **Mod A** hook script:
+**Mod B** also want to affect hit chances globally, by increasing them by 50%. Now in order for both mods to work well together, we need to add this line to **Mod A** hook script:
 ```js
     set_sfall_arg(0, (original_chance / 2));
 ```
@@ -504,7 +512,8 @@ int     ret0 - overrides the returned result of the function:
 
 #### `HOOK_INVENTORYMOVE (hs_inventorymove.int)`
 
-Runs before moving items between inventory slots in dude interface. You can override the action.\
+Runs before moving items between inventory slots in dude interface. You can override the action.
+
 What you can NOT do with this hook:
 - force moving items to inappropriate slots (like gun in armor slot)
 
@@ -529,6 +538,11 @@ Item    arg2 - Item being replaced, weapon being reloaded, or container being fi
 
 int     ret0 - Override setting (-1 - use engine handler, any other value - prevent relocation of item/reloading weapon/picking up item)
 ```
+
+Notes for the event of dropping items on the ground:
+- the event is called for each item when dropping multiple items from the stack
+- for ammo type items, the number of dropped ammo in a pack can be found by using the `get_weapon_ammo_count` function
+- for the `PID_BOTTLE_CAPS` item, the event is called only once, and the number of dropped units can be found from the value of the `OBJ_DATA_CUR_CHARGES` object field (or with the `get_weapon_ammo_count` function)
 
 -------------------------------------------
 

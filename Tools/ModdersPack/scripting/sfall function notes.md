@@ -1,10 +1,12 @@
 GLOBAL SCRIPTS
 --------------
 
-As well as the new functions, sfall also adds global scripts. These run independent of any loaded maps, but do not have an attached object. (i.e. using `self_obj` without using `set_self` first will crash the script.) To use a global script, the script must have a name which begins with `gl` and contains a procedure called `start`, `map_enter_p_proc`, `map_exit_p_proc`, or `map_update_p_proc`. The `start` procedure will be executed once when the player loads a saved game or starts a new game. The `map_*_p_proc` procedures will be executed once when a map is being entered/left/updated. If you wish the script to be executed repeatedly, call `set_global_script_repeat` on the first run of the `start` procedure using the number of frames between each run as the argument. (0 disables the script, 1 runs it every frame, 2 runs it every other frame, etc.)
+As well as the new functions, sfall also adds global scripts. These run independent of any loaded maps, but do not have an attached object (i.e. using `self_obj` without using `set_self` first will crash the script).
 
-Global scripts have multiple modes, which can be set using the `set_global_script_type` function. In the default mode (i.e. mode 0) their execution is linked to the local map game loop, so the script will not run in dialogs or on the world map. In mode 1 their execution is linked to the player input, and so they will run whenever the mouse cursor is visible on screen, including the world map, character dialogs, etc. In mode 2, execution is linked to the world map loop, so the script will only be executed on the world map and not on the local map or in any dialog windows. Mode 3 is a combination of modes 0 and 2, so scripts will be executed on both local maps and the world map, but not in dialog windows.
-_Using mode 1 requires the input wrapper to be enabled. Use available_global_script_types to check what is available._ - Obsolete.
+To use a global script, the script must have a name which begins with `gl` and contains a procedure called `start`, `map_enter_p_proc`, `map_exit_p_proc`, or `map_update_p_proc`. The `start` procedure will be executed once when the player loads a saved game or starts a new game. The `map_*_p_proc` procedures will be executed once when a map is being entered/left/updated. If you wish the script to be executed repeatedly, call `set_global_script_repeat` on the first run of the `start` procedure using the number of frames between each run as the argument (0 disables the script, 1 runs it every frame, 2 runs it every other frame, etc.).
+
+Global scripts have multiple modes, which can be set using the `set_global_script_type` function. In the default mode (i.e. mode 0) their execution is linked to the local map game loop, so the script will not run in dialogs or on the world map. In mode 1 their execution is linked to the player input, and so they will run whenever the mouse cursor is visible on screen, including the world map, character dialogs, etc. In mode 2, execution is linked to the world map loop, so the script will only be executed on the world map and not on the local map or in any dialog windows. Mode 3 is a combination of modes 0 and 2, so scripts will be executed on both local maps and the world map, but not in dialog windows.\
+_Using mode 1 requires the input wrapper to be enabled. Use available_global_script_types to check what is available._ - **Obsolete**.
 
 
 ----------------------
@@ -168,22 +170,22 @@ FUNCTION REFERENCE
 - This function works in addition to the **WorldMapTimeMod** setting in ddraw.ini and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of pathfinder would result in time passing at 25% the normal speed on the world map.
 
 -----
-##### `void remove_script(object)`
+##### `void remove_script(object obj)`
 - Accepts a pointer to an object and will remove the script from that object.
 
 -----
-##### `void set_script(object, int scriptID)`
+##### `void set_script(object obj, int scriptID)`
 - Accepts a pointer to an object and **scriptID**, and applies the given script to an object (scriptID accepts the same values as `create_object_sid`)
 - If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided.
 - If you add `0x80000000` to the SID when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
 
 -----
-##### `int get_script(object)`
+##### `int get_script(object obj)`
 - Accepts a pointer to an object and returns its scriptID (line number in **scripts.lst**), or 0 if the object is unscripted.
 - Returns -1 on argument error.
 
 -----
-##### `void set_self(int obj)`
+##### `void set_self(object setObj)`
 - Overrides the script's `self_obj` for the next function call.
 - It is primarily used to allow the calling of functions which take an implicit `self_obj` parameter (e.g. `drop_obj`) from global scripts, but it can also be used from normal scripts.
 - `self_obj` will be reverted to its original value after the next function call.
@@ -206,11 +208,11 @@ FUNCTION REFERENCE
 - Be careful not to let the player obtain a perk when no perks are available to pick, or the game may crash.
 
 -----
-##### `object get_last_target(object)`
+##### `object get_last_target(object critter)`
 - Will return the last critter to be deliberately attacked.
 
 -----
-##### `object get_last_attacker(object)`
+##### `object get_last_attacker(object critter)`
 - Will return the last critter to deliberately launch an attack against the argument critter.
 - If a critter has not launched/received an attack, it will return 0. This is only stored for the duration of combat, and outside of combat both functions will always return 0.
 
@@ -221,7 +223,7 @@ FUNCTION REFERENCE
 - `mod` will add this much percent to each success chance. For example, if your chance is 50% and `mod` is 20, you will get 70% actual success rate.
 
 -----
-##### `void set_critter_pickpocket_mod(object, int max, int mod)`
+##### `void set_critter_pickpocket_mod(object critter, int max, int mod)`
 - The same as above, but applies only to specific critter.
 
 -----
@@ -303,19 +305,19 @@ FUNCTION REFERENCE
 ---
 ### Some utility/math functions are available:
 
-##### `array string_split(string, split)`
+##### `array string_split(string text, split)`
 - Takes a string and a separator, searches the string for all instances of the separator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the separator, the string is split into individual characters.
 - You can use this to search for a substring in a string like this: `strlen(get_array(string_split(haystack, needle), 0))`
 
 -----
-##### `string substr(string, start, length)`
+##### `string substr(string text, start, length)`
 - Cuts a substring from a string starting at `start` up to `length` characters. The first character position is 0 (zero).
 - If `start` is negative - it indicates starting position from the end of the string (for example, `substr("test", -2, 2)` will return last 2 charactes: "st").
 - If `length` is negative - it means so many characters will be omitted from the end of string (example: `substr("test", 0, -2)` will return string without last 2 characters: "te").
 - If `length` is zero - it will return a string from the starting position to the end of the string (new behavior for sfall 4.2.2/3.8.22).
 
 -----
-##### `int strlen(string string)`
+##### `int strlen(string text)`
 - Returns string length.
 
 -----
@@ -328,7 +330,7 @@ FUNCTION REFERENCE
 - Returns type of the given value: `VALTYPE_INT`, `VALTYPE_FLOAT` or `VALTYPE_STR`.
 
 -----
-##### `int charcode(string string)`
+##### `int charcode(string text)`
 - Returns ASCII code for the first character in given string.
 
 -----
@@ -385,7 +387,7 @@ FUNCTION REFERENCE
 - Just pass 1 as `y` (don't ask...)
 
 -----
-##### `void register_hook_proc(int hook, procedure proc)`
+##### `void register_hook_proc(int hookID, procedure proc)`
 - Works just like `register_hook`, but allows to specify which procedure to use for given hook script (instead of `start`).
 - Use zero (0) as second argument to unregister hook script from current global script.
 - Only use in global scripts.
@@ -393,7 +395,7 @@ FUNCTION REFERENCE
 - See **hookscripts.md** for more details.
 
 -----
-##### `void register_hook_proc_spec(int hook, procedure proc)`
+##### `void register_hook_proc_spec(int hookID, procedure proc)`
 - Works just like `register_hook_proc`, but allows to register a script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script).
 - To unregister hook script from current global script, use the `register_hook_proc` function.
 
