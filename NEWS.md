@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1in2/releases/tag/v1.8.3032))
 
 - **Added**: Green city circle on the worldmap is a bit less bright green when classic worldmap mode is disabled.
+- **Added**: Healing Powder has a low chance to spawn on traveling merchants now.
 - **Added**: New "Expanded Wrecks"-setting to fo1_settings.ini file, which enables more variation in the city encounters (Graphics by Sonora mod). Enabled by default.
 - **Added**: The 9mm Mauser pistol can be converted to the 10mm caliber if Fo2 weapon upgrades are enabled.
 - **Fixed**: City encounter maps were using 07desert and not 11chilrn as in Fo1.
