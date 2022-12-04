@@ -146,7 +146,7 @@
 //#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 #define RMOBJ_BARTER_ARMOR        4675656  // removing armor from NPC's slot before entering the barter screen
 #define RMOBJ_BARTER_WEAPON       4675722  // removing weapon from NPC's slot before entering the barter screen
-#define RMOBJ_INVEN_DROP_CAPS     4667295  // if money/caps are dropped manually by the player from the inventory screen
+#define RMOBJ_INVEN_DROP_CAPS     4667295  // if multiple money/caps are dropped manually by the player from the inventory screen
 #define RMOBJ_DROP_INTO_CONTAINER 4678833  // when dropping items into a container item (bag/backpack)
 // old defines
 #define RMOBJ_RM_MULT_OBJS        RMOBJ_ITEM_REMOVED_MULTI

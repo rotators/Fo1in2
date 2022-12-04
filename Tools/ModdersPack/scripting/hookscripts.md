@@ -692,7 +692,7 @@ Does not run if the script of the object overrides the description.
 ```
 Obj     arg0 - the object
 
-int     ret0 - a pointer to the new text received by using get_string_pointer function
+int     ret0 - a pointer to the new text received by using the get_string_pointer function
 ```
 
 -------------------------------------------
@@ -709,7 +709,7 @@ Obj     arg1 - the target object/critter
 int     arg2 - skill being used
 
 int     ret0 - a new critter to override the user critter. Pass -1 to cancel the skill use, pass 0 to skip this return value
-int     ret1 - pass 1 to allow the skill being used in combat (only for dude_obj or critter being controlled by the player)
+int     ret1 - pass 1 to allow the skill to be used in combat (only for dude_obj or critter being controlled by the player)
 ```
 
 -------------------------------------------
