@@ -33,7 +33,7 @@ don't actually sell anything here; I trade it to Tine or the Hub merchants for g
 {131}{}{Good seein' you again. Hope you're doing all right.}
 
 # New: Motorcycle
-{1000}{}{Oh damn, it's you! I've watched you coming down the road with that bike. Doesn't happen that often anymore nowadays. Usually it's just the brahim carts ... }
+{1000}{}{Oh damn, it's you! I've watched you coming down the road with that bike. Doesn't happen that often anymore nowadays. Usually it's just the brahmin carts ... }
 	{1010}{}{[More]}
 {1100}{}{If you ever feel the bike 's too small, just hit me up, you hear? Got an old sidecart sitting around in a warehouse not far from here. The scavs could fetch it and I'll fix it up for you!}
 	{1110}{}{How much would that cost me?}
