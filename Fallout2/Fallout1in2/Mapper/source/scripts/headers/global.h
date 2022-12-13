@@ -419,9 +419,9 @@
 #define GVAR_ROBCTRL_MOVEMENT_HOWMUCH           (1274)
 #define GVAR_ROBCTRL_SENSORS_HOWMUCH            (1275)
 #define GVAR_DESTROY_VATS_4                     (1276)
-#define GVAR_DESTROY_VATS_5                     (1277)
-#define GVAR_TYCHO_DISTANCE_VAL                 (1278)
-#define GVAR_KATJA_DISTANCE_VAL                 (1279)
+#define GVAR_IAN_DISTANCE_VAL                   (1277) // UNUSED
+#define GVAR_TYCHO_DISTANCE_VAL                 (1278) // UNUSED
+#define GVAR_KATJA_DISTANCE_VAL                 (1279) // UNUSED
 #define GVAR_DAN_HUB_STATUS                     (1280)
 #define GVAR_DESTROY_VATS_9                     (1281)
 #define GVAR_JOIN_SKULLZ                        (1282)
