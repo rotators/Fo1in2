@@ -11,10 +11,12 @@
 #define NAME                    SCRIPT_MRHANDYB
 
 #include "command.h"
+#include "sfall/sfall.h"
 
 procedure start;
 procedure map_update_p_proc;
 procedure critter_p_proc;
+procedure timed_event_p_proc;
 
 import variable valid_target;
 
@@ -26,6 +28,7 @@ procedure start begin
       initial := 1;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_ROBOTS);
+      add_timer_event(self_obj, game_ticks(random(1, 3)), 1);
    end
 end
 
@@ -85,3 +88,25 @@ procedure critter_p_proc begin
       end
    end
 end
+
+procedure timed_event_p_proc begin
+variable critArray;
+variable attack_target;
+variable obj;
+
+   if get_robo_attack_large_pests then begin
+      set_self_team(TEAM_ROBOBRAINS);
+
+      critArray := list_as_array(LIST_CRITTERS);
+      foreach (obj in critArray) begin
+         if (get_team(obj) == TEAM_NECROPOLIS_MUTANT) then begin
+            if obj_can_see_obj(self_obj, obj) then begin
+               attack_target := obj;
+               break;
+            end
+         end
+      end
+   end
+
+end
+
