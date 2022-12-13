@@ -38,20 +38,30 @@ end
 
 procedure map_enter_p_proc begin
    FField_Ptr := self_obj;
-   if mbase_full_alert then begin
-      if not(is_loading_game) then set_self_visible;
-      set_force_fields_on;
-      set_map_var(FField_MVAR, ENABLED);
+   if not(is_loading_game) then begin
+      if mbase_full_alert then begin
+         set_self_visible;
+         set_force_fields_on;
+         set_map_var(FField_MVAR, ENABLED);
+      end
+      if (get_force_fields_off or (map_var(FField_MVAR) == 0)) then begin
+         set_self_invisible;
+      end
+      flush_add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
    end
-   if (get_force_fields_off or (map_var(FField_MVAR) == 0)) then begin
-      if not(is_loading_game) then set_self_invisible;
-   end
-   flush_add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
 end
 
 procedure map_update_p_proc begin
 variable FField_State := DISABLED;
    FField_Ptr := self_obj;
+
+   // Workaround, because manually enabling a field would rest on game load
+   if is_loading_game then begin
+      if (FField_State == DISABLED) and self_visible then begin
+         set_self_visible;
+         set_map_var(FField_MVAR, FORCE_ENABLED);
+      end
+   end
 
    // If the base is in high alert, we enable all force fields once.
    if mbase_full_alert then begin
