@@ -9,6 +9,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Death screen had broken colors.
 - **Fixed**: Error messages when interacting with the elevator doors in the Glow.
 - **Fixed**: Flip in Mariposa would try to walk to his target hex on every game tick, even if he is on the hex already.
+- **Fixed**: Garret's fridge in the Hall of the Dead could be open without actually being open.
 - **Fixed**: Gizmo would keep repeating his initial dialog after the player accepted the task to take down Killian.
 - **Fixed**: Iron Man Fixt settings wouldn't set correctly on game start.
 - **Fixed**: It was possible to break the ending slides when entering the crater-locations right after the Cathedral/Mariposa were destroyed. Added a fail-safe and improved the script to prevent this from happening.
@@ -17,9 +18,11 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Kidnappers in the Hub would get set back to their starting position when loading in combat. NOTE: Saving and loading the game in combat is not advised, since it can corrupt the savegame.
 - **Fixed**: Killian's store guard would attack the player for being in the store at night, even though the store is still open for another hour.
 - **Fixed**: Lone Centaur in Death-encounter table was called "Coyote".
+- **Fixed**: Mariposa force fields had on/off issues when loading a savegame.
 - **Fixed**: Missing scenery .frm error in MBVATS12 map file.
 - **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
 - **Fixed**: On death, Griffith's name would show "Zombie Guard" instead of his actual name.
+- **Fixed**: Pest control settings of the robots in Mariposa will now work better and actually attack all valid targets on sight.
 - **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
 - **Fixed**: The combat training in the Brotherhood gym would not give bonus skill points if the skill is tagged. Also fixed the Skill+ message (shows +2 in message log now instead of +1).
