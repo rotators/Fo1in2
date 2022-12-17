@@ -16,15 +16,7 @@ procedure timed_event_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 
-procedure NecroDemoCompEgg00;
-procedure NecroDemoCompEgg01;
-procedure NecroDemoCompEgg02;
-procedure NecroDemoCompEgg03;
-procedure NecroDemoCompEgg04;
-procedure NecroDemoCompEgg05;
-procedure PlayGame;
 procedure PlayDemo;
-procedure CLS;
 
 #define EVENT_FLOAT     (1)
 
@@ -33,30 +25,22 @@ variable DisplayLine := 0;
 
 #define LVAR_Comp_Fixed       (4)
 #define LVAR_EXP_Earned       (5)
-#define LVAR_DemoExp          (6)
-#define LVAR_PlayedBefore     (7)
-#define LVAR_Heard500         (8)
-#define LVAR_Heard501         (9)
-#define LVAR_Heard502         (10)
-#define LVAR_SeenDemo400      (11)
-#define LVAR_SeenDemo401      (12)
-#define LVAR_Heard503         (13)
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   //add_timer_event(self_obj, game_ticks(6), EVENT_FLOAT);
+   if (local_var(LVAR_Comp_Fixed) == 1) and not(fo1_demo_completed) then begin
+      add_timer_event(self_obj, game_ticks(6), EVENT_FLOAT);
+   end
 end
 
 procedure timed_event_p_proc begin
    if (fixed_param == EVENT_FLOAT and fo1in2_scrapheap_enabled) then begin
       if not(fo1_demo_completed) then begin
-         if (dude_perception >= 5) then begin
-            floater(1000 + DisplayLine);
-            DisplayLine := DisplayLine + 1;
-            if (DisplayLine > 3) then DisplayLine := 0;
-         end
+         floater(1000 + DisplayLine);
+         DisplayLine := DisplayLine + 1;
+         if (DisplayLine > 3) then DisplayLine := 0;
          flush_add_timer_event(self_obj, game_ticks(10), EVENT_FLOAT);
       end
    end
@@ -69,15 +53,13 @@ procedure use_p_proc begin
          display_msg(mstr(100));
       end
       else begin
-         load_map(MAP_SCRAPHEAP, 0);
+         if (local_var(LVAR_Comp_Fixed) == 0) then begin
+            display_msg(message_str(SCRIPT_ROBCTRL,196));
+         end
+         else begin
+            call PlayDemo;
+         end
       end
-   end
-   else if fixt_enabled and (local_var(LVAR_Comp_Fixed) == 1) then begin
-      start_gdialog(62, self_obj, 4, -1, -1);
-      gsay_start;
-      call NecroDemoCompEgg00;
-      gsay_end;
-      end_dialogue;
    end
    else begin
       display_msg(mstr(100));
@@ -85,196 +67,42 @@ procedure use_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-   if fixt_enabled then begin
-      script_overrides;
-      if (action_being_used == SKILL_REPAIR) then begin
-         if (dude_skill_success(SKILL_REPAIR, -30)) then begin
-            if (local_var(LVAR_Comp_Fixed) != 1) then begin
-               display_msg(mstr(101));
-               set_local_var(LVAR_Comp_Fixed, 1);
+   if (fo1in2_scrapheap_enabled and local_var(LVAR_Comp_Fixed) == 0) then begin
+      if (action_being_used == SKILL_SCIENCE) then begin
+         if (local_var(LVAR_Comp_Fixed) == 0) then begin
+            display_msg(mstr(102));
+         end
+         else begin
+            call PlayDemo;
+         end
+      end
+      else if (action_being_used == SKILL_REPAIR) then begin
+         if (dude_skill_success(SKILL_REPAIR, 0)) then begin
+            set_local_var(LVAR_Comp_Fixed, 1);
+            display_msg(mstr(101));
+
+            add_timer_event(self_obj, game_ticks(0), EVENT_FLOAT);
+
+            if (local_var(LVAR_EXP_Earned) == 0) then begin
+               set_local_var(LVAR_EXP_Earned, 1);
+               give_xp(EXP_REPAIR_NEG_40);
             end
          end
          else begin
-            display_msg(mstr(104));
-            Damage := random(1, 6);
-            critter_heal(dude_obj, -Damage);
+            display_msg(mstr(130));
          end
       end
-      else if (action_being_used == SKILL_SCIENCE) then begin
-         if (dude_skill_success(SKILL_SCIENCE, -30)) then begin
-            if (local_var(LVAR_Comp_Fixed) == 1) then begin
-               start_gdialog(62, self_obj, 4, -1, -1);
-               gsay_start;
-               call NecroDemoCompEgg00;
-               gsay_end;
-               end_dialogue;
-            end
-            else begin
-               display_msg(mstr(102));
-            end
-         end
-      end
-   end
-end
-
-procedure NecroDemoCompEgg00 begin
-   Reply(105);
-   if (dude_iq == 4) or (dude_iq == 5) then begin
-      NOption(130, CLS, 4);
-   end
-   NLowOption(140, NecroDemoCompEgg01);
-   NOption(106, NecroDemoCompEgg01, 6);
-   NOption(107, CLS, 6);
-end
-
-procedure NecroDemoCompEgg01 begin
-   Reply(mstr(108) + mstr(111));
-   NOption(109, NecroDemoCompEgg02, 6);
-   NOption(107, CLS, 6);
-end
-
-procedure NecroDemoCompEgg02 begin
-   Reply(114);
-   NOption(106, NecroDemoCompEgg03, 6);
-   NOption(107, CLS, 6);
-end
-
-procedure NecroDemoCompEgg03 begin
-   Reply(mstr(115) + mstr(120));
-   NOption(113, NecroDemoCompEgg04, 6);
-   NOption(126, NecroDemoCompEgg05, 6);
-   NOption(107, CLS, 6);
-end
-
-procedure NecroDemoCompEgg04 begin
-   Reply(117);
-   NOption(116, PlayGame, 6);
-end
-
-procedure NecroDemoCompEgg05 begin
-   Reply(117);
-   NOption(116, PlayDemo, 6);
-end
-
-procedure PlayGame begin
-   gfade_out(1);
-   DisplayLine := random(500, 503);
-   if ((local_var(LVAR_Heard500) == 1) and (local_var(LVAR_Heard501) == 1) and (local_var(LVAR_Heard502) == 1) and (local_var(LVAR_Heard503) == 1)) then begin
-   end
-   else begin
-      while(((DisplayLine == 500) and (local_var(LVAR_Heard500) == 1)) or ((DisplayLine == 501) and (local_var(LVAR_Heard501) == 1)) or ((DisplayLine == 502) and (local_var(LVAR_Heard502) == 1)) or ((DisplayLine == 503) and (local_var(LVAR_Heard503) == 1))) do
-      begin
-         if (DisplayLine == 503) then begin
-            if (local_var(LVAR_Heard503) == 1) then begin
-               DisplayLine := random(500, 502);
-            end
-         end
-         else if (DisplayLine == 500) then begin
-            if (local_var(LVAR_Heard500) == 1) then begin
-               DisplayLine := random(501, 503);
-            end
-         end
-         else if (DisplayLine == 501) then begin
-            if (local_var(LVAR_Heard501) == 1) then begin
-               DisplayLine := random(502, 503);
-            end
-         end
-         else if (DisplayLine == 502) then begin
-            if (local_var(LVAR_Heard502) == 1) then begin
-               if random(0, 2) then begin
-                  DisplayLine := 503;
-               end
-               else begin
-                  DisplayLine := random(500, 501);
-               end
-            end
-         end
-      end
-      if (local_var(LVAR_EXP_Earned) == 0) then begin
-         set_local_var(LVAR_EXP_Earned, 1);
-         give_xp_msg(EXP_PLAY_FALLOUT, mstr(119));
-         if (DisplayLine == 500) then begin
-            set_local_var(LVAR_Heard500, 1);
-         end
-         else if (DisplayLine == 501) then begin
-            set_local_var(LVAR_Heard501, 1);
-         end
-         else if (DisplayLine == 502) then begin
-            set_local_var(LVAR_Heard502, 1);
-         end
-         else if (DisplayLine == 503) then begin
-            set_local_var(LVAR_Heard503, 1);
-         end
-      end
-      else begin
-         if ((DisplayLine == 500) and (local_var(LVAR_Heard500) == 0)) then begin
-            set_local_var(LVAR_Heard500, 1);
-            give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
-         end
-         else if ((DisplayLine == 501) and (local_var(LVAR_Heard501) == 0)) then begin
-            set_local_var(LVAR_Heard501, 1);
-            give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
-         end
-         else if ((DisplayLine == 502) and (local_var(LVAR_Heard502) == 0)) then begin
-            set_local_var(LVAR_Heard502, 1);
-            give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
-         end
-         else if ((DisplayLine == 503) and (local_var(LVAR_Heard503) == 0)) then begin
-            set_local_var(LVAR_Heard503, 1);
-            give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(119));
-         end
-      end
-   end
-   gfade_in(1);
-   Reply(DisplayLine);
-   if (local_var(LVAR_PlayedBefore) == 0) then begin
-      set_local_var(LVAR_PlayedBefore, 1);
-      NOption(110, CLS, 6);
-   end
-   else begin
-      NOption(121, CLS, 6);
+      script_overrides;
    end
 end
 
 procedure PlayDemo begin
-   variable LVar0;
-   LVar0 := random(400, 401);
-   if (local_var(LVAR_SeenDemo400) and local_var(LVAR_SeenDemo401)) then begin
+   if fo1_demo_completed then begin
+      display_msg(mstr(100));
    end
    else begin
-      if (LVar0 == 400) then begin
-         if local_var(LVAR_SeenDemo400) then begin
-            LVar0 := 401;
-            set_local_var(LVAR_SeenDemo401, 1);
-         end
-         else begin
-            set_local_var(LVAR_SeenDemo400, 1);
-         end
-      end
-      else if (LVar0 == 401) then begin
-         if local_var(LVAR_SeenDemo401) then begin
-            LVar0 := 400;
-            set_local_var(LVAR_SeenDemo400, 1);
-         end
-         else begin
-            set_local_var(LVAR_SeenDemo401, 1);
-         end
-      end
+      display_msg(mstr(126));
+      display_msg(mstr(117));
+      load_map(MAP_SCRAPHEAP, 0);
    end
-   gfade_out(1);
-   gfade_in(1);
-   Reply(LVar0);
-   if (local_var(LVAR_DemoExp) == 0) then begin
-      set_local_var(LVAR_DemoExp, 1);
-      give_xp_msg(EXP_PLAY_FALLOUT_SMALL, mstr(155));
-   end
-   if (local_var(LVAR_PlayedBefore) == 0) then begin
-      NOption(153, CLS, 6);
-   end
-   else begin
-      NOption(154, CLS, 6);
-   end
-end
-
-procedure CLS begin
 end
