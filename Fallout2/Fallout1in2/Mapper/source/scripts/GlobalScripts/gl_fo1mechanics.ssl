@@ -82,12 +82,6 @@ procedure general begin
    // Max rad resistance is 100%
    set_pc_stat_max(STAT_rad_resist, 100);
 
-   // Changes the PipBoy rest timer from 08:00 to 06:00
-   if not(fo1in2_0800_resting_enabled) then begin
-      VOODOO_rest_strings;
-      VOODOO_rest_till_0600;
-   end
-
    // Disable the "You encounter: ..." message
    VOODOO_disable_YouEncounter_message;
 
@@ -424,22 +418,19 @@ end
 procedure InventoryMove_handler begin
    variable
       slot := get_sfall_arg,
-      item := get_sfall_arg,
-      container;
+      item := get_sfall_arg;
 
    // Prevent player from picking up objects that should never be able to be picked up
    // Is needed if player uses cheat mods to increase inventory size
    if (slot == 7) then begin // picking up items
-      if (obj_weight(item) > 999) then begin
-         set_sfall_return(0); // block
-         reg_anim_clear(dude_obj);
-      end
+      if (obj_weight(item) > 999) then set_sfall_return(0); // block
    end
 
    // If player uses a bookshelf corner object, reroute the use action to the actual bookshelf
    if (obj_pid(item) == PID_BOOKSHELF_1_CORNER or obj_pid(item) == PID_BOOKSHELF_2_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER) then begin
+      reg_anim_clear(dude_obj);
       Scenery_Creation_Hex := tile_num_in_direction(tile_num(item), 5, 2);
-      container := tile_contains_pid_obj(Scenery_Creation_Hex, dude_elevation, (obj_pid(item) - PID_LEATHER_ARMOR));
-      if (container > 0) then call_offset_v2(0x412134, dude_obj, container);
+      Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, dude_elevation, (obj_pid(item) - 1)); /*ReDefine::IgnoreLine*/
+      if (Scenery_Creation_Ptr > 0) then call_offset_v2(0x412134, dude_obj, Scenery_Creation_Ptr);
    end
 end
