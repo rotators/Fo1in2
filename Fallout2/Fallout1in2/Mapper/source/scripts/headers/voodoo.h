@@ -35,7 +35,7 @@ variable $addr;
                write_byte(0x496E00, 20)
                
 // In Fo2, the perk gives a +20% light level increase, while in Fo1 it is only +10%.
-#define VOODOO_night_person_bonus \
+#define VOODOO_night_vision_bonus \
                write_short(0x47A91D, 0xC069); \
                write_int(0x47A91F, 6553); \
                call VOODOO_WriteNop(0x47A923, 15, true)
