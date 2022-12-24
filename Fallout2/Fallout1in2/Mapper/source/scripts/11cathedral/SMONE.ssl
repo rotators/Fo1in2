@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "maps/v13ent.h"
+#include "area/cathedral.h"
 
 #define NAME                    SCRIPT_SMONE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -16,11 +16,11 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure timed_event_p_proc;
 procedure critter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
-procedure look_at_p_proc;
 
 procedure goto00;
 procedure goto01;
@@ -37,12 +37,9 @@ procedure combat;
 import variable patient;
 import variable lets_go;
 
-variable my_tile;
 variable tmp_hostile;
 variable Only_Once := 1;
 variable PICK;
-
-#define hex_elevator          (12098)
 
 procedure start begin
    if Only_Once then begin
@@ -69,19 +66,19 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   my_tile := self_tile;
+
    if not(combat_is_initialized) then begin
-      if (my_tile == hex_elevator) then begin
+      if (self_tile == hex_elevator_0) then begin
          move_to(self_obj, 7000, 0);
       end
-      else if (tile_distance(my_tile, dude_tile) < 12) then begin
+      else if (tile_distance(self_tile, dude_tile) < 12) then begin
          if (local_var(LVAR_FloatStart) != 1) then begin
             set_local_var(LVAR_FloatStart, 1);
             add_timer_event(self_obj, game_ticks(1), 0);
          end
       end
 
-      if (self_can_see_dude) then begin
+      if self_can_see_dude then begin
          call zamin;
          if (dude_is_armed or not(DISGUISED)) then begin
             call combat;
@@ -89,7 +86,7 @@ procedure critter_p_proc begin
       end
 
       if (lets_go == 1) then begin
-         self_walk_to_tile(hex_elevator);
+         self_walk_to_tile(hex_elevator_0);
       end
    end
 
@@ -115,10 +112,6 @@ end
 
 procedure destroy_p_proc begin
    inc_inv_evil_crit
-end
-
-procedure look_at_p_proc begin
-   script_overrides;
 end
 
 procedure zamin begin
@@ -167,5 +160,5 @@ end
 procedure goto03 begin
    set_local_var(LVAR_LetsGo, 1);
    lets_go := 1;
-   self_walk_to_tile(hex_elevator);
+   self_walk_to_tile(hex_elevator_0);
 end

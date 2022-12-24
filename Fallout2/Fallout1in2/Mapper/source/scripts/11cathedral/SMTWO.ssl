@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "maps/v13ent.h"
+#include "area/cathedral.h"
 
 #define NAME                    SCRIPT_SMTWO
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -18,36 +18,27 @@
 procedure start;
 procedure combat;
 procedure critter_p_proc;
-procedure pickup_p_proc;
 procedure talk_p_proc;
+procedure pickup_p_proc;
 procedure destroy_p_proc;
-procedure look_at_p_proc;
-procedure whoami;
+
+procedure zamin;
 
 import variable patient;
 import variable lets_go;
 
-variable my_tile;
 variable tmp_hostile;
 variable Only_Once := 1;
 
-#define hex_elevator          (12098)
-
 procedure start begin
+   patient := self_obj;
+
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_NORMAL);
    end
    if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
-end
-
-procedure map_enter_p_proc begin
-   call whoami;
-end
-
-procedure map_update_p_proc begin
-   call whoami;
 end
 
 procedure combat begin
@@ -59,15 +50,30 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   my_tile := self_tile;
+
    if not(combat_is_initialized) then begin
-      if (my_tile == hex_elevator) then begin
-         lets_go := 0;
+      if (self_tile == hex_elevator_0) then begin
          move_to(self_obj, 7000, 0);
       end
-      if (lets_go == 1) then begin
-         self_walk_to_tile(hex_elevator);
+
+      if self_can_see_dude then begin
+         call zamin;
+         if (dude_is_armed or not(DISGUISED)) then begin
+            call combat;
+         end
       end
+
+      if (lets_go == 1) then begin
+         self_walk_to_tile(hex_elevator_0);
+      end
+   end
+end
+
+procedure talk_p_proc begin
+   dude_look_at_self;
+   call zamin;
+   if (dude_is_armed or not(DISGUISED)) then begin
+      call combat;
    end
 end
 
@@ -77,18 +83,10 @@ procedure pickup_p_proc begin
    end
 end
 
-procedure talk_p_proc begin
-   dude_look_at_self;
-end
-
 procedure destroy_p_proc begin
    inc_inv_evil_crit
 end
 
-procedure look_at_p_proc begin
-   script_overrides;
-end
-
-procedure whoami begin
-   patient := self_obj;
+procedure zamin begin
+   coc_disguise_check;
 end
