@@ -11,7 +11,7 @@
 ************************************************/
 
 // All Map Vars need to start w/ MVAR_
-#define MVAR_STAGE                (0) // has the player been warned to put his weapon away?
+#define MVAR_STAGE                (0) // Revulse corridor stage
 #define MVAR_FELT_REVULSION       (1)
 #define MVAR_RESET                (2) // reset for corridor of revulsion
 #define MVAR_PLACED               (3) // placed mutants
