@@ -1,5 +1,6 @@
 #include "define.h"
 #include "command.h"
+#include "maps/raiders.h"
 
 #define NAME                     SCRIPT_DOOR
 
@@ -12,7 +13,6 @@ procedure map_update_p_proc;
 procedure damage_p_proc;
 
 import variable Cell_Door_Ptr;
-
 
 procedure start begin
 end
@@ -29,8 +29,8 @@ procedure use_p_proc begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
    else begin
-      if (map_var(2) == 0) then begin
-         set_map_var(2, 1);
+      if (map_var(MVAR_OPENING_DOOR) == 0) then begin
+         set_map_var(MVAR_OPENING_DOOR, 1);
       end
    end
 end
@@ -113,7 +113,7 @@ end
 
 procedure map_update_p_proc begin
    Cell_Door_Ptr := self_obj;
-   if (map_var(2) != 0) then begin
+   if (map_var(MVAR_OPENING_DOOR) != 0) then begin
       set_local_var(0, 1);
    end
    if (local_var(0) == 0) then begin
@@ -126,12 +126,8 @@ end
 
 procedure damage_p_proc begin
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-
-      if not(is_loading_game) then set_self_invisible;
-      set_local_var(1, 1);
       set_global_var(GVAR_ENEMY_RAIDERS, 1);
-      set_map_var(2, 1);
-
+      destroy_object(self_obj);
    end
    else begin
        display_msg(mstr(193));

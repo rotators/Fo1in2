@@ -170,6 +170,7 @@
 // Raiders
 #define EXP_BEFRIEND_KHANS                      (500)
 #define EXP_RESCUE_SLAVE                        (200)
+#define EXP_RESCUE_JACK                         (200)
 
 // Junktown
 #define EXP_TRISH_SAUL_RELATIONSHIP             (250)

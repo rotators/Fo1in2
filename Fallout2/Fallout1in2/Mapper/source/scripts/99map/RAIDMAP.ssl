@@ -3,6 +3,7 @@
 #include "command.h"
 #include "area/shadysands.h"
 #include "maps/raiders.h"
+#include "sfall/sfall.h"
 
 procedure start;
 
@@ -11,23 +12,9 @@ export variable signal_women;
 export variable killing_women;
 export variable Garls_Inven_Ptr;
 export variable Cell_Door_Ptr;
+export variable Jack_Ptr;
 
 variable ExpReward;
-variable party_elevation;
-variable dude_start_hex;
-
-#define REMOVE_RAIDERS \
-   kill_critter_type(PID_MAN_JEANS, 0);               \
-   kill_critter_type(PID_LEATHER_JACKET_WOMAN, 0);    \
-   kill_critter_type(PID_LEATHER_JACKET_MAN, 0);      \
-   kill_critter_type(PID_PEASANT_FEMALE_CUTE, 0);     \
-   kill_critter_type(PID_CITIZEN_PUNK, 0);            \
-   kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);  \
-   kill_critter_type(PID_PEASANT_GREEN, 0);           \
-   kill_critter_type(PID_LEATHER_ARMOR_MALE, 0);      \
-   kill_critter_type(PID_TOWNSWOMAN_METAL, 0);        \
-   kill_critter_type(PID_WOMAN_YELLOW, 0);            \
-   kill_critter_type(PID_TOWNSMAN_LEATHER, 0)
 
 procedure start begin
 end
@@ -35,24 +22,33 @@ end
 procedure map_enter_p_proc begin
    Lighting;
 
-   set_global_var(GVAR_WORLDMAPLIST_RAIDERS, 2);
-   set_global_var(GVAR_MARK_RAIDERS_1, 1);
-
    override_map_start(96, 133, 0, 5);
 
    if (map_first_run) then begin
       display_msg(message_str(SCRIPT_SHADYWST, 103));
       if (dude_is_male) then begin
          if ((dude_luck > 8) and random(0, 1)) then begin
-            set_global_var(GVAR_MISTAKEN_ID, 1);//Raiders think you are Garl's father
+            set_global_var(GVAR_MISTAKEN_ID, 1); // Raiders think you are Garl's father
          end
       end
    end
 
+   // Garl is dead and the Raiders left
    if not(is_loading_game) then begin
-      if (((global_var(GVAR_GARL_DEAD) == 1) and (get_raiders_alive <= 12)) or (get_raiders_alive <= 6)) then begin//GARL_DEAD, RAIDERS_LEFT
-         REMOVE_RAIDERS;
+      if ((not(is_garl_alive) and (get_raiders_alive <= 8)) or (get_raiders_alive <= 4) and (days_since_visited > 0)) then begin
+         variable critter;
+         foreach critter in list_as_array(LIST_CRITTERS) begin
+            if (elevation(critter) == 0) and (critter != dude_obj) and (party_member_obj(critter) == false) and (critter_state(critter) != CRITTER_IS_DEAD) then begin
+               // When removing raiders, the kill counter increases.
+               // We revert it here as workaround, except for when the slaves and prisoners get removed.
+               if ((obj_pid(critter) != PID_TANDI) and (obj_pid(critter) != PID_MERCHANT) and (obj_pid(critter) != PID_PEASANT_FEMALE_CUTE)) then begin
+                  set_global_var(GVAR_TOTAL_RAIDERS, global_var(GVAR_TOTAL_RAIDERS) + 1);
+               end
+               destroy_object(critter);
+            end
+         end
       end
+      debug("get_raiders_alive: " + get_raiders_alive);
    end
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
@@ -77,9 +73,5 @@ procedure map_exit_p_proc begin
 
       inc_general_rep(1);
       if (ExpReward > 0) then give_xp_msg(ExpReward, message_str(SCRIPT_RAIDMAP, 101));
-   end
-
-   if (((global_var(GVAR_GARL_DEAD) == 1) and (get_raiders_alive <= 8)) or (get_raiders_alive <= 4)) then begin//GARL_DEAD, RAIDERS_LEFT
-      REMOVE_RAIDERS;
    end
 end

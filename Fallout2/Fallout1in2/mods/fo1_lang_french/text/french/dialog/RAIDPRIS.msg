@@ -10,3 +10,7 @@
 {109}{}{S'il te plaît, aide-moi juste à sortir.}
 {110}{}{Waouh ! Ma jambe, je crois qu'elle est cassée. Aide-moi, je t'en supplie !}
 #
+
+#Fo1in
+# you gain ...
+{200}{}{ experience for freeing Jack from Junktown.}

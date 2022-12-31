@@ -8,7 +8,7 @@
 #include "define.h"
 #include "area/shadysands.h"
 
-#define NAME                    SCRIPT_RAIDGRD
+#define NAME                    SCRIPT_GENRAIDR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
 
 #include "command.h"
@@ -44,19 +44,22 @@ procedure guard14;
 procedure guard15;
 procedure combat;
 
+#define LVAR_Herebefore    (4)
+#define LVAR_Afraid        (5)
+
 variable tmp_hostile;
 variable initial := 0;
 variable rndz;
 variable Weapons;
-
 variable LastTime;
+
+import variable Jack_Ptr;
 
 procedure start begin
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_RAIDERS);
       set_self_ai(AI_RAIDER_GUARD);
-      debug_msg("RAIDGRD init complete.");
    end
 end
 
@@ -65,118 +68,107 @@ procedure map_enter_p_proc begin
       invasion_kill_critter;
    end
 
-   if map_first_run then
-      self_caps_adjust(random(1, dude_luck * 2));
+   if map_first_run then begin
+      if fixt_enabled then self_caps_adjust(random(1, dude_luck * 2));
+   end
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   display_msg(message_str(SCRIPT_GENRAIDR, 101));
+   display_msg(message_str(NAME, 101));
 end
 
 procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
-   if (self_is_male) then begin// MALE raider
-      display_msg(message_str(SCRIPT_GENRAIDR, random(200, 202)));
+   if (self_is_male) then begin
+      display_msg(message_str(NAME, random(200, 202)));
    end
    else begin
-      display_msg(message_str(SCRIPT_GENRAIDR, random(203, 205)));// FEMALE raider
+      display_msg(message_str(NAME, random(203, 205)));
    end
 end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_RAIDERS);
 
-   if (local_var(5) == 1) then begin
-      display_msg(message_str(SCRIPT_GENRAIDR, 100));
+   if (local_var(LVAR_Afraid) == 1) then begin
+      display_msg(message_str(NAME, 100));
+   end
+   else if (global_var(GVAR_MISTAKEN_ID) == 1) then begin // Raiders think you are Garl's father
+      call guard00;
    end
    else begin
-      if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
-         call guard00;
+      if ((Weapons == 1) and (killing_women == 0) and (global_var(GVAR_GARLS_FRIEND) != 1)) then begin
+         call guard02;
       end
       else begin
-         if ((Weapons == 1) and (killing_women == 0) and (global_var(GVAR_GARLS_FRIEND) != 1)) then begin
-            call guard02;
+         set_local_var(3, 1);
+         get_reaction
+         start_gdialog(136, self_obj, 4, -1, -1);
+         gsay_start;
+         if (local_var(LVAR_Herebefore) == 0) then begin
+            set_local_var(LVAR_Herebefore, 1);
+            call guard04;
          end
          else begin
-            set_local_var(3, 1);
-            get_reaction
-            start_gdialog(136, self_obj, 4, -1, -1);
-            gsay_start;
-            if (local_var(4) == 0) then begin
-               set_local_var(4, 1);
-               call guard04;
-            end
-            else begin
-               call guard15;
-            end
-            gsay_end;
-            end_dialogue;
+            call guard15;
          end
+         gsay_end;
+         end_dialogue;
       end
    end
 end
 
-procedure guard00
-begin
-   float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(102, 106)), FLOAT_MSG_YELLOW);
+procedure guard00 begin
+   float_msg(self_obj, message_str(NAME, random(102, 106)), FLOAT_MSG_YELLOW);
 end
 
-procedure guard01
-begin
-   float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(107, 111)), FLOAT_MSG_YELLOW);
+procedure guard01 begin
+   float_msg(self_obj, message_str(NAME, random(107, 111)), FLOAT_MSG_YELLOW);
 end
 
-procedure guard02
-begin
-   float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(112, 115)), FLOAT_MSG_YELLOW);
+procedure guard02 begin
+   float_msg(self_obj, message_str(NAME, random(112, 115)), FLOAT_MSG_YELLOW);
    add_timer_event(self_obj, game_ticks(9), 1);
 end
 
-procedure guard03
-begin
-   float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(116, 118)), FLOAT_MSG_YELLOW);
+procedure guard03 begin
+   float_msg(self_obj, message_str(NAME, random(116, 118)), FLOAT_MSG_YELLOW);
    add_timer_event(self_obj, game_ticks(10), 2);
 end
 
-procedure guard04
-begin
-   gsay_reply(SCRIPT_GENRAIDR, 119);
+procedure guard04 begin
+   gsay_reply(NAME, 119);
    if (tandi_quest_active and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-      giq_option(4, SCRIPT_GENRAIDR, 120, guard07, NEUTRAL_REACTION);
+      giq_option(4, NAME, 120, guard07, NEUTRAL_REACTION);
    end
-   giq_option(4, SCRIPT_GENRAIDR, 121, guard06, NEUTRAL_REACTION);
-   giq_option(-3, SCRIPT_GENRAIDR, 122, guard05, NEUTRAL_REACTION);
+   giq_option(4, NAME, 121, guard06, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 122, guard05, NEUTRAL_REACTION);
 end
 
-procedure guard05
-begin
-   gsay_message(SCRIPT_GENRAIDR, 123, NEUTRAL_REACTION);
+procedure guard05 begin
+   gsay_message(NAME, 123, NEUTRAL_REACTION);
 end
 
-procedure guard06
-begin
-   gsay_message(SCRIPT_GENRAIDR, 124, NEUTRAL_REACTION);
+procedure guard06 begin
+   gsay_message(NAME, 124, NEUTRAL_REACTION);
    DownReact
 end
 
-procedure guard07
-begin
-   gsay_reply(SCRIPT_GENRAIDR, 125);
-   giq_option(4, SCRIPT_GENRAIDR, 126, guard08, NEUTRAL_REACTION);
-   giq_option(6, SCRIPT_GENRAIDR, 127, guard07a, NEUTRAL_REACTION);
+procedure guard07 begin
+   gsay_reply(NAME, 125);
+   giq_option(4, NAME, 126, guard08, NEUTRAL_REACTION);
+   giq_option(6, NAME, 127, guard07a, NEUTRAL_REACTION);
    if (dude_stat_success(STAT_pe, 0)) then begin
-      giq_option(4, SCRIPT_GENRAIDR, 128, guard07b, NEUTRAL_REACTION);
+      giq_option(4, NAME, 128, guard07b, NEUTRAL_REACTION);
    end
 end
 
-procedure guard07a
-begin
+procedure guard07a begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
       call guard09;
    end
@@ -185,8 +177,7 @@ begin
    end
 end
 
-procedure guard07b
-begin
+procedure guard07b begin
    if (dude_skill_success(SKILL_SPEECH, -20)) then begin
       call guard12;
    end
@@ -195,60 +186,50 @@ begin
    end
 end
 
-procedure guard08
-begin
-   gsay_message(SCRIPT_GENRAIDR, 129, NEUTRAL_REACTION);
+procedure guard08 begin
+   gsay_message(NAME, 129, NEUTRAL_REACTION);
 end
 
-procedure guard09
-begin
-   gsay_reply(SCRIPT_GENRAIDR, 130);
-   giq_option(6, SCRIPT_GENRAIDR, 131, guard10, NEUTRAL_REACTION);
+procedure guard09 begin
+   gsay_reply(NAME, 130);
+   giq_option(6, NAME, 131, guard10, NEUTRAL_REACTION);
 end
 
-procedure guard10
-begin
-   gsay_message(SCRIPT_GENRAIDR, 132, NEUTRAL_REACTION);
+procedure guard10 begin
+   gsay_message(NAME, 132, NEUTRAL_REACTION);
 end
 
-procedure guard11
-begin
-   gsay_message(SCRIPT_GENRAIDR, 133, NEUTRAL_REACTION);
+procedure guard11 begin
+   gsay_message(NAME, 133, NEUTRAL_REACTION);
 end
 
-procedure guard12
-begin
-   gsay_message(SCRIPT_GENRAIDR, 134, NEUTRAL_REACTION);
-   set_local_var(5, 1);
+procedure guard12 begin
+   gsay_message(NAME, 134, NEUTRAL_REACTION);
+   set_local_var(LVAR_Afraid, 1);
 end
 
-procedure guard13
-begin
-   gsay_message(SCRIPT_GENRAIDR, 135, NEUTRAL_REACTION);
+procedure guard13 begin
+   gsay_message(NAME, 135, NEUTRAL_REACTION);
    call combat;
 end
 
-procedure guard14
-begin
-   gsay_message(SCRIPT_GENRAIDR, 136, NEUTRAL_REACTION);
+procedure guard14 begin
+   gsay_message(NAME, 136, NEUTRAL_REACTION);
    add_timer_event(self_obj, game_ticks(12), 3);
 end
 
-procedure guard15
-begin
-   gsay_message(SCRIPT_GENRAIDR, 137, NEUTRAL_REACTION);
+procedure guard15 begin
+   gsay_message(NAME, 137, NEUTRAL_REACTION);
 end
 
-procedure combat
-begin
-   if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
+procedure combat begin
+   if (global_var(GVAR_MISTAKEN_ID) == 1) then begin // Raiders think you are Garl's father
       set_self_team(TEAM_RAIDERS_OTHER);
    end
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       set_global_var(GVAR_ENEMY_RAIDERS, 1);
@@ -259,20 +240,20 @@ begin
          set_global_var(GVAR_ENEMY_RAIDERS, 1);
       end
    end
-   if global_var(GVAR_MISTAKEN_ID) then begin//Raiders think you are Garl's father
+   if global_var(GVAR_MISTAKEN_ID) then begin // Raiders think you are Garl's father
       set_global_var(GVAR_ENEMY_RAIDERS, 0);
       if self_can_see_dude then begin
          if (local_var(7) == 0) then begin
             set_local_var(7, 1);
             LastTime := game_time;
-            float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(102, 106)), FLOAT_MSG_YELLOW);
+            float_msg(self_obj, message_str(NAME, random(102, 106)), FLOAT_MSG_YELLOW);
          end
          else begin
             if (anim_busy(self_obj) == 0) and (game_time - LastTime > 100) then begin
                rndz := random(0, 20);
                if (tile_distance_objs(self_obj, dude_obj) < 6) and (rndz == 1) then begin
                   LastTime := game_time;
-                  float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(102, 106)), FLOAT_MSG_YELLOW);
+                  float_msg(self_obj, message_str(NAME, random(102, 106)), FLOAT_MSG_YELLOW);
                end
             end
          end
@@ -293,11 +274,19 @@ begin
          end
       end
    end
+
+   // If guard sees Jack, the prisoner, attack him for running away
+   if (Jack_Ptr > 0) then begin
+      if obj_can_see_obj(self_obj, Jack_Ptr) and not(in_prison_cell) then begin
+         attack(Jack_Ptr);
+         set_global_var(GVAR_ENEMY_RAIDERS, 1);
+      end
+   end
 end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      if (global_var(GVAR_MISTAKEN_ID) == 0) then begin//PC was (is?) not mistaken for Garl's father
+      if (global_var(GVAR_MISTAKEN_ID) == 0) then begin // PC was (is?) not mistaken for Garl's father
          set_global_var(GVAR_ENEMY_RAIDERS, 1);
       end
    end
