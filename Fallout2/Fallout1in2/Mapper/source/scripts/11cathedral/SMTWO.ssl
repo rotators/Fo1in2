@@ -16,13 +16,15 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure combat;
 procedure critter_p_proc;
 procedure talk_p_proc;
 procedure pickup_p_proc;
 procedure destroy_p_proc;
 
 procedure zamin;
+procedure combat;
+
+#define LVAR_Visible       (4)
 
 import variable patient;
 import variable lets_go;
@@ -38,11 +40,19 @@ procedure start begin
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_NORMAL);
    end
-   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
-end
 
-procedure combat begin
-   tmp_hostile := 1;
+   if fo1in2_cut_characters_enabled then begin
+      if ((days_since_visited > 0) or (local_var(LVAR_Visible) == 1)) then begin
+         set_local_var(LVAR_Visible, 1);
+         set_self_visible;
+      end
+      else begin
+         set_self_invisible;
+      end
+   end
+   else begin
+      destroy_object(self_obj);
+   end
 end
 
 procedure critter_p_proc begin
@@ -89,4 +99,8 @@ end
 
 procedure zamin begin
    coc_disguise_check;
+end
+
+procedure combat begin
+   tmp_hostile := 1;
 end

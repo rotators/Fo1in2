@@ -46,3 +46,7 @@
 {145}{}{Please tell me a story.}
 {146}{}{This Dharma fellow sounds like an idiot.}
 {147}{}{You insult your elders. You should know better.}
+
+#Fo1in2
+{200}{}{Very well then ... [You sit down and listen to Agatha's story for a while]}
+

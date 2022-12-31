@@ -46,3 +46,7 @@
 {145}{}{S'il te plaît, raconte-moi une histoire.}
 {146}{}{Ce Dharma a tout l'air d'un idiot.}
 {147}{}{Tu insultes les anciens. Je n'ai plus rien à te dire.}
+
+#Fo1in2
+{200}{}{Very well then ... [You sit down and listen to Agatha's story for a while]}
+

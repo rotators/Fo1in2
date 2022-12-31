@@ -33,6 +33,7 @@ procedure combat;
 #define LVAR_FloatMSG      (1)
 #define LVAR_FloatStart    (2)
 #define LVAR_LetsGo        (3)
+#define LVAR_Visible       (4)
 
 import variable patient;
 import variable lets_go;
@@ -47,7 +48,19 @@ procedure start begin
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
    end
-   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+
+   if fo1in2_cut_characters_enabled then begin
+      if ((days_since_visited > 0) or (local_var(LVAR_Visible) == 1)) then begin
+         set_local_var(LVAR_Visible, 1);
+         set_self_visible;
+      end
+      else begin
+         set_self_invisible;
+      end
+   end
+   else begin
+      destroy_object(self_obj);
+   end
 end
 
 procedure timed_event_p_proc begin
@@ -55,10 +68,6 @@ procedure timed_event_p_proc begin
       inc_local_var(LVAR_FloatMSG);
       call goto00;
    end
-end
-
-procedure combat begin
-   tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
@@ -71,7 +80,7 @@ procedure critter_p_proc begin
       if (self_tile == hex_elevator_0) then begin
          move_to(self_obj, 7000, 0);
       end
-      else if (tile_distance(self_tile, dude_tile) < 12) then begin
+      else if self_visible and (tile_distance(self_tile, dude_tile) < 12) then begin
          if (local_var(LVAR_FloatStart) != 1) then begin
             set_local_var(LVAR_FloatStart, 1);
             add_timer_event(self_obj, game_ticks(1), 0);
@@ -116,6 +125,10 @@ end
 
 procedure zamin begin
    coc_disguise_check;
+end
+
+procedure combat begin
+   tmp_hostile := 1;
 end
 
 procedure goto00 begin
