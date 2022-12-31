@@ -2,6 +2,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 
 - **Added**: Green city circle on the worldmap is a bit less bright green when classic worldmap mode is disabled.
 - **Added**: Healing Powder has a low chance to spawn on traveling merchants now.
+- **Added**: Jack from Junktown can now be found as a Khan prisoner if cut-content characters are enabled. He can only be found there if Tandi wasn't kidnapped yet.
 - **Added**: New "Expanded Wrecks"-setting to fo1_settings.ini file, which enables more variation in the city encounters (Graphics by Sonora mod). Enabled by default.
 - **Added**: Optional "Vault 15 Rework" mini-mod that replaces the V15 entrance maps with a lore friendly blend of the Fo1 and Fo2 version.
 - **Added**: The 9mm Mauser pistol can be converted to the 10mm caliber if Fo2 weapon upgrades are enabled.
@@ -28,12 +29,14 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Pest control settings of the robots in Mariposa will now work better and actually attack all valid targets on sight.
 - **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
+- **Fixed**: The "Khan survival counter" wasn't working right. Rewrote the function to correctly track the surviving raiders for the endgame slide.
 - **Fixed**: The combat training in the Brotherhood gym would not give bonus skill points if the skill is tagged. Also fixed the Skill+ message (shows +2 in message log now instead of +1).
 - **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Fixed**: Traps would show the wrong message log entry when trying to disarm them.
 - **Fixed**: Vault 13 cave and Vault 15 topside were using the wrong music tracks.
 - **Fixed**: When using repair and science skill on the broken Mr. Handy robot in Mariposa, the message log would print "The robot is already healthy" and "You learn nothing new" after the scripted description text.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
+- **Tweaked**: Adjusted WorldMapTimeMod and WorldMapDelay2 in ddraw.ini to make the travel time fit a bit better to the one from Fo1.
 - **Tweaked**: All worldmap encounter chances have been adjusted to the Fo1 values.
 - **Tweaked**: Changed the way the Fo1 demo can be played.
 - **Tweaked**: Hi-Res patch encounter map edges visually improved.
@@ -41,6 +44,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: Improved how the "rest until morning (Fo2-style)"-setting works. It is not necessary anymore to save and load the game first.
 - **Tweaked**: Motorcycle spawn position in mountain encounter maps.
 - **Tweaked**: Moved the Necropolis Watershed map around to fix shitty map edges.
+- **Tweaked**: The 500 days Vault 13 invasion timer is now disabled by default.
 - **Tweaked**: The Hub Old Town Captors will only attack the player if he actually enters the house. No more unwanted attack from walking past the door that was just opened by a stupid child.
 - **Tweaked**: The garrison troops in the Master's Lair have a respawn delay now.
 - **Tweaked**: Vault 15 entrance hi-res patch screen edges.
