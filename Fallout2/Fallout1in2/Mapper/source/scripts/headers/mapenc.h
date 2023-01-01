@@ -591,7 +591,7 @@ procedure drink_water begin
       Item := PID_GAMMA_GULP_BEER;
 
    if (Item != 0) then begin
-      party_remove_item(Item)
+      party_remove_item(Item);
       Item := create_object(Item, 0, 0);
       if (obj_pid(Item) == PID_WATER_FLASK) then
          display_msg(message_str(SCRIPT_RNDDESRT, 125));
@@ -689,7 +689,7 @@ end
 // Mountain encounter
 procedure breaking_legs(variable hp_dmg) begin
    if (party_has_item(PID_ROPE)) then begin
-      party_remove_item(PID_ROPE)
+      party_remove_item(PID_ROPE);
       display_msg(message_str(SCRIPT_RNDMTN, 204));
    end
    else begin
@@ -728,7 +728,7 @@ procedure falling_from_cliff begin
 
          critter_heal(dude_obj, -hp_dmg);
          if (party_has_item(PID_ROPE)) then begin
-            party_remove_item(PID_ROPE)
+            party_remove_item(PID_ROPE);
             display_msg(message_str(SCRIPT_RNDMTN, 204));
          end
          else begin

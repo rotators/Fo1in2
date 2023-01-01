@@ -665,7 +665,8 @@ variable PartyHealingItem;
                                             end                                                     \
                                             else if (get_item_count(Vasquez_ptr,x) > 0) then begin  \
                                                 remove_pid_qty(Vasquez_ptr, x, 1)                   \
-                                            end
+                                            end                                                     \
+                                            noop
 
 /***************************************************************************************
    This is to check to see if there are any party members within range of the door
