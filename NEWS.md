@@ -36,6 +36,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Vault 13 cave and Vault 15 topside were using the wrong music tracks.
 - **Fixed**: When using repair and science skill on the broken Mr. Handy robot in Mariposa, the message log would print "The robot is already healthy" and "You learn nothing new" after the scripted description text.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
+- **Tweaked**: (Surviving) Khan raiders won't be deleted anymore right after the player has left the location. There is now a 1 day delay, in case the player wants to return for a cleanup.
 - **Tweaked**: Adjusted WorldMapTimeMod and WorldMapDelay2 in ddraw.ini to make the travel time fit a bit better to the one from Fo1.
 - **Tweaked**: All worldmap encounter chances have been adjusted to the Fo1 values.
 - **Tweaked**: Changed the way the Fo1 demo can be played.
@@ -44,7 +45,10 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: Improved how the "rest until morning (Fo2-style)"-setting works. It is not necessary anymore to save and load the game first.
 - **Tweaked**: Motorcycle spawn position in mountain encounter maps.
 - **Tweaked**: Moved the Necropolis Watershed map around to fix shitty map edges.
+- **Tweaked**: Rae, the freshly turned super mutant (cut-content) will now only show up if the Boneyard has been invaded.
+- **Tweaked**: Slight changes to Agatha's dialog (cut-content in Shady Sands), since it is not only lacking stories, but is generally unfinished.
 - **Tweaked**: The 500 days Vault 13 invasion timer is now disabled by default.
 - **Tweaked**: The Hub Old Town Captors will only attack the player if he actually enters the house. No more unwanted attack from walking past the door that was just opened by a stupid child.
 - **Tweaked**: The garrison troops in the Master's Lair have a respawn delay now.
+- **Tweaked**: The super mutant conversation in the Master's Lair now only happens if the player has visited the Lair at least once before.
 - **Tweaked**: Vault 15 entrance hi-res patch screen edges.
