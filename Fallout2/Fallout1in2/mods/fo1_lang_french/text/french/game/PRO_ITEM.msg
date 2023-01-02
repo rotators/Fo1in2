@@ -1021,8 +1021,8 @@
 {52201}{}{Un superbe poignard court. La pointe semble conçue pour percer une armure.}
 {52300}{}{Carte d'état-major}
 {52301}{}{Carte d'état-major des environs de la Baie, avec un accent sur la géologie de la région}
-{52400}{}{Toge du gardien du pont}
-{52401}{}{Ce vêtement doit être fait d'un tissu spécial pour avoir mieux résisté que le cadavre du gardien du pont. Bizarre. Il présente des traces de brûlure au plasma et au lance-flammes, mais il a résisté à ça AUSSI. Quant à savoir pour quelle raison il est violet...}
+{52400}{}{Desert Robes}
+{52401}{}{This smelly, filthy garment must be made out of some special fabric in order to have withstood the harsh environments of the deep wasteland.}
 {52500}{}{Seringue hypodermique}
 {52501}{}{Une sorte d'injecteur médical hi-tech. Tu ne sais pas ce qu'il y a dedans, mais il n'en reste qu'une dose.}
 {52600}{}{Chemise-rouge mort}
