@@ -921,13 +921,13 @@ variable removed_qty;
               destroy_object(restock_obj);                                                   \
            end                                                                               \
            restock_obj := 0;                                                                 \
-           restock_amt := 0;
+           restock_amt := 0
 
 #define stock_pid_qty(who_obj, the_pid, pid_qty)                                                   \
         if (obj_is_carrying_obj_pid(who_obj,the_pid) < pid_qty) then begin                         \
            give_pid_qty(self_obj, the_pid, pid_qty - obj_is_carrying_obj_pid(who_obj,the_pid))     \
         end else if (obj_is_carrying_obj_pid(who_obj,the_pid) > pid_qty) then begin                \
-           remove_pid_qty(who_obj, the_pid, (obj_is_carrying_obj_pid(who_obj,the_pid) - pid_qty))  \
+           remove_pid_qty(who_obj, the_pid, (obj_is_carrying_obj_pid(who_obj,the_pid) - pid_qty)); \
         end else begin                                                                             \
            restock_obj := 0;                                                                       \
         end

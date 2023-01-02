@@ -452,8 +452,8 @@
 #define GVAR_IRWIN_FARM_STATUS                  (1307)
 #define GVAR_QUEST_VAULT13_3_KILL_VATS          (1308)
 #define GVAR_QUEST_VAULT13_2_MASTER             (1309)
-#define GVAR_VREE_DISK_TRACKER                  (1310)
-#define GVAR_DESTROY_MASTER_7                   (1311)
+#define GVAR_VREE_DISK_TRACKER                  (1310) // Unused
+#define GVAR_REGDISK_READ                       (1311)
 #define GVAR_CC_NECROP_ALREADY_LOADED           (1312)
 #define GVAR_IAN_JOINS_GIVE_EXP                 (1313)
 #define GVAR_TYCHO_JOINS_GIVE_EXP               (1314)
