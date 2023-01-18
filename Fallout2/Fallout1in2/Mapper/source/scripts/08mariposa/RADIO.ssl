@@ -9,6 +9,7 @@
 #include "area/mbase.h"
 #include "maps/mbent.h"
 #include "maps/mbstrg12.h"
+#include "maps/mbvats12.h"
 
 #define NAME                    SCRIPT_RADIO
 
@@ -56,7 +57,6 @@ procedure RadioToggleFF;
 import variable field_change;
 
 variable MutantsTricked;
-
 
 procedure start begin
 end
@@ -155,15 +155,17 @@ procedure Radio06 begin
    NMessage(117);
 end
 
-procedure Radio07
-begin
+procedure Radio07 begin
    set_map_var(MVAR_radio_trick, 1);
    MutantsTricked := 1;
    NMessage(118);
 end
 
 procedure Radio08 begin
-   display_msg(mstr(119));
+   if (random(1, 10) == 1) then
+      call Radio10;
+   else
+      display_msg(mstr(119));
 end
 
 procedure Radio10 begin
@@ -232,7 +234,7 @@ procedure Radio36 begin
    Reply(133);
    NLowOption(134, Radio37);
    NOption(135, Radio37, 4);
-   if (map_var(6)) then begin
+   if (map_var(MVAR_has_corridor_code)) then begin
       NOption(136, Radio36a, 4);
    end
    NOption(137, RadioEnd, 4);
@@ -260,13 +262,14 @@ procedure RadioEnt begin
    end
    else begin
       set_map_var(MVAR_radio_used_at_entry, 1);
+
       start_gdialog(361, self_obj, 4, -1, -1);
       gsay_start;
-      Reply(101);
-      NLowOption(102, Radio01);
-      NOption(103, Radio02, 4);
-      NOption(104, Radio03, 5);
-      NOption(105, Radio07, 6);
+         Reply(101);
+         NLowOption(102, Radio01);
+         NOption(103, Radio02, 4);
+         NOption(104, Radio03, 5);
+         NOption(105, Radio07, 6);
       gsay_end;
       end_dialogue;
    end
@@ -308,7 +311,7 @@ procedure RadioVats1 begin
    if (global_var(GVAR_RADIO_COMPUTER_OFF)) then begin
       call Radio14;
    end
-   else if (map_var(6) and map_var(MVAR_BOS_FLOAT) and not(local_var(0))) then begin
+   else if (map_var(MVAR_has_corridor_code) and map_var(MVAR_BOS_FLOAT) and not(local_var(0))) then begin
       call Radio36;
    end
    else if (global_var(GVAR_FIELD_COMPUTER_MODIFIED)) then begin
