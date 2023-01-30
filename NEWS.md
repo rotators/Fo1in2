@@ -21,6 +21,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Keri in the Hub wasn't using the sex-macro which tracks the players sex-level.
 - **Fixed**: Kidnappers in the Hub would get set back to their starting position when loading in combat. NOTE: Saving and loading the game in combat is not advised, since it can corrupt the savegame.
 - **Fixed**: Killian's store guard would attack the player for being in the store at night, even though the store is still open for another hour.
+- **Fixed**: Laser Rifle upgrade cost was wrong.
 - **Fixed**: Lone Centaur in Death-encounter table was called "Coyote".
 - **Fixed**: Mariposa force fields had on/off issues when loading a savegame.
 - **Fixed**: Missing scenery .frm error in MBVATS12 map file.
