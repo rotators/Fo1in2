@@ -42,6 +42,7 @@
 #define ENABLED               (1)
 #define FORCE_DISABLED        (2)
 #define FORCE_ENABLED         (3)
+#define FORCE_DISABLED_TEMP   (4)
 
 // Destroyed emitter:
 variable ff_emitter;
