@@ -420,8 +420,8 @@
 #define GVAR_ROBCTRL_SENSORS_HOWMUCH            (1275)
 #define GVAR_DESTROY_VATS_4                     (1276)
 #define GVAR_IAN_DISTANCE_VAL                   (1277) // UNUSED
-#define GVAR_TYCHO_DISTANCE_VAL                 (1278) // UNUSED
-#define GVAR_KATJA_DISTANCE_VAL                 (1279) // UNUSED
+#define GVAR_RND_ENC_DUC_HOSTILE                (1278)
+#define GVAR_RND_ENC_TALKED_TO_DEALER           (1279)
 #define GVAR_DAN_HUB_STATUS                     (1280)
 #define GVAR_DESTROY_VATS_9                     (1281)
 #define GVAR_JOIN_SKULLZ                        (1282)
@@ -431,7 +431,7 @@
 #define GVAR_URN_STOLEN                         (1286)
 #define GVAR_AMBUSH_SKULLZ                      (1287)
 #define GVAR_MYST_STRANGER_ITEM                 (1288)
-#define GVAR_WATER_THIEF_2                      (1289)
+#define GVAR_RND_ENC_RAIDERS_ALIVE              (1289)
 #define GVAR_RND_ENC_RAIDERS_KILLED             (1290)
 #define GVAR_RND_ENC_PEASANTS_HOSTILE           (1291)
 #define GVAR_RND_ENC_PEASANTS_INIT              (1292)
