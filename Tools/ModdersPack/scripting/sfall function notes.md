@@ -983,7 +983,7 @@ sfall_funcX metarule functions
 `int sfall_func2("get_stat_min", int stat, bool who)`\
 `int sfall_func2("get_stat_max", int stat, bool who)`
 - Returns the maximum or minimum set value of the specified stat (see `set_stat_min` and `set_stat_max` functions)
-- `who`: 0 (false) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
+- `who`: 0 (False) or omitting the argument - returns the value of the player, 1 (True) - returns the value set for other critters
 
 ----
 #### interface_art_draw
@@ -1061,7 +1061,7 @@ sfall_funcX metarule functions
 ----
 #### obj_is_openable
 `bool sfall_func1("obj_is_openable", object obj)`
-- Returns True if the object is openable (i.e. has an opening/closing animation)
+- Returns True if the object is openable (i.e. has an opening/closing animation), False otherwise
 
 
 ****
