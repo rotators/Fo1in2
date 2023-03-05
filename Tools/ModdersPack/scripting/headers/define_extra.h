@@ -2,8 +2,10 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+#define PID_PLAYER          (16777216)
+
 /* Combat Flags */
-#define DAM_PRESERVE_FLAGS  0x80000000 // keep the existing result flags when setting new flags in attack_complex (for sfall)
+#define DAM_PRESERVE_FLAGS  (0x80000000) // keep the existing result flags when setting new flags in attack_complex (for sfall)
 
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
@@ -67,12 +69,12 @@
 #define ATKMODE_SEC_FLAME     128  // 0x00000080
 
 /* Object flags for get/set_flags */
-#define FLAG_MOUSE_3D            (0x1)
-#define FLAG_WALKTHRU            (0x4)
+#define FLAG_HIDDEN              (0x1)
+#define FLAG_NOSAVE              (0x4)
 #define FLAG_FLAT                (0x8)
 #define FLAG_NOBLOCK            (0x10)
 #define FLAG_LIGHTING           (0x20)
-#define FLAG_TEMP              (0x400)
+#define FLAG_NOREMOVE          (0x400)
 #define FLAG_MULTIHEX          (0x800)
 #define FLAG_NOHIGHLIGHT      (0x1000)
 #define FLAG_USED             (0x2000)
@@ -104,6 +106,9 @@
 #define CFLG_RANGED          8192  // 0x00002000 - Range (has extra hand-to-hand range)
 #define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
 #define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
+
+/* Door flags */
+#define FLAG_WALKTHRU               (0x4)
 
 /* Window flags */
 #define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
@@ -424,6 +429,8 @@
 #define OBJ_DATA_MISC_FLAGS         (0x38)
 #define OBJ_DATA_PID                (0x64)
 #define OBJ_DATA_CID                (0x68) // combat ID, used by critters in savegame (don't change while in combat)
+#define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
+#define OBJ_DATA_LIGHT_INTENSITY    (0x70)
 #define OBJ_DATA_SID                (0x78) // script ID
 #define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items
