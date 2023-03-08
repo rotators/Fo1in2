@@ -41,4 +41,3 @@
 // Is Jack still in the cell?
 // coords: top left, top right, bottom left, bottom right
 #define in_prison_cell  (tile_in_tile_rect(15709, 15705, 17109, 17105, tile_num(Jack_Ptr)))
-               
