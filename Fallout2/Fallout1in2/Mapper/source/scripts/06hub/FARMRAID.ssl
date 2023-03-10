@@ -25,6 +25,8 @@ variable Only_Once := 0;
 variable PsstTime;
 
 #define LVAR_Herebefore       (4)
+#define LVAR_Home_Tile        (5)
+#define LVAR_Home_Rotation    (6)
 
 procedure Start begin
    if (Only_Once == 0) then begin
@@ -35,7 +37,6 @@ procedure Start begin
 end
 
 procedure talk_p_proc begin
-   dude_look_at_self;
    float_msg(self_obj, mstr(random(300, 303)), FLOAT_MSG_NORMAL);
 end
 
@@ -68,7 +69,18 @@ procedure destroy_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if map_first_run then self_caps_adjust(random(1, 10));
+   if map_first_run then begin
+      self_caps_adjust(random(1, 10));
+
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else begin
+      if not(is_loading_game) then begin
+         critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+         self_rotate(local_var(LVAR_Home_Rotation));
+      end
+   end
 
    if (global_var(GVAR_IRWIN_FARM_STATUS) == 2) then begin
       if not(is_loading_game) then begin
