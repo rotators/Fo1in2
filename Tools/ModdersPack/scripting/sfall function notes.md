@@ -693,8 +693,8 @@ sfall_funcX metarule functions
 `void sfall_func3("item_make_explosive", int pid, int activePid, int damage)`\
 `void sfall_func4("item_make_explosive", int pid, int activePid, int min, int max)`
 - Makes the specified item (pid) an explosive item like Dynamite or Plastic Explosives
-- `activePid` is for an item with an active timer, can be the same as the pid argument
-- The item proto must be **Misc Item** type and have **Use** action flag
+- `activePid` is for an item with an active timer, can be the same as the `pid` argument
+- The item proto must be the **Misc Item** type and have the **Use** action flag
 - `min` and `max` are the minimum and maximum explosion damage
 - Using the function on an item that is already set as an explosive will override its previous settings
 - __NOTE:__ this function does not work for pid's of Dynamite and Plastic Explosives

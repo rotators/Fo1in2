@@ -30,6 +30,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
 - **Fixed**: On death, Griffith's name would show "Zombie Guard" instead of his actual name.
 - **Fixed**: Pest control settings of the robots in Mariposa will now work better and actually attack all valid targets on sight.
+- **Fixed**: Raiders on Irwin's farm will return to their starting positions if the player leaves the map and returns later.
 - **Fixed**: Red Dogmeat variant wouldn't play idle/combat sfx.
 - **Fixed**: Starting and ending combat in Hub Downtown would make a hooker go mad.
 - **Fixed**: Tag skills item calculation on game start wasn't always working correctly (issues in vanilla Fo1 and with Fixt changes). Replaced complicated calculations with Fo2 is_skill_tagged script command.
