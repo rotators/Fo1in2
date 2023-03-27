@@ -1,4 +1,4 @@
-sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributers
+sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
 version 4.3.5, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
@@ -34,7 +34,7 @@ Delete ddraw.dll, ddraw.ini, sfall-mods.ini, and sfall.dat from your Fallout dir
 ** Usage **
 ***********
 
-This mod is configured via the 'ddraw.ini' and 'sfall-mods.ini' files, which can be opened with any text editor. Details of every configerable option are included in those files. Where a comment refers to a DX scancode, the complete list of codes can be found at the link below:
+This mod is configured via the 'ddraw.ini' and 'sfall-mods.ini' files, which can be opened with any text editor. Details of every configurable option are included in those files. Where a comment refers to a DX scancode, the complete list of codes can be found at the link below:
 https://kippykip.com/b3ddocs/commands/scancodes.htm
 
 In a default installation using an unmodified copy of ddraw.ini, the middle mouse button will be set to switch between weapons and the mouse wheel will be set to scroll through any menus that respond to the up/down arrow keys. Holding Ctrl and hitting numpad keys 0 to 6 (with Num Lock off) will adjust the game speed. Holding left Ctrl will let you move a whole stack of items at once. Pressing left Shift will highlight items on the ground. The script extender and any engine fixes are also enabled. Most of the options that change gameplay in some way not originally intended by the developers are disabled.
@@ -710,7 +710,7 @@ Original engine bug fixes and various features based on the work by Mr.Stalin:
 >Improved and expanded the functionality of UseScrollingQuestsList to display page numbers and add another set of scroll buttons
 >Expanded is_iface_tag_active script function to check tag value of 0/1/2 (sneak/poisoned/radiated)
 >Added a fix for missing AC/DR mod stats when examining ammo in the barter screen
->Added a fix for the display issue in the pipboy when a quest list is too long with UseScrollingQuestsList diabled
+>Added a fix for the display issue in the pipboy when a quest list is too long with UseScrollingQuestsList disabled
 >Added a fix for the clickability issue of holodisk list in the pipboy
 >Added a fix for the broken obj_can_hear_obj script function
 >Added a fix for multihex critters moving too close and overlapping their targets in combat
@@ -924,7 +924,7 @@ v3.7
 >New hook script: hs_invenwield (when causing a critter to wield/unwield an armor or a weapon)
 >Expanded message_str_game script function to support all pro_*.msg files as well
 >ExtraCRC can now accept multiple CRC values
->Merged sfall debugging features into the normal version, thus removing the need of a seperate debugging version for modders
+>Merged sfall debugging features into the normal version, thus removing the need of a separate debugging version for modders
 >Removed the obsolete Jim's damage formula
 >Removed a few options from ddraw.ini that should never be turned off
 
@@ -944,7 +944,7 @@ Original engine bug fixes and various features based on the work by Crafty:
 >Added a fix for the original engine issues that caused the game not to check NPC's addictions properly and Jet Antidote not to work on NPCs
 >Added a fix for the maximum text width of the item weight (Wt.) in party member trading window
 >Added a fix for the original engine issue that caused NPCs to become unresponsive and act like walking containers if you move to another map while they are under 'lost next turn' critical miss effect
->Added a fix for the original engine issues with being able to charge the car by using cells on other scenary/critters, and cells getting consumed even when the car is already fully charged
+>Added a fix for the original engine issues with being able to charge the car by using cells on other scenery/critters, and cells getting consumed even when the car is already fully charged
 >Added an option to stack empty identical weapons, no matter what type of ammo was loaded previously
 >Added an option to highlight containers as well as items
 >Added an option to allow 9 options (lines of text) to be displayed correctly in the dialog window
@@ -1028,7 +1028,7 @@ v3.3
 >Added an option to restrict inventory weight limit to active items only
 >Added an option to modify inventory AP cost
 >Fixes to Glovz's ammo patch (from Glovz)
->Fixed melee/unarmed losing their str depedance when using a skills ini file
+>Fixed melee/unarmed losing their str dependence when using a skills ini file
 >Fixed the set_perk_freq function, which I seem to have broken at some point
 >Fixed the broken third return value for the afterhitroll script
 
@@ -1323,7 +1323,7 @@ v1.45
 >Added a new hook script, hs_combatdamage
 >Added 3 new script functions: remove_script, set_script and get_script
 >Fixed the vanilla Fallout bug where an instadeath critical hit for no damage wouldn't run the critter death function
->Fixed issue with the initilization function of most hook scripts not being rerun on player reload
+>Fixed issue with the initialization function of most hook scripts not being rerun on player reload
 >Added an extra check to try and fix WorldMapFPSPatch crashes
 
 v1.44c
@@ -1361,7 +1361,7 @@ v1.41b
 >New hook script: hs_afterhitroll
 
 v1.41
->Added new script functions for modifing the critical hit table, AP/AC bonus and to support hook scripts
+>Added new script functions for modifying the critical hit table, AP/AC bonus and to support hook scripts
 >Added an option to override the default critical hit table
 >Added hook scripts. (Only one atm, to override the hit percentage chance modifier)
 
@@ -1381,7 +1381,7 @@ v1.38
 v1.37
 >Added support for adding additional movies (max of 32)
 >In DX9 mode, AVI movies will be used in preference to .mve's if they exist
->Weapon animation codes 11 and 15 now corrispond to file paths of 's' and 't' respectively
+>Weapon animation codes 11 and 15 now correspond to file paths of 's' and 't' respectively
 >Weapon animation codes greater than 15 are no longer allowed
 >Fixed another possible hang on startup problem on Win9x
 
@@ -1415,7 +1415,7 @@ v1.34b
 
 v1.34
 >Added an option to define a key to allow you to move the window in graphics mode 5
->Added experimental support for adding additional elevators and modifing old ones
+>Added experimental support for adding additional elevators and modifying old ones
 
 v1.33c
 >Fixed a compilation error in the Win XP version that broke compatibility with older processors
@@ -1524,7 +1524,7 @@ v1.20c
 >Fixed a crash bug in the combat_p_proc fix when critter_dmg was called (from Ray)
 
 v1.20b
->The global shader can declare a variable called rcpres which will recieve the reciprical screen resolution
+>The global shader can declare a variable called rcpres which will receive the reciprocal screen resolution
 >All shaders can load up to 128 textures (e.g. add the lines 'string texname1="filename.bmp";' and 'texture tex1;' to load a texture from data\art\stex\filename.bmp)
 >Two new ScaleFilter modes
 
@@ -1560,7 +1560,7 @@ v1.18
 >Added new script functions: get_active_hand, toggle_active_hand, set_weapon_knockback, set_target_knockback, set_attacker_knockback, remove_weapon_knockback, remove_target_knockback, remove_attacker_knockback
 
 v1.17c
->Made the world map speed patch independant of processor speed
+>Made the world map speed patch independent of processor speed
 
 v1.17b
 >Fixed some of the filter stuff that I managed to screw up...
@@ -1619,7 +1619,7 @@ v1.12
 >You can use command line arguments to tell sfall to use an ini file other than ddraw.ini
 
 v1.11b
->Fixed a possible crash releated to trying to load global scripts that don't actually exist
+>Fixed a possible crash related to trying to load global scripts that don't actually exist
 
 v1.11
 >Added the ability to tell Fallout 2 to use a config file other than fallout2.cfg
