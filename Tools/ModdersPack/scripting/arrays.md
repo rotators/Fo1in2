@@ -200,7 +200,7 @@ _*mixed means any type_
 - if array was "saved", it will be removed from a savegame
 
 #### `mixed scan_array(int arrayID, mixed value)`
-- searches for a first occurence of given value inside given array
+- searches for a first occurrence of given value inside given array
 - if value is found, returns its index (for lists) or key (for maps)
 - if value is not found, returns -1 (be careful, as -1 can be a valid key for a map)
 

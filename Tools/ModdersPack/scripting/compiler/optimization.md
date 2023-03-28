@@ -1,7 +1,7 @@
 Optimization
 ------------
 
-The executation speed of scripts is not typically important in an unmodded game, given the difference in performance between a modern computer and what Fallout was designed for. When you start adding mods to the mix there's the potential for problems again, since sfall's global script system means that you can have a large amount of scripts being run every single frame.
+The execution speed of scripts is not typically important in an unmodded game, given the difference in performance between a modern computer and what Fallout was designed for. When you start adding mods to the mix there's the potential for problems again, since sfall's global script system means that you can have a large amount of scripts being run every single frame.
 
 ---
 ### sslc -O option
@@ -26,7 +26,7 @@ The sfall build of sslc supports a `-O` command line option to perform an optimi
   a := 4;      ->
   ```
 
-- constant propagation: checks for values assigned to variables which can be computed at compile time, and replaces relevent references to the symbol by the constant. The original store is not removed by this optimization. Global variables are considered for this optimization only if they are not marked import or export, and are not assigned to anywhere in the script.
+- constant propagation: checks for values assigned to variables which can be computed at compile time, and replaces relevant references to the symbol by the constant. The original store is not removed by this optimization. Global variables are considered for this optimization only if they are not marked import or export, and are not assigned to anywhere in the script.
   ```
   a := 4;  -> a := 4;
   foo(a);  -> foo(4);
@@ -103,8 +103,8 @@ The sfall build of sslc supports a `-O` command line option to perform an optimi
                                                 -> end
   ```
 
-- Mark functions with `pure` or `inline` where relevent.
+- Mark functions with `pure` or `inline` where relevant.
 
   * `pure` is a hint to the optimizer that a procedure has no side effects. (i.e. there's no way to tell that it's been called aside from its return value.) Pure procedures cannot modify global variables, or call any other procedure that isn't itself pure. Functions marked with pure can only be used in expressions (i.e. you cannot use the `call <procedure>` syntax to call them.) If there are non-pure terms in an expression, it prevents that expression being considered for dead store removal. Where no such optimizations can be performed, or if optimization is disabled, marking a procedure with pure will have no effect on the compiled code.
 
-  * `inline` is an instruction to the compiler to replace calls to the marked procedure with a copy of the procedures code instead of having a seperate call. Inlined procedures cannot use the `return` command, cannot be predefined, and cannot be used as part of an expression. Inlining if a procedure is only going to be called once is always a win, but if there are multiple calls to a procedure you will end up bloating the size of the generated code.
+  * `inline` is an instruction to the compiler to replace calls to the marked procedure with a copy of the procedures code instead of having a separate call. Inlined procedures cannot use the `return` command, cannot be predefined, and cannot be used as part of an expression. Inlining if a procedure is only going to be called once is always a win, but if there are multiple calls to a procedure you will end up bloating the size of the generated code.
