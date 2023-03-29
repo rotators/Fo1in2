@@ -22,4 +22,4 @@ This folder contains documentation about sfall scripting extensions.
     arrays.html - manual for sfall arrays
 
 If you are/will be using sfall Script Editor, don't forget to check out new compiler documentation in .\compiler\sslc_readme.html.
-There are numerious new syntax features and extensions to SSL (Star-Trek Scripting Language).
+There are numerous new syntax features and extensions to SSL (Star-Trek Scripting Language).

@@ -674,7 +674,7 @@ Runs after setting the explosive timer. You can override the result.
 ```
 int     arg0 - the time in ticks set in the timer
 Obj     arg1 - the explosive object
-int     arg2 - the result of engine calculation of whether the timer was set successfully: 1 - failure, 2 - success (similar to ROLL_* in Condition.h)
+int     arg2 - the result of engine calculation of whether the timer was set successfully: 1 - failure, 2 - success (similar to ROLL_* in Condtion.h)
 
 int     ret0 - overrides the time of the timer (maximum 18000 ticks)
 int     ret1 - overrides the result of engine calculation: 0/1 - failure, 2/3 - success (similar to ROLL_*), any other value - use engine handler
