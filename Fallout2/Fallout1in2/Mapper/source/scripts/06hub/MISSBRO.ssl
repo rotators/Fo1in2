@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+//#include "area/hub.h"
 
 #define NAME                    SCRIPT_MISSBRO
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -38,6 +38,9 @@ procedure Brother11;
 procedure Brother12;
 procedure BrotherEnd;
 
+#define LVAR_Herebefore          (4)
+#define LVAR_LeaveArea           (5)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable visible := 1;
@@ -45,7 +48,7 @@ variable visible := 1;
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
-      if (local_var(5) == 1) then begin
+      if (local_var(LVAR_LeaveArea) == 1) then begin
          visible := 0;
       end
       set_self_team(TEAM_BROTHERHOOD);
@@ -62,7 +65,7 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if (local_var(5) == 1) then begin
+   if (local_var(LVAR_LeaveArea) == 1) then begin
       if (self_tile != 17145) then begin
          self_walk_to_tile(17145);
       end
@@ -80,19 +83,15 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       float_msg(self_obj, mstr(random(134, 136)), FLOAT_MSG_RED);
    end
    else begin
-      set_local_var(4, 1);
-      start_gdialog(651, self_obj, 4, -1, -1);
-      gsay_start;
-      call Brother00;
-      gsay_end;
-      end_dialogue;
+      set_local_var(LVAR_Herebefore, 1);
+      start_dialog_at_node(Brother00);
    end
    self_walk_to_tile(17145);
-   set_local_var(5, 1);
+   set_local_var(LVAR_LeaveArea, 1);
 end
 
 procedure destroy_p_proc begin
