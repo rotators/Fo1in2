@@ -36,6 +36,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Tag skills item calculation on game start wasn't always working correctly (issues in vanilla Fo1 and with Fixt changes). Replaced complicated calculations with Fo2 is_skill_tagged script command.
 - **Fixed**: The "Khan survival counter" wasn't working right. Rewrote the function to correctly track the surviving raiders for the endgame slide.
 - **Fixed**: The combat training in the Brotherhood gym would not give bonus skill points if the skill is tagged. Also fixed the Skill+ message (shows +2 in message log now instead of +1).
+- **Fixed**: The kidnapped Brotherhood Inititate in the Hub would not hide correctly after leaving the map area.
 - **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Fixed**: Traps would show the wrong message log entry when trying to disarm them.
 - **Fixed**: Vault 13 cave and Vault 15 topside were using the wrong music tracks.
