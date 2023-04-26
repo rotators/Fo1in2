@@ -59,3 +59,4 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: The garrison troops in the Master's Lair have a respawn delay now.
 - **Tweaked**: The super mutant conversation in the Master's Lair now only happens if the player has visited the Lair at least once before.
 - **Tweaked**: Vault 15 entrance hi-res patch screen edges.
+- **Tweaked**: Warning messages will now shut down the game completely, and not just send players back to the main menu.
