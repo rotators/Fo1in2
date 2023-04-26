@@ -259,4 +259,3 @@
 {1131}{LOX_76}{Pas grand-chose à dire. Des contes pour faire peur aux mouflets... une bête qui vit au Nord et qui bouff'rait les p'tits enfants pas sages.}
 {1132}{LOX_78}{Il y a 3 ans, un marchand est parti vers l'Sud pour d'aut' villes. A son r'tour, les ch'veux et les dents lui tombaient et il bafouillait quequ'chose sur une immense zone radioactive. Qui sait ce qu'il y avait là-bas avant la guerre...}
 {1133}{LOX_79}{Quasi tous les pôvr' qui bossent pour les marchands vivent là, dans des baraques si minces qu'on y crève de chaud. Pendant c'temps-là ces salauds de richards se prélassent dans leur 'sweet home', sur les Hauteurs. Ecœurant.}
-

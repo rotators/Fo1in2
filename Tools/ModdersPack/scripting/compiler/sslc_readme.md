@@ -99,7 +99,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
     x := 5;
     ```
 
-- Multiple variable declaration: Multiple variables can be declared on one line, seperated by commas. This is an alterative to the ugly begin/end block, or the bulky single variable per line style.
+- Multiple variable declaration: Multiple variables can be declared on one line, separated by commas. This is an alternative to the ugly begin/end block, or the bulky single variable per line style.
   - new:
     ```
     variable a, b, c;
@@ -131,7 +131,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
     a := 4096;
     ```
 
-- Increment/decrement operators: `++` and `--` can be used as shorthand for `+= 1` and `-= 1` respectively. They are mearly a syntactic shorthand to improve readability, and so their use is only allowed where `+= 1` would normally be allowed.
+- Increment/decrement operators: `++` and `--` can be used as shorthand for `+= 1` and `-= 1` respectively. They are merely a syntactic shorthand to improve readability, and so their use is only allowed where `+= 1` would normally be allowed.
   - new:
     ```
     a++;
@@ -222,7 +222,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
 
 - Empty statements in blocks are allowed: This is just a convenience to save scripters a bit of memory. Some of the macros in the Fallout headers include their own semicolons while others do not. With the original compiler you had to remember which was which, and if you got it wrong the script would not compile. Now it's always safe to include your own semicolon, even if the macro already had its own. For example, this would not compile with the original sslc, but will with the sfall edition:
   ```
-  #define my_macro diplay_msg("foo");
+  #define my_macro display_msg("foo");
 
   procedure start begin
     my_macro;
@@ -230,7 +230,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
   ```
   __NOTE:__ **Does not work currently.**
 
-- Procedure stringify operator `@`: Designed to make callback-procedures a better option and allow for basic functional programming. Basically it replaces procedure names preceeded by `@` by a string constant.
+- Procedure stringify operator `@`: Designed to make callback-procedures a better option and allow for basic functional programming. Basically it replaces procedure names preceded by `@` by a string constant.
   - old:
     ```
     callbackVar := "Node000";
@@ -245,6 +245,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
   - optimizer wasn't aware that you are referencing a procedure, and could remove it, if you don't call it explicitly (can be solved by adding making procedure `critical`)
   - you couldn't see all references of a procedure from a Script Editor
   - it was completely not obvious that you could do such a thing, it was a confusing syntax
+
 
 - (*) **Arrays**: In vanilla Fallout, arrays had to be constructed by reserving a block of global/map variables. Since sfall 2.7, specific array targeted functions have been available, but they are fairly messy and long winded to use. The compiler provides additional syntactic shorthand for accessing and setting array variables, as well as for array creation. When declaring an array variable, put a constant integer in `[]`` to give the number of elements in the array. (before sfall 3.4 you had to specify size in bytes for array elements, now it's not required, see **arrays.md** for more information)
   - new:
@@ -396,7 +397,7 @@ There are several changes in this version of sslc which may result in problems f
 
 **sfall 3.6:**
 - added Python-style ternary operator (conditional expression)
-- added `-s` short-circuit evalution option for `AND`, `OR` expressions
+- added `-s` short-circuit evaluation option for `AND`, `OR` expressions
 - **int2ssl** will detect and decompile conditional expressions and short-circuit logical operators
 - added `-F` option to include full file paths in `#line` directives after preprocessing
 - added `-D` option to write abstract syntax tree into `.txt` file
@@ -407,7 +408,7 @@ There are several changes in this version of sslc which may result in problems f
 - implemented stringify procedure names using `@` operator, which is helpful to pass procedures around to call them from variables (it will properly handle references)
 - logic for procedures passed as arguments to script functions was moved from code generation to parsing stage
 - now it is possible to call user-defined procedures inside argument list of script functions, without compiler attempting to treat them as procedure references and probably fail (procedures will still be passed, but only to appropriate script functions at appropriate argument positions)
-- **int2ssl** will now place empty parantheses after a call to user-defined procedure - this will distinct calls from passing procedures to some script functions (like `giq_option`)
+- **int2ssl** will now place empty parentheses after a call to user-defined procedure - this will distinct calls from passing procedures to some script functions (like `giq_option`)
 - fixed `inline` procedure "calls" not working when optimization is enabled
 - added column numbers to error/warning output
 - added code to simplify adding sfall opcodes into compiler (need to add code in 3 places, instead of 7 places for each opcode)

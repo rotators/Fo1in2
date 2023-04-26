@@ -29,8 +29,9 @@ variable party_elevation;
 variable Item := 0;
 variable NumItems := 0;
 
-#define EVENT_END_1        (1)
-#define EVENT_END_2        (2)
+#define EVENT_END_1           (1)
+#define EVENT_END_2           (2)
+#define EVENT_SetStartItems   (3)
 
 procedure start begin
 end
@@ -56,15 +57,9 @@ variable Item;
       // Give initial reputation
       inc_v13_rep(REP_BONUS_GAME_STARTED);
 
-      // Add starting inventory
-      if (global_var(GVAR_IRONMAN_MODE) == 0) then begin
-         call base_inventory;
-         call TagInven;
-      end
-      else if (global_var(GVAR_IRONMAN_MODE) == 1) then
-         call base_inventory;
-      else if (global_var(GVAR_IRONMAN_MODE) == 2) then
-         call TagInven;
+      // We have to run this in a timer event since otherwise the code executes to early
+      // and the fo1_settings.ini values aren't refreshed yet
+      add_timer_event(self_obj, 0, EVENT_SetStartItems);
    end
    else begin
       // Check if we should run the endgame scene
@@ -114,7 +109,17 @@ end
 procedure timed_event_p_proc begin
 variable Critter;
 
-   if (fixed_param == EVENT_END_1) then begin
+   if (fixed_param == EVENT_SetStartItems) then begin
+      if (global_var(GVAR_IRONMAN_MODE) == 0) then begin
+         call base_inventory;
+         call TagInven;
+      end
+      else if (global_var(GVAR_IRONMAN_MODE) == 1) then
+         call base_inventory;
+      else if (global_var(GVAR_IRONMAN_MODE) == 2) then
+         call TagInven;
+   end
+   else if (fixed_param == EVENT_END_1) then begin
       debug("EG Scene 1 - Setup");
       kill_critter_type(PID_RAT_CAVE, 0);
 
@@ -140,7 +145,11 @@ variable Critter;
       end
       if MrHandyC_In_Party then begin
          attempt_place_party_member(Handy_ptr, 20090, 0)
-         obj_rotate(Tycho_ptr, 5);
+         obj_rotate(Handy_ptr, 5);
+      end
+      if Eyebot_In_Party then begin
+         attempt_place_party_member(Eyebot_ptr, 20091, 0)
+         obj_rotate(Eyebot_ptr, 5);
       end
       tile_refresh_display;
 
@@ -173,39 +182,39 @@ procedure base_inventory begin
 end
 
 procedure TagInven begin
-   if (((has_skill(dude_obj, SKILL_LOCKPICK) - ((dude_perception + dude_agility) / 2) - 20 + (dude_trait(TRAIT_bruiser) * 10)) >= 20) or ((has_skill(dude_obj, SKILL_STEAL) - dude_agility - 20 + (dude_trait(TRAIT_bruiser) * 10)) >= 20)) then begin
+   if is_skill_tagged(SKILL_LOCKPICK) then begin
       Item := create_object(PID_LOCKPICKS, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if ((has_skill(dude_obj, SKILL_UNARMED_COMBAT) - ((dude_agility + dude_strength) / 2) - 65 + (dude_trait(TRAIT_bruiser) * 10) + (dude_trait(TRAIT_good_natured) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_UNARMED_COMBAT) then begin
       Item := create_object(PID_BRASS_KNUCKLES, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if ((has_skill(dude_obj, SKILL_FIRST_AID) - ((dude_perception + dude_iq) / 2) - 30 - (dude_trait(TRAIT_good_natured) * 20) + (dude_trait(TRAIT_bruiser) * 10) - (dude_trait(TRAIT_good_natured) * 15)) >= 20) then begin
+   if is_skill_tagged(SKILL_FIRST_AID) then begin
       Item := create_object(PID_STIMPAK, 0, 0);
       add_mult_objs_to_inven(dude_obj, Item, 2);
    end
-   if ((has_skill(dude_obj, SKILL_DOCTOR) - ((dude_perception + dude_iq) / 2) - 15 - (dude_trait(TRAIT_good_natured) * 20) + (dude_trait(TRAIT_bruiser) * 10) - (dude_trait(TRAIT_good_natured) * 15)) >= 20) then begin
+   if is_skill_tagged(SKILL_DOCTOR) then begin
       Item := create_object(PID_FIRST_AID_KIT, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if ((has_skill(dude_obj, SKILL_SMALL_GUNS) - dude_agility - 35 + (dude_trait(TRAIT_good_natured) * 10) + (dude_trait(TRAIT_bruiser) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_SMALL_GUNS) then begin
       Item := create_object(PID_10MM_JHP, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if ((has_skill(dude_obj, SKILL_THROWING) - dude_agility - 40 + (dude_trait(TRAIT_good_natured) * 10) + (dude_trait(TRAIT_bruiser) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_THROWING) then begin
       Item := create_object(PID_THROWING_KNIFE, 0, 0);
       add_mult_objs_to_inven(dude_obj, Item, 2);
    end
-   if ((has_skill(dude_obj, SKILL_REPAIR) - dude_iq - 20 + (dude_trait(TRAIT_bruiser) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_REPAIR) then begin
       Item := create_object(PID_MULTI_TOOL, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
-   if ((has_skill(dude_obj, SKILL_OUTDOORSMAN) - ((dude_iq + dude_endurance) / 2) - 5 + (dude_trait(TRAIT_bruiser) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_OUTDOORSMAN) then begin
       Item := create_object(PID_WATER_FLASK, 0, 0);
       add_mult_objs_to_inven(dude_obj, Item, 3);
    end
-   if ((has_skill(dude_obj, SKILL_SCIENCE) - (2 * dude_iq) - 25 - (dude_trait(TRAIT_bruiser) * 10)) >= 20) then begin
+   if is_skill_tagged(SKILL_SCIENCE) then begin
       Item := create_object(PID_MENTATS, 0, 0);
       add_mult_objs_to_inven(dude_obj, Item, 2);
       Item := create_object(PID_BUFFOUT, 0, 0);
@@ -296,7 +305,7 @@ procedure Endgame_Slides begin
 
    // Raiders
    if raiders_visible_on_map then begin
-      if ((get_raiders_alive <= 3) or ((not(is_garl_alive)) and (get_raiders_alive <= 8))) then
+      if ((get_raiders_alive <= 3) or (not(is_garl_alive) and (get_raiders_alive <= 8))) then
          set_end_raiders_dead;
       else if (get_raiders_alive < 16) then
          set_end_raiders_hurt;
@@ -448,7 +457,7 @@ procedure Endgame_Slides_Expanded begin
 
    // Raiders
    if raiders_visible_on_map then begin
-      if ((get_raiders_alive <= 3) or ((not(is_garl_alive)) and (get_raiders_alive <= 8))) then
+      if ((get_raiders_alive <= 3) or (not(is_garl_alive) and (get_raiders_alive <= 8))) then
          set_end_fo1in2_raiders_dead;
       else if (get_raiders_alive < 16) then
          set_end_fo1in2_raiders_hurt;

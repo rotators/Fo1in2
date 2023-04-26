@@ -170,6 +170,7 @@
 // Raiders
 #define EXP_BEFRIEND_KHANS                      (500)
 #define EXP_RESCUE_SLAVE                        (200)
+#define EXP_RESCUE_JACK                         (200)
 
 // Junktown
 #define EXP_TRISH_SAUL_RELATIONSHIP             (250)
@@ -193,6 +194,7 @@
 #define EXP_BOUGHT_WATER_CARAVAN                (1000)
 #define EXP_FIND_DEATHCLAW                      (800)
 #define EXP_BLACKMAILING_BOB                    (500)
+#define EXP_JOINED_THIEVES_GUILD                (900)
 #define EXP_NECKLACE_STOLEN                     (500)
 #define EXP_IRWINE_FARM_CLEARED                 (500)
 #define EXP_REPORTED_BOB                        (500)
@@ -206,6 +208,8 @@
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS                 (1000)
+#define EXP_KILLED_REGULATORS                   (500)
+#define EXP_BLADES_ATTACKED_ADYTUM              (2000)
 #define EXP_UPGRADE_MOTORCYCLE                  (500)
 #define EXP_HIRED_KATJA                         (200)
 #define EXP_LEARN_BRAWLING                      (250)
@@ -231,6 +235,7 @@
 #define EXP_REPAIR_ROBOT_SENSORS                (150)
 
 // Brotherhood of Steel
+#define EXP_DELIVERED_GRENADES                  (300)
 #define EXP_REPAIR_PA                           (500)
 #define EXP_WATCHING_TRAINING                   (500)
 #define EXP_BECOME_INITITAT                     (2000)
@@ -261,6 +266,21 @@
 #define EXP_SHOVELED_ALL_CRAP                   (150)
 #define EXP_TEMPLE_OF_TRIALS                    (500)
 #define EXP_GECKO_SKINNING                      (300)
+
+#define EXP_READ_DISK_ARTIFACT                  (250)
+#define EXP_READ_DISK_BROHIST                   (100)
+#define EXP_READ_DISK_CODEDISK                  (100)
+#define EXP_READ_DISK_DISKA                     (110)
+#define EXP_READ_DISK_DISKD                     (110)
+#define EXP_READ_DISK_FEV                       (200)
+#define EXP_READ_DISK_LTCODES                   (90)
+#define EXP_READ_DISK_MAXDISK                   (100)
+#define EXP_READ_DISK_MUTDISK                   (185)
+#define EXP_READ_DISK_REGDISK                   (75)
+#define EXP_READ_DISK_SECDISK                   (100)
+#define EXP_READ_DISK_SOPDISK                   (100)
+#define EXP_READ_DISK_VALTDISK                  (100)
+#define EXP_READ_DISK_VREEDISK                  (135)
 
 /***************************************
  Give the experience points and display

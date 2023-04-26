@@ -30,9 +30,18 @@ variable $addr;
                write_byte(0x496FAB, 0)
 
 // This will change the skill bonus from Mr. Fixit perk to 20%.
-// In Fo2, the skill gives only +10%, while in Fo1 it is +20%.
+// In Fo2, the perk gives only +10%, while in Fo1 it is +20%.
 #define VOODOO_mr_fixit_bonus \
                write_byte(0x496E00, 20)
+
+// In Fo2, the perk gives a +20% light level increase, while in Fo1 it is only +10%.
+#define VOODOO_night_vision_bonus \
+               begin                                        \
+                write_short(0x47A91D, 0xC069);              \
+                write_int(0x47A91F, 6553);                  \
+                call VOODOO_WriteNop(0x47A923, 15, true);   \
+               end                                          \
+               noop
 
 // This will change the credits and wordlmap music tracks, so that
 // the HQ music pack will not overwrite the Fo1 music with Fo2 tracks.
@@ -44,11 +53,17 @@ variable $addr;
 // This is used in combination with VOODOO_rest_till_0600 to change the resting times.
 #define VOODOO_rest_strings \
                write_int(0x499746, 320)
-               
+
 // This changes the animated head reaction values. See modreact.h for more details.
 #define VOODOO_talking_head_mood \
                write_byte(0x4A29F5, 25); \
                write_byte(0x4A2A0D, 75)
+
+// This will shut down the game and not just send the player back to the main menu
+#define VOODOO_close_game \
+   write_byte(0x481B2A, 0xB8); /* mov eax, 27 (ESC key input) */ \
+   write_int(0x481B2B, 27); \
+   signal_end_game
 
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //

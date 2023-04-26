@@ -1010,8 +1010,8 @@
 {52201}{}{A short finely crafted knife. The tip seems to be designed to pierce armor.}
 {52300}{}{Survey Map}
 {52301}{}{It looks like a geological survey map of the Bay area.}
-{52400}{}{Bridgekeeper's Robes}
-{52401}{}{This smelly, filthy garment must be made out of some special fabric in order to have withstood the foulness of the bridgekeeper's body. Oddly enough, it has plasma burns and scorch marks all over it, as if these weapons were used against it... to no effect. You have NO idea why it's purple.}
+{52400}{}{Desert Robes}
+{52401}{}{This smelly, filthy garment must be made out of some special fabric in order to have withstood the harsh environments of the deep wasteland.}
 {52500}{}{Hypo}
 {52501}{}{A medical injection instrument of some kind. It looks very high tech. You don't know what it's filled with but it appears to have only one dose left.}
 {52600}{}{Dead Redshirt}

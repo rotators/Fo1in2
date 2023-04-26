@@ -479,7 +479,7 @@ end
 ****************************************/
 procedure LoadScenery begin
    if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 20);
+      Choose_Scenery := random(1, 15);
       Active_Scenery_List := 1;
 
       // DEBUG:

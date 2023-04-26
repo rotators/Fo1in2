@@ -130,12 +130,12 @@
     detail: get_stat_min(int stat, bool who = False)
     doc: |
       - Returns the minimum set value of the specified stat (see `set_stat_min` functions)
-      - who: 0 (`false`) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
+      - who: 0 (`False`) or omitting the argument - returns the value of the player, 1 (`True`) - returns the value set for other critters
   - name: get_stat_max
     detail: get_stat_max(int stat, bool who = False)
     doc: |
       - Returns the maximum set value of the specified stat (see `set_stat_max` functions)
-      - who: 0 (`false`) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
+      - who: 0 (`False`) or omitting the argument - returns the value of the player, 1 (`True`) - returns the value set for other critters
 
 - name: Alter min/max
   doc: The `set_stat_max/min` functions can be used to set the valid ranges on stats. Values returned by `get_current_stat` will be clamped to this range. The `set_pc_` function only affects the player, the `set_npc_` functions only affects other critters, and the `set_` functions affects both.
@@ -757,7 +757,7 @@
       - makes the specified item (pid) an explosive item like Dynamite or Plastic Explosives
       - `maxDamage` is optional
       - `activePid` is for an item with an active timer, can be the same as the `pid` argument
-      - the item proto must be "Misc Item" type and have "Use" action flag
+      - the item proto must be the **Misc Item** type and have the **Use** action flag
       - minDamage/maxDamage are the minimum and maximum explosion damage
       - using the function on an item that is already set as an explosive will override its previous settings
       - NOTE: this function does not work for pids of Dynamite and Plastic Explosives
@@ -1077,11 +1077,11 @@
   parent: Variables
   items:
   - name: string_split
-    detail: array string_split(string, split)
+    detail: array string_split(string text, split)
     doc: "Takes a string and a seperator, searches the string for all instances of the seperator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the seperator, the string is split into individual characters. You can use this to search for a substring in a string like this: `strlen(get_array(string_split(haystack, needle), 0))`"
     opcode: 0x8235
   - name: substr
-    detail: string substr(string, start, length)
+    detail: string substr(string text, start, length)
     doc: |
       Cuts a substring from a string starting at "start" up to "length" characters. The first character position is 0 (zero).
       - If start is negative - it indicates starting position from the end of the string (for example `substr("test", -2, 2)` will return last 2 charactes: "st").
@@ -1178,34 +1178,34 @@
     opcode: 0x81e5
   - name: set_sfall_arg
     detail: void set_sfall_arg(int argNum, int value)
-    doc: Changes argument value. The argument number (argNum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see `register_hook_proc`).
+    doc: Changes argument value. The argument number (`argNum`) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see `register_hook_proc`).
     opcode: 0x823d
   - name: register_hook
     detail: void register_hook(int hookID)
-    doc: Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` proc will be executed in current global script. You can use all above functions like normal.
+    doc: Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` procedure will be executed in current global script. You can use all above functions like normal.
     opcode: 0x8207
   - name: register_hook_proc
     detail: void register_hook_proc(int hookID, proc procedure)
     doc: |
-      The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use "hs_*.int" scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
+      The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script with no conflicts) and flexibility. You can place all related hook scripts for a specific mod in one global script!
 
       Use zero (0) as second argument to unregister hook script from current global script.
 
-      __NOTE:__ you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again. Sometimes you need to multiply certain value in a chain of hook scripts.
+      __NOTE:__ you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again.
 
-      Example: let's say we have a Mod A which reduces all "to hit" chances by 50%. The code might look like this:
+      __Example:__ Sometimes you need to multiply certain value in a chain of hook scripts. Let's say we have a **Mod A** which reduces all "to hit" chances by 50%. The code might look like this:
 
       ```js
       original_chance = get_sfall_arg;
       set_sfall_return(original_chance / 2);
       ```
 
-      Mod B also want to affect hit chances globally, by increasing them by 50%. Now in order for both mods to work well together, we need to add this line to Mod A hook script:
+      **Mod B** also want to affect hit chances globally, by increasing them by 50%. Now in order for both mods to work well together, we need to add this line to **Mod A** hook script:
       ```js
       set_sfall_arg(0, (original_chance / 2));
       ```
 
-      This basically changes hook argument for the next script. Mod B code:
+      This basically changes hook argument for the next script. **Mod B** code:
       ```js
       original_chance = get_sfall_arg;
       set_sfall_return(original_chance * 1.5);
@@ -1218,7 +1218,12 @@
     opcode: 0x8262
   - name: register_hook_proc_spec
     detail: void register_hook_proc_spec(int hookID, procedure proc)
-    doc: Works very similar to `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script). All scripts hooked to a single hook point with this function are executed in exact order of how they were registered, as opposed to the description below, which refers to using `register_hook/register_hook_proc` functions.
+    doc: Works the same as `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_<name>.int` script). In addition, all scripts hooked to a single hook point with this function are executed in the exact order of how they were registered. In the case of using `register_hook` and `register_hook_proc` functions, scripts are executed in reverse order of how they were registered.
+
+      **The execution chain of script procedures for a hook is as follows:**
+      1. Procedures registered with `register_hook` and `register_hook_proc` functions (executed in reverse order of registration).
+      2. The `hs_<name>.int` script.
+      3. Procedures registered with the `register_hook_proc_spec` function (executed in the exact order of registration).
 
 - name: Array functions
   parent: Arrays # not in this files, normal page
@@ -1675,7 +1680,7 @@
         - winName: the window name, assigned to the window by the `CreateWin/create_win` function
         - winID: the ID number of the interface or script window obtained with the `get_window_under_mouse` function, or 0 for the current game interface
         - flag: the flag to change (see `WIN_FLAG_*` constants in `define_extra.h`)
-        - value: `true` - set the flag, `false` - unset the flag
+        - value: `True` - set the flag, `False` - unset the flag
       macro: sfall.h
 
     - name: win_fill_color
@@ -1822,7 +1827,7 @@
 - name: Objects and scripts
   items:
   - name: set_self
-    detail: void set_self(ObjectPtr)
+    detail: void set_self(ObjectPtr setObj)
     doc: |
       Overrides the script's `self_obj` for the next function call.
       - It is primarily used to allow the calling of functions which take an implicit `self_obj` parameter (e.g. `drop_obj`) from global scripts, but it can also be used from normal scripts.
@@ -1841,15 +1846,15 @@
     macro: sfall.h
 
   - name: remove_script
-    detail: void remove_script(ObjectPtr)
+    detail: void remove_script(ObjectPtr obj)
     opcode: 0x81f3
     doc: Accepts a pointer to an object and will remove the script from that object.
   - name: set_script
-    detail: void set_script(ObjectPtr, int scriptID)
+    detail: void set_script(ObjectPtr obj, int scriptID)
     opcode: 0x81f4
     doc: Accepts a pointer to an object and scriptID, and applies the given script to an object (scriptID accept the same values as `create_object_sid `from sfall 3.6). If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided. If you add 0x80000000 to the sid when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
   - name: get_script
-    detail: int get_script(ObjectPtr)
+    detail: int get_script(ObjectPtr obj)
     opcode: 0x81f5
     doc: |
       - accepts a pointer to an object and returns its scriptID (line number in `scripts.lst`), or 0 if the object is unscripted.
@@ -1920,5 +1925,5 @@
 
   - name: obj_is_openable
     detail: bool obj_is_openable(object obj)
-    doc: Returns True if the object is openable (i.e. has an opening/closing animation)
+    doc: Returns True if the object is openable (i.e. has an opening/closing animation), False otherwise
     macro: sfall.h

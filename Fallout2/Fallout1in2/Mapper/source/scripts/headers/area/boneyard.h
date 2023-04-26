@@ -11,16 +11,19 @@
     Generic Defines
 ************************************************/
 // Super Mutant invaders
-#define create_la_invader(hex)   invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);   \
-                                 set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);                               \
-                                 critter_attempt_placement(invaderPtr, hex, 0)
+#define create_la_invader(hex) \
+   invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);   \
+   set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);                               \
+   critter_attempt_placement(invaderPtr, hex, 0)
 
-#define create_foa_invader(pid, hex, script)	invaderPtr := create_object_sid(pid, 0, 0, script);   \
-												critter_attempt_placement(invaderPtr, hex, elev)
+#define create_foa_invader(pid, hex, script) \
+   invaderPtr := create_object_sid(pid, 0, 0, script);   \
+   critter_attempt_placement(invaderPtr, hex, elev)
 
 // Turn Adytum against the Regulators:
-#define set_fight_regulators  if (not(get_blades_attack_finished) and (get_zimmermann_turned or get_blades_attacking)) then \
-                                 set_self_team(TEAM_PLAYER)
+#define set_fight_regulators \
+   if (not(get_blades_attack_finished) and (get_zimmermann_turned or get_blades_attacking)) then \
+      set_self_team(TEAM_PLAYER)
 
 //******************** Quest: Blades vs. Regulators conflict
 //--- Gun Runners:
@@ -57,7 +60,7 @@
 
 #define set_arming_blades               set_global_var(GVAR_BLADES_STATUS, 9101); \
                                         set_blades_quest_active
-#define get_arming_blades               global_var( GVAR_BLADES_STATUS ) == 9101
+#define get_arming_blades               (global_var(GVAR_BLADES_STATUS) == 9101)
 
 // Player wants to talk to Zimmermann before the attack:
 #define set_blades_attacking_wait       set_global_var(GVAR_BLADES_STATUS, 9102)

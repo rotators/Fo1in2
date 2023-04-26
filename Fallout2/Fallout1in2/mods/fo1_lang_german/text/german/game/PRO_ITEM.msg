@@ -1010,8 +1010,8 @@
 {52201}{}{Kurzes, aufwendig gearbeitetes Messer. Die Spitze sieht aus, als könne sie Rüstungen durchbohren.}
 {52300}{}{Übersichtskarte}
 {52301}{}{Sieht aus wie eine geologische Übersichtskarte der Gegend um die Bucht von San Francisco.}
-{52400}{}{Gewänder des Brückenwächters}
-{52401}{}{Diese stinkenden und dreckigen Kleidungsstücke müssen aus einem speziellen Stoff gefertigt worden sein, sonst hätten sie dem Fäulnisgeruch des Brückenwächters nicht so lange standgehalten. Komischerweise ist die Leiche übersät mit Plasmaverbrennungen und Brandspuren, so als seien zahlreiche Waffen vergebens gegen sie gerichtet gewesen. Du hast KEINE Ahnung, warum sie lila ist.}
+{52400}{}{Desert Robes}
+{52401}{}{This smelly, filthy garment must be made out of some special fabric in order to have withstood the harsh environments of the deep wasteland.}
 {52500}{}{Spritze}
 {52501}{}{Ein medizinisches Injektionsinstrument. Sieht sehr nach High-Tech aus. Du weißt nicht, womit es gefüllt ist, jedenfalls ist nur noch eine Dosis davon übrig.}
 {52600}{}{Totes Rothemd}

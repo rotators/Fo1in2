@@ -46,3 +46,6 @@
 {145}{}{Bitte erzähl mir eine Geschichte.}
 {146}{}{Dieser Dharma-Typ klingt wie ein Idiot.}
 {147}{}{Du beleidigst deine Ältesten. Du solltest es besser wissen.}
+
+#Fo1in2
+{200}{}{Very well then ... [You sit down and listen to Agatha's story for a while]}

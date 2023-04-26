@@ -2,8 +2,10 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+#define PID_PLAYER          (16777216)
+
 /* Combat Flags */
-#define DAM_PRESERVE_FLAGS  0x80000000 // keep the existing result flags when setting new flags in attack_complex (for sfall)
+#define DAM_PRESERVE_FLAGS  (0x80000000) // keep the existing result flags when setting new flags in attack_complex (for sfall)
 
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
@@ -67,12 +69,12 @@
 #define ATKMODE_SEC_FLAME     128  // 0x00000080
 
 /* Object flags for get/set_flags */
-#define FLAG_MOUSE_3D            (0x1)
-#define FLAG_WALKTHRU            (0x4)
+#define FLAG_HIDDEN              (0x1)
+#define FLAG_NOSAVE              (0x4)
 #define FLAG_FLAT                (0x8)
 #define FLAG_NOBLOCK            (0x10)
 #define FLAG_LIGHTING           (0x20)
-#define FLAG_TEMP              (0x400)
+#define FLAG_NOREMOVE          (0x400)
 #define FLAG_MULTIHEX          (0x800)
 #define FLAG_NOHIGHLIGHT      (0x1000)
 #define FLAG_USED             (0x2000)
@@ -105,6 +107,9 @@
 #define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
 #define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
 
+/* Door flags */
+#define FLAG_WALKTHRU               (0x4)
+
 /* Window flags */
 #define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
 #define WIN_FLAG_MOVEONTOP          (0x4) // places the window on top of other windows
@@ -122,25 +127,22 @@
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
 // Some possible defines for the 4th argument to HOOK_REMOVEINVOBJ
-#define RMOBJ_DROP                4831349  // If the object is dropped manually by the player from the inventory screen
-#define RMOBJ_TRADE               4683293  // If the object is offered up as a trade
-#define RMOBJ_DROPMULTI           4571599  // When dropping a part of a stack (RMOBJ_DROP occurs first)
+#define RMOBJ_ITEM_REMOVED_INVEN  4831349  // removing or destroying an item (obj_remove_from_inven_)
+#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
+#define RMOBJ_ITEM_REMOVED_MULTI  4563866  // (op_rm_mult_objs_from_inven_)
+#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
+#define RMOBJ_ITEM_DESTROY_MULTI  4571599  // (op_destroy_mult_objs_)
+#define RMOBJ_ITEM_MOVE           4683293  // (item_move_func_)
 #define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
-//#define RMOBJ_CONTAINER         4683293  // same as RMOBJ_TRADE (item_move_func_)
 #define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
 #define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
 #define RMOBJ_EQUIP_WEAPON        4658675  // (switch_hand_)
 #define RMOBJ_UNLOAD_WEAPON       4667030  // (inven_action_cursor_)
-//#define RMOBJ_LOAD_WEAPON       4831349  // same as RMOBJ_DROP (obj_remove_from_inven_)
 #define RMOBJ_USE_DRUG_ON         4834866  // (obj_use_item_on_)
 #define RMOBJ_STEAL_VIEW          4668206  // (loot_container_)
-//#define RMOBJ_DROP_DYNAMITE     4666865  // same as RMOBJ_USE_OBJ
-#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
-#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
 #define RMOBJ_ARMOR_EQUIPED       4651961  // removing armor from the player's slot when entering INVENTORY/LOOT/BARTER/USE inventory
 #define RMOBJ_LEFT_HAND_EQUIPED   4651899  // removing item from the player's left slot when entering INVENTORY/LOOT/BARTER/USE inventory
 #define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // removing item from the player's right slot when entering INVENTORY/LOOT/BARTER/USE inventory
-#define RMOBJ_RM_MULT_OBJS        4563866  // (op_rm_mult_objs_from_inven_)
 #define RMOBJ_REPLACE_WEAPON      4658526  // (switch_hand_)
 #define RMOBJ_THROW               4266040  // (action_ranged_)
 #define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
@@ -149,8 +151,16 @@
 //#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 #define RMOBJ_BARTER_ARMOR        4675656  // removing armor from NPC's slot before entering the barter screen
 #define RMOBJ_BARTER_WEAPON       4675722  // removing weapon from NPC's slot before entering the barter screen
-#define RMOBJ_INVEN_DROP_CAPS     4667295  // if money/caps are dropped manually by the player from the inventory screen
+#define RMOBJ_INVEN_DROP_CAPS     4667295  // if multiple money/caps are dropped manually by the player from the inventory screen
 #define RMOBJ_DROP_INTO_CONTAINER 4678833  // when dropping items into a container item (bag/backpack)
+// old defines
+#define RMOBJ_RM_MULT_OBJS        RMOBJ_ITEM_REMOVED_MULTI
+#define RMOBJ_TRADE               RMOBJ_ITEM_MOVE          // If the object is offered up as a trade
+#define RMOBJ_DROP                RMOBJ_ITEM_REMOVED_INVEN // If the object is dropped manually by the player from the inventory screen
+#define RMOBJ_DROPMULTI           RMOBJ_ITEM_DESTROY_MULTI // When dropping a part of a stack (RMOBJ_ITEM_MOVE occurs first)
+//#define RMOBJ_DROP_DYNAMITE     RMOBJ_USE_OBJ
+//#define RMOBJ_CONTAINER         RMOBJ_ITEM_MOVE
+//#define RMOBJ_LOAD_WEAPON       RMOBJ_ITEM_REMOVED_INVEN
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
@@ -419,6 +429,8 @@
 #define OBJ_DATA_MISC_FLAGS         (0x38)
 #define OBJ_DATA_PID                (0x64)
 #define OBJ_DATA_CID                (0x68) // combat ID, used by critters in savegame (don't change while in combat)
+#define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
+#define OBJ_DATA_LIGHT_INTENSITY    (0x70)
 #define OBJ_DATA_SID                (0x78) // script ID
 #define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items

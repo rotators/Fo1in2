@@ -11,6 +11,9 @@
     Generic Defines
 ************************************************/
 
+// Elevator hex in mstrlr12 elevation 0
+#define hex_elevator_0              (12098)
+
 // Cathedral invaders
 #define FOLINVAD_FLOAT_Entrance     bit_1
 #define FOLINVAD_FLOAT_Vault        bit_2

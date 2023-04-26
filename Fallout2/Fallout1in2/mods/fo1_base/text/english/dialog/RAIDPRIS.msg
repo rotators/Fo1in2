@@ -10,3 +10,7 @@
 {109}{}{Please, just help me out.}
 {110}{}{Ow! My leg. It's hurt. I think it might be broken. Please help me!}
 #
+
+#Fo1in
+# you gain ...
+{200}{}{ experience for freeing Jack from Junktown.}

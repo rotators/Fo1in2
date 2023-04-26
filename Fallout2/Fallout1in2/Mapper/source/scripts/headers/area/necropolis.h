@@ -113,7 +113,7 @@ variable Critter,
    Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
    add_obj_to_inven(Critter, Item);
    item_caps_adjust(Critter, random(10, 40));
-   kill_critter(Critter, ANIM_chunks_of_flesh_sf);
+   //kill_critter(Critter, ANIM_chunks_of_flesh_sf);
 
    Critter := create_object_sid(PID_SEWER_KING, 0, 0, SCRIPT_NKINGRAT);
    critter_attempt_placement(Critter, Critter_spawn_hex, 0);

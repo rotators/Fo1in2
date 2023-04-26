@@ -104,13 +104,15 @@ procedure TandiSchedule;
 variable BYE;
 variable tmp_hostile;
 
+#define LVAR_JoinPlayer                   (5)
+
 #define LVAR_WAITING                      (26)
 #define LVAR_FOLLOW_DISTANCE              (27)
 #define LVAR_TEAM                         (28)
 
 #define float_tandi(x)                    float_msg(self_obj, gen_mstr(x), FLOAT_MSG_NORMAL)
-#define tandi_joins_party                 party_add_self;                                                   \
-                                          add_timer_event(self_obj, game_ticks(1), 2);                        \
+#define tandi_joins_party                 party_add_self;                              \
+                                          add_timer_event(self_obj, game_ticks(1), 2); \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_tandi      ((dude_at_max_party_size == false) and (Tandi_In_Party == false))
 
@@ -136,10 +138,10 @@ procedure timed_event_p_proc begin
       if not(combat_is_initialized) and Tandi_In_Party and self_visible then begin
          if (Is_Crippled(self_obj)) then
             float_tandi(3500);
-         /*else if (self_rads) then
+         else if (self_rads) then
             float_tandi(3501);
          else if (get_poison(self_obj)) then
-            float_tandi(3502);*/
+            float_tandi(3502);
       end
       add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
    end
@@ -426,7 +428,7 @@ procedure tandi37 begin
 end
 
 procedure tandi38 begin
-   if (global_var(GVAR_GARL_DEAD) == 1) then begin
+   if not(is_garl_alive) then begin
       call tandi38a;
    end
    else begin
@@ -600,7 +602,7 @@ procedure tandix4 begin
 end
 
 procedure tandix5 begin
-   set_local_var(5, 1);
+   set_local_var(LVAR_JoinPlayer, 1);
    set_self_team(TEAM_PLAYER);
 end
 
@@ -703,9 +705,9 @@ procedure critter_p_proc begin
             tandi_joins_party;
             set_global_var(GVAR_TANDI_LOCATION_TRACKER, 3);
          end
-         if ((map_var(2) != 0) and (local_var(5) == 0)) then begin
+         if ((map_var(2) != 0) and (local_var(LVAR_JoinPlayer) == 0)) then begin
             set_global_var(GVAR_TANDI_HIRELING_STATUS, 5);
-            set_local_var(5, 1);
+            set_local_var(LVAR_JoinPlayer, 1);
             if not(Tandi_In_Party) then begin
                tandi_joins_party;
             end
@@ -779,8 +781,8 @@ procedure critter_p_proc begin
    end
 
    // Tandi is free and starts following the player
-   if ((global_var(GVAR_TANDI_HIRELING_STATUS) == 5) and (local_var(5) == 0)) then begin
-      set_local_var(5, 1);
+   if ((global_var(GVAR_TANDI_HIRELING_STATUS) == 5) and (local_var(LVAR_JoinPlayer) == 0)) then begin
+      set_local_var(LVAR_JoinPlayer, 1);
       if not(Tandi_In_Party) then begin
          tandi_joins_party;
       end

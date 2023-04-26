@@ -84,6 +84,7 @@ variable How_Many_Party_Members_Armed;
                                                     How_Many_Party_Members_Are_Injured+=1;*/    \
                                             if (Rae_In_Party) then                              \
                                                 if (Is_Injured(Rae_ptr)) then                   \
+                                                    How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Vasquez_In_Party) then                          \
                                                 if (Is_Injured(Vasquez_ptr)) then               \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
@@ -636,35 +637,36 @@ variable PartyHealingItem;
                                             get_item_count(Rae_ptr,x)) > 0)
 
 #define party_remove_item(x)                if (get_item_count(dude_obj,x) > 0) then begin          \
-                                                remove_pid_qty(dude_obj, x, 1)                      \
+                                                remove_pid_qty(dude_obj, x, 1);                     \
                                             end                                                     \
                                             else if (get_item_count(Ian_ptr,x) > 0) then begin      \
-                                                remove_pid_qty(Ian_ptr, x, 1)                       \
+                                                remove_pid_qty(Ian_ptr, x, 1);                      \
                                             end                                                     \
                                             else if (get_item_count(Tycho_ptr,x) > 0) then begin    \
-                                                remove_pid_qty(Tycho_ptr, x, 1)                     \
+                                                remove_pid_qty(Tycho_ptr, x, 1);                    \
                                             end                                                     \
                                             else if (get_item_count(Dog_ptr,x) > 0) then begin      \
-                                                remove_pid_qty(Dog_ptr, x, 1)                       \
+                                                remove_pid_qty(Dog_ptr, x, 1);                      \
                                             end                                                     \
                                             else if (get_item_count(Katja_ptr,x) > 0) then begin    \
-                                                remove_pid_qty(Katja_ptr, x, 1)                     \
+                                                remove_pid_qty(Katja_ptr, x, 1);                    \
                                             end                                                     \
                                             else if (get_item_count(Tandi_ptr,x) > 0) then begin    \
-                                                remove_pid_qty(Tandi_ptr, x, 1)                     \
+                                                remove_pid_qty(Tandi_ptr, x, 1);                    \
                                             end                                                     \
                                             else if (get_item_count(Handy_ptr,x) > 0) then begin    \
-                                                remove_pid_qty(Handy_ptr, x, 1)                     \
+                                                remove_pid_qty(Handy_ptr, x, 1);                    \
                                             end                                                     \
                                             else if (get_item_count(Eyebot_ptr,x) > 0) then begin   \
-                                                remove_pid_qty(Eyebot_ptr, x, 1)                    \
+                                                remove_pid_qty(Eyebot_ptr, x, 1);                   \
                                             end                                                     \
                                             else if (get_item_count(Rae_ptr,x) > 0) then begin      \
-                                                remove_pid_qty(Rae_ptr, x, 1)                       \
+                                                remove_pid_qty(Rae_ptr, x, 1);                      \
                                             end                                                     \
                                             else if (get_item_count(Vasquez_ptr,x) > 0) then begin  \
-                                                remove_pid_qty(Vasquez_ptr, x, 1)                   \
-                                            end
+                                                remove_pid_qty(Vasquez_ptr, x, 1);                  \
+                                            end                                                     \
+                                            noop
 
 /***************************************************************************************
    This is to check to see if there are any party members within range of the door

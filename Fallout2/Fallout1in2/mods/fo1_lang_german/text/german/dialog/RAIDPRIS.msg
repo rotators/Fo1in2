@@ -9,3 +9,7 @@
 {108}{}{So ein Pech aber auch. Schöne Zeit noch.}
 {109}{}{Bitte, hilf mir dabei, hier rauszukommen.}
 {110}{}{Au! Mein Bein. Ich bin verletzt. Ich glaub', es ist gebrochen. Bitte hilf mir!}
+
+#Fo1in
+# you gain ...
+{200}{}{ experience for freeing Jack from Junktown.}

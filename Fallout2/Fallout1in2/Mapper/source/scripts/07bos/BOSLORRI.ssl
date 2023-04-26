@@ -49,8 +49,6 @@ procedure BoS_Lorri21;
 procedure BoS_Lorri22;
 procedure BoS_Lorri23;
 procedure BoS_Lorri24;
-procedure BoS_Lorri25;
-procedure BoS_Lorri26;
 procedure BoS_Lorriend;
 
 procedure Dumb02;
@@ -70,17 +68,6 @@ variable money;
 variable temp;
 variable rad_level;
 variable bag_ptr := 0;
-
-procedure Sex01;
-procedure Sex02;
-procedure Sex03kis;
-procedure Sex04kis;
-procedure Sex03ask;
-procedure Sex04ask;
-procedure Sex05ask;
-procedure SexEnd01;
-procedure SexAgain;
-procedure SexInterim;
 
 variable INTcost;
 
@@ -184,9 +171,6 @@ procedure BoS_Lorri00 begin
          NOption(124, BoS_Lorri23, 4);
       end
    end
-   if (local_var(15) and fixt_enabled and global_var(GVAR_BOS_LORRI_SEX_ENABLED) and local_var(5)) then begin
-      GOption(314, SexAgain, 4);
-   end
    if (Heal_amount > 0) then begin
       NOption(103, BoS_Lorri04, 4);//  hurt HP
    end
@@ -218,9 +202,6 @@ end
 
 procedure BoS_Lorri24 begin
    Reply(mstr(138) + dude_name + mstr(152) + mstr(142));
-   if (local_var(15) and fixt_enabled and global_var(GVAR_BOS_LORRI_SEX_ENABLED) and local_var(5)) then begin
-      GOption(314, SexAgain, 4);
-   end
    if (Heal_amount > 0) then begin
       NOption(103, BoS_Lorri04, 4);//  hurt HP
    end
@@ -297,12 +278,7 @@ end
 
 procedure BoS_Lorri08 begin
    set_local_var(4, 1);
-   if fixt_disabled or not(global_var(GVAR_BOS_LORRI_CHA_ENABLED)) then begin
-      Reply(222);
-   end
-   else begin
-      Reply(122);
-   end
+   Reply(222);
    call BoS_Lorri10;
 end
 
@@ -329,13 +305,6 @@ procedure BoS_Lorri10 begin
    if (local_var(9) < TotalOpsAllowed) then begin
       NOption(129, BoS_Lorri13, 4);//  ENDURANCE
    end
-
-   if (fixt_enabled and global_var(GVAR_BOS_LORRI_CHA_ENABLED)) then begin
-      if (local_var(10) < TotalOpsAllowed) then begin
-         NOption(123, BoS_Lorri25, 4);//  CHARISMA
-      end
-   end
-
    if (local_var(11) < TotalOpsAllowed) then begin
       NOption(130, BoS_Lorri14, 4);//  INTELLIGENCE
    end
@@ -374,7 +343,7 @@ end
 
 // STRENGTH
 procedure BoS_Lorri18 begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= cost) then begin
 //
 //  TeamX code:
 //
@@ -431,7 +400,7 @@ end
 
 // PERCEPTION
 procedure BoS_Lorri19 begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= cost) then begin
       if dude_armor > 0 then begin
          variable ArmorMove := 0;
          ArmorMove := dude_armor;
@@ -477,7 +446,7 @@ end
 
 // ENDURANCE
 procedure BoS_Lorri20 begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= cost) then begin
       if dude_armor > 0 then begin
          variable ArmorMove := 0;
          ArmorMove := dude_armor;
@@ -507,55 +476,6 @@ procedure BoS_Lorri20 begin
    end
 end
 
-// CHARISMA
-procedure BoS_Lorri25 begin
-   temp := dude_charisma;
-   if (temp > 9) then begin
-      call sorry;//  Stat already at 10
-   end
-   else begin
-      cost := 3500 + (3500 * local_var(10));
-      Reply(mstr(145) + cost + mstr(245));
-      NOption(135, BoS_Lorri26, 4);
-      NOption(136, BoS_Lorri17, 4);
-   end
-end
-
-// CHARISMA
-procedure BoS_Lorri26 begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
-      if dude_armor > 0 then begin
-         variable ArmorMove := 0;
-         ArmorMove := dude_armor;
-         rm_obj_from_inven(dude_obj, ArmorMove);
-         add_obj_to_inven(dude_obj, ArmorMove);
-      end
-      set_local_var(10, (local_var(10) + 1));
-      if (dude_caps >= cost) then begin
-         dude_caps_adjust(-cost);
-      end
-      NMessage(180);
-      gfade_out(1);
-      gsay_end;
-      end_dialogue;
-      game_time_advance(game_ticks(3 * 604800));// 3 weeks
-      temp := dude_charisma;//   CHARISMA
-      set_critter_stat(dude_obj, STAT_ch, 1);//     + 1
-      display_msg(gen_mstr(164));
-      start_gdialog(675, self_obj, 4, -1, -1);
-      gsay_start;
-      gfade_in(1);
-      Reply(181);
-      GOption(182, BoS_Lorriend, 4);
-      if fixt_enabled and global_var(GVAR_BOS_LORRI_SEX_ENABLED) and not(local_var(15)) then begin
-         GOption(185, Sex01, 4);
-      end
-   end
-   else begin
-      call BoS_Lorri16;
-   end
-end
-
 // INTELLIGENCE
 procedure BoS_Lorri14 begin
    temp := dude_iq;
@@ -572,7 +492,7 @@ end
 
 // INTELLIGENCE
 procedure raisiq begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= cost) then begin
       if dude_armor > 0 then begin
          variable ArmorMove := 0;
          ArmorMove := dude_armor;
@@ -618,7 +538,7 @@ end
 
 // AGILITY
 procedure BoS_Lorri22 begin
-   if (dude_caps >= cost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= cost) then begin
       if dude_armor > 0 then begin
          variable ArmorMove := 0;
          ArmorMove := dude_armor;
@@ -688,7 +608,7 @@ end
 
 procedure Dumb04 begin
    INTcost := (6000 + (6000 * local_var(11))) / 2;
-   if (dude_caps >= INTcost) or ((GAME_TIME_IN_YEARS) >= 10) then begin
+   if (dude_caps >= INTcost) then begin
       set_local_var(13, 1);
       set_local_var(11, 1);
       if (dude_caps >= INTcost) then begin
@@ -736,112 +656,4 @@ end
 
 procedure sorry begin
    NMessage(500);
-end
-
-procedure Sex01 begin
-   if (dude_charisma < 5) then begin
-      NMessage(301);
-   end
-   else if (dude_charisma < 8) then begin
-      NMessage(300);
-   end
-   else if (dude_charisma >= 8) or (has_skill(dude_obj, SKILL_SPEECH) >= 80) then begin
-      Reply(302);
-      GOption(303, Sex02, 6);
-      NOption(304, BoS_Lorriend, 4);
-   end
-end
-
-procedure Sex02 begin
-   Reply(305);
-   NOption(306, SexEnd01, 5);
-   if (global_var(GVAR_BOS_LORRI_SEX_ENABLED) == 1) then begin
-      NOption(308, Sex03kis, 4);
-      NOption(307, Sex03ask, 6);
-   end
-   else begin
-      NOption(307, SexEnd01, 6);
-   end
-end
-
-procedure Sex03kis begin
-   Reply(316);
-   NOption(144, Sex04kis, 4);
-end
-
-procedure Sex04kis begin
-   call SexInterim;
-   GMessage(312);
-   set_local_var(15, 1);
-end
-
-procedure SexInterim begin
-   variable lvar0;
-
-   gfade_out(ONE_GAME_SECOND);
-   do_default_sex;
-   gfade_IN(ONE_GAME_SECOND);
-
-/*   gfade_out(1);
-
-   lvar0 := random(1, 3);
-   while(lvar0 == Sex_SoundByte) do
-   begin
-      lvar0 := random(1, 3);
-   end
-   Sex_SoundByte := lvar0;
-   if (Sex_SoundByte == 1) then begin
-      play_sfx("moan1");
-   end
-   else begin
-      if (Sex_SoundByte == 2) then begin
-         play_sfx("moan2");
-      end
-      else begin
-         play_sfx("moan3");
-      end
-   end
-
-   gfade_in(1);*/
-end
-
-procedure Sex03ask begin
-   Reply(310);
-   NOption(144, Sex04ask, 4);
-end
-
-procedure Sex04ask begin
-   gfade_out(1);
-   gfade_in(1);
-   Reply(311);
-   NOption(144, Sex05ask, 4);
-end
-
-procedure Sex05ask begin
-   call SexInterim;
-   if (dude_strength > 6) or (dude_endurance > 6) then begin// STR or END
-      Reply(313);
-      GOption(315, BoS_Lorriend, 4);
-   end
-   else begin
-      GMessage(312);
-   end
-   set_local_var(15, 1);
-end
-
-procedure SexEnd01 begin
-   NMessage(309);
-end
-
-procedure SexAgain begin
-   variable LVar0;
-   LVar0 := random(317, 319);
-   while(LVar0 == local_var(14)) do
-   begin
-      LVar0 := random(317, 319);
-   end
-   set_local_var(14, LVar0);
-   GMessage(mstr(local_var(14)));
-   call SexInterim;
-   GMessage(312);
 end

@@ -34,6 +34,7 @@ procedure UseAnimObj_handler;
 procedure UseSkillOn_handler;
 procedure UseObjOn_handler;
 procedure WithinPerception_handler;
+procedure InventoryMove_handler;
 
 procedure steal_urn;
 
@@ -42,21 +43,31 @@ variable dude_elev := 0;
 variable item;
 variable tmpScanner := false;
 
-#define get_active_hand(slot)    if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
+#define get_active_hand(slot)    if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND;    \
                                  else slot := INVEN_TYPE_RIGHT_HAND
-#define get_inactive_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_RIGHT_HAND; \
+#define get_inactive_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_RIGHT_HAND;   \
                                  else slot := INVEN_TYPE_LEFT_HAND
 
 #define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
 #define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
 
 #define disableV13Entrance \
-   mark_map_entrance_state(MAP_VAULT13, 0);               \
-   mark_map_entrance_elev_state(MAP_VAULT13, 0, 0);        \
-   mark_map_entrance_elev_state(MAP_VAULT13, 1, 0);        \
+   mark_map_entrance_state(MAP_VAULT13, 0);           \
+   mark_map_entrance_elev_state(MAP_VAULT13, 0, 0);   \
+   mark_map_entrance_elev_state(MAP_VAULT13, 1, 0);   \
    mark_map_entrance_elev_state(MAP_VAULT13, 2, 0)
 
 import variable Neal_urn_ptr;
+
+/*procedure ToHit_handler begin
+   variable
+   hit := get_sfall_arg,
+   attacker := get_sfall_arg;
+
+   if (attacker == dude_obj) then begin
+      terminate_combat;
+   end
+end*/
 
 procedure start begin
    if (game_loaded) then begin
@@ -68,6 +79,9 @@ procedure start begin
       register_hook_proc(HOOK_USEOBJON, UseObjOn_handler);
       register_hook_proc(HOOK_USEANIMOBJ, UseAnimObj_handler);
       register_hook_proc(HOOK_WITHINPERCEPTION, WithinPerception_handler);
+      register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_handler);
+
+     // register_hook_proc(HOOK_TOHIT, ToHit_handler);
    end
 
    call general;
@@ -79,12 +93,6 @@ procedure general begin
 
    // Max rad resistance is 100%
    set_pc_stat_max(STAT_rad_resist, 100);
-
-   // Changes the PipBoy rest timer from 08:00 to 06:00
-   if not(fo1in2_0800_resting_enabled) then begin
-      VOODOO_rest_strings;
-      VOODOO_rest_till_0600;
-   end
 
    // Disable the "You encounter: ..." message
    VOODOO_disable_YouEncounter_message;
@@ -100,6 +108,9 @@ procedure general begin
 
    // Change the skill bonus from Mr. Fixit perk to +20%.
    VOODOO_mr_fixit_bonus;
+
+   // Change light modifier from Night Vision perk to +10%.
+   VOODOO_night_vision_bonus;
 
    // Change the credits and wordlmap music tracks to Fo1 files.
    VOODOO_fo1_music;
@@ -399,7 +410,7 @@ procedure WithinPerception_handler begin
    end
 end
 
-procedure CalcAPcost_hAndAlsoler begin
+procedure CalcAPcost_handler begin
    // This is done by latest Sfall now.
    /*variable
       critter := get_sfall_arg,
@@ -417,4 +428,24 @@ procedure CalcAPcost_hAndAlsoler begin
          set_sfall_return(apCost + 1);
       end
    end*/
+end
+
+procedure InventoryMove_handler begin
+   variable
+      slot := get_sfall_arg,
+      item := get_sfall_arg;
+
+   // Prevent player from picking up objects that should never be able to be picked up
+   // Is needed if player uses cheat mods to increase inventory size
+   if (slot == 7) then begin // picking up items
+      if (obj_weight(item) > 999) then set_sfall_return(0); // block
+   end
+
+   // If player uses a bookshelf corner object, reroute the use action to the actual bookshelf
+   if (obj_pid(item) == PID_BOOKSHELF_1_CORNER or obj_pid(item) == PID_BOOKSHELF_2_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER) then begin
+      reg_anim_clear(dude_obj);
+      Scenery_Creation_Hex := tile_num_in_direction(tile_num(item), 5, 2);
+      Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, dude_elevation, (obj_pid(item) - 1)); /*ReDefine::IgnoreLine*/
+      if (Scenery_Creation_Ptr > 0) then call_offset_v2(0x412134, dude_obj, Scenery_Creation_Ptr);
+   end
 end

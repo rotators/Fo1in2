@@ -158,7 +158,7 @@
 #define FID_MABOS2        (16777318)
 //#define FID_MAWASP        (16777319) // unused???
 #define FID_HAENRO        (16777320)
-//#define FID_reserv        (16777321) // Duplicate, reserv
+#define FID_HASROB        (16777321) // Sand Robe
 #define FID_NFLYNN        (16777322)
 #define FID_MABOSS        (16777323)
 #define FID_MAQUEN        (16777324)
@@ -175,9 +175,9 @@
 #define FID_NMOLDD        (16777335)
 #define FID_MAROBE        (16777336)
 #define FID_NFPRIM        (16777337) // NPC Female Primitive
-#define FID_NFPJMP        (16777338)
-#define FID_NMBJMP        (16777339)
-#define FID_NMLJMP        (16777340)
+#define FID_NFPJMP        (16777338) // Punk Girl Vault Suit
+#define FID_NMBJMP        (16777339) // Bald Dude Vault Suit
+#define FID_NMLJMP        (16777340) // Long Hair Vault Suit
 #define FID_NMBGRY        (16777341) // Black guy with dark shirt
 #define FID_NMLGRY        (16777342) // Loser with dark shirt
 #define FID_HFCMBL        (16777343) // Female, Dark ("Black") Combat Armor

@@ -99,13 +99,14 @@ import variable Vree_ptr;
 
 variable rndx;
 variable item;
-variable MALE;
 variable tmp_hostile;
 variable ATKBROTHERS;
 variable KNOWKEDPLAN;
 
 variable INITIAT;
 variable Only_Once := 1;
+
+#define LVAR_Herebefore       (4)
 
 #define EVENT_USE_TERMINAL          (1)
 #define EVENT_SHOW_TERMINAL         (2)
@@ -127,8 +128,7 @@ procedure talk_p_proc begin
    start_gdialog(57, self_obj, 4, HEAD_VREE, BACKGROUND_BHOOD);
    get_reaction
    gsay_start;
-   MALE := dude_is_male;
-   if (local_var(4) > 0) then begin
+   if (local_var(LVAR_Herebefore) > 0) then begin
       if (ATKBROTHERS) then begin
          call vree32;
       end
@@ -151,7 +151,7 @@ procedure talk_p_proc begin
       end
    end
    else begin
-      set_local_var(4, 1);
+      set_local_var(LVAR_Herebefore, 1);
       if (local_var(1) >= 2) then begin
          call vree02;
       end
@@ -348,20 +348,14 @@ end
 
 // Give the "super mutant are sterile" holodisk
 procedure vree29 begin
-variable holodisk;
-
-   set_global_var(GVAR_VREE_DISK_TRACKER, 1);
+   item := create_object(PID_VREE_HOLODISK, 0, 0);
+   add_obj_to_inven(dude_obj, item);
    set_global_var(GVAR_VREE_GIVEN_DUDE_AUTOPSY, 1);
    set_local_var(6, 1);
+
    Reply(147);
    NOption(149, vree17a, 4);
    NOption(148, Node999, 4);
-
-   // TODO: Figure out why this was in obj_dude critter_p_proc ....
-   set_global_var(GVAR_VREE_DISK_TRACKER, 2);
-   holodisk := create_object_sid(PID_VREE_HOLODISK, 0, 0, SCRIPT_VREEDISK);// RegDisk.int
-   add_obj_to_inven(dude_obj, holodisk);
-   //set_global_var( GVAR_VREE_AUTOPSY_POINTER, holodisk );
 end
 
 procedure vree30 begin
@@ -588,15 +582,14 @@ procedure vree01b begin
 end
 
 procedure vree45a begin
-   variable LVar0 := 0;
-   LVar0 := create_object(PID_RADAWAY, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
-   LVar0 := create_object(PID_RADAWAY, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
-   LVar0 := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
-   LVar0 := create_object(PID_MICRO_FUSION_CELL, 0, 0);
-   add_obj_to_inven(dude_obj, LVar0);
+   item := create_object(PID_RADAWAY, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   item := create_object(PID_RADAWAY, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   item := create_object(PID_MICRO_FUSION_CELL, 0, 0);
+   add_obj_to_inven(dude_obj, item);
    BigUpReact
    call Node999;
 end

@@ -1,6 +1,6 @@
 /*
 
-   Raiders - Prisoner (cut-content)
+   Raiders - Prisoner, Jack from Junktown (cut-content)
 
 */
 
@@ -28,29 +28,40 @@ procedure prisoner03;
 procedure prisoner04;
 procedure prisonerend;
 procedure Critter_Action;
+procedure escape;
+
+import variable Jack_Ptr;
 
 #define LVAR_Herebefore       (4)
 
 variable tmp_hostile;
 variable Only_Once := 1;
 
+#define exit_hex        (10284)
+
 procedure start begin
-   if (shady_invaded and CUR_MAP_RAIDERS) then begin
-      invasion_kill_critter;
-      kill_critter(self_obj, DeathType);
-   end
-   else begin
-      if Only_Once then begin
-         Only_Once := 0;
-         set_self_team(TEAM_PRISONERS);
-         set_self_ai(AI_GENERIC_RAIDER);
-      end
+   Jack_Ptr := self_obj;
+
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_team(TEAM_PRISONERS);
+      set_self_ai(AI_GENERIC_RAIDER);
    end
 end
 
 procedure map_enter_p_proc begin
-   // Cut content, remove for now:
-   destroy_object(self_obj);
+   // Prisoner only shows up if Tandi isn't around
+   if is_visible(Tandi_ptr) then destroy_object(self_obj);
+
+   if shady_invaded and CUR_MAP_RAIDERS then begin
+      invasion_kill_critter;
+   end
+
+   if (self_tile == exit_hex) then begin
+      destroy_object(self_obj);
+   end
 end
 
 procedure look_at_p_proc begin
@@ -59,10 +70,18 @@ procedure look_at_p_proc begin
 end
 
 procedure critter_p_proc begin
-   call Critter_Action;
+   if (tmp_hostile and (tile_distance_objs(self_obj, dude_obj) > 12)) then tmp_hostile := 0;
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
+   end
+
+   call escape;
+
+   if (self_tile == exit_hex) then begin
+      give_xp_msg(EXP_RESCUE_JACK, mstr(200));
+      set_self_invisible;
+      //destroy_object(self_obj);
    end
 end
 
@@ -74,12 +93,14 @@ procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
 
-   if (local_var(LVAR_Herebefore)) then begin
-      start_dialog_at_node(prisoner03);
-   end
-   else begin
-      set_local_var(LVAR_Herebefore, 1);
-      start_dialog_at_node(prisoner00);
+   if in_prison_cell then begin
+      if local_var(LVAR_Herebefore) then begin
+         start_dialog_at_node(prisoner03);
+      end
+      else begin
+         set_local_var(LVAR_Herebefore, 1);
+         start_dialog_at_node(prisoner00);
+      end
    end
 end
 
@@ -112,23 +133,6 @@ end
 procedure prisonerend begin
 end
 
-procedure Critter_Action begin
-   if get_tandi_returned then begin
-      set_global_var(GVAR_ENEMY_RAIDERS, 1);
-   end
-   else begin
-      if global_var(GVAR_TANDI_ESCAPE) then begin
-         set_global_var(GVAR_ENEMY_RAIDERS, 1);
-      end
-      if (map_var(2) == 1) then begin
-         set_global_var(GVAR_ENEMY_RAIDERS, 1);
-      end
-   end
-   if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-      tmp_hostile := 0;
-   end
-end
-
 procedure damage_p_proc begin
    tmp_hostile := 1;
    if (global_var(GVAR_MISTAKEN_ID) == 0) then begin
@@ -137,5 +141,10 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
+   Jack_Ptr := 0;
    inc_inv_good_crit
+end
+
+procedure escape begin
+   self_run_to_tile(exit_hex);
 end

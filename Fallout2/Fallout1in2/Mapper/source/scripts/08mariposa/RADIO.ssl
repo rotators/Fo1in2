@@ -9,6 +9,7 @@
 #include "area/mbase.h"
 #include "maps/mbent.h"
 #include "maps/mbstrg12.h"
+#include "maps/mbvats12.h"
 
 #define NAME                    SCRIPT_RADIO
 
@@ -31,16 +32,13 @@ procedure Radio07;
 procedure Radio08;
 procedure Radio10;
 procedure Radio11;
-procedure Radio12;
 procedure Radio13;
 procedure Radio14;
-procedure Radio21;
 procedure Radio22;
 procedure Radio23;
 procedure Radio23a;
 procedure Radio24;
 procedure Radio25;
-procedure Radio31;
 procedure Radio36;
 procedure Radio36a;
 procedure Radio37;
@@ -54,10 +52,11 @@ procedure RadioVats1;
 procedure Radio_Action;//  Fallout Fixt
 procedure Radio40;//    Fallout Fixt
 
+procedure RadioToggleFF;
+
 import variable field_change;
 
 variable MutantsTricked;
-
 
 procedure start begin
 end
@@ -156,15 +155,17 @@ procedure Radio06 begin
    NMessage(117);
 end
 
-procedure Radio07
-begin
+procedure Radio07 begin
    set_map_var(MVAR_radio_trick, 1);
    MutantsTricked := 1;
    NMessage(118);
 end
 
 procedure Radio08 begin
-   display_msg(mstr(119));
+   if (random(1, 10) == 1) then
+      call Radio10;
+   else
+      display_msg(mstr(119));
 end
 
 procedure Radio10 begin
@@ -178,16 +179,6 @@ procedure Radio11 begin
       LVar0 := LVar0 + " " + mstr(122);
    end
    display_msg(LVar0);
-end
-
-procedure Radio12 begin
-   if get_force_fields_off then begin
-      set_force_fields_on;
-   end
-   else begin
-      set_force_fields_off;
-   end
-   display_msg(mstr(123));
 end
 
 procedure Radio13 begin
@@ -208,15 +199,6 @@ procedure Radio14 begin
       LVar1 := LVar1 + mstr(126);
    end
    display_msg(LVar1);
-end
-
-procedure Radio21 begin
-   if get_force_fields_off then begin
-      set_force_fields_on;
-   end
-   else begin
-      set_force_fields_off;
-   end
 end
 
 procedure Radio22 begin
@@ -248,21 +230,11 @@ procedure Radio25 begin
    NMessage(132);
 end
 
-procedure Radio31 begin
-   if get_force_fields_off then begin
-      set_force_fields_on;
-   end
-   else begin
-      set_force_fields_off;
-   end
-   display_msg(mstr(123));
-end
-
 procedure Radio36 begin
    Reply(133);
    NLowOption(134, Radio37);
    NOption(135, Radio37, 4);
-   if (map_var(6)) then begin
+   if (map_var(MVAR_has_corridor_code)) then begin
       NOption(136, Radio36a, 4);
    end
    NOption(137, RadioEnd, 4);
@@ -290,13 +262,14 @@ procedure RadioEnt begin
    end
    else begin
       set_map_var(MVAR_radio_used_at_entry, 1);
+
       start_gdialog(361, self_obj, 4, -1, -1);
       gsay_start;
-      Reply(101);
-      NLowOption(102, Radio01);
-      NOption(103, Radio02, 4);
-      NOption(104, Radio03, 5);
-      NOption(105, Radio07, 6);
+         Reply(101);
+         NLowOption(102, Radio01);
+         NOption(103, Radio02, 4);
+         NOption(104, Radio03, 5);
+         NOption(105, Radio07, 6);
       gsay_end;
       end_dialogue;
    end
@@ -307,7 +280,7 @@ procedure RadioStrg1 begin
       call Radio14;
    end
    else if (global_var(GVAR_FIELD_COMPUTER_MODIFIED)) then begin
-      call Radio12;
+      call RadioToggleFF;
    end
    else if (global_var(GVAR_VATS_ALERT)) then begin
       if (map_var(MVAR_Warned_Player) == 3) then begin
@@ -324,7 +297,7 @@ procedure RadioStrg2 begin
       call Radio14;
    end
    else if (global_var(GVAR_FIELD_COMPUTER_MODIFIED)) then begin
-      call Radio21;
+      call RadioToggleFF;
    end
    else if (global_var(GVAR_VATS_ALERT)) then begin
       call Radio22;
@@ -336,13 +309,13 @@ end
 
 procedure RadioVats1 begin
    if (global_var(GVAR_RADIO_COMPUTER_OFF)) then begin
-      call Radio12;
+      call Radio14;
    end
-   else if (map_var(6) and map_var(MVAR_BOS_FLOAT) and not(local_var(0))) then begin
+   else if (map_var(MVAR_has_corridor_code) and map_var(MVAR_BOS_FLOAT) and not(local_var(0))) then begin
       call Radio36;
    end
    else if (global_var(GVAR_FIELD_COMPUTER_MODIFIED)) then begin
-      call Radio31;
+      call RadioToggleFF;
    end
    else if (global_var(GVAR_VATS_ALERT)) then begin
       call Radio22;
@@ -354,4 +327,14 @@ end
 
 procedure Radio40 begin
    display_msg(mstr(120));
+end
+
+procedure RadioToggleFF begin
+   if get_force_fields_off then begin
+      set_force_fields_on;
+   end
+   else begin
+      set_force_fields_off;
+   end
+   display_msg(mstr(123));
 end

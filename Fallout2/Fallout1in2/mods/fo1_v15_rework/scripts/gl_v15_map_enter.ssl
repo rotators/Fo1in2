@@ -1,0 +1,35 @@
+/*
+
+   Fix the player spawn position when entering the V15 cavern from the town/world screen
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure spawn_player;
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      register_hook_proc(HOOK_STDPROCEDURE, spawn_player);
+   end
+end
+
+procedure spawn_player begin
+   variable
+      proc := get_sfall_arg,
+      critter := get_sfall_arg;
+
+   if (proc != map_enter_proc) then return;
+   if (critter != dude_obj) then return;
+
+   if CUR_AREA_VAULT_15 then begin
+      if (CUR_MAP_VAULTBUR and dude_elevation == 0) then override_map_start_hex(27307, 0, 3);
+   end
+end

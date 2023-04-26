@@ -50,8 +50,9 @@ variable tmp_hostile;
 variable initial := 0;
 variable rndz;
 variable Weapons;
-
 variable LastTime;
+
+import variable Jack_Ptr;
 
 procedure start begin
    if not(initial) then begin
@@ -123,30 +124,25 @@ procedure talk_p_proc begin
    end
 end
 
-procedure guard00
-begin
+procedure guard00 begin
    float_msg(self_obj, mstr(random(102, 106)), FLOAT_MSG_YELLOW);
 end
 
-procedure guard01
-begin
+procedure guard01 begin
    NMessage(random(107, 111));
 end
 
-procedure guard02
-begin
+procedure guard02 begin
    float_msg(self_obj, mstr(random(112, 115)), FLOAT_MSG_YELLOW);
    add_timer_event(self_obj, game_ticks(9), 1);
 end
 
-procedure guard03
-begin
+procedure guard03 begin
    NMessage(random(116, 118));
    add_timer_event(self_obj, game_ticks(10), 2);
 end
 
-procedure guard04
-begin
+procedure guard04 begin
    Reply(119);
    if (tandi_quest_active and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
       NOption(120, guard07, 4);
@@ -155,19 +151,16 @@ begin
    NLowOption(122, guard05);
 end
 
-procedure guard05
-begin
+procedure guard05 begin
    NMessage(123);
 end
 
-procedure guard06
-begin
+procedure guard06 begin
    NMessage(124);
    DownReact
 end
 
-procedure guard07
-begin
+procedure guard07 begin
    Reply(125);
    NOption(126, guard08, 4);
    NOption(127, guard07a, 5);
@@ -176,8 +169,7 @@ begin
    end
 end
 
-procedure guard07a
-begin
+procedure guard07a begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
       call guard09;
    end
@@ -186,8 +178,7 @@ begin
    end
 end
 
-procedure guard07b
-begin
+procedure guard07b begin
    if (dude_skill_success(SKILL_SPEECH, -20)) then begin
       call guard12;
    end
@@ -196,52 +187,43 @@ begin
    end
 end
 
-procedure guard08
-begin
+procedure guard08 begin
    NMessage(129);
 end
 
-procedure guard09
-begin
+procedure guard09 begin
    Reply(130);
    NOption(131, guard10, 6);
 end
 
-procedure guard10
-begin
+procedure guard10 begin
    NMessage(132);
 end
 
-procedure guard11
-begin
+procedure guard11 begin
    NMessage(133);
 end
 
-procedure guard12
-begin
+procedure guard12 begin
    NMessage(134);
    set_local_var(5, 1);
 end
 
-procedure guard13
-begin
+procedure guard13 begin
    NMessage(135);
    call combat;
 end
 
-procedure guard14
-begin
+procedure guard14 begin
    NMessage(136);
    add_timer_event(self_obj, game_ticks(12), 3);
 end
 
-procedure guard15
-begin
+procedure guard15 begin
    NMessage(137);
 end
 
-procedure combat
-begin
+procedure combat begin
    if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
       set_self_team(TEAM_RAIDERS_OTHER);
    end
@@ -269,8 +251,7 @@ procedure do_flee_dude begin
    animate_move_obj_to_tile(self_obj, Distance, Run);
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       set_global_var(GVAR_ENEMY_RAIDERS, 1);
@@ -281,7 +262,8 @@ begin
          set_global_var(GVAR_ENEMY_RAIDERS, 1);
       end
    end
-   if global_var(GVAR_MISTAKEN_ID) then begin//Raiders think you are Garl's father
+
+   if global_var(GVAR_MISTAKEN_ID) then begin // Raiders think you are Garl's father
       set_global_var(GVAR_ENEMY_RAIDERS, 0);
       if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
          if (local_var(7) == 0) then begin
@@ -319,6 +301,14 @@ begin
    if (rndz == 1) then begin
       if (anim_busy(self_obj) == 0) then begin
          self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 2)));
+      end
+   end
+
+   // If guard sees Jack, the prisoner, attack him for running away
+   if (Jack_Ptr > 0) then begin
+      if obj_can_see_obj(self_obj, Jack_Ptr) and not(in_prison_cell) then begin
+         attack(Jack_Ptr);
+         set_global_var(GVAR_ENEMY_RAIDERS, 1);
       end
    end
 end

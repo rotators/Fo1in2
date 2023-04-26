@@ -114,6 +114,10 @@ procedure Open_Fridge begin
       end
    end
    else begin
+      if obj_is_open(self_obj) then begin // fail-safe, if door was opened by Garret before
+         set_local_var(LVAR_Fridge_State, OPEN);
+      end
+
       if (local_var(LVAR_Fridge_Lock) == LOCKED) then begin
          //script_overrides;
          display_msg(mstr(100));
@@ -129,7 +133,8 @@ end
 
 procedure pick_lock begin
    script_overrides;
-   if (local_var(LVAR_Fridge_Lock) == UNLOCKED) then begin
+   if ((local_var(LVAR_Fridge_Lock) == UNLOCKED) or obj_is_open(self_obj)) then begin
+      set_local_var(LVAR_Fridge_Lock, UNLOCKED); // if door is opened by Garret, but wasn't actually unlocked yet, unlock it
       display_msg(mstr(101));
    end
    else if skill_success(source_obj, SKILL_LOCKPICK, 0) then begin
