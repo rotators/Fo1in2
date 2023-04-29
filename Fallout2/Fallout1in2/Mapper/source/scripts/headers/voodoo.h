@@ -45,9 +45,11 @@ variable $addr;
 
 // This will change the credits and wordlmap music tracks, so that
 // the HQ music pack will not overwrite the Fo1 music with Fo2 tracks.
+/*
 #define VOODOO_fo1_music \
                write_string(0x501A40, "maybe"); \
                write_string(0x50F790, "03WORLD")
+*/
 
 // This will change the resting strings in the PIPBOY.MSG to start at 320.
 // This is used in combination with VOODOO_rest_till_0600 to change the resting times.
