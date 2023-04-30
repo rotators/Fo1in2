@@ -25,6 +25,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Laser Rifle upgrade cost was wrong.
 - **Fixed**: Lone Centaur in Death-encounter table was called "Coyote".
 - **Fixed**: Mariposa force fields had on/off issues when loading a savegame.
+- **Fixed**: Mauser Pistol barrel angle always looked slightly off.
 - **Fixed**: Missing scenery .frm error in MBVATS12 map file.
 - **Fixed**: Night Vision perk now works exactly as in Fo1 (3 ranks and +10% instead of +20% light level change).
 - **Fixed**: Not all of Loxley's TMA lines were recognized by the game.
