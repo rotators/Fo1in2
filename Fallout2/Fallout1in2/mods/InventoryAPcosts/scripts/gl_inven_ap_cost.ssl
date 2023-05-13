@@ -28,13 +28,7 @@ procedure check_ap (variable critter, variable item) begin
             set_critter_current_ap(critter, ap - ITEM_USE_COST);
          end
          else begin
-
-            // TODO: Move text to *.msg or *.ini file.
-            if (ITEM_USE_COST == 1) then
-               display_msg("You need " + ITEM_USE_COST + " action point.");
-            else
-               display_msg("You need " + ITEM_USE_COST + " action points.");
-
+            display_msg(string_format1(message_str_game(GAME_MSG_COMBAT, 100), ITEM_USE_COST)); // You need %d action points.
             set_sfall_return(0);
          end
       end
@@ -51,12 +45,21 @@ procedure useobjon_handler begin
 end
 
 procedure moveobj_handler begin
-   variable target, item, critter;
+   variable target, item, critter, item_at_target;
    target := get_sfall_arg;
    item := get_sfall_arg;
    critter := dude_obj;
 
-   call check_ap(critter, item);
+   if (target == 1) then // left hand
+      item_at_target := critter_inven_obj2(critter, INVEN_TYPE_LEFT_HAND);
+   else if (target == 2) then // right hand
+      item_at_target := critter_inven_obj2(critter, INVEN_TYPE_RIGHT_HAND);
+   else if (target == 3) then // armor
+      item_at_target := critter_inven_obj2(critter, INVEN_TYPE_WORN);
+
+   if (item_at_target != item) then begin
+      call check_ap(critter, item);
+   end
 end
 
 procedure start begin
