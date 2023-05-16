@@ -129,6 +129,14 @@
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
 
+// perks and traits
+#define get_perk(cr,perk)                   has_trait(TRAIT_PERK,cr,perk)
+#define dude_perk(perk)                     get_perk(dude_obj,perk)
+#define self_perk(perk)                     get_perk(self_obj,perk)
+#define get_trait(cr,trait)                 has_trait(TRAIT_TRAIT,cr,trait)
+#define dude_trait(trait)                   get_trait(dude_obj,trait)
+#define self_trait(trait)                   get_trait(self_obj,trait)
+
 #define self_carrying_laser_pistol          ((obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND)) == PID_LASER_PISTOL) orElse \
                                              (obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LASER_PISTOL))
 

@@ -3,6 +3,7 @@
 
 // Recognised modes for set_shader_mode and get_game_mode
 #define WORLDMAP    (0x1)
+#define LOCALMAP    (0x2) //No point hooking this: would always be 1 at any point at which scripts are running
 #define DIALOG      (0x4)
 #define ESCMENU     (0x8)
 #define SAVEGAME    (0x10)
@@ -102,28 +103,6 @@
 #define ENCOUNTER_FLAG_NO_ICON  (0x4)  // disable displaying the flashing icon
 #define ENCOUNTER_FLAG_ICON_SP  (0x8)  // use special encounter icon
 #define ENCOUNTER_FLAG_FADEOUT  (0x10) // fade out the screen on encounter (Note: you yourself should restore the fade screen when entering the encounter)
-
-// The attack types returned by get_attack_type
-#define ATKTYPE_LWEP1           (0)
-#define ATKTYPE_LWEP2           (1)
-#define ATKTYPE_RWEP1           (2)
-#define ATKTYPE_RWEP2           (3)
-#define ATKTYPE_PUNCH           (4)
-#define ATKTYPE_KICK            (5)
-#define ATKTYPE_LWEP_RELOAD     (6)
-#define ATKTYPE_RWEP_RELOAD     (7)
-#define ATKTYPE_STRONGPUNCH     (8)
-#define ATKTYPE_HAMMERPUNCH     (9)
-#define ATKTYPE_HAYMAKER       (10)
-#define ATKTYPE_JAB            (11)
-#define ATKTYPE_PALMSTRIKE     (12)
-#define ATKTYPE_PIERCINGSTRIKE (13)
-#define ATKTYPE_STRONGKICK     (14)
-#define ATKTYPE_SNAPKICK       (15)
-#define ATKTYPE_POWERKICK      (16)
-#define ATKTYPE_HIPKICK        (17)
-#define ATKTYPE_HOOKKICK       (18)
-#define ATKTYPE_PIERCINGKICK   (19)
 
 // Return values for "typeof"
 #define VALTYPE_NONE  (0) // not used yet
@@ -292,6 +271,10 @@
 #define set_weapon_usable(item)                         set_object_data(item, OBJ_DATA_MISC_FLAGS, get_object_data(item, OBJ_DATA_MISC_FLAGS) bwand 0xFFFFFFEF)
 #define weapon_is_unusable(item)                        (get_object_data(item, OBJ_DATA_MISC_FLAGS) bwand 0x00000010)
 
+#define weapon_attack_mode1(pid)                        (get_proto_data(pid, PROTO_FLAG_EXT) bwand 0x0000000F)
+#define weapon_attack_mode2(pid)                        ((get_proto_data(pid, PROTO_FLAG_EXT) bwand 0x000000F0) / 0x10)
+#define weapon_attack_mode(pid, attackType)             (weapon_attack_mode1(pid) if (attackType == ATKTYPE_LWEP1 or attackType == ATKTYPE_RWEP1) else weapon_attack_mode2(pid))
+
 
 /* SFALL_FUNCX MACROS */
 
@@ -400,7 +383,10 @@
 #define spatial_radius(obj)                                     sfall_func1("spatial_radius", obj)
 #define string_compare(str1, str2)                              sfall_func2("string_compare", str1, str2)
 #define string_compare_locale(str1, str2, codePage)             sfall_func3("string_compare", str1, str2, codePage)
-#define string_format(format, a1, a2)                           sfall_func3("string_format", format, a1, a2)
+#define string_format1(format, a1)                              sfall_func2("string_format", format, a1)
+#define string_format2(format, a1, a2)                          sfall_func3("string_format", format, a1, a2)
+#define string_format3(format, a1, a2, a3)                      sfall_func4("string_format", format, a1, a2, a3)
+#define string_format4(format, a1, a2, a3, a4)                  sfall_func5("string_format", format, a1, a2, a3, a4)
 #define string_tolower(text)                                    sfall_func2("string_to_case", text, 0)
 #define string_toupper(text)                                    sfall_func2("string_to_case", text, 1)
 #define tile_by_position(x, y)                                  sfall_func2("tile_by_position", x, y)

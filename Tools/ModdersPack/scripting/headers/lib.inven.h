@@ -3,6 +3,7 @@
 #define LIB_INVEN_H
 
 #include "define_lite.h"
+#define PID_BOTTLE_CAPS                     (41)
 
 /**
   Inventory contents as temp array to be used in foreach

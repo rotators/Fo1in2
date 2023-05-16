@@ -35,7 +35,7 @@
 #define WEAPON_TYPE_UNARMED (1)
 #define WEAPON_TYPE_MELEE   (2)
 #define WEAPON_TYPE_THROWN  (3)
-#define WEAPON_TYPE_GUNS    (4)
+#define WEAPON_TYPE_RANGED  (4)
 
 /* Item Flags (FlagsExt in proto) */
 #define HEALING_ITEM          0x04000000  // Healing Item (item will be used by NPCs for healing in combat) [sfall 4.3.1/3.8.31]
@@ -49,24 +49,38 @@
 #define WEAPON_2HAND          0x00000200  // 2Hnd (weapon is two-handed)
 #define WEAPON_ENERGY         0x00000400  // Energy Weapon (forces weapon to use Energy Weapons skill) [sfall 4.2/3.8.20]
 
-#define ATKMODE_PRI_NONE        0
-#define ATKMODE_PRI_PUNCH       1  // 0001
-#define ATKMODE_PRI_KICK        2  // 0010
-#define ATKMODE_PRI_SWING       3  // 0011
-#define ATKMODE_PRI_THRUST      4  // 0100
-#define ATKMODE_PRI_THROW       5  // 0101
-#define ATKMODE_PRI_SINGLE      6  // 0110
-#define ATKMODE_PRI_BURST       7  // 0111
-#define ATKMODE_PRI_FLAME       8  // 1000
-#define ATKMODE_SEC_NONE        0
-#define ATKMODE_SEC_PUNCH      16  // 0x00000010
-#define ATKMODE_SEC_KICK       32  // 0x00000020
-#define ATKMODE_SEC_SWING      48  // 0x00000030
-#define ATKMODE_SEC_THRUST     64  // 0x00000040
-#define ATKMODE_SEC_THROW      80  // 0x00000050
-#define ATKMODE_SEC_SINGLE     96  // 0x00000060
-#define ATKMODE_SEC_BURST     112  // 0x00000070
-#define ATKMODE_SEC_FLAME     128  // 0x00000080
+// The attack types returned by get_attack_type or as the fifth argument of HOOK_ITEMDAMAGE
+#define ATKTYPE_LWEP1           (0)
+#define ATKTYPE_LWEP2           (1)
+#define ATKTYPE_RWEP1           (2)
+#define ATKTYPE_RWEP2           (3)
+#define ATKTYPE_PUNCH           (4)
+#define ATKTYPE_KICK            (5)
+#define ATKTYPE_LWEP_RELOAD     (6)
+#define ATKTYPE_RWEP_RELOAD     (7)
+#define ATKTYPE_STRONGPUNCH     (8)
+#define ATKTYPE_HAMMERPUNCH     (9)
+#define ATKTYPE_HAYMAKER       (10)
+#define ATKTYPE_JAB            (11)
+#define ATKTYPE_PALMSTRIKE     (12)
+#define ATKTYPE_PIERCINGSTRIKE (13)
+#define ATKTYPE_STRONGKICK     (14)
+#define ATKTYPE_SNAPKICK       (15)
+#define ATKTYPE_POWERKICK      (16)
+#define ATKTYPE_HIPKICK        (17)
+#define ATKTYPE_HOOKKICK       (18)
+#define ATKTYPE_PIERCINGKICK   (19)
+
+#define ATTACK_MODE_NONE        (0)
+#define ATTACK_MODE_PUNCH       (1)
+#define ATTACK_MODE_KICK        (2)
+#define ATTACK_MODE_SWING       (3)
+#define ATTACK_MODE_THRUST      (4)
+#define ATTACK_MODE_THROW       (5)
+#define ATTACK_MODE_SINGLE      (6)
+#define ATTACK_MODE_BURST       (7)
+#define ATTACK_MODE_FLAME       (8)
+
 
 /* Object flags for get/set_flags */
 #define FLAG_HIDDEN              (0x1)
@@ -126,7 +140,7 @@
 #define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
-// Some possible defines for the 4th argument to HOOK_REMOVEINVOBJ
+// Some possible defines for the fourth argument of HOOK_REMOVEINVENOBJ
 #define RMOBJ_ITEM_REMOVED_INVEN  4831349  // removing or destroying an item (obj_remove_from_inven_)
 #define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
 #define RMOBJ_ITEM_REMOVED_MULTI  4563866  // (op_rm_mult_objs_from_inven_)
@@ -487,6 +501,15 @@
 #define C_ATTACK_KNOCKBACK_VALUE4   (0xAC)
 #define C_ATTACK_KNOCKBACK_VALUE5   (0xB0)
 #define C_ATTACK_KNOCKBACK_VALUE6   (0xB4)
+
+#define CRITICAL_VALUE_MULT          (0) // This is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage.
+#define CRITICAL_VALUE_EFFECTS       (1) // This is a flag bit field (DAM_*) controlling what effects the critical causes.
+#define CRITICAL_VALUE_STAT_CHECK    (2) // This makes a check against a (SPECIAL) stat. Values of 2 (endurance), 5 (agility), and 6 (luck) are used, but other stats will probably work as well. A value of -1 indicates that no check is to be made.
+#define CRITICAL_VALUE_STAT_MOD      (3) // Affects the outcome of the stat check, if one is made. Positive values make it easier to pass the check, and negative ones make it harder.
+#define CRITICAL_VALUE_FAIL_EFFECT   (4) // Another bit field, using the same values as EFFECTS. If the stat check is failed, these are applied in addition to the earlier ones.
+#define CRITICAL_VALUE_MSG           (5) // The message to show when this critical occurs, taken from combat.msg.
+#define CRITICAL_VALUE_FAIL_MSG      (6) // This is shown instead of Message if the stat check fails.
+
 
 /* Playback mode defines for the soundplay function */
 #define soundraw        (0x80000000) // sfall flag
