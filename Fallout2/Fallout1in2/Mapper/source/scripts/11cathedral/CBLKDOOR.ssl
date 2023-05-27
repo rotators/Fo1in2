@@ -12,7 +12,12 @@ procedure use_obj_on_p_proc;
 procedure map_update_p_proc;
 procedure damage_p_proc;
 
-#define LVAR_Gave_Locks_XP    (3)
+#define LVAR_Door_Status      (0)
+#define LVAR_Door_Destroyed   (1)
+#define LVAR_Gave_Locks_XP    (2)
+
+#define LOCKED    (0)
+#define UNLOCKED  (1)
 
 import variable Black_Door_Ptr;
 import variable Laura_Ptr;
@@ -21,13 +26,13 @@ procedure start begin
 end
 
 procedure use_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Door_Status) == LOCKED) then begin
       obj_lock(self_obj);
    end
    else begin
       obj_unlock(self_obj);
    end
-   if ((local_var(0) == 0) and source_is_dude) then begin
+   if ((local_var(LVAR_Door_Status) == LOCKED) and source_is_dude) then begin
       script_overrides;
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
@@ -35,12 +40,12 @@ end
 
 procedure use_skill_on_p_proc begin
    variable Item := 0;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Door_Status) == LOCKED) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          Item := roll_vs_skill(source_obj, SKILL_LOCKPICK, -80);
          if (is_success(Item)) then begin
-            set_local_var(0, 1);
+            set_local_var(LVAR_Door_Status, UNLOCKED);
             if source_is_dude then
                display_msg(mstr(100));
             else
@@ -71,7 +76,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Door_Status) == LOCKED) then begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
@@ -89,7 +94,7 @@ procedure use_obj_on_p_proc begin
          Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
 
       if (is_success(Skill)) then begin
-         set_local_var(0, 1);
+         set_local_var(LVAR_Door_Status, UNLOCKED);
          display_msg(mstr(100));//{100}{}{You unlock the door.}
          if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
             set_local_var(LVAR_Gave_Locks_XP, 1);
@@ -111,14 +116,14 @@ procedure use_obj_on_p_proc begin
    end
    else if (obj_pid(Item) == PID_BLACK_COC_BADGE) then begin
       script_overrides;
-      set_local_var(0, 1);
+      set_local_var(LVAR_Door_Status, UNLOCKED);
       display_msg(mstr(100));//{100}{}{You unlock the door.}
    end
 end
 
 procedure map_update_p_proc begin
    Black_Door_Ptr := self_obj;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Door_Status) == LOCKED) then begin
       obj_lock(self_obj);
    end
    else begin
@@ -128,8 +133,8 @@ end
 
 procedure damage_p_proc begin
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-      if not(is_loading_game) then set_self_invisible;
-      set_local_var(1, 1);
+      set_self_invisible;
+      set_local_var(LVAR_Door_Destroyed, 1);
    end
    else begin
       display_msg(mstr(193));

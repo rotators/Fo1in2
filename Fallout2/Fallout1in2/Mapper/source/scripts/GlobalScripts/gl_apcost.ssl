@@ -1,0 +1,54 @@
+/*
+
+   Adjust AP calculations for various Fo2 stuff that is being used in Fo1in2.
+
+   Made by NovaRain
+
+*/
+
+#include "define.h"
+#include "sfall\sfall.h"
+
+procedure start;
+procedure calcapcost_handler;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_CALCAPCOST, calcapcost_handler);
+   end
+end
+
+procedure calcapcost_handler begin
+   variable
+      critter := get_sfall_arg,
+      atkType := get_sfall_arg,
+      aimed := get_sfall_arg,
+      slot, item, i := -1;
+
+   if (atkType == ATKTYPE_PALMSTRIKE) or (atkType == ATKTYPE_PIERCINGSTRIKE) or (atkType == ATKTYPE_JAB) then begin
+      i := 4 - (has_trait(TRAIT_PERK, dude_obj, PERK_bonus_hth_attacks) > 0);
+   end else if (atkType == ATKTYPE_HIPKICK) or (atkType == ATKTYPE_HOOKKICK) or (atkType == ATKTYPE_PIERCINGKICK) then begin
+      i := 5 - (has_trait(TRAIT_PERK, dude_obj, PERK_bonus_hth_attacks) > 0);
+   end
+
+   if (atkType == hit_left_weapon_reload) or (atkType == hit_right_weapon_reload) then begin
+      if (critter == dude_obj) and (active_hand == 0) then begin
+         slot := INVEN_TYPE_LEFT_HAND;
+      end else begin
+         slot := INVEN_TYPE_RIGHT_HAND;
+      end
+      item := critter_inven_obj(critter, slot);
+
+      if (item > 0) then begin
+         if (obj_pid(item) == PID_44_MAGNUM_REVOLVER) then i := 3;
+         else if (obj_pid(item) == PID_44_MAGNUM_SPEEDLOADER) then i := 2;
+      end
+   end
+
+   if (i != -1) then begin
+      if aimed then i++;
+      set_sfall_arg(3, i);
+      set_sfall_return(i);
+   end
+end
+ 
