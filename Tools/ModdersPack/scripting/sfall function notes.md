@@ -261,7 +261,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `int/array metarule2_explosions(int arg1, int arg2, int arg3)`
-- Was made as a dirty easy hack to allow dynamically change some explosion parameters (ranged attack). All changed parameters are reset to vanilla state automatically after each attack action. Following macros are available in **sfall.h**:
+- Was made as a dirty easy hack to allow to dynamically change some explosion parameters (ranged attack). All changed parameters are automatically reset to vanilla state after each attack action. Following macros are available in **sfall.h**:
 
 -----
 ##### `void set_attack_explosion_pattern(x, y)`
@@ -569,7 +569,7 @@ sfall_funcX metarule functions
 #### set_dude_obj
 `object sfall_func1("set_dude_obj", critter)`
 - Take control of a given critter
-- passing 0 will reset control back to "real" dude
+- Passing 0 will reset control back to "real" dude
 
 ----
 #### real_dude_obj
@@ -1062,6 +1062,16 @@ sfall_funcX metarule functions
 #### obj_is_openable
 `bool sfall_func1("obj_is_openable", object obj)`
 - Returns True if the object is openable (i.e. has an opening/closing animation), False otherwise
+
+----
+##### set_spray_settings
+`void sfall_func4("set_spray_settings", int centerMult, int centerDiv, int targetMult, int targetDiv)`
+
+- Allows to dynamically change the multipilers and divisors for the bullet distribution of burst attacks. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
+- Should be called before the calculation of the bullet distribution (e.g. in `HOOK_TOHIT` or `HOOK_AMMOCOST`)
+- `centerDiv/targetDiv`: the minimum value of divisor is 1
+- `centerMult/targetMult`: multiplier values are capped at divisor values
+- __NOTE:__ refer to the description of **ComputeSpray_\*** settings in ddraw.ini for details of the bullet distribution of burst attacks
 
 
 ****

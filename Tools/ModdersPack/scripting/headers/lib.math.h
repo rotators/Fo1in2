@@ -16,42 +16,30 @@ pure procedure unsigned_comp(variable a, variable b) begin
    return 1 if ((b == 0) orElse a div b) else -1;
 end
 
-#define MAX(x, y)    ((x > y) * x + (x <= y) * y)
-#define MIN(x, y)    ((x < y) * x + (x >= y) * y)
-#define in_range(x, from, to)    (x >= from and x <= to)
+#define MAX(x, y)                    ((x > y) * x + (x <= y) * y)
+#define MIN(x, y)                    ((x < y) * x + (x >= y) * y)
 
-procedure max(variable x, variable y) begin
-   if (x > y) then return x;
-   return y;
-end
+#define math_max(x, y)               (x if x > y else y)
+#define math_min(x, y)               (x if x < y else y)
+#define in_range(x, from, to)        (x >= from and x <= to)
 
-procedure min(variable x, variable y) begin
-   if (x < y) then return x;
-   return y;
-end
 
-/*procedure round(variable val) begin
-   variable intp;
-   intp := floor(val);
-   if ((val-intp) >= 0.5) then intp++;
-   return intp;
-end*/
-
-/*procedure ceil(variable val) begin
-   variable intp;
-   intp := floor(val);
-   if (abs(val-intp) > 0.0) then begin
-      intp++;
+procedure get_clamped(variable val, variable a, variable b) begin
+   variable min, max;
+   if (a < b) then begin
+      min := a;
+      max := b;
+   end else begin
+      min := b;
+      max := a;
    end
-   return intp;
-end*/
-
-procedure cap_number(variable num, variable min, variable max) begin
-   if (num > max) then num := max;
-   else if (num < min) then num := min;
-   return num;
+   if (val < min) then
+      return min;
+   else if (val > max) then
+      return max;
+   else
+      return val;
 end
-
 
 
 #endif

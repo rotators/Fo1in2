@@ -59,27 +59,17 @@ procedure hotkey_pressed_now(variable n, variable key) begin
    end
 end
 
-
-
-/**
-  Attempt to make list_as_array safe
-*/
-/*procedure list_as_array_safe(variable type) begin
-   variable list, item, arr, i;
-   list := list_begin(type);
-   arr := temp_array(100, 4);
-   i := 0;
-   item := list_next(list);
-   while (item) do begin
-      if (len_array(arr) == i) then resize_array(arr, len_array(arr) + 100);
-      arr[i] := item;
-      item := list_next(list);
-      i++;
+// Loads ini section as map of keys and values parsed as integers (0 values will be skipped!)
+procedure get_ini_section_int_to_int(variable file, variable section, variable fixArray := false) begin
+   variable ar, ar2 := temp_array_map, k, v;
+   ar := get_ini_section(file, section);
+   foreach k: v in ar begin
+      ar2[atoi(k)] := atoi(v);
    end
-   resize_array(arr, i);
-   list_end(list);
-   return arr;
-end*/
+   if (fixArray) then
+      fix_array(ar2);
+   return ar2;
+end
 
 
 #endif

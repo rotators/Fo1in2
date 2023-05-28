@@ -56,6 +56,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: Rae, the freshly turned super mutant (cut-content) will now only show up if the Boneyard has been invaded.
 - **Tweaked**: Slight changes to Agatha's dialog (cut-content in Shady Sands), since it is not only lacking stories, but is generally unfinished.
 - **Tweaked**: The 500 days Vault 13 invasion timer is now disabled by default.
+- **Tweaked**: The Fo2 Revolver now needs 3 AP to reload instead of 2, to differentiate it more from the Desert Eagle.
 - **Tweaked**: The Hub Old Town Captors will only attack the player if he actually enters the house. No more unwanted attack from walking past the door that was just opened by a stupid child.
 - **Tweaked**: The garrison troops in the Master's Lair have a respawn delay now.
 - **Tweaked**: The super mutant conversation in the Master's Lair now only happens if the player has visited the Lair at least once before.

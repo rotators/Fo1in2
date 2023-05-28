@@ -284,7 +284,9 @@ procedure copy_array(variable src, variable srcPos, variable dest, variable dstP
   end
 end
 
-// create exact copy of the array as a new temp array
+/**
+ * Creates a shallow copy of the array as a new temp array.
+ */
 procedure clone_array(variable array) begin
    variable new, k, v;
    if (array_is_map(array)) then
@@ -399,9 +401,9 @@ procedure remove_array_set(variable array, variable item) begin
    end
 end
 
-// use callback on each array element
+// Transform every value in array using given callback
 procedure array_map_func(variable arr, variable callback) begin
-   variable k, v, i;
+   variable k, v;
    foreach (k: v in arr)
       arr[k] := callback(v);
    return arr;

@@ -373,6 +373,7 @@
 #define set_rest_heal_time(time)                                sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                                     sfall_func1("set_rest_mode", mode)
 #define set_scr_name(name)                                      sfall_func1("set_scr_name", name)
+#define set_spray_settings(ctrMult, ctrDiv, tgtMult, tgtDiv)    sfall_func4("set_spray_settings", ctrMult, ctrDiv, tgtMult, tgtDiv)
 #define set_terrain_name(x, y, name)                            sfall_func3("set_terrain_name", x, y, name)
 #define set_town_title(areaID, title)                           sfall_func2("set_town_title", areaID, title)
 #define set_unique_id(obj)                                      sfall_func1("set_unique_id", obj)

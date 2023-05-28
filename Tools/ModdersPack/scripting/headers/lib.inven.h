@@ -3,6 +3,7 @@
 #define LIB_INVEN_H
 
 #include "define_lite.h"
+#include "define_extra.h"
 #define PID_BOTTLE_CAPS                     (41)
 
 /**

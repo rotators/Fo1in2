@@ -277,6 +277,8 @@
 
 // critters
 #define PROTO_CR_FLAGS                   (32)  // Critter Flags
+#define PROTO_CR_BASE_STATS              (36)  // 35 stats, see STAT_*
+#define PROTO_CR_BONUS_STATS            (176)  // 35 stats, see STAT_*
 #define PROTO_CR_BONUS_SRENGTH          (176)
 #define PROTO_CR_BONUS_PRCEPTION        (180)
 #define PROTO_CR_BONUS_ENDURANCE        (184)
@@ -294,6 +296,7 @@
 #define PROTO_CR_BONUS_HEALING_RATE     (232)
 #define PROTO_CR_BONUS_CRITICAL_CHANCE  (236)
 #define PROTO_CR_BONUS_BETTER_CRITICALS (240)
+#define PROTO_CR_SKILLS                 (316)  // 18 skills, see SKILL_*
 #define PROTO_CR_BODY_TYPE              (388)
 #define PROTO_CR_KILL_EXP               (392)
 #define PROTO_CR_KILL_TYPE              (396)
