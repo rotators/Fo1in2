@@ -147,6 +147,7 @@
 #define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
 #define RMOBJ_ITEM_DESTROY_MULTI  4571599  // (op_destroy_mult_objs_)
 #define RMOBJ_ITEM_MOVE           4683293  // (item_move_func_)
+#define RMOBJ_ITEM_REPLACE        4686256  // (item_replace_)
 #define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
 #define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
 #define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
@@ -455,6 +456,7 @@
 // critters
 #define OBJ_DATA_COMBAT_STATE       (0x3C) // flags: 1 - combat, 2 - target is out of range, 4 - flee
 #define OBJ_DATA_CUR_ACTION_POINT   (0x40)
+#define OBJ_DATA_DAMAGE_FLAGS       (0x44)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
 #define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
 
