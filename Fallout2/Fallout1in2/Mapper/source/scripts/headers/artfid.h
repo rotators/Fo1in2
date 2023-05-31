@@ -193,5 +193,4 @@
 #define FID_HAROBB        (16777353) // Black dude purple robe
 #define FID_NMMETL        (16777354) // Tycho metal armor
 #define FID_HMGLCM        (16777355) // Male Bald Combat Armor
-#define FID_HMCMB4        (16777356) // Male Bald Combat Armor
-
+#define FID_HMCMB4        (16777356) // Tycho Combat Armor
