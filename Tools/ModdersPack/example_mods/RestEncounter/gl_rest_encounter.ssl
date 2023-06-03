@@ -1,0 +1,65 @@
+/*
+
+Resting Encounters mod for Fallout 2 by Lexx
+--------------------------------------------
+
+- Check where we are on the world map and overwrite the default desert "resting" map
+- Compatible with vanilla Fallout 2 and UP/RP
+
+Requires sfall 4.3.6/3.8.38 or higher
+
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\lib.arrays.h"
+
+procedure start;
+procedure encounter_handler;
+
+#define is_terrain_desert           (get_current_terrain_name == mstr_worldmap(1000))
+#define is_terrain_mountains        (get_current_terrain_name == mstr_worldmap(1001))
+#define is_terrain_city             (get_current_terrain_name == mstr_worldmap(1002))
+#define is_terrain_coast            (get_current_terrain_name == mstr_worldmap(1003))
+
+procedure start begin
+   if (game_loaded) then begin
+      register_hook_proc(HOOK_ENCOUNTER, encounter_handler);
+   end
+end
+
+procedure encounter_handler begin
+   variable
+      event := get_sfall_arg,
+      mapID := get_sfall_arg,
+      mapsList;
+
+   // If the player enters a map on the world map, we set it depending on the current terrain type
+   // event 0 is random encounter, 1 is player initiated "encounter"
+   if (event == 1 AndAlso mapID == MAP_RND_DESERT_1) then begin
+      if (is_terrain_desert) then begin
+         mapsList := [MAP_RND_DESERT_1];
+         if (global_var(GVAR_CAR_PLACED_TILE) < 0) then set_car_current_town(AREA_RND_DESERT);
+      end
+      else if (is_terrain_mountains) then begin
+         mapsList := [MAP_RND_MOUNTAIN1, MAP_RND_MOUNTAIN2];
+         if (global_var(GVAR_CAR_PLACED_TILE) < 0) then set_car_current_town(AREA_RND_MOUNTAIN);
+      end
+      else if (is_terrain_city) then begin
+         mapsList := [MAP_RND_CITY1, MAP_RND_CITY_2, MAP_RND_CITY_3, MAP_RND_CITY_4, MAP_RND_CITY_5, MAP_RND_CITY_6, MAP_RND_CITY_7, MAP_RND_CITY_8];
+         if (global_var(GVAR_CAR_PLACED_TILE) < 0) then set_car_current_town(AREA_RND_CITY);
+      end
+      else if (is_terrain_coast) then begin
+         mapsList := [MAP_RND_COAST1, MAP_RND_COAST2];
+         if (global_var(GVAR_CAR_PLACED_TILE) < 0) then set_car_current_town(AREA_RND_COAST);
+      end
+      else begin
+         mapsList := [MAP_RND_DESERT_1];
+         if (global_var(GVAR_CAR_PLACED_TILE) < 0) then set_car_current_town(AREA_RND_DESERT);
+         debug_msg("!!! COULDN'T DETECT TERRAIN TYPE !!!");
+      end
+
+      mapID := array_random_value(mapsList);
+      set_sfall_return(mapID);
+   end
+end

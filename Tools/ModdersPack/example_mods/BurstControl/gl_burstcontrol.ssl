@@ -1,0 +1,30 @@
+/*
+   A basic example of how to use set_spray_settings function for script-based burst control
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\sfall\define_extra.h"
+#include "..\headers\sfall\sfall.h"
+
+procedure start;
+procedure ammocost_handler;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_AMMOCOST, ammocost_handler);
+   end
+end
+
+procedure ammocost_handler begin
+   variable
+      weapon   := get_sfall_arg,
+      bullets  := get_sfall_arg,
+      cost     := get_sfall_arg,
+      event    := get_sfall_arg;
+
+   if (event == 2 and weapon > 0) then begin // when calculating number of burst rounds
+      if (obj_pid(weapon) == PID_ASSAULT_RIFLE) then begin
+         set_spray_settings(1, 1, 1, 1); // burst attack will not hit other targets
+      end
+   end
+end
