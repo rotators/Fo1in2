@@ -703,7 +703,7 @@
   items:
   - name: metarule2_explosions
     detail: int metarule2_explosions(int arg1, int arg2)
-    doc: Was made as a dirty easy hack to allow to dynamically change some explosion parameters (ranged attack). All changed parameters are automatically reset to vanilla state after each attack action.
+    doc: Was made as a quick-and-dirty hack to enable dynamic changes to some explosion parameters for ranged attacks. All changed parameters are automatically reset to vanilla state after each attack action.
     opcode: 0x8261
 
   - name: set_attack_explosion_pattern
@@ -767,7 +767,7 @@
   items:
   - name: reg_anim_combat_check
     detail: void reg_anim_combat_check(int enable)
-    doc: Allows to enable all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin` - `reg_anim_end` block.
+    doc: Allows enabling all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin` - `reg_anim_end` block.
     opcode: 0x825c
   - name: reg_anim_destroy
     detail: void reg_anim_destroy(ObjectPtr)
@@ -1559,12 +1559,19 @@
   - name: set_spray_settings
     detail: void set_spray_settings(int centerMult, int centerDiv, int targetMult, int targetDiv)
     doc: |
-      Allows to dynamically change the multipilers and divisors for the bullet distribution of burst attacks. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
+      Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
       - Should be called before the calculation of the bullet distribution (e.g. in `HOOK_TOHIT` or `HOOK_AMMOCOST`)
       - `centerDiv/targetDiv`: the minimum value of divisor is 1
       - `centerMult/targetMult`: multiplier values are capped at divisor values
       - __NOTE:__ refer to the description of **ComputeSpray_\*** settings in ddraw.ini for details of the bullet distribution of burst attacks
     macro: sfall.h
+    
+  - name: set_combat_free_move
+    detail: void set_combat_free_move(int value)
+    doc: |
+      Allows changing "bonus move" points (yellow lights on the interface bar) that can only be used for movement, not attacking
+      - Can be called from `HOOK_COMBATTURN` at the start of the turn (will not work on `dude_obj`)
+      - Can be called from `HOOK_STDPROCEDURE` with `combat_proc` event (will work on both NPCs and `dude_obj`)
 
 - name: Car
   items:
@@ -1811,15 +1818,20 @@
   - name: get_ini_setting
     detail: int get_ini_setting(string setting)
     doc: |
-      - Reads an integer value from an ini file in the fallout directory.
-      - It only takes a single argument; seperate the file name, section and key with a "\|" character; e.g. `myvar:=get_ini_setting("myini.ini|mysec|var1")` If the file or key cannot be found, -1 is returned.
+      Reads an integer value from an ini file in the fallout directory.
+      - It only takes a single argument; seperate the file name, section and key with a "\|" character; e.g. `myvar:=get_ini_setting("myini.ini|mysec|var1")`
+      - If the file or key cannot be found, -1 is returned.
+      - If setting argument is in invalid format, -1 is also returned.
       - The file name is limited to 63 chars, including the extension.
       - The section name is limited to 32 characters.
       - It can also be used to get sfall's settings, by using `ddraw.ini` as the file name.
     opcode: 0x81ac
   - name: get_ini_string
     detail: string get_ini_string(string setting)
-    doc: Reads a string value from an ini file in the fallout directory.
+    doc: |
+      Reads a string value from an ini file in the fallout directory.
+      - If the file or key cannot be found, an empty string is returned.
+      - If setting argument is in invalid format, -1 (integer) is returned.
     opcode: 0x81eb
   - name: get_ini_section
     detail: array get_ini_section(string file, string sect)

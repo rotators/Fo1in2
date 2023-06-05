@@ -802,10 +802,12 @@ Runs before or after Fallout engine executes a standard procedure (handler) in a
 __NOTE:__ This hook will not be executed for `start`, `critter_p_proc`, `timed_event_p_proc`, and `map_update_p_proc` procedures.
 
 ```
-int     arg0 - the number of the standard script handler (see define.h)
+int     arg0 - the number of the standard script handler (see *_proc in define.h)
 Obj     arg1 - the object that owns this handler (self_obj)
 Obj     arg2 - the object that called this handler (source_obj, can be 0)
 int     arg3 - 1 after procedure execution (for HOOK_STDPROCEDURE_END), 0 otherwise
+Obj     arg4 - the object that is acted upon by this handler (target_obj, can be 0)
+int     arg5 - the parameter of this call (fixed_param), useful for combat_proc
 
 int     ret0 - pass -1 to cancel the execution of the handler (only for HOOK_STDPROCEDURE)
 ```

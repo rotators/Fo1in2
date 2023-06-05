@@ -360,6 +360,7 @@
 #define remove_timer_event(fixedParam)                          sfall_func1("remove_timer_event", fixedParam)
 #define set_can_rest_on_map(map, elev, value)                   sfall_func3("set_can_rest_on_map", map, elev, value)
 #define set_car_intface_art(artIndex)                           sfall_func1("set_car_intface_art", artIndex)
+#define set_combat_free_move(value)                             sfall_func1("set_combat_free_move", value)
 #define set_cursor_mode(mode)                                   sfall_func1("set_cursor_mode", mode)
 #define set_drugs_data(type, pid, value)                        sfall_func3("set_drugs_data", type, pid, value)
 #define set_dude_obj(critter)                                   sfall_func1("set_dude_obj", critter)

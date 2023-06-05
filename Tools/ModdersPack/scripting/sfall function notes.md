@@ -124,7 +124,9 @@ FUNCTION REFERENCE
 -----
 ##### `int get_ini_setting(string setting)`
 - Reads an integer value from an ini file in the Fallout directory.
-- It only takes a single argument; seperate the file name, section and key with a `|` character, e.g. `myvar := get_ini_setting("myini.ini|mysec|var1")`. If the file or key cannot be found, -1 is returned.
+- It only takes a single argument; seperate the file name, section and key with a `|` character, e.g. `myvar := get_ini_setting("myini.ini|mysec|var1")`.
+- If the file or key cannot be found, -1 is returned.
+- If setting argument is in invalid format, -1 is also returned.
 - The file name is limited to 63 chars, including the extension.
 - The section name is limited to 32 characters.
 - It can also be used to get sfall settings, by using ddraw.ini as the file name.
@@ -132,6 +134,8 @@ FUNCTION REFERENCE
 -----
 ##### `string get_ini_string(string setting)`
 - Reads a string value from an ini file in the Fallout directory.
+- If the file or key cannot be found, an empty string is returned.
+- If setting argument is in invalid format, -1 (integer) is returned.
 
 -----
 ##### `int get_game_mode()`
@@ -228,7 +232,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `void reg_anim_combat_check`
-- Allows to enable all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin() ... reg_anim_end()` code block.
+- Allows enabling all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin() ... reg_anim_end()` code block.
 
 **Some additional `reg_anim_*` functions were introduced. They all work in the same convention as vanilla functions and use the same underlying code.**
 
@@ -261,7 +265,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `int/array metarule2_explosions(int arg1, int arg2, int arg3)`
-- Was made as a dirty easy hack to allow to dynamically change some explosion parameters (ranged attack). All changed parameters are automatically reset to vanilla state after each attack action. Following macros are available in **sfall.h**:
+- Was made as a quick-and-dirty hack to enable dynamic changes to some explosion parameters for ranged attacks. All changed parameters are automatically reset to vanilla state after each attack action. Following macros are available in **sfall.h**:
 
 -----
 ##### `void set_attack_explosion_pattern(x, y)`
@@ -1067,11 +1071,19 @@ sfall_funcX metarule functions
 ##### set_spray_settings
 `void sfall_func4("set_spray_settings", int centerMult, int centerDiv, int targetMult, int targetDiv)`
 
-- Allows to dynamically change the multipilers and divisors for the bullet distribution of burst attacks. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
+- Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
 - Should be called before the calculation of the bullet distribution (e.g. in `HOOK_TOHIT` or `HOOK_AMMOCOST`)
 - `centerDiv/targetDiv`: the minimum value of divisor is 1
 - `centerMult/targetMult`: multiplier values are capped at divisor values
 - __NOTE:__ refer to the description of **ComputeSpray_\*** settings in ddraw.ini for details of the bullet distribution of burst attacks
+
+----
+##### set_combat_free_move
+`void sfall_func1("set_combat_free_move", int value)`
+
+- Allows changing "bonus move" points (yellow lights on the interface bar) that can only be used for movement, not attacking
+- Can be called from `HOOK_COMBATTURN` at the start of the turn (will not work on `dude_obj`)
+- Can be called from `HOOK_STDPROCEDURE` with `combat_proc` event (will work on both NPCs and `dude_obj`)
 
 
 ****

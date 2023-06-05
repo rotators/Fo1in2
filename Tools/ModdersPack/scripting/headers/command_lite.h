@@ -31,6 +31,10 @@
 #define dude_is_armed                       critter_is_armed(dude_obj)
 #define dude_wearing_armor                  critter_wearing_armor(dude_obj)
 
+#define get_armor(cr)                       critter_inven_obj(cr,INVEN_TYPE_WORN)
+#define dude_armor                          get_armor(dude_obj)
+#define self_armor                          get_armor(self_obj)
+
 #define dude_has_power_armor                (((obj_is_carrying_obj_pid(dude_obj, PID_POWERED_ARMOR)) +            \
                                               (obj_is_carrying_obj_pid(dude_obj, PID_ADVANCED_POWER_ARMOR)) +     \
                                               (obj_is_carrying_obj_pid(dude_obj, PID_ADVANCED_POWER_ARMOR_MK2)) + \
@@ -125,8 +129,22 @@
 #define self_agility                        (get_critter_stat(self_obj,STAT_ag))
 #define self_luck                           (get_critter_stat(self_obj,STAT_lu))
 
+// more stats
+#define get_strength(cr)                    get_critter_stat(cr,STAT_st)
+#define get_perception(cr)                  get_critter_stat(cr,STAT_pe)
+#define get_endurance(cr)                   get_critter_stat(cr,STAT_en)
+#define get_charisma(cr)                    get_critter_stat(cr,STAT_ch)
+#define get_iq(cr)                          get_critter_stat(cr,STAT_iq)
+#define get_agility(cr)                     get_critter_stat(cr,STAT_ag)
+#define get_luck(cr)                        get_critter_stat(cr,STAT_lu)
+
+// gender
+#define get_gender(cr)                      get_critter_stat(cr,STAT_gender)
+#define is_male(cr)                         (get_gender(cr) == GENDER_MALE)
+#define is_female(cr)                       (get_gender(cr) == GENDER_FEMALE)
 #define self_is_male                        (self_gender == GENDER_MALE)
 #define self_is_female                      (self_gender == GENDER_FEMALE)
+
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
 

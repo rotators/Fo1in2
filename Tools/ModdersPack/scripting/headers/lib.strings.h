@@ -9,8 +9,8 @@
 #ifndef LIB_STRINGS_H
 #define LIB_STRINGS_H
 
-#define is_in_string(str, substr)         (string_pos(str, substr) != -1)
-#define string_starts_with(str, substr)   (string_pos(str, substr) == 0)
+#define is_in_string(str, sub)         (string_pos(str, sub) != -1)
+#define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
 
 /**
  * Returns position of first occurance of substr in str, or -1 if not found
