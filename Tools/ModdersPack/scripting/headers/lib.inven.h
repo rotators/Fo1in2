@@ -23,10 +23,10 @@ procedure inven_as_array(variable critter) begin
 end
 
 
-procedure add_items_pid(variable who_obj, variable the_pid, variable pid_qty) begin
+procedure add_items_pid(variable invenObj, variable itemPid, variable quantity) begin
    variable item;
-   item := create_object(the_pid,0,0);
-   add_mult_objs_to_inven(who_obj, item, (pid_qty));
+   item := create_object(itemPid, 0, 0);
+   add_mult_objs_to_inven(invenObj, item, quantity);
    return item;
 end
 
@@ -37,50 +37,50 @@ end
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 #endif
 
-procedure unwield_armor(variable who_obj) begin
+procedure unwield_armor(variable critter) begin
    variable armor;
-   if (not(who_obj)) then return;
-   if (critter_wearing_armor(who_obj)) then begin
-      armor := critter_inven_obj(who_obj,INVEN_TYPE_WORN);
-      rm_obj_from_inven(who_obj, armor);
-      add_obj_to_inven(who_obj, armor);
+   if (not(critter)) then return;
+   if (critter_wearing_armor(critter)) then begin
+      armor := critter_inven_obj(critter,INVEN_TYPE_WORN);
+      rm_obj_from_inven(critter, armor);
+      add_obj_to_inven(critter, armor);
    end
 end
 
-procedure remove_items_pid(variable who_obj, variable the_pid, variable pid_qty) begin
+procedure remove_items_pid(variable invenObj, variable itemPid, variable quantity) begin
    variable begin
       item;
-      removed_qty;
-      tmp;
+      toRemoveQty;
+      numRemoved;
    end
-   if (not(who_obj)) then return;
-   removed_qty := obj_is_carrying_obj_pid(who_obj,the_pid);
-   if (pid_qty < removed_qty and pid_qty != -1) then begin
-      removed_qty := pid_qty;
+   if (not(invenObj)) then return;
+   toRemoveQty := obj_is_carrying_obj_pid(invenObj,itemPid);
+   if (quantity < toRemoveQty and quantity != -1) then begin
+      toRemoveQty := quantity;
    end
-   if (removed_qty > 0) then begin
-      item := obj_carrying_pid_obj(who_obj, the_pid);
-      if (obj_type(who_obj) == 1) then begin
-         if (critter_inven_obj(who_obj,INVEN_TYPE_WORN) == item) then begin
-            call unwield_armor(who_obj);
-         end else if ((critter_inven_obj(who_obj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(who_obj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
-            inven_unwield(who_obj);
+   while (toRemoveQty > 0) do begin
+      item := obj_carrying_pid_obj(invenObj, itemPid);
+      if (obj_type(invenObj) == OBJ_TYPE_CRITTER) then begin
+         if (critter_inven_obj(invenObj, INVEN_TYPE_WORN) == item) then begin
+            call unwield_armor(invenObj);
+         end else if ((critter_inven_obj(invenObj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(invenObj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
+            inven_unwield(invenObj);
          end
       end
-      tmp := rm_mult_objs_from_inven(who_obj, item, removed_qty);
+      toRemoveQty -= rm_mult_objs_from_inven(invenObj, item, toRemoveQty);
       destroy_object(item);
    end
 end
 
-procedure remove_item_obj(variable who_obj, variable item) begin
-   if (obj_type(who_obj) == 1) then begin
-      if (critter_inven_obj(who_obj,INVEN_TYPE_WORN) == item) then begin
-         call unwield_armor(who_obj);
-      end else if ((critter_inven_obj(who_obj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(who_obj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
-         inven_unwield(who_obj);
+procedure remove_item_obj(variable invenObj, variable item) begin
+   if (obj_type(invenObj) == 1) then begin
+      if (critter_inven_obj(invenObj,INVEN_TYPE_WORN) == item) then begin
+         call unwield_armor(invenObj);
+      end else if ((critter_inven_obj(invenObj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(invenObj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
+         inven_unwield(invenObj);
       end
    end
-   rm_obj_from_inven(who_obj, item);
+   rm_obj_from_inven(invenObj, item);
    destroy_object(item);
 end
 
@@ -91,37 +91,20 @@ end
 /**
  Set item quantity in inventory, by item pid
  */
-procedure set_items_qty_pid(variable invenobj, variable itempid, variable newcount)
+procedure set_items_qty_pid(variable invenobj, variable itempid, variable quantity)
 begin
    variable begin
       count;
       obj;
    end
    count := obj_is_carrying_obj_pid(invenobj, itempid);
-   if (newcount > count) then begin
+   if (quantity > count) then begin
       obj := create_object_sid(itempid, 0, 0, -1);
-      add_mult_objs_to_inven(invenobj, obj, newcount - count);
-   end else if (newcount < count) then begin
-      call remove_items_pid(invenobj, itempid, count - newcount);
+      add_mult_objs_to_inven(invenobj, obj, quantity - count);
+   end else if (quantity < count) then begin
+      call remove_items_pid(invenobj, itempid, count - quantity);
    end
 end
-
-/*
-
-procedure check_restock_item(the_item, min_amt, max_amt, res_perc)
-      restock_amt := random(min_amt, max_amt);
-      if (obj_is_carrying_obj_pid(self_obj, the_item) < restock_amt) then begin
-         if (res_perc >= random(1,100)) then begin
-            stock_pid_qty(self_obj, the_item, restock_amt)
-         end
-      end else begin
-         stock_pid_qty(self_obj, the_item, restock_amt)
-      end
-procedure check_restock_item_min_limit(the_item, min_amt, max_amt, res_perc)
-      if (obj_is_carrying_obj_pid(self_obj, the_item) < min_amt) then begin
-         check_restock_item(the_item, min_amt, max_amt, res_perc)
-      end
-*/
 
 
 procedure reduce_merchant_loot(variable critter, variable moneyPercent, variable probArmor, variable probDrugs, variable probWeapons, variable probAmmo, variable probMisc) begin

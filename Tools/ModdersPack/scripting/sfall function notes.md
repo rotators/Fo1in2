@@ -706,6 +706,7 @@ sfall_funcX metarule functions
 ----
 #### get_string_pointer
 `int sfall_func1("get_string_pointer", string text)`
+- DEPRECATED, use normal strings
 - Returns a pointer to a string variable or to a text
 
 ----
@@ -1076,6 +1077,12 @@ sfall_funcX metarule functions
 - `centerDiv/targetDiv`: the minimum value of divisor is 1
 - `centerMult/targetMult`: multiplier values are capped at divisor values
 - __NOTE:__ refer to the description of **ComputeSpray_\*** settings in ddraw.ini for details of the bullet distribution of burst attacks
+
+----
+##### get_combat_free_move
+`int sfall_func0("get_combat_free_move")`
+
+- Returns available "bonus move" points of the current critter's turn. For NPCs, this is always 0 unless changed by `set_combat_free_move`.
 
 ----
 ##### set_combat_free_move

@@ -9,6 +9,8 @@
 #ifndef LIB_STRINGS_H
 #define LIB_STRINGS_H
 
+#include "sfall.h"
+
 #define is_in_string(str, sub)         (string_pos(str, sub) != -1)
 #define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
 
@@ -166,14 +168,22 @@ end
  * Useful in cunjunction with is_in_array()
  */
 procedure string_split_ints(variable str, variable split) begin
-   variable i := 0;
-   variable list;
+   variable n := 0;
+   variable list, result, val;
+
+   if (str == "" or typeof(str) != VALTYPE_STR) then
+      return temp_array_list(0);
+
    list := string_split(str, split);
-   while (i < len_array(list)) do begin
-      list[i] := atoi(list[i]);
-      i++;
+   result := temp_array_list(0);
+   foreach (val in list) begin
+      if (val != "") then begin
+         resize_array(result, n + 1);
+         result[n] := atoi(val);
+         n++;
+      end
    end
-   return list;
+   return result;
 end
 
 

@@ -694,7 +694,7 @@ Does not run if the script of the object overrides the description.
 ```
 Obj     arg0 - the object
 
-int     ret0 - a pointer to the new text received by using the get_string_pointer function
+str     ret0 - new description text to use
 ```
 
 -------------------------------------------
