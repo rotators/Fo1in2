@@ -631,10 +631,10 @@
 {1546}{}{unused}
 {1547}{}{ }                   # Holds all encounter maps but unused in Fo1in2
 {1548}{}{unused}
-{1549}{}{ }                   # Desert - triggered by player
-{1550}{}{ }                   # Mountain - triggered by player
-{1551}{}{ }                   # City - triggered by player
-{1552}{}{ }                   # Coast - triggered by player
+{1549}{}{ }                   # Desert - triggered by player - DEPRECATED
+{1550}{}{ }                   # Mountain - triggered by player - DEPRECATED
+{1551}{}{ }                   # City - triggered by player - DEPRECATED
+{1552}{}{ }                   # Coast - triggered by player - DEPRECATED
 {1553}{}{Giant Footprint}     # FOOT
 {1554}{}{Unusual Call Box}    # TARDIS
 {1555}{}{Bob's Car Mart}      # USEDCAR

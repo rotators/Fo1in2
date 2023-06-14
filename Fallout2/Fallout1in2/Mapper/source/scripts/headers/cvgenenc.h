@@ -657,7 +657,7 @@ procedure LoadChests begin
    chance := random(1, 100);
    if (chance <= (70 + dude_luck) and (map_is_mine or special_spawn_container_weapons == 1)) then begin
       Scenery_Creation_Hex := array_random_value(Chest_List);
-      debug("SPAWN FANCY WEAPON CONTAINER!");
+      debug_cyan("SPAWN FANCY WEAPON CONTAINER!");
 
       // Container #1
       chance := random(1, 100);

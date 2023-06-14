@@ -45,12 +45,12 @@
 #define ROBOT_CLEANER      (5)
 #define CENTAUR_HANDLER    (6)
 
-#define set_gold_mine         set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE)
-#define set_toxic_cave        set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE)
-#define set_hideout_1         set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1)
-#define set_dead_bodies       set_map_var(MVAR_CAVERN_TYPE, DEAD_BODIES)
-#define set_robot_cleaner     set_map_var(MVAR_CAVERN_TYPE, ROBOT_CLEANER)
-#define set_centaur_handler   set_map_var(MVAR_CAVERN_TYPE, CENTAUR_HANDLER)
+#define set_gold_mine         set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE); debug_cyan("Setting Gold Mine!")
+#define set_toxic_cave        set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE); debug_cyan("Setting Toxic Cave!")
+#define set_hideout_1         set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1); debug_cyan("Setting Hideout!")
+#define set_dead_bodies       set_map_var(MVAR_CAVERN_TYPE, DEAD_BODIES); debug_cyan("Setting Dead Bodies!")
+#define set_robot_cleaner     set_map_var(MVAR_CAVERN_TYPE, ROBOT_CLEANER); debug_cyan("Setting Robot Cleaner!")
+#define set_centaur_handler   set_map_var(MVAR_CAVERN_TYPE, CENTAUR_HANDLER); debug_cyan("Setting Centaur Handler!")
 
 #define cave_is_gold_mine           (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
 #define cave_is_toxic               (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
