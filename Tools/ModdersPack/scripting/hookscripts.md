@@ -691,10 +691,12 @@ An example usage would be to add an additional description to the item based on 
 
 Does not run if the script of the object overrides the description.
 
+__NOTE:__ Returning a pointer to the new text received from the `get_string_pointer` function is still valid, but the method is DEPRECATED and is left for backward compatibility only.
+
 ```
 Obj     arg0 - the object
 
-str     ret0 - new description text to use
+String  ret0 - the new description text to use
 ```
 
 -------------------------------------------
@@ -926,7 +928,7 @@ For the player, this happens when the game updates the item data for active item
 Critter arg0 - the critter doing the check
 Item    arg1 - the item being checked
 int     arg2 - attack type (see ATKTYPE_* constants), or -1 for dude_obj
-int     arg3 - original result of engine function: 1 - can use, 0 - can't use
+int     arg3 - original result of engine function: 1 - can use, 0 - cannot use
 
 int     ret0 - overrides the result of engine function. Any non-zero value allows using the weapon
 ```

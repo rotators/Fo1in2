@@ -310,7 +310,7 @@ _^ - These functions require AllowUnsafeScripting to be enabled in ddraw.ini_
 0x8251 - `int   charcode(string string)`\
 0x8253 - `int   typeof(any value)`
 
-0x823a - `int get_tile_fid(int tile)`
+0x823a - `int get_tile_fid(int tileData)`
 
 0x823b - `int modified_ini()`
 

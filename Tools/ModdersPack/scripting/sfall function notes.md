@@ -231,6 +231,20 @@ FUNCTION REFERENCE
 - The same as above, but applies only to specific critter.
 
 -----
+##### `int get_tile_fid(int tileData)`
+- Returns FID information about the square under the given tile at elevation 0.
+- Pass elevation as 4-bit number in bits 25-28 to access other elevations.
+- Pass result mode in bits 29-32: 0 - ground FID, 1 - roof FID, 2 - raw data. Following macros are available in **sfall.h**:
+
+-----
+##### `int get_tile_ground_fid(int tileNum, int elevation)`
+- Returns FID of a ground tile at given tile number and elevation.
+
+-----
+##### `int get_tile_roof_fid(int tileNum, int elevation)`
+- Returns FID of a roof tile at given tile number and elevation. Note that FID of 1 is used when there is no actual roof.
+
+-----
 ##### `void reg_anim_combat_check`
 - Allows enabling all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin() ... reg_anim_end()` code block.
 
@@ -257,7 +271,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `void reg_anim_turn_towards(object, tile/target, delay)`
-- Makes object change its direction to face given tile num or target object.
+- Makes object change its direction to face given tile number or target object.
 
 -----
 ##### `void reg_anim_callback(procedure proc)`
@@ -706,8 +720,8 @@ sfall_funcX metarule functions
 ----
 #### get_string_pointer
 `int sfall_func1("get_string_pointer", string text)`
-- DEPRECATED, use normal strings
-- Returns a pointer to a string variable or to a text
+- (DEPRECATED) Returns a pointer to a string variable or to a text
+- __NOTE:__ this function is intended for use only in `HOOK_DESCRIPTIONOBJ`. Starting from sfall 4.3.9/3.8.39, you can return normal strings directly in the hook without calling the function
 
 ----
 #### dialog_message

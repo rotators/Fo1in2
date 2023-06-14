@@ -40,6 +40,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: The kidnapped Brotherhood Inititate in the Hub would not hide correctly after leaving the map area.
 - **Fixed**: The refugee in Necropolis would always mention that "some human killed their men" even if the player did not attack Harry & Friends.
 - **Fixed**: Traps would show the wrong message log entry when trying to disarm them.
+- **Fixed**: Using a radio on the broken Mr. Handy robot would print a "This does nothing"-message after fixing it.
 - **Fixed**: Vault 13 cave and Vault 15 topside were using the wrong music tracks.
 - **Fixed**: When using repair and science skill on the broken Mr. Handy robot in Mariposa, the message log would print "The robot is already healthy" and "You learn nothing new" after the scripted description text.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
