@@ -33,13 +33,13 @@
 #define COLOR_BG_WHITE        "[107m"
 
 // Default is green text
-#define debug(x)           debug_msg(" " + STYLE_BOLD + COLOR_GREEN(x))
+#define debug(x)           debug_msg(" " + STYLE_BOLD + COLOR_GREEN(">"+x))
 
-#define debug_black(x)     debug_msg(" " + COLOR_BLACK(x))
-#define debug_red(x)       debug_msg(" " + COLOR_RED(x))
-#define debug_green(x)     debug_msg(" " + COLOR_GREEN(x))
-#define debug_yellow(x)    debug_msg(" " + COLOR_YELLOW(x))
-#define debug_blue(x)      debug_msg(" " + COLOR_BLUE(x))
-#define debug_magenta(x)   debug_msg(" " + COLOR_MAGENTA(x))
-#define debug_cyan(x)      debug_msg(" " + COLOR_CYAN(x))
-#define debug_white(x)     debug_msg(" " + COLOR_WHITE(x))
+#define debug_black(x)     debug_msg(" " + STYLE_BOLD + COLOR_BLACK(x))
+#define debug_red(x)       debug_msg(" " + STYLE_BOLD + COLOR_RED(x))
+#define debug_green(x)     debug_msg(" " + STYLE_BOLD + COLOR_GREEN(x))
+#define debug_yellow(x)    debug_msg(" " + STYLE_BOLD + COLOR_YELLOW(x))
+#define debug_blue(x)      debug_msg(" " + STYLE_BOLD + COLOR_BLUE(x))
+#define debug_magenta(x)   debug_msg(" " + STYLE_BOLD + COLOR_MAGENTA(x))
+#define debug_cyan(x)      debug_msg(" " + STYLE_BOLD + COLOR_CYAN(x))
+#define debug_white(x)     debug_msg(" " + STYLE_BOLD + COLOR_WHITE(x))
