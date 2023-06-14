@@ -275,6 +275,10 @@
 #define weapon_attack_mode2(pid)                        ((get_proto_data(pid, PROTO_FLAG_EXT) bwand 0x000000F0) / 0x10)
 #define weapon_attack_mode(pid, attackType)             (weapon_attack_mode1(pid) if (attackType == ATKTYPE_LWEP1 or attackType == ATKTYPE_RWEP1) else weapon_attack_mode2(pid))
 
+#define get_tile_fid_ext(tile, elev, mode)              get_tile_fid(((mode bwand 0xF) * 0x10000000) bwor ((elev bwand 0xF) * 0x1000000) bwor (tile bwand 0xFFFFFF))
+#define get_tile_ground_fid(tile, elev)                 get_tile_fid_ext(tile, elev, 0)
+#define get_tile_roof_fid(tile, elev)                   get_tile_fid_ext(tile, elev, 1)
+
 
 /* SFALL_FUNCX MACROS */
 
@@ -321,9 +325,6 @@
 #define get_npc_stat_max(stat)                                  sfall_func2("get_stat_max", stat, 1)
 #define get_npc_stat_min(stat)                                  sfall_func2("get_stat_min", stat, 1)
 #define get_sfall_arg_at(argNum)                                sfall_func1("get_sfall_arg_at", argNum)
-#define get_tile_fid_ext(tile, elev, mode)                      get_tile_fid(((mode bwand 0xF) * 0x10000000) bwor ((elev bwand 0xF) * 0x1000000) bwor (tile bwand 0xFFFFFF))
-#define get_tile_ground_fid(tile, elev)                         get_tile_fid_ext(tile, elev, 0)
-#define get_tile_roof_fid(tile, elev)                           get_tile_fid_ext(tile, elev, 1)
 #define get_terrain_name(x, y)                                  sfall_func2("get_terrain_name", x, y)
 #define get_text_width(text)                                    sfall_func1("get_text_width", text)
 #define has_fake_perk_npc(npc, perk)                            sfall_func2("has_fake_perk_npc", npc, perk)

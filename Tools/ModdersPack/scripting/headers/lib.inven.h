@@ -51,10 +51,9 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
    variable begin
       item;
       toRemoveQty;
-      numRemoved;
    end
    if (not(invenObj)) then return;
-   toRemoveQty := obj_is_carrying_obj_pid(invenObj,itemPid);
+   toRemoveQty := obj_is_carrying_obj_pid(invenObj, itemPid);
    if (quantity < toRemoveQty and quantity != -1) then begin
       toRemoveQty := quantity;
    end
