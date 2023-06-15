@@ -44,9 +44,11 @@ jobs:
 
           pre=
           if   [ "$event" == "workflow_dispatch" ]; then
-               pre=true
+               pre"=--prerelease"
+#              pre=true
           elif [ "$event" == "workflow_dispatch:release" ]; then
-               pre=false
+               pre=
+#              pre=false
           else
                echo "[ERROR] unknown event<$event>"
                exit 1
@@ -54,7 +56,8 @@ jobs:
 
           echo MOD_RELEASE_NAME=$($GHA_SCRIPTS/version.sh release) >> $GITHUB_ENV
           echo MOD_RELEASE_TAG=$($GHA_SCRIPTS/version.sh tag) >> $GITHUB_ENV
-          echo MOD_RELEASE_DRAFT=true >> $GITHUB_ENV
+          echo MOD_RELEASE_DRAFT="--draft" >> $GITHUB_ENV
+#         echo MOD_RELEASE_DRAFT=true >> $GITHUB_ENV
           echo MOD_RELEASE_PRE=$pre >> $GITHUB_ENV
           echo MOD_RELEASE_BODY=NEWS.md >> $GITHUB_ENV
 
@@ -154,28 +157,43 @@ jobs:
     working-directory: Fallout2
 
   - name: Create release
-    id:   release
-    uses: actions/create-release@v1
-    with:
-     release_name: ${{ env.MOD_RELEASE_NAME }}
-     tag_name:     ${{ env.MOD_RELEASE_TAG }}
-     draft:        ${{ env.MOD_RELEASE_DRAFT }}
-     prerelease:   ${{ env.MOD_RELEASE_PRE }}
-     body_path:    ${{ env.MOD_RELEASE_BODY }}
+    run: gh release create $MOD_RELEASE_TAG --title $MOD_RELEASE_NAME $MOD_RELEASE_PRE $MOD_RELEASE_DRAFT --notes-file $MOD_RELEASE_BODY
     env:
-     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+     GH_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
   - name: Upload main package
-    uses: actions/upload-release-asset@v1.0.2
-    with:
-     upload_url:         ${{ steps.release.outputs.upload_url }}
-     asset_path:         ${{ env.MOD_RELEASE_ZIP }}
-     asset_name:         ${{ env.MOD_RELEASE_ZIP }}
-     asset_content_type: application/zip
+    run:  gh release upload $MOD_RELEASE_TAG $MOD_RELEASE_ZIP
     env:
-     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+     GH_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
   - name: Show release
-    run:  |
-          :
-          echo "${{ steps.release.outputs.html_url }}"
+    run:  gh release view $MOD_RELEASE_TAG --json url --jq '.url'; gh release view $MOD_RELEASE_TAG --json assets --jq ".assets[0].url"
+    env:
+     GH_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+
+# - name: Create release
+#   id:   release
+#   uses: actions/create-release@v1
+#   with:
+#    release_name: ${{ env.MOD_RELEASE_NAME }}
+#    tag_name:     ${{ env.MOD_RELEASE_TAG }}
+#    draft:        ${{ env.MOD_RELEASE_DRAFT }}
+#    prerelease:   ${{ env.MOD_RELEASE_PRE }}
+#    body_path:    ${{ env.MOD_RELEASE_BODY }}
+#   env:
+#    GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+#
+# - name: Upload main package
+#   uses: actions/upload-release-asset@v1.0.2
+#   with:
+#    upload_url:         ${{ steps.release.outputs.upload_url }}
+#    asset_path:         ${{ env.MOD_RELEASE_ZIP }}
+#    asset_name:         ${{ env.MOD_RELEASE_ZIP }}
+#    asset_content_type: application/zip
+#   env:
+#    GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+#
+# - name: Show release
+#   run:  |
+#         :
+#         echo "${{ steps.release.outputs.html_url }}"
