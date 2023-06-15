@@ -33,7 +33,7 @@
 #define COLOR_BG_WHITE        "[107m"
 
 // Default is green text
-#define debug(x)           debug_msg(" " + STYLE_BOLD + COLOR_GREEN(">"+x))
+#define debug(x)           debug_msg(" " + STYLE_BOLD + COLOR_GREEN("•"+x))
 
 #define debug_black(x)     debug_msg(" " + STYLE_BOLD + COLOR_BLACK(x))
 #define debug_red(x)       debug_msg(" " + STYLE_BOLD + COLOR_RED(x))

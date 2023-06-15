@@ -20,6 +20,7 @@
     Settings:
 *********************************************************/
 #define fo1in2_fluff_enc_disabled       ((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
+#define fo1in2_auto_doors_enabled       (global_var(GVAR_ENABLE_AUTO_DOORS) > 0)
 #define fo1in2_auto_doors_closing       (global_var(GVAR_ENABLE_AUTO_DOORS_CLOSING) > 0)
 #define fo1in2_motorcycle_enabled       (global_var(GVAR_ENABLE_MOTORCYCLE) > 0)
 #define fo1in2_destroy_armor_enabled    (global_var(GVAR_ENABLE_ARMOR_DESTROY_MOD) > 0)
