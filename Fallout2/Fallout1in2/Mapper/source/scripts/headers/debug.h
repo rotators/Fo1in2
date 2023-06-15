@@ -43,3 +43,5 @@
 #define debug_magenta(x)   debug_msg(" " + STYLE_BOLD + COLOR_MAGENTA(x))
 #define debug_cyan(x)      debug_msg(" " + STYLE_BOLD + COLOR_CYAN(x))
 #define debug_white(x)     debug_msg(" " + STYLE_BOLD + COLOR_WHITE(x))
+
+#define debug_warning(x)   debug_msg(" " + STYLE_INVERSE + COLOR_RED(" " + x + " "))

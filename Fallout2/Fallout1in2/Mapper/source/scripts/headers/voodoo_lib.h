@@ -86,7 +86,7 @@ procedure VOODOO_AssertByte(variable func, variable address, variable expected)
 begin
      variable byte := read_byte(address);
      if(byte != expected) then begin
-         display_msg("Byte mismatch at "+func+ " (0x"+sprintf("%x",address)+"), expected " + sprintf("%x", expected) + " but got " + sprintf("%x", byte));
+         debug_warning("Byte mismatch at "+func+ " (0x"+sprintf("%x",address)+"), expected " + sprintf("%x", expected) + " but got " + sprintf("%x", byte));
          return false;
      end
      return true;
@@ -199,13 +199,13 @@ begin
 
    if(typeof(id) != VALTYPE_INT or id <= 0) then
    begin
-      debug(warn + "invalid id");
+      debug_warning(warn + "invalid id");
       return;
    end
 
    if(typeof(idx) != VALTYPE_INT or idx <= 0) then
    begin
-      debug(warn + "invalid idx");
+      debug_warning(warn + "invalid idx");
       return 0;
    end
 
@@ -219,7 +219,7 @@ begin
          return read_int(a + idx * 4);
    end
 
-   debug(warn + "unknown id");
+   debug_warning(warn + "unknown id");
    return 0;
 end
 
@@ -230,7 +230,7 @@ begin
 
    if(typeof(id) != VALTYPE_INT or id <= 0) then
    begin
-      debug(warn + "invalid id");
+      debug_warning(warn + "invalid id");
       return;
    end
 
@@ -247,7 +247,7 @@ begin
       end
    end
 
-   debug(warn + "lookup table is full");
+   debug_warning(warn + "lookup table is full");
 end
 
 procedure VOODOO_ClearLookupData
@@ -287,11 +287,7 @@ begin
          size := "???";
 
       msg := "VOODOO Lookup[" + idx + "] " + id + " = 0x" + sprintf("%x ", address) + size + "b";
-
-      if(debug_mode) then
-         debug(msg);
-      else
-         debug_msg(msg);
+      debug(msg);
 
       idx++;
    end
@@ -382,5 +378,5 @@ begin
    else if(num == 4) then
       return call_offset_r4(address, arg1, arg2, arg3, arg4);
 
-   display_msg("VOODOO call_offset_r invalid num<" + num + ">");
+   debug("VOODOO call_offset_r invalid num<" + num + ">");
 end
