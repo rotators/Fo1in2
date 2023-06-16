@@ -7,6 +7,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Added**: Optional "Vault 15 Rework" mini-mod that replaces the V15 entrance maps with a lore friendly blend of the Fo1 and Fo2 version.
 - **Added**: Restored an unused message log text when using the radio item. Has a low chance to replace the normal text.
 - **Added**: The 9mm Mauser pistol can be converted to the 10mm caliber if Fo2 weapon upgrades are enabled.
+- **Added**: Walking through doors Arcanum-style can now be disabled in the fo1_settings.ini file.
 - **Fixed**: A wrong name would show when inspecting the body of a dead critter in one of the random desert encounters.
 - **Fixed**: City encounter maps were using 07desert and not 11chilrn as in Fo1.
 - **Fixed**: Crash when using the door inside of Darkwater's shop after killing Killian.
