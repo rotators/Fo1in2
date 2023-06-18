@@ -1,6 +1,6 @@
 /*
 
-   Encounter - Generic Raider
+   Encounter - Generic Raider - probably unused
 
 */
 
@@ -49,6 +49,9 @@ procedure notfirst;
 
 import variable killing_women;
 
+#define LVAR_Herebefore          (4)
+#define LVAR_Afraid              (5)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable Weapons;
@@ -66,7 +69,7 @@ end
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_RAIDERS);
 
-   if (local_var(5) == 1) then begin
+   if (local_var(LVAR_Afraid) == 1) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -96,23 +99,18 @@ end
 
 procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
-
       if (dude_is_armed) then begin
          call combat;
       end
    end
-   else begin
-      if (fixed_param == 2) then begin
-         if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
-            call combat;
-         end
+   else if (fixed_param == 2) then begin
+      if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+         call combat;
       end
-      else begin
-         if (fixed_param == 3) then begin
-            if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-               call combat;
-            end
-         end
+   end
+   else if (fixed_param == 3) then begin
+      if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
+         call combat;
       end
    end
 end
@@ -122,8 +120,8 @@ procedure sys_dialog begin
    get_reaction
    start_gdialog(439, self_obj, 4, -1, -1);
    gsay_start;
-   if (local_var(4) == 0) then begin
-      set_local_var(4, 1);
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      set_local_var(LVAR_Herebefore, 1);
       call guard04;
    end
    else begin
@@ -239,7 +237,7 @@ end
 
 procedure guard12 begin
    NMessage(134);
-   set_local_var(5, 1);
+   set_local_var(LVAR_Afraid, 1);
 end
 
 procedure guard13 begin
