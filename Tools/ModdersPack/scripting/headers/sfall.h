@@ -307,6 +307,8 @@
 #define get_current_terrain_name                                sfall_func0("get_terrain_name")
 #define get_cursor_mode                                         sfall_func0("get_cursor_mode")
 #define get_flags(obj)                                          sfall_func1("get_flags", obj)
+#define get_ini_config(file)                                    sfall_func2("get_ini_config", file, 0)
+#define get_ini_config_db(file)                                 sfall_func2("get_ini_config", file, 1)
 #define get_ini_section(file, sect)                             sfall_func2("get_ini_section", file, sect)
 #define get_ini_sections(file)                                  sfall_func1("get_ini_sections", file)
 #define get_interface_rect(winType)                             sfall_func2("get_window_attribute", winType, -1)
