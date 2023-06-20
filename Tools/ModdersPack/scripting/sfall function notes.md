@@ -18,13 +18,13 @@ Both `set_global_script_repeat` and `set_global_script_type` only have an effect
 The `read_xxx` functions take a memory address as the parameter and can read arbitrary pieces of Fallout's address space. The `write_xxx` functions are equivalent except that they write to arbitrary memory addresses.
 
 The `call_offset_xx` functions can be used to call arbitrary functions inside Fallout. Different versions are used to call functions with different numbers of arguments.
-None of `write_xxx` and `call_offset_xx` functions will work unless **AllowUnsafeScripting** is enabled in ddraw.ini.
+None of `write_xxx` and `call_offset_xx` functions will work unless **AllowUnsafeScripting** is enabled in **ddraw.ini**.
 
 The `get_pc_base_stat`, `set_pc_base_stat`, `get_pc_extra_stat` and `set_pc_extra_stat` functions are equivalent to calling `get_critter_base_stat`, `set_critter_base_stat`, `get_critter_extra_stat` and `set_critter_extra_stat` with `dude_obj` as the critter pointer. None of these stat functions take perks into account, and neither do they do range clamping to make sure the stats are valid. Use the normal `get_critter_stat` function to get a correctly perk adjusted and range clamped value for a stat.
 
 The `set_stat_min` and `set_stat_max` functions can be used to set the valid ranges on stats. Values returned by `get_current_stat` will be clamped to this range. The `set_pc_stat_*` functions only affect the player, the `set_npc_stat_*` functions only affect other critters, and the `set_stat_*` functions affect both.
 
-The input functions are only available if the user has the input hook turned on in ddraw.ini. Use `input_funcs_available` to check.
+The input functions are only available if the user has the input hook turned on in **ddraw.ini**. Use `input_funcs_available` to check.
 
 The graphics functions are only available if the user is using graphics mode 4 or 5. Use `graphics_funcs_available` to check; it returns 1 if you can use them or 0 if you can't. Calling graphics functions when `graphics_funcs_available` returns 0 will do nothing.
 
@@ -54,11 +54,11 @@ The `has_fake_trait` and `has_fake_perk` return the number of levels the player 
 
 The `perk_add_mode`, `set_selectable_perk`, `set_perkbox_title`, `hide_real_perks`, `show_real_perks` and `clear_selectable_perks` control the behaviour of the select a perk box. The `set_selectable_perk` can be used to add additional items by setting the **active** parameter to 1, and to remove them again by setting it to 0. The `set_perkbox_title` can be used to change the title of the box, or by using `""` it will be set back to the default. The `hide_real_perks` and `show_real_perks` can be used to prevent the dialog from displaying any of the original 119 perks. The `perk_add_mode` modifies what happens when a fake perk is selected from the perks dialog. It is treated as a set of flags - if bit 1 is set then it is added to the player's traits, if bit 2 is set it is added to the player's perks, and if bit 3 is set it is removed from the list of selectable perks. The default is 0x2. The `clear_selectable_perks` restores the dialog to its default state.
 
-The `show_iface_tag`, `hide_iface_tag` and `is_iface_tag_active` relate to the boxes that appear above the interface such as **SNEAK** and **LEVEL**. You can use 3 for **LEVEL** and 4 for **ADDICT**, or the range from 5 to (4 + the value of BoxBarCount in ddraw.ini) for custom boxes. Remember to add your messages to **intrface.msg** and set up the font colours in ddraw.ini if you're going to use custom boxes. Starting from sfall 4.1/3.8.12, `is_iface_tag_active` can also be used to check 0 for **SNEAK**, 1 for **POISONED**, and 2 for **RADIATED**.
+The `show_iface_tag`, `hide_iface_tag` and `is_iface_tag_active` relate to the boxes that appear above the interface such as **SNEAK** and **LEVEL**. You can use 3 for **LEVEL** and 4 for **ADDICT**, or the range from 5 to (4 + the value of BoxBarCount in **ddraw.ini**) for custom boxes. Remember to add your messages to **intrface.msg** and set up the font colours in **ddraw.ini** if you're going to use custom boxes. Starting from sfall 4.1/3.8.12, `is_iface_tag_active` can also be used to check 0 for **SNEAK**, 1 for **POISONED**, and 2 for **RADIATED**.
 
-The `get_bodypart_hit_modifier` and `set_bodypart_hit_modifier` alter the hit percentage modifiers for aiming at specific bodyparts. Valid bodypart id's are from 0 to 8. Changes are not saved, and will reset to the defaults (or to the values specified in ddraw.ini if they exist) at each reload.
+The `get_bodypart_hit_modifier` and `set_bodypart_hit_modifier` alter the hit percentage modifiers for aiming at specific bodyparts. Valid bodypart id's are from 0 to 8. Changes are not saved, and will reset to the defaults (or to the values specified in **ddraw.ini** if they exist) at each reload.
 
-The `get_critical_table`, `set_critical_table` and `reset_critical_table` are used for modifying the critical table (for details, see http://falloutmods.wikia.com/wiki/Critical_hit_tables). Changes are not saved, and will reset to the defaults (or to the contents of **CriticalOverrides.ini**, if it exists) at each game reload. These function also require **OverrideCriticalTable** to be enabled in ddraw.ini.
+The `get_critical_table`, `set_critical_table` and `reset_critical_table` are used for modifying the critical table (for details, see http://falloutmods.wikia.com/wiki/Critical_hit_tables). Changes are not saved, and will reset to the defaults (or to the contents of **CriticalOverrides.ini**, if it exists) at each game reload. These function also require **OverrideCriticalTable** to be enabled in **ddraw.ini**.
 
 The `get_unspent_ap_bonus` and `set_unspent_ap_bonus` alter the AC bonus you receive per unused action point at the end of your turn in combat. To allow for fractional values, the value given if divided by 4. (Hence the default value is 4 and not 1.) The `get_unspent_ap_perk_bonus` and `set_unspent_ap_perk_bonus` are similar, but affect the extra AC granted by the HtH Evade perk. (The default value of this is also 4, equivalent to doubling the original bonus.)
 
@@ -70,7 +70,7 @@ The `get_proto_data` and `set_proto_data` are used to manipulate the in memory c
 
 The `list_xxx` functions can be used to loop over all items on a map. `list_begin` takes an argument telling sfall what you want to list (defined in **sfall.h**). It returns a list pointer, which you iterate through with `list_next`. Finally, when you've finished with the list use `list_end` on it. Not calling `list_end` will result in a memory leak. Alternatively, use `list_as_array` to get the whole list at once as a temp array variable, which can be looped over using `len_array` and which you don't need to remember to free afterwards.
 
-The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an id which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. These functions do not require **AllowDShowSound** to be set to 1 in ddraw.ini.
+The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an id which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. These functions do not require **AllowDShowSound** to be set to 1 in **ddraw.ini**.
 Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, You need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
 
 Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad id or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.\
@@ -125,17 +125,16 @@ FUNCTION REFERENCE
 ##### `int get_ini_setting(string setting)`
 - Reads an integer value from an ini file in the Fallout directory.
 - It only takes a single argument; seperate the file name, section and key with a `|` character, e.g. `myvar := get_ini_setting("myini.ini|mysec|var1")`.
-- If the file or key cannot be found, -1 is returned.
-- If setting argument is in invalid format, -1 is also returned.
+- If the file or key cannot be found or the setting argument is in an invalid format, it returns -1.
 - The file name is limited to 63 chars, including the extension.
 - The section name is limited to 32 characters.
-- It can also be used to get sfall settings, by using ddraw.ini as the file name.
+- It can also be used to get sfall settings by using **ddraw.ini** as the file name.
 
 -----
 ##### `string get_ini_string(string setting)`
 - Reads a string value from an ini file in the Fallout directory.
-- If the file or key cannot be found, an empty string is returned.
-- If setting argument is in invalid format, -1 (integer) is returned.
+- If the file or key cannot be found, it returns an empty string.
+- If the setting argument is in an invalid format, it returns -1 (integer).
 
 -----
 ##### `int get_game_mode()`
@@ -171,7 +170,7 @@ FUNCTION REFERENCE
 -----
 ##### `void set_map_time_multi(float multi)`
 - Adjusts how fast time passes while you're on the world map. It takes a single float as an argument, where 1 is the normal speed.
-- This function works in addition to the **WorldMapTimeMod** setting in ddraw.ini and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of pathfinder would result in time passing at 25% the normal speed on the world map.
+- This function works in addition to the **WorldMapTimeMod** setting in **ddraw.ini** and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of pathfinder would result in time passing at 25% the normal speed on the world map.
 
 -----
 ##### `void remove_script(object obj)`
@@ -421,8 +420,8 @@ FUNCTION REFERENCE
 ##### `string message_str_game(int fileId, int messageId)`
 - Works exactly the same as `message_str`, except you get messages from files in the `text\<language>\game\` directory.
 - Use `GAME_MSG_*` defines or `mstr_*` macros from **sfall.h** to use specific msg file.
-- Additional game msg files added by **ExtraGameMsgFileList** setting will have consecutive fileIds assigned beginning from `0x2000` to `0x2FFF`. (e.g. if you set `ExtraGameMsgFileList=foo,bar` in ddraw.ini, foo.msg will be associated with 0x2000 and bar.msg with 0x2001.)
-- If a file has a specific number assigned in **ExtraGameMsgFileList**, its fileId will be (`0x2000` + assigned number). (e.g. with `ExtraGameMsgFileList=foo,bar:2,foobar` in ddraw.ini, bar.msg will be associated with 0x2002 and foobar.msg with 0x2003.)
+- Additional game msg files added by **ExtraGameMsgFileList** setting will have consecutive fileIds assigned beginning from `0x2000` to `0x2FFF`. (e.g. if you set `ExtraGameMsgFileList=foo,bar` in **ddraw.ini**, foo.msg will be associated with 0x2000 and bar.msg with 0x2001.)
+- If a file has a specific number assigned in **ExtraGameMsgFileList**, its fileId will be (`0x2000` + assigned number). (e.g. with `ExtraGameMsgFileList=foo,bar:2,foobar` in **ddraw.ini**, bar.msg will be associated with 0x2002 and foobar.msg with 0x2003.)
 
 -----
 ##### `int sneak_success()`
@@ -596,13 +595,15 @@ sfall_funcX metarule functions
 
 ----
 #### get_ini_sections
-`array sfall_func1("get_ini_sections", string fileName)`
+`array sfall_func1("get_ini_sections", string file)`
 - Returns an array of names of all sections in a given INI file
+- If the INI file is not found, it returns an empty array
 
 ----
 #### get_ini_section
-`array sfall_func2("get_ini_section", string fileName, string section)`
+`array sfall_func2("get_ini_section", string file, string section)`
 - Returns an associative array of keys and values for a given INI file and section
+- If the INI file is not found, it returns an empty array
 - __NOTE:__ all keys and their values will be of String type
 
 ----
@@ -688,8 +689,8 @@ sfall_funcX metarule functions
 ----
 #### set_iface_tag_text
 `void sfall_func3("set_iface_tag_text", int tag, string text, int color)`
-- Sets the text messages and colors for custom notification boxes to the interface without the need to add messages to intrface.msg and set up the font colors in ddraw.ini
-- `tag` value is the same as used in `show_iface_tag`, `hide_iface_tag`, and `is_iface_tag_active`. The valid range is from 5 to (4 + the value of **BoxBarCount** in ddraw.ini) or the number of the last custom box added using the `add_ifaca_tag` function
+- Sets the text messages and colors for custom notification boxes to the interface without the need to add messages to intrface.msg and set up the font colors in **ddraw.ini**
+- `tag` value is the same as used in `show_iface_tag`, `hide_iface_tag`, and `is_iface_tag_active`. The valid range is from 5 to (4 + the value of **BoxBarCount** in **ddraw.ini**) or the number of the last custom box added using the `add_ifaca_tag` function
 - The text is limited to 19 characters
 - Available colors: 0 - green, 1 - red, 2 - white, 3 - yellow, 4 - dark yellow, 5 - blue, 6 - purple, 7 - dull pink
 
@@ -805,7 +806,7 @@ sfall_funcX metarule functions
 ----
 #### set_drugs_data
 `void sfall_func3("set_drugs_data", int type, int pid, int value)`
-- Overrides the parameters of drugs set in the configuration file (**DrugsFile** setting in ddraw.ini)
+- Overrides the parameters of drugs set in the configuration file (**DrugsFile** setting in **ddraw.ini**)
 - `type`:\
     0 - changes the value of **NumEffects** for the drug (see **Drugs.ini** for the description of NumEffects)\
     1 - changes the duration of the addiction effect for the drug (a value of 1 = one game minute)
@@ -854,7 +855,7 @@ sfall_funcX metarule functions
 - __NOTE:__ if the msg file does not exist in the current language directory, the function will try to load it from the `text\English\game\` directory
 
 **Optional argument:**
-- `fileNumber`: the file ID number for the `message_str_game` function. The available range is from `0x2000` to `0x2FFF` (see **ExtraGameMsgFileList** setting in ddraw.ini). Use **fileNumber** only if you want to add a message file without editing ddraw.ini or existing scripts to support the old way
+- `fileNumber`: the file ID number for the `message_str_game` function. The available range is from `0x2000` to `0x2FFF` (see **ExtraGameMsgFileList** setting in **ddraw.ini**). Use **fileNumber** only if you want to add a message file without editing **ddraw.ini** or existing scripts to support the old way
 
 ----
 #### unwield_slot
@@ -1086,17 +1087,17 @@ sfall_funcX metarule functions
 ##### set_spray_settings
 `void sfall_func4("set_spray_settings", int centerMult, int centerDiv, int targetMult, int targetDiv)`
 
-- Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (**ComputeSpray_\*** settings in ddraw.ini) after each attack action
+- Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (**ComputeSpray_\*** settings in **ddraw.ini**) after each attack action
 - Should be called before the calculation of the bullet distribution (e.g. in `HOOK_TOHIT` or `HOOK_AMMOCOST`)
 - `centerDiv/targetDiv`: the minimum value of divisor is 1
 - `centerMult/targetMult`: multiplier values are capped at divisor values
-- __NOTE:__ refer to the description of **ComputeSpray_\*** settings in ddraw.ini for details of the bullet distribution of burst attacks
+- __NOTE:__ refer to the description of **ComputeSpray_\*** settings in **ddraw.ini** for details of the bullet distribution of burst attacks
 
 ----
 ##### get_combat_free_move
 `int sfall_func0("get_combat_free_move")`
 
-- Returns available "bonus move" points of the current critter's turn. For NPCs, this is always 0 unless changed by `set_combat_free_move`.
+- Returns available "bonus move" points of the current critter's turn. For NPCs, this is always 0 unless changed by `set_combat_free_move`
 
 ----
 ##### set_combat_free_move
@@ -1105,6 +1106,14 @@ sfall_funcX metarule functions
 - Allows changing "bonus move" points (yellow lights on the interface bar) that can only be used for movement, not attacking
 - Can be called from `HOOK_COMBATTURN` at the start of the turn (will not work on `dude_obj`)
 - Can be called from `HOOK_STDPROCEDURE` with `combat_proc` event (will work on both NPCs and `dude_obj`)
+----
+#### get_ini_config
+`array sfall_func2("get_ini_config", string file, bool searchDB)`
+- Loads a given INI file and returns a permanent array (map) where keys are section names and values are permanent sub-arrays (maps) where keys and values are strings
+- `searchDB`:\
+    False - searches the file in the regular file system, like with all other ini-related functions\
+    True - searches the file in database (DAT) files. If not found, then it will try the regular file system
+- Subsequent calls for the same file will return the same array, unless it was disposed using `free_array`
 
 
 ****
