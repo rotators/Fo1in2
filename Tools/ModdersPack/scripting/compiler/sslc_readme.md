@@ -220,16 +220,6 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
     end
     ```
 
-- Empty statements in blocks are allowed: This is just a convenience to save scripters a bit of memory. Some of the macros in the Fallout headers include their own semicolons while others do not. With the original compiler you had to remember which was which, and if you got it wrong the script would not compile. Now it's always safe to include your own semicolon, even if the macro already had its own. For example, this would not compile with the original sslc, but will with the sfall edition:
-  ```
-  #define my_macro display_msg("foo");
-
-  procedure start begin
-    my_macro;
-  end
-  ```
-  __NOTE:__ **Does not work currently.**
-
 - Procedure stringify operator `@`: Designed to make callback-procedures a better option and allow for basic functional programming. Basically it replaces procedure names preceded by `@` by a string constant.
   - old:
     ```
@@ -360,6 +350,13 @@ There are several changes in this version of sslc which may result in problems f
 
 ### Changelog
 
+**sfall 4.4:**
+- fixed compiler crash when trying to define an exported procedure with variables
+- fixed compiler giving "symbol or string expected" error when trying to call procedure using a string literal
+- fixed optimizer not treating `call string_variable` as variable use
+- fixed unused arguments in a procedure being removed incorrectly by the optimizer
+- fixed unused string literals in an optimized-out procedure not being removed by the optimizer
+
 **sfall 4.2.9:**
 - added support for additional universal opcodes `sfall_func7` and `sfall_func8`
 - fixed a compilation error when the script has a UTF-8 BOM
@@ -368,7 +365,7 @@ There are several changes in this version of sslc which may result in problems f
 - added ability to declare local variables anywhere in the procedure body
 
 **sfall 4.2.3:**
-- fixed compiler giving "assignment operator expected" error when a variable-like macro is not being defined properly
+- fixed compiler giving "assignment operator expected" error when a variable-like macro is not defined properly
 - added new logical operators `AndAlso`, `OrElse` for short-circuit evaluation of logical expressions
 - added an alternative (C/Java-style) assignment operator `=`
 - added support for new `div` operator (unsigned integer division)

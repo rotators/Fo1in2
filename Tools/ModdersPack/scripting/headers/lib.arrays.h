@@ -484,6 +484,7 @@ procedure array_append(variable arr1, variable arr2) begin
    return arr1;
 end
 
+// Loads a "saved" array. If it doesn't exist, creates it (with a given size).
 procedure load_create_array(variable name, variable size) begin
    variable arr;
    arr := load_array(name);
@@ -494,6 +495,7 @@ procedure load_create_array(variable name, variable size) begin
    return arr;
 end
 
+// Creates and returns a new "saved" array. If array already existed with this name, frees it.
 procedure get_saved_array_new(variable name, variable size) begin
    variable arr;
    arr := load_array(name);

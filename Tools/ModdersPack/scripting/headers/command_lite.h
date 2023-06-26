@@ -170,9 +170,26 @@
 #define self_elevation                      (elevation(self_obj))
 
 #define self_pid                            (obj_pid(self_obj))
+
+// team
 #define self_team                           has_trait(TRAIT_OBJECT,self_obj,OBJECT_TEAM_NUM)
+#define get_team(cr)                        has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
+#define set_team(cr,team)                   critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
+#define set_self_team(team)                 set_team(self_obj,team)
+
+// ai
 #define self_ai                             has_trait(TRAIT_OBJECT,self_obj,OBJECT_AI_PACKET)
+#define get_ai(cr)                          has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
+#define set_ai(cr,ai)                       critter_add_trait(cr,TRAIT_OBJECT,OBJECT_AI_PACKET,ai)
+#define set_self_ai(ai)                     set_ai(self_obj,ai)
+
+// visibility
 #define self_visible                        obj_is_visible_flag(self_obj)
+#define set_obj_invisible(cr)               set_obj_visibility(cr,1)
+#define set_obj_visible(cr)                 set_obj_visibility(cr,0)
+#define set_self_invisible                  set_obj_visibility(self_obj, true)
+#define set_self_visible                    set_obj_visibility(self_obj, false)
+#define is_visible(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
 
 #define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))
 #define self_max_hits                       (get_critter_stat(self_obj,STAT_max_hp))

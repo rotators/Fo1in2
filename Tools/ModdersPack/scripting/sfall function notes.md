@@ -339,7 +339,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `string sprintf(string format, any value)`
-- Formats given value using standard syntax of C `printf` function (google "printf" for format details). However it is limited to formatting only 1 value.
+- Formats given value using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting only 1 value.
 - Can be used to get character by ASCII code (`%c`).
 
 -----
@@ -722,7 +722,7 @@ sfall_funcX metarule functions
 #### get_string_pointer
 `int sfall_func1("get_string_pointer", string text)`
 - (DEPRECATED) Returns a pointer to a string variable or to a text
-- __NOTE:__ this function is intended for use only in `HOOK_DESCRIPTIONOBJ`. Starting from sfall 4.3.9/3.8.39, you can return normal strings directly in the hook without calling the function
+- __NOTE:__ this function is intended for use only in `HOOK_DESCRIPTIONOBJ`. Starting from sfall 4.4/3.8.40, you can return normal strings directly in the hook without calling the function
 
 ----
 #### dialog_message
@@ -930,9 +930,10 @@ sfall_funcX metarule functions
 
 ----
 #### string_format
-`string sfall_func3("string_format", string format, any val1, any val2, ...)`
-- Formats given value using standard syntax of C `printf` function (google "printf" for format details). However it is limited to formatting up to 4 values
-- Formatting is only supported for `%s` and `%d`, and the format string is limited to 1024 characters
+`string sfall_func2("string_format", string format, any val1)`
+`string sfall_funcX("string_format", string format, any val1, any val2, ...)`
+- Formats given values using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting up to 7 values
+- The format string is limited to 1024 characters
 
 ----
 #### objects_in_radius

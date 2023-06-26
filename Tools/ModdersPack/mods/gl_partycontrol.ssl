@@ -15,6 +15,12 @@
 #include "..\headers\critrpid.h"
 #include "main.h"
 
+#ifndef DEBUG
+#define DEBUGMSG(x)
+#else
+#define DEBUGMSG(x)  debug_msg(x);
+#endif
+
 procedure start;
 procedure AllowControl(variable pid);
 procedure SetLight(variable critter, variable int, variable dist);
@@ -48,25 +54,29 @@ procedure CombatTurn_Handler begin
       critter := get_sfall_arg,
       pid, perkID, level;
 
-   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
+   DEBUGMSG("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg)
 
    pid := obj_pid(critter);
    if (pid == PID_PLAYER and inControl == false) then return;
 
    if (pid != PID_PLAYER and controlMode != 1 and AllowControl(pid) == false) then begin
+      DEBUGMSG("Skip control.")
+
       if (npcControl) then begin
          npcControl := 0;
+         set_dude_obj(real_dude_obj);
          call SetLight(dude_obj, dudeLightInt, dudeLightDist); // restore dude light
-         //move_to(dude_obj, dude_tile, dude_elevation);
-         intface_redraw;
+         move_to(dude_obj, dude_tile, dude_elevation);
+
+         DEBUGMSG("Set dude after NPC control.")
       end
-      //display_msg("Skip control.");
       return;
    end
 
    if (status == 1) then begin
       set_dude_obj(critter);
-      //display_msg("Take control of: " + obj_name(critter));
+
+      DEBUGMSG("Take control of: " + obj_name(critter))
 
       if (critter != real_dude_obj) then begin
          if (npcControl == 0) then begin
@@ -118,13 +128,11 @@ procedure CombatTurn_Handler begin
 
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
+         DEBUGMSG("Remove perks after NPC control.")
          foreach (perkID in perksList) begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
-
-         if (status == 0) then set_dude_obj(0); // w/o redraw interface bar (otherwise it flickers when switching from the player to NPCs)
-         //display_msg("Return control to real dude!");
       end
 
       if (status < 0) then begin
@@ -175,11 +183,8 @@ procedure SetGlobalVar_Handler begin
 end
 
 procedure start begin
-   if (game_loaded and sfall_ver_major >= 4) then begin
-      //variable configSection := "CombatControl";
-
-      set_perk_ranks(PERK_gecko_skinning_perk, 1);
-      set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
+   if game_loaded then begin
+      if (sfall_ver_major < 4) then return;
 
       controlMode := GetConfig("CombatControl", "Mode", 0);
       if (controlMode >= 3) then begin
@@ -205,6 +210,9 @@ procedure start begin
             end
             displayNameColor := GetConfig("CombatControl", "DisplayNameColor", 0);
          end
+
+         set_perk_ranks(PERK_gecko_skinning_perk, 1);
+         set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
 
          pidList := GetConfigListInt("CombatControl", "PIDList");
          if (len_array(pidList) > 0) then

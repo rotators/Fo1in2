@@ -1,11 +1,13 @@
 /**
 
-   Item Highlight mod.
+   Item Highlight mod
 
    Previously was part of sfall itself, now a separate mod.
    Features:
    - highlighting items, containers (optional) and lootable corpses (optional) on the ground
+   - highlighting critters using the same rules as combat mode highlighting (optional)
    - configurable hotkey is used to trigger highlight
+   - hotkey can be pressed and held to continuously update highlighted objects based on current position
    - only objects in direct line-of-sight of player are highlighted (optional)
    - motion scanner is required to enable highlight (optional)
    - motion scanner charges are decreased on each use (optional)
@@ -13,7 +15,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.1
+   version 1.2
 
 **/
 
@@ -22,6 +24,7 @@
 
 #define CRITTER_IS_DEAD    (1)
 #define PID_MOTION_SENSOR  (59)
+#define REPEAT_FRAMES      (10)
 #define NO_HIGHLIGHT(obj)  (get_flags(obj) bwand FLAG_NOHIGHLIGHT)
 #define NO_STEAL(obj)      (get_proto_data(obj_pid(obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL)
 
@@ -30,36 +33,70 @@ variable highlightKey;
 variable isHighlight;
 variable alsoContainer;
 variable alsoCorpse;
+variable alsoCritter;
 variable checkLOS;
 variable outlineColor;
 variable motionScanner;
 variable highlightFailMsg1;
 variable highlightFailMsg2;
 
-procedure ToggleHighlightObject(variable obj, variable enable) begin
-   if obj and (not enable or not checkLOS or not obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT)) then begin
-      if (alsoContainer and obj_item_subtype(obj) == item_type_container) or (not NO_HIGHLIGHT(obj)) then begin
-         if (enable) then set_outline(obj, outlineColor);
-         else set_outline(obj, 0);
+procedure DudeCanSee(variable obj) begin
+   variable block := obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT);
+   return not block or block == obj;
+end
+
+procedure DudeCanHear(variable obj) begin
+   variable hearDist := dude_perception * 5;
+   if (get_flags(obj) bwand FLAG_TRANSGLASS) then
+      hearDist /= 2;
+
+   return tile_distance_objs(dude_obj, obj) <= hearDist;
+end
+
+procedure GetOutlineColor(variable obj, variable isCritter) begin
+   if isCritter then begin
+      if get_team(obj) == get_team(dude_obj) then return OUTLINE_GREEN_GLOW;
+      if not DudeCanSee(obj) then begin
+         if (DudeCanHear(obj)) then return OUTLINE_DARK_YELLOW;
+         return 0;
       end
+      return OUTLINE_RED_GLOW;
    end
+   if checkLOS and not DudeCanSee(obj) then
+      return 0;
+
+   return outlineColor;
+end
+
+procedure ToggleHighlightObject(variable obj, variable enable, variable isCritter) begin
+   if (not alsoContainer or obj_item_subtype(obj) != item_type_container) and NO_HIGHLIGHT(obj) then return;
+
+   set_outline(obj, GetOutlineColor(obj, isCritter) if enable else 0);
 end
 
 procedure ToggleHighlight(variable enable) begin
-   variable obj;
+   variable obj, isCorpse;
    foreach obj in list_as_array(LIST_GROUNDITEMS) begin
-      if obj != outlined_object then begin
-         call ToggleHighlightObject(obj, enable);
+      if obj and obj != outlined_object then begin
+         call ToggleHighlightObject(obj, enable, false);
       end
    end
-   if (alsoCorpse) then begin
+   if (alsoCorpse or alsoCritter) then begin
       foreach obj in list_as_array(LIST_CRITTERS) begin
-         if critter_state(obj) == CRITTER_IS_DEAD and not NO_STEAL(obj) then begin
-            call ToggleHighlightObject(obj, enable);
+         if obj and obj != dude_obj then begin
+            isCorpse := critter_state(obj) == CRITTER_IS_DEAD;
+            if (alsoCritter and not isCorpse) or (isCorpse and not NO_STEAL(obj)) then begin
+               call ToggleHighlightObject(obj, enable, not isCorpse);
+            end
          end
       end
    end
    tile_refresh_display;
+   if (checkLOS or alsoCritter) and enable != isHighlight then begin
+      set_global_script_repeat(REPEAT_FRAMES if enable else 0);
+   end
+
+   isHighlight := enable;
 end
 
 procedure KeyPressHandler begin
@@ -69,7 +106,7 @@ procedure KeyPressHandler begin
 
    if scanCode == highlightKey and not(get_game_mode bwand (INTFACELOOT bwor BARTER)) then begin
       if pressed then begin
-         isHighlight := true;
+         set_global_script_repeat(REPEAT_FRAMES);
          if motionScanner then begin
             scanner := obj_carrying_pid_obj(dude_obj, PID_MOTION_SENSOR);
             if scanner then begin
@@ -92,7 +129,6 @@ procedure KeyPressHandler begin
             call ToggleHighlight(true);
          end
       end else begin
-         isHighlight := false;
          call ToggleHighlight(false);
       end
    end
@@ -100,14 +136,12 @@ end
 
 procedure CombatTurnHandler begin
    if isHighlight then begin
-      isHighlight := false;
       call ToggleHighlight(false);
    end
 end
 
 procedure GameModeChangeHandler begin
    if isHighlight and (get_game_mode bwand (INTFACELOOT bwor BARTER)) then begin
-      isHighlight := false;
       call ToggleHighlight(false);
    end
 end
@@ -118,12 +152,15 @@ procedure InventoryMoveHandler begin
 end
 
 procedure start begin
-   if game_loaded and (sfall_ver_major >= 4) then begin
+   if game_loaded then begin
+      if (sfall_ver_major < 4) then return;
+
       call InitConfigs;
 
       highlightKey := GetConfig(configSection, "Key", 0);
       alsoContainer := GetConfig(configSection, "Containers", 0);
       alsoCorpse := GetConfig(configSection, "Corpses", 0);
+      alsoCritter := GetConfig(configSection, "Critters", 0);
       checkLOS := GetConfig(configSection, "CheckLOS", 0);
       outlineColor := GetConfig(configSection, "OutlineColor", 16);
       if (outlineColor < 1) then outlineColor := 64;
@@ -136,5 +173,10 @@ procedure start begin
       register_hook_proc(HOOK_COMBATTURN, CombatTurnHandler);
       register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChangeHandler);
       register_hook_proc(HOOK_INVENTORYMOVE, InventoryMoveHandler);
+      set_global_script_type(1);
+   end else begin
+      if isHighlight and not(get_game_mode bwand (INTFACELOOT bwor BARTER)) then begin
+         call ToggleHighlight(true);
+      end
    end
 end
