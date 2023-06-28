@@ -2,8 +2,10 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+#define PID_PLAYER          (16777216)
+
 /* Combat Flags */
-#define DAM_PRESERVE_FLAGS  0x80000000 // keep the existing result flags when setting new flags in attack_complex (for sfall)
+#define DAM_PRESERVE_FLAGS  (0x80000000) // keep the existing result flags when setting new flags in attack_complex (for sfall)
 
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
@@ -33,7 +35,7 @@
 #define WEAPON_TYPE_UNARMED (1)
 #define WEAPON_TYPE_MELEE   (2)
 #define WEAPON_TYPE_THROWN  (3)
-#define WEAPON_TYPE_GUNS    (4)
+#define WEAPON_TYPE_RANGED  (4)
 
 /* Item Flags (FlagsExt in proto) */
 #define HEALING_ITEM          0x04000000  // Healing Item (item will be used by NPCs for healing in combat) [sfall 4.3.1/3.8.31]
@@ -47,32 +49,46 @@
 #define WEAPON_2HAND          0x00000200  // 2Hnd (weapon is two-handed)
 #define WEAPON_ENERGY         0x00000400  // Energy Weapon (forces weapon to use Energy Weapons skill) [sfall 4.2/3.8.20]
 
-#define ATKMODE_PRI_NONE        0
-#define ATKMODE_PRI_PUNCH       1  // 0001
-#define ATKMODE_PRI_KICK        2  // 0010
-#define ATKMODE_PRI_SWING       3  // 0011
-#define ATKMODE_PRI_THRUST      4  // 0100
-#define ATKMODE_PRI_THROW       5  // 0101
-#define ATKMODE_PRI_SINGLE      6  // 0110
-#define ATKMODE_PRI_BURST       7  // 0111
-#define ATKMODE_PRI_FLAME       8  // 1000
-#define ATKMODE_SEC_NONE        0
-#define ATKMODE_SEC_PUNCH      16  // 0x00000010
-#define ATKMODE_SEC_KICK       32  // 0x00000020
-#define ATKMODE_SEC_SWING      48  // 0x00000030
-#define ATKMODE_SEC_THRUST     64  // 0x00000040
-#define ATKMODE_SEC_THROW      80  // 0x00000050
-#define ATKMODE_SEC_SINGLE     96  // 0x00000060
-#define ATKMODE_SEC_BURST     112  // 0x00000070
-#define ATKMODE_SEC_FLAME     128  // 0x00000080
+// The attack types returned by get_attack_type or as the fifth argument of HOOK_ITEMDAMAGE
+#define ATKTYPE_LWEP1           (0)
+#define ATKTYPE_LWEP2           (1)
+#define ATKTYPE_RWEP1           (2)
+#define ATKTYPE_RWEP2           (3)
+#define ATKTYPE_PUNCH           (4)
+#define ATKTYPE_KICK            (5)
+#define ATKTYPE_LWEP_RELOAD     (6)
+#define ATKTYPE_RWEP_RELOAD     (7)
+#define ATKTYPE_STRONGPUNCH     (8)
+#define ATKTYPE_HAMMERPUNCH     (9)
+#define ATKTYPE_HAYMAKER       (10)
+#define ATKTYPE_JAB            (11)
+#define ATKTYPE_PALMSTRIKE     (12)
+#define ATKTYPE_PIERCINGSTRIKE (13)
+#define ATKTYPE_STRONGKICK     (14)
+#define ATKTYPE_SNAPKICK       (15)
+#define ATKTYPE_POWERKICK      (16)
+#define ATKTYPE_HIPKICK        (17)
+#define ATKTYPE_HOOKKICK       (18)
+#define ATKTYPE_PIERCINGKICK   (19)
+
+#define ATTACK_MODE_NONE        (0)
+#define ATTACK_MODE_PUNCH       (1)
+#define ATTACK_MODE_KICK        (2)
+#define ATTACK_MODE_SWING       (3)
+#define ATTACK_MODE_THRUST      (4)
+#define ATTACK_MODE_THROW       (5)
+#define ATTACK_MODE_SINGLE      (6)
+#define ATTACK_MODE_BURST       (7)
+#define ATTACK_MODE_FLAME       (8)
+
 
 /* Object flags for get/set_flags */
-#define FLAG_MOUSE_3D            (0x1)
-#define FLAG_WALKTHRU            (0x4)
+#define FLAG_HIDDEN              (0x1)
+#define FLAG_NOSAVE              (0x4)
 #define FLAG_FLAT                (0x8)
 #define FLAG_NOBLOCK            (0x10)
 #define FLAG_LIGHTING           (0x20)
-#define FLAG_TEMP              (0x400)
+#define FLAG_NOREMOVE          (0x400)
 #define FLAG_MULTIHEX          (0x800)
 #define FLAG_NOHIGHLIGHT      (0x1000)
 #define FLAG_USED             (0x2000)
@@ -105,6 +121,9 @@
 #define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
 #define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
 
+/* Door flags */
+#define FLAG_WALKTHRU               (0x4)
+
 /* Window flags */
 #define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
 #define WIN_FLAG_MOVEONTOP          (0x4) // places the window on top of other windows
@@ -121,29 +140,42 @@
 #define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
-// remove inven obj defines for the 4th argument to HOOK_REMOVEINVOBJ
+// Some possible defines for the fourth argument of HOOK_REMOVEINVENOBJ
+#define RMOBJ_ITEM_REMOVED_INVEN  4831349  // removing or destroying an item (obj_remove_from_inven_)
+#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
+#define RMOBJ_ITEM_REMOVED_MULTI  4563866  // (op_rm_mult_objs_from_inven_)
+#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
+#define RMOBJ_ITEM_DESTROY_MULTI  4571599  // (op_destroy_mult_objs_)
+#define RMOBJ_ITEM_MOVE           4683293  // (item_move_func_)
+#define RMOBJ_ITEM_REPLACE        4686256  // (item_replace_)
 #define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
-#define RMOBJ_CONTAINER           4683293  // same as RMOBJ_TRADE (item_move_func_)
 #define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
 #define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
 #define RMOBJ_EQUIP_WEAPON        4658675  // (switch_hand_)
 #define RMOBJ_UNLOAD_WEAPON       4667030  // (inven_action_cursor_)
-//#define RMOBJ_LOAD_WEAPON       4831349  // same as RMOBJ_DROP (obj_remove_from_inven_)
 #define RMOBJ_USE_DRUG_ON         4834866  // (obj_use_item_on_)
 #define RMOBJ_STEAL_VIEW          4668206  // (loot_container_)
-//#define RMOBJ_DROP_DYNAMITE     4666865  // same as RMOBJ_USE_OBJ
-#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
-#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
-#define RMOBJ_ARMOR_EQUIPED       4651961  // (setup_inventory_)
-#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // (setup_inventory_)
-#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // (setup_inventory_)
-#define RMOBJ_RM_MULT_OBJS        4563866  // (op_rm_mult_objs_from_inven_)
+#define RMOBJ_ARMOR_EQUIPED       4651961  // removing armor from the player's slot when entering INVENTORY/LOOT/BARTER/USE inventory
+#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // removing item from the player's left slot when entering INVENTORY/LOOT/BARTER/USE inventory
+#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // removing item from the player's right slot when entering INVENTORY/LOOT/BARTER/USE inventory
 #define RMOBJ_REPLACE_WEAPON      4658526  // (switch_hand_)
 #define RMOBJ_THROW               4266040  // (action_ranged_)
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory (item_remove_mult_)
-#define RMOBJ_AI_USE_DRUG_ON      4359920  // remove before AI uses the drug in combat (ai_check_drugs_)
+#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
+#define RMOBJ_AI_USE_DRUG_ON      4359920  // removing before AI uses the drug in combat
 //#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 //#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
+#define RMOBJ_BARTER_ARMOR        4675656  // removing armor from NPC's slot before entering the barter screen
+#define RMOBJ_BARTER_WEAPON       4675722  // removing weapon from NPC's slot before entering the barter screen
+#define RMOBJ_INVEN_DROP_CAPS     4667295  // if multiple money/caps are dropped manually by the player from the inventory screen
+#define RMOBJ_DROP_INTO_CONTAINER 4678833  // when dropping items into a container item (bag/backpack)
+// old defines
+#define RMOBJ_RM_MULT_OBJS        RMOBJ_ITEM_REMOVED_MULTI
+#define RMOBJ_TRADE               RMOBJ_ITEM_MOVE          // If the object is offered up as a trade
+#define RMOBJ_DROP                RMOBJ_ITEM_REMOVED_INVEN // If the object is dropped manually by the player from the inventory screen
+#define RMOBJ_DROPMULTI           RMOBJ_ITEM_DESTROY_MULTI // When dropping a part of a stack (RMOBJ_ITEM_MOVE occurs first)
+//#define RMOBJ_DROP_DYNAMITE     RMOBJ_USE_OBJ
+//#define RMOBJ_CONTAINER         RMOBJ_ITEM_MOVE
+//#define RMOBJ_LOAD_WEAPON       RMOBJ_ITEM_REMOVED_INVEN
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
@@ -246,6 +278,8 @@
 
 // critters
 #define PROTO_CR_FLAGS                   (32)  // Critter Flags
+#define PROTO_CR_BASE_STATS              (36)  // 35 stats, see STAT_*
+#define PROTO_CR_BONUS_STATS            (176)  // 35 stats, see STAT_*
 #define PROTO_CR_BONUS_SRENGTH          (176)
 #define PROTO_CR_BONUS_PRCEPTION        (180)
 #define PROTO_CR_BONUS_ENDURANCE        (184)
@@ -263,6 +297,7 @@
 #define PROTO_CR_BONUS_HEALING_RATE     (232)
 #define PROTO_CR_BONUS_CRITICAL_CHANCE  (236)
 #define PROTO_CR_BONUS_BETTER_CRITICALS (240)
+#define PROTO_CR_SKILLS                 (316)  // 18 skills, see SKILL_*
 #define PROTO_CR_BODY_TYPE              (388)
 #define PROTO_CR_KILL_EXP               (392)
 #define PROTO_CR_KILL_TYPE              (396)
@@ -412,6 +447,8 @@
 #define OBJ_DATA_MISC_FLAGS         (0x38)
 #define OBJ_DATA_PID                (0x64)
 #define OBJ_DATA_CID                (0x68) // combat ID, used by critters in savegame (don't change while in combat)
+#define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
+#define OBJ_DATA_LIGHT_INTENSITY    (0x70)
 #define OBJ_DATA_SID                (0x78) // script ID
 #define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items
@@ -419,6 +456,7 @@
 // critters
 #define OBJ_DATA_COMBAT_STATE       (0x3C) // flags: 1 - combat, 2 - target is out of range, 4 - flee
 #define OBJ_DATA_CUR_ACTION_POINT   (0x40)
+#define OBJ_DATA_DAMAGE_FLAGS       (0x44)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
 #define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
 
@@ -468,6 +506,15 @@
 #define C_ATTACK_KNOCKBACK_VALUE4   (0xAC)
 #define C_ATTACK_KNOCKBACK_VALUE5   (0xB0)
 #define C_ATTACK_KNOCKBACK_VALUE6   (0xB4)
+
+#define CRITICAL_VALUE_MULT          (0) // This is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage.
+#define CRITICAL_VALUE_EFFECTS       (1) // This is a flag bit field (DAM_*) controlling what effects the critical causes.
+#define CRITICAL_VALUE_STAT_CHECK    (2) // This makes a check against a (SPECIAL) stat. Values of 2 (endurance), 5 (agility), and 6 (luck) are used, but other stats will probably work as well. A value of -1 indicates that no check is to be made.
+#define CRITICAL_VALUE_STAT_MOD      (3) // Affects the outcome of the stat check, if one is made. Positive values make it easier to pass the check, and negative ones make it harder.
+#define CRITICAL_VALUE_FAIL_EFFECT   (4) // Another bit field, using the same values as EFFECTS. If the stat check is failed, these are applied in addition to the earlier ones.
+#define CRITICAL_VALUE_MSG           (5) // The message to show when this critical occurs, taken from combat.msg.
+#define CRITICAL_VALUE_FAIL_MSG      (6) // This is shown instead of Message if the stat check fails.
+
 
 /* Playback mode defines for the soundplay function */
 #define soundraw        (0x80000000) // sfall flag

@@ -3,6 +3,7 @@
 
 // Recognised modes for set_shader_mode and get_game_mode
 #define WORLDMAP    (0x1)
+#define LOCALMAP    (0x2) //No point hooking this: would always be 1 at any point at which scripts are running
 #define DIALOG      (0x4)
 #define ESCMENU     (0x8)
 #define SAVEGAME    (0x10)
@@ -103,33 +104,6 @@
 #define ENCOUNTER_FLAG_ICON_SP  (0x8)  // use special encounter icon
 #define ENCOUNTER_FLAG_FADEOUT  (0x10) // fade out the screen on encounter (Note: you yourself should restore the fade screen when entering the encounter)
 
-// The attack types returned by get_attack_type
-#define ATKTYPE_LWEP1           (0)
-#define ATKTYPE_LWEP2           (1)
-#define ATKTYPE_RWEP1           (2)
-#define ATKTYPE_RWEP2           (3)
-#define ATKTYPE_PUNCH           (4)
-#define ATKTYPE_KICK            (5)
-#define ATKTYPE_LWEP_RELOAD     (6)
-#define ATKTYPE_RWEP_RELOAD     (7)
-#define ATKTYPE_STRONGPUNCH     (8)
-#define ATKTYPE_HAMMERPUNCH     (9)
-#define ATKTYPE_HAYMAKER       (10)
-#define ATKTYPE_JAB            (11)
-#define ATKTYPE_PALMSTRIKE     (12)
-#define ATKTYPE_PIERCINGSTRIKE (13)
-#define ATKTYPE_STRONGKICK     (14)
-#define ATKTYPE_SNAPKICK       (15)
-#define ATKTYPE_POWERKICK      (16)
-#define ATKTYPE_HIPKICK        (17)
-#define ATKTYPE_HOOKKICK       (18)
-#define ATKTYPE_PIERCINGKICK   (19)
-
-// Some possible values for the 4th argument to hs_removeinvobj
-#define RMOBJ_DROP             (0x49B875)  // If the object is dropped manually by the player from the inventory screen
-#define RMOBJ_TRADE            (0x47761D)  // If the object is offered up as a trade
-#define RMOBJ_DROPMULTI        (0x45C1CF)  // When dropping a part of a stack (RMOBJ_DROP occurs first)
-
 // Return values for "typeof"
 #define VALTYPE_NONE  (0) // not used yet
 #define VALTYPE_INT   (1)
@@ -212,6 +186,7 @@
 #define GAME_MSG_STAT       (17)
 #define GAME_MSG_TRAIT      (18)
 #define GAME_MSG_WORLDMAP   (19)
+#define GAME_MSG_EDITOR     (20)
 #define GAME_MSG_PRO_ITEM   (0x1000)
 #define GAME_MSG_PRO_CRIT   (0x1001)
 #define GAME_MSG_PRO_SCEN   (0x1002)
@@ -257,6 +232,7 @@
 #define mstr_stat(x)        (message_str_game(GAME_MSG_STAT, x))
 #define mstr_trait(x)       (message_str_game(GAME_MSG_TRAIT, x))
 #define mstr_worldmap(x)    (message_str_game(GAME_MSG_WORLDMAP, x))
+#define mstr_character(x)   (message_str_game(GAME_MSG_EDITOR, x))
 
 
 #define BLOCKING_TYPE_BLOCK     (0)
@@ -295,6 +271,14 @@
 #define set_weapon_usable(item)                         set_object_data(item, OBJ_DATA_MISC_FLAGS, get_object_data(item, OBJ_DATA_MISC_FLAGS) bwand 0xFFFFFFEF)
 #define weapon_is_unusable(item)                        (get_object_data(item, OBJ_DATA_MISC_FLAGS) bwand 0x00000010)
 
+#define weapon_attack_mode1(pid)                        (get_proto_data(pid, PROTO_FLAG_EXT) bwand 0x0000000F)
+#define weapon_attack_mode2(pid)                        ((get_proto_data(pid, PROTO_FLAG_EXT) bwand 0x000000F0) / 0x10)
+#define weapon_attack_mode(pid, attackType)             (weapon_attack_mode1(pid) if (attackType == ATKTYPE_LWEP1 or attackType == ATKTYPE_RWEP1) else weapon_attack_mode2(pid))
+
+#define get_tile_fid_ext(tile, elev, mode)              get_tile_fid(((mode bwand 0xF) * 0x10000000) bwor ((elev bwand 0xF) * 0x1000000) bwor (tile bwand 0xFFFFFF))
+#define get_tile_ground_fid(tile, elev)                 get_tile_fid_ext(tile, elev, 0)
+#define get_tile_roof_fid(tile, elev)                   get_tile_fid_ext(tile, elev, 1)
+
 
 /* SFALL_FUNCX MACROS */
 
@@ -318,10 +302,13 @@
 #define exec_map_update_scripts                                 sfall_func0("exec_map_update_scripts")
 #define floor2(value)                                           sfall_func1("floor2", value)
 #define get_can_rest_on_map(map, elev)                          sfall_func2("get_can_rest_on_map", map, elev)
+#define get_combat_free_move                                    sfall_func0("get_combat_free_move")
 #define get_current_inven_size(obj)                             sfall_func1("get_current_inven_size", obj)
 #define get_current_terrain_name                                sfall_func0("get_terrain_name")
 #define get_cursor_mode                                         sfall_func0("get_cursor_mode")
 #define get_flags(obj)                                          sfall_func1("get_flags", obj)
+#define get_ini_config(file)                                    sfall_func2("get_ini_config", file, 0)
+#define get_ini_config_db(file)                                 sfall_func2("get_ini_config", file, 1)
 #define get_ini_section(file, sect)                             sfall_func2("get_ini_section", file, sect)
 #define get_ini_sections(file)                                  sfall_func1("get_ini_sections", file)
 #define get_interface_rect(winType)                             sfall_func2("get_window_attribute", winType, -1)
@@ -340,10 +327,6 @@
 #define get_npc_stat_max(stat)                                  sfall_func2("get_stat_max", stat, 1)
 #define get_npc_stat_min(stat)                                  sfall_func2("get_stat_min", stat, 1)
 #define get_sfall_arg_at(argNum)                                sfall_func1("get_sfall_arg_at", argNum)
-#define get_tile_fid_ext(tile, elev, mode)                      get_tile_fid(((mode bwand 0xF) * 0x10000000) bwor ((elev bwand 0xF) * 0x1000000) bwor (tile bwand 0xFFFFFF))
-#define get_tile_ground_fid(tile, elev)                         get_tile_fid_ext(tile, elev, 0)
-#define get_tile_roof_fid(tile, elev)                           get_tile_fid_ext(tile, elev, 1)
-#define get_string_pointer(text)                                sfall_func1("get_string_pointer", text)
 #define get_terrain_name(x, y)                                  sfall_func2("get_terrain_name", x, y)
 #define get_text_width(text)                                    sfall_func1("get_text_width", text)
 #define has_fake_perk_npc(npc, perk)                            sfall_func2("has_fake_perk_npc", npc, perk)
@@ -383,6 +366,7 @@
 #define remove_timer_event(fixedParam)                          sfall_func1("remove_timer_event", fixedParam)
 #define set_can_rest_on_map(map, elev, value)                   sfall_func3("set_can_rest_on_map", map, elev, value)
 #define set_car_intface_art(artIndex)                           sfall_func1("set_car_intface_art", artIndex)
+#define set_combat_free_move(value)                             sfall_func1("set_combat_free_move", value)
 #define set_cursor_mode(mode)                                   sfall_func1("set_cursor_mode", mode)
 #define set_drugs_data(type, pid, value)                        sfall_func3("set_drugs_data", type, pid, value)
 #define set_dude_obj(critter)                                   sfall_func1("set_dude_obj", critter)
@@ -396,6 +380,7 @@
 #define set_rest_heal_time(time)                                sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                                     sfall_func1("set_rest_mode", mode)
 #define set_scr_name(name)                                      sfall_func1("set_scr_name", name)
+#define set_spray_settings(ctrMult, ctrDiv, tgtMult, tgtDiv)    sfall_func4("set_spray_settings", ctrMult, ctrDiv, tgtMult, tgtDiv)
 #define set_terrain_name(x, y, name)                            sfall_func3("set_terrain_name", x, y, name)
 #define set_town_title(areaID, title)                           sfall_func2("set_town_title", areaID, title)
 #define set_unique_id(obj)                                      sfall_func1("set_unique_id", obj)
@@ -406,7 +391,15 @@
 #define spatial_radius(obj)                                     sfall_func1("spatial_radius", obj)
 #define string_compare(str1, str2)                              sfall_func2("string_compare", str1, str2)
 #define string_compare_locale(str1, str2, codePage)             sfall_func3("string_compare", str1, str2, codePage)
-#define string_format(format, a1, a2)                           sfall_func3("string_format", format, a1, a2)
+#define string_format1(format, a1)                              sfall_func2("string_format", format, a1)
+#define string_format2(format, a1, a2)                          sfall_func3("string_format", format, a1, a2)
+#define string_format3(format, a1, a2, a3)                      sfall_func4("string_format", format, a1, a2, a3)
+#define string_format4(format, a1, a2, a3, a4)                  sfall_func5("string_format", format, a1, a2, a3, a4)
+#define string_format5(format, a1, a2, a3, a4, a5)              sfall_func6("string_format", format, a1, a2, a3, a4, a5)
+#define string_format6(format, a1, a2, a3, a4, a5, a6)          sfall_func7("string_format", format, a1, a2, a3, a4, a5, a6)
+#define string_format7(format, a1, a2, a3, a4, a5, a6, a7)      sfall_func8("string_format", format, a1, a2, a3, a4, a5, a6, a7)
+#define string_format_MACRO(_0,_1,_2,_3,_4,_5,_6,FUNC,...)      FUNC
+#define string_format(...)                                      string_format_MACRO(__VA_ARGS__, string_format6, string_format5, string_format4, string_format3, string_format2, string_format1)(__VA_ARGS__)
 #define string_tolower(text)                                    sfall_func2("string_to_case", text, 0)
 #define string_toupper(text)                                    sfall_func2("string_to_case", text, 1)
 #define tile_by_position(x, y)                                  sfall_func2("tile_by_position", x, y)

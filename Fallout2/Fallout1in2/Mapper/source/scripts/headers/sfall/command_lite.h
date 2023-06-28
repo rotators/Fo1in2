@@ -1,11 +1,11 @@
 #ifndef COMMAND_H
 #define COMMAND_H
+#define COMMAND_LITE_H
 
 #define critter_is_armed(x)                 (((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon) orElse \
                                              ((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))
 
-#define critter_weight_calc(x)              (100 + ((get_critter_stat(x,STAT_gender) == GENDER_MALE) * 50) + (get_critter_stat(x,STAT_st) * 5) - ((get_critter_stat(x,STAT_ag) + get_critter_stat(x,STAT_en))/3))
-#define critter_weight(x)                   get_critter_stat(x, STAT_carry_amt)
+#define critter_weight(x)                   (100 + ((get_critter_stat(x,STAT_gender) == GENDER_MALE) * 50) + (get_critter_stat(x,STAT_st) * 5) - ((get_critter_stat(x,STAT_ag) + get_critter_stat(x,STAT_en))/3))
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 
 #define dude_is_stupid                      (dude_iq <= 3)
@@ -21,7 +21,8 @@
 #define dude_level                          (get_pc_stat(PCSTAT_level))
 #define dude_age                            (get_critter_stat(dude_obj,STAT_age))
 #define dude_weight                         critter_weight(dude_obj)
-#define dude_cur_weight                     who_carry_amount(dude_obj)
+#define dude_cur_carry                      who_carry_amount(dude_obj)
+#define dude_max_carry                      who_max_carry(dude_obj)
 
 #define dude_moron_not_vegetable            (((get_critter_stat(dude_obj,STAT_iq)) > 1) andAlso ((get_critter_stat(dude_obj,STAT_iq)) < 3) )
 
@@ -29,6 +30,10 @@
 #define dude_is_female                      (dude_gender == GENDER_FEMALE)
 #define dude_is_armed                       critter_is_armed(dude_obj)
 #define dude_wearing_armor                  critter_wearing_armor(dude_obj)
+
+#define get_armor(cr)                       critter_inven_obj(cr,INVEN_TYPE_WORN)
+#define dude_armor                          get_armor(dude_obj)
+#define self_armor                          get_armor(self_obj)
 
 #define dude_has_power_armor                (((obj_is_carrying_obj_pid(dude_obj, PID_POWERED_ARMOR)) +            \
                                               (obj_is_carrying_obj_pid(dude_obj, PID_ADVANCED_POWER_ARMOR)) +     \
@@ -39,10 +44,18 @@
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_THROWING_KNIFE) orElse       \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_RIPPER) orElse               \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_COMBAT_KNIFE) orElse         \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_SWITCHBLADE) orElse          \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_SHIV) orElse                 \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LIL_JESUS_WEAPON) orElse     \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_WAKIZASHI_BLADE) orElse      \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_KNIFE) orElse                 \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_THROWING_KNIFE) orElse        \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_RIPPER) orElse                \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_COMBAT_KNIFE))
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_COMBAT_KNIFE) orElse          \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_SWITCHBLADE) orElse           \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_SHIV) orElse                  \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_LIL_JESUS_WEAPON) orElse      \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_WAKIZASHI_BLADE))
 
 #define dude_wearing_power_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) orElse \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) orElse \
@@ -73,6 +86,7 @@
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_LEFT)  orElse \
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_RIGHT))
 
+#define get_cur_rot(cr)                     has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
 #define dude_cur_rot                        (has_trait(TRAIT_OBJECT,dude_obj,OBJECT_CUR_ROT))
 #define dude_inv_rot                        ((dude_cur_rot + 3)%6)
 #define dude_tile                           (tile_num(dude_obj))
@@ -115,10 +129,32 @@
 #define self_agility                        (get_critter_stat(self_obj,STAT_ag))
 #define self_luck                           (get_critter_stat(self_obj,STAT_lu))
 
+// more stats
+#define get_strength(cr)                    get_critter_stat(cr,STAT_st)
+#define get_perception(cr)                  get_critter_stat(cr,STAT_pe)
+#define get_endurance(cr)                   get_critter_stat(cr,STAT_en)
+#define get_charisma(cr)                    get_critter_stat(cr,STAT_ch)
+#define get_iq(cr)                          get_critter_stat(cr,STAT_iq)
+#define get_agility(cr)                     get_critter_stat(cr,STAT_ag)
+#define get_luck(cr)                        get_critter_stat(cr,STAT_lu)
+
+// gender
+#define get_gender(cr)                      get_critter_stat(cr,STAT_gender)
+#define is_male(cr)                         (get_gender(cr) == GENDER_MALE)
+#define is_female(cr)                       (get_gender(cr) == GENDER_FEMALE)
 #define self_is_male                        (self_gender == GENDER_MALE)
 #define self_is_female                      (self_gender == GENDER_FEMALE)
+
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
+
+// perks and traits
+#define get_perk(cr,perk)                   has_trait(TRAIT_PERK,cr,perk)
+#define dude_perk(perk)                     get_perk(dude_obj,perk)
+#define self_perk(perk)                     get_perk(self_obj,perk)
+#define get_trait(cr,trait)                 has_trait(TRAIT_TRAIT,cr,trait)
+#define dude_trait(trait)                   get_trait(dude_obj,trait)
+#define self_trait(trait)                   get_trait(self_obj,trait)
 
 #define self_carrying_laser_pistol          ((obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND)) == PID_LASER_PISTOL) orElse \
                                              (obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LASER_PISTOL))
@@ -134,9 +170,26 @@
 #define self_elevation                      (elevation(self_obj))
 
 #define self_pid                            (obj_pid(self_obj))
+
+// team
 #define self_team                           has_trait(TRAIT_OBJECT,self_obj,OBJECT_TEAM_NUM)
+#define get_team(cr)                        has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
+#define set_team(cr,team)                   critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
+#define set_self_team(team)                 set_team(self_obj,team)
+
+// ai
 #define self_ai                             has_trait(TRAIT_OBJECT,self_obj,OBJECT_AI_PACKET)
+#define get_ai(cr)                          has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
+#define set_ai(cr,ai)                       critter_add_trait(cr,TRAIT_OBJECT,OBJECT_AI_PACKET,ai)
+#define set_self_ai(ai)                     set_ai(self_obj,ai)
+
+// visibility
 #define self_visible                        obj_is_visible_flag(self_obj)
+#define set_obj_invisible(cr)               set_obj_visibility(cr,1)
+#define set_obj_visible(cr)                 set_obj_visibility(cr,0)
+#define set_self_invisible                  set_obj_visibility(self_obj, true)
+#define set_self_visible                    set_obj_visibility(self_obj, false)
+#define is_visible(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
 
 #define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))
 #define self_max_hits                       (get_critter_stat(self_obj,STAT_max_hp))

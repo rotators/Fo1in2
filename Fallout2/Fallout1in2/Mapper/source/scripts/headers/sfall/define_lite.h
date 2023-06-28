@@ -4,6 +4,7 @@
 
 #ifndef DEFINE_H
 #define DEFINE_H
+#define DEFINE_LITE_H
 
 //   This file holds all of the things that should be preprocessed.
 
@@ -806,15 +807,18 @@
 #define bit_32                      (0x80000000)
 #define bit_ALL                     (0xFFFFFFFF)
 
-
+#define ROLL_CRITICAL_FAILURE       0
+#define ROLL_FAILURE                1
+#define ROLL_SUCCESS                2
+#define ROLL_CRITICAL_SUCCESS       3
 
 //Misc commands
-#define obj_get_rot(obj)   (has_trait(TRAIT_OBJECT, obj, OBJECT_CUR_ROT))
-#define obj_in_party(x)    (party_member_obj(obj_pid(x)) != 0)
+#define obj_get_rot(obj)  (has_trait(TRAIT_OBJECT, obj, OBJECT_CUR_ROT))
+#define obj_in_party(x)   (party_member_obj(obj_pid(x)) != 0)
 
-#define dude_tile          (tile_num(dude_obj))
-#define dude_elevation     (elevation(dude_obj))
-#define dude_skill(x)      (has_skill(dude_obj, x))
+#define dude_tile         (tile_num(dude_obj))
+#define dude_elevation    (elevation(dude_obj))
+#define dude_skill(x)     (has_skill(dude_obj, x))
 
 
 // some commands
