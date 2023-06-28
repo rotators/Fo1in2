@@ -9,6 +9,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Added**: The 9mm Mauser pistol can be converted to the 10mm caliber if Fo2 weapon upgrades are enabled.
 - **Added**: Walking through doors Arcanum-style can now be disabled in the fo1_settings.ini file.
 - **Fixed**: A wrong name would show when inspecting the body of a dead critter in one of the random desert encounters.
+- **Fixed**: CHILDEAD, BRODEAD, and HUBMIS0 maps were using the wrong background music files.
 - **Fixed**: City encounter maps were using 07desert and not 11chilrn as in Fo1.
 - **Fixed**: Crash when using the door inside of Darkwater's shop after killing Killian.
 - **Fixed**: Death screen had broken colors.
