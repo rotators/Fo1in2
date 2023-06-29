@@ -62,40 +62,40 @@ jobs:
     run:  |
           :
           # (md)->(nma) copy raw version
-          cp MOD_RELEASE_BODY MOD_RELEASE_BODY.nma
+          cp "$MOD_RELEASE_BODY" "$MOD_RELEASE_BODY.nma"
 
           # (nma) insert list head
-          sed -ri 's!^(Notable changes .+)!\1\n\n[color=#00b300][b]Changelog[/b][/color]\n[spoiler]\n[list]!' MOD_RELEASE_BODY.nma
+          sed -ri 's!^(Notable changes .+)!\1\n\n[color=#00b300][b]Changelog[/b][/color]\n[spoiler]\n[list]!' "$MOD_RELEASE_BODY.nma"
 
           # (nma) replace list elements
-          sed -ri 's!^-[\ ]+\*\*([A-Za-z]+)\*\*![*][b]\1[/b]!g' MOD_RELEASE_BODY.nma
+          sed -ri 's!^-[\ ]+\*\*([A-Za-z]+)\*\*![*][b]\1[/b]!g' "$MOD_RELEASE_BODY.nma"
 
           # (nma) append list tail
-          echo "" >> MOD_RELEASE_BODY.nma
-          echo "[/list]" >> MOD_RELEASE_BODY.nma
-          echo "[/spoiler]" >> MOD_RELEASE_BODY.nma
-          echo "" >> MOD_RELEASE_BODY.nma
+          echo "" >> "$MOD_RELEASE_BODY.nma"
+          echo "[/list]" >> "$MOD_RELEASE_BODY.nma"
+          echo "[/spoiler]" >> "$MOD_RELEASE_BODY.nma"
+          echo "" >> "$MOD_RELEASE_BODY.nma"
 
           # (nma) append link
-          echo "You can find the latest release [url=https://github.com/rotators/Fo1in2/releases/latest/download/Fallout1in2.zip]here[/url]." >> MOD_RELEASE_BODY.nma
+          echo "You can find the latest release [url=https://github.com/rotators/Fo1in2/releases/latest/download/Fallout1in2.zip]here[/url]." >> "$MOD_RELEASE_BODY.nma"
 
           # (nma) replace header text with image if available, strip otherwise
           if [ -f "$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png" ]; then
-             sed -ri "s!^Notable changes .+![img]https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$(.github/workflows/scripts/version.sh raw).png[/img]!" MOD_RELEASE_BODY.nma
+             sed -ri "s!^Notable changes .+![img]https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$(.github/workflows/scripts/version.sh raw).png[/img]!" "$MOD_RELEASE_BODY.nma"
           else
-             sed -ri 's!^Notable changes .+!!' MOD_RELEASE_BODY.nma
+             sed -ri 's!^Notable changes .+!!' "$MOD_RELEASE_BODY.nma"
           fi
 
           # (md) replace header text with image if available
           if [ -f "$RELEASE_PICS/release_v)$($GHA_SCRIPTS/version.sh raw).png" ]; then
-             sed -ri "s!^Notable changes .+!<p align=\"center\"><img src=\"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png\" alt=\"$($GHA_SCRIPTS/version.sh tag)\"/></p>\\n!" MOD_RELEASE_BODY
+             sed -ri "s!^Notable changes .+!<p align=\"center\"><img src=\"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png\" alt=\"$($GHA_SCRIPTS/version.sh tag)\"/></p>\\n!" "$MOD_RELEASE_BODY"
           fi
 
           # (nma)+>(md) merge formatting
-          echo "" >> MOD_RELEASE_BODY
-          echo "---" >> MOD_RELEASE_BODY
-          echo "" >> MOD_RELEASE_BODY
-          cat MOD_RELEASE_BODY.nma >> MOD_RELEASE_BODY
+          echo "" >> "$MOD_RELEASE_BODY"
+          echo "---" >> "$MOD_RELEASE_BODY"
+          echo "" >> "$MOD_RELEASE_BODY"
+          cat "$MOD_RELEASE_BODY.nma" >> "$MOD_RELEASE_BODY"
 
   - name: Update version info
     run:  |
