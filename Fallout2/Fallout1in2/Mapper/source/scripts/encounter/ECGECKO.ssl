@@ -15,10 +15,11 @@
 #include "mapenc.h"
 
 procedure start;
-procedure combat_p_proc;
-procedure destroy_p_proc;
-procedure critter_p_proc;
 procedure map_enter_p_proc;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
 
 variable starttile := 0;
 
@@ -32,6 +33,7 @@ procedure map_enter_p_proc begin
    starttile := self_tile;
    set_self_team(TEAM_RND_GECKO);
    self_rotate(Random(0, 5));
+   add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
 
    if map_first_run then begin
       // Add flame attack weapon for Fire Geckos
@@ -70,19 +72,10 @@ procedure critter_p_proc begin
    end
    else begin
       if (self_can_see_dude) then begin
-         if (dude_perk(PERK_animal_friend) and self_pid == PID_GECKO) then begin
-            // do nothing for now
-         end
-         else
+         if not(dude_perk(PERK_animal_friend) and (self_pid == PID_GECKO or self_pid == PID_GOLDEN_GECKO or self_pid == PID_FIRE_GECKO)) then begin
             attack(dude_obj);
+         end
       end
-   end
-
-   if not(anim_busy(self_obj)) then begin
-      reg_anim_clear(self_obj);
-      reg_anim_begin();
-      self_walk_to_tile(tile_num_in_direction(starttile, Random(0, 5), Random(3, 10)));
-      reg_anim_end();
    end
 end
 
@@ -106,4 +99,15 @@ procedure destroy_p_proc begin
 
    if map_is_caravan_escort then
       dec_map_var(MVAR_Hostile_Total);
+end
+
+procedure timed_event_p_proc begin
+   if (not(combat_is_initialized)) then begin
+      critter_tile := tile_num_in_direction(starttile, random(0, 5), Random(3, 10));
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+      reg_anim_end();
+   end
+   add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
