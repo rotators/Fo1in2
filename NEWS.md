@@ -16,6 +16,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Error messages when interacting with the elevator doors in the Glow.
 - **Fixed**: Flip in Mariposa would try to walk to his target hex on every game tick, even if he is on the hex already.
 - **Fixed**: Garret's fridge in the Hall of the Dead could be open without actually being open.
+- **Fixed**: Geckos in random encounters would walk around way too frantically. Now they aren't such speedy boys anymore.
 - **Fixed**: Gizmo would keep repeating his initial dialog after the player accepted the task to take down Killian.
 - **Fixed**: If players uses cheat mods to increase the inventory size, he was able to pick up objects like shelf corners (fix by NovaRain).
 - **Fixed**: Iron Man Fixt settings wouldn't set correctly on game start.
@@ -48,9 +49,11 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
 - **Tweaked**: (Surviving) Khan raiders won't be deleted anymore right after the player has left the location. There is now a 1 day delay, in case the player wants to return for a cleanup.
 - **Tweaked**: Adjusted WorldMapTimeMod and WorldMapDelay2 in ddraw.ini to make the travel time fit a bit better to the one from Fo1.
+- **Tweaked**: All gecko types are now affected by the Animal Friend-perk to make it at least a little bit more useful.
 - **Tweaked**: All worldmap encounter chances have been adjusted to the Fo1 values.
 - **Tweaked**: Changed the repair limit of the robodogmeat to be based on the repair and not the speech skill.
 - **Tweaked**: Changed the way the Fo1 demo can be played.
+- **Tweaked**: Decreased the radiation gain when walking around the Glow on the worldmap.
 - **Tweaked**: Hi-Res patch encounter map edges visually improved.
 - **Tweaked**: Hub cops will not float warning messages anymore if the player just enters and leaves combat.
 - **Tweaked**: Improved how the "rest until morning (Fo2-style)"-setting works. It is not necessary anymore to save and load the game first.
