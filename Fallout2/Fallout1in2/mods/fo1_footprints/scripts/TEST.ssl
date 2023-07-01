@@ -1,0 +1,49 @@
+/*
+
+   Footprint scenery object
+
+*/
+
+#include "define.h"
+#include "command.h"
+
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
+
+// ETTU
+#define settings_path      "mods\\fo1_footprints\\footprints.ini"
+
+// Fo2 compatibility
+//#define settings_path      "mods\\fo2_footprints\\footprints.ini"
+
+variable alive_time;
+variable alive_rnd;
+variable load_cleanup;
+
+procedure start begin
+   // TODO: Improve this shit
+   alive_time := get_ini_setting(settings_path + "|" + "main" + "|" + "alive_time");
+   alive_rnd := get_ini_setting(settings_path + "|" + "main" + "|" + "alive_rnd");
+   load_cleanup := get_ini_setting(settings_path + "|" + "main" + "|" + "delete_on_load");
+
+   if (alive_time > 0) then add_timer_event(self_obj, game_ticks(alive_time + random(0, alive_rnd)), 0);
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+end
+
+procedure description_p_proc begin
+   script_overrides;
+end
+
+procedure map_enter_p_proc begin
+   if (load_cleanup > 0) then destroy_object(self_obj);
+end
+
+procedure timed_event_p_proc begin
+   destroy_object(self_obj);
+end

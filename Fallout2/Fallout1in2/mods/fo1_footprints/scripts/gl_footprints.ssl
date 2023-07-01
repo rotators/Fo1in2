@@ -1,0 +1,216 @@
+/*
+
+   Footprints prototype script
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+
+procedure create_critter_list;
+procedure create_prints;
+
+procedure StdProcedure_handler;
+procedure MoveCost_handler;
+procedure footsteps(variable step_crit);
+procedure footsteps2(variable i, variable step_crit, variable last_step, variable step_fid);
+
+// ETTU
+#define settings_path      "mods\\fo1_footprints\\footprints.ini"
+
+// Fo2 compatibility
+//#define settings_path      "mods\\fo2_footprints\\footprints.ini"
+
+#define FID_FOOT_RIGHT     (33554462)
+#define FID_FOOT_LEFT      (33554463)
+
+#define PID_FOOT_RIGHT     (33554650)
+#define PID_FOOT_LEFT      (33554651)
+
+#define tile_fid           get_tile_ground_fid(tile_num(step_crit),elevation(step_crit))
+#define valid_tile         (tile_fid >= 191 and tile_fid <= 198) \
+                           or (tile_fid >= 173 and tile_fid <= 175) \
+                           or (tile_fid == 203) \
+                           or (tile_fid >= 206 and tile_fid <= 206) \
+                           or (tile_fid == 208) \
+                           or (tile_fid == 211) \
+                           or (tile_fid == 214)
+#define valid_critter_ptr  (read_int(critter - 4) == -17958194)
+
+#define CHECK_PRINTS_ALLOWED \
+   if ((prints_allowed == 0) and (step_crit != dude_obj)) then return; /* Only dude can leave prints */ \
+   if ((prints_allowed == 1) and ((step_crit != dude_obj) and not(obj_in_party(step_crit)))) then return; /* Only player party can leave prints */ \
+   if dude_is_sneaking and ((step_crit == dude_obj) or obj_in_party(step_crit)) then return /* Sneaking party will not leave prints */
+
+// ETTU
+#define SCRIPT_FOOTPRINT   SCRIPT_TEST
+
+// Use test1.ssl for Fo2 compatibility
+//#define SCRIPT_FOOTPRINT   3
+
+
+variable last_step := 0, new_step := 0, step_fid;
+variable critter_List, critter, tile_List, step_List;
+variable prints_allowed;
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      set_global_script_repeat(1);
+
+      register_hook_proc(HOOK_STDPROCEDURE, StdProcedure_handler);
+      register_hook_proc(HOOK_MOVECOST, MoveCost_handler);
+
+      prints_allowed := get_ini_setting(settings_path + "|" + "main" + "|" + "footprints");
+   end
+
+   call create_prints;
+end
+
+procedure map_enter_p_proc begin
+variable scenery_List, scenery;
+
+   // Cleanup footprints
+   // Note: This is in test.ssl for now
+   /*scenery_List := list_as_array(LIST_SCENERY);
+   foreach scenery in scenery_List begin
+      if (obj_pid(scenery) == PID_FOOT_RIGHT or obj_pid(scenery) == PID_FOOT_LEFT) then begin
+         destroy_object(scenery);
+      end
+   end*/
+
+   // Regenerate critter list
+   call create_critter_list;
+end
+
+procedure create_critter_list begin
+variable critter, i := 0;
+
+   critter_List := list_as_array(LIST_CRITTERS);
+   tile_List := [];
+   step_List := [];
+
+   resize_array(tile_List, len_array(critter_List));
+   resize_array(step_List, len_array(critter_List));
+
+   foreach critter in critter_List begin
+      //if not(is_critter_dead(critter)) then begin
+         tile_List[i] := tile_num(critter);
+         step_List[i] := 0;
+         i++;
+      //end
+   end
+
+   save_array("critters", critter_List);
+   save_array("tilenum", tile_List);
+   save_array("stepcount", step_List);
+end
+
+procedure create_prints begin
+variable regen_critlist;
+
+   if (critter_List == 0) then call create_critter_list;
+
+   if not(combat_is_initialized) then begin
+      variable i := 0;
+      //load_array("critters");
+      foreach (critter in critter_List) begin
+         if valid_critter_ptr then begin
+            if (proto_data(obj_pid(critter), cr_body_type) == CR_BODY_BIPED) and not(is_critter_dead(critter)) and is_visible(critter) then begin
+               call footsteps2(i, critter, tile_List[i], step_List[i]);
+            end
+         end
+         else begin
+            regen_critlist := 1;
+            debug_warning("Critter pointer invalid!");
+         end
+         i++;
+      end
+
+      if regen_critlist then begin
+         regen_critlist := 0;
+         call create_critter_list;
+      end
+   end
+end
+
+procedure StdProcedure_handler begin
+   variable
+      proc := get_sfall_arg,
+      critter := get_sfall_arg;
+
+   if (proc != destroy_proc and proc != map_enter_proc) then return;
+
+   // Regenerate critter list when someone dies
+   if (obj_type(critter) == OBJ_TYPE_CRITTER) then call create_critter_list;
+end
+
+// Creates footsteps while in combat mode
+procedure MoveCost_handler begin
+   variable
+      critter := get_sfall_arg;
+
+   // Only create footprints for 2-leggers for now
+   if (proto_data(obj_pid(critter), cr_body_type) == CR_BODY_BIPED) and not(is_critter_dead(critter)) and is_visible(critter) then begin
+      call footsteps(critter);
+   end
+end
+
+// TODO: Rewrite this shit into a single procedure
+procedure footsteps(variable step_crit) begin
+   CHECK_PRINTS_ALLOWED;
+
+   new_step := tile_num(step_crit);
+   if (last_step != new_step) then begin
+      last_step := new_step;
+
+      //debug("get_tile_fid: " + get_tile_fid(dude_tile));
+      if valid_tile then begin
+         if (step_fid == 0) then begin
+            step_fid := 1;
+            Scenery_Creation := create_object_sid(PID_FOOT_RIGHT, new_step, elevation(step_crit), SCRIPT_FOOTPRINT);
+         end
+         else begin
+            step_fid := 0;
+            Scenery_Creation := create_object_sid(PID_FOOT_LEFT, new_step, elevation(step_crit), SCRIPT_FOOTPRINT);
+         end
+         obj_rotate(Scenery_Creation, get_cur_rot(step_crit));
+      end
+   end
+end
+
+procedure footsteps2(variable i, variable step_crit, variable last_step, variable step_fid) begin
+   load_array("tilenum");
+   load_array("stepcount");
+
+   CHECK_PRINTS_ALLOWED;
+
+   new_step := tile_num(step_crit);
+   if (tile_List[i] != new_step) then begin
+      tile_List[i] := new_step;
+
+      //debug("get_tile_fid: " + get_tile_fid(dude_tile));
+      if valid_tile then begin
+         if (step_fid == 0) then begin
+            step_fid := 1;
+            Scenery_Creation := create_object_sid(PID_FOOT_RIGHT, new_step, elevation(step_crit), SCRIPT_FOOTPRINT);
+         end
+         else begin
+            step_fid := 0;
+            Scenery_Creation := create_object_sid(PID_FOOT_LEFT, new_step, elevation(step_crit), SCRIPT_FOOTPRINT);
+         end
+         step_List[i] := step_fid;
+         obj_rotate(Scenery_Creation, get_cur_rot(step_crit));
+
+         save_array("tilenum", tile_List);
+         save_array("stepcount", step_List);
+      end
+   end
+end

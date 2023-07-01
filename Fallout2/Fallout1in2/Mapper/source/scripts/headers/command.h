@@ -264,11 +264,13 @@ variable step_tile;
 // gear
 //
 
-#define get_left_hand(cr)                 critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
+#define self_active_hand                  critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND)
+
+#define get_left_hand(cr)                 critter_inven_obj2(cr,INVEN_TYPE_LEFT_HAND)
 #define dude_left_hand                    get_left_hand(dude_obj)
 #define self_left_hand                    get_left_hand(self_obj)
 
-#define get_right_hand(cr)                critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
+#define get_right_hand(cr)                critter_inven_obj2(cr,INVEN_TYPE_RIGHT_HAND)
 #define dude_right_hand                   get_right_hand(dude_obj)
 #define self_right_hand                   get_right_hand(self_obj)
 
@@ -763,19 +765,19 @@ FLOAT_MSG_BLUE
 #define dec_local_var_amt(x,y)      set_local_var(x,local_var(x)-y)
 #define dec_local_var(x)            dec_local_var_amt(x,1)
 
-// Sfall workaround to influence local variables in other scripts 
+// Sfall workaround to influence local variables in other scripts
 #define set_local_var_obj(obj,x,y) \
    set_self(obj);       \
    set_self(obj);       \
    set_local_var(x, y); \
    set_self(0)
-   
+
 #define inc_local_var_obj(obj,x) \
    set_self(obj);       \
    set_self(obj);       \
    inc_local_var(x);    \
    set_self(0)
-   
+
 #define dec_local_var_obj(obj,x) \
    set_self(obj);       \
    set_self(obj);       \
