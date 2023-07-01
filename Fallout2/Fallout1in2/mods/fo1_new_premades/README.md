@@ -13,7 +13,4 @@ Replaces the original FALLOUT 1 premade characters. Depending on the picked char
 **Sarah** - Sarah Asturias worked with electricity all her life, from the young age of three. A freak accident with a power conduit left her with loss of motor control in the left hand, but it never stopped her: She studied and practised until she became a master with her right hand, whether it be tools or pistols. With a knack for picking up skills and developing them, she is eager to put them to test outside the Vault.
 
 ### Installation
-To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\fo1_newPremades" at the end of the "PatchFile"-list!
-The game will now load the additional mod folder.
-
-If there is more than one additional mod, make sure to correctly number the "PatchFileX" entry (1, 2, 3, ...).
+To use this mod, add the mod folder name to the mods_order.txt file inside the /mods/ directory. If the mods_order.txt doesn't exist, start the game once for it to be created.
