@@ -1,5 +1,7 @@
 Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1in2/releases/tag/v1.8.3032))
 
+- **Added**: Flares will now spawn randomly at some merchants if the merchant restocking feature has been enabled.
+- **Added**: Footsteps mod is added as a new mod to the release package. Disabled by default.
 - **Added**: Green city circle on the worldmap is a bit less bright green when classic worldmap mode is disabled.
 - **Added**: Healing Powder has a low chance to spawn on traveling merchants now.
 - **Added**: Jack from Junktown can now be found as a Khan prisoner if cut-content characters are enabled. He can only be found there if Tandi wasn't kidnapped yet.
@@ -8,6 +10,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Added**: Restored an unused message log text when using the radio item. Has a low chance to replace the normal text.
 - **Added**: The 9mm Mauser pistol can be converted to the 10mm caliber if Fo2 weapon upgrades are enabled.
 - **Added**: Walking through doors Arcanum-style can now be disabled in the fo1_settings.ini file.
+- **Fixed**: "You steal x"-message won't show up anymore when transferring items between party members.
 - **Fixed**: A wrong name would show when inspecting the body of a dead critter in one of the random desert encounters.
 - **Fixed**: CHILDEAD, BRODEAD, and HUBMIS0 maps were using the wrong background music files.
 - **Fixed**: City encounter maps were using 07desert and not 11chilrn as in Fo1.
@@ -48,6 +51,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: When using repair and science skill on the broken Mr. Handy robot in Mariposa, the message log would print "The robot is already healthy" and "You learn nothing new" after the scripted description text.
 - **Tweaked**: "Resting encounter" are now based on vanilla encounter maps, as in Fo1. Disabled the old workaround locations.
 - **Tweaked**: (Surviving) Khan raiders won't be deleted anymore right after the player has left the location. There is now a 1 day delay, in case the player wants to return for a cleanup.
+- **Tweaked**: Active flares will now illuminate the area even if the player has the item in his off-hand slot.
 - **Tweaked**: Adjusted WorldMapTimeMod and WorldMapDelay2 in ddraw.ini to make the travel time fit a bit better to the one from Fo1.
 - **Tweaked**: All gecko types are now affected by the Animal Friend-perk to make it at least a little bit more useful.
 - **Tweaked**: All worldmap encounter chances have been adjusted to the Fo1 values.
