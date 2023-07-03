@@ -185,10 +185,10 @@
 
 // visibility
 #define self_visible                        obj_is_visible_flag(self_obj)
-#define set_obj_invisible(cr)               set_obj_visibility(cr,1)
-#define set_obj_visible(cr)                 set_obj_visibility(cr,0)
-#define set_self_invisible                  set_obj_visibility(self_obj, true)
-#define set_self_visible                    set_obj_visibility(self_obj, false)
+#define set_obj_invisible(cr)               set_obj_visibility(cr,true)
+#define set_obj_visible(cr)                 set_obj_visibility(cr,false)
+#define set_self_invisible                  set_obj_visibility(self_obj,true)
+#define set_self_visible                    set_obj_visibility(self_obj,false)
 #define is_visible(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
 
 #define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))

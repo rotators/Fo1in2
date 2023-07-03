@@ -12,7 +12,7 @@
 #include "..\scripting\headers\lib.inven.h"
 */
 
-variable ini := "sfall-mods.ini";
+variable ini := "mods\\sfall-mods.ini";
 variable translationIni;
 
 // Gets the integer value from the specified ini
