@@ -51,13 +51,15 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
    variable begin
       item;
       toRemoveQty;
+      actualQty;
    end
    if (not(invenObj)) then return;
-   toRemoveQty := obj_is_carrying_obj_pid(invenObj, itemPid);
-   if (quantity < toRemoveQty and quantity != -1) then begin
-      toRemoveQty := quantity;
+   actualQty := obj_is_carrying_obj_pid(invenObj, itemPid);
+   if (quantity > actualQty or quantity < 0) then begin
+      quantity := actualQty;
    end
-   while (toRemoveQty > 0) do begin
+   toRemoveQty := quantity;
+   while (quantity > 0) do begin
       item := obj_carrying_pid_obj(invenObj, itemPid);
       if (obj_type(invenObj) == OBJ_TYPE_CRITTER) then begin
          if (critter_inven_obj(invenObj, INVEN_TYPE_WORN) == item) then begin
@@ -66,9 +68,10 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
             inven_unwield(invenObj);
          end
       end
-      toRemoveQty -= rm_mult_objs_from_inven(invenObj, item, toRemoveQty);
+      quantity -= rm_mult_objs_from_inven(invenObj, item, quantity);
       destroy_object(item);
    end
+   return toRemoveQty;
 end
 
 procedure remove_item_obj(variable invenObj, variable item) begin

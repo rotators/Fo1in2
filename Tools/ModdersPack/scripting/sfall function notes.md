@@ -249,27 +249,27 @@ FUNCTION REFERENCE
 
 **Some additional `reg_anim_*` functions were introduced. They all work in the same convention as vanilla functions and use the same underlying code.**
 
-##### `void reg_anim_destroy(object)`
+##### `void reg_anim_destroy(object obj)`
 - Given object is destroyed at the end of current animation set.
 
 -----
-##### `void reg_anim_animate_and_hide(object, animID, delay)`
+##### `void reg_anim_animate_and_hide(object obj, int animID, int delay)`
 - Exactly like `reg_anim_animate` but the object will automatically disappear after the last animation frame (but not destroyed).
 
 -----
-##### `void reg_anim_light(object, light, delay)`
+##### `void reg_anim_light(object obj, int light, int delay)`
 - Change light of any object. light argument is a light radius (0-8), but you can use highest 2 bytes to pass light intensity as well (example: `0xFFFF0008` - intensity 65535 and radius 8). If highest 2 bytes are 0, intensity will not be changed. Intensity range is from 0 to 65535 (0xFFFF).
 
 -----
-##### `void reg_anim_change_fid(object, fid, delay)`
+##### `void reg_anim_change_fid(object obj, int fid, int delay)`
 - Should work like `art_change_fid_num` but in `reg_anim` sequence.
 
 -----
-##### `void reg_anim_take_out(object, holdFrameID, delay)`
+##### `void reg_anim_take_out(object obj, holdFrameID, int delay)`
 - Plays "take out weapon" animation for given **holdFrameID**. It is not required to have such weapon in critter's inventory.
 
 -----
-##### `void reg_anim_turn_towards(object, tile/target, delay)`
+##### `void reg_anim_turn_towards(object obj, int/object tile/target, int delay)`
 - Makes object change its direction to face given tile number or target object.
 
 -----
@@ -281,15 +281,15 @@ FUNCTION REFERENCE
 - Was made as a quick-and-dirty hack to enable dynamic changes to some explosion parameters for ranged attacks. All changed parameters are automatically reset to vanilla state after each attack action. Following macros are available in **sfall.h**:
 
 -----
-##### `void set_attack_explosion_pattern(x, y)`
+##### `void set_attack_explosion_pattern(int x, int y)`
 - Currently `y` is not used and `x` means: 1 - reduced explosion pattern (3 effects are spawned instead of 7), 0 - full pattern.
 
 -----
-##### `void set_attack_explosion_art(x, y)`
+##### `void set_attack_explosion_art(int x, int y)`
 - `y` is not used and `x` is a misc frame ID (last 3 bytes, without object type) to use for the next explosion.
 
 -----
-##### `void set_attack_explosion_radius(x)`
+##### `void set_attack_explosion_radius(int x)`
 - Changes radius at which explosion will hit secondary targets for the next attack (from the experiments it is limited to something around 8 by the engine)
 
 -----
@@ -297,41 +297,41 @@ FUNCTION REFERENCE
 - If you call this right before using a weapon with fire damage type (e.g. in `HOOK_AFTERHITROLL`), it will produce explosion effects (and radius damage) just like "explosion" type, but all targets will still receive fire damage.
 
 -----
-##### `void set_explosion_radius(grenade, rocket)`
+##### `void set_explosion_radius(int grenade, int rocket)`
 - Sets a permanent radius of the explosion for grenades and/or rockets. Passing 0 means not changing the corresponding radius.
 - Changed radius will be reset each time the player reloads the game.
 
 -----
-##### `array get_explosion_damage(itemPid)`
+##### `array get_explosion_damage(int itemPid)`
 - Returns an array of the minimum and maximum damage of the explosive item.
 
 -----
-##### `void set_dynamite_damage(minDmg, maxDmg)`
+##### `void set_dynamite_damage(int minDmg, int maxDmg)`
 - Sets the minimum and maximum damage for Dynamite.
 - Changed damage will be reset each time the player reloads the game.
 
 -----
-##### `void set_plastic_damage(minDmg, maxDmg)`
+##### `void set_plastic_damage(int minDmg, int maxDmg)`
 - Sets the minimum and maximum damage for Plastic Explosives.
 - Changed damage will be reset each time the player reloads the game.
 
 -----
-##### `void set_explosion_max_targets(x)`
+##### `void set_explosion_max_targets(int x)`
 - Sets the maximum number of additional targets for an explosion, valid range: 1..6 (default is 6)
 
 ---
 ### Some utility/math functions are available:
 
-##### `array string_split(string text, split)`
+##### `array string_split(string text, string split)`
 - Takes a string and a separator, searches the string for all instances of the separator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the separator, the string is split into individual characters.
 - You can use this to search for a substring in a string like this: `strlen(get_array(string_split(haystack, needle), 0))`
 
 -----
-##### `string substr(string text, start, length)`
+##### `string substr(string text, int start, int length)`
 - Cuts a substring from a string starting at `start` up to `length` characters. The first character position is 0 (zero).
-- If `start` is negative - it indicates starting position from the end of the string (for example, `substr("test", -2, 2)` will return last 2 charactes: "st").
+- If `start` is negative - it indicates a position starting from the end of the string (for example, `substr("test", -2, 2)` will return last 2 charactes: "st").
 - If `length` is negative - it means so many characters will be omitted from the end of string (example: `substr("test", 0, -2)` will return string without last 2 characters: "te").
-- If `length` is zero - it will return a string from the starting position to the end of the string (new behavior for sfall 4.2.2/3.8.22).
+- If `length` is zero - it will return a string from the starting position to the end of the string (**new behavior** since sfall 4.2.2/3.8.22).
 
 -----
 ##### `int strlen(string text)`
@@ -494,7 +494,7 @@ sfall_funcX metarule functions
 
 ----
 #### spatial_radius
-`int sfall_func1("spatial_radius", object object)`
+`int sfall_func1("spatial_radius", object obj)`
 - Returns radius of spatial script, associated with given dummy-object (returned by `create_spatial`)
 
 ----
@@ -545,17 +545,17 @@ sfall_funcX metarule functions
 
 ----
 #### item_weight
-`int sfall_func1("item_weight", object)`
+`int sfall_func1("item_weight", object obj)`
 - Gets the current weight of an object
 
 ----
 #### get_outline
-`int sfall_func1("get_outline", object)`
+`int sfall_func1("get_outline", object obj)`
 - Gets the current outline color for an object
 
 ----
 #### set_outline
-`void sfall_func2("set_outline", object, int color)`
+`void sfall_func2("set_outline", object obj, int color)`
 - Sets the outline color of an object (see `OUTLINE_*` constants in **sfall.h**)
 - Can also set a custom color from the game palette by shifting the color index value left by 8 bits: `0xCC00` where `CC` is the palette index (**available since sfall 4.2.7/3.8.27**)
 - Passing 0 will disable the outline
@@ -563,12 +563,12 @@ sfall_funcX metarule functions
 
 ----
 #### get_flags
-`int sfall_func1("get_flags", object)`
+`int sfall_func1("get_flags", object obj)`
 - Gets the current value of object flags (see **define_extra.h** for available flags)
 
 -----
 ##### set_flags
-`void sfall_func2("set_flags", object, int flags)`
+`void sfall_func2("set_flags", object obj, int flags)`
 - Sets the current flags of an object
 - All flags are rewritten with given integer, so first get current flags with `get_flags` and use `bwor`/`bwand` to set/remove specific flag
 
@@ -584,7 +584,7 @@ sfall_funcX metarule functions
 
 ----
 #### set_dude_obj
-`object sfall_func1("set_dude_obj", critter)`
+`object sfall_func1("set_dude_obj", int critter)`
 - Take control of a given critter
 - Passing 0 will reset control back to "real" dude
 
@@ -638,12 +638,12 @@ sfall_funcX metarule functions
 
 ----
 #### lock_is_jammed
-`int sfall_func1("lock_is_jammed", object)`
+`int sfall_func1("lock_is_jammed", object obj)`
 - Returns 1 if the lock (container or scenery) is currently jammed, 0 otherwise
 
 ----
 #### unjam_lock
-`void sfall_func1("unjam_lock", object)`
+`void sfall_func1("unjam_lock", object obj)`
 - Unjams a lock immediately without having to wait until the next day, or leave the map and then return after 24 hours
 - __NOTE:__ does not work in `use_skill_on_p_proc` procedure
 
@@ -731,7 +731,7 @@ sfall_funcX metarule functions
 
 ----
 #### get_current_inven_size
-`int sfall_func1("get_current_inven_size", object)`
+`int sfall_func1("get_current_inven_size", object obj)`
 - Returns the current inventory size of the container or the critter
 
 ----
@@ -778,17 +778,17 @@ sfall_funcX metarule functions
 
 ----
 #### get_object_data
-`int sfall_func2("get_object_data", object, int offset)`
+`int sfall_func2("get_object_data", object obj, int offset)`
 - Returns the data at the specified offset of an object (see `OBJ_DATA_*` constants in **define_extra.h** for offsets)
 
 ----
-#### set_object_data (object, offset, data)
-`void sfall_func3("set_object_data", object, int offset, int data)`
+#### set_object_data
+`void sfall_func3("set_object_data", object obj, int offset, int data)`
 - Sets the data at the specified offset of an object
 
 ----
 #### get_object_ai_data
-`int sfall_func2("get_object_ai_data", object, int aiParam)`
+`int sfall_func2("get_object_ai_data", object obj, int aiParam)`
 - Returns the setting value from the AI packet of an object (critter)
 - Use `AI_CAP_*` constants from **define_extra.h** for the aiParam argument to get AI value
 
@@ -813,8 +813,8 @@ sfall_funcX metarule functions
 
 ----
 #### set_unique_id
-`int sfall_func1("set_unique_id", object)`\
-`int sfall_func2("set_unique_id", object, int flag)`
+`int sfall_func1("set_unique_id", object obj)`\
+`int sfall_func2("set_unique_id", object obj, int flag)`
 - Assigns a unique ID number to the object and returns it. If a unique ID number has already been assigned to an object, then ID number is returned without reassignment
 - Items with unique IDs will not stack with other items of the same type in the inventory
 - To just get the current ID number of an object, use `sfall_func2("get_object_data", object, OBJ_DATA_ID)`
@@ -930,7 +930,7 @@ sfall_funcX metarule functions
 
 ----
 #### string_format
-`string sfall_func2("string_format", string format, any val1)`
+`string sfall_func2("string_format", string format, any val1)`\
 `string sfall_funcX("string_format", string format, any val1, any val2, ...)`
 - Formats given values using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting up to 7 values
 - The format string is limited to 1024 characters
@@ -1107,6 +1107,7 @@ sfall_funcX metarule functions
 - Allows changing "bonus move" points (yellow lights on the interface bar) that can only be used for movement, not attacking
 - Can be called from `HOOK_COMBATTURN` at the start of the turn (will not work on `dude_obj`)
 - Can be called from `HOOK_STDPROCEDURE` with `combat_proc` event (will work on both NPCs and `dude_obj`)
+
 ----
 #### get_ini_config
 `array sfall_func2("get_ini_config", string file, bool searchDB)`
@@ -1115,6 +1116,16 @@ sfall_funcX metarule functions
     False - searches the file in the regular file system, like with all other ini-related functions\
     True - searches the file in database (DAT) files. If not found, then it will try the regular file system
 - Subsequent calls for the same file will return the same array, unless it was disposed using `free_array`
+
+----
+#### string_pos
+`int sfall_func2("string_pos", string haystack, string needle)`
+`int sfall_func3("string_pos", string haystack, string needle, int pos)`
+
+- Returns the position of the first occurrence of a `needle` string in a `haystack` string, or -1 if not found. The first character position is 0 (zero)
+
+**Optional argument:**
+- `pos`: the position at which to start the search. If negative, it indicates a position starting from the end of the string
 
 
 ****

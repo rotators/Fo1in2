@@ -35,6 +35,9 @@ procedure array_keys(variable array);
 // list of array values (useful for maps)
 procedure array_values(variable array);
 
+// makes given array permanent and returns it
+procedure array_fixed(variable array);
+
 // returns temp array containing a subarray starting from $index with $count elements
 // negative $index means index from the end of array
 // negative $count means leave this many elements from the end of array
@@ -91,6 +94,11 @@ procedure get_empty_array_index(variable array);
 procedure add_array_set(variable array, variable item);
 procedure remove_array_set(variable array, variable item);
 
+// Creates a new array filled from a given array by transforming each value using given procedure name.
+procedure array_transform(variable arr, variable valueFunc);
+
+// Create a new temp array filled from a given array by transforming each key and value using given procedure name.
+procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc);
 
 
 
@@ -221,6 +229,11 @@ procedure array_values(variable array) begin
       i++;
    end
    return tmp;
+end
+
+procedure array_fixed(variable array) begin
+   fix_array(array);
+   return array;
 end
 
 procedure array_slice(variable array, variable index, variable count) begin
@@ -401,13 +414,32 @@ procedure remove_array_set(variable array, variable item) begin
    end
 end
 
-// Transform every value in array using given callback
-procedure array_map_func(variable arr, variable callback) begin
-   variable k, v;
-   foreach (k: v in arr)
-      arr[k] := callback(v);
-   return arr;
+// Creates a new array filled from a given array by transforming each value using given procedure name.
+procedure array_transform(variable arr, variable valueFunc) begin
+   variable k, v, retArr := temp_array_map if array_is_map(arr) else temp_array(len_array(arr), 0);
+   foreach (k: v in arr) begin
+      retArr[k] := valueFunc(v);
+   end
+   return retArr;
 end
+
+// Create a new temp array filled from a given array by transforming each key and value using given procedure name.
+procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc) begin
+   variable k, v, retArr := temp_array_map;
+   foreach (k: v in arr) begin
+      retArr[keyFunc(k)] := valueFunc(v);
+   end
+   return retArr;
+end
+
+procedure array_to_set(variable arr) begin
+   variable v, retArr := temp_array_map;
+   foreach (v in arr) begin
+      retArr[v] := 1;
+   end
+   return retArr;
+end
+
 
 #define ARRAY_EMPTY_INDEX   (-1)
 
@@ -586,30 +618,47 @@ end
   Different utility functions...
 */
 
-procedure debug_array_str(variable arr) begin
-   variable i := 0, k, s, len;
+#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
+
+procedure debug_array_str_deep(variable arr, variable levels) begin
+#define _newline if (levels > 1) then s += "\n";
+#define _indent ii := 0; while (ii < levels - 1) do begin s += "   "; ii++; end
+#define _value(v) (v if (levels <= 1 or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
+   variable i := 0, ii, k, v, s, len;
    len := len_array(arr);
    if (array_is_map(arr)) then begin  // print assoc array
       s := "Map("+len+"): {";
       while i < len do begin
+         _newline
          k := array_key(arr, i);
-         s += k + ": "+ get_array(arr, k);
+         v := get_array(arr, k);
+         _indent
+         s += k + ": " + _value(v);
          if i < (len - 1) then s += ", ";
          i++;
       end
-      if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      //if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      _newline
       s += "}";
    end else begin  // print list
       s := "List("+len+"): [";
+      _newline
       while i < len do begin
-         s += arr[i];
+         _newline
+         v := get_array(arr, i);
+         _indent
+         s += _value(v);
          if i < (len - 1) then s += ", ";
          i++;
       end
-      if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      //if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      _newline
       s += "]";
    end
    return s;
+#undef _newline
+#undef _indent
+#undef _value
 end
 
 procedure _PURGE_all_saved_arrays begin

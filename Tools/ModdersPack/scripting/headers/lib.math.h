@@ -5,13 +5,8 @@
   Numbers...
 */
 
-#define above(a, b)        (unsigned_comp(a, b) > 0)
-#define above_equal(a, b)  (unsigned_comp(a, b) >= 0)
-#define below(a, b)        (unsigned_comp(a, b) < 0)
-#define below_equal(a, b)  (unsigned_comp(a, b) <= 0)
-
 // for sfall 4.2.3/3.8.23
-pure procedure unsigned_comp(variable a, variable b) begin
+pure procedure unsigned_int_compare(variable a, variable b) begin
    if ((a bwxor b) == 0) then return 0; // a == b
    return 1 if ((b == 0) orElse a div b) else -1;
 end
@@ -21,10 +16,10 @@ end
 
 #define math_max(x, y)               (x if x > y else y)
 #define math_min(x, y)               (x if x < y else y)
-#define in_range(x, from, to)        (x >= from and x <= to)
+#define math_in_range(x, from, to)   (x >= from and x <= to)
 
 
-procedure get_clamped(variable val, variable a, variable b) begin
+procedure math_clamp(variable val, variable a, variable b) begin
    variable min, max;
    if (a < b) then begin
       min := a;

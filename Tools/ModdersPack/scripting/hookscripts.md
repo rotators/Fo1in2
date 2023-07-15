@@ -108,7 +108,7 @@ int     arg5 - Attack Type (see ATKTYPE_* constants)
 int     arg6 - Ranged flag. 1 if the hit chance calculation takes into account the distance to the target. This does not mean the attack is a ranged attack
 int     arg7 - The raw hit chance before applying the cap
 
-int     ret0 - the new hit chance
+int     ret0 - The new hit chance. The value is limited to the range of -99 to 999
 ```
 
 -------------------------------------------
