@@ -36,8 +36,8 @@ procedure UseObjOn_handler;
 procedure WithinPerception_handler;
 procedure InventoryMove_handler;
 procedure AmmoCost_handler;
-procedure SetLighting_handler;
 procedure Steal_handler;
+procedure SetLighting_handler;
 
 procedure steal_urn;
 
@@ -74,8 +74,8 @@ procedure start begin
       register_hook_proc(HOOK_WITHINPERCEPTION, WithinPerception_handler);
       register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_handler);
       register_hook_proc(HOOK_AMMOCOST, AmmoCost_handler);
-      register_hook_proc(HOOK_SETLIGHTING, SetLighting_handler);
       register_hook_proc(HOOK_STEAL, Steal_handler);
+      register_hook_proc(HOOK_SETLIGHTING, SetLighting_handler);
    end
 
    call general;
@@ -195,13 +195,13 @@ procedure night_person begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 2);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) + 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) + 2);
-         debug_msg("Night person trait is active!");
+         debug_blue("Night person trait is active!");
       end
       else if not(night) AndAlso (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
-         debug_msg("Night person trait is not active!");
+         debug_blue("Night person trait is not active!");
       end
    end
    // If used Mutate!-perk to remove Night Person, reset everything to default:
@@ -212,7 +212,7 @@ procedure night_person begin
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
       end
-      debug_msg("Night person trait is disabled!");
+      debug_blue("Night person trait is disabled!");
    end
 end
 
@@ -430,24 +430,6 @@ procedure AmmoCost_handler begin
    end
 end
 
-procedure SetLighting_handler begin
-   variable
-      object := get_sfall_arg,
-      intensity := get_sfall_arg,
-      radius := get_sfall_arg;
-
-   // Set active flare light at all times when player has an active flare in either hand
-   if (object > 0) then begin
-      if (object == dude_obj) then begin
-         if ((obj_pid(dude_left_hand) == PID_ACTIVE_FLARE) or (obj_pid(dude_right_hand) == PID_ACTIVE_FLARE)) then begin
-            //debug_yellow("Set flare light for the player!");
-            set_sfall_return(65536);
-            set_sfall_return(8);
-         end
-      end
-   end
-end
-
 procedure Steal_handler begin
    variable
       thief := get_sfall_arg,
@@ -456,5 +438,26 @@ procedure Steal_handler begin
    // Remove the "You steal x"-message when transfering items from party members
    if obj_in_party(target) then begin
       set_sfall_return(1);
+   end
+end
+
+procedure SetLighting_handler begin
+   variable
+      object := get_sfall_arg,
+      intensity := get_sfall_arg,
+      radius := get_sfall_arg;
+
+   //debug("intensity: " + intensity);
+   //debug("radius: " + radius);
+
+   // Set active flare light at all times when player has an active flare in either hand
+   if (object > 0) then begin
+      if (object == dude_obj) then begin
+         if ((obj_pid(dude_left_hand) == PID_ACTIVE_FLARE) or (obj_pid(dude_right_hand) == PID_ACTIVE_FLARE)) then begin
+            debug_yellow("Set flare light for the player!");
+            set_sfall_return(65536);
+            set_sfall_return(8);
+         end
+      end
    end
 end

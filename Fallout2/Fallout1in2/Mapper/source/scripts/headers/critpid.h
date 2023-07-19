@@ -211,7 +211,7 @@
 #define PID_GUARD_9                       (16777417)
 #define PID_STRANGER_3                    (16777418)
 #define PID_GEN_THUG                      (16777419)
-#define PID_MERCHENARY                    (16777420)
+#define PID_MERCENARY                    (16777420)
 #define PID_GUARD_10                      (16777421)
 #define PID_VAULT_DWELLER_2               (16777422)
 #define PID_GARL                          (16777423)
