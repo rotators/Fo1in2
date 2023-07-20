@@ -357,6 +357,8 @@ There are several changes in this version of sslc which may result in problems f
 - fixed unused arguments in a procedure being removed incorrectly by the optimizer
 - fixed unused string literals in an optimized-out procedure not being removed by the optimizer
 - fixed `get_array` syntax not working for exported variables
+- fixed optional arguments not working for imported procedures
+- fixed compiler crash when an exported procedure has no body
 
 **sfall 4.2.9:**
 - added support for additional universal opcodes `sfall_func7` and `sfall_func8`

@@ -540,8 +540,8 @@ sfall_funcX metarule functions
 ----
 #### floor2
 `int sfall_func1("floor2", int/float value)`
-- Works just like vanilla `floor` function, but returns correct integers for negative values
-- __NOTE:__ vanilla `floor` function works exactly the same as ceil for negative values, much like trunc in C/C++
+- Works just like vanilla `floor` function, but returns correct integers for negative floats
+- __NOTE:__ vanilla `floor` function works exactly the same as `ceil` for negative floats (i.e. basically `trunc` in C/C++)
 
 ----
 #### item_weight
