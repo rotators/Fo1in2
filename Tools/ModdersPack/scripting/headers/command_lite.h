@@ -93,6 +93,7 @@
 #define dude_elevation                      (elevation(dude_obj))
 
 #define tile_behind_obj(who)                (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), 1))
+#define tile_behind_obj_rng(who, rng)       (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), rng))
 
 #define dude_cur_hits                       (get_critter_stat(dude_obj,STAT_current_hp))
 #define dude_max_hits                       (get_critter_stat(dude_obj,STAT_max_hp))

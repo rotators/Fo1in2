@@ -322,7 +322,7 @@ Critter arg0 - the critter doing the bartering (either dude_obj or inven_dude)
 Critter arg1 - the critter being bartered with
 int     arg2 - the default value of the goods
 Critter arg3 - table of requested goods (being bought from NPC)
-int     arg4 - the amount of actual caps in the barter stack (as opposed to goods)
+int     arg4 - the number of actual caps in the barter stack (as opposed to goods)
 int     arg5 - the value of all goods being traded before skill modifications
 Critter arg6 - table of offered goods (being sold to NPC)
 int     arg7 - the total cost of the goods offered by the player
@@ -476,10 +476,12 @@ Example message (vanilla behavior):\
 ```
 Critter arg0 - Thief
 Obj     arg1 - The target
-Item    arg2 - Item being stolen/planted
+Item    arg2 - The item being stolen/planted
 int     arg3 - 0 when stealing, 1 when planting
+int     arg4 - quantity of the item being stolen/planted
 
-int     ret0 - overrides hard-coded handler (1 - force success, 0 - force fail, -1 - use engine handler)
+int     ret0 - overrides hard-coded handler (2 - force fail without closing window, 1 - force success, 0 - force fail, -1 - use engine handler)
+int     ret1 - overrides experience points gained for stealing this item (must be greater than or equal to 0)
 ```
 
 -------------------------------------------

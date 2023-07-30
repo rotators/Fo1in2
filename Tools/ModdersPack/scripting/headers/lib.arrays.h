@@ -131,7 +131,7 @@ procedure remove_array_block(variable arr, variable blocksize, variable index);
 /**
  * Converts any array to string for debugging purposes
  */
-procedure debug_array_str(variable arr);
+#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
 
 #define display_array(arr)       display_msg(debug_array_str(arr))
 
@@ -617,8 +617,6 @@ end
 /**
   Different utility functions...
 */
-
-#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
 
 procedure debug_array_str_deep(variable arr, variable levels) begin
 #define _newline if (levels > 1) then s += "\n";
