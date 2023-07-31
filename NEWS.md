@@ -17,6 +17,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Fixed**: Crash when using the door inside of Darkwater's shop after killing Killian.
 - **Fixed**: Death screen had broken colors.
 - **Fixed**: Error messages when interacting with the elevator doors in the Glow.
+- **Fixed**: Finding and disarming the mines in the thieves circle location would show the wrong messages.
 - **Fixed**: Flip in Mariposa would try to walk to his target hex on every game tick, even if he is on the hex already.
 - **Fixed**: Garret's fridge in the Hall of the Dead could be open without actually being open.
 - **Fixed**: Geckos in random encounters would walk around way too frantically. Now they aren't such speedy boys anymore.

@@ -186,14 +186,17 @@
 
 // visibility
 #define self_visible                        obj_is_visible_flag(self_obj)
-#define set_obj_invisible(cr)               set_obj_visibility(cr,true)
-#define set_obj_visible(cr)                 set_obj_visibility(cr,false)
-#define set_self_invisible                  set_obj_visibility(self_obj,true)
-#define set_self_visible                    set_obj_visibility(self_obj,false)
+#define set_obj_invisible(cr)               set_obj_visibility(cr, true)
+#define set_obj_visible(cr)                 set_obj_visibility(cr, false)
+#define set_self_invisible                  set_obj_visibility(self_obj, true)
+#define set_self_visible                    set_obj_visibility(self_obj, false)
 #define is_visible(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
 
+// hp
 #define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))
 #define self_max_hits                       (get_critter_stat(self_obj,STAT_max_hp))
+#define get_cur_hits(cr)                    get_critter_stat(cr,STAT_current_hp)
+#define get_max_hits(cr)                    get_critter_stat(cr,STAT_max_hp)
 
 #define self_mental_block                   (has_trait(TRAIT_PERK,self_obj,PERK_mental_block))
 #define self_presence                       (has_trait(TRAIT_PERK,self_obj,PERK_presence))
@@ -207,12 +210,14 @@
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
 #define self_can_see_dude                   obj_can_see_obj(self_obj,dude_obj)
+#define self_can_hear_dude                  obj_can_hear_obj(self_obj,dude_obj)
 #define self_distance_from_dude             tile_distance(self_tile, dude_tile)
 #define self_is_high                        drug_influence(self_obj)
 
 #define self_item(x)                        obj_carrying_pid_obj(self_obj, x)
 #define self_item_count(x)                  obj_is_carrying_obj_pid(self_obj, x)
-
+#define get_item(cr,pid)                    obj_carrying_pid_obj(cr,pid)
+#define get_item_count(cr,pid)              obj_is_carrying_obj_pid(cr,pid)
 
 // some timer event macros
 #define check_set_obj_visiblility(the_obj, x)      if (obj_is_visible_flag(the_obj) == x) then set_obj_visibility(the_obj, x)
