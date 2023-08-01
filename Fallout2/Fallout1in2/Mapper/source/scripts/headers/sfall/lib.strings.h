@@ -9,19 +9,14 @@
 #ifndef LIB_STRINGS_H
 #define LIB_STRINGS_H
 
-#define is_in_string(str, substr)         (string_pos(str, substr) != -1)
-#define string_starts_with(str, substr)   (string_pos(str, substr) == 0)
+#include "sfall.h"
 
-/**
- * Returns position of first occurance of substr in str, or -1 if not found
- */
-procedure string_pos(variable str, variable subst) begin
-   variable lst, n;
-   lst := string_split(str, subst);
-   if (len_array(lst) < 2) then
-      return -1;
-   return strlen(lst[0]);
-end
+#define is_in_string(str, sub)         (string_pos(str, sub) != -1)
+#define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
+#define string_format_array(fmt, arr)  sprintf_array(fmt, arr)
+// Replaces all occurances of substring in a string with another substring
+#define string_replace(str, search, replace)    (string_join(string_split(str, search), replace))
+#define sprintf2(fmt, arg1, arg2)      string_format2(fmt, arg1, arg2)
 
 /**
  * Join array of strings using delimeter
@@ -34,44 +29,6 @@ procedure string_join(variable array, variable join) begin
       str := array[0];
       for (i:=1; i<len; i++) begin
          str += join + array[i];
-      end
-   end
-   return str;
-end
-
-/**
- * replaces all occurances of substring in a string with another substring
- */
-#define string_replace(str, search, replace)    (string_join(string_split(str, search), replace))
-
-/**
- * sprintf with two arguments
- */
-procedure sprintf2(variable str, variable arg1, variable arg2) begin
-   variable split, len, i, j, arg;
-   split := string_split(str, "%");
-   len := len_array(split);
-   str := "";
-   if (len > 0) then begin
-      str := split[0];
-      j := 0;
-      for (i := 1; i < len; i++) begin
-         if (split[i] == "") then begin
-            if (i < len - 1) then begin
-               str += "%" + split[i+1];
-               i++;
-            end
-         end else begin
-            if (j == 0) then
-               arg := arg1;
-            else if (j == 1) then
-               arg := arg2;
-            else
-               arg := 0;
-
-            str += sprintf("%" + split[i], arg);
-            j++;
-         end
       end
    end
    return str;
@@ -150,34 +107,47 @@ procedure string_repeat(variable str, variable count) begin
 end
 
 /**
- * Workaround for string_split bug in sfall 3.3
- * DEPRECATED as of sfall 3.4 (bug fixed)
- */
-procedure string_split_safe(variable str, variable split) begin
-   variable lst;
-   str += split;
-   lst := string_split(str, split);
-   resize_array(lst, len_array(lst) - 1);
-   return lst;
-end
-
-/**
  * The same as sfall string_split, but returns array of integers instead
  * Useful in cunjunction with is_in_array()
  */
 procedure string_split_ints(variable str, variable split) begin
-   variable i := 0;
-   variable list;
+   variable n := 0;
+   variable list, result, val;
+
+   if (str == "" or typeof(str) != VALTYPE_STR) then
+      return temp_array_list(0);
+
    list := string_split(str, split);
-   while (i < len_array(list)) do begin
-      list[i] := atoi(list[i]);
-      i++;
+   result := temp_array_list(0);
+   foreach (val in list) begin
+      if (val != "") then begin
+         resize_array(result, n + 1);
+         result[n] := atoi(val);
+         n++;
+      end
    end
-   return list;
+   return result;
+end
+
+// atoi proc wrapper, for use as callback
+procedure string_to_int(variable str) begin
+   return atoi(str);
+end
+
+// atof proc wrapper, for use as callback
+procedure string_to_float(variable str) begin
+   return atof(str);
+end
+
+// converts any value to a string, for use as callback
+procedure to_string(variable val) begin
+   return ""+val;
 end
 
 
 /**
+  DEPRECATED, use string_format instead!
+
   String parse functions. Idea taken from KLIMaka on TeamX forums.
   Placeholders in format %d% are replaced from string. d refers to variable index (starting from 1).
   You can repeat one placeholder multiple times, or use placeholders in any order.

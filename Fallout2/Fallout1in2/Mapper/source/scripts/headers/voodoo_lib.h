@@ -136,7 +136,7 @@ begin
    n := 0x90;
   // x86 instructions can't be longer than 15 bytes.
   if not goBackTo90s then
-    length := cap_number(length, 1, 15);
+    length := math_clamp(length, 1, 15);
   for(i := 0; i < length-1; i++) begin
    write_byte(address+i, n);
   end
@@ -145,12 +145,12 @@ end
 
 procedure VOODOO_BlockCall(variable address, variable length:=5)
 begin
-   call VOODOO_WriteNop(address, cap_number(length, 5, 15));
+   call VOODOO_WriteNop(address, math_clamp(length, 5, 15));
 end
 
 procedure VOODOO_BlockJump(variable address, variable length:=5)
 begin
-   call VOODOO_WriteNop(address, cap_number(length, 5, 15));
+   call VOODOO_WriteNop(address, math_clamp(length, 5, 15));
 end
 
 //

@@ -25,7 +25,7 @@
 #define COUNTERWIN  (0x100000) // counter window for moving multiple items or setting a timer
 #define SPECIAL     (0x80000000)
 
-// Valid arguments to register_hook
+// Valid arguments to register_hook_proc
 #define HOOK_TOHIT            (0)
 #define HOOK_AFTERHITROLL     (1)
 #define HOOK_CALCAPCOST       (2)
@@ -149,7 +149,7 @@
 // sort map in descending order by key value
 #define sort_map_reverse(array)     resize_array(array, -7)
 // remove element from map or just replace value with 0 for list
-#define unset_array(array, item)    set_array(array, item, 0)
+#define unset_array(array, key)     set_array(array, key, 0)
 
 // same as "key_pressed" but checks VK codes instead of DX codes
 #define key_pressed_vk(key)         (key_pressed(key bwor 0x80000000))
@@ -282,6 +282,8 @@
 
 /* SFALL_FUNCX MACROS */
 
+#define FUNC_SELECTOR_7(_1,_2,_3,_4,_5,_6,_7,FUNC,...)          FUNC
+
 #define add_extra_msg_file(name)                                sfall_func1("add_extra_msg_file", name)
 #define add_global_timer_event(time, fixedParam)                sfall_func2("add_g_timer_event", time, fixedParam)
 #define add_iface_tag                                           sfall_func0("add_iface_tag")
@@ -391,6 +393,8 @@
 #define spatial_radius(obj)                                     sfall_func1("spatial_radius", obj)
 #define string_compare(str1, str2)                              sfall_func2("string_compare", str1, str2)
 #define string_compare_locale(str1, str2, codePage)             sfall_func3("string_compare", str1, str2, codePage)
+#define string_pos(haystack, needle)                            sfall_func2("string_pos", haystack, needle)
+#define string_pos_from(haystack, needle, pos)                  sfall_func3("string_pos", haystack, needle, pos)
 #define string_format1(format, a1)                              sfall_func2("string_format", format, a1)
 #define string_format2(format, a1, a2)                          sfall_func3("string_format", format, a1, a2)
 #define string_format3(format, a1, a2, a3)                      sfall_func4("string_format", format, a1, a2, a3)
@@ -398,8 +402,7 @@
 #define string_format5(format, a1, a2, a3, a4, a5)              sfall_func6("string_format", format, a1, a2, a3, a4, a5)
 #define string_format6(format, a1, a2, a3, a4, a5, a6)          sfall_func7("string_format", format, a1, a2, a3, a4, a5, a6)
 #define string_format7(format, a1, a2, a3, a4, a5, a6, a7)      sfall_func8("string_format", format, a1, a2, a3, a4, a5, a6, a7)
-#define string_format_MACRO(_0,_1,_2,_3,_4,_5,_6,FUNC,...)      FUNC
-#define string_format(...)                                      string_format_MACRO(__VA_ARGS__, string_format6, string_format5, string_format4, string_format3, string_format2, string_format1)(__VA_ARGS__)
+#define string_format(format, ...)                              FUNC_SELECTOR_7(__VA_ARGS__,string_format7,string_format6,string_format5,string_format4,string_format3,string_format2,string_format1)(format, __VA_ARGS__)
 #define string_tolower(text)                                    sfall_func2("string_to_case", text, 0)
 #define string_toupper(text)                                    sfall_func2("string_to_case", text, 1)
 #define tile_by_position(x, y)                                  sfall_func2("tile_by_position", x, y)

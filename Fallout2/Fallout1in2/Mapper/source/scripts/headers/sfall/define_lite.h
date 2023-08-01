@@ -395,6 +395,7 @@
 #define SKILL_TRAPS                         (11)
 #define SKILL_SCIENCE                       (12)
 #define SKILL_REPAIR                        (13)
+#define SKILL_SPEECH                        (14)
 #define SKILL_CONVERSANT                    (14)
 #define SKILL_BARTER                        (15)
 #define SKILL_GAMBLING                      (16)
@@ -815,15 +816,6 @@
 //Misc commands
 #define obj_get_rot(obj)  (has_trait(TRAIT_OBJECT, obj, OBJECT_CUR_ROT))
 #define obj_in_party(x)   (party_member_obj(obj_pid(x)) != 0)
-
-#define dude_tile         (tile_num(dude_obj))
-#define dude_elevation    (elevation(dude_obj))
 #define dude_skill(x)     (has_skill(dude_obj, x))
-
-
-// some commands
-#define mstr(x)                     message_str(NAME,x)
-#define display_mstr(x)             display_msg(mstr(x))
-#define g_mstr(x)                   message_str(SCRIPT_GENERIC,x)
 
 #endif // DEFINE_H

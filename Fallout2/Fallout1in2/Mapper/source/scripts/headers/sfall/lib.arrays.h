@@ -35,6 +35,9 @@ procedure array_keys(variable array);
 // list of array values (useful for maps)
 procedure array_values(variable array);
 
+// makes given array permanent and returns it
+procedure array_fixed(variable array);
+
 // returns temp array containing a subarray starting from $index with $count elements
 // negative $index means index from the end of array
 // negative $count means leave this many elements from the end of array
@@ -91,6 +94,11 @@ procedure get_empty_array_index(variable array);
 procedure add_array_set(variable array, variable item);
 procedure remove_array_set(variable array, variable item);
 
+// Creates a new array filled from a given array by transforming each value using given procedure name.
+procedure array_transform(variable arr, variable valueFunc);
+
+// Create a new temp array filled from a given array by transforming each key and value using given procedure name.
+procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc);
 
 
 
@@ -123,7 +131,7 @@ procedure remove_array_block(variable arr, variable blocksize, variable index);
 /**
  * Converts any array to string for debugging purposes
  */
-procedure debug_array_str(variable arr);
+#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
 
 #define display_array(arr)       display_msg(debug_array_str(arr))
 
@@ -223,6 +231,11 @@ procedure array_values(variable array) begin
    return tmp;
 end
 
+procedure array_fixed(variable array) begin
+   fix_array(array);
+   return array;
+end
+
 procedure array_slice(variable array, variable index, variable count) begin
    variable tmp, i, n;
    n := len_array(array);
@@ -284,7 +297,9 @@ procedure copy_array(variable src, variable srcPos, variable dest, variable dstP
   end
 end
 
-// create exact copy of the array as a new temp array
+/**
+ * Creates a shallow copy of the array as a new temp array.
+ */
 procedure clone_array(variable array) begin
    variable new, k, v;
    if (array_is_map(array)) then
@@ -399,13 +414,32 @@ procedure remove_array_set(variable array, variable item) begin
    end
 end
 
-// use callback on each array element
-procedure array_map_func(variable arr, variable callback) begin
-   variable k, v, i;
-   foreach (k: v in arr)
-      arr[k] := callback(v);
-   return arr;
+// Creates a new array filled from a given array by transforming each value using given procedure name.
+procedure array_transform(variable arr, variable valueFunc) begin
+   variable k, v, retArr := temp_array_map if array_is_map(arr) else temp_array(len_array(arr), 0);
+   foreach (k: v in arr) begin
+      retArr[k] := valueFunc(v);
+   end
+   return retArr;
 end
+
+// Create a new temp array filled from a given array by transforming each key and value using given procedure name.
+procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc) begin
+   variable k, v, retArr := temp_array_map;
+   foreach (k: v in arr) begin
+      retArr[keyFunc(k)] := valueFunc(v);
+   end
+   return retArr;
+end
+
+procedure array_to_set(variable arr) begin
+   variable v, retArr := temp_array_map;
+   foreach (v in arr) begin
+      retArr[v] := 1;
+   end
+   return retArr;
+end
+
 
 #define ARRAY_EMPTY_INDEX   (-1)
 
@@ -482,6 +516,7 @@ procedure array_append(variable arr1, variable arr2) begin
    return arr1;
 end
 
+// Loads a "saved" array. If it doesn't exist, creates it (with a given size).
 procedure load_create_array(variable name, variable size) begin
    variable arr;
    arr := load_array(name);
@@ -492,6 +527,7 @@ procedure load_create_array(variable name, variable size) begin
    return arr;
 end
 
+// Creates and returns a new "saved" array. If array already existed with this name, frees it.
 procedure get_saved_array_new(variable name, variable size) begin
    variable arr;
    arr := load_array(name);
@@ -582,30 +618,45 @@ end
   Different utility functions...
 */
 
-procedure debug_array_str(variable arr) begin
-   variable i := 0, k, s, len;
+procedure debug_array_str_deep(variable arr, variable levels) begin
+#define _newline if (levels > 1) then s += "\n";
+#define _indent ii := 0; while (ii < levels - 1) do begin s += "   "; ii++; end
+#define _value(v) (v if (levels <= 1 or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
+   variable i := 0, ii, k, v, s, len;
    len := len_array(arr);
    if (array_is_map(arr)) then begin  // print assoc array
       s := "Map("+len+"): {";
       while i < len do begin
+         _newline
          k := array_key(arr, i);
-         s += k + ": "+ get_array(arr, k);
+         v := get_array(arr, k);
+         _indent
+         s += k + ": " + _value(v);
          if i < (len - 1) then s += ", ";
          i++;
       end
-      if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      //if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      _newline
       s += "}";
    end else begin  // print list
       s := "List("+len+"): [";
+      _newline
       while i < len do begin
-         s += arr[i];
+         _newline
+         v := get_array(arr, i);
+         _indent
+         s += _value(v);
          if i < (len - 1) then s += ", ";
          i++;
       end
-      if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      //if (strlen(s) > 254) then s := substr(s, 0, 251) + "...";
+      _newline
       s += "]";
    end
    return s;
+#undef _newline
+#undef _indent
+#undef _value
 end
 
 procedure _PURGE_all_saved_arrays begin
