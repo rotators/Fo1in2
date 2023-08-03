@@ -578,7 +578,7 @@ variable merch_slot_armor_flags;
 
 
 // Used to reduce the amount of caps a merchant spawns
-#define caps_modifier               (0.5)
+#define caps_modifier               1 //(0.5)
 
 
 // Fo1 caps restocking on merchants
@@ -586,6 +586,7 @@ variable merch_slot_armor_flags;
    if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin \
       set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);   \
       set_local_var(LVAR_Caps_Amount, caps_amount);      \
+      debug("Merchant " + obj_name(self_obj) + " is restocking money! Next restock in " + (RESTOCK_TIME - GAME_TIME_IN_DAYS + 1) + " day(s)."); \
    end                                                   \
    self_caps_adjust(local_var(LVAR_Caps_Amount))
 
