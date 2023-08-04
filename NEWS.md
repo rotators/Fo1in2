@@ -63,6 +63,7 @@ Notable changes since last release ([v1.8.3032](https://github.com/rotators/Fo1i
 - **Tweaked**: Hi-Res patch encounter map edges visually improved.
 - **Tweaked**: Hub cops will not float warning messages anymore if the player just enters and leaves combat.
 - **Tweaked**: Improved how the "rest until morning (Fo2-style)"-setting works. It is not necessary anymore to save and load the game first.
+- **Tweaked**: Merchants will restock money once per day again.
 - **Tweaked**: Motorcycle spawn position in mountain encounter maps.
 - **Tweaked**: Moved the Necropolis Watershed map around to fix shitty map edges.
 - **Tweaked**: Rae, the freshly turned super mutant (cut-content) will now only show up if the Boneyard has been invaded.
