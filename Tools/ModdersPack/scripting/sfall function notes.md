@@ -1118,9 +1118,9 @@ sfall_funcX metarule functions
 - Subsequent calls for the same file will return the same array, unless it was disposed using `free_array`
 
 ----
-#### string_pos
-`int sfall_func2("string_pos", string haystack, string needle)`
-`int sfall_func3("string_pos", string haystack, string needle, int pos)`
+#### string_find
+`int sfall_func2("string_find", string haystack, string needle)`\
+`int sfall_func3("string_find", string haystack, string needle, int pos)`
 
 - Returns the position of the first occurrence of a `needle` string in a `haystack` string, or -1 if not found. The first character position is 0 (zero)
 

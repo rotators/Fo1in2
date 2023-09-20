@@ -11,7 +11,7 @@
 
 #include "sfall.h"
 
-#define is_in_string(str, sub)         (string_pos(str, sub) != -1)
+#define string_contains(str, sub)      (string_find(str, sub) != -1)
 #define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
 #define string_format_array(fmt, arr)  sprintf_array(fmt, arr)
 // Replaces all occurances of substring in a string with another substring
