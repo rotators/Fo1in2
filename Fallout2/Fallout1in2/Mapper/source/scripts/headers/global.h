@@ -243,7 +243,7 @@
 #define GVAR_TOWN_NECROP_VAULT                  (1098)
 #define GVAR_TOWN_WATERSHED                     (1099)
 #define GVAR_KILL_DEATHCLAW                     (1100)
-#define GVAR_QUEST_VAULT13_4_WATERCHIP          (1101)
+#define GVAR_VAULT_WATER                        (1101)
 #define GVAR_BITS_BOB_IN_JAIL                   (1102)
 #define GVAR_TANDI_RESCUE                       (1103)
 #define GVAR_CAPTURE_GIZMO                      (1104)

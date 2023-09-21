@@ -80,13 +80,13 @@
 /*********************************************************
     Quests:
 *********************************************************/
-#define looking_for_waterchip               ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) < 2) and (dude_item_count(PID_WATER_CHIP) == 0))
+#define looking_for_waterchip               ((global_var(GVAR_VAULT_WATER) < 2) and (dude_item_count(PID_WATER_CHIP) == 0))
 
-#define v13_water_delivered                 (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 1)
-#define set_v13_deliver_water               set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 1)
+#define v13_water_delivered                 (global_var(GVAR_VAULT_WATER) == 1)
+#define set_v13_deliver_water               set_global_var(GVAR_VAULT_WATER, 1)
 
-#define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
-#define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
+#define waterchip_returned                  (global_var(GVAR_VAULT_WATER) >= 2)
+#define set_waterchip_returned              set_global_var(GVAR_VAULT_WATER, 2)
 
 #define get_quest_vats_active               ((global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) > 0) and not(military_base_destroyed))
 #define get_quest_master_active             ((global_var(GVAR_QUEST_VAULT13_2_MASTER) > 0) and not(cathedral_destroyed))

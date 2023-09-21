@@ -20,7 +20,7 @@
 // Water rations scene
 #define EVENT_WaterRation  (4)
 
-// Changed condition from GVAR_QUEST_VAULT13_4_WATERCHIP == 0 to days-check, because it would be false if the player has send water from the water merchants once.
+// Changed condition from GVAR_VAULT_WATER == 0 to days-check, because it would be false if the player has send water from the water merchants once.
 #define water_rations \
    if (not(waterchip_returned) and (get_water_days_left < 90))  then begin          \
       if (local_var(LVAR_WaterRations) == 0) then begin                             \
