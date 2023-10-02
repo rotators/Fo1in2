@@ -203,9 +203,9 @@ jobs:
 ### clones all interesting repositories used by tasks
 ### restores/creates cache used by tasks
 
-  - name: Clone sfall-develop
+  - name: Clone sfall-default
     if:   env.GHA_TASK_DAILY == 'true' || env.GHA_TASK_MONTHLY == 'true'
-    run:  git clone --branch=develop https://github.com/sfall-team/sfall.git $HOME/sfall-develop
+    run:  git clone https://github.com/sfall-team/sfall.git $HOME/sfall-default
 
   - name: Clone sfall-asm
     if:   env.GHA_TASK_DAILY == 'true'
@@ -244,7 +244,7 @@ jobs:
 
           echo "::group::Get new SHA"
           NEW_SCANMSG=$(git -C $HOME/ScanMsg --no-pager log --pretty=format:%H -1 ScanMsg README.md LICENSE.md)
-          NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
+          NEW_ARTIFACTS=$(git -C $HOME/sfall-default --no-pager log --pretty=format:%H -1 artifacts)
           echo "ScanMsg        $NEW_SCANMSG"
           echo "ModdersPack    $NEW_ARTIFACTS"
           echo ::endgroup::
@@ -288,11 +288,11 @@ jobs:
     run:  |
           :
           rm -fR Tools/ModdersPack
-          cp -r $HOME/sfall-develop/artifacts Tools/ModdersPack
+          cp -r $HOME/sfall-default/artifacts Tools/ModdersPack
 
           if [[ -n $(git status --short --untracked-files=all Tools/ModdersPack) ]]; then
              git add Tools/ModdersPack
-             SFALL_ARTIFACTS_COMMIT=$(git -C $HOME/sfall-develop log --pretty=format:%H -1 artifacts)
+             SFALL_ARTIFACTS_COMMIT=$(git -C $HOME/sfall-default log --pretty=format:%H -1 artifacts)
              echo "- ModdersPack update (sfall-team/sfall@${SFALL_ARTIFACTS_COMMIT})" >> $HOME/gha.commit
           fi
 
