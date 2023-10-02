@@ -53,7 +53,8 @@ Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_sett
 Other interesting files:
 - [ddraw.ini](ddraw.ini) (sfall configuration)
 - [f2_res.ini](f2_res.ini) (high resolution patch configuration)
-- [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
+- [mods/sfall-mods.ini](mods/sfall-mods.ini) (item highlighting and NPC combat control configuration)
+- [config/](config/) directory (misc modifications configuration)
 
 
 STEAM
