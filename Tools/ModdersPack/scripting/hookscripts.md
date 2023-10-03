@@ -133,7 +133,7 @@ Critter ret2 - Override the target of the attack
 
 #### `HOOK_CALCAPCOST (hs_calcapcost.int)`
 
-Runs whenever Fallout is calculating the AP cost of using the weapon (or unarmed attack). Doesn't run for using other item types or moving.\
+Runs whenever Fallout calculates the AP cost of using an active item in hand (or unarmed attack). Doesn't run for moving.\
 Note that the first time a game is loaded, this script doesn't run before the initial interface is drawn, so if the script effects the AP cost of whatever is in the player's hands at the time the wrong AP cost will be shown. It will be fixed the next time the interface is redrawn.\
 You can get the weapon object by checking item slot based on attack type (`ATKTYPE_LWEP1`, `ATKTYPE_LWEP2`, etc) and then calling `critter_inven_obj`.
 
