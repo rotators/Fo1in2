@@ -12,7 +12,7 @@
    NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.3
+   version 1.4
 
 */
 
@@ -44,8 +44,12 @@ variable
    dudeLightInt, dudeLightDist;
 
 
+// returns non-zero for a controlled NPC
 procedure AllowControl(variable pid) begin
-   return ((pidList == 0 or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)));
+   if (pidList) then begin
+      return scan_array(pidList, pid bwand 0xFFFFFF) != -1;
+   end
+   return party_member_obj(pid);
 end
 
 procedure SetLight(variable critter, variable lInt, variable lDist) begin
@@ -99,6 +103,10 @@ procedure CombatTurn_Handler begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
+         // special handling if dude has Jinxed trait/perk
+         if (has_trait(TRAIT_TRAIT, real_dude_obj, TRAIT_jinxed) or has_trait(TRAIT_PERK, real_dude_obj, PERK_jinxed_perk)) then begin
+            critter_add_trait(critter, TRAIT_PERK, PERK_jinxed_perk, 1);
+         end
          intface_redraw;
 
          obj_set_light_level(critter, 100, 4);
@@ -138,6 +146,8 @@ procedure CombatTurn_Handler begin
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
+         // special handling for Jinxed
+         critter_rm_trait(critter, TRAIT_PERK, PERK_jinxed_perk, -1);
       end
 
       if (status < 0) then begin
@@ -152,6 +162,7 @@ procedure GameModeChange_Handler begin
       inControl := false;
       npcControl := 0;
       move_to(dude_obj, dude_tile, dude_elevation);
+      DEBUGMSG("Move to dude after NPC control.")
    end
 end
 
