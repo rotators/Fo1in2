@@ -38,7 +38,7 @@ You can arbitrarily get the value of any argument using the `sfall_func1("get_sf
 #### `array get_sfall_args()`
 Returns all hook arguments as a new temp array.
 
-#### `void set_sfall_return(int value)`
+#### `void set_sfall_return(any value)`
 Used to return the new values from the script. Each time it's called it sets the next value, or if you've already set all return values it does nothing.
 
 #### `void set_sfall_arg(int argNum, int value)`
