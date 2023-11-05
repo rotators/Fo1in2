@@ -263,7 +263,7 @@
 #define PID_GUARD_NFMETL                  (16777469)  // (253)
 #define PID_TRAVELER_HMMETL               (16777470)  // (254)
 #define PID_STRANGER_HMMETL               (16777471)  // (255)
-#define PID_THUG_MALE_METAL               (16777472)  // 
+#define PID_THUG_MALE_METAL               (16777472)  //
 #define PID_MERC_MALE_METAL               (16777473)  //
 #define PID_GUARD_HMMETL                  (16777474)  // (258)
 #define PID_TRAVELER_HFMETL               (16777475)  // (259)

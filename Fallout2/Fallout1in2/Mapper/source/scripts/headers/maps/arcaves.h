@@ -10,7 +10,7 @@
                            load_map(MAP_GUARDIAN,10);             \
                            anim( dude_obj, ANIMATE_ROTATION, 5 ); \
                            gfade_in(600)
- 
+
 
  // Comments
 
