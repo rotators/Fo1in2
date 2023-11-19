@@ -487,7 +487,7 @@ variable COC_TRESPASSING;
    else if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
        if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
            if (tile_num(self_obj) != sleep_tile) then                \
-               animate_move_obj_to_tile(self_obj, self_obj, 0);      \
+               animate_move_obj_to_tile(self_obj, sleep_tile, 0);      \
            else                                                      \
                set_local_var(LVAR_Sleeping, 1);                      \
        end                                                           \
