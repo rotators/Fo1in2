@@ -364,6 +364,7 @@
 #define overlay_clear_rectangle(winType, x, y, w, h)            sfall_func6("interface_overlay", winType, 2, x, y, w, h)
 #define overlay_destroy(winType)                                sfall_func2("interface_overlay", winType, 0)
 #define real_dude_obj                                           sfall_func0("real_dude_obj")
+#define reg_anim_animate_and_move(obj, tile, animID, delay)     sfall_func4("reg_anim_animate_and_move", obj, tile, animID, delay)
 #define remove_all_timer_events                                 sfall_func0("remove_timer_event")
 #define remove_timer_event(fixedParam)                          sfall_func1("remove_timer_event", fixedParam)
 #define set_can_rest_on_map(map, elev, value)                   sfall_func3("set_can_rest_on_map", map, elev, value)

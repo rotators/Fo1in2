@@ -254,7 +254,8 @@ FUNCTION REFERENCE
 
 -----
 ##### `void reg_anim_animate_and_hide(object obj, int animID, int delay)`
-- Exactly like `reg_anim_animate` but the object will automatically disappear after the last animation frame (but not destroyed).
+- Works exactly like `reg_anim_animate` but the object will automatically disappear after the last animation frame (but not destroyed).
+- `delay`: delay from the previous animation. A value of -1 will execute the specified animation immediately after the previous one in the sequence ends.
 
 -----
 ##### `void reg_anim_light(object obj, int light, int delay)`
@@ -1126,6 +1127,12 @@ sfall_funcX metarule functions
 
 **Optional argument:**
 - `pos`: the position at which to start the search. If negative, it indicates a position starting from the end of the string
+
+----
+#### reg_anim_animate_and_move
+`void sfall_func4("reg_anim_animate_and_move", object obj, int tile, int animID, int delay)`
+- Plays the specified animation while simultaneously moving the object to the given tile
+- `delay`: delay from the previous animation. A value of -1 will execute the specified animation immediately after the previous one in the sequence ends
 
 
 ****
