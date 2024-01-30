@@ -546,35 +546,53 @@ variable merch_slot_2;
 variable merch_slot_2_flags;
 variable merch_slot_armor;
 variable merch_slot_armor_flags;
-#define get_barter_inven(x)         merch_slot_1 := self_left_hand;                                     \
+#define get_barter_inven(x)      if (x > 0) then begin                                                  \
+                                    merch_slot_1 := self_left_hand;                                     \
                                     merch_slot_2 := self_right_hand;                                    \
                                     merch_slot_armor := self_armor;                                     \
-                                    if (merch_slot_1 > 0) then                                          \
+                                    if (merch_slot_1 > 0) then begin                                    \
                                         merch_slot_1_flags := get_flags(merch_slot_1);                  \
-                                    if (merch_slot_2 > 0) then                                          \
+                                        set_unique_id(merch_slot_1);                                    \
+                                    end                                                                 \
+                                    if (merch_slot_2 > 0) then begin                                    \
                                         merch_slot_2_flags := get_flags(merch_slot_2);                  \
-                                    if (merch_slot_armor > 0) then                                      \
+                                        set_unique_id(merch_slot_2);                                    \
+                                    end                                                                 \
+                                    if (merch_slot_armor > 0) then begin                                \
                                         merch_slot_armor_flags := get_flags(merch_slot_armor);          \
+                                        set_unique_id(merch_slot_armor);                                \
+                                    end                                                                 \
                                     tmp_merch_box := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);     \
                                     move_obj_inven_to_obj(self_obj, tmp_merch_box);                     \
                                     /* This is just for the visuals in dialog interface */              \
                                     if (merch_slot_2 > 0) then                                          \
                                         wield_obj(merch_slot_2);                                        \
                                     /* Move the barter inventory to merchant */                         \
-                                    move_obj_inven_to_obj(x, self_obj)
+                                    move_obj_inven_to_obj(x, self_obj);                                 \
+                                 end                                                                    \
+                                 noop
 
-#define put_barter_inven(x)         /* Move the barter inventory back into the trade box */             \
+#define put_barter_inven(x)      if (x > 0) then begin                                                  \
+                                    /* Move the barter inventory back into the trade box */             \
                                     move_obj_inven_to_obj(self_obj, x);                                 \
                                     /* Now give his inventory back and get rid of the temp box */       \
                                     move_obj_inven_to_obj(tmp_merch_box, self_obj);                     \
                                     /* Wield all items as before */                                     \
-                                    if (merch_slot_1 > 0) then                                          \
+                                    if (merch_slot_1 > 0) then begin                                    \
                                         set_flags(merch_slot_1, merch_slot_1_flags);                    \
-                                    if (merch_slot_2 > 0) then                                          \
+                                        unset_unique_id(merch_slot_1);                                  \
+                                    end                                                                 \
+                                    if (merch_slot_2 > 0) then begin                                    \
                                         set_flags(merch_slot_2, merch_slot_2_flags);                    \
-                                    if (merch_slot_armor > 0) then                                      \
+                                        unset_unique_id(merch_slot_2);                                  \
+                                    end                                                                 \
+                                    if (merch_slot_armor > 0) then begin                                \
                                         set_flags(merch_slot_armor, merch_slot_armor_flags);            \
-                                    destroy_object(tmp_merch_box)
+                                        unset_unique_id(merch_slot_armor);                              \
+                                    end                                                                 \
+                                    destroy_object(tmp_merch_box);                                      \
+                                 end                                                                    \
+                                 noop
 
 
 // Used to reduce the amount of caps a merchant spawns
