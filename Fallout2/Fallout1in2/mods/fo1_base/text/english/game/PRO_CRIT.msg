@@ -430,22 +430,22 @@
 {31100}{}{Dead Traveler}
 {31200}{}{Kenji}
 {31300}{}{Mr. Handy C}
-{31400}{}{Ian}
-{31500}{}{Ian}
-{31600}{}{Ian}
-{31700}{}{Ian}
-{31800}{}{Tycho}
-{31900}{}{Tycho}
-{32000}{}{Tycho}
-{32100}{}{Tycho}
-{32200}{}{Katja}
-{32300}{}{Katja}
-{32400}{}{Katja}
-{32500}{}{Katja}
-{32600}{}{Dogmeat}
-{32700}{}{Dogmeat}
-{32800}{}{Dogmeat}
-{32900}{}{Dogmeat}
+{31400}{}{Ian - Stage 1}
+{31500}{}{Ian - Stage 2}
+{31600}{}{Ian - Stage 3}
+{31700}{}{Ian - Stage 4}
+{31800}{}{Tycho - Stage 1}
+{31900}{}{Tycho - Stage 2}
+{32000}{}{Tycho - Stage 3}
+{32100}{}{Tycho - Stage 4}
+{32200}{}{Katja - Stage 1}
+{32300}{}{Katja - Stage 2}
+{32400}{}{Katja - Stage 3}
+{32500}{}{Katja - Stage 4}
+{32600}{}{Dogmeat - Stage 1}
+{32700}{}{Dogmeat - Stage 2}
+{32800}{}{Dogmeat - Stage 3}
+{32900}{}{Dogmeat - Stage 4}
 {33000}{}{Mysterious Stranger}
 {33100}{}{Dr. Buker}
 {33200}{}{Radscorpion}
