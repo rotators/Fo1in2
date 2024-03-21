@@ -5,6 +5,7 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: Incorrect LVAR check was used for MacRae's teach option after helping the Blades.
 - **Fixed**: One of tiles for John's work routine was out of range.
 - **Fixed**: One of tiles for V13 water guard's sleep routine was out of range.
+- **Fixed**: Radscorpions near the Glow could have a wrong script.
 - **Fixed**: The computer course in Brotherhood was ten times longer.
 - **Fixed**: The player's ouch message (stupid only) was missing when healed by Thorndyke.
 - **Fixed**: The random rotation of FoA guard/scout movement was out of range.

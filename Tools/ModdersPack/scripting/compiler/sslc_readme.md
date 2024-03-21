@@ -3,13 +3,11 @@ SSLC
 
 This is a modified copy of sslc, that has a few bugfixes from the original, that will recognise and compile the additional script functions provided by sfall, that can also understand some additional syntax, and that has an integrated preprocessor and optimizer.
 
-Unlike the original script compiler, this has not been compiled as a dos program. When using this in place of the original compile.exe but still using p.bat, you need to either get rid of the dos4gw.exe reference from p.bat or replace the original dos4gw.exe with the one in this archive.
+Unlike the original script compiler, this has not been compiled as a DOS program. When using this in place of the original `compile.exe` but still using `p.bat`, you need to get rid of the `dos4gw.exe` reference from `p.bat`.
 
-If you use Fallout Script Editor, you can extract `compile.exe` and `dos4gw.exe` to its `\binary` folder, or extract them somewhere else and change your preferences in FSE to point there. FSE doesn't seem to be able to tell when errors occur when using this compiler though, so I'd recommend either using sfall's script editor instead or compiling by hand if possible.
+When compiling global or hook scripts for sfall 3.4 or below, you _must_ include the line `procedure start;` before any `#include` files that define procedures to avoid a few weird problems. This is no longer required starting from 3.5.
 
-When compiling global or hook scripts for sfall 3.4 or below, you _must_ include the line `procedure start;` before any `#include` files that define procedures to avoid a few weird problems. (this is no longer required starting from 3.5)
-
-This version of compiler was designed primarily for new sfall functions, but it can safely (and is recommended) to be used with non-sfall scripts as well, as long as you don't use any of the arrays syntax and any sfall script functions.
+This version of compiler was designed primarily for new sfall functions, but it can be safely used (and is recommended) with non-sfall scripts as well.
 
 The original unmodified sslc source is over here: [https://teamx.ru/site_arc/utils/index.html](https://teamx.ru/site_arc/utils/index.html)
 
@@ -18,19 +16,19 @@ The original unmodified sslc source is over here: [https://teamx.ru/site_arc/uti
 ```
 -q  don't wait for input on error
 -n  no warnings
--b  backward compatibility mode
+-b  use backward compatibility mode
 -l  no logo
 -p  preprocess source
 -P  preprocess only (don't generate .int)
 -F  write full file paths in "#line" directives
--O  optimize code (full by default, see optimization.md)
--O<N> set specific level of optimization (0 - off, 1 - basic, 2 - full, 3 - experimental)
+-O  optimize code (full optimization, see optimization.md)
+-O<N>  set specific level of optimization (0 - none, 1 - basic, 2 - full, 3 - experimental)
 -d  print debug messages
 -D  output an abstract syntax tree of the program
 -o  set output path (follows the input file name)
 -s  enable short-circuit evaluation for all AND, OR operators
--m<macro[=val]> define a macro named "macro" for conditional compilation
--I<path> specify an additional directory to search for include files
+-m<macro>[=<val>]  define a macro named "macro" for conditional compilation
+-I<path>  specify an additional directory to search for include files
 ```
 
 The original command line option `-w` to turn on warnings no longer has an effect, since warnings are now on by default

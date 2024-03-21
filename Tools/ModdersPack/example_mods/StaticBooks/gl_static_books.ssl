@@ -1,0 +1,84 @@
+/*
+
+Static Books mod for Fallout 2 by NovaRain
+------------------------------------------
+
+- changes vanilla skill books to increase skills by a fixed amount
+- reading a book gives +5% to a skill (+6% if tagged), +8% with the Comprehension perk
+- books can still increase skills when over 91%
+
+Requires sfall 3.5 or higher
+
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\sfall\sfall.h"
+
+#define BOOK_BONUS    (5)
+
+procedure start;
+procedure useobj_handler;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_USEOBJ, useobj_handler);
+   end
+end
+
+procedure useobj_handler begin
+   variable
+      user  := get_sfall_arg,
+      obj   := get_sfall_arg,
+      skill := -1,
+      bonus := BOOK_BONUS,
+      msg, skLevel;
+
+   if (obj_item_subtype(obj) == item_type_misc_item) then begin
+      switch obj_pid(obj) begin
+      case PID_BIG_BOOK_OF_SCIENCE:
+         skill := SKILL_SCIENCE;
+         msg := 802;
+      case PID_DEANS_ELECTRONICS:
+         skill := SKILL_REPAIR;
+         msg := 803;
+      case PID_FIRST_AID_BOOK:
+         skill := SKILL_FIRST_AID;
+         msg := 804;
+      case PID_SCOUT_HANDBOOK:
+         skill := SKILL_OUTDOORSMAN;
+         msg := 806;
+      case PID_GUNS_AND_BULLETS:
+         skill := SKILL_SMALL_GUNS;
+         msg := 805;
+      end
+
+      // read book
+      if (skill != -1) then begin
+         if combat_is_initialized then begin
+            display_msg(mstr_proto(902));
+            set_sfall_return(0);
+            return;
+         end
+
+         skLevel := has_skill(dude_obj, skill);
+         if (dude_perk(PERK_comprehension_perk)) then begin
+            bonus := (bonus * 3 + 1) / 2; // +50%, rounding up
+         end
+         if (bonus % 2) then begin
+            bonus += is_skill_tagged(skill); // adjustment for tagged skill when the bonus is an odd number
+         end
+         critter_mod_skill(dude_obj, skill, bonus);
+         gfade_out(1);
+         game_time_advance(ONE_GAME_HOUR * (11 - dude_iq));
+         exec_map_update_scripts;
+         gfade_in(1);
+         display_msg(mstr_proto(800));
+         if (has_skill(dude_obj, skill) == skLevel) then begin
+            msg := 801;
+         end
+         display_msg(mstr_proto(msg));
+         set_sfall_return(1); // remove
+      end
+   end
+end

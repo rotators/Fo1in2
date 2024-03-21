@@ -9,9 +9,9 @@ The execution speed of scripts is not typically important in an unmodded game, g
 The sfall build of sslc supports a `-O` command line option to perform an optimization pass over the generated code. This isn't a magic make-my-code-go-faster bullet; most of what it does is very limited in scope. It's primary purpose was to strip out the procedures and variables which get automatically pulled into every script that includes **define.h**, whether you use them or not, and to do something about the additional variables that get created by `foreach` loops.
 
 **There are several levels of optimization available:**
-- `-O1` - Basic, only removes unreferenced globals variables and procedures, code itself remains untouched.
+- `-O1` - Basic, only removes unreferenced variables and procedures, code itself remains untouched.
 - `-O2` - Full, most code optimizations are on, but only those that were tested on complex scripts.
-- `-O3` - Experimental, provides most efficiency, but tend to break some complex code due to bugs.
+- `-O3` - Experimental, provides the most efficiency, but tends to break some complex code due to bugs.
 
 **The following optimizations are performed:**
 
