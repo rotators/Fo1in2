@@ -37,7 +37,7 @@ procedure SetGlobalVar_Handler;
 
 variable
    controlMode,
-   pidList, perksList,
+   pidList, perksList, addedPerkLevels,
    lightInt, lightDist, npcControl,
    displayName, displayNameColor, isShowTag,
    inControl := false,
@@ -61,7 +61,7 @@ procedure CombatTurn_Handler begin
    variable
       status := get_sfall_arg,
       critter := get_sfall_arg,
-      pid, perkID, level;
+      pid, i, perkID, level;
 
    DEBUGMSG("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg)
 
@@ -99,9 +99,14 @@ procedure CombatTurn_Handler begin
          lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
 
          // set perks (only work with 4.1.8+)
-         foreach (perkID in perksList) begin
+         foreach (i: perkID in perksList) begin
+            addedPerkLevels[i] := 0;
+
             level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
-            if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
+            if (level) then begin
+               addedPerkLevels[i] := level;
+               critter_add_trait(critter, TRAIT_PERK, perkID, level);
+            end
          end
          // special handling if dude has Jinxed trait/perk
          if (has_trait(TRAIT_TRAIT, real_dude_obj, TRAIT_jinxed) or has_trait(TRAIT_PERK, real_dude_obj, PERK_jinxed_perk)) then begin
@@ -142,8 +147,8 @@ procedure CombatTurn_Handler begin
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          DEBUGMSG("Remove perks after NPC control.")
-         foreach (perkID in perksList) begin
-            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+         foreach (i: perkID in perksList) begin
+            level := addedPerkLevels[i]; //has_trait(TRAIT_PERK, real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
          // special handling for Jinxed
@@ -227,9 +232,6 @@ procedure start begin
             displayNameColor := GetConfig("CombatControl", "DisplayNameColor", 0);
          end
 
-         set_perk_ranks(PERK_gecko_skinning_perk, 1);
-         set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
-
          pidList := GetConfigListInt("CombatControl", "PIDList");
          if (len_array(pidList) > 0) then
             fix_array(pidList);
@@ -238,6 +240,8 @@ procedure start begin
 
          perksList := GetConfigListInt("CombatControl", "PerksList");
          fix_array(perksList);
+
+         addedPerkLevels := create_array_list(len_array(perksList));
 
          register_hook_proc(HOOK_COMBATTURN, CombatTurn_Handler);
          register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);

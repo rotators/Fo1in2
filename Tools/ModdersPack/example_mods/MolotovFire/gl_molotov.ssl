@@ -1,0 +1,55 @@
+/*
+
+Molotov Fire Damage mod for Fallout 2 by NovaRain
+-------------------------------------------------
+
+- molotov cocktail now inflicts fire damage to critters
+- molotov cocktail can still blow up some doors and scenery objects as before
+
+Requires sfall 3.8.4 or higher
+
+NOTE: this script requires compiler from sfall modderspack with -s option
+(short circuit evaluation)
+
+*/
+
+
+procedure start;
+procedure afterhitroll_handler;
+
+#include "..\headers\define.h"
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\define_extra.h"
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
+   end
+end
+
+procedure afterhitroll_handler begin
+   variable
+      hitType := get_sfall_arg,
+      attacker := get_sfall_arg,
+      target := get_sfall_arg,
+      slot, item;
+
+   if (target and attacker) then begin
+      if (attacker == dude_obj and active_hand == 0) then begin
+         slot := INVEN_TYPE_LEFT_HAND;
+      end else begin
+         slot := INVEN_TYPE_RIGHT_HAND;
+      end
+      item := critter_inven_obj(attacker, slot);
+
+      if (item and obj_pid(item) == PID_MOLOTOV_COCKTAIL) then begin
+         if (obj_type(target) == OBJ_TYPE_SCENERY and hitType > 1) then begin
+            set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_explosion);
+         end else begin
+            set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_fire);
+            set_attack_explosion_radius(2); // grenade radius
+            set_attack_is_explosion_fire;
+         end
+      end
+   end
+end
