@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.1, built for Fallout 2 v1.02 US
+version 4.4.3, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -53,6 +53,29 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.4.3
+>Fixed a bug introduced in 4.2.9 that caused critters with crippled arms to be unable to attack in certain cases
+>Fixed the critical hit messages of the right arm and left leg for super mutants
+>Fixed add_extra_msg_file script function to prevent it from loading the same msg file more than once
+>Removed DisplaySwiftLearnerExp from ddraw.ini because there is little reason to turn it off
+>Removed SpeedInterfaceCounterAnims=3. Now the AC counter is always instantly updated when switching to other controlled critters in combat
+>Added a fix for the game disappearing from the taskbar after using Alt+Tab
+>Added a fix for the clickability issue of the 'Use Inventory Item On' action when the selected item overlaps an object
+>Added a fix for the xp exploit from canceling Here and Now perk when the player has Swift Learner perk
+>Added support for loading an external DirectDraw wrapper (ddraw.dll) from the <GameRoot>\wrapper\ directory for rendering
+>Added a static books mod and a molotov fire damage mod to the example mods in the modders pack
+
+v4.4.2
+>Fixed a bug in XPTable that could cause a hang when leveling up in some cases
+>Fixed the critical hit messages of the right arm for some critter types
+>Changed add_mult_objs_to_inven script function to allow adding more than 99999 instances of an object in one go
+>Added a fix to use 'English' as the fallback language directory for loading credits.txt/quotes.txt
+>Added a fix for gaining two levels at once when leveling up from level 97
+>Added a fix for the modulo operator treating negative integers as unsigned
+>Added a fix to prevent integer overflow for the number of items in a stack in the inventory
+>Added a fix to COMBATDAMAGE hook to prevent instadeath critical hits for no damage
+>New script function: reg_anim_animate_and_move
 
 v4.4.1
 >HRP: Fixed the clickability issue of the file list for save/load and 'print to file' options in the character screen
@@ -494,7 +517,7 @@ v4.2.1
 >Fixed move_obj_inven_to_obj/drop_obj script functions not removing the equipped armor properly for the player and party members
 >Fixed inven_unwield script function not updating the active item button on the interface bar for the player
 >Fixed art_change_fid_num script function not setting player's FID correctly when the hero appearance mod is enabled
->Fixed critter_add/rm_trait script functions ignoring the value of the 'amount' argument. Note: pass negative amount values to critter_rm_trait to remove all ranks of the perk (vanilla behavior)
+>Fixed critter_add/rm_trait script functions ignoring the 'amount' argument. Note: pass negative amount values to critter_rm_trait to remove all ranks of the perk (vanilla behavior)
 >Fixed the xp bonus set by set_swiftlearner_mod script function not being reset on game load
 >Fixed the player name while controlling other critters
 >Fixed NPC combat control mod not removing the inherited perks from controlled critters properly
@@ -685,7 +708,7 @@ Various bug fixes and features based on the work by Mr.Stalin:
 >Fixed critter_mod_skill script function taking a negative amount value as a positive
 >Fixed a crash when calling use_obj/use_obj_on_obj without using set_self in global scripts
 >Fixed pickup_obj, drop_obj, and use_obj script functions not working properly in some cases
->Fixed TimeLimit=-3 not returning the correct year, and removed the setting value -2 (Now it works the same as -3)
+>Fixed TimeLimit=-3 not returning the correct year, and removed the setting value of -2 (Now it works the same as -3)
 >Fixed the mouse cursor lag on the world map when WorldMapFPSPatch is enabled
 >Fixed issues with the game speed tweak. Now the game speed will be temporarily set to normal speed when in the inventory or dialogue, and it doesn't affect the endgame slideshow
 >Fixed and improved the functionality of UseFileSystemOverride and fs_* script functions
@@ -850,7 +873,7 @@ v4.0.4
 v4.0.3
 >Fixed the broken ExtraGameMsgFileList option
 >Fixed a bug in NPC combat control mod that increases the rank of Gecko Skinning perk when the combat ends
->Fixed add_mult_objs_to_inven script function only adding 500 of an object when the value of the 'count' argument is over 99999
+>Fixed add_mult_objs_to_inven script function adding only 500 instances of an object when the 'count' argument is over 99999
 >Improved the fix for player's base EMP DR to make sure the value is set correctly
 >Item highlighting mod now only highlights lootable corpses
 
