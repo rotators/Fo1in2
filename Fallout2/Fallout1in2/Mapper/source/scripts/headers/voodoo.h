@@ -24,6 +24,10 @@ variable $addr;
 #include "debug.h"
 #include "voodoo_lib.h"
 
+// This will revert the nerfed player hit chance back to how it was in Fo1
+#define VOODOO_RevertToHitPlayerNerf \
+               write_byte(0x4244ED, 0xEB)
+
 // This will change the skill bonus from survivalist perk to 0.
 // The bonus for all perk ranks is applied via gl_survivalist.ssl script.
 #define VOODOO_survivalist_bonus \
