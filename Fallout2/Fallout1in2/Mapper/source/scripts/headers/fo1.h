@@ -1,6 +1,6 @@
 /*
 
-    Generic Fo1 defines
+    Generic Fo1in2 defines
 
 */
 
