@@ -244,7 +244,7 @@ FUNCTION REFERENCE
 - Returns FID of a roof tile at given tile number and elevation. Note that FID of 1 is used when there is no actual roof.
 
 -----
-##### `void reg_anim_combat_check`
+##### `void reg_anim_combat_check(int enable)`
 - Allows enabling all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin() ... reg_anim_end()` code block.
 
 **Some additional `reg_anim_*` functions were introduced. They all work in the same convention as vanilla functions and use the same underlying code.**
@@ -1133,6 +1133,11 @@ sfall_funcX metarule functions
 `void sfall_func4("reg_anim_animate_and_move", object obj, int tile, int animID, int delay)`
 - Plays the specified animation while simultaneously moving the object to the given tile
 - `delay`: delay from the previous animation. A value of -1 will execute the specified animation immediately after the previous one in the sequence ends
+
+----
+#### signal_close_game
+`void sfall_func0("signal_close_game")`
+- Works in a similar way to vanilla function: `metarule(METARULE_SIGNAL_END_GAME, 0)`, but it will then close the game instead of only returning the player to the main menu
 
 
 ****

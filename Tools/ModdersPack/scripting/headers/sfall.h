@@ -391,6 +391,7 @@
 #define set_window_flag(winID, flag, value)                     sfall_func3("set_window_flag", winID, flag, value)
 #define show_win                                                sfall_func0("show_window")
 #define show_window(winName)                                    sfall_func1("show_window", winName)
+#define signal_close_game                                       sfall_func0("signal_close_game")
 #define spatial_radius(obj)                                     sfall_func1("spatial_radius", obj)
 #define string_compare(str1, str2)                              sfall_func2("string_compare", str1, str2)
 #define string_compare_locale(str1, str2, codePage)             sfall_func3("string_compare", str1, str2, codePage)
