@@ -11,7 +11,7 @@ Le jeu peut se jouer entièrement en français. Pour toute question ou correctio
 Pour utiliser ce mod allez dans le 'fallout2.cfg' et modifiez la ligne : 'language=french'
 
 Dans le 'ddraw.ini', allez à la section [ExtraPatches] et ajoutez la ligne :
-"PatchFile[nombre]=mods\fo1_french" à la fin de la liste du "PatchFile".
+"PatchFile[nombre]=mods\fo1_lang_french" à la fin de la liste du "PatchFile".
 
 Le jeu charge les mods dans l'ordre de la liste.
 S'il y a plus d'un mod à ajouter, n'oubliez pas de corriger les nombres dans la liste de ""PatchFileX" (1, 2, 3, ...).
