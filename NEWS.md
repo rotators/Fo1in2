@@ -1,5 +1,8 @@
 Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1in2/releases/tag/v1.9.3324))
 
+- **Added**: Full ai generated Ron Perlman voice for the Expanded Ending slides.
+- **Added**: New mini-mod for restored "original" Junktown endings (inverted Killian and Gizmo consequences).
+- **Added**: New mini-mod that replaced the rerecorded narrator lines for the expanded ending slides option with a ai generated Ron Perlman version
 - **Added**: The nerfed hit chance in Fo2 can now be reverted back to the version in Fo1 (GVAR_ENABLE_FO2_HITCHANCE in fo1_settings.ini)
 - **Fixed**: Added missing dialog for the hintbook and tweaked the text to fit Fo1in2.
 - **Fixed**: Crash when delivering pulse grenades to Sophia
