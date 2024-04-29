@@ -48,6 +48,11 @@ sed -ri 's/^[\ \-]+//' "$news"
 # remove all lines not starting with keywords
 sed -ri "/^(${keywords}):/!d" "$news"
 
+# remove unwanted entries
+if [[ "$repo" == "rotators/Fo1in2" ]] && [[ "$tag" == "v1.9.3324" ]]; then
+   sed -ri "/^Added: New mini-mod that replaced the rerecorded narrator lines for the expanded ending slides/d" "$news"
+fi
+
 # create a list, make keywords bold
 sed -ri 's!^([A-Za-z]+)!- **\1**!' "$news"
 
