@@ -47,5 +47,5 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
        git mv "$ssl_full" "$ssl_full_new"
     fi
 
-    unix2dos -q "$ssl_full_new"
+    dos2unix -q "$ssl_full_new"
 done
