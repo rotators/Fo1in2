@@ -247,6 +247,8 @@ procedure Encounter_handler begin
 end
 
 procedure start begin
+variable terrain_time, time, skill;
+
    if (game_loaded) then begin
       set_global_script_type(2);
       set_global_script_repeat(1);
@@ -258,4 +260,22 @@ procedure start begin
    end
    call SetWorldmapInfo;
    if fo1in2_radiation_enabled then call SetRadiation;
+
+   // Override Fo2 wm travel time to match Fo1 more closely
+   skill := has_skill(dude_obj, SKILL_OUTDOORSMAN);
+   if (skill > 100) then skill := 100;
+
+   if is_terrain_mountain then begin
+      terrain_time := 0.625; // 20h
+   end
+   else if is_terrain_city then begin
+      terrain_time := 0.245; // 6h
+   end
+   else begin
+      terrain_time := 0.408; // 10h
+   end
+   time := (-0.0075717243419 * skill + 1.75717243419) * terrain_time;
+
+   //debug("terrain_time: " + time);
+   set_map_time_multi(time);
 end
