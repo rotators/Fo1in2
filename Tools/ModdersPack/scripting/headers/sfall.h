@@ -144,9 +144,9 @@
 #define reverse_array(array)        resize_array(array, -4)
 // randomly shuffle elements in list/map
 #define shuffle_array(array)        resize_array(array, -5)
-// sort map in ascending order by key value
+// sort map in ascending order by value
 #define sort_map_value(array)       resize_array(array, -6)
-// sort map in descending order by key value
+// sort map in descending order by value
 #define sort_map_reverse(array)     resize_array(array, -7)
 // remove element from map or just replace value with 0 for list
 #define unset_array(array, key)     set_array(array, key, 0)
@@ -282,6 +282,7 @@
 
 /* SFALL_FUNCX MACROS */
 
+#define FUNC_SELECTOR_4(_1,_2,_3,_4,FUNC,...)                   FUNC
 #define FUNC_SELECTOR_7(_1,_2,_3,_4,_5,_6,_7,FUNC,...)          FUNC
 
 #define add_extra_msg_file(name)                                sfall_func1("add_extra_msg_file", name)
@@ -289,6 +290,7 @@
 #define add_iface_tag                                           sfall_func0("add_iface_tag")
 #define add_trait(traitID)                                      sfall_func1("add_trait", traitID)
 #define art_cache_clear                                         sfall_func0("art_cache_clear")
+#define art_frame_data(art, frame, rot)                         sfall_func3("art_frame_data", art, frame, rot)
 #define attack_is_aimed                                         sfall_func0("attack_is_aimed")
 #define car_gas_amount                                          sfall_func0("car_gas_amount")
 #define clear_window                                            sfall_func0("win_fill_color")
@@ -352,7 +354,11 @@
 #define item_weight(obj)                                        sfall_func1("item_weight", obj)
 #define lock_is_jammed(obj)                                     sfall_func1("lock_is_jammed", obj)
 #define loot_obj                                                sfall_func0("loot_obj")
-#define message_box(text)                                       sfall_func1("message_box", text)
+#define message_box1(text)                                      sfall_func1("message_box", text)
+#define message_box2(text, flags)                               sfall_func2("message_box", text, flags)
+#define message_box3(text, flags, color1)                       sfall_func3("message_box", text, flags, color1)
+#define message_box4(text, flags, color1, color2)               sfall_func4("message_box", text, flags, color1, color2)
+#define message_box(...)                                        FUNC_SELECTOR_4(__VA_ARGS__,message_box4,message_box3,message_box2,message_box1)(__VA_ARGS__)
 #define metarule_exist(metaruleName)                            sfall_func1("metarule_exist", metaruleName)
 #define npc_engine_level_up(toggle)                             sfall_func1("npc_engine_level_up", toggle)
 #define obj_is_openable(obj)                                    sfall_func1("obj_is_openable", obj)

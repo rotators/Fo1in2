@@ -1139,6 +1139,16 @@ sfall_funcX metarule functions
 `void sfall_func0("signal_close_game")`
 - Works in a similar way to vanilla function: `metarule(METARULE_SIGNAL_END_GAME, 0)`, but it will then close the game instead of only returning the player to the main menu
 
+----
+#### art_frame_data
+`array sfall_func3("art_frame_data", string/int artFile/artId, int frame, int rotation)`
+- Returns the dimensions of a given PCX or FRM frame as a temp array in the form **[width, height]**
+- `artFile/artId`: path to the PCX/FRM file (e.g. `art\\inven\\5mmap.frm`), or its FRM ID number (e.g. `0x7000026`, see specification of the FID format)
+
+**Optional arguments:**
+- `frame`: frame number, the first frame starts from zero
+- `rotation`: rotation to get the frame for, useful when reading FRM files by path
+
 
 ****
 _See other documentation files (arrays.md, hookscripts.md) for related functions reference._
