@@ -711,5 +711,5 @@ procedure get_highest_skill_in_party(variable skill) begin
    return max;
 end
 
-#define party_highest_skill_level(x) \
+#define has_skill_party(x) \
    get_highest_skill_in_party(x)

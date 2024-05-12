@@ -29,6 +29,9 @@
 #define is_terrain_coast               (get_current_terrain_name == mstr_worldmap(1003))
 */
 
+// Check if the player is currently traveling the wm with car
+#define car_on_wm                      ((global_var(GVAR_PLAYER_GOT_CAR) != 0) and (global_var(GVAR_CAR_CUR_MAP) == -1))
+
 // Where the player will get radiation on the worldmap
 #define is_terrain_radiated_mountains  (get_current_terrain_name == mstr_worldmap(1005))
 #define is_terrain_radiated_desert     (get_current_terrain_name == mstr_worldmap(1006))
