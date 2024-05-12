@@ -247,7 +247,7 @@ procedure Encounter_handler begin
 end
 
 procedure start begin
-variable terrain_time, time, skill, test;
+variable terrain_time, time, skill;
 
    if (game_loaded) then begin
       set_global_script_type(2);
@@ -262,7 +262,9 @@ variable terrain_time, time, skill, test;
    if fo1in2_radiation_enabled then call SetRadiation;
 
    // Override Fo2 wm travel time to match Fo1 more closely
-   skill := has_skill(dude_obj, SKILL_OUTDOORSMAN);
+   //skill := has_skill(dude_obj, SKILL_OUTDOORSMAN);
+   skill := party_highest_skill_level(SKILL_OUTDOORSMAN);
+
    if (skill > 100) then skill := 100;
 
    // Add flat +20 if player has a motion sensor or the Eyebot is in the party
@@ -280,8 +282,8 @@ variable terrain_time, time, skill, test;
    else begin
       terrain_time := 0.408; // 10h
    end
-   time := ((-0.0075717243419 * skill + 1.75717243419) * terrain_time);
+   time := ((-0.0075717243419 * skill + 1.75717243419) * terrain_time) * (1 - dude_perk(PERK_pathfinder) * 0.25);
 
-   //debug("terrain_time: " + terrain_time);
+   //debug("terrain_time: " + time);
    set_map_time_multi(time);
 end

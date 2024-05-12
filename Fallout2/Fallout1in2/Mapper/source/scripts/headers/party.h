@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "sfall/sfall.h"
+
 /***************************************************************
     The following contain all of the Party information and
     commands for Fallout 2
@@ -695,3 +697,19 @@ procedure checkPartyMembersNearDoor begin
    CHECKMEMBERNEARDOOR(Vasquez_In_Party, Vasquez_ptr)
    return 0;
 end
+
+/***************************************************************************************
+   Get who has the highest skill in the party
+****************************************************************************************/
+procedure get_highest_skill_in_party(variable skill) begin
+   variable who, max;
+   foreach (who in party_member_list_critters) begin
+      if (has_skill(who, skill) > max) then begin
+         max := has_skill(who, skill);
+      end
+   end
+   return max;
+end
+
+#define party_highest_skill_level(x) \
+   get_highest_skill_in_party(x)
