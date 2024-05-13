@@ -15,4 +15,5 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: The player's ouch message (stupid only) was missing when healed by Thorndyke.
 - **Fixed**: The random rotation of FoA guard/scout movement was out of range.
 - **Fixed**: possible crash when talking to Katja when escaping the military base
+- **Tweaked**: If player has disabled the Fo2 party member limit, the Magnetic Personality perk won't show up anymore, since it is useless.
 - **Tweaked**: Reverted Fixt changes to party member stats, to bring them back more in line with vanilla Fo1. Adjusted stats for party member level-up accordingly.
