@@ -970,9 +970,9 @@
 #define SCRIPT_RAIDDOOR  (958)  //  RaidDoor.int    ; the cell door for tandi in the raiders
 #define SCRIPT_GENEMIT   (959)  //  GenEmit.int     ; generic damaged force field emitter
 #define SCRIPT_TEST      (960)  //  Test.int        ; testing scripts
+#define SCRIPT_PEASDOG   (961)  //  Peasdog.int     ; Dog victim for random encounters.
 
 // FalloutFIXT
-#define SCRIPT_CHITEM    (961)
 #define SCRIPT_CARCUST   (962)
 #define SCRIPT_JBOXER    (963)
 #define SCRIPT_STAPBOX   (964)

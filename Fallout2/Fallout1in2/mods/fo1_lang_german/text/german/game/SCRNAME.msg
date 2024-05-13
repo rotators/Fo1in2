@@ -958,7 +958,7 @@
 {1058}{}{Tür}                                           #  RaidDoor.int
 {1059}{}{Beschädigter Kraftfeldemitter}                 #  GenEmit.int
 {1060}{}{Test}                                          #
-{1061}{}{Cheater Item}                                  #  Chitem.int
+{1061}{}{Hund}                                          #  Peasdog.int    ; Dog victim for random encounters.
 {1062}{}{Caravankunde}                                  #  carcust.int
 {1063}{}{Boxer}                                         #  jboxer.int
 {1064}{}{}                                              #  stapbox.int

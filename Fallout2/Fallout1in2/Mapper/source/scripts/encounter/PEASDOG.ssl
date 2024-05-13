@@ -1,0 +1,69 @@
+/*
+
+   Random Coast Encounter - Dog of the peasants being attacked by Raiders.
+
+*/
+
+#include "define.h"
+
+#define NAME                    SCRIPT_PEASDOG
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "command.h"
+#include "modreact.h"
+
+procedure start;
+procedure push_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+variable initial := 0;
+variable dude_enemy;
+
+procedure start begin
+   if (not(initial) and map_first_run) then begin
+      set_self_ai(global_var(GVAR_MYST_STRANGER_ITEM));
+      set_self_team(TEAM_SHADY_SANDS);
+      initial := 1;
+   end
+end
+
+procedure push_p_proc begin
+end
+
+procedure critter_p_proc begin
+   dude_enemy := global_var(GVAR_RND_ENC_PEASANTS_HOSTILE);
+   if ((dude_enemy >= 3) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
+      call flee_dude;
+   end
+   else begin
+      if ((global_var(GVAR_RND_ENC_RAIDERS_ALIVE) <= 0) and (dude_enemy < 3) and (global_var(GVAR_RND_ENC_RAIDERS_KILLED) > 0)) then begin
+         terminate_combat;
+      end
+   end
+end
+
+procedure damage_p_proc begin
+   if source_is_dude then begin
+      dude_enemy := global_var(GVAR_RND_ENC_PEASANTS_HOSTILE);
+      dude_enemy := dude_enemy + 1;
+      set_global_var(GVAR_RND_ENC_PEASANTS_HOSTILE, dude_enemy);
+   end
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure pickup_p_proc begin
+   dude_enemy := global_var(GVAR_RND_ENC_PEASANTS_HOSTILE);
+   dude_enemy := dude_enemy + 1;
+   set_global_var(GVAR_RND_ENC_PEASANTS_HOSTILE, dude_enemy);
+end
+
+procedure talk_p_proc begin
+   dude_enemy := global_var(GVAR_RND_ENC_PEASANTS_HOSTILE);
+end
