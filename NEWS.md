@@ -1,14 +1,18 @@
 Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1in2/releases/tag/v1.9.3324))
 
+- **Added**: "Mangled" corpse script to the dead bodies in the Necropolis sewers that were dragged away by rats (Restored cut content).
 - **Added**: Full ai generated Ron Perlman voice for the Expanded Ending slides.
 - **Added**: New mini-mod for restored "original" Junktown endings (inverted Killian and Gizmo consequences).
 - **Added**: The nerfed hit chance in Fo2 can now be reverted back to the version in Fo1 (GVAR_ENABLE_FO2_HITCHANCE in fo1_settings.ini)
 - **Fixed**: Added missing dialog for the hintbook and tweaked the text to fit Fo1in2.
 - **Fixed**: Crash when delivering pulse grenades to Sophia
+- **Fixed**: Dog in random coast encounter wasn't called "Dog", because it shared the script with the peasants.
 - **Fixed**: Footsteps mod would crash the game when triggering corpse aging on map enter.
 - **Fixed**: Incorrect LVAR check was used for MacRae's teach option after helping the Blades.
+- **Fixed**: Lance in the Shady Sands encounter could talk about the player having dealt with the Khans, even though he didn't yet.
 - **Fixed**: One of tiles for John's work routine was out of range.
 - **Fixed**: One of tiles for V13 water guard's sleep routine was out of range.
+- **Fixed**: People of average intelligence could run into a bug with Lou that would restart the whole dialog.
 - **Fixed**: Radscorpions near the Glow could have a wrong script.
 - **Fixed**: Razor had a visible debug dialog option.
 - **Fixed**: The computer course in Brotherhood was ten times longer.
