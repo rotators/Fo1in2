@@ -242,8 +242,8 @@
 {332}{}{Oh, yeah.}
 {333}{}{Yeah, he deserved it and I don't feel bad about doing it.}
 # Sid works for Beth. Sid is male.
-{334}{}{You did it? Really? I love you! [Beth looks over at Sid] Don't even think about it wise guy... Here, to show my gratitude... [Beth gives you six stimpaks.] It's not much, but I really appreciate it!}
-{335}{}{You did it? Really? You're the best! You have no idea how happy I was to hear that he was dead. Here take these... [Beth gives you six stimpaks.] It's not much, but I really appreciate it!}
+{334}{}{You did it? Really? I love you! [Beth looks over at Sid] Don't even think about it wise guy... Here, to show my gratitude... [Beth gives you six stimpaks] It's not much, but I really appreciate it!}
+{335}{}{You did it? Really? You're the best! You have no idea how happy I was to hear that he was dead. Here take these... [Beth gives you six stimpaks] It's not much, but I really appreciate it!}
 {336}{}{Sorry I don't have anything you like.}
 {337}{}{Don't see anything you like? I'll try to get better goods.}
 {338}{}{Sorry if you didn't like my offer, but I've got to be able to sell if for a profit.}
