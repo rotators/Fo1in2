@@ -140,7 +140,7 @@
 {239}{}{Okay. Who could have taken her?}
 {240}{}{Ah... no thanks. I got other stuff I gotta take care of.}
 {241}{Ara_42}{As Dharma said, 'While you are out hunting the wolves, do not bring the lion to your den.' If you will not help, you must leave here.}
-{242}{Ara_43}{I will be forever in your debt for your courage and bravery, wanderer. Here is your reward.}
+{242}{Ara_43}{I will be forever in your debt for your courage and bravery, wanderer. Here is your reward. [Aradesh gives you 500 caps]}
 {243}{}{Thanks. Can I ask you a few more questions, first?}
 {244}{}{Thanks.}
 {245}{Ara_44}{Until we meet again, my friend. May the water you find in the desert not shine at you in the dark.}

@@ -137,7 +137,10 @@ variable pickup_attempt;
 
 #define LVAR_Herebefore              (4)
 #define LVAR_Invasion                (6)
+#define LVAR_Grief                   (7)
+#define LVAR_TandiReward             (8)
 #define LVAR_Caught_Stealing         (9)
+#define LVAR_RadscorpionGone         (10)
 
 procedure start begin
 end
@@ -177,7 +180,7 @@ procedure talk_p_proc begin
          call do_dialogue;
       end
    end
-   if (local_var(7) == 1) then begin
+   if (local_var(LVAR_Grief) == 1) then begin
       self_walk_to_tile(32945);
    end
 end
@@ -191,6 +194,21 @@ procedure map_enter_p_proc begin
       set_self_team(TEAM_SHADY_SANDS);
       set_self_ai(AI_PEASANT);
    end
+end
+
+procedure damage_p_proc begin
+   if source_is_dude then begin
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+      tmp_hostile := 1;
+   end
+end
+
+procedure destroy_p_proc begin
+   if source_is_dude then begin
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+   end
+   inc_good_critter
+   set_global_var(GVAR_ARADESH_STATUS, 1);
 end
 
 procedure pickup_p_proc begin
@@ -228,14 +246,14 @@ procedure do_dialogue begin
             call aradesh37;
       end
       else if (local_var(LVAR_Herebefore) == 1) then begin
-         if (local_var(5) == 1) then begin
+         if (local_var(5) == 1) then begin // This can never trigger??
             call aradesh46;
          end
-         else if (get_tandi_returned and (local_var(8) == 0)) then begin
+         else if (get_tandi_returned and (local_var(LVAR_TandiReward) == 0)) then begin
             call aradesh43;
          end
-         else if (radscorp_quest_completed and (local_var(10) == 0)) then begin
-            set_local_var(10, 1);
+         else if (radscorp_quest_completed and (local_var(LVAR_RadscorpionGone) == 0)) then begin
+            set_local_var(LVAR_RadscorpionGone, 1);
             call aradesh31;
          end
          else if (get_tandi_returned and not(radscorp_quest_completed)) then begin
@@ -793,8 +811,8 @@ procedure aradesh42 begin
 end
 
 procedure aradesh43 begin
-   if (local_var(8) == 0) then begin
-      set_local_var(8, 1);
+   if (local_var(LVAR_TandiReward) == 0) then begin
+      set_local_var(LVAR_TandiReward, 1);
       dude_caps_adjust(500);
    end
    if (local_var(LVAR_Caught_Stealing) != 0) then begin
@@ -855,7 +873,7 @@ procedure aradeshx3 begin
 end
 
 procedure aradeshx5 begin
-   set_local_var(7, 1);
+   set_local_var(LVAR_Grief, 1);
 end
 
 procedure aradesh49 begin
@@ -960,20 +978,4 @@ end
 
 procedure aradesh73 begin
    NMessage(275);
-end
-
-
-procedure destroy_p_proc begin
-   if source_is_dude then begin
-      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-   end
-   inc_good_critter
-   set_global_var(GVAR_ARADESH_STATUS, 1);
-end
-
-procedure damage_p_proc begin
-   if source_is_dude then begin
-      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-      tmp_hostile := 1;
-   end
 end
