@@ -22,21 +22,25 @@ procedure damage_p_proc;
 
 import variable Cur_Door_Ptr;
 
+#define LVAR_DoorStatus       (0)
 #define LVAR_DoorDestroyed    (1)
-#define LVAR_DoorState        (2)
+#define LVAR_DoorHP           (2)
 #define LVAR_Gave_Locks_XP    (3)
+
+#define DOOR_LOCKED           (0)
+#define DOOR_UNLOCKED         (1)
 
 procedure start begin
 end
 
 procedure use_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
       obj_lock(self_obj);
    end
    else begin
       obj_unlock(self_obj);
    end
-   if ((local_var(0) == 0) and source_is_dude) then begin
+   if ((local_var(LVAR_DoorStatus) == DOOR_LOCKED) and source_is_dude) then begin
       script_overrides;
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
@@ -44,12 +48,12 @@ end
 
 procedure use_skill_on_p_proc begin
    variable Item := 0;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
          Item := roll_vs_skill(source_obj, SKILL_LOCKPICK, -40);
          if (is_success(Item)) then begin
-            set_local_var(0, 1);
+            set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
             if source_is_dude then
                display_msg(mstr(100));
             else
@@ -82,7 +86,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
@@ -100,7 +104,7 @@ procedure use_obj_on_p_proc begin
          Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -10);
 
       if (is_success(Skill)) then begin
-         set_local_var(0, 1);
+         set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
          display_msg(mstr(100));//{100}{}{You unlock the door.}
          if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
             set_local_var(LVAR_Gave_Locks_XP, 1);
@@ -121,7 +125,7 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
       obj_lock(self_obj);
    end
    else begin
@@ -132,8 +136,8 @@ end
 procedure damage_p_proc begin
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
 
-      set_local_var(LVAR_DoorState, local_var(LVAR_DoorState) + 1);
-      if (local_var(LVAR_DoorState) > 2) then begin
+      set_local_var(LVAR_DoorHP, local_var(LVAR_DoorHP) + 1);
+      if (local_var(LVAR_DoorHP) > 2) then begin
          if not(is_loading_game) then set_self_invisible;
          set_local_var(LVAR_DoorDestroyed, 1);
       end
