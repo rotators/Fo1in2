@@ -11,15 +11,30 @@
 
 #include "sfall.h"
 
+/**
+   Checks if *str* contains *sub* as part of it anywhere in the string. 
+ */
 #define string_contains(str, sub)      (string_find(str, sub) != -1)
-#define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
+
+/**
+   Checks if *str* contains *sub* at the beginning of the string. 
+ */
+#define string_starts_with(str, sub)   (string_find(str, sub) == 0)
+
+/**
+   Same as *string_format*, but takes parameters from a given list array.
+ */
 #define string_format_array(fmt, arr)  sprintf_array(fmt, arr)
-// Replaces all occurances of substring in a string with another substring
+
+/**
+   Replaces all occurances of *search* in *str* with *replace* string.
+ */
 #define string_replace(str, search, replace)    (string_join(string_split(str, search), replace))
+
 #define sprintf2(fmt, arg1, arg2)      string_format2(fmt, arg1, arg2)
 
 /**
- * Join array of strings using delimeter
+   Joins *array* of strings into a new string using *join* as delimeter.
  */
 procedure string_join(variable array, variable join) begin
    variable str, i, len;
@@ -35,7 +50,7 @@ procedure string_join(variable array, variable join) begin
 end
 
 /**
- * sprintf with unlimited number of arguments
+   Like *sprintf* but takes parameters from a given list array.
  */
 procedure sprintf_array(variable str, variable args) begin
    variable split, len, i, j;
@@ -72,9 +87,7 @@ variable lst, n;
    return string_len(str) - (string_len(lst[n-1]) + string_len(substr));
 end*/
 
-/**
- * Basically the same as string_split, but delim is of type char instead of string
- */
+// UNFINISHED, don't use!
 procedure string_get_tokens(variable str, variable delim) begin
    variable lst, line, token, maxlen, len, count;
    count := 1;
@@ -97,6 +110,9 @@ procedure string_get_tokens(variable str, variable delim) begin
    return count;
 end
 
+/**
+   Creates a string by repeating *str* *count* times.
+ */
 procedure string_repeat(variable str, variable count) begin
    variable out := "", i := 0;
    while (i < count) do begin
@@ -129,17 +145,23 @@ procedure string_split_ints(variable str, variable split) begin
    return result;
 end
 
-// atoi proc wrapper, for use as callback
+/**
+ * *atoi* proc wrapper, for use as a delegate.
+ */
 procedure string_to_int(variable str) begin
    return atoi(str);
 end
 
-// atof proc wrapper, for use as callback
+/**
+ * *atof* proc wrapper, for use as a delegate.
+ */
 procedure string_to_float(variable str) begin
    return atof(str);
 end
 
-// converts any value to a string, for use as callback
+/**
+ * Converts any value to a string, for use as a delegate.
+ */
 procedure to_string(variable val) begin
    return ""+val;
 end
