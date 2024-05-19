@@ -216,6 +216,7 @@
 #############################################################
 
 {193}{}{Das hat nicht mal einen Kratzer an der Tür hinterlassen.}
+{1931}{}{The door is damaged but still won't open.}
 
 {200}{}{An dieser Tür ist kein Schloss, das man aufbrechen könnte.}
 {201}{}{Du stellst einige Unregelmäßigkeiten in der Mauer fest.}

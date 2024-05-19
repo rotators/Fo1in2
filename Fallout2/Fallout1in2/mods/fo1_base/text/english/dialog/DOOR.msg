@@ -289,6 +289,7 @@
 #############################################################
 
 {193}{}{That doesn't even put a scratch on the door.}
+{1931}{}{The door is damaged but still won't open.}
 
 # Fo1 the master hidden door:
 {200}{}{There is no lock on this door to pick.}
