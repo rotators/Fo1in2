@@ -163,6 +163,8 @@ end
 
 /**
  * Returns first index of zero value in a list array.
+ * @arg {list} array
+ * @ret {int}
  */
 procedure get_empty_array_index(variable array) begin
    variable zero := false;
@@ -178,7 +180,10 @@ procedure get_empty_array_index(variable array) begin
 end
 
 /**
- * Pushes new item to the end of a list array.
+ * Pushes new item to the end of a list array and returns the array.
+ * @arg {list} array
+ * @arg {any} item
+ * @ret {list}
  */
 procedure array_push(variable array, variable item) begin
    variable n;
@@ -190,6 +195,8 @@ end
 
 /**
  * Removes last item from list array (reducing it's size by 1) and returns it's value.
+ * @arg {list} array
+ * @ret {mixed}
  */
 procedure array_pop(variable array) begin
    variable n, ret;
@@ -204,6 +211,8 @@ end
 
 /** 
  * Returns a temp list of keys from a given map array.
+ * @arg {array}
+ * @ret {list}
  */
 procedure array_keys(variable array) begin
    variable tmp, i, len;
@@ -219,6 +228,8 @@ end
 
 /**
  * Returns a temp list of values from a given map array.
+ * @arg {array} array
+ * @ret {array}
  */
 procedure array_values(variable array) begin
    variable v, tmp, i, len;
@@ -234,6 +245,8 @@ end
 
 /**
  * Sets given array as permanent and returns it.
+ * @arg {array} array
+ * @ret {array}
  */
 procedure array_fixed(variable array) begin
    fix_array(array);
@@ -242,6 +255,10 @@ end
 
 /**
  * Returns a slice of a given list array as a new temp array.
+ * @arg {list} array
+ * @arg {int} index - Start position to slice from.
+ * @arg {int} count - Number of elements to slice.
+ * @ret {list}
  */
 procedure array_slice(variable array, variable index, variable count) begin
    variable tmp, i, n;
@@ -261,7 +278,11 @@ procedure array_slice(variable array, variable index, variable count) begin
 end
 
 /**
- * Removes a slice of given list array.
+ * Removes a slice of given list array and returns it.
+ * @arg {list} array
+ * @arg {int} index - Start position to remove from.
+ * @arg {int} count - Number of elements to remove.
+ * @ret {list}
  */
 procedure array_cut(variable array, variable index, variable count) begin
    variable i, n;
@@ -281,7 +302,10 @@ procedure array_cut(variable array, variable index, variable count) begin
 end
 
 /**
- * Removes all values in arr1 that also present in arr2.
+ * Removes all values in arr1 that also present in arr2 and returns arr1.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array}
  */
 procedure array_diff(variable arr1, variable arr2) begin
    variable i, v, isMap;
@@ -300,6 +324,11 @@ end
 
 /**
  * Copy a slice of one array into another (will not resize)
+ * @arg {list} src - Source array.
+ * @arg {int} srcPos - Position in source array.
+ * @arg {list} dest - Destination array.
+ * @arg {int} dstPos - Position in destination array.
+ * @arg {int} size - Number of elements to copy.
  */
 procedure copy_array(variable src, variable srcPos, variable dest, variable dstPos, variable size) begin
   variable i := 0;
@@ -312,6 +341,8 @@ end
 
 /**
  * Creates a shallow copy of the array as a new temp array.
+ * @arg {array} array
+ * @ret {array}
  */
 procedure clone_array(variable array) begin
    variable new, k, v;
@@ -327,6 +358,9 @@ end
 
 /**
  * Compares two arrays (list or map) and returns true if they have identical values in the same order.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {bool}
  */
 procedure arrays_equal(variable arr1, variable arr2) begin
    variable n, i, k1, k2;
@@ -350,6 +384,8 @@ end
 
 /**
  * Returns maximum element in array.
+ * @arg {array} arr
+ * @ret {mixed}
  */
 procedure array_max(variable arr) begin
    variable v, max;
@@ -363,6 +399,8 @@ end
 
 /**
  * Returns minimum element in array.
+ * @arg {array} arr
+ * @ret {mixed}
  */
 procedure array_min(variable arr) begin
    variable v, min;
@@ -376,6 +414,8 @@ end
 
 /**
  * Returns sum of array elements (or concatenated string, if elements are strings).
+ * @arg {array} arr
+ * @ret {mixed}
  */
 procedure array_sum(variable arr) begin
    variable v, sum;
@@ -388,6 +428,8 @@ end
 
 /**
  * Returns a random value from a given list array.
+ * @arg {list} arr
+ * @ret {any}
  */
 procedure array_random_value(variable arr) begin
    return get_array(arr, array_key(arr, random(0, len_array(arr) - 1)));
@@ -399,6 +441,9 @@ end
 /**
  * Array set is a list array that is used as a set of unique values (where no diplicate value is allowed).
  * Tries to add new value to a set and returns true if it was just added.
+ * @arg {list} array - List array to use as a set.
+ * @arg {any} item
+ * @ret {bool}
  */
 procedure add_array_set(variable array, variable item) begin
    variable i := 0;
@@ -428,6 +473,9 @@ end
 
 /**
  * Remove value from a set (list array). Returns true if item was actually found and removed.
+ * @arg {list} array - List array to use as a set.
+ * @arg {any} item
+ * @ret {bool}
  */
 procedure remove_array_set(variable array, variable item) begin
    variable i := 0;
@@ -455,9 +503,10 @@ end
 #undef ARRAY_SET_BLOCK_SIZE
 
 /**
-   Creates a new array filled from a given array by transforming each value using given procedure name.
-   - *arr* - Array to use values from.
-   - *valueFunc* - A name of procedure that accepts value from arr and returns a new value.
+ * Creates a new array filled from a given array by transforming each value using given procedure name.
+ * @arg {array} arr - Array to use values from.
+ * @arg {string} valueFunc - A name of procedure that accepts value from arr and returns a new value.
+ * @ret {array}
  */
 procedure array_transform(variable arr, variable valueFunc) begin
    variable k, v, retArr := temp_array_map if array_is_map(arr) else temp_array(len_array(arr), 0);
@@ -468,10 +517,11 @@ procedure array_transform(variable arr, variable valueFunc) begin
 end
 
 /**
-   Creates a new temp array filled from a given array by transforming each key and value using given procedure name.
-   - *arr* - Array to use keys and values from.
-   - *keyFunc* - A name of procedure that accepts key from arr and returns a new key for the new array.
-   - *valueFunc* - A name of procedure that accepts value from arr and returns a new value.
+ * Creates a new temp array filled from a given array by transforming each key and value using given procedure name.
+ * @arg {array} arr - Array to use keys and values from.
+ * @arg {string} keyFunc - A name of procedure that accepts key from arr and returns a new key for the new array.
+ * @arg {string} valueFunc - A name of procedure that accepts value from arr and returns a new value.
+ * @ret {map}
  */
 procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc) begin
    variable k, v, retArr := temp_array_map;
@@ -483,6 +533,8 @@ end
 
 /**
  * Converts given array into a new map where keys are array values and all values are 1.
+ * @arg {array} arr
+ * @ret {array}
  */
 procedure array_to_set(variable arr) begin
    variable v, retArr := temp_array_map;
@@ -497,8 +549,10 @@ end
 
 /**
  * Adds new empty place for a new block into array. Returns index of new block that was "created".
- * 
- * DEPRECATED, use collections instead
+ * @arg {list} arr - array to add "block" into
+ * @arg {int} blocksize - block size
+ * @ret {int} - index of added block
+ * @deprecated - use collections instead
  */
 procedure add_array_block(variable arr, variable blocksize) begin
    variable begin
@@ -526,8 +580,10 @@ end
 
 /**
  * Removes a block from an array by index
- * 
- * DEPRECATED, use collections instead
+ * @arg {list} arr - array to remove "block" from
+ * @arg {int} blocksize - block size
+ * @arg {int} index - index to remove
+ * @deprecated - use collections instead
  */
 procedure remove_array_block(variable arr, variable blocksize, variable index) begin
    variable len;
@@ -547,9 +603,10 @@ end
 
 /**
  * Fill array (or it's part) with the same value.
- * pos - starting position;
- * count - number of items to fill (use -1 to fill to the end of the array);
- * value - value to set;
+ * @arg {list} arr
+ * @arg {int} pos - starting position
+ * @arg {int} count - number of items to fill (use -1 to fill to the end of the array);
+ * @arg {any} value - value to set;
  */
 procedure array_fill(variable arr, variable pos, variable count, variable value) begin
    variable i := 0;
@@ -563,6 +620,9 @@ end
 
 /**
  * Adds all the values of the second array to the first array.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array} - the first array after modification
  */
 procedure array_append(variable arr1, variable arr2) begin
    variable arr1_len;
@@ -581,6 +641,9 @@ end
 
 /**
  * Loads a "saved" array. If it doesn't exist, creates it (with a given size).
+ * @arg {string} name - saved array name/key
+ * @arg {int} size - size of array to create
+ * @ret {array} - the created/loaded array
  */
 procedure load_create_array(variable name, variable size) begin
    variable arr;
@@ -594,6 +657,9 @@ end
 
 /**
  * Creates and returns a new "saved" array. If array already existed with this name, frees it.
+ * @arg {string} name - saved array name/key
+ * @arg {int} size - size of array to create
+ * @ret {array} - the new array
  */
 procedure get_saved_array_new(variable name, variable size) begin
    variable arr;
@@ -609,6 +675,8 @@ end
 
 /**
  * A collection is a 2-level-deep saved array (a saved array containing other saved arrays as values).
+ * @arg {string} name - name/key of a "root" array
+ * @arg {array} arr - collection array
  */
 procedure save_collection(variable name, variable arr) begin
    variable k, v, keys, oldKeys;
@@ -625,6 +693,11 @@ procedure save_collection(variable name, variable arr) begin
    end
 end
 
+/**
+ * Loads collection by name.
+ * @arg {string} name - name/key of a "root" array
+ * @ret {array}
+ */
 procedure load_collection(variable name) begin
    variable k, v, keys, arr;
    keys := load_array(name);
@@ -645,7 +718,10 @@ end
 */
 
 /**
- * Prints array contents with a given level of recursion.
+ * Formats array contents into a string with a given level of recursion. For debugging.
+ * @arg {array} arr
+ * @arg {int} levels - recursion level
+ * @ret {string}
  */
 procedure debug_array_str_deep(variable arr, variable levels) begin
 #define _newline if (levels > 1) then s += "\n";

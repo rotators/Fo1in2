@@ -23,7 +23,9 @@ end*/
 end*/
 
 /**
-   Parses keyboard shortcut definition (key code + optional modifier key) from a string into an integer for later use in other hotkey procedures.
+ * Parses keyboard shortcut definition (key code + optional modifier key) from a string into an integer for later use in other hotkey procedures.
+ * @arg {string} string
+ * @ret {int}
  */
 procedure parse_hotkey(variable string) begin
    variable lst;
@@ -38,7 +40,9 @@ procedure parse_hotkey(variable string) begin
 end
 
 /**
-   Checks if a given shortcut is currently pressed (see parse_hotkey).
+ * Checks if a given shortcut is currently pressed (see parse_hotkey).
+ * @arg {int} n - hotkey data parsed with *parse_hotkey*
+ * @ret {bool}
  */
 procedure hotkey_pressed(variable n) begin
    if (n < 0x10000) then
@@ -48,7 +52,10 @@ procedure hotkey_pressed(variable n) begin
 end
 
 /**
-   Checks if a shortcut is currently pressed, given that *key* is already pressed.
+ * Checks if a shortcut is currently pressed, given that *key* is already pressed.
+ * @arg {int} n - hotkey data parsed with *parse_hotkey*
+ * @arg {int} key - DX scancode
+ * @ret {bool}
  */
 procedure hotkey_pressed_now(variable n, variable key) begin
    if (n < 0x10000) then
@@ -66,7 +73,11 @@ procedure hotkey_pressed_now(variable n, variable key) begin
 end
 
 /**
-   Loads ini section as map of keys and values parsed as integers (0 values will be skipped!)
+ * Loads ini section as map of keys and values parsed as integers (0 values will be skipped!)
+ * @arg {string} file
+ * @arg {string} section
+ * @arg {bool} [fixArray=false] - if true, *fix_array* will be called automatically on resulting array
+ * @ret {map}
  */
 procedure get_ini_section_int_to_int(variable file, variable section, variable fixArray := false) begin
    variable ar, ar2 := temp_array_map, k, v;

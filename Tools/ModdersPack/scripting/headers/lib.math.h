@@ -16,9 +16,23 @@ end
 
 #define math_max(x, y)               (x if x > y else y)
 #define math_min(x, y)               (x if x < y else y)
+
+/**
+ * Returns true if x is within range: [from, to]
+ * @arg {any} x
+ * @arg {any} from
+ * @arg {any} to
+ * @ret {bool}
+ */
 #define math_in_range(x, from, to)   (x >= from and x <= to)
 
-
+/**
+ * Returns: a if val < a, b if val > b, otherwise val.
+ * @arg {any} val
+ * @arg {any} a
+ * @arg {any} b
+ * @ret {any}
+ */
 procedure math_clamp(variable val, variable a, variable b) begin
    variable min, max;
    if (a < b) then begin

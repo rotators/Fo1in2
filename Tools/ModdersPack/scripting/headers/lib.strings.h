@@ -12,29 +12,48 @@
 #include "sfall.h"
 
 /**
-   Checks if *str* contains *sub* as part of it anywhere in the string. 
+ * Checks if *str* contains *sub* as part of it anywhere in the string. 
+ * @arg {string} str
+ * @arg {string} sub
+ * @ret {bool}
  */
 #define string_contains(str, sub)      (string_find(str, sub) != -1)
 
 /**
-   Checks if *str* contains *sub* at the beginning of the string. 
+ * Checks if *str* contains *sub* at the beginning of the string.
+ * @arg {string} str
+ * @arg {string} sub
+ * @ret {bool}
  */
 #define string_starts_with(str, sub)   (string_find(str, sub) == 0)
 
 /**
-   Same as *string_format*, but takes parameters from a given list array.
+ * Same as *string_format*, but takes parameters from a given list array.
+ * @arg {string} fmt
+ * @arg {list} arr
+ * @ret {string}
  */
 #define string_format_array(fmt, arr)  sprintf_array(fmt, arr)
 
 /**
-   Replaces all occurances of *search* in *str* with *replace* string.
+ * Replaces all occurances of *search* in *str* with *replace* string.
+ * @arg {string} str
+ * @arg {string} search
+ * @arg {string} replace
+ * @ret {string}
  */
 #define string_replace(str, search, replace)    (string_join(string_split(str, search), replace))
 
+/**
+ * @deprecated - use *string_format* instead
+ */
 #define sprintf2(fmt, arg1, arg2)      string_format2(fmt, arg1, arg2)
 
 /**
-   Joins *array* of strings into a new string using *join* as delimeter.
+ * Joins *array* of strings into a new string using *join* as delimeter.
+ * @arg {list} array
+ * @arg {string} join
+ * @ret {string}
  */
 procedure string_join(variable array, variable join) begin
    variable str, i, len;
@@ -50,7 +69,10 @@ procedure string_join(variable array, variable join) begin
 end
 
 /**
-   Like *sprintf* but takes parameters from a given list array.
+ * Like *sprintf* but takes parameters from a given list array.
+ * @arg {string} str
+ * @arg {list} args
+ * @ret {string}
  */
 procedure sprintf_array(variable str, variable args) begin
    variable split, len, i, j;
@@ -111,7 +133,10 @@ procedure string_get_tokens(variable str, variable delim) begin
 end
 
 /**
-   Creates a string by repeating *str* *count* times.
+ * Creates a string by repeating *str* *count* times.
+ * @arg {string} str
+ * @arg {int} count
+ * @ret {string}
  */
 procedure string_repeat(variable str, variable count) begin
    variable out := "", i := 0;
@@ -125,6 +150,9 @@ end
 /**
  * The same as sfall string_split, but returns array of integers instead
  * Useful in cunjunction with is_in_array()
+ * @arg {string} str
+ * @arg {string} split
+ * @ret {list}
  */
 procedure string_split_ints(variable str, variable split) begin
    variable n := 0;
@@ -147,6 +175,8 @@ end
 
 /**
  * *atoi* proc wrapper, for use as a delegate.
+ * @arg {string} str
+ * @ret {int}
  */
 procedure string_to_int(variable str) begin
    return atoi(str);
@@ -154,6 +184,8 @@ end
 
 /**
  * *atof* proc wrapper, for use as a delegate.
+ * @arg {string} str
+ * @ret {float}
  */
 procedure string_to_float(variable str) begin
    return atof(str);
@@ -161,6 +193,8 @@ end
 
 /**
  * Converts any value to a string, for use as a delegate.
+ * @arg {any} val
+ * @ret {string}
  */
 procedure to_string(variable val) begin
    return ""+val;
