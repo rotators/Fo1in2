@@ -25,6 +25,7 @@ procedure start;
 procedure push_p_proc;
 procedure timed_event_p_proc;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure description_p_proc;
@@ -142,6 +143,16 @@ end
 
 procedure map_enter_p_proc begin
    add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
+end
+
+procedure map_update_p_proc begin
+   if (local_var(LVAR_Heal_Count)) then begin
+      if (game_time > local_var(LVAR_Heal_Dec_Time)) then begin
+         set_local_var(LVAR_Heal_Count, local_var(LVAR_Heal_Count) - 50);
+         if (local_var(LVAR_Heal_Count) < 50) then set_local_var(LVAR_Heal_Count, 0);
+         set_local_var(LVAR_Heal_Dec_Time, game_time + ONE_GAME_HOUR);
+      end
+   end
 end
 
 procedure damage_p_proc begin
@@ -351,8 +362,9 @@ procedure use_skill_on_p_proc begin
    end
    else if (action_being_used == SKILL_REPAIR) then begin
       if MrHandyC_In_Party then begin
-         call Heal_Robo(0);
-         script_overrides;
+         // Is this really neccessary???
+         //call Heal_Robo(0);
+         //script_overrides;
       end
       else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
          game_time_advance(game_ticks(12000));
