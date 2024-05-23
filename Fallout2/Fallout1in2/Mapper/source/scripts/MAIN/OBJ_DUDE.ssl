@@ -225,40 +225,55 @@ end
 
 procedure timed_event_p_proc begin
    if fixed_param == EVENT_END_GAME then begin
-      debug("EVENT_END_GAME");
+      debug_red("EVENT_END_GAME");
       game_ui_enable;
       set_story_finished;
       kill_critter_type(PID_OVERSEER, 0);
    end
    else if fixed_param == EVENT_TIMEOUT then begin
-      debug("EVENT_TIMEOUT");
+      debug_red("EVENT_TIMEOUT");
       game_ui_disable;
-      add_timer_event(dude_obj, 4, EVENT_SHOOT_OVERSEER);
+      add_timer_event(dude_obj, 5, EVENT_SHOOT_OVERSEER);
    end
    else if fixed_param == EVENT_SHOOT_OVERSEER then begin
-      debug("EVENT_SHOOT_OVERSEER");
+      debug_red("EVENT_SHOOT_OVERSEER");
       call KillCheck;
 
       if (ShootOverseer == 1) then begin
+         variable dude_armed := 0;
+
          gun_ptr := create_object(PID_10MM_PISTOL, 0, 0);
          add_obj_to_inven(dude_obj, gun_ptr);
 
+         if dude_is_armed then dude_armed := 1;
+
          if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+            //inven_unwield(dude_obj); // Workaround for now to fix the cutscene
             wield_obj_critter(dude_obj, gun_ptr);
          end
 
          set_global_var(GVAR_OVERSEER_KILLED, 2);
-         add_timer_event(dude_obj, 10, EVENT_SHOOT_OVERSEER_AUTO);//was 25
+
+         // If player was armed when entering the cutscene, we need a slightly longer delay due to the weapon swap animation
+         if (dude_armed == 0) then
+            add_timer_event(dude_obj, 13, EVENT_SHOOT_OVERSEER_AUTO); // original was 25
+         else
+            add_timer_event(dude_obj, 22, EVENT_SHOOT_OVERSEER_AUTO);
       end
       else begin
          add_timer_event(dude_obj, 36, EVENT_ALLOW_PLAYER_CONTROL);
       end
    end
    else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
-      debug("EVENT_SHOOT_OVERSEER_AUTO");
+      debug_red("EVENT_SHOOT_OVERSEER_AUTO");
       if global_var(GVAR_DUDE_SHOOTS_OVERSEER) < 1 then begin
          if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
-            reg_anim_clear(map_var(0));
+            // If the player had another weapon equipped at first, the cutscene breaks
+            // So we have to clear his animations first, just to make sure it'll work in any case
+            // Also had to increase the timer in EVENT_SHOOT_OVERSEER to make it feel smoother
+            reg_anim_clear(dude_obj);
+
+            reg_anim_clear(map_var(0)); // Overseer pointer
             reg_anim_begin();
             reg_anim_animate(dude_obj, ANIM_point, -1);
 
@@ -280,17 +295,17 @@ procedure timed_event_p_proc begin
       set_global_var(GVAR_DUDE_SHOOTS_OVERSEER, 1);
    end
    else if fixed_param == 8 then begin
-      debug("fixed_param 8");
+      debug_red("fixed_param 8");
       game_ui_enable;
       set_global_var(GVAR_OVERSEER_END_SEQ, 7);
       add_timer_event(dude_obj, game_ticks(1), EVENT_SHOOT_OVERSEER_KILLED);
    end
    else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
-      debug("EVENT_ALLOW_PLAYER_CONTROL");
+      debug_red("EVENT_ALLOW_PLAYER_CONTROL");
       add_timer_event(dude_obj, 0, EVENT_END_GAME);
    end
    else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
-      debug("EVENT_SHOOT_OVERSEER_KILLED");
+      debug_red("EVENT_SHOOT_OVERSEER_KILLED");
       game_ui_enable;
       kill_critter_type(PID_OVERSEER, 1);
 
