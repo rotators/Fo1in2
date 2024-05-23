@@ -10,6 +10,8 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: Footsteps mod would crash the game when triggering corpse aging on map enter.
 - **Fixed**: Incorrect LVAR check was used for MacRae's teach option after helping the Blades.
 - **Fixed**: Lance in the Shady Sands encounter could talk about the player having dealt with the Khans, even though he didn't yet.
+- **Fixed**: Mike in the Boneyard (Blades territory) would show the wrong dialog message if the player declines his reward.
+- **Fixed**: Mr. Handy and Floating Eye companions use base game repair mechanics for healing now.
 - **Fixed**: One of tiles for John's work routine was out of range.
 - **Fixed**: One of tiles for V13 water guard's sleep routine was out of range.
 - **Fixed**: People of average intelligence could run into a bug with Lou that would restart the whole dialog.
