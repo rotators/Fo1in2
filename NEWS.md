@@ -17,6 +17,7 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: People of average intelligence could run into a bug with Lou that would restart the whole dialog.
 - **Fixed**: Radscorpions near the Glow could have a wrong script.
 - **Fixed**: Razor had a visible debug dialog option.
+- **Fixed**: The brutal death endgame cutscene with the Overseer could break if the player went into it with a weapon already in his hands.
 - **Fixed**: The computer course in Brotherhood was ten times longer.
 - **Fixed**: The player's ouch message (stupid only) was missing when healed by Thorndyke.
 - **Fixed**: The random rotation of FoA guard/scout movement was out of range.

@@ -1,0 +1,399 @@
+/*
+   This script reimplements the healing skills of the original game.
+   This version uses a refactored code with no less code duplication, but potentially some minor differences from vanilla.
+   You can use this to make any tweaks you want to these skills.
+*/
+
+#include "../../scripting/headers/define_lite.h"
+#include "../../scripting/headers/define_extra.h"
+#include "../../scripting/headers/sfall.h"
+#include "../../scripting/headers/lib.arrays.h"
+#include "../../scripting/headers/lib.math.h"
+
+#define PID_FIRST_AID_KIT                   (47)
+#define PID_DOCTORS_BAG                     (91)
+#define PID_FIELD_MEDIC_KIT                 (408)
+#define PID_PARAMEDICS_BAG                  (409)
+
+#define DAM_CRIP        (DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT bwor DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_BLIND)
+#define COMBAT_STATE_FLEEING     (4)
+
+#define critter_max_hp(cr)       get_critter_stat(cr, STAT_max_hit_points)
+#define critter_cur_hp(cr)       get_critter_stat(cr, STAT_current_hp)
+#define critter_body_type(cr)    proto_data(obj_pid(cr), cr_body_type)
+#define critter_has_dmg_flag(cr, flag)        ((get_object_data(cr, OBJ_DATA_DAMAGE_FLAGS) bwand flag) != 0)
+
+#define clear_critter_flag(cr, offset, flag)  set_object_data(cr, offset, get_object_data(cr, offset) bwand bwnot(flag))
+#define clear_critter_dmg_flag(cr, flag)      clear_critter_flag(cr, OBJ_DATA_DAMAGE_FLAGS, flag)
+#define clear_critter_combat_flag(cr, flag)   clear_critter_flag(cr, OBJ_DATA_COMBAT_STATE, flag)
+
+#define SKILL_COUNT                (18)
+#define SKILLS_MAX_USES_PER_DAY     (3)
+
+variable times_skill_used, healable_damage_flags;
+
+procedure skill_use_slot_available(variable skill) begin
+   variable slot, time, hoursSinceLastUsage,
+      skillOffset := skill * SKILLS_MAX_USES_PER_DAY;
+
+   // Lazy init array
+   if (not times_skill_used) then
+      times_skill_used := create_array_list(SKILL_COUNT * SKILLS_MAX_USES_PER_DAY);
+
+   for (slot := 0; slot < SKILLS_MAX_USES_PER_DAY; slot++) begin
+      if (times_skill_used[skillOffset + slot] == 0) then
+         return slot;
+   end
+   time := game_time;
+   hoursSinceLastUsage = (time - times_skill_used[skillOffset + 0]) / ONE_GAME_HOUR;
+   if (hoursSinceLastUsage <= 24) then begin
+      return -1;
+   end
+   return SKILLS_MAX_USES_PER_DAY - 1;
+end
+
+procedure skill_use_slot_add(variable skill) begin
+   variable i,
+      slot := skill_use_slot_available(skill),
+      skillOffset := skill * SKILLS_MAX_USES_PER_DAY;
+   if (slot == -1) then
+      return -1;
+
+   if (times_skill_used[skillOffset + slot] != 0) then begin
+      for (i := 0; i < slot; i++) begin
+         times_skill_used[skillOffset + i] := times_skill_used[skillOffset + i + 1];
+      end
+   end
+
+   times_skill_used[skillOffset + slot] = game_time;
+   return 0;
+end
+
+procedure critter_is_dead(variable critter) begin
+   if (not critter) then
+      return false;
+
+   if (obj_type(critter) != OBJ_TYPE_CRITTER) then
+      return false;
+
+   if (critter_cur_hp(critter) <= 0) then
+      return true;
+
+   if (is_critter_dead(critter) != 0) then
+      return true;
+
+   return false;
+end
+
+procedure critter_is_crippled(variable critter) begin
+   if (not critter) then
+      return false;
+
+   if (obj_type(critter) != OBJ_TYPE_CRITTER) then
+      return false;
+
+   return critter_has_dmg_flag(critter, DAM_CRIP);
+end
+
+procedure get_skill_xp(variable skill) begin
+   switch (skill) begin
+      case SKILL_FIRST_AID: return 25;
+      // case SKILL_REPAIR: return 0; // no exp for repair skill in vanilla!
+      case SKILL_DOCTOR: return 50;
+      default: return 0;
+   end
+end
+
+procedure show_skill_use_messages(variable skill, variable successCount := 1) begin
+   variable baseExp, xpToAdd, before, after;
+   if (successCount <= 0) then return;
+
+   baseExp = get_skill_xp(skill);
+   if (baseExp == 0) then return;
+
+   xpToAdd = successCount * baseExp;
+
+   before = get_pc_stat(PCSTAT_experience);
+
+   give_exp_points(xpToAdd);
+
+   after = get_pc_stat(PCSTAT_experience);
+   display_msg(sprintf(mstr_skill(505), after - before));
+end
+
+/**
+ * Exactly like FO2 roll_check functions, but without returning "how_much" and disabling criticals in the first day.
+ */
+procedure roll_check(variable rollMod, variable critChance) begin
+   variable
+      delta := rollMod - random(1, 100),
+      roll;
+
+   if (delta < 0) then begin
+      return ROLL_CRITICAL_FAILURE if (random(1, 100) <= -delta / 10) else ROLL_FAILURE;
+   end
+   return ROLL_CRITICAL_SUCCESS if (random(1, 100) <= delta / 10 + critChance) else ROLL_SUCCESS;
+end
+
+
+/**
+ * A refactored version of skill_use function from the engine, for use with healing skills only. Returns true if skill use was successful.
+ * @arg {ObjectPtr} user
+ * @arg {ObjectPtr} target
+ * @arg {int} skill - First Aid, Doctor or Repair
+ * @arg {int} skillBonus
+ */
+procedure use_healing_skill(variable user, variable target, variable skill, variable skillBonus) begin
+   variable curHp, maxHp, healingAttempts, isRobot, isRepair, isFirstAid;
+
+   display_msg(string_format("use_healing_skill: user = %s, target = %s, bonus = %d, skill = %d", obj_name(user), obj_name(target), skillBonus, skill));
+
+   isRobot := (critter_body_type(target) == CR_BODY_ROBOTIC);
+   isRepair := (skill == SKILL_REPAIR);
+   if (isRepair and not isRobot) then begin
+      // You cannot repair that.
+      display_msg(mstr_skill(553));
+      return false;
+   end
+   if (skill_use_slot_available(skill) == -1) then begin
+      // 590: You've taxed your ability with that skill. Wait a while.
+      // 591: You're too tired.
+      // 592: The strain might kill you.
+      display_msg(mstr_skill(590 + random(0, 2)));
+      return false;
+   end
+   if (critter_is_dead(target)) then begin
+      // 512: You can't heal the dead.
+      // 513: Let the dead rest in peace.
+      // 514: It's dead, get over it.
+      display_msg(mstr_skill(512 + random(0, 2)));
+      return false;
+   end
+
+   isFirstAid := (skill == SKILL_FIRST_AID);
+
+   curHp := critter_cur_hp(target);
+   maxHp := critter_max_hp(target);
+   healingAttempts := 1;
+   if (curHp < maxHp or (not isFirstAid and critter_is_crippled(target))) then begin
+      variable skillUseSlotAdded, roll, i, prefixMsg,
+         critChance := get_critter_stat(user, STAT_crit_chance) + skillBonus;
+
+      fade_out;
+
+      // Heal crippled limbs.
+      if (not isFirstAid and (not isRepair or not isRobot) and critter_is_crippled(target)) then begin
+         // Lazy init healable flags
+         if (not healable_damage_flags) then
+            healable_damage_flags := array_fixed([
+               DAM_BLIND,
+               DAM_CRIP_ARM_LEFT,
+               DAM_CRIP_ARM_RIGHT,
+               DAM_CRIP_LEG_RIGHT,
+               DAM_CRIP_LEG_LEFT
+            ]);
+
+         for (i := 0; i < len_array(healable_damage_flags); i++) begin
+            if (not critter_has_dmg_flag(target, healable_damage_flags[i])) then
+               continue;
+
+            healingAttempts += 1;
+            roll := roll_vs_skill(user, skill, critChance);
+            if (roll == ROLL_SUCCESS or roll == ROLL_CRITICAL_SUCCESS) then begin
+               clear_critter_dmg_flag(target, healable_damage_flags[i]);
+               clear_critter_combat_flag(target, COMBAT_STATE_FLEEING);
+               // 520: You heal your %s.
+               // 521: You heal the %s.
+               prefixMsg := 520 if (target == dude_obj) else 521;
+               call skill_use_slot_add(skill);
+               skillUseSlotAdded := true;
+            end else begin
+               // 525: You fail to heal your %s.
+               // 526: You fail to heal the %s.
+               prefixMsg := 525 if (target == dude_obj) else 526;
+            end
+            // 530: damaged eye
+            // 531: crippled left arm
+            // 532: crippled right arm
+            // 533: crippled right leg
+            // 534: crippled left leg
+            display_msg(sprintf(mstr_skill(prefixMsg), mstr_skill(530 + i)));
+            if (user == dude_obj) then
+               call show_skill_use_messages(skill);
+         end
+      end
+
+      // Restore hit points.
+      roll := (roll_vs_skill(user, skill, critChance) if isFirstAid else roll_check(has_skill(user, skill), critChance))
+         if (isRepair or not isRobot)
+         else ROLL_FAILURE;
+
+      if (roll == ROLL_SUCCESS or roll == ROLL_CRITICAL_SUCCESS) then begin
+         variable
+            minHpToHeal := (1 if isFirstAid else 4),
+            maxHpToHeal := (5 if isFirstAid else 10),
+            hpToHeal;
+         if (user == dude_obj and not isRepair) then begin
+            variable healerRank := has_trait(TRAIT_PERK, user, PERK_healer);
+            minHpToHeal += 4 * healerRank;
+            maxHpToHeal += 10 * healerRank;
+         end
+         hpToHeal = random(minHpToHeal, maxHpToHeal);
+         critter_heal(target, hpToHeal);
+
+         if (user == dude_obj) then begin
+            // You heal %d hit points.
+            display_msg(sprintf(mstr_skill(500), math_min(maxHp - curHp, hpToHeal)));
+         end
+
+         if (not skillUseSlotAdded) then
+            call skill_use_slot_add(skill);
+
+         clear_critter_combat_flag(target, COMBAT_STATE_FLEEING);
+         if (user == dude_obj) then
+            call show_skill_use_messages(skill);
+      end else begin
+         // You fail to do any healing.
+         display_msg(sprintf(mstr_skill(503), how_much(0)));
+      end
+
+      fade_in;
+   end else if (user == dude_obj) then begin
+      // 501: You look healty already
+      // 502: %s looks healthy already
+      display_msg(mstr_skill(501)
+         if (target == dude_obj)
+         else sprintf(mstr_skill(502), obj_name(target)));
+   end
+   if (user == dude_obj) then begin
+      game_time_advance((ONE_GAME_HOUR if (skill == SKILL_DOCTOR) else (30 * ONE_GAME_MINUTE)) * healingAttempts);
+   end
+   // TODO: not sure if this is needed
+   //exec_map_update_scripts
+end
+
+
+/**
+ * A partial copy of engine's protinst_use_item_on with code pertinent to healing skills. Returns value for set_sfall_return in useobjon_hook.
+ * @arg {ObjectPtr} user - item user
+ * @arg {ObjectPtr} target - target
+ * @arg {ObjectPtr} item - item
+ * @ret {bool}
+ */
+procedure protinst_use_item_on(variable user, variable target, variable item) begin
+   variable begin
+      messageId := -1;
+      skillBonus := 0;
+      skill := -1;
+   end
+   switch (obj_pid(item)) begin
+      case PID_DOCTORS_BAG: begin
+         // The supplies in the Doctor's Bag run out.
+         messageId = 900;
+         skillBonus = 20;
+         skill = SKILL_DOCTOR;
+      end
+      case PID_FIRST_AID_KIT: begin
+         // The supplies in the First Aid Kit run out.
+         messageId = 901;
+         skillBonus = 20;
+         skill = SKILL_FIRST_AID;
+      end
+      case PID_PARAMEDICS_BAG: begin
+         // The supplies in the Paramedic's Bag run out.
+         messageId = 910;
+         skillBonus = 40;
+         skill = SKILL_DOCTOR;
+      end
+      case PID_FIELD_MEDIC_KIT: begin
+         // The supplies in the Field Medic First Aid Kit run out.
+         messageId = 911;
+         skillBonus = 40;
+         skill = SKILL_FIRST_AID;
+      end
+   end
+   if (skill == -1) then
+      return -1;
+
+   if (combat_is_initialized) then begin
+      // You cannot do that in combat.
+      if (user == dude_obj) then
+         display_msg(mstr_proto(902));
+      return 0;
+   end
+
+   if (not use_healing_skill(user, target, skill, skillBonus)) then
+      return 0;
+
+   if (random(1, 10) != 1) then
+      return 0;
+
+   if (user == dude_obj) then
+      display_msg(mstr_proto(messageId));
+
+   return 1;
+end
+
+/*
+Runs when:
+
+a critter uses an object on another critter. (Or themselves)
+a critter uses an object from inventory screen AND this object does not have "Use" action flag set and it's not active flare or explosive.
+player or AI uses any drug
+This is fired before the object is used, and the relevant use_obj_on script procedures are run. You can disable default item behavior.
+
+NOTE: You can't remove and/or destroy this object during the hookscript (game will crash otherwise). To remove it, return 1.
+
+Critter arg0 - The target
+Critter arg1 - The user
+int     arg2 - The object used
+
+int     ret0 - overrides hard-coded handler and selects what should happen with the item (0 - place it back, 1 - remove it, -1 - use engine handler)
+*/
+procedure useobjon_hook begin
+   variable
+      target := get_sfall_arg,
+      user := get_sfall_arg,
+      item := get_sfall_arg,
+      useItemResult;
+
+   useItemResult := protinst_use_item_on(user, target, item);
+   if (useItemResult != -1) then
+      set_sfall_return(useItemResult);
+end
+
+/*
+Runs when using any skill on any object.
+
+This is fired before the default handlers are called, which you can override. In this case you should write your own skill use handler entirely, or otherwise nothing will happen (this includes fade in/fade out, time lapsing and messages - all of this can be scripted; to get vanilla text messages - use message_str_game along with sprintf). Suggested use - override First Aid/Doctor skills to buff/nerf them, override Steal skill to disallow observing NPCs inventories in some cases.
+
+Does not run if the script of the object calls script_overrides for using the skill.
+
+Critter arg0 - The user critter
+Obj     arg1 - The target object
+int     arg2 - skill being used
+int     arg3 - skill bonus from items such as first aid kits
+
+int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override; if it is 0, there will be a 10% chance of removing the used medical item)
+*/
+procedure useskill_hook begin
+   variable
+      user := get_sfall_arg,
+      target := get_sfall_arg,
+      skill := get_sfall_arg,
+      skillBonus := get_sfall_arg,
+      isSuccess;
+
+   if (skill == SKILL_FIRST_AID or skill == SKILL_DOCTOR or skill == SKILL_REPAIR) then begin
+      isSuccess := use_healing_skill(user, target, skill, skillBonus);
+      set_sfall_return(0 if isSuccess else 1);
+   end
+end
+
+
+procedure start begin
+   if (game_loaded) then begin
+      register_hook_proc(HOOK_USEOBJON, useobjon_hook);
+      register_hook_proc(HOOK_USESKILL, useskill_hook);
+   end
+end
