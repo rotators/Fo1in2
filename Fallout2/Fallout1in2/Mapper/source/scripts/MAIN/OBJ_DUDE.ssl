@@ -36,9 +36,7 @@ variable Zero;
 #define EVENT_TIMEOUT                  (5)
 #define EVENT_SHOOT_OVERSEER           (6)
 #define EVENT_SHOOT_OVERSEER_AUTO      (7)
-//#define EVENT_???                    (8)
-#define EVENT_ALLOW_PLAYER_CONTROL     (9)
-#define EVENT_SHOOT_OVERSEER_KILLED    (10)
+#define EVENT_ALLOW_PLAYER_CONTROL     (8)
 #define EVENT_COUNTDOWN_MASTER         (11)
 #define EVENT_COUNTDOWN_VATS           (12)
 
@@ -228,7 +226,7 @@ procedure timed_event_p_proc begin
       debug_red("EVENT_END_GAME");
       game_ui_enable;
       set_story_finished;
-      kill_critter_type(PID_OVERSEER, 0);
+      kill_critter_type(PID_OVERSEER, 1);
    end
    else if fixed_param == EVENT_TIMEOUT then begin
       debug_red("EVENT_TIMEOUT");
@@ -259,7 +257,7 @@ procedure timed_event_p_proc begin
             add_timer_event(dude_obj, 22, EVENT_SHOOT_OVERSEER_AUTO);
       end
       else begin
-         add_timer_event(dude_obj, 36, EVENT_ALLOW_PLAYER_CONTROL);
+         add_timer_event(dude_obj, 25, EVENT_ALLOW_PLAYER_CONTROL); // original cutscene behavior, give player the chance to attack the overseer no matter what
       end
    end
    else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
@@ -287,27 +285,16 @@ procedure timed_event_p_proc begin
             reg_anim_animate(dude_obj, ANIM_unpoint, 0);
             reg_anim_end();
 
-            add_timer_event(dude_obj, game_ticks(10), 8);
+            add_timer_event(dude_obj, game_ticks(11), EVENT_ALLOW_PLAYER_CONTROL);
          end
       end
       set_global_var(GVAR_DUDE_SHOOTS_OVERSEER, 1);
    end
-   else if fixed_param == 8 then begin
-      debug_red("fixed_param 8");
-      game_ui_enable;
-      set_global_var(GVAR_OVERSEER_END_SEQ, 7);
-      add_timer_event(dude_obj, game_ticks(1), EVENT_SHOOT_OVERSEER_KILLED);
-   end
    else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
       debug_red("EVENT_ALLOW_PLAYER_CONTROL");
-      add_timer_event(dude_obj, 0, EVENT_END_GAME);
-   end
-   else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
-      debug_red("EVENT_SHOOT_OVERSEER_KILLED");
       game_ui_enable;
-      kill_critter_type(PID_OVERSEER, 1);
-
-      set_story_finished;
+      set_global_var(GVAR_OVERSEER_END_SEQ, 7);
+      add_timer_event(dude_obj, game_ticks(1), EVENT_END_GAME);
    end
 
    /*******************************************************************
