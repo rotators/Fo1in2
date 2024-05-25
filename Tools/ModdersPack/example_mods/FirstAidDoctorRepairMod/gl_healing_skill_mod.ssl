@@ -20,32 +20,33 @@
 
 #define critter_max_hp(cr)       get_critter_stat(cr, STAT_max_hit_points)
 #define critter_cur_hp(cr)       get_critter_stat(cr, STAT_current_hp)
-#define critter_body_type(cr)    proto_data(obj_pid(cr), cr_body_type)
 #define critter_has_dmg_flag(cr, flag)        ((get_object_data(cr, OBJ_DATA_DAMAGE_FLAGS) bwand flag) != 0)
 
 #define clear_critter_flag(cr, offset, flag)  set_object_data(cr, offset, get_object_data(cr, offset) bwand bwnot(flag))
 #define clear_critter_dmg_flag(cr, flag)      clear_critter_flag(cr, OBJ_DATA_DAMAGE_FLAGS, flag)
 #define clear_critter_combat_flag(cr, flag)   clear_critter_flag(cr, OBJ_DATA_COMBAT_STATE, flag)
 
-#define SKILL_COUNT                (18)
 #define SKILLS_MAX_USES_PER_DAY     (3)
 
 variable times_skill_used, healable_damage_flags;
 
 procedure skill_use_slot_available(variable skill) begin
-   variable slot, time, hoursSinceLastUsage,
-      skillOffset := skill * SKILLS_MAX_USES_PER_DAY;
+   variable slot, time, hoursSinceLastUsage, timesUsed;
 
    // Lazy init array
    if (not times_skill_used) then
-      times_skill_used := create_array_list(SKILL_COUNT * SKILLS_MAX_USES_PER_DAY);
+      times_skill_used := create_array_map;
 
+   if (not times_skill_used[skill]) then
+      times_skill_used[skill] := create_array_list(SKILLS_MAX_USES_PER_DAY);
+
+   timesUsed := times_skill_used[skill];
    for (slot := 0; slot < SKILLS_MAX_USES_PER_DAY; slot++) begin
-      if (times_skill_used[skillOffset + slot] == 0) then
+      if (timesUsed[slot] == 0) then
          return slot;
    end
    time := game_time;
-   hoursSinceLastUsage = (time - times_skill_used[skillOffset + 0]) / ONE_GAME_HOUR;
+   hoursSinceLastUsage = (time - timesUsed[0]) / ONE_GAME_HOUR;
    if (hoursSinceLastUsage <= 24) then begin
       return -1;
    end
@@ -53,19 +54,21 @@ procedure skill_use_slot_available(variable skill) begin
 end
 
 procedure skill_use_slot_add(variable skill) begin
-   variable i,
-      slot := skill_use_slot_available(skill),
-      skillOffset := skill * SKILLS_MAX_USES_PER_DAY;
+   variable i, timesUsed,
+      slot := skill_use_slot_available(skill);
+
    if (slot == -1) then
       return -1;
 
-   if (times_skill_used[skillOffset + slot] != 0) then begin
+   timesUsed := times_skill_used[skill];
+   if (timesUsed[slot] != 0) then begin
+      // Shift all earlier use times to make use for the new time.
       for (i := 0; i < slot; i++) begin
-         times_skill_used[skillOffset + i] := times_skill_used[skillOffset + i + 1];
+         timesUsed[i] := timesUsed[i + 1];
       end
    end
 
-   times_skill_used[skillOffset + slot] = game_time;
+   timesUsed[slot] = game_time;
    return 0;
 end
 
@@ -83,6 +86,18 @@ procedure critter_is_dead(variable critter) begin
       return true;
 
    return false;
+end
+
+procedure critter_body_type(variable critter) begin
+   if (not critter) then begin
+      debug_msg("\nError: critter_body_type: pobj was NULL!");
+      return CR_BODY_BIPED;
+   end
+
+   if (obj_type(critter) != OBJ_TYPE_CRITTER) then
+      return CR_BODY_BIPED;
+
+   return proto_data(obj_pid(critter), cr_body_type);
 end
 
 procedure critter_is_crippled(variable critter) begin
@@ -121,23 +136,43 @@ procedure show_skill_use_messages(variable skill, variable successCount := 1) be
    display_msg(sprintf(mstr_skill(505), after - before));
 end
 
+variable sfall_ini_RemoveCriticalTimelimits := -2;
+
 /**
- * Exactly like FO2 roll_check functions, but without returning "how_much" and disabling criticals in the first day.
+ * Exactly like FO2 roll_check function, but without returning "how_much".
+ * @arg {int} rollMod
+ * @arg {int} critSuccessMod
  */
-procedure roll_check(variable rollMod, variable critChance) begin
+procedure roll_check(variable rollMod, variable critSuccessMod) begin
    variable
       delta := rollMod - random(1, 100),
-      roll;
+      roll, criticalsAllowed;
+
+   if (sfall_ini_RemoveCriticalTimelimits == -2) then
+      sfall_ini_RemoveCriticalTimelimits := get_ini_setting("ddraw.ini|Misc|RemoveCriticalTimelimits");
+
+   criticalsAllowed := (sfall_ini_RemoveCriticalTimelimits > 0) or (game_time >= ONE_GAME_DAY);
 
    if (delta < 0) then begin
-      return ROLL_CRITICAL_FAILURE if (random(1, 100) <= -delta / 10) else ROLL_FAILURE;
+      return ROLL_CRITICAL_FAILURE
+         if (criticalsAllowed and random(1, 100) <= -delta / 10)
+         else ROLL_FAILURE;
    end
-   return ROLL_CRITICAL_SUCCESS if (random(1, 100) <= delta / 10 + critChance) else ROLL_SUCCESS;
+   return ROLL_CRITICAL_SUCCESS
+      if (criticalsAllowed and random(1, 100) <= delta / 10 + critSuccessMod)
+      else ROLL_SUCCESS;
 end
+
+// 530: damaged eye
+// 531: crippled left arm
+// 532: crippled right arm
+// 533: crippled right leg
+// 534: crippled left leg
+#define display_uncrippled_msg(dmgFlagIdx, prefixMsgId)     display_msg(sprintf(mstr_skill(prefixMsgId), mstr_skill(530 + dmgFlagIdx)))
 
 
 /**
- * A refactored version of skill_use function from the engine, for use with healing skills only. Returns true if skill use was successful.
+ * A refactored version of skill_use function from the engine, for use with healing skills only. Returns true if skill use was actually attempted.
  * @arg {ObjectPtr} user
  * @arg {ObjectPtr} target
  * @arg {int} skill - First Aid, Doctor or Repair
@@ -204,22 +239,16 @@ procedure use_healing_skill(variable user, variable target, variable skill, vari
                clear_critter_combat_flag(target, COMBAT_STATE_FLEEING);
                // 520: You heal your %s.
                // 521: You heal the %s.
-               prefixMsg := 520 if (target == dude_obj) else 521;
+               display_uncrippled_msg(i, 520 if (target == dude_obj) else 521);
                call skill_use_slot_add(skill);
                skillUseSlotAdded := true;
+               if (user == dude_obj) then
+                  call show_skill_use_messages(skill);
             end else begin
                // 525: You fail to heal your %s.
                // 526: You fail to heal the %s.
-               prefixMsg := 525 if (target == dude_obj) else 526;
+               display_uncrippled_msg(i, 525 if (target == dude_obj) else 526);
             end
-            // 530: damaged eye
-            // 531: crippled left arm
-            // 532: crippled right arm
-            // 533: crippled right leg
-            // 534: crippled left leg
-            display_msg(sprintf(mstr_skill(prefixMsg), mstr_skill(530 + i)));
-            if (user == dude_obj) then
-               call show_skill_use_messages(skill);
          end
       end
 
@@ -270,6 +299,7 @@ procedure use_healing_skill(variable user, variable target, variable skill, vari
    end
    // TODO: not sure if this is needed
    //exec_map_update_scripts
+   return true;
 end
 
 
