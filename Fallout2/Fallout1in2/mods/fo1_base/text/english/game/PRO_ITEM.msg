@@ -115,7 +115,7 @@
 {5800}{}{Tape}
 {5801}{}{A Wattz Electronics Holodisc tape. This particular tape looks to be into very poor condition.}
 {5900}{}{Motion Sensor}
-{5901}{}{A Wattz Electronics C-U model motion sensor. Detects the movement of biological material over a distance of meters using a tuned radar device. Having one in your inventory will also help you avoid outdoor encounters (+20% Outdoorsman skill).}
+{5901}{}{A Wattz Electronics C-U model motion sensor. Detects the movement of biological material over a distance of meters using a tuned radar device.}
 {6000}{}{Bookcase}
 {6001}{}{A wooden bookcase.}
 {6100}{}{Bookcase}
