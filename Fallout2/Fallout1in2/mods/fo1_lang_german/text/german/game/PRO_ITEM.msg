@@ -114,8 +114,8 @@
 {5701}{}{Minimikrofon und Übertragungsgerät.}
 {5800}{}{Holodisk}
 {5801}{}{Holodisk der Firma Wattz Electronics. Offensichtlich in sehr schlechtem Zustand.}
-{5900}{}{Bewegungssensor}
-{5901}{}{Bewegungssensor von Wattz Electronics, Modell C-U. Stellt Bewegungen biologischer Materie mit Hilfe eines getunten Radarempfängers über eine Entfernung von mehreren Metern fest. Wenn du einen in deinem Inventar hast, kann es dir helfen, durch die Ödnis zu reisen (+20% auf Naturbursche).}
+{5900}{}{Scanner}
+{5901}{}{Scanner der Firma Wattz Electronics vom Typ C-U. Erkennt Bewegungen von biologischem Material auf eine Entfernung von mehreren Metern mittels eines justierten Radargeräts. Wenn du einen in deinem Inventar hast, kann er dir helfen, durch die Ödnis zu reisen (+20% auf Naturbursche).}
 {6000}{}{Regal}
 {6001}{}{Regal aus Holz.}
 {6100}{}{Regal}
@@ -404,8 +404,8 @@
 {20601}{}{Hochexplosiver Sprengstoff aus Nitroglyzerin, gemischt mit der absorbierenden Substanz Kieselguhr. Mit tickendem Zeitzünder.}
 {20700}{}{Geigerzähler}
 {20701}{}{Geigerzähler vom Typ Wattz Electronics C-Radz. Zeigt Strahlungsfelder und ihre Stärke an. Eingeschaltet.}
-{20800}{}{Bewegungssensor}
-{20801}{}{Bewegungssensor von Wattz Electronics, Modell C-U. Stellt Bewegungen biologischer Materie mit Hilfe eines getunten Radarempfängers über eine Entfernung von mehreren Metern fest. Er ist eingeschaltet.}
+{20800}{}{Scanner}
+{20801}{}{Scanner der Firma Wattz Electronics vom Typ C-U. Erkennt Bewegungen von biologischem Material auf eine Entfernung von mehreren Metern mittels eines justierten Radargeräts. Aktiviert.}
 {20900}{}{Plastiksprengstoff}
 {20901}{}{Cordex, ein Plastiksprengstoff für Militärzwecke. Hohe Stabilität, hohe Zerstörungskraft. Mit tickendem Zeitzünder.}
 {21000}{}{Stealth Boy}
