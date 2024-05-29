@@ -115,7 +115,7 @@
 {5800}{}{Holodisque}
 {5801}{}{Voici un Holodisque Wattz Electronics pour lecteurs THT. Aussi appelée "Holobande" ou "Cassette", ce sont des appareils de stockage de longue durée sur des bandes holographiques lisibles au laser. Elles permettent la conservation de texte, de sons ou de vidéos et possèdent 64 ou 256 kilo-octets de données.}
 {5900}{}{Détecteur de mouvements}
-{5901}{}{Un détecteur de mouvements Wattz Electronics, modèle C-U. Détecte les mouvements des créatures biologiques sur plusieurs mètres à la ronde grâce à un radar spécialement conçu.}
+{5901}{}{Un détecteur de mouvements Wattz Electronics, modèle C-U. Détecte les mouvements des créatures biologiques sur plusieurs mètres à la ronde. En avoir un dans ton inventaire t'aidera aussi à voyager à travers la terre désolée (+20% à la compétence Vie en plein air).}
 {6000}{}{Bibliothèque}
 {6001}{}{Une bibliothèque en bon état. Elle est faite de bois et peut supporter le poids de livres.}
 {6100}{}{Bibliothèque}
