@@ -1149,6 +1149,14 @@ sfall_funcX metarule functions
 - `frame`: frame number, the first frame starts from zero
 - `rotation`: rotation to get the frame for, useful when reading FRM files by path
 
+----
+#### set_worldmap_heal_time
+`void sfall_func1("set_worldmap_heal_time", int minutes)`
+- Sets the time interval in minutes for healing during world map travel. The default is 180
+- Passing 0 will revert to 1 second of real time (vanilla engine behavior)
+- Passing -1 will disable healing during travel
+- The time interval will be reset each time the player reloads the game
+
 
 ****
 _See other documentation files (arrays.md, hookscripts.md) for related functions reference._

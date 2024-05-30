@@ -606,7 +606,7 @@ int     ret0 - pass 1 at the start of turn to skip the turn, pass -1 at the end 
 
 #### `HOOK_CARTRAVEL (hs_cartravel.int)`
 
-Runs continuously during worldmap travel on car.
+Runs continuously during world map travel by car.
 
 ```
 int     arg0 - vanilla car speed (between 3 and 8 "steps")

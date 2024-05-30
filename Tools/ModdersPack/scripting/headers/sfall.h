@@ -395,6 +395,7 @@
 #define set_unique_id(obj)                                      sfall_func1("set_unique_id", obj)
 #define set_unjam_locks_time(time)                              sfall_func1("set_unjam_locks_time", time)
 #define set_window_flag(winID, flag, value)                     sfall_func3("set_window_flag", winID, flag, value)
+#define set_worldmap_heal_time(time)                            sfall_func1("set_worldmap_heal_time", time)
 #define show_win                                                sfall_func0("show_window")
 #define show_window(winName)                                    sfall_func1("show_window", winName)
 #define signal_close_game                                       sfall_func0("signal_close_game")
