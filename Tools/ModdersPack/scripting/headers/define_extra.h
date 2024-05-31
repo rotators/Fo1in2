@@ -516,6 +516,11 @@
 #define CRITICAL_VALUE_FAIL_MSG      (6) // This is shown instead of Message if the stat check fails.
 
 
+#define DIFFICULTY_EASY              (0)
+#define DIFFICULTY_NORMAL            (1)
+#define DIFFICULTY_HARD              (2)
+
+
 /* Playback mode defines for the soundplay function */
 #define soundraw        (0x80000000) // sfall flag
 #define Stereo8bit      (soundstereo)

@@ -121,7 +121,7 @@ procedure remove_array_block(variable arr, variable blocksize, variable index);
 /**
  * Converts any array to string for debugging purposes
  */
-#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
+#define debug_array_str(arr)     debug_array_str_deep(arr, 1, false)
 
 // Prints contents of a given array to main message window, for debugging purposes.
 #define display_array(arr)       display_msg(debug_array_str(arr))
@@ -503,6 +503,28 @@ end
 #undef ARRAY_SET_BLOCK_SIZE
 
 /**
+ * Returns a new array containing only those items from *arr* for which *filterFunc* returns true.
+ * @arg {array} arr - Array to use values from. Can be map or list.
+ * @arg {string} filterFunc - A name of procedure that accepts value from arr and returns true if it should be copied to the new array.
+ * @arg {bool} negate - If true, reverses the result of filterFunc so that only "false" values will be copied to the new array.
+ * @ret {array}
+ */
+procedure array_filter(variable arr, variable filterFunc, variable negate := false) begin
+   variable k, v,
+      isMap := array_is_map(arr),
+      retArr := temp_array_map if isMap else temp_array_list(0);
+   foreach (k: v in arr) begin
+      if ((filterFunc(v) != 0) == (not negate)) then begin
+         if (isMap) then
+            set_array(retArr, k, v);
+         else
+            call array_push(retArr, v);
+      end
+   end
+   return retArr;
+end
+
+/**
  * Creates a new array filled from a given array by transforming each value using given procedure name.
  * @arg {array} arr - Array to use values from.
  * @arg {string} valueFunc - A name of procedure that accepts value from arr and returns a new value.
@@ -721,16 +743,17 @@ end
  * Formats array contents into a string with a given level of recursion. For debugging.
  * @arg {array} arr
  * @arg {int} levels - recursion level
+ * @arg {bool} prefix - true to include a prefix with item count
  * @ret {string}
  */
-procedure debug_array_str_deep(variable arr, variable levels) begin
+procedure debug_array_str_deep(variable arr, variable levels, variable prefix := false) begin
 #define _newline if (levels > 1) then s += "\n";
 #define _indent ii := 0; while (ii < levels - 1) do begin s += "   "; ii++; end
 #define _value(v) (v if (levels <= 1 or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
    variable i := 0, ii, k, v, s, len;
    len := len_array(arr);
    if (array_is_map(arr)) then begin  // print assoc array
-      s := "Map("+len+"): {";
+      s := ("Map("+len+"): {") if prefix else "{";
       while i < len do begin
          _newline
          k := array_key(arr, i);
@@ -744,7 +767,7 @@ procedure debug_array_str_deep(variable arr, variable levels) begin
       _newline
       s += "}";
    end else begin  // print list
-      s := "List("+len+"): [";
+      s := ("List("+len+"): [") if prefix else "[";
       _newline
       while i < len do begin
          _newline

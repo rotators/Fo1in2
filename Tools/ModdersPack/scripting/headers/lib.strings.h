@@ -200,6 +200,15 @@ procedure to_string(variable val) begin
    return ""+val;
 end
 
+/**
+ * Returns true if given string is 0 or empty string. For use as a delegate.
+ * @arg {string} str
+ * @ret {bool}
+ */
+procedure string_null_or_empty(variable str) begin
+   return str == 0 or str == "";
+end
+
 
 /**
   DEPRECATED, use string_format instead!
