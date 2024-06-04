@@ -30,13 +30,13 @@ variable $addr;
 
 // This will change the skill bonus from survivalist perk to 0.
 // The bonus for all perk ranks is applied via gl_survivalist.ssl script.
-#define VOODOO_survivalist_bonus \
-               write_byte(0x496FAB, 0)
+// #define VOODOO_survivalist_bonus \
+//               write_byte(0x496FAB, 0)
 
 // This will change the skill bonus from Mr. Fixit perk to 20%.
 // In Fo2, the perk gives only +10%, while in Fo1 it is +20%.
-#define VOODOO_mr_fixit_bonus \
-               write_byte(0x496E00, 20)
+// #define VOODOO_mr_fixit_bonus \
+//               write_byte(0x496E00, 20)
 
 // In Fo2, the perk gives a +20% light level increase, while in Fo1 it is only +10%.
 #define VOODOO_night_vision_bonus \
