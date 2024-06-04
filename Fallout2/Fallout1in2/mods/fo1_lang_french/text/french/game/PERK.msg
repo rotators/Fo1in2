@@ -42,7 +42,7 @@
 {131}{}{Mangeur de serpents}
 {132}{}{M. Réparetout}
 {133}{}{Médecin}
-{134}{}{Maître Voleur}
+{134}{}{ERREUR - DÉSACTIVÉ} # was -- Master Thief
 {135}{}{Orateur}
 {136}{}{Oh Hisse !}
 {137}{}{ERREUR - LIBRE}  # was -- Friendly Foe
@@ -114,7 +114,7 @@
 {203}{}{Récupération rapide}
 {204}{}{Vendeur}
 {205}{}{Muraille}
-{206}{}{Voleur}
+{206}{}{Maître Voleur} # was -- Thief
 {207}{}{Manipulation des armes}
 {208}{}{Entraînement de la Cité}
 {209}{}{PI accrus par l'alcool}
@@ -170,7 +170,7 @@
 {1131}{}{Miam-miam ! Ca a le goût de poulet. Pour chaque niveau de cette aptitude, ta résistance au poison augmente de +25%.}
 {1132}{}{Avec cette aptitude, tu reçois un bonus de +10% aux compétences Réparation et Science. Travailler tard le soir n'a jamais fait de mal personne, surtout pas toi !}
 {1133}{}{Avec l'aptitude Médecin, tu reçois un bonus de +10% lorsque tu utilises les compétences Secourisme et Médecin. Etre capable de soigner est une bonne chose.}
-{1134}{}{Le Maître voleur est un spécialiste du vol et du crochetage de serrures. Tu gagnes +15 en Voleur et en Crochetage. Vole aux riches, garde pour toi !}
+{1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1135}{}{Avec l'aptitude Orateur, tu reçois un bonus de +20% lorsque tu utilises la compétence Discours. La vérité sort de la bouche des enfants, il paraît...}
 {1136}{}{A chaque niveau de cette aptitude, tu reçois +2 en Force (jusqu'à 10) pour déterminer la portée avec des armes de jet uniquement. Cet avantage ne permet pas de dépasser la portée maximale d'une arme.}
 {1137}{}{ERREUR.LIBRE !}
@@ -242,7 +242,7 @@
 {1203}{}{Tu récupères vite après avoir été mis K.O.} # Quick Recovery
 {1204}{}{Tu as la fibre commerciale ! Grâce à cette aptitude, tu bénéficies de +20% pour ta compétence Troc.}  # Salesman
 {1205}{}{Tu risques beaucoup moins de te faire mettre à terre lors d'un combat.}  # Stonewall
-{1206}{}{L'aptitude Voleur t'offre un bonus unique de +10% pour les compétences Esquive, Crochetage, Voleur et Pièges. Un bon voleur est un voleur vivant.}  # Thief
+{1206}{}{Avec l'aptitude Maître Voleur, tu reçois un bonus de +10% lorsque tu utilises les compétences Esquive, Passe-partout, Voleur, et Pièges.}
 {1207}{}{Tu sais manier des armes bien plus grosses que la normale. Tu reçois un bonus de +3 à tes tests de Force quand il s'agit de manier une arme.}  # Weapon Handling
 {1208}{}{Tu as reçu une formation médicale à la Cité de l'Abri.}  # Vault City Training
 {1209}{}{Tes points d'impact sont quelque peu accrus par ton ivrognerie.}  # Alcohol Enhanced hit points

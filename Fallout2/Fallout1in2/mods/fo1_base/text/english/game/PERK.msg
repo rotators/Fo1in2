@@ -37,7 +37,7 @@
 {131}{}{Snakeater}
 {132}{}{Mr. Fixit}
 {133}{}{Medic}
-{134}{}{Master Thief}
+{134}{}{ERROR -- DISABLED} # was -- Master Thief
 {135}{}{Speaker}
 {136}{}{Heave Ho!}
 {137}{}{ERROR -- UNIMPED}  # was -- Friendly Foe
@@ -109,7 +109,7 @@
 {203}{}{Quick Recovery}
 {204}{}{Salesman}
 {205}{}{Stonewall}
-{206}{}{Thief}
+{206}{}{Master Thief} # was -- Thief
 {207}{}{Weapon Handling}
 {208}{}{Vault City Training}
 {209}{}{Alcohol Raised hit points}
@@ -160,7 +160,7 @@
 {1131}{}{Yum!  Tastes like chicken. You have gained an immunity to poison, resulting in a +25% to your Poison Resistance.}
 {1132}{}{This Perk will give you a one-time bonus of +20% to the Repair and Science skills.  A little late night cramming never hurt anybody, especially you.}
 {1133}{}{The Medic Perk will give you a one-time bonus of +20% to the First Aid and Doctor skills.  Healing skills are a good thing.}
-{1134}{}{A Master Thief has a one-time bonus of +10% to the Sneak, Lockpick, Steal and Traps skills.  Rob from the rich, and give to you.}
+{1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1135}{}{Being a Speaker means that you have a one-time bonus of +20% to the Speech and Barter skills.  From the mouth of babes and all that.}
 {1136}{}{Each level of the Heave Ho! Perk will give your thrown weapons an additional +2 Strength for purposes of determining range only.}
 {1137}{}{Characters that are part of your team are high-lighted green in combat instead of red, if you have this Perk.  Red high-lighted characters may still be non-hostile towards you.}
@@ -232,7 +232,7 @@
 {1203}{}{You are quick at recovering from being knocked down.}  # Quick Recovery
 {1204}{}{You are an adept salesperson.  With this Perk you gain +20% towards your Barter skill.}  # Salesman
 {1205}{}{You are much less likely to be knocked down in combat.}  # Stonewall
-{1206}{}{The blood of a thief runs through your veins. With the Thief Perk, you get a one-time bonus of +10% to your Sneak, Lockpick, Steal, and Traps skills.  A well rounded thief is a live thief.}  # Thief
+{1206}{}{A Master Thief has a one-time bonus of +10% to the Sneak, Lockpick, Steal and Traps skills.  Rob from the rich, and give to you.}
 {1207}{}{You can wield weapons much larger than normally allowed. You gain a +3 to your strength for the purposes of Strength checks when trying to wield weaponry.}  # Weapon Handling
 {1208}{}{You have received the Vault City medical training.}  # Vault City Training
 {1209}{}{Your hit points have been enhanced a little by repeated drunkeness.}  # Alcohol Enhanced hit points

@@ -37,7 +37,7 @@
 {131}{}{Schlangenesser}
 {132}{}{Technische Begabung}
 {133}{}{Sanitäter}
-{134}{}{Meisterdieb}
+{134}{}{FEHLER - DEAKTIVIERT} # was -- Master Thief
 {135}{}{Redner}
 {136}{}{Wurfkraft}
 {137}{}{Freund oder Feind}
@@ -110,7 +110,7 @@
 {203}{}{Schnelle Erholung}
 {204}{}{Verkäufer}
 {205}{}{Steinmauer}
-{206}{}{Dieb}
+{206}{}{Meisterdieb} # was -- Thief
 {207}{}{Waffenhandhabung}
 {208}{}{Bunkerstadt-Training}
 {209}{}{Durch Alkohol erhöhte Trefferpunkte }
@@ -161,7 +161,7 @@
 {1131}{}{Lecker, lecker! Schmeckt wie Hähnchen. Für jeden Level dieses Bonus erhöht sich deine Resistenz gegen Gift um 25%.}
 {1132}{}{Für diesen Bonus erhältst du einmalig +10 % zu den Fähigkeiten Reparieren und Wissenschaft. Ein bisschen Pauken hat noch niemandem geschadet, besonders dir nicht.}
 {1133}{}{Mit dem Mediziner-Bonus erhältst du einen einmaligen Bonus von +10% zu deinen Erste-Hilfe- und Arzt-Fähigkeiten. Es ist nie verkehrt, Leute heilen zu können.}
-{1134}{}{Ein Meisterdieb ist versiert in allen Bereichen des Stehlens und Schlösserknackens. Du bekommst +15 zu Stehlen und Öffnen hinzu. Nimm von den Reichen und gib es dir selbst.}
+{1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1135}{}{Als Sprecher erhältst du einen einmaligen Bonus von +20% zur Sprache. Alle werden an deinen Lippen hängen.}
 {1136}{}{Mit jedem Level des Bonus Heave Ho! Erhältst du weitere +2 zu Stärke (bis zu 10) hinzu, um die Distanz von Wurfwaffen feststellen zu können. Dieser Bonus geht nicht über die maximale Reichweite einer Waffe hinaus.}
 {1137}{}{FEHLER. UNIMPED!}
@@ -233,7 +233,7 @@
 {1203}{}{Du erholst dich schnell, wenn du niedergeschlagen wurdest.}  # Quick Recovery
 {1204}{}{Du bist ein gerissener Verkäufer. Mit diesem Bonus erhältst du 20 % zu deiner Handelsfähigkeit.}  # Salesman
 {1205}{}{Es ist viel unwahrscheinlicher, dass du im Kampf niedergeschlagen wirst.}  # Stonewall
-{1206}{}{Durch deine Adern fließt Diebesblut. Mit dem Diebesbonus erhältst du einen einmaligen Bonus von +10% zu den Fähigkeiten Schleichen, Öffnen, Stehlen und Fallen. Ein vielseitiger Dieb lebt länger.}  # Thief
+{1206}{}{Mit diesem Bonus werden deine Fähigkeiten 'Schleichen', 'Öffnen', 'Stehlen' und 'Falle' einmalig um 10 % erhöht. Nimm es von den Reichen und beschenke ... dich.}
 {1207}{}{Du kannst eine Waffe wesentlich länger als normal erlaubt halten. Du erhältst +3 zu deiner Stärke, die du in Kraftproben einsetzen kannst, wenn du Waffen lange führen musst.}  # Weapon Handling
 {1208}{}{Du hast das medizinische Training von Bunkerstadt absolviert.}  # Vault City Training
 {1209}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit erhöht worden.}  # Alcohol Enhanced hit points
