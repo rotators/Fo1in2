@@ -38,7 +38,7 @@
 {132}{}{Mr. Fixit}
 {133}{}{Medic}
 {134}{}{ERROR -- DISABLED} # was -- Master Thief
-{135}{}{Speaker}
+{135}{}{ERROR -- DISABLED} # was -- Speaker
 {136}{}{Heave Ho!}
 {137}{}{ERROR -- UNIMPED}  # was -- Friendly Foe
 {138}{}{Pickpocket}
@@ -103,11 +103,11 @@
 {197}{}{Light Step}
 {198}{}{Living Anatomy}
 {199}{}{Magnetic Personality}
-{200}{}{Negotiator}
+{200}{}{Speaker} # was -- Negotiator
 {201}{}{Pack Rat}
 {202}{}{Pyromaniac}
 {203}{}{Quick Recovery}
-{204}{}{Salesman}
+{204}{}{ERROR -- DISABLED} # was -- Salesman
 {205}{}{Stonewall}
 {206}{}{Master Thief} # was -- Thief
 {207}{}{Weapon Handling}
@@ -161,7 +161,7 @@
 {1132}{}{This Perk will give you a one-time bonus of +20% to the Repair and Science skills.  A little late night cramming never hurt anybody, especially you.}
 {1133}{}{The Medic Perk will give you a one-time bonus of +20% to the First Aid and Doctor skills.  Healing skills are a good thing.}
 {1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
-{1135}{}{Being a Speaker means that you have a one-time bonus of +20% to the Speech and Barter skills.  From the mouth of babes and all that.}
+{1135}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1136}{}{Each level of the Heave Ho! Perk will give your thrown weapons an additional +2 Strength for purposes of determining range only.}
 {1137}{}{Characters that are part of your team are high-lighted green in combat instead of red, if you have this Perk.  Red high-lighted characters may still be non-hostile towards you.}
 {1138}{}{You are much more adept at Stealing than the normal crook.  You can Steal with the best of them, because with this Perk, you ignore size and facing modifiers, when stealing from a person.}
@@ -226,11 +226,11 @@
 {1197}{}{You are agile, lucky, and always careful. This perk halves your chances of setting off a trap.}  # Light Step
 {1198}{}{You have a better understanding of living creatures and their strengths and weaknesses.  You get a one-time bonus of +10% to Doctor, and you do +5 damage per attack to living creatures.}  # Living Anatomy
 {1199}{}{You get 1 extra slot in your companion limit, but don't forget that more than 5 is always a crowd.}  # Magnetic Personality
-{1200}{}{You are a very skilled negotiator.  Not only can you barter with the best of them, but you can talk your way into or out of almost anything.  With this Perk you gain +10% to both Barter and Speech.}  # Negotiator
+{1200}{}{Being a Speaker means that you have a one-time bonus of +20% to the Speech and Barter skills.  From the mouth of babes and all that.}
 {1201}{}{You are efficient at arranging your inventory in general.  This makes it much easier to carry that little extra you've always needed.}  # Pack Rat
 {1202}{}{You do extra damage with fire-based weapons, and enemies always seem to die in the most painful fiery fashion.}  # Pyromaniac
 {1203}{}{You are quick at recovering from being knocked down.}  # Quick Recovery
-{1204}{}{You are an adept salesperson.  With this Perk you gain +20% towards your Barter skill.}  # Salesman
+{1204}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1205}{}{You are much less likely to be knocked down in combat.}  # Stonewall
 {1206}{}{A Master Thief has a one-time bonus of +10% to the Sneak, Lockpick, Steal and Traps skills.  Rob from the rich, and give to you.}
 {1207}{}{You can wield weapons much larger than normally allowed. You gain a +3 to your strength for the purposes of Strength checks when trying to wield weaponry.}  # Weapon Handling

@@ -38,7 +38,7 @@
 {132}{}{Technische Begabung}
 {133}{}{Sanitäter}
 {134}{}{FEHLER - DEAKTIVIERT} # was -- Master Thief
-{135}{}{Redner}
+{135}{}{FEHLER - DEAKTIVIERT} # was -- Speaker
 {136}{}{Wurfkraft}
 {137}{}{Freund oder Feind}
 {138}{}{Taschendieb}
@@ -104,11 +104,11 @@
 {197}{}{Leichter Schritt}
 {198}{}{Lebendige Anatomie}
 {199}{}{Anziehende Persönlichkeit}
-{200}{}{Unterhändler}
+{200}{}{Redner} # was -- Negotiator
 {201}{}{Packratte}
 {202}{}{Pyromane}
 {203}{}{Schnelle Erholung}
-{204}{}{Verkäufer}
+{204}{}{FEHLER - DEAKTIVIERT} # was -- Salesman
 {205}{}{Steinmauer}
 {206}{}{Meisterdieb} # was -- Thief
 {207}{}{Waffenhandhabung}
@@ -162,7 +162,7 @@
 {1132}{}{Für diesen Bonus erhältst du einmalig +10 % zu den Fähigkeiten Reparieren und Wissenschaft. Ein bisschen Pauken hat noch niemandem geschadet, besonders dir nicht.}
 {1133}{}{Mit dem Mediziner-Bonus erhältst du einen einmaligen Bonus von +10% zu deinen Erste-Hilfe- und Arzt-Fähigkeiten. Es ist nie verkehrt, Leute heilen zu können.}
 {1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
-{1135}{}{Als Sprecher erhältst du einen einmaligen Bonus von +20% zur Sprache. Alle werden an deinen Lippen hängen.}
+{1135}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1136}{}{Mit jedem Level des Bonus Heave Ho! Erhältst du weitere +2 zu Stärke (bis zu 10) hinzu, um die Distanz von Wurfwaffen feststellen zu können. Dieser Bonus geht nicht über die maximale Reichweite einer Waffe hinaus.}
 {1137}{}{FEHLER. UNIMPED!}
 {1138}{}{Du bist ein wesentlich besserer Dieb als die meisten Gauner. Du bist sogar einer der besten, denn mit diesem Bonus ignorierst du beim Stehlen von einer Person Größen- und Richtungsfaktoren.}
@@ -227,11 +227,11 @@
 {1197}{}{Du bist agil, hast Glück und lässt immer Vorsicht walten. Dieser Bonus halbiert die Wahrscheinlichkeit, dass du in eine Falle läufst.}  # Light Step
 {1198}{}{Deine Kenntnis aller Lebewesen und ihrer Stärken und Schwächen hat sich verbessert. Du erhältst einen einmaligen Bonus von +10% für Arzt, und du fügst allen Lebewesen +5 Schaden pro Angriff zu.}  # Living Anatomy
 {1199}{}{Du erhältst einen zusätzlichen Eintrag für dein Begleiterlimit, aber denk daran: Mehr als fünf sind einfach zuviel.}  # Magnetic Personality
-{1200}{}{Du bist ein gewiefter Unterhändler. Du handelst wie eine Marktfrau, doch kannst du dich aus so ziemlich allem herausreden. Mit diesem Bonus erhältst du 10 % zu deiner Handels- und Redefähigkeit.}  # Negotiator
+{1200}{}{Mit diesem Bonus werden deine Fähigkeiten 'Reden' und 'Handeln' einmalig um 20 % erhöht. Ist Schweigen denn wirklich immer Gold?}
 {1201}{}{Du bist gut darin, dein Inventar in Ordnung zu halten. Dadurch wird es wesentlich leichter, das bisschen an Extras zu tragen, die du immer benötigst.}  # Pack Rat
 {1202}{}{Du richtest besonders großen Schaden mit Feuerwaffen an, und deine Feinde sterben immer auf die qualvollste Weise in einem Höllenszenario. }  # Pyromaniac
 {1203}{}{Du erholst dich schnell, wenn du niedergeschlagen wurdest.}  # Quick Recovery
-{1204}{}{Du bist ein gerissener Verkäufer. Mit diesem Bonus erhältst du 20 % zu deiner Handelsfähigkeit.}  # Salesman
+{1204}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1205}{}{Es ist viel unwahrscheinlicher, dass du im Kampf niedergeschlagen wirst.}  # Stonewall
 {1206}{}{Mit diesem Bonus werden deine Fähigkeiten 'Schleichen', 'Öffnen', 'Stehlen' und 'Falle' einmalig um 10 % erhöht. Nimm es von den Reichen und beschenke ... dich.}
 {1207}{}{Du kannst eine Waffe wesentlich länger als normal erlaubt halten. Du erhältst +3 zu deiner Stärke, die du in Kraftproben einsetzen kannst, wenn du Waffen lange führen musst.}  # Weapon Handling

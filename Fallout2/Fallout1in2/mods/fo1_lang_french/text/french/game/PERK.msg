@@ -43,7 +43,7 @@
 {132}{}{M. Réparetout}
 {133}{}{Médecin}
 {134}{}{ERREUR - DÉSACTIVÉ} # was -- Master Thief
-{135}{}{Orateur}
+{135}{}{ERREUR - DÉSACTIVÉ} # was -- Speaker
 {136}{}{Oh Hisse !}
 {137}{}{ERREUR - LIBRE}  # was -- Friendly Foe
 {138}{}{Pickpocket}
@@ -108,11 +108,11 @@
 {197}{}{Pas léger}
 {198}{}{Anatomie vivante}
 {199}{}{Personnalité magnétique}
-{200}{}{Négociateur}
+{200}{}{Orateur} # was -- Negotiator
 {201}{}{Voyageur organisé}
 {202}{}{Pyromane}
 {203}{}{Récupération rapide}
-{204}{}{Vendeur}
+{204}{}{ERREUR - DÉSACTIVÉ} # was -- Salesman
 {205}{}{Muraille}
 {206}{}{Maître Voleur} # was -- Thief
 {207}{}{Manipulation des armes}
@@ -171,7 +171,7 @@
 {1132}{}{Avec cette aptitude, tu reçois un bonus de +10% aux compétences Réparation et Science. Travailler tard le soir n'a jamais fait de mal personne, surtout pas toi !}
 {1133}{}{Avec l'aptitude Médecin, tu reçois un bonus de +10% lorsque tu utilises les compétences Secourisme et Médecin. Etre capable de soigner est une bonne chose.}
 {1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
-{1135}{}{Avec l'aptitude Orateur, tu reçois un bonus de +20% lorsque tu utilises la compétence Discours. La vérité sort de la bouche des enfants, il paraît...}
+{1135}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1136}{}{A chaque niveau de cette aptitude, tu reçois +2 en Force (jusqu'à 10) pour déterminer la portée avec des armes de jet uniquement. Cet avantage ne permet pas de dépasser la portée maximale d'une arme.}
 {1137}{}{ERREUR.LIBRE !}
 {1138}{}{Avec cette aptitude, tu peux voler mieux que n'importe quel escroc, car ni la taille de l'objet ni l'angle d'attaque ne t'importent lorsque tu détrousses une personne.}
@@ -236,11 +236,11 @@
 {1197}{}{Tu es agile, tu as de la chance et tu fais preuve de prudence. Cette aptitude réduit de moitié tes chances de déclencher un piège.}  # Light Step
 {1198}{}{Tu as une meilleure compréhension des créatures vivantes, de leurs points forts et de leurs points faibles. Tu obtiens un bonus unique de +10% en Médecine et tu infliges +5 de dégâts par attaque sur des créatures vivantes.}  # Living Anatomy
 {1199}{}{Tu bénéficies d'un emplacement supplémentaire dans ta liste de compagnons. Mais attention, à plus de cinq, on commence à se sentir serré...}  # Magnetic Personality
-{1200}{}{Tu es un négociateur très habile. Tu peux marchander avec les plus durs et te sortir des pires situations juste en parlant. Grâce à cette aptitude, tu gagnes +10% à Troc et à Discours.}  # Negotiator
+{1200}{}{Avec l'aptitude Orateur, tu reçois un bonus de +20% lorsque tu utilises les compétences Discours et Troc.}
 {1201}{}{Préparer ton sac à dos et gérer ton inventaire, ça te connaît. Il devient donc plus facile de transporter ces petits riens dont on a toujours besoin.} # Pack Rat
 {1202}{}{Tu occasionnes plus de dégâts par le feu et tes ennemis semblent toujours mourir de la manière la plus douloureuse imaginable.}  # Pyromaniac
 {1203}{}{Tu récupères vite après avoir été mis K.O.} # Quick Recovery
-{1204}{}{Tu as la fibre commerciale ! Grâce à cette aptitude, tu bénéficies de +20% pour ta compétence Troc.}  # Salesman
+{1204}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1205}{}{Tu risques beaucoup moins de te faire mettre à terre lors d'un combat.}  # Stonewall
 {1206}{}{Avec l'aptitude Maître Voleur, tu reçois un bonus de +10% lorsque tu utilises les compétences Esquive, Passe-partout, Voleur, et Pièges.}
 {1207}{}{Tu sais manier des armes bien plus grosses que la normale. Tu reçois un bonus de +3 à tes tests de Force quand il s'agit de manier une arme.}  # Weapon Handling
