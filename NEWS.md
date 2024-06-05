@@ -21,6 +21,7 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: The computer course in Brotherhood was ten times longer.
 - **Fixed**: The player's ouch message (stupid only) was missing when healed by Thorndyke.
 - **Fixed**: The random rotation of FoA guard/scout movement was out of range.
+- **Fixed**: not all FO1 perks (ID 0-63) have their old requirements.
 - **Fixed**: possible crash when talking to Katja when escaping the military base
 - **Tweaked**: Aradesh dialog will now mention the reward that the player gets after rescuing Tandi.
 - **Tweaked**: If player has disabled the Fo2 party member limit, the Magnetic Personality perk won't show up anymore, since it is useless.
