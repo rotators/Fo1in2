@@ -441,10 +441,7 @@ procedure Shady_table begin
          end
       end
       else if (Encounter_Num == 5) then begin
-         if (global_var(GVAR_LANCE_DEAD_ALREADY_SEEN) != 2) then
-            call Shady5;
-         else
-            call Shady2;
+         call Shady5;
       end
       else if (Encounter_Num == 6) then begin
          call Shady6;
@@ -983,23 +980,42 @@ end
 procedure Shady5 begin
 variable Lance_ptr;
 
-   if ((global_var(GVAR_LANCE_STATUS) bwand 4) != 0) then begin
-      display_msg(message_str(SCRIPT_RNDDESRT, 171));
-      set_global_var(GVAR_LANCE_DEAD_ALREADY_SEEN, 2);
-   end
-   else
-      display_msg(message_str(SCRIPT_RNDDESRT, 175));
-
    Outer_ring := (dude_enc_perception / 2) + 4;
    Inner_ring := (dude_enc_perception / 2) + 3;
    Critter_direction := dude_rot;
-   Critter_type := PID_TOWNSMAN_LEATHER;
-   Critter_script := SCRIPT_LANCE;
+
+   // Vanilla code randomly spawns a dead raider. Fixt changes it. We revert partly but keep Lance alive.
+   // If the player saw the dead Lance already, only spawn dead raider from now on.
+   if (random(0, 1) and (global_var(GVAR_LANCE_DEAD_ALREADY_SEEN) != 2)) then begin
+      Critter_type := PID_PEASANT_YELLOW;
+      Critter_script := SCRIPT_LANCE;
+   end
+   else begin
+      Critter_type := PID_TOWNSMAN_LEATHER;
+      Critter_script := SCRIPT_GENRAIDA;
+   end
+
+   if (Critter_type == PID_TOWNSMAN_LEATHER) then begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 171));
+   end
+   else if ((global_var(GVAR_LANCE_STATUS) bwand 4) != 0) then begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 171));
+      set_global_var(GVAR_LANCE_DEAD_ALREADY_SEEN, 2);
+   end
+   else begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 175));
+   end
+
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
    Lance_ptr := Critter;
 
-   Item := create_object(PID_10MM_PISTOL, 0, 0);
+   if (Critter_type == PID_PEASANT_YELLOW) then begin // Lance can't use 10mm pistol, so he gets a pipe rifle.
+      Item := create_object(PID_SPRINGER_RIFLE, 0, 0);
+   end
+   else begin
+      Item := create_object(PID_10MM_PISTOL, 0, 0);
+   end
    add_obj_to_inven(Critter, Item);
    wield_obj_critter(Critter, Item);
 
@@ -1014,8 +1030,9 @@ variable Lance_ptr;
 
    item_caps_adjust(Critter, fortune_finder(random(8, 44)));
 
-   if (global_var(GVAR_LANCE_STATUS) != 0) then
+   if ((global_var(GVAR_LANCE_STATUS) != 0) or (Critter_type == PID_TOWNSMAN_LEATHER)) then begin
       kill_critter(Critter, ANIM_fall_back_blood_sf);
+   end
 
    // Create Mantis
    Tot_Critter_A := random(4, 6);
