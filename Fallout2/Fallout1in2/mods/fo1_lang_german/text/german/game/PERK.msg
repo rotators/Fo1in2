@@ -9,93 +9,93 @@
 {103}{}{Mehr Nahkampfverletzungen}
 {104}{}{Mehr Bewegungen}
 {105}{}{Mehr Distanzverletzungen}
-{106}{}{Höhere Feuerrate}
+{106}{}{HÃ¶here Feuerrate}
 {107}{}{Schnellere Reaktion}
 {108}{}{Schnellere Heilung}
 {109}{}{Mehr kritische Treffer}
 {110}{}{Nachtsicht}
 {111}{}{Ausstrahlung}
 {112}{}{Strahlungsresistenz}
-{113}{}{Härte}
-{114}{}{Starker Rücken}
-{115}{}{Scharfschütze}
+{113}{}{HÃ¤rte}
+{114}{}{Starker RÃ¼cken}
+{115}{}{ScharfschÃ¼tze}
 {116}{}{Lautloses Laufen}
-{117}{}{Überlebenskünstler}
-{118}{}{Meisterhändler}
+{117}{}{ÃœberlebenskÃ¼nstler}
+{118}{}{MeisterhÃ¤ndler}
 {119}{}{Gebildet}
 {120}{}{Heiler}
 {121}{}{Schatzsucher}
 {122}{}{Bessere kritische Treffer}
-{123}{}{Einfühlungsvermögen}
-{124}{}{Schlächter}
-{125}{}{Heckenschütze}
+{123}{}{EinfÃ¼hlungsvermÃ¶gen}
+{124}{}{SchlÃ¤chter}
+{125}{}{HeckenschÃ¼tze}
 {126}{}{Leiser Tod}
 {127}{}{Action Boy}
 {128}{}{Mentaler Block}
 {129}{}{Lebensspender}
-{130}{}{Ausweichkünstler}
+{130}{}{AusweichkÃ¼nstler}
 {131}{}{Schlangenesser}
 {132}{}{Technische Begabung}
-{133}{}{Sanitäter}
+{133}{}{SanitÃ¤ter}
 {134}{}{FEHLER - DEAKTIVIERT} # was -- Master Thief
 {135}{}{FEHLER - DEAKTIVIERT} # was -- Speaker
 {136}{}{Wurfkraft}
 {137}{}{Freund oder Feind}
 {138}{}{Taschendieb}
 {139}{}{Geist}
-{140}{}{Persönlichkeitskult}
+{140}{}{PersÃ¶nlichkeitskult}
 {141}{}{Schnorrer}
 {142}{}{Entdecker}
 {143}{}{Blumenkind}
 {144}{}{Pfadfinder}
 {145}{}{Tierfreund}
-{146}{}{Späher}
-{147}{}{Mysteriöser Fremder}
+{146}{}{SpÃ¤her}
+{147}{}{MysteriÃ¶ser Fremder}
 {148}{}{Ranger}
-{149}{}{Taschenkünstler}
+{149}{}{TaschenkÃ¼nstler}
 {150}{}{Redegewandt}
 {151}{}{Heller Kopf}
 {152}{}{Spezialkenntnis}
 {153}{}{Mutiere!}
-{154}{}{Nuka Cola-abhängig}
-{155}{}{Buffout-abhängig}
-{156}{}{Mentats-abhängig}
-{157}{}{Psycho-abhängig}
-{158}{}{RadAway-abhängig}
+{154}{}{Nuka Cola-abhÃ¤ngig}
+{155}{}{Buffout-abhÃ¤ngig}
+{156}{}{Mentats-abhÃ¤ngig}
+{157}{}{Psycho-abhÃ¤ngig}
+{158}{}{RadAway-abhÃ¤ngig}
 {159}{}{Waffen - Reichweite}
 {160}{}{Waffen - Genauigkeit}
 {161}{}{Waffen - Durchschlagskraft}
-{162}{}{Waffen - Erschütterung}
-{163}{}{Powerrüstung}
-{164}{}{Kampfrüstung}
+{162}{}{Waffen - ErschÃ¼tterung}
+{163}{}{PowerrÃ¼stung}
+{164}{}{KampfrÃ¼stung}
 
 {165}{}{Waffe Reichweite Visier}
 {166}{}{Waffe Schnell Nachladen}
 {167}{}{Waffe Nachtsicht}
 {168}{}{Waffe Flammenwerfer}
-{169}{}{Rüstung - Erweitert I}
-{170}{}{Rüstung - Erweitert II}
+{169}{}{RÃ¼stung - Erweitert I}
+{170}{}{RÃ¼stung - Erweitert II}
 {171}{}{Jet-Verlangen}
-{172}{}{Abhängigkeit von Tragischen Karten}
-{173}{}{Rüstung - Charisma}
-{174}{}{Gecko häuten}
-{175}{}{Hitzeschutzrüstung}
-{176}{}{Hitzeangriffsverstärker}
-{177}{}{Phoenix-Rüstungsimplantate}
-{178}{}{Phoenix-Angriffsverstärker}
+{172}{}{AbhÃ¤ngigkeit von Tragischen Karten}
+{173}{}{RÃ¼stung - Charisma}
+{174}{}{Gecko hÃ¤uten}
+{175}{}{HitzeschutzrÃ¼stung}
+{176}{}{HitzeangriffsverstÃ¤rker}
+{177}{}{Phoenix-RÃ¼stungsimplantate}
+{178}{}{Phoenix-AngriffsverstÃ¤rker}
 {179}{}{Bunker-Schutzimpfungen}
-{180}{}{Adrenalinstoß}
+{180}{}{AdrenalinstoÃŸ}
 {181}{}{Vorsichtig}
-{182}{}{Verständnis}
+{182}{}{VerstÃ¤ndnis}
 {183}{}{Abbruchexperte}
 {184}{}{Spieler}
-{185}{}{Stärke verbessern}
+{185}{}{StÃ¤rke verbessern}
 {186}{}{Wahrnehmung verbessern}
 {187}{}{Ausdauer verbessern}
 {188}{}{Charisma verbessern}
 {189}{}{Intelligenz verbessern}
 {190}{}{Beweglichkeit verbessern}
-{191}{}{Glück verbessern}
+{191}{}{GlÃ¼ck verbessern}
 {192}{}{Harmlos}
 {193}{}{Hier und jetzt}
 {194}{}{Nahkampf ausweichen}
@@ -103,7 +103,7 @@
 {196}{}{Karma-Strahl}
 {197}{}{Leichter Schritt}
 {198}{}{Lebendige Anatomie}
-{199}{}{Anziehende Persönlichkeit}
+{199}{}{Anziehende PersÃ¶nlichkeit}
 {200}{}{Redner} # was -- Negotiator
 {201}{}{Packratte}
 {202}{}{Pyromane}
@@ -113,12 +113,12 @@
 {206}{}{Meisterdieb} # was -- Thief
 {207}{}{Waffenhandhabung}
 {208}{}{Bunkerstadt-Training}
-{209}{}{Durch Alkohol erhöhte Trefferpunkte }
-{210}{}{Durch Alkohol erhöhte Trefferpunkte II}
+{209}{}{Durch Alkohol erhÃ¶hte Trefferpunkte }
+{210}{}{Durch Alkohol erhÃ¶hte Trefferpunkte II}
 {211}{}{Durch Alkohol gesenkte Trefferpunkte}
 {212}{}{Durch Alkohol gesenkte Trefferpunkte II}
-{213}{}{Durch Autodoc erhöhte Trefferpunkte }
-{214}{}{Durch Autodoc erhöhte Trefferpunkte II}
+{213}{}{Durch Autodoc erhÃ¶hte Trefferpunkte }
+{214}{}{Durch Autodoc erhÃ¶hte Trefferpunkte II}
 {215}{}{Durch Autodoc gesenkte Trefferpunkte}
 {216}{}{Durch Autodoc gesenkte Trefferpunkte II}
 {217}{}{Experten-Exkrementschleuder}
@@ -128,116 +128,116 @@
 #
 #   PERK DESCRIPTIONS
 #
-{1101}{}{Mit Bewusstsein bekommst du genaue Informationen über jede Kreatur, die du untersuchst. Du siehst ihre genauen Trefferpunkte sowie Angaben zu allen Waffen, die sie bei sich trägt.}
-{1102}{}{Du kennst die geheimen Künste des Ostens, oder du schlägst einfach schneller. Auf jeden Fall kosten deine Nahkampfangriffe 1 AP weniger.}
-{1103}{}{Erfahrung im Kampf ohne Waffen verleiht dir einen Vorteil bei Verletzungen. Für jede Stufe dieses Bonus verursachst Du +2 Trefferpunkte bei Nahkampfangriffen }
-{1104}{}{Für jede Stufe der Bonus-Bewegung erhältst du pro Zug 2 APs umsonst, die nur für Bewegung eingesetzt werden können. Für jede Stufe dieses Bonus kannst du dich also bei jedem Zug um zwei Felder umsonst bewegen.}
-{1105}{}{Deine Ausbildung an Feuerwaffen und anderen Distanz- waffen hat dich zu einem tödlichen Waffenkämpfer gemacht. Für jede Stufe dieses Bonus fügst du +2 Trefferpunkte mit Distanzwaffen zu.}
-{1106}{}{Mit diesem Bonus bist du noch schneller am Auslöser und kannst dennoch so genau zielen wie bisher. Jeder Angriff mit Distanzwaffen kostet 1 AP weniger.}
-{1107}{}{Es ist wahrscheinlicher, dass du dich im Kampf schneller als deine Gegner bewegst, da deine Reaktion für jede Stufe dieses Bonus um +2 zunimmt.}
-{1108}{}{Bei jeder Stufe dieses Bonus bekommst du +2 Punkte zu deiner Heilung hinzu. Diese werden zu deiner normalen Heilung hinzugerechnet, so dass du schneller gesund wirst.}
-{1109}{}{Mit diesem Bonus ist die Wahrscheinlichkeit kritischer Treffer bei einem Angriff zu erzielen erhöht. Mit jedem Level Zusätzliche Kriterien erhöht sich deine Chance, einen kritischen Treffer zu landen um +5%.}
+{1101}{}{Mit Bewusstsein bekommst du genaue Informationen Ã¼ber jede Kreatur, die du untersuchst. Du siehst ihre genauen Trefferpunkte sowie Angaben zu allen Waffen, die sie bei sich trÃ¤gt.}
+{1102}{}{Du kennst die geheimen KÃ¼nste des Ostens, oder du schlÃ¤gst einfach schneller. Auf jeden Fall kosten deine Nahkampfangriffe 1 AP weniger.}
+{1103}{}{Erfahrung im Kampf ohne Waffen verleiht dir einen Vorteil bei Verletzungen. FÃ¼r jede Stufe dieses Bonus verursachst Du +2 Trefferpunkte bei Nahkampfangriffen }
+{1104}{}{FÃ¼r jede Stufe der Bonus-Bewegung erhÃ¤ltst du pro Zug 2 APs umsonst, die nur fÃ¼r Bewegung eingesetzt werden kÃ¶nnen. FÃ¼r jede Stufe dieses Bonus kannst du dich also bei jedem Zug um zwei Felder umsonst bewegen.}
+{1105}{}{Deine Ausbildung an Feuerwaffen und anderen Distanz- waffen hat dich zu einem tÃ¶dlichen WaffenkÃ¤mpfer gemacht. FÃ¼r jede Stufe dieses Bonus fÃ¼gst du +2 Trefferpunkte mit Distanzwaffen zu.}
+{1106}{}{Mit diesem Bonus bist du noch schneller am AuslÃ¶ser und kannst dennoch so genau zielen wie bisher. Jeder Angriff mit Distanzwaffen kostet 1 AP weniger.}
+{1107}{}{Es ist wahrscheinlicher, dass du dich im Kampf schneller als deine Gegner bewegst, da deine Reaktion fÃ¼r jede Stufe dieses Bonus um +2 zunimmt.}
+{1108}{}{Bei jeder Stufe dieses Bonus bekommst du +1 Punkte zu deiner Heilung hinzu. Diese werden zu deiner normalen Heilung hinzugerechnet, so dass du schneller gesund wirst.}
+{1109}{}{Mit diesem Bonus ist die Wahrscheinlichkeit kritischer Treffer bei einem Angriff zu erzielen erhÃ¶ht. Mit jedem Level ZusÃ¤tzliche Kriterien erhÃ¶ht sich deine Chance, einen kritischen Treffer zu landen um +5%.}
 {1110}{}{Mit dem Nachtsichtbonus kannst du nachts besser sehen. Die Gesamtdunkelheit wird um 20% vermindert.}
-{1111}{}{Du erregst Aufmerksamkeit, wenn du einen Raum betrittst. Für jede Stufe dieses Bonus wird die erste Reaktion einer anderen Person um 10 % verbessert.}
-{1112}{}{Du kannst Strahlung und deren schädlicher Wirkung besser aus dem Wege gehen. Mit jedem Level dieses Bonus wird deine Resistenz gegen Strahlung um 15% verbessert.}
-{1113}{}{Wenn du zäh bist, nimmst du weniger Schaden. Jeder Level dieses Bonus fügt deiner allgemeinen Resistenz gegen Schaden +10% hinzu.}
-{1114}{}{Auch Maultier genannt. Mit jedem Level dieses Bonus kannst du zusätzliche 50 Pfund an Ausrüstung tragen.}
-{1115}{}{Du hast ein Talent dafür, Objekte in weiter Entfernung zu treffen. Mit jedem Bonuslevel bekommst du +2 Punkte Wahrnehmung. Es ist dann einfacher, aus großer Entfernung zu töten!}
-{1116}{}{Dieser Bonus gibt dir die Fähigkeit, dich schnell und doch leise fortzubewegen. Du kannst zugleich schleichen und laufen. Ohne diesen Bonus würdest du nicht mehr schleichen können, sobald du anfängst zu laufen.}
-{1117}{}{Du fühlst dich unter freiem Himmel wohl. Dieser Bonus verleiht die Fähigkeit, in einer widrigen Umgebung zu überleben. Du erhältst +25 % für Naturbursche.}
-{1118}{}{Du hast eine Seite des Feilschens gemeistert - du kaufst Waren weit unter Normalpreis ein. Mit diesem Bonus bekommst du 25% Rabatt, wenn du in einem Geschäft oder bei einem anderen Händler einkaufst.}
-{1119}{}{Jeder Level von Gebildet gibt dir +2 Fähigkeitspunkte, wenn du eine neue Erfahrungsebene bewältigst. Dieser Bonus funktioniert am besten, wenn du ihn schon zu einem frühen Zeitpunkt deines Abenteuers kaufst.}
-{1120}{}{Es fällt dir mit diesem Bonus leichter, andere zu heilen. Jeder Level dieses Bonus heilt 4-10 zusätzliche Trefferpunkte, wenn du die Erste-Hilfe- oder Arzt-Fähigkeiten anwendest.}
-{1121}{}{Du hast eine Begabung dafür, Geld zu finden. Du findest bei verschiedenen Zufallsbegegnungen in der Wüste noch mehr Geld.}
-{1122}{}{Im Kampf gelandete kritische Treffer richten mehr Unheil an. Du erhältst einen Bonus von 20%, so dass verstärkt Schaden angerichtet wird. Die Chance, einen kritischen Treffer zu landen, wird nicht beeinflusst. }
-{1123}{}{Du hast andere menschliche Wesen studiert, um ihre emotionale Reaktion dir gegenüber genau einzuschätzen. Du siehst bei einem vertraulichen Gespräch den Reaktionswert der Person, mit der du gerade sprichst. }
-{1124}{}{Du bist der leibhaftige Totschläger! Bei Nahkämpfen werden aus all deinen Treffern kritische Treffer, so dass du Zerstörung und Verwüstung zurücklässt.}
+{1111}{}{Du erregst Aufmerksamkeit, wenn du einen Raum betrittst. FÃ¼r jede Stufe dieses Bonus wird die erste Reaktion einer anderen Person um 10 % verbessert.}
+{1112}{}{Du kannst Strahlung und deren schÃ¤dlicher Wirkung besser aus dem Wege gehen. Mit jedem Level dieses Bonus wird deine Resistenz gegen Strahlung um 15% verbessert.}
+{1113}{}{Wenn du zÃ¤h bist, nimmst du weniger Schaden. Jeder Level dieses Bonus fÃ¼gt deiner allgemeinen Resistenz gegen Schaden +10% hinzu.}
+{1114}{}{Auch Maultier genannt. Mit jedem Level dieses Bonus kannst du zusÃ¤tzliche 50 Pfund an AusrÃ¼stung tragen.}
+{1115}{}{Du hast ein Talent dafÃ¼r, Objekte in weiter Entfernung zu treffen. Mit jedem Bonuslevel bekommst du +2 Punkte Wahrnehmung. Es ist dann einfacher, aus groÃŸer Entfernung zu tÃ¶ten!}
+{1116}{}{Dieser Bonus gibt dir die FÃ¤higkeit, dich schnell und doch leise fortzubewegen. Du kannst zugleich schleichen und laufen. Ohne diesen Bonus wÃ¼rdest du nicht mehr schleichen kÃ¶nnen, sobald du anfÃ¤ngst zu laufen.}
+{1117}{}{Du fÃ¼hlst dich unter freiem Himmel wohl. Dieser Bonus verleiht die FÃ¤higkeit, in einer widrigen Umgebung zu Ã¼berleben. Du erhÃ¤ltst +25 % fÃ¼r Naturbursche.}
+{1118}{}{Du hast eine Seite des Feilschens gemeistert - du kaufst Waren weit unter Normalpreis ein. Mit diesem Bonus bekommst du 25% Rabatt, wenn du in einem GeschÃ¤ft oder bei einem anderen HÃ¤ndler einkaufst.}
+{1119}{}{Jeder Level von Gebildet gibt dir +2 FÃ¤higkeitspunkte, wenn du eine neue Erfahrungsebene bewÃ¤ltigst. Dieser Bonus funktioniert am besten, wenn du ihn schon zu einem frÃ¼hen Zeitpunkt deines Abenteuers kaufst.}
+{1120}{}{Es fÃ¤llt dir mit diesem Bonus leichter, andere zu heilen. Jeder Level dieses Bonus heilt 4-10 zusÃ¤tzliche Trefferpunkte, wenn du die Erste-Hilfe- oder Arzt-FÃ¤higkeiten anwendest.}
+{1121}{}{Du hast eine Begabung dafÃ¼r, Geld zu finden. Du findest bei verschiedenen Zufallsbegegnungen in der WÃ¼ste noch mehr Geld.}
+{1122}{}{Im Kampf gelandete kritische Treffer richten mehr Unheil an. Du erhÃ¤ltst einen Bonus von 20%, so dass verstÃ¤rkt Schaden angerichtet wird. Die Chance, einen kritischen Treffer zu landen, wird nicht beeinflusst. }
+{1123}{}{Du hast andere menschliche Wesen studiert, um ihre emotionale Reaktion dir gegenÃ¼ber genau einzuschÃ¤tzen. Du siehst bei einem vertraulichen GesprÃ¤ch den Reaktionswert der Person, mit der du gerade sprichst. }
+{1124}{}{Du bist der leibhaftige TotschlÃ¤ger! Bei NahkÃ¤mpfen werden aus all deinen Treffern kritische Treffer, so dass du ZerstÃ¶rung und VerwÃ¼stung zurÃ¼cklÃ¤sst.}
 {1125}{}{Du hast die Feuer- waffe als Schmerz- quelle gemeistert. Mit diesem Bonus wird jeder erfolg- reiche Treffer im Kampf mit Waffen zu einem kritischen Treffer aufgewertet, wenn du zudem einen guten Wurf machst.}
-{1126}{}{Wenn du beim Schleichen eine Kreatur in den Rücken triffst, fügst du im Nahkampf doppelten Schaden zu. Dieser Bonus heißt Leiser Tod.}
-{1127}{}{Jeder Action Boy-Level (auf Wunsch auch Girl) gibt dir bei Kampfhandlungen einen zusätzlichen AP. Diese APs kannst du bei jeder beliebigen Aufgabe einsetzen.}
-{1128}{}{Geistesblockade ist die Fähigkeit, alle äußeren mentalen Einflüsse auszuschalten. Du musst dieses Talent von einem fahrenden Guru gelernt haben oder an einem Abend, an dem du in der Kneipe so richtig versackt bist.}
-{1129}{}{Mit jeder Stufe dieses Bonus erhältst du 4 Trefferpunkte, wenn du um eine Stufe aufsteigst. Und zwar zusätzlich zu den Trefferpunkten, die du schon aufgrund deiner Ausdauer erhältst.}
-{1130}{}{Du wirst mit diesem Bonus seltener im Kampf getroffen. Du bekommst +5 Punkte zu deiner Rüstungsart dazu, und außerdem noch den RA-Bonus für die getragene Rüstung.}
-{1131}{}{Lecker, lecker! Schmeckt wie Hähnchen. Für jeden Level dieses Bonus erhöht sich deine Resistenz gegen Gift um 25%.}
-{1132}{}{Für diesen Bonus erhältst du einmalig +10 % zu den Fähigkeiten Reparieren und Wissenschaft. Ein bisschen Pauken hat noch niemandem geschadet, besonders dir nicht.}
-{1133}{}{Mit dem Mediziner-Bonus erhältst du einen einmaligen Bonus von +10% zu deinen Erste-Hilfe- und Arzt-Fähigkeiten. Es ist nie verkehrt, Leute heilen zu können.}
+{1126}{}{Wenn du beim Schleichen eine Kreatur in den RÃ¼cken triffst, fÃ¼gst du im Nahkampf doppelten Schaden zu. Dieser Bonus heiÃŸt Leiser Tod.}
+{1127}{}{Jeder Action Boy-Level (auf Wunsch auch Girl) gibt dir bei Kampfhandlungen einen zusÃ¤tzlichen AP. Diese APs kannst du bei jeder beliebigen Aufgabe einsetzen.}
+{1128}{}{Geistesblockade ist die FÃ¤higkeit, alle Ã¤uÃŸeren mentalen EinflÃ¼sse auszuschalten. Du musst dieses Talent von einem fahrenden Guru gelernt haben oder an einem Abend, an dem du in der Kneipe so richtig versackt bist.}
+{1129}{}{Mit jeder Stufe dieses Bonus erhÃ¤ltst du 4 Trefferpunkte, wenn du um eine Stufe aufsteigst. Und zwar zusÃ¤tzlich zu den Trefferpunkten, die du schon aufgrund deiner Ausdauer erhÃ¤ltst.}
+{1130}{}{Du wirst mit diesem Bonus seltener im Kampf getroffen. Du bekommst +5 Punkte zu deiner RÃ¼stungsart dazu, und auÃŸerdem noch den RA-Bonus fÃ¼r die getragene RÃ¼stung.}
+{1131}{}{Lecker, lecker! Schmeckt wie HÃ¤hnchen. FÃ¼r jeden Level dieses Bonus erhÃ¶ht sich deine Resistenz gegen Gift um 25%.}
+{1132}{}{FÃ¼r diesen Bonus erhÃ¤ltst du einmalig +10 % zu den FÃ¤higkeiten Reparieren und Wissenschaft. Ein bisschen Pauken hat noch niemandem geschadet, besonders dir nicht.}
+{1133}{}{Mit dem Mediziner-Bonus erhÃ¤ltst du einen einmaligen Bonus von +10% zu deinen Erste-Hilfe- und Arzt-FÃ¤higkeiten. Es ist nie verkehrt, Leute heilen zu kÃ¶nnen.}
 {1134}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1135}{}{Sorry, due to technical reasons, this perk is now disabled.}
-{1136}{}{Mit jedem Level des Bonus Heave Ho! Erhältst du weitere +2 zu Stärke (bis zu 10) hinzu, um die Distanz von Wurfwaffen feststellen zu können. Dieser Bonus geht nicht über die maximale Reichweite einer Waffe hinaus.}
+{1136}{}{Mit jedem Level des Bonus Heave Ho! ErhÃ¤ltst du weitere +2 zu StÃ¤rke (bis zu 10) hinzu, um die Distanz von Wurfwaffen feststellen zu kÃ¶nnen. Dieser Bonus geht nicht Ã¼ber die maximale Reichweite einer Waffe hinaus.}
 {1137}{}{FEHLER. UNIMPED!}
-{1138}{}{Du bist ein wesentlich besserer Dieb als die meisten Gauner. Du bist sogar einer der besten, denn mit diesem Bonus ignorierst du beim Stehlen von einer Person Größen- und Richtungsfaktoren.}
-{1139}{}{Wenn die Sonne untergeht oder du dich in einer schlecht beleuchteten Umgebung befindest, bewegst du dich mit diesem Bonus wie ein Geist. Deine Schleichfähigkeit im Dunkeln wird um +20% gesteigert.}
-{1140}{}{Dein Ruf ist immer positiv. Ohne diesen Bonus hätte ein negativer Ruf eine schlechte Wirkung auf gutmütige Menschen. Das funktioniert auch umgekehrt. Selbst bösartige Leute behandeln ein wahres Engelchen jetzt wie ein Gangmitglied.}
-{1141}{}{Du findest mehr Munition als andere Überlebende des postatomaren Horrorszenarios. Mit diesem Bonus verdoppelt sich die Munitionsmenge, die du zufällig findest.}
+{1138}{}{Du bist ein wesentlich besserer Dieb als die meisten Gauner. Du bist sogar einer der besten, denn mit diesem Bonus ignorierst du beim Stehlen von einer Person GrÃ¶ÃŸen- und Richtungsfaktoren.}
+{1139}{}{Wenn die Sonne untergeht oder du dich in einer schlecht beleuchteten Umgebung befindest, bewegst du dich mit diesem Bonus wie ein Geist. Deine SchleichfÃ¤higkeit im Dunkeln wird um +20% gesteigert.}
+{1140}{}{Dein Ruf ist immer positiv. Ohne diesen Bonus hÃ¤tte ein negativer Ruf eine schlechte Wirkung auf gutmÃ¼tige Menschen. Das funktioniert auch umgekehrt. Selbst bÃ¶sartige Leute behandeln ein wahres Engelchen jetzt wie ein Gangmitglied.}
+{1141}{}{Du findest mehr Munition als andere Ãœberlebende des postatomaren Horrorszenarios. Mit diesem Bonus verdoppelt sich die Munitionsmenge, die du zufÃ¤llig findest.}
 {1142}{}{Ein Forscher entdeckt neue und interessante Orte. Mit diesem Bonus hast du eine bessere Chance, besonders interessante Orte und Menschen zu finden.}
-{1143}{}{Mit diesem Bonus verringert sich die Wahrscheinlichkeit von Präparaten abhängig zu werden um 50%, und du musst nur die Hälfte der normalen Entzugszeit durchmachen.}
-{1144}{}{Der Pfadfinder hat es einfacher, den kürzesten Weg zu finden. Mit diesem Bonus verringert sich deine Reisezeit auf der Weltkarte um 25 % pro Stufe.}
-{1145}{}{Tiere greifen keine Freunde an, außer das Tier wird zuerst angegriffen oder bedroht. Was genau in dieser Welt als Tier gilt, ist Definitionssache.}
-{1146}{}{Du hast deine Fähigkeit verbessert, weit entfernte Örtlichkeiten zu sehen, womit die Größe der Entdeckungen auf der Weltkarte um ein Quadrat in jeder Richtung ausgeweitet wird. Es erhöht sich auch deine Chance, besondere Begegnungen zu machen.}
-{1147}{}{Mit diesem Bonus hast du die Hilfe eines Mysteriösen Fremden gewonnen, der dir hin und wieder zu Hilfe kommt. Wenn dein Helfer im Kampf stirbt, wird er (oder sie) nicht ersetzt.}
-{1148}{}{Du bekommst +15% zu deiner Fähigkeit als Naturbursche hinzu. Mit größter Wahrscheinlichkeit kannst du zufälligen Begegnungen ausweichen, wenn du das willst, und statt dessen mehr "besondere" Begegnungen als andere herbeiführen.}
-{1149}{}{Du kannst deine Ausrüstung jetzt besser packen. Es kostet dich nur 2 Aktionspunkte (statt 4), im Kampf auf dein Inventar zuzugreifen.}
-{1150}{}{Du kannst jetzt deine Dialogoptionen verbessern, ohne genau zu wissen, wovon du eigentlich redest. Mit jedem Level dieses Bonus erhöht sich deine Intelligenz für Dialogzwecke um eins (bis zu 10).}
-{1151}{}{Mit diesem Bonus hast du tatsächlich eine gute Auffassungsgabe, da du mit jedem Level weitere +5% bekommst, wenn du Erfahrungspunkte sammelst. Hiervon machst du am besten schon früh Gebrauch.}
-{1152}{}{Deine Fähigkeiten haben sich so weit ausgedehnt, dass du eine zusätzliche Spezialkenntnis erwerben kannst. Spezialkenntnisse verbessern sich doppelt schnell.}
-{1153}{}{Die Strahlung im Ödland hat dich verändert! Eines deiner Zusatzmerkmale ist zu etwas anderem mutiert.}
+{1143}{}{Mit diesem Bonus verringert sich die Wahrscheinlichkeit von PrÃ¤paraten abhÃ¤ngig zu werden um 50%, und du musst nur die HÃ¤lfte der normalen Entzugszeit durchmachen.}
+{1144}{}{Der Pfadfinder hat es einfacher, den kÃ¼rzesten Weg zu finden. Mit diesem Bonus verringert sich deine Reisezeit auf der Weltkarte um 25 % pro Stufe.}
+{1145}{}{Tiere greifen keine Freunde an, auÃŸer das Tier wird zuerst angegriffen oder bedroht. Was genau in dieser Welt als Tier gilt, ist Definitionssache.}
+{1146}{}{Du hast deine FÃ¤higkeit verbessert, weit entfernte Ã–rtlichkeiten zu sehen, womit die GrÃ¶ÃŸe der Entdeckungen auf der Weltkarte um ein Quadrat in jeder Richtung ausgeweitet wird. Es erhÃ¶ht sich auch deine Chance, besondere Begegnungen zu machen.}
+{1147}{}{Mit diesem Bonus hast du die Hilfe eines MysteriÃ¶sen Fremden gewonnen, der dir hin und wieder zu Hilfe kommt. Wenn dein Helfer im Kampf stirbt, wird er (oder sie) nicht ersetzt.}
+{1148}{}{Du bekommst +15% zu deiner FÃ¤higkeit als Naturbursche hinzu. Mit grÃ¶ÃŸter Wahrscheinlichkeit kannst du zufÃ¤lligen Begegnungen ausweichen, wenn du das willst, und statt dessen mehr "besondere" Begegnungen als andere herbeifÃ¼hren.}
+{1149}{}{Du kannst deine AusrÃ¼stung jetzt besser packen. Es kostet dich nur 2 Aktionspunkte (statt 4), im Kampf auf dein Inventar zuzugreifen.}
+{1150}{}{Du kannst jetzt deine Dialogoptionen verbessern, ohne genau zu wissen, wovon du eigentlich redest. Mit jedem Level dieses Bonus erhÃ¶ht sich deine Intelligenz fÃ¼r Dialogzwecke um eins (bis zu 10).}
+{1151}{}{Mit diesem Bonus hast du tatsÃ¤chlich eine gute Auffassungsgabe, da du mit jedem Level weitere +5% bekommst, wenn du Erfahrungspunkte sammelst. Hiervon machst du am besten schon frÃ¼h Gebrauch.}
+{1152}{}{Deine FÃ¤higkeiten haben sich so weit ausgedehnt, dass du eine zusÃ¤tzliche Spezialkenntnis erwerben kannst. Spezialkenntnisse verbessern sich doppelt schnell.}
+{1153}{}{Die Strahlung im Ã–dland hat dich verÃ¤ndert! Eines deiner Zusatzmerkmale ist zu etwas anderem mutiert.}
 {1154}{}{Du gierst nach einer weiteren Nuka-Cola.}
-{1155}{}{Dich schüttelt es}
-{1156}{}{Du fühlst dich groggy.}
+{1155}{}{Dich schÃ¼ttelt es}
+{1156}{}{Du fÃ¼hlst dich groggy.}
 {1157}{}{Du bist benommen.}
-{1158}{}{Dir ist übel.}
+{1158}{}{Dir ist Ã¼bel.}
 {1159}{}{Waffen - Reichweite}
 {1160}{}{Waffen - Genauigkeit}
 {1161}{}{Waffen - Durchschlagskraft}
-{1162}{}{Waffen - Rückstoß}
-{1163}{}{Powerrüstung}
-{1164}{}{Kampfrüstung}
+{1162}{}{Waffen - RÃ¼ckstoÃŸ}
+{1163}{}{PowerrÃ¼stung}
+{1164}{}{KampfrÃ¼stung}
 {1165}{}{Waffe Reichweite Visier}
 {1166}{}{Waffe Schnell Nachladen}
 {1167}{}{Waffe Nachtsicht}
 {1168}{}{Waffe Flammenwerfer}
-{1169}{}{Rüstung - Erweitert I}
-{1170}{}{Rüstung - Erweitert II}
-{1171}{}{Alles ist so zäh und langsam...du brauchst noch etwas Jet, und zwar JETZT!}
-{1172}{}{Du fühlst das brennende Verlangen, noch eine Schachtel tragische Karten zu öffnen.}
-{1173}{}{Rüstung - Charisma}
-{1174}{}{Du weißt, wie man Geckos richtig häutet, um die Haut weiterzuverwenden.}
-{1175}{}{Du hast einen inneren Schutz gegen körperliche Angriffe.}     # Dermal Impact Armor
-{1176}{}{Du hast einen besonders starken inneren Schutz gegen körperliche Angriffe.}  # Dermal Impact Assault Enhancement
+{1169}{}{RÃ¼stung - Erweitert I}
+{1170}{}{RÃ¼stung - Erweitert II}
+{1171}{}{Alles ist so zÃ¤h und langsam...du brauchst noch etwas Jet, und zwar JETZT!}
+{1172}{}{Du fÃ¼hlst das brennende Verlangen, noch eine Schachtel tragische Karten zu Ã¶ffnen.}
+{1173}{}{RÃ¼stung - Charisma}
+{1174}{}{Du weiÃŸt, wie man Geckos richtig hÃ¤utet, um die Haut weiterzuverwenden.}
+{1175}{}{Du hast einen inneren Schutz gegen kÃ¶rperliche Angriffe.}     # Dermal Impact Armor
+{1176}{}{Du hast einen besonders starken inneren Schutz gegen kÃ¶rperliche Angriffe.}  # Dermal Impact Assault Enhancement
 {1177}{}{Du hast einen inneren Schutz gegen Energieangriffe.}     # Phoenix Armor Implants
 {1178}{}{Du hast einen besonders starken inneren Schutz gegen Energieangriffe.}  # Phoenix Assault Enhancement
 {1179}{}{Du hast +10 % Resistenz gegen Gift und Strahlung erlangt.}  # Vault City Inoculations
-{1180}{}{Mit diesem Bonus gewinnst du 1 Stärkepunkt, wenn du unter 1/2 deiner max. Trefferpunkte fällst.}  # Adrenaline Rush
-{1181}{}{Du bist im Freien wachsamer, und Feinde können sich nicht so leicht an dich heranschleichen. Mit diesem Bonus bekommst du +3 zu deiner Wahrnehmung in Zufallsbegegnungen hinzu, wenn du die Plazierung festlegst.}  # Cautious Nature
-{1182}{}{Du kannst dich beim Lesen viel besser auf Details konzentrieren. Du gewinnst 50% mehr Fähigkeitspunkte beim Lesen von Büchern .}  # Comprehension
-{1183}{}{Du bist ein Experte in Fragen der Sprengstoffhandhabung. Alles geht immer genau dann hoch, wenn du es auch willst und richtet besonders großen Schaden an.}  # Demolition Expert
-{1184}{}{Du würfelst wie ein Meister. Deine Spielfähigkeiten erhöhen sich um 20 %.}  # Gambler
-{1185}{}{Mit diesem Bonus erhältst du 1 Punkt zu deiner Stärke.}     # Gain Strength
-{1186}{}{Mit diesem Bonus erhältst du 1 Punkt zu deiner Wahrnehmung.}   # Gain Perception
-{1187}{}{Mit diesem Bonus erhältst du 1 Punkt zu deiner Ausdauer.}    # Gain Endurance
-{1188}{}{Mit diesem Bonus erhältst du 1 Punkt zu deinem Charisma.}     # Gain Charisma
-{1189}{}{Mit diesem Bonus erhältst du 1 Punkt zu deiner Intelligenz.} # Gain Intelligence
-{1190}{}{Mit diesem Bonus erhältst du 1 Punkt zu deiner Beweglichkeit.}      # Gain Agility
-{1191}{}{Mit diesem Bonus erhältst du 1 Punkt zu deinem Glück.}         # Gain Luck
-{1192}{}{Dein unschuldiges Aussehen erleichtert dir das Stehlen ein wenig. Du gewinnst 20% zu deiner Stehlfähigkeit hinzu.}  # Harmless
-{1193}{}{Mit diesem Bonus erhältst du automatisch einen Erfahrungslevel hinzu.}  # Here and Now
-{1194}{}{Wenn beide Objektschächte leer sind, erhältst du für jeden ungenutzten Aktionspunkt +2 anstelle von +1 für deine Rüstungsart am Ende der Runde, und 1/12 deiner unbewaffneten Fähigkeiten.}  # HtH Evade
-{1195}{}{Du bist Experte darin, anderen sexuelle Höhepunkte zu verschaffen.}  # Kama Sutra Master
-{1196}{}{Dein Karma leuchtet doppelt so hell. Egal ob schlecht oder gut, dein Karma wird für alle Reaktionen und Faktoren verdoppelt.}  # Karma Beacon
-{1197}{}{Du bist agil, hast Glück und lässt immer Vorsicht walten. Dieser Bonus halbiert die Wahrscheinlichkeit, dass du in eine Falle läufst.}  # Light Step
-{1198}{}{Deine Kenntnis aller Lebewesen und ihrer Stärken und Schwächen hat sich verbessert. Du erhältst einen einmaligen Bonus von +10% für Arzt, und du fügst allen Lebewesen +5 Schaden pro Angriff zu.}  # Living Anatomy
-{1199}{}{Du erhältst einen zusätzlichen Eintrag für dein Begleiterlimit, aber denk daran: Mehr als fünf sind einfach zuviel.}  # Magnetic Personality
-{1200}{}{Mit diesem Bonus werden deine Fähigkeiten 'Reden' und 'Handeln' einmalig um 20 % erhöht. Ist Schweigen denn wirklich immer Gold?}
-{1201}{}{Du bist gut darin, dein Inventar in Ordnung zu halten. Dadurch wird es wesentlich leichter, das bisschen an Extras zu tragen, die du immer benötigst.}  # Pack Rat
-{1202}{}{Du richtest besonders großen Schaden mit Feuerwaffen an, und deine Feinde sterben immer auf die qualvollste Weise in einem Höllenszenario. }  # Pyromaniac
+{1180}{}{Mit diesem Bonus gewinnst du 1 StÃ¤rkepunkt, wenn du unter 1/2 deiner max. Trefferpunkte fÃ¤llst.}  # Adrenaline Rush
+{1181}{}{Du bist im Freien wachsamer, und Feinde kÃ¶nnen sich nicht so leicht an dich heranschleichen. Mit diesem Bonus bekommst du +3 zu deiner Wahrnehmung in Zufallsbegegnungen hinzu, wenn du die Plazierung festlegst.}  # Cautious Nature
+{1182}{}{Du kannst dich beim Lesen viel besser auf Details konzentrieren. Du gewinnst 50% mehr FÃ¤higkeitspunkte beim Lesen von BÃ¼chern .}  # Comprehension
+{1183}{}{Du bist ein Experte in Fragen der Sprengstoffhandhabung. Alles geht immer genau dann hoch, wenn du es auch willst und richtet besonders groÃŸen Schaden an.}  # Demolition Expert
+{1184}{}{Du wÃ¼rfelst wie ein Meister. Deine SpielfÃ¤higkeiten erhÃ¶hen sich um 20 %.}  # Gambler
+{1185}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deiner StÃ¤rke.}     # Gain Strength
+{1186}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deiner Wahrnehmung.}   # Gain Perception
+{1187}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deiner Ausdauer.}    # Gain Endurance
+{1188}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deinem Charisma.}     # Gain Charisma
+{1189}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deiner Intelligenz.} # Gain Intelligence
+{1190}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deiner Beweglichkeit.}      # Gain Agility
+{1191}{}{Mit diesem Bonus erhÃ¤ltst du 1 Punkt zu deinem GlÃ¼ck.}         # Gain Luck
+{1192}{}{Dein unschuldiges Aussehen erleichtert dir das Stehlen ein wenig. Du gewinnst 20% zu deiner StehlfÃ¤higkeit hinzu.}  # Harmless
+{1193}{}{Mit diesem Bonus erhÃ¤ltst du automatisch einen Erfahrungslevel hinzu.}  # Here and Now
+{1194}{}{Wenn beide ObjektschÃ¤chte leer sind, erhÃ¤ltst du fÃ¼r jeden ungenutzten Aktionspunkt +2 anstelle von +1 fÃ¼r deine RÃ¼stungsart am Ende der Runde, und 1/12 deiner unbewaffneten FÃ¤higkeiten.}  # HtH Evade
+{1195}{}{Du bist Experte darin, anderen sexuelle HÃ¶hepunkte zu verschaffen.}  # Kama Sutra Master
+{1196}{}{Dein Karma leuchtet doppelt so hell. Egal ob schlecht oder gut, dein Karma wird fÃ¼r alle Reaktionen und Faktoren verdoppelt.}  # Karma Beacon
+{1197}{}{Du bist agil, hast GlÃ¼ck und lÃ¤sst immer Vorsicht walten. Dieser Bonus halbiert die Wahrscheinlichkeit, dass du in eine Falle lÃ¤ufst.}  # Light Step
+{1198}{}{Deine Kenntnis aller Lebewesen und ihrer StÃ¤rken und SchwÃ¤chen hat sich verbessert. Du erhÃ¤ltst einen einmaligen Bonus von +10% fÃ¼r Arzt, und du fÃ¼gst allen Lebewesen +5 Schaden pro Angriff zu.}  # Living Anatomy
+{1199}{}{Du erhÃ¤ltst einen zusÃ¤tzlichen Eintrag fÃ¼r dein Begleiterlimit, aber denk daran: Mehr als fÃ¼nf sind einfach zuviel.}  # Magnetic Personality
+{1200}{}{Mit diesem Bonus werden deine FÃ¤higkeiten 'Reden' und 'Handeln' einmalig um 20 % erhÃ¶ht. Ist Schweigen denn wirklich immer Gold?}
+{1201}{}{Du bist gut darin, dein Inventar in Ordnung zu halten. Dadurch wird es wesentlich leichter, das bisschen an Extras zu tragen, die du immer benÃ¶tigst.}  # Pack Rat
+{1202}{}{Du richtest besonders groÃŸen Schaden mit Feuerwaffen an, und deine Feinde sterben immer auf die qualvollste Weise in einem HÃ¶llenszenario. }  # Pyromaniac
 {1203}{}{Du erholst dich schnell, wenn du niedergeschlagen wurdest.}  # Quick Recovery
 {1204}{}{Sorry, due to technical reasons, this perk is now disabled.}
 {1205}{}{Es ist viel unwahrscheinlicher, dass du im Kampf niedergeschlagen wirst.}  # Stonewall
-{1206}{}{Mit diesem Bonus werden deine Fähigkeiten 'Schleichen', 'Öffnen', 'Stehlen' und 'Falle' einmalig um 10 % erhöht. Nimm es von den Reichen und beschenke ... dich.}
-{1207}{}{Du kannst eine Waffe wesentlich länger als normal erlaubt halten. Du erhältst +3 zu deiner Stärke, die du in Kraftproben einsetzen kannst, wenn du Waffen lange führen musst.}  # Weapon Handling
+{1206}{}{Mit diesem Bonus werden deine FÃ¤higkeiten 'Schleichen', 'Ã–ffnen', 'Stehlen' und 'Falle' einmalig um 10 % erhÃ¶ht. Nimm es von den Reichen und beschenke ... dich.}
+{1207}{}{Du kannst eine Waffe wesentlich lÃ¤nger als normal erlaubt halten. Du erhÃ¤ltst +3 zu deiner StÃ¤rke, die du in Kraftproben einsetzen kannst, wenn du Waffen lange fÃ¼hren musst.}  # Weapon Handling
 {1208}{}{Du hast das medizinische Training von Bunkerstadt absolviert.}  # Vault City Training
-{1209}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit erhöht worden.}  # Alcohol Enhanced hit points
-{1210}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit noch ein wenig mehr erhöht worden.}  # Alcohol Enhanced hit points II
+{1209}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit erhÃ¶ht worden.}  # Alcohol Enhanced hit points
+{1210}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit noch ein wenig mehr erhÃ¶ht worden.}  # Alcohol Enhanced hit points II
 {1211}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit leicht gesenkt worden.}  # Alcohol Lowered hit points
 {1212}{}{Deine Trefferpunkte sind aufgrund wiederholter Trunkenheit leicht gesenkt worden.}  # Alcohol Lowered hit points II
 
@@ -247,6 +247,6 @@
 {1215}{}{Your hit points have been lowered slightly by repeated use of the autodoc.}  # Autodoc Lowered hit points
 {1216}{}{Your hit points have been lowered slightly by repeated use of the autodoc.}  # Autodoc Lowered hit points II
 
-{1217}{}{Im Schwafeln übertrifft dich so schnell keiner.}
+{1217}{}{Im Schwafeln Ã¼bertrifft dich so schnell keiner.}
 {1218}{}{Durch Waffen verbesserter K.o.}
-{1219}{}{Das Gute an dir ist, dass alle um dich herum mehr kritische Treffer im Kampf erleiden. Der Nachteil ist, dass das auch für dich gilt!}
+{1219}{}{Das Gute an dir ist, dass alle um dich herum mehr kritische Treffer im Kampf erleiden. Der Nachteil ist, dass das auch fÃ¼r dich gilt!}
