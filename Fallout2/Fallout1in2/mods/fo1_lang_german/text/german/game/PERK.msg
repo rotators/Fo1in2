@@ -135,7 +135,7 @@
 {1105}{}{Deine Ausbildung an Feuerwaffen und anderen Distanz- waffen hat dich zu einem tödlichen Waffenkämpfer gemacht. Für jede Stufe dieses Bonus fügst du +2 Trefferpunkte mit Distanzwaffen zu.}
 {1106}{}{Mit diesem Bonus bist du noch schneller am Auslöser und kannst dennoch so genau zielen wie bisher. Jeder Angriff mit Distanzwaffen kostet 1 AP weniger.}
 {1107}{}{Es ist wahrscheinlicher, dass du dich im Kampf schneller als deine Gegner bewegst, da deine Reaktion für jede Stufe dieses Bonus um +2 zunimmt.}
-{1108}{}{Bei jeder Stufe dieses Bonus bekommst du +2 Punkte zu deiner Heilung hinzu. Diese werden zu deiner normalen Heilung hinzugerechnet, so dass du schneller gesund wirst.}
+{1108}{}{Bei jeder Stufe dieses Bonus bekommst du +1 Punkte zu deiner Heilung hinzu. Diese werden zu deiner normalen Heilung hinzugerechnet, so dass du schneller gesund wirst.}
 {1109}{}{Mit diesem Bonus ist die Wahrscheinlichkeit kritischer Treffer bei einem Angriff zu erzielen erhöht. Mit jedem Level Zusätzliche Kriterien erhöht sich deine Chance, einen kritischen Treffer zu landen um +5%.}
 {1110}{}{Mit dem Nachtsichtbonus kannst du nachts besser sehen. Die Gesamtdunkelheit wird um 20% vermindert.}
 {1111}{}{Du erregst Aufmerksamkeit, wenn du einen Raum betrittst. Für jede Stufe dieses Bonus wird die erste Reaktion einer anderen Person um 10 % verbessert.}

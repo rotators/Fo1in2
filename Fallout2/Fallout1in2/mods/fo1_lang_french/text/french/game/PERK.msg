@@ -144,7 +144,7 @@
 {1105}{}{Ton expérience des armes à feu et des autres armes à distance te rend redoutable. A chaque niveau de cette aptitude, tu infliges +2 points de dégâts avec des armes à distance.}
 {1106}{}{Cette aptitude te permet de tirer un peu plus vite tout en conservant la même précision. Chaque attaque avec une arme à distance te coûte 1 PA de moins.}
 {1107}{}{Tu augmentes tes chances de précéder tes adversaires au combat, car à chaque niveau de cette aptitude, ta position (Séquence) augmente de +2.}
-{1108}{}{A chaque niveau de cette aptitude, ta vitesse de guérison augmente de +2, ce qui te permet de guérir plus vite. Ceci vient s'ajouter à ta vitesse de guérison normale.}
+{1108}{}{A chaque niveau de cette aptitude, ta vitesse de guérison augmente de +1, ce qui te permet de guérir plus vite. Ceci vient s'ajouter à ta vitesse de guérison normale.}
 {1109}{}{Avec cette aptitude, tu augmentes tes chances d'infliger des coups critiques au combat. Chaque niveau de cette aptitude augmente tes chances de +5%.}
 {1110}{}{Grâce à la vision nocturne, tu vois mieux dans l'obscurité. Chaque niveau de cette aptitude réduit l'obscurité générale de 20%.}
 {1111}{}{Tu attires l'attention simplement en traversant une pièce. La réaction initiale des personnes qui t'entourent est améliorée de 10% à chaque niveau de cette aptitude.}
