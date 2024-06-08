@@ -146,7 +146,7 @@
 {1117}{}{You are a master of the outdoors.  This Perk confers the ability to survive in hostile environments.  You get a +20% bonus to Outdoorsman for survival purposes, for each level of this Perk.}
 {1118}{}{You have mastered one aspect of bartering - the ability to buy goods far cheaper than a normal person.  With this Perk, you get a 25% discount when purchasing items from a store or another trader.}
 {1119}{}{Each level of Educated will add +2 skill points when you gain a new experience level.  This Perk works best when purchased early in your adventure.}
-{1120}{}{The healing of bodies comes easier to you with this Perk.  Each level will add 2-5 more hit points healed when using the First Aid or Doctor skills.}
+{1120}{}{The healing of bodies comes easier to you with this Perk.  Each level of this Perk heals 4-10 additional hit points when using the First Aid or Doctor skills.}
 {1121}{}{You have the talent of finding money.  You will find additional money in random encounters in the desert.}
 {1122}{}{The critical hits you cause in combat are more devastating.  You gain a 20% bonus on the critical hit table, almost ensuring that more damage will be done.  This does not affect the chance to cause a critical hit.}
 {1123}{}{You have studied other human beings, giving you the inside knowledge of their emotional reaction to you.  You will see the reaction level of the person you are talking to, when involved in an indepth conversation.}
