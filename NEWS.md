@@ -24,7 +24,9 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: not all FO1 perks (ID 0-63) have their old requirements.
 - **Fixed**: possible crash when talking to Katja when escaping the military base
 - **Tweaked**: Aradesh dialog will now mention the reward that the player gets after rescuing Tandi.
+- **Tweaked**: Ian (and Tandi if around) will now leave the party and attack if the player is an enemy of Shady Sands.
 - **Tweaked**: If player has disabled the Fo2 party member limit, the Magnetic Personality perk won't show up anymore, since it is useless.
 - **Tweaked**: Reverted Fixt changes to party member stats, to bring them back more in line with vanilla Fo1. Adjusted stats for party member level-up accordingly.
 - **Tweaked**: Reworked the Lance encounter around Shady Sands to work more like in the vanilla game again (random chance to spawn a dead raider instead of Lance). Lance remains alive (restored cut-content).
+- **Tweaked**: Tycho will now leave the party and attack if the player is an enemy of Junktown.
 - **Tweaked**: When damaging a door but not yet destroying it, a notification will show in the message log.
