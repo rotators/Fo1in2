@@ -241,11 +241,148 @@ procedure ZAX11 begin
 end
 
 procedure ZAX12 begin
-   Reply(mstr(148) + local_var(LVAR_Chess_Wins) + mstr(228) + local_var(LVAR_Chess_Draws) + mstr(229) + local_var(LVAR_Chess_Losses) + mstr(230));
-   NOption(215, ChessBlack, 5);
-   NOption(216, ChessWhite, 5);
+   if (fixt_enabled or fo1in2_fixt_chess_enabled) then begin
+      Reply(mstr(1481) + local_var(LVAR_Chess_Wins) + mstr(228) + local_var(LVAR_Chess_Draws) + mstr(229) + local_var(LVAR_Chess_Losses) + mstr(230));
+      NOption(215, ChessBlack, 5);
+      NOption(216, ChessWhite, 5);
+   end
+   else begin
+      variable Intelligence_Roll := 0;
+      NMessage(148);
+      gfade_out(600);
+         game_time_advance(game_ticks(7200));
+         Intelligence_Roll := roll_vs_stat(dude_obj, STAT_iq, 0);
+      gfade_in(600);
+      if (is_success(Intelligence_Roll)) then begin
+         if (is_critical(Intelligence_Roll)) then begin
+            Reply(149);
+            set_local_var(LVAR_Chess_GiveExp, 1);
+            set_global_var(GVAR_GLOW_ZAX_STATE, 2);
+            give_xp_msg(EXP_WON_IN_CHESS, mstr(227));
+            inc_glow_rep(REP_BONUS_DEFEAT_ZAX);
+         end
+         else begin
+            Reply(150);
+         end
+      end
+      else begin
+         Reply(150);
+      end
+      if (local_var(LVAR_Chess_GiveExp) == 0) then begin
+         NOption(151, Zax12, 5);
+      end
+      NOption(152, Zax01, 5);
+   end
 end
 
+procedure ZAX13 begin
+   NMessage(153);
+end
+
+procedure ZAX14 begin
+   Reply(154);
+   NOption(155, ZAX13, 5);
+   NOption(156, ZAX01, 5);
+end
+
+procedure ZAX15 begin
+   NMessage(157);
+   Reply(158);
+   NOption(159, ZAX16, 5);
+   NOption(160, ZAX17, 7);
+   NOption(161, ZAX18, 9);
+end
+
+procedure ZAX16 begin
+   Reply(162);
+   NOption(163, ZAX01, 5);
+   NOption(164, ZAX17, 7);
+   NOption(165, ZAX18, 9);
+end
+
+procedure ZAX17 begin
+   Reply(166);
+   NOption(167, ZAX01, 5);
+   NOption(168, ZAX18, 9);
+end
+
+procedure ZAX18 begin
+   NMessage(169);
+   NMessage(170);
+   NMessage(171);
+   NMessage(172);
+   Reply(173);
+   NOption(174, ZAX19, 9);
+   NOption(175, ZAX20, 10);
+   NOption(176, ZAX01, 5);
+   NOption(177, ZAX13, 5);
+end
+
+procedure ZAX19 begin
+   NMessage(178);
+   NMessage(179);
+   Reply(180);
+   NOption(181, ZAX20, 10);
+   NOption(182, ZAX01, 5);
+   NOption(183, ZAX13, 5);
+end
+
+procedure ZAX20 begin
+   Reply(184);
+   NOption(185, ZAX19, 9);
+   NOption(186, ZAX01, 5);
+   NOption(187, ZAX13, 5);
+end
+
+procedure ZAX21 begin
+   Reply(188);
+   NOption(189, ZAX22, 5);
+   NOption(190, ZAX23, 5);
+   NOption(191, ZAX24, 5);
+   NOption(192, ZAX01, 5);
+end
+
+procedure ZAX22 begin
+   Reply(193);
+   NOption(194, ZAX23, 5);
+   NOption(195, ZAX24, 5);
+   NOption(196, ZAX01, 5);
+   NOption(197, ZAX13, 5);
+end
+
+procedure ZAX23 begin
+   Reply(198);
+   NOption(199, ZAX22, 5);
+   NOption(200, ZAX24, 5);
+   NOption(201, ZAX01, 5);
+   NOption(202, ZAX13, 5);
+end
+
+procedure ZAX24 begin
+   Reply(203);
+   NOption(204, ZAX22, 5);
+   NOption(205, ZAX23, 5);
+   NOption(206, ZAX01, 5);
+   NOption(207, ZAX13, 5);
+end
+
+procedure ZAX25 begin
+   NMessage(208);
+   if glow_weapons_locked then begin
+      NMessage(209);
+      set_glow_weapons_unlocked;
+   end
+end
+
+procedure ZAXClearance begin
+   if glow_traps_active then begin
+      NMessage(210);
+      NMessage(211);
+      set_glow_taps_active;
+   end
+end
+
+// FIXT CHESS GAME
 procedure ChessBlack begin
    BLACK := 1;
    WHITE := 0;
@@ -363,113 +500,6 @@ procedure ChessPLAY begin
    end
    NOption(151, ZAX12, 5);
    NOption(152, ZAX01, 5);
-end
-
-procedure ZAX13 begin
-   NMessage(153);
-end
-
-procedure ZAX14 begin
-   Reply(154);
-   NOption(155, ZAX13, 5);
-   NOption(156, ZAX01, 5);
-end
-
-procedure ZAX15 begin
-   NMessage(157);
-   Reply(158);
-   NOption(159, ZAX16, 5);
-   NOption(160, ZAX17, 7);
-   NOption(161, ZAX18, 9);
-end
-
-procedure ZAX16 begin
-   Reply(162);
-   NOption(163, ZAX01, 5);
-   NOption(164, ZAX17, 7);
-   NOption(165, ZAX18, 9);
-end
-
-procedure ZAX17 begin
-   Reply(166);
-   NOption(167, ZAX01, 5);
-   NOption(168, ZAX18, 9);
-end
-
-procedure ZAX18 begin
-   NMessage(169);
-   NMessage(170);
-   NMessage(171);
-   NMessage(172);
-   Reply(173);
-   NOption(174, ZAX19, 9);
-   NOption(175, ZAX20, 10);
-   NOption(176, ZAX01, 5);
-   NOption(177, ZAX13, 5);
-end
-
-procedure ZAX19 begin
-   NMessage(178);
-   NMessage(179);
-   Reply(180);
-   NOption(181, ZAX20, 10);
-   NOption(182, ZAX01, 5);
-   NOption(183, ZAX13, 5);
-end
-
-procedure ZAX20 begin
-   Reply(184);
-   NOption(185, ZAX19, 9);
-   NOption(186, ZAX01, 5);
-   NOption(187, ZAX13, 5);
-end
-
-procedure ZAX21 begin
-   Reply(188);
-   NOption(189, ZAX22, 5);
-   NOption(190, ZAX23, 5);
-   NOption(191, ZAX24, 5);
-   NOption(192, ZAX01, 5);
-end
-
-procedure ZAX22 begin
-   Reply(193);
-   NOption(194, ZAX23, 5);
-   NOption(195, ZAX24, 5);
-   NOption(196, ZAX01, 5);
-   NOption(197, ZAX13, 5);
-end
-
-procedure ZAX23 begin
-   Reply(198);
-   NOption(199, ZAX22, 5);
-   NOption(200, ZAX24, 5);
-   NOption(201, ZAX01, 5);
-   NOption(202, ZAX13, 5);
-end
-
-procedure ZAX24 begin
-   Reply(203);
-   NOption(204, ZAX22, 5);
-   NOption(205, ZAX23, 5);
-   NOption(206, ZAX01, 5);
-   NOption(207, ZAX13, 5);
-end
-
-procedure ZAX25 begin
-   NMessage(208);
-   if glow_weapons_locked then begin
-      NMessage(209);
-      set_glow_weapons_unlocked;
-   end
-end
-
-procedure ZAXClearance begin
-   if glow_traps_active then begin
-      NMessage(210);
-      NMessage(211);
-      set_glow_taps_active;
-   end
 end
 
 procedure Term01 begin
@@ -638,7 +668,7 @@ procedure Mainframe00 begin
    end
    else begin
       gsay_message(SCRIPT_GPWRTERM, 201, NEUTRAL_REACTION);
-      display_msg(mstr(214));
+      display_msg(mstr(300));
    end
 end
 
@@ -726,7 +756,7 @@ procedure Mainframe04a begin
    end
    else begin
       if (local_var(9) == 1) then begin
-         display_msg(mstr(214));
+         display_msg(mstr(300));
          call Mainframe10;
       end
       else begin

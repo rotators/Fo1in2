@@ -430,6 +430,34 @@ variable step_tile;
 #define stat_success(x,y,z)                 is_success(do_check(x,y,z))
 #define dude_stat_success(y,z)              stat_success(dude_obj,y,z)
 
+/**
+   Taken from RPU - https://github.com/BGforgeNet/Fallout2_Unofficial_Patch/blob/master/scripts_src/headers/command.h#L490
+ * Like `roll_vs_skill`, but for stat roll checks.
+ * Because `do_check` can't generate criticals.
+ * Returns one of the ROLL_* constants, can be used in `is_critical`.
+ * Average luck of 5 provides DnD-like 1/20 chance to upgrade success to critical.
+ * For failures, engine doesn't use mods, we follow suit.
+ * Maybe Jinxed should work here too.
+ * @arg {ObjPtr} who Critter
+ * @arg {int} stat STAT_*
+ * @arg {int} mod Difficulty mod
+ * @ret {int}
+ */
+procedure roll_vs_stat(variable who, variable stat, variable mod) begin
+   variable rnd = random(1, 100);
+   variable success = is_success(do_check(who, stat, mod));
+   // success
+   if success then begin
+       // critical
+       if (rnd + (get_critter_stat(who, STAT_lu) - 5)) > 95 then return ROLL_CRITICAL_SUCCESS;
+       else return ROLL_SUCCESS;
+   end else begin // failure
+     // critical
+     if rnd > 95 then return ROLL_CRITICAL_FAILURE;
+   end
+   return ROLL_FAILURE;
+end
+
 //
 // misc triplets
 //

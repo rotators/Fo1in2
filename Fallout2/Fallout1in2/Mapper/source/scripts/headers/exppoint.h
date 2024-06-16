@@ -233,6 +233,7 @@
 #define EXP_REPAIR_ROBOT_BATTERY_SEC            (300)
 #define EXP_REPAIR_ROBOT_BATTERY_MFC            (500)
 #define EXP_REPAIR_ROBOT_SENSORS                (150)
+#define EXP_WON_IN_CHESS                        (700)
 
 // Brotherhood of Steel
 #define EXP_DELIVERED_GRENADES                  (300)

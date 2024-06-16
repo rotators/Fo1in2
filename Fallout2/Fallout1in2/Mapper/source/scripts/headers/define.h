@@ -7,7 +7,7 @@
 #include "..\headers\itempid.h"
 #include "..\headers\scripts.h"
 #include "..\headers\teams.h"
-//#include "..\headers\condtion.h"
+#include "..\headers\condition.h"
 #include "..\headers\aipacket.h"
 #include "..\headers\exppoint.h"
 #include "..\headers\scenepid.h"
