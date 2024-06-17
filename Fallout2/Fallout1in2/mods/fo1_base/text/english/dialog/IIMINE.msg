@@ -1,3 +1,17 @@
+# Fo2
+{1000}{}{You see a raised plate. It looks to be part of a trap.}
+
+# NPC name prepends this line
+{1010}{}{ sees a raised plate. It looks to be part of a trap.}
+{1020}{}{You see a raised plate.}
+
+# NPC name prepends this line
+{1030}{}{ sees a raised plate.}
+{1040}{}{You trigger the trap and narrowly avoid the projectile shot from the wall.}
+
+# NPC name prepends this line
+{1050}{}{ triggers the trap and narrowly avoids the projectile shot from the wall.}
+{1060}{}{You see a raised plate that looks harmless.}
 
 #############################################################
 #  The following lines are for what the player received     #
