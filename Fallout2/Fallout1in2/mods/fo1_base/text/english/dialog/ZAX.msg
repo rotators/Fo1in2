@@ -55,11 +55,11 @@
 {145}{}{In this fashion, I am effectively capable of 'faith'. Barring evidence to the contrary, I therefore have 'faith' that I possess the equivalent of a 'soul'.}
 	{146}{}{May I ask some other questions?}
 	{147}{}{I see. Interesting.}
-   
+
 {148}{}{I would be delighted.}
 
 {300}{}{This system is too advanced for you.}
-   
+
 #
 # 1481 continues at 228, listing wins/draws/losses. Space is intentional. FIXT addition.
 #

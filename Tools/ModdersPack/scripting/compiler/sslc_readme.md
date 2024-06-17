@@ -287,7 +287,7 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
   ```
   __NOTE:__ When using incremental operators like `+=`, `*=`, `++`, `--` compiler will use additional temp variable to get an array at penultimate level in order to avoid making the same chain of `get_array` calls twice.
 
-- (*) `foreach` loops: A shorthand method of looping over all elements in an array. Syntax is `foreach (<symbol> in <expression>)`.
+- (*) `foreach` loops: A shorthand method of looping over all elements in an array. Syntax is `foreach (<symbol> in <expression>)`. You can declare variables in place by adding the `variable` keyword before the symbol name.
   - new:
     ```
     procedure bingle begin
@@ -347,6 +347,14 @@ There are several changes in this version of sslc which may result in problems f
 ---
 
 ### Changelog
+
+**sfall 4.4.4:**
+- fixed stringified procedure names shifting when the same name is called more than once
+- syntax improvements:
+  - `foreach`: allow to declare variables for key & value header
+  - `foreach`: allow to use expressions after `in` that start with a symbol without mandatory parentheses
+  - variables: allow to declare variables anywhere a statement is expected
+  - expressions: display useful error messages when an expression is expected but nothing is parsed
 
 **sfall 4.4:**
 - fixed compiler crash when trying to define an exported procedure with variables

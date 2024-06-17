@@ -9,6 +9,7 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Fixed**: Dog in random coast encounter wasn't called "Dog", because it shared the script with the peasants.
 - **Fixed**: Footsteps mod would crash the game when triggering corpse aging on map enter.
 - **Fixed**: Incorrect LVAR check was used for MacRae's teach option after helping the Blades.
+- **Fixed**: It is now possible to win the chess game against Zax in the Glow when using the vanilla chess game dialog (advanced chess game has been moved behind a new toggle option in the fo1_settings.ini file).
 - **Fixed**: Lance in the Shady Sands encounter could talk about the player having dealt with the Khans, even though he didn't yet.
 - **Fixed**: Mike in the Boneyard (Blades territory) would show the wrong dialog message if the player declines his reward.
 - **Fixed**: Mr. Handy and Floating Eye companions use base game repair mechanics for healing now.
@@ -26,7 +27,9 @@ Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1i
 - **Tweaked**: Aradesh dialog will now mention the reward that the player gets after rescuing Tandi.
 - **Tweaked**: Ian (and Tandi if around) will now leave the party and attack if the player is an enemy of Shady Sands.
 - **Tweaked**: If player has disabled the Fo2 party member limit, the Magnetic Personality perk won't show up anymore, since it is useless.
+- **Tweaked**: Restored the original chess game dialog with Zax in the Glow.
 - **Tweaked**: Reverted Fixt changes to party member stats, to bring them back more in line with vanilla Fo1. Adjusted stats for party member level-up accordingly.
 - **Tweaked**: Reworked the Lance encounter around Shady Sands to work more like in the vanilla game again (random chance to spawn a dead raider instead of Lance). Lance remains alive (restored cut-content).
+- **Tweaked**: The expanded chess game with Zax is now behind a new GVAR_ENABLE_FIXT_CHESS toggle option (see fo1_settings.ini file). Disabled by default.
 - **Tweaked**: Tycho will now leave the party and attack if the player is an enemy of Junktown.
 - **Tweaked**: When damaging a door but not yet destroying it, a notification will show in the message log.
