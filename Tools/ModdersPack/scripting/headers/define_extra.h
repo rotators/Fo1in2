@@ -178,7 +178,7 @@
 //#define RMOBJ_LOAD_WEAPON       RMOBJ_ITEM_REMOVED_INVEN
 
 // common prototype offsets for get/set_proto_data
-#define PROTO_PID             (1)
+#define PROTO_PID             (0)
 #define PROTO_TEXTID          (4)
 #define PROTO_FID             (8)
 #define PROTO_LDIST          (12)
