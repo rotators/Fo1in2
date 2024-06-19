@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.3.1, built for Fallout 2 v1.02 US
+version 4.4.4, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -37,7 +37,7 @@ Delete ddraw.dll, ddraw.ini, and sfall.dat from your Fallout directory, and dele
 This mod is configured via the 'ddraw.ini' and 'sfall-mods.ini' files, which can be opened with any text editor. Details of every configurable option are included in those files. Where a comment refers to a DX scancode, the complete list of codes can be found at the link below:
 https://kippykip.com/b3ddocs/commands/scancodes.htm
 
-In a default installation using an unmodified copy of ddraw.ini, the middle mouse button will be set to switch between weapons and the mouse wheel will be set to scroll through any menus that respond to the up/down arrow keys. Holding Ctrl and hitting numpad keys 0 to 6 (with Num Lock off) will adjust the game speed. Holding left Ctrl will let you move a whole stack of items at once. Pressing left Shift will highlight items on the ground. The script extender and any engine fixes are also enabled. Most of the options that change gameplay in some way not originally intended by the developers are disabled.
+In a default installation using an unmodified copy of ddraw.ini, the middle mouse button will be set to switch between weapons and the mouse wheel will be set to scroll through any menus that respond to the up/down arrow keys. Holding Ctrl and hitting numpad keys 0 to 6 (with Num Lock off) will adjust the game speed. Holding left Ctrl will let you move items between inventory lists by simply clicking on them. Pressing left Shift will highlight items on the ground, and holding the key will let you move an entire stack of items at once. The script extender and any engine fixes are also enabled. Most of the options that change gameplay in some way not originally intended by the developers are disabled.
 
 For Wine users:
 You need to set DLL overrides for ddraw.dll to 'native, builtin' in winecfg or use WINEDLLOVERRIDES="ddraw=n,b" to run Fallout from the command line. If you want to play alternative sound files, you'll also need to install GStreamer Good 32-bit plugins.
@@ -53,6 +53,36 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.4.4
+>Fixed a bug in NPCsTryToSpendExtraAP that caused NPCs to still be able to move in their combat turn after they killed themselves
+>Fixed a bug in PlayIdleAnimOnReload that could cause critters to lose highlights after reloading weapons in combat
+>Fixed a crash bug in interface_art_draw script function when drawing beyond window bounds
+>Fixed the missing hotkeys for additional elevators derived from the original elevator types
+>Fixed and improved the syntax parsing in script compiler (compile.exe in the modders pack)
+>Improved the fix for using 'English' as the fallback language directory for msg files to work on a per-line basis
+>Improved the fix for saving/loading party member protos to include the car trunk
+>Improved the performance of draw_image, draw_image_scaled, and interface_art_draw script functions
+>Expanded show/hide_iface_tag script functions to work with the tag value 0 (sneak)
+>Changed the expanded world map interface to be compatible with older versions of the hi-res patch
+>Changed the expanded action points bar to require fewer resources and be compatible with older versions of the hi-res patch
+>Changed AIDrugUsePerfFix to be enabled by default
+>Tweaked the behavior of NPCAutoLevel option and renamed it to PartyMemberNonRandomLevelUp to better match its behavior
+>Removed the unnecessary error message about sndlist.lst when AutoSearchSFX is enabled
+>Added a fix for the time interval for healing during world map travel being tied to the system timer instead of game time
+>Added a fix for the interface bar obscuring the barter/trade interface when using the hi-res patch
+>Added a tweak to prevent the 'forever' type of animation on objects from stopping when entering combat
+>Added an option to use the expanded barter/trade interface (4 item slots per table instead of 3)
+>Added an option to use the expanded inventory/loot screens (8 vertical slots instead of 6)
+>Added an option to pre-fill the 'Move Items' window with the correct balancing amount when moving money/caps in the barter screen
+>Added an option to set up a key to let you move items between inventory lists by simply clicking on them
+>Added debug options to adjust the size and text font for the internal debug window
+>Added an option for tweaking Cautious Nature perk to the perks ini file
+>Added a new attribute type value to get_window_attribute script function
+>Added PAUSEWIN flag to the game mode functions (when pausing the game using Ctrl+P)
+>Added 2 new arguments to HOOK_ENCOUNTER hook script
+>Added a healing skills example script to the example mods in the modders pack
+>New script function: signal_close_game, art_frame_data, set_worldmap_heal_time
 
 v4.4.3.1
 >Fixed a possible hang or crash introduced in 4.4.1 when running certain script sequences
@@ -336,7 +366,7 @@ v4.2.9
 >Added more options for tweaking some engine perks to the perks ini file
 >Added options for tweaking tag skills to the skills ini file
 >Added an option about the behavior of maximum HP calculation to the stats ini file
->Added 3 new attribute type values to get_window_attribute script functions
+>Added 3 new attribute type values to get_window_attribute script function
 >Added additional universal opcodes sfall_func7 and sfall_func8 (compile.exe and int2ssl.exe in the modders pack are also updated)
 >Added a new mode to NPC combat control mod that lets you use the command cursor to specify targets for party members to attack in combat
 >Added an auto-close containers mod to the example mods in the modders pack
@@ -615,7 +645,7 @@ v4.1.9
 >Added a fix for dead NPCs reloading their weapons when the combat ends
 >Added an option to use the expanded world map interface (requires the hi-res patch v4.1.8)
 >Added an option to allow setting a directory for the game to automatically search and load custom .dat files
->Added an option to expand the number of action points displayed on the interface bar
+>Added an option to expand the number of action points displayed on the interface bar (requires the hi-res patch v4.1.8)
 >Added an option to change the base value of the duration of the knockout effect
 >Added a check for the DAM_KNOCKED_OUT flag to wield_obj_critter/inven_unwield script functions
 >Added a new value to SkipOpeningMovies to also skip the splash screen
@@ -817,7 +847,7 @@ Original engine bug fixes and various features based on the work by Mr.Stalin:
 >Improved the functionality of ExtraGameMsgFileList to allow manually assigning numbers to specific msg files
 >Improved the functionality of HOOK_AMMOCOST hook script when CheckWeaponAmmoCost is enabled
 >Improved and expanded the functionality of UseScrollingQuestsList to display page numbers and add another set of scroll buttons
->Expanded is_iface_tag_active script function to check tag value of 0/1/2 (sneak/poisoned/radiated)
+>Expanded is_iface_tag_active script function to check tag values of 0/1/2 (sneak/poisoned/radiated)
 >Added a fix for missing AC/DR mod stats when examining ammo in the barter screen
 >Added a fix for the display issue in the pipboy when a quest list is too long with UseScrollingQuestsList disabled
 >Added a fix for the clickability issue of the holodisk list in the pipboy
