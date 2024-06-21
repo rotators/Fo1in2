@@ -78,7 +78,7 @@
 # Sequence
 {213}{}{Détermine la rapidité de réaction de ton personnage en situation de combat.}
 # Healing Rate
-{214}{}{En fin de journée, ton personnage guérit d'1 PI pour chaque point de vitesse de guérison. Lorsque tu te reposes, tu guéris toutes les six heures.}
+{214}{}{En fin de journée, ton personnage guérit d'1 PI pour chaque point de vitesse de guérison. Lorsque tu te reposes, tu guéris toutes les trois heures.}
 # Critical Chance
 {215}{}{Les chances de porter un coup critique au cours d'un combat augmentent en fonction de cette valeur.}
 {216}{}{Meilleurs coups critiques}

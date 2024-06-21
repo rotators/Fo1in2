@@ -78,7 +78,7 @@
 # Sequence
 {213}{}{Legt fest, wie schnell deine Figur im Kampf reagieren kann.}
 # Healing Rate
-{214}{}{Am Ende eines jeden Tages heilt deine Figur einen Trefferpunkt mit einem Heilungspunkt. Wenn du dich ausruhst, erfolgt die Heilung alle sechs Stunden.}
+{214}{}{Am Ende eines jeden Tages heilt deine Figur einen Trefferpunkt mit einem Heilungspunkt. Wenn du dich ausruhst, erfolgt die Heilung alle drei Stunden.}
 # Critical Chance
 {215}{}{Die Wahrscheinlichkeit, im Kampf einen kritischen Treffer zu landen, wird um diesen Prozentsatz erhöht.}
 {216}{}{Bessere kritische Treffer}
