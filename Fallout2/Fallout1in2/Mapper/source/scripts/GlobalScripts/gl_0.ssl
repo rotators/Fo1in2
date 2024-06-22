@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "voodoo.h"
 #include "sfall/define_lite.h"
+#include "sfall/sfall.h"
 
 procedure start;
 procedure error_AllowUnsafeScripting;
@@ -24,15 +25,15 @@ procedure start begin
    if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") != 2) then begin
       call error_AllowUnsafeScripting in 1;
    end else begin
-      if (get_ini_setting("ddraw.ini|Misc|DisableHorrigan") != 1) then begin
+      if (get_ini_setting("ddraw.ini|Misc|DisableHorrigan") == 0) then begin
          call error_DisableHorrigan in 1;
       end
 
-      if (get_ini_setting("ddraw.ini|Misc|UseFileSystemOverride") != 1) then begin
+      if (get_ini_setting("ddraw.ini|Misc|UseFileSystemOverride") == 0) then begin
          call error_UseFileSystemOverride in 1;
       end
 
-      if (get_ini_setting("ddraw.ini|Misc|Fallout1Behavior") != 1) then begin
+      if (get_ini_setting("ddraw.ini|Misc|Fallout1Behavior") == 0) then begin
          call error_Fallout1Behavior in 1;
       end
 
@@ -54,31 +55,35 @@ procedure error_AllowUnsafeScripting begin
 end
 
 procedure error_DisableHorrigan begin
-   debug_warning("Fo1in2 SETTINGS - 'DisableHorrigan' != 1 in ddraw.ini!");
+   debug_warning("Fo1in2 SETTINGS - 'DisableHorrigan' == 0 in ddraw.ini!");
    message_box_warning("ERROR\n\n'DisableHorrigan' not enabled\nFallout et Tu must be restarted!");
 
    call force_settings;
 end
 
 procedure error_UseFileSystemOverride begin
-   debug_warning("Fo1in2 SETTINGS - 'UseFileSystemOverride' != 1 in ddraw.ini!");
+   debug_warning("Fo1in2 SETTINGS - 'UseFileSystemOverride' == 0 in ddraw.ini!");
    message_box_warning("WARNING:\n'UseFileSystemOverride' disabled\nFallout et Tu must be restarted!");
 
    call force_settings;
 end
 
 procedure error_Fallout1Behavior begin
-   debug_warning("Fo1in2 SETTINGS - 'Fallout1Behavior' != 1 in ddraw.ini!");
+   debug_warning("Fo1in2 SETTINGS - 'Fallout1Behavior' == 0 in ddraw.ini!");
    message_box_warning("WARNING:\n'Fallout1Behavior' disabled\nFallout et Tu must be restarted!");
 
    call force_settings;
 end
 
 procedure force_settings begin
-   //set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 2);
    set_ini_setting("ddraw.ini|Misc|DisableHorrigan", 1);
    set_ini_setting("ddraw.ini|Misc|UseFileSystemOverride", 1);
    set_ini_setting("ddraw.ini|Misc|Fallout1Behavior", 1);
 
-   VOODOO_close_game;
+   if (metarule_exist("signal_close_game")) then begin
+      set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 2);
+      signal_close_game;
+   end else begin
+      VOODOO_close_game;
+   end
 end
