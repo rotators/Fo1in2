@@ -178,7 +178,7 @@
 //#define RMOBJ_LOAD_WEAPON       RMOBJ_ITEM_REMOVED_INVEN
 
 // common prototype offsets for get/set_proto_data
-#define PROTO_PID             (1)
+#define PROTO_PID             (0)
 #define PROTO_TEXTID          (4)
 #define PROTO_FID             (8)
 #define PROTO_LDIST          (12)
@@ -514,6 +514,11 @@
 #define CRITICAL_VALUE_FAIL_EFFECT   (4) // Another bit field, using the same values as EFFECTS. If the stat check is failed, these are applied in addition to the earlier ones.
 #define CRITICAL_VALUE_MSG           (5) // The message to show when this critical occurs, taken from combat.msg.
 #define CRITICAL_VALUE_FAIL_MSG      (6) // This is shown instead of Message if the stat check fails.
+
+
+#define DIFFICULTY_EASY              (0)
+#define DIFFICULTY_NORMAL            (1)
+#define DIFFICULTY_HARD              (2)
 
 
 /* Playback mode defines for the soundplay function */

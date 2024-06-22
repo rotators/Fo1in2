@@ -4,25 +4,34 @@
 
 #include "define_lite.h"
 #include "define_extra.h"
+
 #define PID_BOTTLE_CAPS                     (41)
 
 /**
-  Inventory contents as temp array to be used in foreach
-*/
+ * Inventory contents as temp array to be used in foreach
+ * @arg {ObjectPtr} critter
+ * @ret {list}
+ */
 procedure inven_as_array(variable critter) begin
-   variable i:=0, list;
-   list := temp_array(100, 4);
-   while (inven_ptr(critter, i)) do begin
-      if (i>=len_array(list)) then
-         resize_array(list, len_array(list) + 100);
-      list[i] := inven_ptr(critter, i);
+   variable i := 0, list, item;
+   list := temp_array(0, 4);
+   item := inven_ptr(critter, i);
+   while (item) do begin
+      resize_array(list, i + 1);
+      list[i] := item;
       i++;
+      item := inven_ptr(critter, i);
    end
-   resize_array(list, i);
    return list;
 end
 
-
+/**
+ * Adds quantity of itemPid to invenObj and returns the created item object.
+ * @arg {ObjectPtr} invenObj - Object to add new item to.
+ * @arg {int} itemPid - PID of item.
+ * @arg {int} quantity
+ * @ret {ObjectPtr} - created item
+ */
 procedure add_items_pid(variable invenObj, variable itemPid, variable quantity) begin
    variable item;
    item := create_object(itemPid, 0, 0);
@@ -30,13 +39,22 @@ procedure add_items_pid(variable invenObj, variable itemPid, variable quantity) 
    return item;
 end
 
-// aliases:
+/**
+ * Adds 1 item of a given pid to obj.
+ * @arg {ObjectPtr} obj - Object to add new item to.
+ * @arg {int} pid
+ * @ret {ObjectPtr}
+ */
 #define add_item_pid(obj, pid)            add_items_pid(obj, pid, 1)
 
 #ifndef critter_wearing_armor
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 #endif
 
+/**
+ * Makes critter remove his armor and put it back to his inventory.
+ * @arg {ObjectPtr} critter
+ */
 procedure unwield_armor(variable critter) begin
    variable armor;
    if (not(critter)) then return;
@@ -47,6 +65,13 @@ procedure unwield_armor(variable critter) begin
    end
 end
 
+/**
+ * Removes items of given pid from given object's inventory. Returns number of actually removed items.
+ * @arg {ObjectPtr} invenObj - obj to remove items from
+ * @arg {int} itemPid - PID of item to remove
+ * @arg {int} quantity - maximum quantity of items to remove (-1 to remove all available items)
+ * @ret {int}
+ */
 procedure remove_items_pid(variable invenObj, variable itemPid, variable quantity) begin
    variable begin
       item;
@@ -74,8 +99,14 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
    return toRemoveQty;
 end
 
+/**
+ * Remove the whole stack of a given *item* object from *invenObj* inventory.
+ * For a critter, this will correctly remove item from armor/hand slot, if it is equipped.
+ * @arg {ObjectPtr} invenObj - obj to remove from
+ * @arg {ObjectPtr} item - item (stack) object to remove
+ */
 procedure remove_item_obj(variable invenObj, variable item) begin
-   if (obj_type(invenObj) == 1) then begin
+   if (obj_type(invenObj) == OBJ_TYPE_CRITTER) then begin
       if (critter_inven_obj(invenObj,INVEN_TYPE_WORN) == item) then begin
          call unwield_armor(invenObj);
       end else if ((critter_inven_obj(invenObj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(invenObj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
@@ -86,29 +117,54 @@ procedure remove_item_obj(variable invenObj, variable item) begin
    destroy_object(item);
 end
 
-// aliases:
+/**
+ * Remove one item of a given *pid* from *obj* inventory.
+ * @arg {ObjectPtr} obj - obj to remove items from
+ * @arg {int} pid - PID of item to remove
+ * @ret {int}
+ */
 #define remove_item_pid(obj, pid)            remove_items_pid(obj, pid, 1)
+
+/**
+ * Remove all items of a given *pid* from *obj* inventory. Returns number of removed items.
+ * @arg {ObjectPtr} obj - obj to remove items from
+ * @arg {int} pid - PID of item to remove
+ * @ret {int}
+ */
 #define remove_all_items_pid(obj, pid)       remove_items_pid(obj, pid, -1)
 
 /**
- Set item quantity in inventory, by item pid
+ * Ensures a given *quantity* of *itemPid* in *invenObj* inventory, adding or removing items as necessary.
+ * @arg {ObjectPtr} invenObj - obj to add/remove items to/from
+ * @arg {int} itemPid - PID of item to remove
+ * @arg {int} quantity
  */
-procedure set_items_qty_pid(variable invenobj, variable itempid, variable quantity)
+procedure set_items_qty_pid(variable invenObj, variable itemPid, variable quantity)
 begin
    variable begin
       count;
       obj;
    end
-   count := obj_is_carrying_obj_pid(invenobj, itempid);
+   count := obj_is_carrying_obj_pid(invenObj, itemPid);
    if (quantity > count) then begin
-      obj := create_object_sid(itempid, 0, 0, -1);
-      add_mult_objs_to_inven(invenobj, obj, quantity - count);
+      obj := create_object_sid(itemPid, 0, 0, -1);
+      add_mult_objs_to_inven(invenObj, obj, quantity - count);
    end else if (quantity < count) then begin
-      call remove_items_pid(invenobj, itempid, count - quantity);
+      call remove_items_pid(invenObj, itemPid, count - quantity);
    end
 end
 
-
+/**
+ * Removes money and items from a *critter*'s inventory, using provided probabilities (applied to whole stacks, not individual items).
+ * Useful for reducing loot of merchants after death.
+ * @arg {ObjectPtr} critter
+ * @arg {int} moneyPercent - Percent of money to remove. 
+ * @arg {int} probArmor - % probability to remove armor.
+ * @arg {int} probDrugs - % probability to remove drugs.
+ * @arg {int} probWeapons - % probability to remove weapons.
+ * @arg {int} probAmmo - % probability to remove ammo.
+ * @arg {int} probMisc - % probability to remove misc item.
+ */
 procedure reduce_merchant_loot(variable critter, variable moneyPercent, variable probArmor, variable probDrugs, variable probWeapons, variable probAmmo, variable probMisc) begin
    variable inv, item, it, prob, tmp;
    inv := inven_as_array(critter);
@@ -135,6 +191,12 @@ procedure reduce_merchant_loot(variable critter, variable moneyPercent, variable
    end
 end
 
+/**
+ * Returns item in one of *critter*'s hand slots using given attack type.
+ * @arg {ObjectPtr} critter
+ * @arg {int} type - Attack Type, see ATKTYPE_* in define_extra.h
+ * @ret {ObjectPtr}
+ */
 procedure item_by_attack_type(variable critter, variable type) begin
    variable slot;
    if (type > 3 and type != ATKTYPE_LWEP_RELOAD and type != ATKTYPE_RWEP_RELOAD) then

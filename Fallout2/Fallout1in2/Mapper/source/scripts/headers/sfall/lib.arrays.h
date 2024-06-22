@@ -71,13 +71,7 @@ procedure array_sum(variable arr);
 // returns random value from array
 procedure array_random_value(variable arr);
 
-/**
- * Fill array (or it's part) with the same value.
- * pos - starting position
- * count - number of items to fill (use -1 to fill to the end of the array)
- * value - value to set
- * returns arr
- */
+
 procedure array_fill(variable arr, variable pos, variable count, variable value);
 
 /**
@@ -118,21 +112,18 @@ procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc)
    DEPRECATED, use collections instead
  */
 
-/**
- * Adds new empty place for a new block into array. Returns index of new block that was "created".
- */
+// Adds new empty place for a new block into array. Returns index of new block that was "created".
 procedure add_array_block(variable arr, variable blocksize);
 
-/**
- * Removes a block from an array by index
- */
+// Removes a block from an array by index.
 procedure remove_array_block(variable arr, variable blocksize, variable index);
 
 /**
  * Converts any array to string for debugging purposes
  */
-#define debug_array_str(arr)     debug_array_str_deep(arr, 1)
+#define debug_array_str(arr)     debug_array_str_deep(arr, 1, false)
 
+// Prints contents of a given array to main message window, for debugging purposes.
 #define display_array(arr)       display_msg(debug_array_str(arr))
 
 
@@ -152,15 +143,15 @@ procedure load_collection(variable name);
 // the difference between this and load_create_array is that array itself might not be saved (but sfall global is always saved)
 //procedure sfall_global_array(variable global, variable size);
 
-
+/**
+ * Loads a "saved" array. If it doesn't exist, creates it (with a given size).
+ */
 #define load_create_array_map(name)    (load_create_array(name, -1))
 #define get_saved_array_new_map(name)    (get_saved_array_new(name, -1))
 //#define sfall_global_array_map(name)    (sfall_global_array(name, -1))
 
 
 // IMPLEMENTATION
-
-#define ARRAY_SET_BLOCK_SIZE  (10)
 
 procedure map_contains_key(variable arrayMap, variable key) begin
    variable i;
@@ -171,7 +162,9 @@ procedure map_contains_key(variable arrayMap, variable key) begin
 end
 
 /**
- * Returns first index of zero value
+ * Returns first index of zero value in a list array.
+ * @arg {list} array
+ * @ret {int}
  */
 procedure get_empty_array_index(variable array) begin
    variable zero := false;
@@ -186,7 +179,12 @@ procedure get_empty_array_index(variable array) begin
    return i;
 end
 
-// push new item at the end of array
+/**
+ * Pushes new item to the end of a list array and returns the array.
+ * @arg {list} array
+ * @arg {any} item
+ * @ret {list}
+ */
 procedure array_push(variable array, variable item) begin
    variable n;
    n := len_array(array);
@@ -195,7 +193,11 @@ procedure array_push(variable array, variable item) begin
    return array;
 end
 
-// remove last item from array and returns it's value
+/**
+ * Removes last item from list array (reducing it's size by 1) and returns it's value.
+ * @arg {list} array
+ * @ret {mixed}
+ */
 procedure array_pop(variable array) begin
    variable n, ret;
    n := len_array(array) - 1;
@@ -207,6 +209,11 @@ procedure array_pop(variable array) begin
    return 0;
 end
 
+/** 
+ * Returns a temp list of keys from a given map array.
+ * @arg {array}
+ * @ret {list}
+ */
 procedure array_keys(variable array) begin
    variable tmp, i, len;
    len := len_array(array);
@@ -219,6 +226,11 @@ procedure array_keys(variable array) begin
    return tmp;
 end
 
+/**
+ * Returns a temp list of values from a given map array.
+ * @arg {array} array
+ * @ret {array}
+ */
 procedure array_values(variable array) begin
    variable v, tmp, i, len;
    len := len_array(array);
@@ -231,11 +243,23 @@ procedure array_values(variable array) begin
    return tmp;
 end
 
+/**
+ * Sets given array as permanent and returns it.
+ * @arg {array} array
+ * @ret {array}
+ */
 procedure array_fixed(variable array) begin
    fix_array(array);
    return array;
 end
 
+/**
+ * Returns a slice of a given list array as a new temp array.
+ * @arg {list} array
+ * @arg {int} index - Start position to slice from.
+ * @arg {int} count - Number of elements to slice.
+ * @ret {list}
+ */
 procedure array_slice(variable array, variable index, variable count) begin
    variable tmp, i, n;
    n := len_array(array);
@@ -253,6 +277,13 @@ procedure array_slice(variable array, variable index, variable count) begin
    return tmp;
 end
 
+/**
+ * Removes a slice of given list array and returns it.
+ * @arg {list} array
+ * @arg {int} index - Start position to remove from.
+ * @arg {int} count - Number of elements to remove.
+ * @ret {list}
+ */
 procedure array_cut(variable array, variable index, variable count) begin
    variable i, n;
    n := len_array(array);
@@ -270,6 +301,12 @@ procedure array_cut(variable array, variable index, variable count) begin
    return array;
 end
 
+/**
+ * Removes all values in arr1 that also present in arr2 and returns arr1.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array}
+ */
 procedure array_diff(variable arr1, variable arr2) begin
    variable i, v, isMap;
    isMap := array_is_map(arr1);
@@ -287,6 +324,11 @@ end
 
 /**
  * Copy a slice of one array into another (will not resize)
+ * @arg {list} src - Source array.
+ * @arg {int} srcPos - Position in source array.
+ * @arg {list} dest - Destination array.
+ * @arg {int} dstPos - Position in destination array.
+ * @arg {int} size - Number of elements to copy.
  */
 procedure copy_array(variable src, variable srcPos, variable dest, variable dstPos, variable size) begin
   variable i := 0;
@@ -299,6 +341,8 @@ end
 
 /**
  * Creates a shallow copy of the array as a new temp array.
+ * @arg {array} array
+ * @ret {array}
  */
 procedure clone_array(variable array) begin
    variable new, k, v;
@@ -312,6 +356,12 @@ procedure clone_array(variable array) begin
    return new;
 end
 
+/**
+ * Compares two arrays (list or map) and returns true if they have identical values in the same order.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {bool}
+ */
 procedure arrays_equal(variable arr1, variable arr2) begin
    variable n, i, k1, k2;
    if (array_is_map(arr1) != array_is_map(arr2)) then
@@ -332,7 +382,11 @@ procedure arrays_equal(variable arr1, variable arr2) begin
    return true;
 end
 
-// returns maximum element in array
+/**
+ * Returns maximum element in array.
+ * @arg {array} arr
+ * @ret {mixed}
+ */
 procedure array_max(variable arr) begin
    variable v, max;
    max := 0;
@@ -343,7 +397,11 @@ procedure array_max(variable arr) begin
    return max;
 end
 
-// returns minimum element in array
+/**
+ * Returns minimum element in array.
+ * @arg {array} arr
+ * @ret {mixed}
+ */
 procedure array_min(variable arr) begin
    variable v, min;
    min := 0;
@@ -354,7 +412,11 @@ procedure array_min(variable arr) begin
    return min;
 end
 
-// returns sum of array elements (or concatenated string, if elements are strings)
+/**
+ * Returns sum of array elements (or concatenated string, if elements are strings).
+ * @arg {array} arr
+ * @ret {mixed}
+ */
 procedure array_sum(variable arr) begin
    variable v, sum;
    sum := 0;
@@ -364,11 +426,25 @@ procedure array_sum(variable arr) begin
    return sum;
 end
 
+/**
+ * Returns a random value from a given list array.
+ * @arg {list} arr
+ * @ret {any}
+ */
 procedure array_random_value(variable arr) begin
    return get_array(arr, array_key(arr, random(0, len_array(arr) - 1)));
 end
 
 
+#define ARRAY_SET_BLOCK_SIZE  (10)
+
+/**
+ * Array set is a list array that is used as a set of unique values (where no diplicate value is allowed).
+ * Tries to add new value to a set and returns true if it was just added.
+ * @arg {list} array - List array to use as a set.
+ * @arg {any} item
+ * @ret {bool}
+ */
 procedure add_array_set(variable array, variable item) begin
    variable i := 0;
    variable len;
@@ -390,9 +466,17 @@ procedure add_array_set(variable array, variable item) begin
          resize_array(array, len + ARRAY_SET_BLOCK_SIZE);
       end
       set_array(array, i, item);
+      return true;
    end
+   return false;
 end
 
+/**
+ * Remove value from a set (list array). Returns true if item was actually found and removed.
+ * @arg {list} array - List array to use as a set.
+ * @arg {any} item
+ * @ret {bool}
+ */
 procedure remove_array_set(variable array, variable item) begin
    variable i := 0;
    variable len;
@@ -411,10 +495,41 @@ procedure remove_array_set(variable array, variable item) begin
    if (found_at != -1) then begin
       array[found_at] := array[i - 1];
       array[i - 1] := 0;
+      return true;
    end
+   return false;
 end
 
-// Creates a new array filled from a given array by transforming each value using given procedure name.
+#undef ARRAY_SET_BLOCK_SIZE
+
+/**
+ * Returns a new array containing only those items from *arr* for which *filterFunc* returns true.
+ * @arg {array} arr - Array to use values from. Can be map or list.
+ * @arg {string} filterFunc - A name of procedure that accepts value from arr and returns true if it should be copied to the new array.
+ * @arg {bool} negate - If true, reverses the result of filterFunc so that only "false" values will be copied to the new array.
+ * @ret {array}
+ */
+procedure array_filter(variable arr, variable filterFunc, variable negate := false) begin
+   variable k, v,
+      isMap := array_is_map(arr),
+      retArr := temp_array_map if isMap else temp_array_list(0);
+   foreach (k: v in arr) begin
+      if ((filterFunc(v) != 0) == (not negate)) then begin
+         if (isMap) then
+            set_array(retArr, k, v);
+         else
+            call array_push(retArr, v);
+      end
+   end
+   return retArr;
+end
+
+/**
+ * Creates a new array filled from a given array by transforming each value using given procedure name.
+ * @arg {array} arr - Array to use values from.
+ * @arg {string} valueFunc - A name of procedure that accepts value from arr and returns a new value.
+ * @ret {array}
+ */
 procedure array_transform(variable arr, variable valueFunc) begin
    variable k, v, retArr := temp_array_map if array_is_map(arr) else temp_array(len_array(arr), 0);
    foreach (k: v in arr) begin
@@ -423,7 +538,13 @@ procedure array_transform(variable arr, variable valueFunc) begin
    return retArr;
 end
 
-// Create a new temp array filled from a given array by transforming each key and value using given procedure name.
+/**
+ * Creates a new temp array filled from a given array by transforming each key and value using given procedure name.
+ * @arg {array} arr - Array to use keys and values from.
+ * @arg {string} keyFunc - A name of procedure that accepts key from arr and returns a new key for the new array.
+ * @arg {string} valueFunc - A name of procedure that accepts value from arr and returns a new value.
+ * @ret {map}
+ */
 procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc) begin
    variable k, v, retArr := temp_array_map;
    foreach (k: v in arr) begin
@@ -432,6 +553,11 @@ procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc)
    return retArr;
 end
 
+/**
+ * Converts given array into a new map where keys are array values and all values are 1.
+ * @arg {array} arr
+ * @ret {array}
+ */
 procedure array_to_set(variable arr) begin
    variable v, retArr := temp_array_map;
    foreach (v in arr) begin
@@ -445,8 +571,10 @@ end
 
 /**
  * Adds new empty place for a new block into array. Returns index of new block that was "created".
- *
- * DEPRECATED, use collections instead
+ * @arg {list} arr - array to add "block" into
+ * @arg {int} blocksize - block size
+ * @ret {int} - index of added block
+ * @deprecated - use collections instead
  */
 procedure add_array_block(variable arr, variable blocksize) begin
    variable begin
@@ -474,8 +602,10 @@ end
 
 /**
  * Removes a block from an array by index
- *
- * DEPRECATED, use collections instead
+ * @arg {list} arr - array to remove "block" from
+ * @arg {int} blocksize - block size
+ * @arg {int} index - index to remove
+ * @deprecated - use collections instead
  */
 procedure remove_array_block(variable arr, variable blocksize, variable index) begin
    variable len;
@@ -491,6 +621,15 @@ procedure remove_array_block(variable arr, variable blocksize, variable index) b
    end
 end
 
+#undef ARRAY_EMPTY_INDEX
+
+/**
+ * Fill array (or it's part) with the same value.
+ * @arg {list} arr
+ * @arg {int} pos - starting position
+ * @arg {int} count - number of items to fill (use -1 to fill to the end of the array);
+ * @arg {any} value - value to set;
+ */
 procedure array_fill(variable arr, variable pos, variable count, variable value) begin
    variable i := 0;
    if (count == -1 or (pos + count > len_array(arr))) then count := len_array(arr) - pos; // this should prevent write to illegal offsets
@@ -501,6 +640,12 @@ procedure array_fill(variable arr, variable pos, variable count, variable value)
    return arr;
 end
 
+/**
+ * Adds all the values of the second array to the first array.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array} - the first array after modification
+ */
 procedure array_append(variable arr1, variable arr2) begin
    variable arr1_len;
    if (array_is_map(arr1)) then begin
@@ -516,7 +661,12 @@ procedure array_append(variable arr1, variable arr2) begin
    return arr1;
 end
 
-// Loads a "saved" array. If it doesn't exist, creates it (with a given size).
+/**
+ * Loads a "saved" array. If it doesn't exist, creates it (with a given size).
+ * @arg {string} name - saved array name/key
+ * @arg {int} size - size of array to create
+ * @ret {array} - the created/loaded array
+ */
 procedure load_create_array(variable name, variable size) begin
    variable arr;
    arr := load_array(name);
@@ -527,7 +677,12 @@ procedure load_create_array(variable name, variable size) begin
    return arr;
 end
 
-// Creates and returns a new "saved" array. If array already existed with this name, frees it.
+/**
+ * Creates and returns a new "saved" array. If array already existed with this name, frees it.
+ * @arg {string} name - saved array name/key
+ * @arg {int} size - size of array to create
+ * @ret {array} - the new array
+ */
 procedure get_saved_array_new(variable name, variable size) begin
    variable arr;
    arr := load_array(name);
@@ -540,6 +695,11 @@ end
 
 #define _ITEM_NAME(colname, itemkey)      ""+colname+"."+itemkey
 
+/**
+ * A collection is a 2-level-deep saved array (a saved array containing other saved arrays as values).
+ * @arg {string} name - name/key of a "root" array
+ * @arg {array} arr - collection array
+ */
 procedure save_collection(variable name, variable arr) begin
    variable k, v, keys, oldKeys;
    keys := array_keys(arr);
@@ -555,6 +715,11 @@ procedure save_collection(variable name, variable arr) begin
    end
 end
 
+/**
+ * Loads collection by name.
+ * @arg {string} name - name/key of a "root" array
+ * @ret {array}
+ */
 procedure load_collection(variable name) begin
    variable k, v, keys, arr;
    keys := load_array(name);
@@ -570,62 +735,25 @@ end
 #undef _ITEM_NAME
 
 
-/* NOT SAFE
-procedure sfall_global_array(variable global, variable size) begin
-   variable ar;
-   ar := get_sfall_global_int(global);
-   if (ar == 0) then begin
-      ar := create_array(size, 0); // persistent array, but not saved
-      set_sfall_global(global, ar);
-   end
-   return ar;
-end*/
-
-/*
-DEPRECATED code, just for reference, don't use
-
-procedure get_sfall_global_array(variable global_id, variable elemcount, variable elemsize) begin
-   variable ar;
-   ar := get_sfall_global_int(global_id);
-   if (ar == 0) then begin
-      ar := create_array(elemcount, elemsize);
-      set_sfall_global(global_id, ar);
-   end
-   return ar;
-end
-
-procedure get_sfall_global_array_new(variable global_id, variable elemcount, variable elemsize) begin
-   variable ar;
-   variable i;
-   variable it;
-   ar := get_sfall_global_int(global_id);
-   if (ar == 0) then begin
-      ar := create_array(elemcount, elemsize);
-      set_sfall_global(global_id, ar);
-   end else begin
-      i := 0;
-      resize_array(ar, elemcount);
-      while (i < len_array(ar)) do begin
-         ar[i] := 0;
-         i++;
-      end
-   end
-   return ar;
-end
-*/
-
 /**
   Different utility functions...
 */
 
-procedure debug_array_str_deep(variable arr, variable levels) begin
+/**
+ * Formats array contents into a string with a given level of recursion. For debugging.
+ * @arg {array} arr
+ * @arg {int} levels - recursion level
+ * @arg {bool} prefix - true to include a prefix with item count
+ * @ret {string}
+ */
+procedure debug_array_str_deep(variable arr, variable levels, variable prefix := false) begin
 #define _newline if (levels > 1) then s += "\n";
 #define _indent ii := 0; while (ii < levels - 1) do begin s += "   "; ii++; end
 #define _value(v) (v if (levels <= 1 or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
    variable i := 0, ii, k, v, s, len;
    len := len_array(arr);
    if (array_is_map(arr)) then begin  // print assoc array
-      s := "Map("+len+"): {";
+      s := ("Map("+len+"): {") if prefix else "{";
       while i < len do begin
          _newline
          k := array_key(arr, i);
@@ -639,7 +767,7 @@ procedure debug_array_str_deep(variable arr, variable levels) begin
       _newline
       s += "}";
    end else begin  // print list
-      s := "List("+len+"): [";
+      s := ("List("+len+"): [") if prefix else "[";
       _newline
       while i < len do begin
          _newline
@@ -659,6 +787,7 @@ procedure debug_array_str_deep(variable arr, variable levels) begin
 #undef _value
 end
 
+// NUKES all saved arrays. Don't use in production code.
 procedure _PURGE_all_saved_arrays begin
    variable saved, key;
    saved := list_saved_arrays;

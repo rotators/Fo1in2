@@ -11,15 +11,49 @@
 
 #include "sfall.h"
 
+/**
+ * Checks if *str* contains *sub* as part of it anywhere in the string. 
+ * @arg {string} str
+ * @arg {string} sub
+ * @ret {bool}
+ */
 #define string_contains(str, sub)      (string_find(str, sub) != -1)
-#define string_starts_with(str, sub)   (substr(str, 0, strlen(sub)) == sub)
+
+/**
+ * Checks if *str* contains *sub* at the beginning of the string.
+ * @arg {string} str
+ * @arg {string} sub
+ * @ret {bool}
+ */
+#define string_starts_with(str, sub)   (string_find(str, sub) == 0)
+
+/**
+ * Same as *string_format*, but takes parameters from a given list array.
+ * @arg {string} fmt
+ * @arg {list} arr
+ * @ret {string}
+ */
 #define string_format_array(fmt, arr)  sprintf_array(fmt, arr)
-// Replaces all occurances of substring in a string with another substring
+
+/**
+ * Replaces all occurances of *search* in *str* with *replace* string.
+ * @arg {string} str
+ * @arg {string} search
+ * @arg {string} replace
+ * @ret {string}
+ */
 #define string_replace(str, search, replace)    (string_join(string_split(str, search), replace))
+
+/**
+ * @deprecated - use *string_format* instead
+ */
 #define sprintf2(fmt, arg1, arg2)      string_format2(fmt, arg1, arg2)
 
 /**
- * Join array of strings using delimeter
+ * Joins *array* of strings into a new string using *join* as delimeter.
+ * @arg {list} array
+ * @arg {string} join
+ * @ret {string}
  */
 procedure string_join(variable array, variable join) begin
    variable str, i, len;
@@ -35,7 +69,10 @@ procedure string_join(variable array, variable join) begin
 end
 
 /**
- * sprintf with unlimited number of arguments
+ * Like *sprintf* but takes parameters from a given list array.
+ * @arg {string} str
+ * @arg {list} args
+ * @ret {string}
  */
 procedure sprintf_array(variable str, variable args) begin
    variable split, len, i, j;
@@ -72,9 +109,7 @@ variable lst, n;
    return string_len(str) - (string_len(lst[n-1]) + string_len(substr));
 end*/
 
-/**
- * Basically the same as string_split, but delim is of type char instead of string
- */
+// UNFINISHED, don't use!
 procedure string_get_tokens(variable str, variable delim) begin
    variable lst, line, token, maxlen, len, count;
    count := 1;
@@ -97,6 +132,12 @@ procedure string_get_tokens(variable str, variable delim) begin
    return count;
 end
 
+/**
+ * Creates a string by repeating *str* *count* times.
+ * @arg {string} str
+ * @arg {int} count
+ * @ret {string}
+ */
 procedure string_repeat(variable str, variable count) begin
    variable out := "", i := 0;
    while (i < count) do begin
@@ -109,6 +150,9 @@ end
 /**
  * The same as sfall string_split, but returns array of integers instead
  * Useful in cunjunction with is_in_array()
+ * @arg {string} str
+ * @arg {string} split
+ * @ret {list}
  */
 procedure string_split_ints(variable str, variable split) begin
    variable n := 0;
@@ -129,19 +173,40 @@ procedure string_split_ints(variable str, variable split) begin
    return result;
 end
 
-// atoi proc wrapper, for use as callback
+/**
+ * *atoi* proc wrapper, for use as a delegate.
+ * @arg {string} str
+ * @ret {int}
+ */
 procedure string_to_int(variable str) begin
    return atoi(str);
 end
 
-// atof proc wrapper, for use as callback
+/**
+ * *atof* proc wrapper, for use as a delegate.
+ * @arg {string} str
+ * @ret {float}
+ */
 procedure string_to_float(variable str) begin
    return atof(str);
 end
 
-// converts any value to a string, for use as callback
+/**
+ * Converts any value to a string, for use as a delegate.
+ * @arg {any} val
+ * @ret {string}
+ */
 procedure to_string(variable val) begin
    return ""+val;
+end
+
+/**
+ * Returns true if given string is 0 or empty string. For use as a delegate.
+ * @arg {string} str
+ * @ret {bool}
+ */
+procedure string_null_or_empty(variable str) begin
+   return str == 0 or str == "";
 end
 
 
