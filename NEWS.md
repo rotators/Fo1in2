@@ -1,36 +1,3 @@
-Notable changes since last release ([v1.9.3324](https://github.com/rotators/Fo1in2/releases/tag/v1.9.3324))
+Notable changes since last release ([v1.10.3504](https://github.com/rotators/Fo1in2/releases/tag/v1.10.3504))
 
-- **Added**: "Mangled" corpse script to the dead bodies in the Necropolis sewers that were dragged away by rats (Restored cut content).
-- **Added**: Full ai generated Ron Perlman voice for the Expanded Ending slides.
-- **Added**: New mini-mod for restored "original" Junktown endings (inverted Killian and Gizmo consequences).
-- **Added**: The nerfed hit chance in Fo2 can now be reverted back to the version in Fo1 (GVAR_ENABLE_FO2_HITCHANCE in fo1_settings.ini)
-- **Fixed**: Added missing dialog for the hintbook and tweaked the text to fit Fo1in2.
-- **Fixed**: Crash when delivering pulse grenades to Sophia
-- **Fixed**: Dog in random coast encounter wasn't called "Dog", because it shared the script with the peasants.
-- **Fixed**: Footsteps mod would crash the game when triggering corpse aging on map enter.
-- **Fixed**: Incorrect LVAR check was used for MacRae's teach option after helping the Blades.
-- **Fixed**: It is now possible to win the chess game against Zax in the Glow when using the vanilla chess game dialog (advanced chess game has been moved behind a new toggle option in the fo1_settings.ini file).
-- **Fixed**: Lance in the Shady Sands encounter could talk about the player having dealt with the Khans, even though he didn't yet.
-- **Fixed**: Mike in the Boneyard (Blades territory) would show the wrong dialog message if the player declines his reward.
-- **Fixed**: Mr. Handy and Floating Eye companions use base game repair mechanics for healing now.
-- **Fixed**: One of tiles for John's work routine was out of range.
-- **Fixed**: One of tiles for V13 water guard's sleep routine was out of range.
-- **Fixed**: People of average intelligence could run into a bug with Lou that would restart the whole dialog.
-- **Fixed**: Radscorpions near the Glow could have a wrong script.
-- **Fixed**: Razor had a visible debug dialog option.
-- **Fixed**: The brutal death endgame cutscene with the Overseer could break if the player went into it with a weapon already in his hands.
-- **Fixed**: The computer course in Brotherhood was ten times longer.
-- **Fixed**: The player's ouch message (stupid only) was missing when healed by Thorndyke.
-- **Fixed**: The random rotation of FoA guard/scout movement was out of range.
-- **Fixed**: Wrong message was shown when detecting traps in the Hub thieves guild hideout.
-- **Fixed**: not all FO1 perks (ID 0-63) have their old requirements.
-- **Fixed**: possible crash when talking to Katja when escaping the military base
-- **Tweaked**: Aradesh dialog will now mention the reward that the player gets after rescuing Tandi.
-- **Tweaked**: Ian (and Tandi if around) will now leave the party and attack if the player is an enemy of Shady Sands.
-- **Tweaked**: If player has disabled the Fo2 party member limit, the Magnetic Personality perk won't show up anymore, since it is useless.
-- **Tweaked**: Restored the original chess game dialog with Zax in the Glow.
-- **Tweaked**: Reverted Fixt changes to party member stats, to bring them back more in line with vanilla Fo1. Adjusted stats for party member level-up accordingly.
-- **Tweaked**: Reworked the Lance encounter around Shady Sands to work more like in the vanilla game again (random chance to spawn a dead raider instead of Lance). Lance remains alive (restored cut-content).
-- **Tweaked**: The expanded chess game with Zax is now behind a new GVAR_ENABLE_FIXT_CHESS toggle option (see fo1_settings.ini file). Disabled by default.
-- **Tweaked**: Tycho will now leave the party and attack if the player is an enemy of Junktown.
-- **Tweaked**: When damaging a door but not yet destroying it, a notification will show in the message log.
+- **Fixed**: the text position of ShowLootWeight mod when ExpandInventory=1
