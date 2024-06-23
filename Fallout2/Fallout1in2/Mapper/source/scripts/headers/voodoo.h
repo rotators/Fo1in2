@@ -66,10 +66,12 @@ variable $addr;
                write_byte(0x4A2A0D, 75)
 
 // This will shut down the game and not just send the player back to the main menu
+/*
 #define VOODOO_close_game \
    write_byte(0x481B2A, 0xB8); /* mov eax, 27 (ESC key input) */ \
    write_int(0x481B2B, 27); \
    signal_end_game
+*/
 
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //

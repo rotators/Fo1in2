@@ -22,7 +22,7 @@ procedure start begin
 
    debug("Remember to wear protective goggles" + _ANSI_window_name("Fallout 1in2 Debug Console"));
 
-   if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") != 2) then begin
+   if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") < 1) then begin
       call error_AllowUnsafeScripting in 1;
    end else begin
       if (get_ini_setting("ddraw.ini|Misc|DisableHorrigan") == 0) then begin
@@ -36,19 +36,12 @@ procedure start begin
       if (get_ini_setting("ddraw.ini|Misc|Fallout1Behavior") == 0) then begin
          call error_Fallout1Behavior in 1;
       end
-
-      init := VOODOO_Init(); // must be called before any other voodoo magick
-
-      //if(init) then
-      //begin
-         // everything in this block will run only once per session
-      //end
    end
 end
 
 procedure error_AllowUnsafeScripting begin
-   debug_warning("Fo1in2 SETTINGS - 'AllowUnsafeScripting' != 2 in ddraw.ini!");
-   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nChange ddraw.ini setting to 2!");
+   debug_warning("Fo1in2 SETTINGS - 'AllowUnsafeScripting' < 1 in ddraw.ini!");
+   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nChange ddraw.ini setting to 1!");
    //create_message_window("Warning:\n'AllowUnsafeScripting' disabled in ddraw.ini\nFallout et Tu will not work correctly!");
 
    call force_settings;
@@ -80,10 +73,10 @@ procedure force_settings begin
    set_ini_setting("ddraw.ini|Misc|UseFileSystemOverride", 1);
    set_ini_setting("ddraw.ini|Misc|Fallout1Behavior", 1);
 
-   if (metarule_exist("signal_close_game")) then begin
-      set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 2);
+   set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 1);
+   if (metarule_exist("signal_close_game"))
       signal_close_game;
-   end else begin
-      VOODOO_close_game;
+   else
+      variable bad_cfg:= read_byte(0xBADCF6);
    end
 end
