@@ -44,7 +44,7 @@ MOD INSTALLATION
 
 That's it. The game can now be played!
 
-If there are issues after that, set the *.dll override priorities in Wine: `WINEDLLOVERRIDES="ddraw.dll=n,b" wine Fallout2.exe`
+When using Linux with Wine, if there are issues running the game correctly, set the *.dll override priorities in Wine: `WINEDLLOVERRIDES="ddraw.dll=n,b" wine Fallout2.exe`
 
 
 CONFIGURATION
