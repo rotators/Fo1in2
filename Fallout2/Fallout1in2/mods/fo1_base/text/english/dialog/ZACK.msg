@@ -45,6 +45,7 @@
 
 {2000}{}{Sure as hell can. What do you have?}
 {2001}{}{Sure as hell can, but you don't look like you have anything we can tinker with. Bring by some... eh, "normal" pistols and rifles, and we might be able to help you.}
+{2002}{}{You don't look like you have anything we can tinker with. Bring by some... eh, "normal" pistols and rifles, and we might be able to help you.}
 	{2010}{}{Can you do anything with any of these pistols I have?}
 	{2020}{}{One of my rifles could use some attachments.}
 	{2025}{}{Can you beef up my flamethrower?}

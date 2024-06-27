@@ -541,6 +541,13 @@ variable knock_down_sound;
 #define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))
 #define set_enable_barter           set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_BARTER)
 
+// Barter exploit workaround. Player was able to sell items to the NPC before "giving" it via dialog and then later steal them back.
+#define remove_barter_item(var, x) \
+   var := dude_item(x); \
+   if (var > 0) then rm_obj_from_inven(dude_obj, var); \
+   var := self_item(x); \
+   if (var > 0) then rm_obj_from_inven(self_obj, var)
+   
 variable tmp_merch_box;
 variable merch_slot_1;
 variable merch_slot_1_flags;
