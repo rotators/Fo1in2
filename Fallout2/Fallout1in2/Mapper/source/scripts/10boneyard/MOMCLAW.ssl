@@ -9,10 +9,17 @@
 #include "maps/laripper.h"
 #include "command.h"
 
+#include "sfall/main.h"
+
 procedure start;
 procedure destroy_p_proc;
+procedure map_update_p_proc;
 procedure critter_p_proc;
 procedure damage_p_proc;
+
+procedure set_female_crit_msgs;
+procedure reset_crit_msgs;
+
 variable tmp_hostile;
 
 procedure start begin
@@ -29,15 +36,54 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if /*self_can_hear_dude or*/ self_can_see_dude then begin// or (tile_distance_objs(self_obj, dude_obj) <= (self_perception * 1)) then begin
+      if self_can_see_dude then begin
          tmp_hostile := 1;
          attack(dude_obj);
       end
+   end
+
+   if (dude_elevation == self_elevation) then begin
+      call set_female_crit_msgs;
+   end
+end
+
+procedure map_update_p_proc begin
+   if (dude_elevation != self_elevation) then begin
+      call reset_crit_msgs;
    end
 end
 
 procedure damage_p_proc begin
    if obj_in_party(source_obj) then begin
       tmp_hostile := 1;
+   end
+end
+
+procedure set_female_crit_msgs begin
+   variable bodypart, level, value;
+
+   if (get_critical_table(KILL_TYPE_deathclaw_kills, BODY_HIT_HEAD, 0, CRITICAL_VALUE_MSG) < 5100) then begin
+      for (bodypart := BODY_HIT_HEAD; bodypart <= BODY_UNCALLED; bodypart++) begin
+         for (level := 0; level < 6; level++) begin
+            value := get_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_MSG);
+            if (value < 6300) then set_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_MSG, value + 100);
+            value := get_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_FAIL_MSG);
+            if (value < 6300) then set_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_FAIL_MSG, value + 100);
+         end
+      end
+   end
+end
+
+// reset (male msgs)
+procedure reset_crit_msgs begin
+   variable bodypart, level;
+
+   if (get_critical_table(KILL_TYPE_deathclaw_kills, BODY_HIT_HEAD, 0, CRITICAL_VALUE_MSG) > 5100) then begin
+      for (bodypart := BODY_HIT_HEAD; bodypart <= BODY_UNCALLED; bodypart++) begin
+         for (level := 0; level < 6; level++) begin
+            reset_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_MSG);
+            reset_critical_table(KILL_TYPE_deathclaw_kills, bodypart, level, CRITICAL_VALUE_FAIL_MSG);
+         end
+      end
    end
 end
