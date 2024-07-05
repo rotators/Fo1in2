@@ -23,7 +23,7 @@ procedure start begin
 
    debug("Remember to wear protective goggles" + _ANSI_window_name("Fallout 1in2 Debug Console"));
 
-   if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") < 1) then begin
+   if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") == 0) then begin
       call error_AllowUnsafeScripting in 1;
    end else begin
       if (get_ini_setting("ddraw.ini|Misc|DisableHorrigan") == 0) then begin
@@ -41,8 +41,8 @@ procedure start begin
 end
 
 procedure error_AllowUnsafeScripting begin
-   debug_warning("Fo1in2 SETTINGS - 'AllowUnsafeScripting' < 1 in ddraw.ini!");
-   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nChange ddraw.ini setting to 1!");
+   debug_warning("Fo1in2 SETTINGS - 'AllowUnsafeScripting' == 0 in ddraw.ini!");
+   message_box_warning("ERROR\n\n'AllowUnsafeScripting' not enabled\nFallout et Tu must be restarted!");
    //create_message_window("Warning:\n'AllowUnsafeScripting' disabled in ddraw.ini\nFallout et Tu will not work correctly!");
 
    call force_settings;
@@ -70,16 +70,17 @@ procedure error_Fallout1Behavior begin
 end
 
 procedure force_settings begin
+   set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 1);
    set_ini_setting("ddraw.ini|Misc|DisableHorrigan", 1);
    set_ini_setting("ddraw.ini|Misc|UseFileSystemOverride", 1);
    set_ini_setting("ddraw.ini|Misc|Fallout1Behavior", 1);
 
-   set_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting", 1);
    signal_close_game;
    // deliberately crash the game for older sfall
-   call force_crash in 3;
+   call force_crash in 1;
 end
 
 procedure force_crash begin
-   variable panik := read_int(1);
+   debug_warning("Fo1in2 SETTINGS - force crash for bad config.");
+   variable panik := read_int(0xFFBADCF6);
 end

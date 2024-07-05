@@ -534,7 +534,7 @@ variable knock_down_sound;
    reg_anim_end();                                                                        \
    critter_injure(dude_obj, DAM_KNOCKED_OUT)
 
-#define self_is_child 				   (self_pid == PID_GIRL or self_pid == PID_BOY)
+#define self_is_child               (self_pid == PID_GIRL or self_pid == PID_BOY)
 
 
 // Merchant stuff
@@ -547,7 +547,7 @@ variable knock_down_sound;
    if (var > 0) then rm_obj_from_inven(dude_obj, var); \
    var := self_item(x); \
    if (var > 0) then rm_obj_from_inven(self_obj, var)
-   
+
 variable tmp_merch_box;
 variable merch_slot_1;
 variable merch_slot_1_flags;
