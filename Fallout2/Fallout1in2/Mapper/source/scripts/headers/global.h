@@ -412,7 +412,7 @@
 #define GVAR_BLADES_COUNTER                     (1267)
 #define GVAR_WATER_CHIP_11                      (1268)
 #define GVAR_RAIDERS_LEFT_IRWIN                 (1269)
-#define GVAR_WATER_CHIP_13                      (1270)
+#define GVAR_DEATHCLAWS_TIMER                   (1270)
 #define GVAR_MBASE_DOOR_HOLODISK                (1271)
 #define GVAR_ENEMY_FOLL_INVADERS                (1272)
 #define GVAR_ROBCTRL_PESTS_HOWMUCH              (1273)

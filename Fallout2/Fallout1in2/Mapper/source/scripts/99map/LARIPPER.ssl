@@ -29,8 +29,8 @@ procedure map_enter_p_proc begin
    call map_lightning;
 
    if not(is_loading_game) then begin
-      if ((map_var(MVAR_IsMommyDead) == 0) and (((game_time / 10) - global_var(GVAR_WATER_CHIP_13)) > (60 * 60))) then begin
-         set_global_var(GVAR_WATER_CHIP_13, game_time / 10);
+      if ((map_var(MVAR_IsMommyDead) == 0) and (((game_time / 10) - global_var(GVAR_DEATHCLAWS_TIMER)) > (60 * 60))) then begin
+         set_global_var(GVAR_DEATHCLAWS_TIMER, game_time / 10);
          if (map_var(MVAR_RoamingCount) == 0) then begin
             rnd := random(2, 3);
             set_map_var(MVAR_RoamingCount, rnd);
@@ -77,6 +77,9 @@ procedure map_exit_p_proc begin
          inc_boneyard_rep(REP_BONUS_DEATHCLAWS_DEAD);
       end
    end
+   set_rest_mode(0);
+
+   set_map_var(MVAR_LastVisit, (game_time + ONE_GAME_DAY));
 end
 
 procedure map_lightning begin
@@ -112,8 +115,24 @@ procedure PlaceCritter begin
       else if (rnd == 7) then
          hex := 15475;
 
-      critter := create_object_sid(PID_DEATHCLAW, 0, 0, SCRIPT_ROAMCLAW);
+      // If enabled, small deathclaws initialy spawn and will later get replaced by bigger ones
+      if fo1in2_fo2_critters_enabled then begin
+         critter := create_object_sid(PID_DEATHCLAW_SMALL, 0, 0, SCRIPT_ROAMCLAW);
+      end
+      else begin
+         critter := create_object_sid(PID_DEATHCLAW, 0, 0, SCRIPT_ROAMCLAW);
+      end
       critter_attempt_placement(critter, hex, 0);
+      obj_rotate(critter,random(0,5));
       count := count - 1;
+   end
+
+   // Cleanup dead corpses a little faster. We pretend the new deathclaws were hungry and ate them
+   foreach critter in list_as_array(LIST_CRITTERS) begin
+      if (critter_state(critter) == CRITTER_IS_DEAD) then begin
+         if ((obj_pid(critter) == PID_DEATHCLAW) or (obj_pid(critter) == PID_DEATHCLAW_SMALL)) then begin
+            destroy_object(critter);
+         end
+      end
    end
 end

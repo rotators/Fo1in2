@@ -113,7 +113,7 @@
 #define FID_NMDOCC        (16777273)
 #define FID_MADEGG        (16777274)
 #define FID_MASCP2        (16777275)
-#define FID_MACLW2        (16777276)
+#define FID_MACLW2        (16777276) // Deathclaw Small
 #define FID_HMIANJ        (16777277)
 #define FID_HMTYCL        (16777278)
 #define FID_MAMTN3        (16777279)

@@ -10,6 +10,7 @@
 #include "command.h"
 
 procedure start;
+procedure map_enter_p_proc;
 procedure destroy_p_proc;
 procedure timed_event_p_proc;
 procedure critter_p_proc;
@@ -25,7 +26,21 @@ procedure start begin
    end
 end
 
+procedure map_enter_p_proc begin
+   // Replace small deathclaw with big deathclaw after a some time has passed
+   if (self_pid == PID_DEATHCLAW_SMALL) then begin
+      //if (days_since_visited > 0) then begin
+      if (game_time > map_var(MVAR_LastVisit)) then begin
+         variable critter := create_object_sid(PID_DEATHCLAW, 0, 0, SCRIPT_ROAMCLAW);
+         critter_attempt_placement(critter, self_tile, self_elevation);
+         obj_rotate(critter,random(0,5));
+         destroy_object(self_obj);
+      end
+   end
+end
+
 procedure destroy_p_proc begin
+   debug_warning("destroy!");
    set_map_var(MVAR_RoamingCount, (map_var(MVAR_RoamingCount) - 1));
    inc_evil_critter
 end
