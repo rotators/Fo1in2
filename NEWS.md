@@ -3,3 +3,6 @@ Notable changes since last release ([v1.10.3504](https://github.com/rotators/Fo1
 - **Fixed**: It was possible to sell items to various NPCs before "giving" them via dialog, so they could be stolen back later.
 - **Fixed**: The Mother Deathclaw in the Boneyard was printing male instead of female critical hit messages (old Fo1 vanilla bug).
 - **Fixed**: the text position of ShowLootWeight mod when ExpandInventory=1
+- **Tweaked**: Dead bodies in the LA Rippers map will be cleaned up faster (Deathclaws eat them, duh).
+- **Tweaked**: Deathclaw Spawn critters in caravan job encounters will look like small Deathclaws if Fo2 critters are enabled.
+- **Tweaked**: If Fo2 critters are enabled, new Deathclaws in the LA Rippers map will initially be Deathclaw Spawns. After a day, they turn into full grown Deathclaws.
