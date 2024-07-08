@@ -1,4 +1,5 @@
 {100}{}{You see a Knight.}
+{1001}{}{You see: Larry.}
 {101}{}{Hello Initiate. I'm Larry, how may I help you?}
 {102}{}{Vree said you could show me a laser pistol?}
 {103}{}{Vree said you could give me a laser pistol.}

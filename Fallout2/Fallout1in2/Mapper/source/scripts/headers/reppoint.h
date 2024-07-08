@@ -378,6 +378,7 @@
 
 // BOS
 #define REP_BONUS_KICKED_OUT                    (-25)
+#define REP_BONUS_LIED_TO_LARRY                 (-1)
 #define inc_bos_rep(x)                          inc_global_var_amt(GVAR_TOWN_REP_BOS, x)
 
 // Mariposa

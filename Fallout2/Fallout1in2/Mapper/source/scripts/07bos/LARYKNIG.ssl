@@ -1,12 +1,12 @@
 /*
 
-   Brotherhood - Knight Larry
+   Brotherhood - Knight Larry, cut content
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/brotherhood.h"
 
 #define NAME                    SCRIPT_LARYKNIG
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -23,6 +23,7 @@ procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 
+procedure Node999;
 procedure goto00;
 procedure goto00b;
 procedure goto01;
@@ -32,10 +33,14 @@ procedure goto04;
 procedure goto05;
 procedure goto06;
 
+#define LVAR_Liar                (0)
+#define LVAR_LaserPistol         (1)
+#define LVAR_Herebefore          (4)
+
+variable skill := 5;
 variable tmp_hostile;
 variable Only_Once := 1;
 variable rndx;
-
 
 procedure start begin
    if Only_Once then begin
@@ -45,13 +50,11 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if REP_ENEMY_BOS then begin
       tmp_hostile := 1;
    end
@@ -65,8 +68,7 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if source_is_dude then begin
       tmp_hostile := 1;
    end
@@ -76,16 +78,12 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_BOS);
 
    dude_look_at_self;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_Liar)) then begin
       call goto05;
    end
    else begin
-      if (local_var(1) == 0) then begin
-         start_gdialog(770, self_obj, 4, -1, -1);
-         gsay_start;
-         call goto00;
-         gsay_end;
-         end_dialogue;
+      if (local_var(LVAR_LaserPistol) == 0) then begin
+         start_dialog_at_node(goto00);
       end
       else begin
          call goto06;
@@ -100,22 +98,30 @@ procedure destroy_p_proc begin
    end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   display_msg(mstr(100));
+   if (local_var(LVAR_Herebefore) == 0) then
+      display_msg(mstr(100));
+   else
+      display_msg(mstr(1001));
 end
 
-procedure goto00
-begin
+procedure Node999 begin
+end
+
+procedure goto00 begin
+   set_local_var(LVAR_Herebefore, 1);
+
    Reply(101);
-   NOption(102, goto02, 4);
-   NOption(103, goto00b, 4);
+   if global_var(GVAR_TALKED_TO_VREE) then begin
+      NOption(102, goto02, 4);
+      NOption(103, goto00b, 4);
+   end
    NLowOption(104, goto01);
+   NOption(g_bye, Node999, 4);
 end
 
-procedure goto00b
-begin
+procedure goto00b begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
       call goto03;
    end
@@ -124,41 +130,36 @@ begin
    end
 end
 
-procedure goto01
-begin
+procedure goto01 begin
    NMessage(105);
 end
 
-procedure goto02
-begin
-   set_local_var(1, 1);
-   critter_mod_skill(dude_obj, SKILL_ENERGY_WEAPONS, 5);
+procedure goto02 begin
+   set_local_var(LVAR_LaserPistol, 1);
+   critter_mod_skill(dude_obj, SKILL_ENERGY_WEAPONS, skill);
    game_time_advance(game_ticks(1800));
    NMessage(106);
-   display_msg(gen_mstr(116) + 5 + gen_mstr(119));
+   display_msg(gen_mstr(116) + skill + gen_mstr(119));
 end
 
-procedure goto03
-begin
-   set_local_var(1, 1);
-   critter_mod_skill(dude_obj, SKILL_ENERGY_WEAPONS, 5);
+procedure goto03 begin
+   set_local_var(LVAR_LaserPistol, 1);
+   critter_mod_skill(dude_obj, SKILL_ENERGY_WEAPONS, skill);
    game_time_advance(game_ticks(1800));
    NMessage(107);
-   display_msg(gen_mstr(116) + 5 + gen_mstr(119));
+   display_msg(gen_mstr(116) + skill + gen_mstr(119));
 end
 
-procedure goto04
-begin
-   set_local_var(0, 1);
+procedure goto04 begin
+   set_local_var(LVAR_Liar, 1);
+   inc_bos_rep(REP_BONUS_LIED_TO_LARRY);
    NMessage(108);
 end
 
-procedure goto05
-begin
+procedure goto05 begin
    float_msg(self_obj, mstr(109), FLOAT_MSG_RED);
 end
 
-procedure goto06
-begin
+procedure goto06 begin
    float_msg(self_obj, mstr(random(216, 223)), FLOAT_MSG_RED);
 end

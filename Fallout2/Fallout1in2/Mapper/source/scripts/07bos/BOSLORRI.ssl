@@ -60,6 +60,16 @@ procedure Dumb06a;
 procedure raisiq;
 procedure sorry;
 
+#define LVAR_Herebefore       (4)
+#define LVAR_KnowsName        (5)
+#define LVAR_TimesTalked      (6)
+#define LVAR_TimesOpSTR       (7)
+#define LVAR_TimesOpPER       (8)
+#define LVAR_TimesOpENDUR     (9)
+#define LVAR_TimesOpINT       (10)
+#define LVAR_OpDumb           (11)
+#define LVAR_TimesOpAGL       (12)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable Heal_amount;
@@ -72,23 +82,6 @@ variable bag_ptr := 0;
 variable INTcost;
 
 import variable Lorri_ptr;
-
-//variable Sex_SoundByte := 0;
-
-// local_var(4) == been told about operations
-// local_var(5) == exchanged names
-// local_var(6) == # of times have talked to Lori
-// local_var(7) == TimesOpSTR
-// local_var(8) == TimesOpPER
-// local_var(9) == TimesOpENDUR
-// local_var(10) == TimesOpCHA
-// local_var(11) == TimesOpINT
-//    12 is reserved, do not use
-// local_var(13) == OpDumb
-// local_var(14) == BackLine
-// local_var(15) == had sex once already
-//  local_var(16) == TimesOpAGL
-
 
 procedure start begin
    Lorri_ptr := self_obj;
@@ -104,7 +97,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if not(local_var(5)) then begin
+   if not(local_var(LVAR_KnowsName)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -155,14 +148,14 @@ procedure destroy_p_proc begin
 end
 
 procedure BoS_Lorri00 begin
-   if (local_var(6) < 5) then begin
-      set_local_var(6, (local_var(6) + 1));
+   if (local_var(LVAR_TimesTalked) < 5) then begin
+      set_local_var(LVAR_TimesTalked, (local_var(LVAR_TimesTalked) + 1));
    end
-   if local_var(5) then begin
+   if local_var(LVAR_KnowsName) then begin
       Reply(158);
    end
    else begin
-      if (local_var(6) >= 2) then begin
+      if (local_var(LVAR_TimesTalked) >= 2) then begin
          Reply(158);
          NOption(124, BoS_Lorri23, 4);
       end
@@ -180,13 +173,13 @@ procedure BoS_Lorri00 begin
    if (dude_poison_stat != 0) then begin//  (get_poison(dude_obj) != 0)  gives an error
       NOption(140, BoS_Lorri21, 4);//  poisoned
    end
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       NOption(105, BoS_Lorri07, 4);//  operations
    end
    else begin
       NOption(106, BoS_Lorri09, 4);//  operations again
    end
-   if (local_var(13) == 1) or (local_var(11) != 0) then begin
+   if (local_var(LVAR_OpDumb) == 1) or (local_var(LVAR_TimesOpINT) != 0) then begin
       NLowOption(107, BoS_Lorri01);// "you fix?"
    end
    else begin
@@ -196,7 +189,7 @@ end
 
 procedure BoS_Lorri23 begin
    Reply(125);
-   set_local_var(5, 1);
+   set_local_var(LVAR_KnowsName, 1);
    NOption(mstr(151) + dude_name + mstr(152), BoS_Lorri24, 4);
 end
 
@@ -211,13 +204,13 @@ procedure BoS_Lorri24 begin
    if (dude_poison_stat != 0) then begin//  (get_poison(dude_obj) != 0)  gives an error
       NOption(140, BoS_Lorri21, 4);//  poisoned
    end
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       NOption(105, BoS_Lorri07, 4);//  operations
    end
    else begin
       NOption(106, BoS_Lorri09, 4);//  operations again
    end
-   if (local_var(13) == 1) or (local_var(11) != 0) then begin
+   if (local_var(LVAR_OpDumb) == 1) or (local_var(LVAR_TimesOpINT) != 0) then begin
       NLowOption(107, BoS_Lorri01);// "you fix?"
    end
    else begin
@@ -277,7 +270,7 @@ procedure BoS_Lorri07 begin
 end
 
 procedure BoS_Lorri08 begin
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(222);
    call BoS_Lorri10;
 end
@@ -296,19 +289,19 @@ procedure BoS_Lorri10 begin
    variable TotalOpsAllowed;
    TotalOpsAllowed := global_var(GVAR_BOS_LORRI_NUM_OPS_ALLOWED);
 
-   if (local_var(7) < TotalOpsAllowed) then begin
+   if (local_var(LVAR_TimesOpSTR) < TotalOpsAllowed) then begin
       NOption(127, BoS_Lorri11, 4);//  STRENGTH
    end
-   if (local_var(8) < TotalOpsAllowed) then begin
+   if (local_var(LVAR_TimesOpPER) < TotalOpsAllowed) then begin
       NOption(128, BoS_Lorri12, 4);//  PERCEPTION
    end
-   if (local_var(9) < TotalOpsAllowed) then begin
+   if (local_var(LVAR_TimesOpENDUR) < TotalOpsAllowed) then begin
       NOption(129, BoS_Lorri13, 4);//  ENDURANCE
    end
-   if (local_var(11) < TotalOpsAllowed) then begin
+   if (local_var(LVAR_TimesOpINT) < TotalOpsAllowed) then begin
       NOption(130, BoS_Lorri14, 4);//  INTELLIGENCE
    end
-   if (local_var(16) < TotalOpsAllowed) then begin
+   if (local_var(LVAR_TimesOpAGL) < TotalOpsAllowed) then begin
       NOption(131, BoS_Lorri15, 4);//  AGILITY
    end
    NOption(132, BoS_Lorriend, 4);
@@ -321,7 +314,7 @@ procedure BoS_Lorri11 begin
    if (STRcheck > 9) then begin
       if dude_armor > 0 then begin
          variable ArmorCheck := 0;
-         ArmorCheck := dude_armor;//  if (ArmorCheck == 139099868) or (ArmorCheck == 43082196) then begin
+         ArmorCheck := dude_armor;
          if dude_wearing_bos_power_armor then begin
             NMessage(150);
          end
@@ -334,7 +327,7 @@ procedure BoS_Lorri11 begin
       end
    end
    else begin
-      cost := 2000 + (2000 * local_var(7));
+      cost := 2000 + (2000 * local_var(LVAR_TimesOpSTR));
       Reply(mstr(133) + cost + mstr(233));
       NOption(135, BoS_Lorri18, 4);
       NOption(136, BoS_Lorri17, 4);
@@ -361,7 +354,7 @@ procedure BoS_Lorri18 begin
          rm_obj_from_inven(dude_obj, ArmorMove);
          add_obj_to_inven(dude_obj, ArmorMove);
       end
-      set_local_var(7, (local_var(7) + 1));
+      set_local_var(LVAR_TimesOpSTR, (local_var(LVAR_TimesOpSTR) + 1));
       if (dude_caps >= cost) then begin
          dude_caps_adjust(-cost);
       end
@@ -369,11 +362,11 @@ procedure BoS_Lorri18 begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(3 * 604800));// 3 weeks
-      temp := dude_strength;//   STRENGTH
-      set_critter_stat(dude_obj, STAT_st, 1);//     + 1
+      game_time_advance(game_ticks(3 * ONE_GAME_WEEK));
+      temp := dude_strength;
+      set_critter_stat(dude_obj, STAT_st, 1);
       display_msg(gen_mstr(161));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(156);
@@ -391,7 +384,7 @@ procedure BoS_Lorri12 begin
       call sorry;//  Stat already at 10
    end
    else begin
-      cost := 4000 + (4000 * local_var(8));
+      cost := 4000 + (4000 * local_var(LVAR_TimesOpPER));
       Reply(mstr(137) + cost + mstr(237));
       NOption(135, BoS_Lorri19, 4);
       NOption(136, BoS_Lorri17, 4);
@@ -407,7 +400,7 @@ procedure BoS_Lorri19 begin
          rm_obj_from_inven(dude_obj, ArmorMove);
          add_obj_to_inven(dude_obj, ArmorMove);
       end
-      set_local_var(8, (local_var(8) + 1));
+      set_local_var(LVAR_TimesOpPER, (local_var(LVAR_TimesOpPER) + 1));
       if (dude_caps >= cost) then begin
          dude_caps_adjust(-cost);
       end
@@ -415,11 +408,11 @@ procedure BoS_Lorri19 begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(604800));//  1 week
-      temp := dude_perception;// PERCEPTION
-      set_critter_stat(dude_obj, STAT_pe, 1);//     + 1
+      game_time_advance(game_ticks(ONE_GAME_WEEK));
+      temp := dude_perception;
+      set_critter_stat(dude_obj, STAT_pe, 1);
       display_msg(gen_mstr(162));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(161);
@@ -437,7 +430,7 @@ procedure BoS_Lorri13 begin
       call sorry;//  Stat already at 10
    end
    else begin
-      cost := 3000 + (3000 * local_var(9));
+      cost := 3000 + (3000 * local_var(LVAR_TimesOpENDUR));
       Reply(mstr(139) + cost + mstr(239));
       NOption(135, BoS_Lorri20, 4);
       NOption(136, BoS_Lorri17, 4);
@@ -453,7 +446,7 @@ procedure BoS_Lorri20 begin
          rm_obj_from_inven(dude_obj, ArmorMove);
          add_obj_to_inven(dude_obj, ArmorMove);
       end
-      set_local_var(9, (local_var(9) + 1));
+      set_local_var(LVAR_TimesOpENDUR, (local_var(LVAR_TimesOpENDUR) + 1));
       if (dude_caps >= cost) then begin
          dude_caps_adjust(-cost);
       end
@@ -461,11 +454,11 @@ procedure BoS_Lorri20 begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(604800));//  1 week
-      temp := dude_endurance;//  ENDURANCE
-      set_critter_stat(dude_obj, STAT_en, 1);//     + 1
+      game_time_advance(game_ticks(ONE_GAME_WEEK));
+      temp := dude_endurance;
+      set_critter_stat(dude_obj, STAT_en, 1);
       display_msg(gen_mstr(163));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(166);
@@ -483,7 +476,7 @@ procedure BoS_Lorri14 begin
       call sorry;//  Stat already at 10
    end
    else begin
-      cost := 6000 + (6000 * local_var(11));
+      cost := 6000 + (6000 * local_var(LVAR_TimesOpINT));
       Reply(mstr(141) + cost + mstr(241));
       NOption(135, raisiq, 4);
       NOption(136, BoS_Lorri17, 4);
@@ -499,7 +492,7 @@ procedure raisiq begin
          rm_obj_from_inven(dude_obj, ArmorMove);
          add_obj_to_inven(dude_obj, ArmorMove);
       end
-      set_local_var(11, (local_var(11) + 1));
+      set_local_var(LVAR_TimesOpINT, (local_var(LVAR_TimesOpINT) + 1));
       if (dude_caps >= cost) then begin
          dude_caps_adjust(-cost);
       end
@@ -507,11 +500,11 @@ procedure raisiq begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(3 * 604800));// 3 weeks
-      temp := dude_iq;//   INTELLIGENCE
-      set_critter_stat(dude_obj, STAT_iq, 1);//     + 1
+      game_time_advance(game_ticks(3 * ONE_GAME_WEEK));
+      temp := dude_iq;
+      set_critter_stat(dude_obj, STAT_iq, 1);
       display_msg(gen_mstr(165));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(170);
@@ -529,7 +522,7 @@ procedure BoS_Lorri15 begin
       call sorry;//  Stat already at 10
    end
    else begin
-      cost := 5000 + (5000 * local_var(16));
+      cost := 5000 + (5000 * local_var(LVAR_TimesOpAGL));
       Reply(mstr(143) + cost + mstr(243));
       NOption(135, BoS_Lorri22, 4);
       NOption(136, BoS_Lorri17, 4);
@@ -545,7 +538,7 @@ procedure BoS_Lorri22 begin
          rm_obj_from_inven(dude_obj, ArmorMove);
          add_obj_to_inven(dude_obj, ArmorMove);
       end
-      set_local_var(16, (local_var(16) + 1));
+      set_local_var(LVAR_TimesOpAGL, (local_var(LVAR_TimesOpAGL) + 1));
       if (dude_caps >= cost) then begin
          dude_caps_adjust(-cost);
       end
@@ -553,11 +546,11 @@ procedure BoS_Lorri22 begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(3 * 604800));// 3 weeks
-      temp := dude_agility;// AGILITY
-      set_critter_stat(dude_obj, STAT_ag, 1);//     + 1
+      game_time_advance(game_ticks(3 * ONE_GAME_WEEK));
+      temp := dude_agility;
+      set_critter_stat(dude_obj, STAT_ag, 1);
       display_msg(gen_mstr(166));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(176);
@@ -586,7 +579,7 @@ end
 
 procedure Dumb02 begin
    Reply(400);
-   if (local_var(11) == 0) then begin
+   if (local_var(LVAR_TimesOpINT) == 0) then begin
       NLowOption(401, Dumb04);
    end
    NLowOption(402, Dumb03);
@@ -607,10 +600,10 @@ procedure Dumb03 begin
 end
 
 procedure Dumb04 begin
-   INTcost := (6000 + (6000 * local_var(11))) / 2;
+   INTcost := (6000 + (6000 * local_var(LVAR_TimesOpINT))) / 2;
    if (dude_caps >= INTcost) then begin
-      set_local_var(13, 1);
-      set_local_var(11, 1);
+      set_local_var(LVAR_OpDumb, 1);
+      set_local_var(LVAR_TimesOpINT, 1);
       if (dude_caps >= INTcost) then begin
          dude_caps_adjust(-INTcost);
       end
@@ -618,11 +611,11 @@ procedure Dumb04 begin
       gfade_out(1);
       gsay_end;
       end_dialogue;
-      game_time_advance(game_ticks(604800));//  1 week
-      temp := dude_iq;//   INTELLIGENCE
-      set_critter_stat(dude_obj, STAT_iq, 1);//     + 1
+      game_time_advance(game_ticks(ONE_GAME_WEEK));
+      temp := dude_iq;
+      set_critter_stat(dude_obj, STAT_iq, 1);
       display_msg(gen_mstr(165));
-      start_gdialog(675, self_obj, 4, -1, -1);
+      start_gdialog(NAME, self_obj, 4, -1, -1);
       gsay_start;
       gfade_in(1);
       Reply(407);

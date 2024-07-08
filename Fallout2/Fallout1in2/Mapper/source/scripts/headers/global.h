@@ -4041,8 +4041,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4899)
 #define RESERVED_FOR_FALLOUT_FIXT               (4900)
 #define RESERVED_FOR_FALLOUT_FIXT               (4901)
-#define RESERVED_FOR_FALLOUT_FIXT               (4902)
-#define RESERVED_FOR_FALLOUT_FIXT               (4903)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4902)*/
+#define GVAR_TALKED_TO_VREE                     (4903)
 #define GVAR_ENABLE_FIXT_CHESS                  (4904)
 #define GVAR_ENABLE_FO2_HITCHANCE               (4905)
 #define GVAR_ENABLE_AUTO_DOORS                  (4906)
