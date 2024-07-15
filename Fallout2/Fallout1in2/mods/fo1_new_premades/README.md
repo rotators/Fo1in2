@@ -4,6 +4,7 @@ Fallout 1 New Premade Characters
 --------------------------------
 
 Replaces the original FALLOUT 1 premade characters. Depending on the picked character, the starting items will change.
+New interface character art by Nathan Skaggs.
 
 ##### PERSONAL BIO DATA:
 **Kenneth** - Known and feared as an explosives expert, Kenneth Glade always felt restricted by the Vault's confined environments. The feeling intensified after he was banned from further experiments after nearly blowing up the Vault's hydroponics. The Overseer may be trying to get rid of Ken and set him loose for the safety of the Vault. Ken doesn't mind, he's looking forward to new proving grounds for his devices.
