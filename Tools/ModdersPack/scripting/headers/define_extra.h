@@ -306,6 +306,22 @@
 #define PROTO_CR_AI_PACKET              (408)
 #define PROTO_CR_TEAM_NUM               (412)
 
+// scenery
+#define PROTO_SC_MATERIAL            (44)
+
+// walls
+#define PROTO_WL_MATERIAL            (32)
+
+// material types
+#define MATERIAL_TYPE_GLASS               (0)
+#define MATERIAL_TYPE_METAL               (1)
+#define MATERIAL_TYPE_PLASTIC             (2)
+#define MATERIAL_TYPE_WOOD                (3)
+#define MATERIAL_TYPE_DIRT                (4)
+#define MATERIAL_TYPE_STONE               (5)
+#define MATERIAL_TYPE_CEMENT              (6)
+#define MATERIAL_TYPE_LEATHER             (7)
+
 // weapon calibers
 #define CALIBER_NONE                 (0)
 #define CALIBER_ROCKET               (1)

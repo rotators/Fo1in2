@@ -554,14 +554,14 @@ procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc)
 end
 
 /**
- * Converts given array into a new map where keys are array values and all values are 1.
+ * Converts given array into a new map where keys are array values and all values are set to specified value.
  * @arg {array} arr
  * @ret {array}
  */
-procedure array_to_set(variable arr) begin
+procedure array_to_set(variable arr, variable value := 1) begin
    variable v, retArr := temp_array_map;
    foreach (v in arr) begin
-      retArr[v] := 1;
+      retArr[v] := value;
    end
    return retArr;
 end
@@ -641,7 +641,7 @@ procedure array_fill(variable arr, variable pos, variable count, variable value)
 end
 
 /**
- * Adds all the values of the second array to the first array.
+ * Adds all the values of the second array to the first array. If arr1 is a map then for values with same keys, values from arr2 will take priority.
  * @arg {array} arr1
  * @arg {array} arr2
  * @ret {array} - the first array after modification
@@ -660,6 +660,14 @@ procedure array_append(variable arr1, variable arr2) begin
    end
    return arr1;
 end
+
+/**
+ * Creates a new temp array with all values from arr1 and arr2. If arr1 is a map then for values with same keys, values from arr2 will take priority.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array} - the created temp array
+ */
+#define array_concat(arr1, arr2)       array_append(clone_array(arr1), arr2)
 
 /**
  * Loads a "saved" array. If it doesn't exist, creates it (with a given size).

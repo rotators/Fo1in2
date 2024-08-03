@@ -450,7 +450,7 @@ FUNCTION REFERENCE
 
 -----
 ##### `array party_member_list(int includeHidden)`
-- Returns an array of all current party members (0 - only critter-type, alive and visible will be returned, 1 - all object, including Trunk, etc.)
+- Returns an array of all current party members (0 - only critters that are alive and visible will be returned, 1 - all objects, including the car trunk, etc.)
 
 -----
 ##### `array path_find_to(object objFrom, int tileTo, int blockingType)`
