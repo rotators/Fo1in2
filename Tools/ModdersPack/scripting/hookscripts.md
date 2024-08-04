@@ -936,3 +936,23 @@ int     arg3 - original result of engine function: 1 - can use, 0 - cannot use
 
 int     ret0 - overrides the result of engine function. Any non-zero value allows using the weapon
 ```
+
+-------------------------------------------
+
+#### `HOOK_BUILDSFXWEAPON (hs_buildsfxweapon.int)`
+
+Runs before each weapon sound effect is played or added to the animation queue to determine the name of the sound effect file based on the weapon, target, and action being performed.
+
+```
+int     arg0 - weapon sound effect type:
+               0 - ready/reload
+               1 - attack
+               2 - out of ammo
+               3 - flying (for projectiles from weapons)
+               4 - hit
+Item    arg1 - the weapon being used
+int     arg2 - attack type (see ATKTYPE_* constants)
+Obj     arg3 - the target of the attack (can be 0)
+
+String  ret0 - the filename of the new sound effect to use, without extension (relative to the sound\sfx\ directory)
+```

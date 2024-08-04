@@ -76,6 +76,8 @@
 #define HOOK_ROLLCHECK        (46)
 #define HOOK_BESTWEAPON       (47)
 #define HOOK_CANUSEWEAPON     (48)
+// RESERVED 49..60
+#define HOOK_BUILDSFXWEAPON   (61)
 
 // Valid arguments to list_begin
 #define LIST_CRITTERS    (0)

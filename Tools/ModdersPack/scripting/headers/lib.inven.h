@@ -66,6 +66,21 @@ procedure unwield_armor(variable critter) begin
 end
 
 /**
+ * Makes critter put away given item if it's in armor or any item/weapon slot.
+ * @arg {ObjectPtr} critter
+ * @arg {ObjectPtr} item
+ */
+procedure inven_unwield_item(variable critter, variable item) begin
+   if (obj_type(critter) != OBJ_TYPE_CRITTER) then return;
+
+   if (critter_inven_obj(critter, INVEN_TYPE_WORN) == item) then begin
+      call unwield_armor(critter);
+   end else if ((critter_inven_obj(critter, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(critter, INVEN_TYPE_RIGHT_HAND) == item)) then begin
+      inven_unwield(critter);
+   end
+end
+
+/**
  * Removes items of given pid from given object's inventory. Returns number of actually removed items.
  * @arg {ObjectPtr} invenObj - obj to remove items from
  * @arg {int} itemPid - PID of item to remove
@@ -86,13 +101,7 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
    toRemoveQty := quantity;
    while (quantity > 0) do begin
       item := obj_carrying_pid_obj(invenObj, itemPid);
-      if (obj_type(invenObj) == OBJ_TYPE_CRITTER) then begin
-         if (critter_inven_obj(invenObj, INVEN_TYPE_WORN) == item) then begin
-            call unwield_armor(invenObj);
-         end else if ((critter_inven_obj(invenObj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(invenObj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
-            inven_unwield(invenObj);
-         end
-      end
+      call inven_unwield_item(invenObj, item);
       quantity -= rm_mult_objs_from_inven(invenObj, item, quantity);
       destroy_object(item);
    end
@@ -100,19 +109,14 @@ procedure remove_items_pid(variable invenObj, variable itemPid, variable quantit
 end
 
 /**
- * Remove the whole stack of a given *item* object from *invenObj* inventory.
+ * Remove one item from a given *item* stack object from *invenObj* inventory.
  * For a critter, this will correctly remove item from armor/hand slot, if it is equipped.
+ * Note that *item* pointer will be invalid after this.
  * @arg {ObjectPtr} invenObj - obj to remove from
  * @arg {ObjectPtr} item - item (stack) object to remove
  */
 procedure remove_item_obj(variable invenObj, variable item) begin
-   if (obj_type(invenObj) == OBJ_TYPE_CRITTER) then begin
-      if (critter_inven_obj(invenObj,INVEN_TYPE_WORN) == item) then begin
-         call unwield_armor(invenObj);
-      end else if ((critter_inven_obj(invenObj, INVEN_TYPE_LEFT_HAND) == item) or (critter_inven_obj(invenObj, INVEN_TYPE_RIGHT_HAND) == item)) then begin
-         inven_unwield(invenObj);
-      end
-   end
+   call inven_unwield_item(invenObj, item);
    rm_obj_from_inven(invenObj, item);
    destroy_object(item);
 end
@@ -136,7 +140,7 @@ end
 /**
  * Ensures a given *quantity* of *itemPid* in *invenObj* inventory, adding or removing items as necessary.
  * @arg {ObjectPtr} invenObj - obj to add/remove items to/from
- * @arg {int} itemPid - PID of item to remove
+ * @arg {int} itemPid - PID of item to add/remove
  * @arg {int} quantity
  */
 procedure set_items_qty_pid(variable invenObj, variable itemPid, variable quantity)
@@ -154,42 +158,6 @@ begin
    end
 end
 
-/**
- * Removes money and items from a *critter*'s inventory, using provided probabilities (applied to whole stacks, not individual items).
- * Useful for reducing loot of merchants after death.
- * @arg {ObjectPtr} critter
- * @arg {int} moneyPercent - Percent of money to remove. 
- * @arg {int} probArmor - % probability to remove armor.
- * @arg {int} probDrugs - % probability to remove drugs.
- * @arg {int} probWeapons - % probability to remove weapons.
- * @arg {int} probAmmo - % probability to remove ammo.
- * @arg {int} probMisc - % probability to remove misc item.
- */
-procedure reduce_merchant_loot(variable critter, variable moneyPercent, variable probArmor, variable probDrugs, variable probWeapons, variable probAmmo, variable probMisc) begin
-   variable inv, item, it, prob, tmp;
-   inv := inven_as_array(critter);
-   item_caps_adjust(critter, -(item_caps_total(critter) * moneyPercent / 100));
-   //display_msg("total items "+len_array(inv));
-   foreach item in inv begin
-      if (obj_pid(item) != PID_BOTTLE_CAPS) then begin
-         it := obj_item_subtype(item);
-         if (it == item_type_armor) then
-            prob := probArmor;
-         else if (it == item_type_drug) then
-            prob := probDrugs;
-         else if (it == item_type_weapon) then
-            prob := probWeapons;
-         else if (it == item_type_ammo) then
-            prob := probAmmo;
-         else
-            prob := probMisc;
-         if (random(0, 99) < prob) then begin
-            //display_msg("remove "+obj_name(item));
-            call remove_all_items_pid(critter, obj_pid(item));
-         end
-      end
-   end
-end
 
 /**
  * Returns item in one of *critter*'s hand slots using given attack type.
