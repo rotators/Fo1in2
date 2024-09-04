@@ -368,28 +368,28 @@ variable tma_gvar_array;
     Invasions
 *********************************************************/
 // Pick dead body type:
-#define invasion_kill_critter                         \
-	variable DeathType := 56;                        	\
-	variable LVar0 := random(0, 18);                 	\
-	if (LVar0 <= 5) then /*// 31.5%*/            	   \
-		DeathType := ANIM_burned_to_nothing_sf;       	\
-	else if (LVar0 <= 10) then /*// 26%*/       	      \
-		DeathType := ANIM_sliced_in_half_sf;         	\
-	else if (LVar0 <= 14) then /*// 21%*/       	      \
-		DeathType := ANIM_chunks_of_flesh_sf;          	\
-	else if (LVar0 <= 16) then /*// 10.5%*/      	   \
-		DeathType := ANIM_fall_front_blood_sf;         	\
-	else begin/*// <--------------------    16%*/      \
-		variable LVar1 := 0;                          	\
-		LVar1 := random(0, 2);                         	\
-		if (LVar1 == 0) then                           	\
-			DeathType := ANIM_dancing_autofire_sf;     	\
-		else if (LVar1 == 1) then                     	\
-			DeathType := ANIM_exploded_to_nothing_sf;	   \
-		else if (LVar1 == 2) then                 	   \
-			DeathType := ANIM_melted_to_nothing_sf;   	\
-	end                                               	\
-	kill_critter(self_obj, DeathType)
+#define invasion_kill_critter                      \
+   variable DeathType := 56;                       \
+   variable LVar0 := random(0, 18);                \
+   if (LVar0 <= 5) then /*// 31.5%*/               \
+      DeathType := ANIM_burned_to_nothing_sf;      \
+   else if (LVar0 <= 10) then /*// 26%*/           \
+      DeathType := ANIM_sliced_in_half_sf;         \
+   else if (LVar0 <= 14) then /*// 21%*/           \
+      DeathType := ANIM_chunks_of_flesh_sf;        \
+   else if (LVar0 <= 16) then /*// 10.5%*/         \
+      DeathType := ANIM_fall_front_blood_sf;       \
+   else begin /*// <--------------------    16%*/  \
+      variable LVar1 := 0;                         \
+      LVar1 := random(0, 2);                       \
+      if (LVar1 == 0) then                         \
+         DeathType := ANIM_dancing_autofire_sf;    \
+      else if (LVar1 == 1) then                    \
+         DeathType := ANIM_exploded_to_nothing_sf; \
+      else if (LVar1 == 2) then                    \
+         DeathType := ANIM_melted_to_nothing_sf;   \
+   end                                             \
+   kill_critter(self_obj, DeathType)
 
 /*********************************************************
     Stealth Boy
@@ -636,6 +636,12 @@ variable merch_slot_armor_flags;
 #define game_time_advance_minutes(x) game_time_advance(ONE_GAME_MINUTE * x)
 
 #define roll3d6   (random(1, 6) + random(1, 6) + random(1, 6))
+
+#define is_alcohol(x)               ((obj_pid(x) == PID_BEER) or            \
+                                     (obj_pid(x) == PID_BOOZE) or           \
+                                     (obj_pid(x) == PID_GAMMA_GULP_BEER) or \
+                                     (obj_pid(x) == PID_ROENTGEN_RUM) or    \
+                                     (obj_pid(x) == PID_ROT_GUT))
 
 // Used to display message in spatial scripts once
 #define display_spatial_once(x)     if source_is_dude then begin \

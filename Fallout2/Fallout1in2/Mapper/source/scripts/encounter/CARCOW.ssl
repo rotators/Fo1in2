@@ -17,10 +17,14 @@
 /* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
 procedure talk_p_proc;
 procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
+
 variable initial := 0;
 
 #define LVAR_CaravanTimer      (0)
@@ -38,6 +42,13 @@ procedure map_enter_p_proc begin
          set_self_team(TEAM_PLAYER);
    end
 
+   if not(is_loading_game) then begin
+      if (critter_state(self_obj) bwand DAM_KNOCKED_DOWN) then begin
+         self_stand;
+         move_to(self_obj, self_tile, self_elevation); // avoid visual offset shifting
+      end
+   end
+
    check_map_enter_timer
 end
 
@@ -47,8 +58,8 @@ end
 
 procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-       script_overrides;
-       debug_msg("I'm strapped in and won't move.");
+      script_overrides;
+      debug_msg("I'm strapped in and won't move.");
    end
 end
 
@@ -65,24 +76,22 @@ procedure talk_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   variable LVar0 := 0;
-   if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_BOOZE)) then begin
+   variable item := 0;
+   if (is_alcohol(obj_being_used_with)) then begin
       script_overrides;
-      LVar0 := obj_being_used_with;
+      item := obj_being_used_with;
       rm_obj_from_inven(source_obj, obj_being_used_with);
-      destroy_object(LVar0);
-      play_sfx("MABROMAQ");
-
-      reg_anim_clear(self_obj);
+      destroy_object(item);
+      //play_sfx("MABROMAQ");
+      if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
+         reg_anim_clear(self_obj);
          reg_anim_begin();
-         reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
-         reg_anim_animate(self_obj, ANIM_fall_back, 5);
-         reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
-      reg_anim_end();
-
-      critter_injure(self_obj, DAM_KNOCKED_DOWN);
-      critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-      critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+            reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
+            reg_anim_animate(self_obj, ANIM_fall_back, 5);
+            reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
+         reg_anim_end();
+         critter_injure(self_obj, DAM_KNOCKED_DOWN);
+      end
    end
 end
 

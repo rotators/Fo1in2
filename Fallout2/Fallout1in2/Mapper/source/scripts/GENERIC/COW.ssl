@@ -4,39 +4,48 @@
 
 */
 
+/* Include Files */
 #include "define.h"
 
 #define NAME                    SCRIPT_COW
 
 #include "command.h"
 
+/* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure push_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
 procedure timed_event_p_proc;
 procedure talk_p_proc;
 procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
-procedure description_p_proc;
-procedure destroy_p_proc;
 procedure damage_p_proc;
-procedure critter_p_proc;
+procedure destroy_p_proc;
 
 variable initial := 0;
-variable moo_counter;
-variable critter_tile;
 variable tmp_hostile := 0;
-variable hit_counter := 0;
+variable moo_counter;
 
-#define TIMER_STAND_UP 4
+#define EVENT_STAND_UP        (4)
 
 procedure start begin
    if not(initial) then begin
       initial := 1;
-
       set_self_ai(AI_COW);
       set_self_team(TEAM_BRAHMIN);
 
-      flush_add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
+      flush_add_timer_event_sec(self_obj, random(1, 5), 1);
+   end
+end
+
+procedure map_enter_p_proc begin
+   if not(is_loading_game) then begin
+      if (critter_state(self_obj) bwand DAM_KNOCKED_DOWN) then begin
+         self_stand;
+         move_to(self_obj, self_tile, self_elevation); // avoid visual offset shifting
+      end
    end
 end
 
@@ -51,7 +60,7 @@ procedure push_p_proc begin
                reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
             reg_anim_end();
             critter_injure(self_obj, DAM_KNOCKED_DOWN);
-            add_timer_event(self_obj, game_ticks(Random(10, 30)), TIMER_STAND_UP);
+            add_timer_event(self_obj, game_ticks(random(10, 30)), EVENT_STAND_UP);
             debug_msg("ZCBRAHMN : ahh Cow TIPPED you get + 10 Hick Experience Points.");
          end
       end
@@ -65,9 +74,43 @@ procedure critter_p_proc begin
    end
 end
 
+procedure description_p_proc begin
+   script_overrides;
+   if (CUR_MAP_TALKCOW) then
+      display_msg(message_str(SCRIPT_BRAHMIN, 106));
+   else
+      display_msg(message_str(SCRIPT_BRAHMIN, 100));
+end
+
+procedure timed_event_p_proc begin
+   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
+   end
+   else if (fixed_param == EVENT_STAND_UP) then begin
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+         reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+      reg_anim_end();
+      critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
+   end
+   //flush_add_timer_event_sec(self_obj, random(6, 10), 1);
+
+   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized)) then begin
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
+   end
+
+   if (CUR_MAP_TALKCOW) then begin
+      if (random(0, 1)) then begin
+         call talk_p_proc;
+      end
+   end
+
+   flush_add_timer_event_sec(self_obj, random(3, 5), 1);
+end
+
 procedure talk_p_proc begin
-   if CUR_MAP_TALKCOW then begin
-      moo_counter := moo_counter + 1;
+   if (CUR_MAP_TALKCOW) then begin
+      moo_counter += 1;
       if (moo_counter > 2) then begin
          moo_counter := 0;
       end
@@ -81,29 +124,22 @@ procedure talk_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   variable Item := 0;
-   if ((obj_pid(obj_being_used_with) == PID_BEER)
-       or (obj_pid(obj_being_used_with) == PID_BOOZE)
-        or (obj_pid(obj_being_used_with) == PID_ROT_GUT)
-         or (obj_pid(obj_being_used_with) == PID_GAMMA_GULP_BEER)
-          or (obj_pid(obj_being_used_with) == PID_ROENTGEN_RUM)) then begin
-
+   variable item := 0;
+   if (is_alcohol(obj_being_used_with)) then begin
       script_overrides;
-      Item := obj_being_used_with;
+      item := obj_being_used_with;
       rm_obj_from_inven(source_obj, obj_being_used_with);
-      destroy_object(Item);
-      play_sfx("MABROMAQ");
-
-      reg_anim_clear(self_obj);
-      reg_anim_begin();
-      reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
-      reg_anim_animate(self_obj, ANIM_fall_back, 5);
-      reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
-      reg_anim_end();
-
-      critter_injure(self_obj, DAM_KNOCKED_DOWN);
-      critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-      critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+      destroy_object(item);
+      //play_sfx("MABROMAQ");
+      if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+            reg_anim_animate(self_obj, ANIM_hit_from_front, -1);
+            reg_anim_animate(self_obj, ANIM_fall_back, 5);
+            reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
+         reg_anim_end();
+         critter_injure(self_obj, DAM_KNOCKED_DOWN);
+      end
    end
 end
 
@@ -111,12 +147,7 @@ procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_SCIENCE) then begin
       script_overrides;
       if (CUR_MAP_TALKCOW) then begin
-         if (dude_skill_success(action_being_used, 0)) then begin
-            display_msg(message_str(SCRIPT_BRAHMIN, 108));
-         end
-         else begin
-            display_msg(message_str(SCRIPT_BRAHMIN, 107));
-         end
+         display_msg(message_str(SCRIPT_BRAHMIN, 107 + dude_skill_success(action_being_used, 0)));
       end
       else begin
          display_msg(message_str(SCRIPT_BRAHMIN, 101));
@@ -124,53 +155,16 @@ procedure use_skill_on_p_proc begin
    end
 end
 
-procedure timed_event_p_proc begin
-   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
-      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
-   end
-   else if (fixed_param == TIMER_STAND_UP) then begin
-      reg_anim_clear(self_obj);
-      reg_anim_begin();
-      reg_anim_animate_reverse(self_obj, ANIM_fall_back, -1);
-      reg_anim_end();
-      critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
-   end
-   //add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
-
-   if (((is_critter_prone(self_obj)) == 0) and not(combat_is_initialized)) then begin
-      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), 3));
-   end
-
-   if (CUR_MAP_TALKCOW) then begin
-      if (random(0, 1)) then begin
-         call talk_p_proc;
-      end
-   end
-
-   add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-end
-
-procedure description_p_proc begin
-   script_overrides;
-   if (CUR_MAP_TALKCOW) then
-      display_msg(message_str(SCRIPT_BRAHMIN, 106));
-   else
-      display_msg(message_str(SCRIPT_BRAHMIN, 100));
+procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   if obj_in_party(source_obj) then begin
-      if CUR_AREA_HUB then begin
+   if source_is_dude then begin
+      if CUR_AREA_HUB or CUR_MAP_HUBMIS0 then
          set_global_var(GVAR_ENEMY_HUB, 1);
-      end
-      else if CUR_AREA_JUNKTOWN then begin
+      else if CUR_AREA_JUNKTOWN then
          set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-      end
-      else if CUR_AREA_SHADY_SANDS then begin
+      else if CUR_AREA_SHADY_SANDS then
          set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-      end
    end
-end
-
-procedure damage_p_proc begin
 end
