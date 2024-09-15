@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.4, built for Fallout 2 v1.02 US
+version 4.4.5, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -53,6 +53,20 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.4.5
+>Fixed a bug introduced in 4.2.9 that caused game_loaded script function to always return 1 when called from normal scripts
+>Fixed a bug introduced in 4.4.4 that caused the information card for the hero appearance mod not to refresh properly
+>Fixed a crash bug in AutoSearchSFX when an ACM file has a name longer than 12 characters
+>Fixed an issue with sfall not resetting data properly after attempting to load a corrupted saved game
+>Fixed the inconsistent behavior of the escaped percent sign '%' in sprintf and string_format script functions
+>Fixed show/hide_iface_tag script functions to prevent unnecessary toggling of tags
+>Fixed using_skill script function returning garbage values when the arguments are not the player and Sneak skill
+>Added a fix for the engine not checking 'misc' type items when correcting data for items on maps
+>Added a fix to prevent the windows of Tag! and Mutate! perks from reappearing when there are still unused perks
+>Added a tweak to restore the player's sneak state when switching between maps
+>Added options to item highlighting mod to separately set the color of outlines for highlighted containers and corpses
+>New hook script: hs_buildsfxweapon
 
 v4.4.4
 >Fixed a bug in NPCsTryToSpendExtraAP that caused NPCs to still be able to move in their combat turn after they killed themselves
