@@ -1194,3 +1194,6 @@ end
          debug_msg("created out of business @ tile == " + tile + " / elevation == " + elev)
 #define create_north_out_of_business(x, e)            create_out_of_business(x, e, PID_OUT_OF_BUSINESS_NORTH)
 #define create_east_out_of_business(x, e)             create_out_of_business(x, e, PID_OUT_OF_BUSINESS_EAST)
+
+// late includes go here
+#include "party2.h"
