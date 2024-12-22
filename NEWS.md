@@ -14,4 +14,5 @@ Notable changes since last release ([v1.10.3504](https://github.com/rotators/Fo1
 - **Tweaked**: Deathclaw Spawn critters in caravan job encounters will look like small Deathclaws if Fo2 critters are enabled.
 - **Tweaked**: If Fo2 critters are enabled, new Deathclaws in the LA Rippers map will initially be Deathclaw Spawns. After a day, they turn into full grown Deathclaws.
 - **Tweaked**: If Sheriff Greene in the Hub gets knocked out/down in the Decker fight, he will stand up again once back in his office.
+- **Tweaked**: Players can no longer open out-of-bounds merchant boxes.
 - **Tweaked**: Reverted prices of Stimpak and Super Stimpak from Fo2 to the original Fo1 values.
