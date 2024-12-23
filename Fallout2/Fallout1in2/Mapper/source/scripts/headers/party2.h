@@ -8,7 +8,7 @@ procedure party_has_item(variable pid) begin
    foreach (who in party_member_list_critters) begin
       count += get_item_count(who, pid);
    end
-   return count;
+   return (count > 0);
 end
 
 procedure party_remove_item_pid(variable pid) begin

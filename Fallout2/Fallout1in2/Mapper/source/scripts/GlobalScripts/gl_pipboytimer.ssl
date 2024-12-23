@@ -27,6 +27,7 @@ procedure delete_all;
 
 variable Scr_Width;
 variable Scr_Height;
+variable opennote;
 
 #define timer_active       (not(waterchip_returned) and (global_var(GVAR_VAULT13_WATER_DAYS) > 0))
 
@@ -47,18 +48,20 @@ procedure start begin
 end
 
 procedure GameModeChange_handler begin
+   variable mode := get_game_mode;
+
    // Show the pipboy note if the remaining water timer is > 0 days:
-   if ((get_game_mode bwand PIPBOY) and (timer_active and get_water_days_left > 0)) then begin
-      if (get_sfall_global_int("opennote") != 1) then begin
-         set_sfall_global("opennote", 1);
+   if (mode bwand PIPBOY) then begin
+      if (not(opennote) and timer_active and get_water_days_left > 0) then begin
          call show_note;
       end
+      return;
    end
-   else if (get_sfall_global_int("opennote") != 0) then begin
-      set_sfall_global("opennote", 0);
+   else if (opennote) then begin
       call delete_all;
    end
-   else if (get_game_mode bwand WORLDMAP) then begin
+
+   if (mode bwand WORLDMAP) then begin
       // Only run the script on repeat of either water timer or invasions are still a thing.
       if (timer_active or not(cathedral_destroyed)) then
          set_global_script_repeat(10);
@@ -73,16 +76,15 @@ procedure GameModeChange_handler begin
 end
 
 procedure RestTimer_handler begin
-   if (get_game_mode bwand PIPBOY) then begin
-      if timer_active and (get_sfall_global_int("opennote") > 0) then begin
+   //if (get_game_mode bwand PIPBOY) then begin
+      if (opennote and timer_active) then begin
          call show_days;
          call check_watertimer;
       end
-      else if (get_sfall_global_int("opennote") != 0) then begin
-         set_sfall_global("opennote", 0);
+      else if (opennote) then begin
          call delete_all;
       end
-   end
+   //end
 end
 
 procedure check_watertimer begin
@@ -144,6 +146,7 @@ procedure check_invasions begin
 end
 
 procedure show_note begin
+   opennote := true;
    Scr_Width := (get_screen_width / 2);
    Scr_Height := (get_screen_height / 2);
 
@@ -175,5 +178,6 @@ procedure show_days begin
 end
 
 procedure delete_all begin
+   opennote := false;
    DeleteWin("win_note");
 end
