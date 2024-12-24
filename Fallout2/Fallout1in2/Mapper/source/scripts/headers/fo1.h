@@ -230,15 +230,19 @@ variable tma_gvar_array;
 /*********************************************************
     Game time Limits
 *********************************************************/
+#define GAME_TIME_IN_DAYS_X(time)           (time / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY))
+
 // GVAR_VAULT13_WATER_DAYS_COUNTER is set in the start procedure of OBJ_DUDE.
 // We need this to keep track of the correct time (start time is advanced randomly by a few hours).
 // Example: If we don't do this, the water time on the PipBoy note will not change at midnight, but in the morning.
 #define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY))
+#define get_days_passed_x(time)             (GAME_TIME_IN_DAYS_X(time) - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY))
 
 /*********************************************************
             Water Chip related:
 *********************************************************/
 #define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed)
+#define get_water_days_left_x(time)         (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed_x(time))
 #define inc_water_days(x)                   set_global_var(GVAR_VAULT13_WATER_DAYS, global_var(GVAR_VAULT13_WATER_DAYS) + x)
 #define dec_water_days(x)                   inc_water_days(-x)
 

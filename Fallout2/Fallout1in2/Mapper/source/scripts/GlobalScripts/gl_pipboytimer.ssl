@@ -9,7 +9,6 @@
 #include "define.h"
 #include "command.h"
 #include "sfall/sfall.h"
-#include "sfall/sfall.rotators.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -22,14 +21,17 @@ procedure check_invasions;
 
 procedure KeyPressHandler;
 procedure show_note;
-procedure show_days;
+procedure show_days(variable gameTime);
 procedure delete_all;
 
-variable Scr_Width;
-variable Scr_Height;
-variable opennote;
+#define PIP_FRM            (0x0600007F) // "PIP.frm" in intrface.lst
+#define PIP2_FRM           (0x06000080) // "PIP2.frm" in intrface.lst
+#define NotePosX           (32)
+#define NotePosY           (83)
 
 #define timer_active       (not(waterchip_returned) and (global_var(GVAR_VAULT13_WATER_DAYS) > 0))
+
+variable opennote, lastFrame;
 
 procedure start begin
    if (game_loaded) then begin
@@ -57,8 +59,8 @@ procedure GameModeChange_handler begin
       end
       return;
    end
-   else if (opennote) then begin
-      call delete_all;
+   else begin
+      opennote := false;
    end
 
    if (mode bwand WORLDMAP) then begin
@@ -78,7 +80,7 @@ end
 procedure RestTimer_handler begin
    //if (get_game_mode bwand PIPBOY) then begin
       if (opennote and timer_active) then begin
-         call show_days;
+         call show_days(get_sfall_arg);
          call check_watertimer;
       end
       else if (opennote) then begin
@@ -147,37 +149,33 @@ end
 
 procedure show_note begin
    opennote := true;
-   Scr_Width := (get_screen_width / 2);
-   Scr_Height := (get_screen_height / 2);
+   lastFrame := -1;
 
-   // If using original resolution for whatever weird reason
-   if ((get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE") == 1) or Scr_Height == 240) then begin
-      Scr_Height += 50;
-   end
+   interface_art_draw(0x1000000 + WINTYPE_PIPBOY, PIP2_FRM, NotePosX, NotePosY);
 
-   create_win("win_note", (Scr_Width - 288), (Scr_Height - 207), 148, 227);
-   SelectWin("win_note");
-   sfall_func("draw_image_scaled", "art\\intrface\\PIP2.frm");
-   ShowWin;
-
-   call show_days;
+   call show_days(0);
 end
 
 // Initial "days left" when opening the PipBoy:
-procedure show_days begin
+procedure show_days(variable gameTime) begin
    // We only have 250 images, so bigger than that can't be shown:
    // YES I KNOW THESE ARE 250 IMAGES, BUT IF YOU WANT IT TO LOOK EXACTLY
    // THE SAME AS IN FALLOUT 1, IT IS A NECESSARY THING TO DO. Sue me.
    // We will rework this shit some day in the future. Promise.
-   SelectWin("win_note");
-   if (get_water_days_left <= 250) then
-      draw_image("art\\INTRFACE\\days.frm", (get_water_days_left - 1), 35, 97, 0);
-   else
-      draw_image("art\\INTRFACE\\days.frm", 250, 35, 97, 0);
-   ShowWin;
+   if (gameTime == 0) then gameTime := game_time;
+
+   variable days_left = get_water_days_left_x(gameTime);
+   variable frame = days_left - 1;
+
+   if (days_left > 250) then frame := 250;
+   if (frame == lastFrame) then return;
+
+   interface_art_draw_frame(0x1000000 + WINTYPE_PIPBOY, "art\\intrface\\days.frm", NotePosX + 35, NotePosY + 97, frame);
+   lastFrame = frame;
 end
 
 procedure delete_all begin
    opennote := false;
-   DeleteWin("win_note");
+   // Overwrite the pipboy note with a cropped pipboy window image
+   interface_art_draw(WINTYPE_PIPBOY, "art\\intrface\\pip2a.frm", NotePosX, NotePosY);
 end
