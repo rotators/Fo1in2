@@ -46,6 +46,12 @@ procedure map_enter_p_proc begin
    call Initialize_Fridge;
 
    if (local_var(LVAR_Fridge_Lock) == LOCKED) then obj_lock(self_obj);
+
+   if obj_is_open(self_obj) then begin // fail-safe, if door was opened by Garret before
+      obj_unlock(self_obj);
+      set_local_var(LVAR_Fridge_Lock, UNLOCKED);
+      set_local_var(LVAR_Fridge_State, OPEN);
+   end
 end
 
 procedure map_update_p_proc begin
@@ -114,7 +120,10 @@ procedure Open_Fridge begin
       end
    end
    else begin
+
       if obj_is_open(self_obj) then begin // fail-safe, if door was opened by Garret before
+         obj_unlock(self_obj);
+         set_local_var(LVAR_Fridge_Lock, UNLOCKED);
          set_local_var(LVAR_Fridge_State, OPEN);
       end
 
