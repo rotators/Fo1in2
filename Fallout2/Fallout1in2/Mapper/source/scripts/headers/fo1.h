@@ -53,6 +53,7 @@
 #define fo1in2_expanded_wrecks_enabled  (global_var(GVAR_ENABLE_EXPANDED_WRECKS) > 0)
 #define fo1in2_fo2_hitchance_enabled    (global_var(GVAR_ENABLE_FO2_HITCHANCE) > 0)
 #define fo1in2_fixt_chess_enabled       (global_var(GVAR_ENABLE_FIXT_CHESS) > 0)
+#define fo1in2_party_leveling_enabled   (global_var(GVAR_ENABLE_PARTY_LEVELING) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
