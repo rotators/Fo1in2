@@ -187,7 +187,7 @@
 #define PID_MEAN_PIG_RAT                  (16777393)
 #define PID_FARMER_4                      (16777394)
 #define PID_WORKER_3                      (16777395)
-#define PID_MERCHANT_6                    (16777396)
+#define PID_MERCHANT_6                    (16777396) // Merchant PID that spawns with carvlead script in towns 
 #define PID_GUARD_4                       (16777397)
 #define PID_GLOWER                        (16777398)
 #define PID_MAD_GLOWING_ONE               (16777399)
