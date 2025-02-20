@@ -111,7 +111,7 @@ FUNCTION REFERENCE
 -----
 ##### `void inc_npc_level(int pid/string name)`
 - Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party.
-- This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** setting.
+- This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** or **PartyMemberNonRandomLevelUp** setting.
 
 -----
 ##### `int get_npc_level(int pid/string name)`
@@ -1090,7 +1090,7 @@ sfall_funcX metarule functions
 ##### set_spray_settings
 `void sfall_func4("set_spray_settings", int centerMult, int centerDiv, int targetMult, int targetDiv)`
 
-- Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (**ComputeSpray_\*** settings in **ddraw.ini**) after each attack action
+- Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (i.e. **ComputeSpray_\*** settings in **ddraw.ini**) after each attack action
 - Should be called before the calculation of the bullet distribution (e.g. in `HOOK_TOHIT` or `HOOK_AMMOCOST`)
 - `centerDiv/targetDiv`: the minimum value of divisor is 1
 - `centerMult/targetMult`: multiplier values are capped at divisor values
