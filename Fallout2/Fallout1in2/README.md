@@ -74,12 +74,6 @@ ADDITIONAL CONTENT
 
 While most optional content is a part of the mod core, and can be toggled on and off by editing the [config/fo1_settings.ini](config/fo1_settings.ini), there are a few mini-mods - separated from main codebase - included as well.
 
-### Classic worldmap ###
-[mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
-
-Enabled by default.
-Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
-
 ### Carry Weight Indicator  ###
 [mods/ShowLootWeight](mods/ShowLootWeight)
 
