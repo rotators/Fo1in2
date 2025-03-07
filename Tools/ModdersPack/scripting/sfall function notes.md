@@ -5,8 +5,7 @@ As well as the new functions, sfall also adds global scripts. These run independ
 
 To use a global script, the script must have a name which begins with `gl` and contains a procedure called `start`, `map_enter_p_proc`, `map_exit_p_proc`, or `map_update_p_proc`. The `start` procedure will be executed once when the player loads a saved game or starts a new game. The `map_*_p_proc` procedures will be executed once when a map is being entered/left/updated. If you wish the script to be executed repeatedly, call `set_global_script_repeat` on the first run of the `start` procedure using the number of frames between each run as the argument (0 disables the script, 1 runs it every frame, 2 runs it every other frame, etc.).
 
-Global scripts have multiple modes, which can be set using the `set_global_script_type` function. In the default mode (i.e. mode 0) their execution is linked to the local map game loop, so the script will not run in dialogs or on the world map. In mode 1 their execution is linked to the player input, and so they will run whenever the mouse cursor is visible on screen, including the world map, character dialogs, etc. In mode 2, execution is linked to the world map loop, so the script will only be executed on the world map and not on the local map or in any dialog windows. Mode 3 is a combination of modes 0 and 2, so scripts will be executed on both local maps and the world map, but not in dialog windows.\
-_Using mode 1 requires the input wrapper to be enabled. Use available_global_script_types to check what is available._ - **Obsolete**.
+Global scripts have multiple modes, which can be set using the `set_global_script_type` function. In the default mode (i.e. mode 0) their execution is linked to the local map game loop, so the script will not run in dialogs or on the world map. In mode 1 their execution is linked to the player input, and so they will run whenever the mouse cursor is visible on screen, including the world map, character dialogs, etc. In mode 2, execution is linked to the world map loop, so the script will only be executed on the world map and not on the local map or in any dialog windows. Mode 3 is a combination of modes 0 and 2, so scripts will be executed on both local maps and the world map, but not in dialog windows.
 
 
 ----------------------
@@ -23,8 +22,6 @@ None of `write_xxx` and `call_offset_xx` functions will work unless **AllowUnsaf
 The `get_pc_base_stat`, `set_pc_base_stat`, `get_pc_extra_stat` and `set_pc_extra_stat` functions are equivalent to calling `get_critter_base_stat`, `set_critter_base_stat`, `get_critter_extra_stat` and `set_critter_extra_stat` with `dude_obj` as the critter pointer. None of these stat functions take perks into account, and neither do they do range clamping to make sure the stats are valid. Use the normal `get_critter_stat` function to get a correctly perk adjusted and range clamped value for a stat.
 
 The `set_stat_min` and `set_stat_max` functions can be used to set the valid ranges on stats. Values returned by `get_current_stat` will be clamped to this range. The `set_pc_stat_*` functions only affect the player, the `set_npc_stat_*` functions only affect other critters, and the `set_stat_*` functions affect both.
-
-The input functions are only available if the user has the input hook turned on in **ddraw.ini**. Use `input_funcs_available` to check.
 
 The graphics functions are only available if the user is using graphics mode 4 or 5. Use `graphics_funcs_available` to check; it returns 1 if you can use them or 0 if you can't. Calling graphics functions when `graphics_funcs_available` returns 0 will do nothing.
 
@@ -62,8 +59,6 @@ The `get_critical_table`, `set_critical_table` and `reset_critical_table` are us
 
 The `get_unspent_ap_bonus` and `set_unspent_ap_bonus` alter the AC bonus you receive per unused action point at the end of your turn in combat. To allow for fractional values, the value given if divided by 4. (Hence the default value is 4 and not 1.) The `get_unspent_ap_perk_bonus` and `set_unspent_ap_perk_bonus` are similar, but affect the extra AC granted by the HtH Evade perk. (The default value of this is also 4, equivalent to doubling the original bonus.)
 
-The `nb_*` functions are reserved for the brotherhood tactical training mod, and should be avoided.
-
 The `fs_*` functions are used to manipulate a virtual file system. Files saved here should have paths relative to the data folder, and use backslashes as the directory separator. They will take precedence over files stored in the normal data folder. They will also be saved into save games if you set a flag for them using `fs_resize(fileId, -1)`, so be avoid creating large files. Using `fs_copy` followed by `fs_read_xxx`, you can read the contents of existing files.
 
 The `get_proto_data` and `set_proto_data` are used to manipulate the in memory copies of the **.pro** files Fallout makes when they are loaded. The offset refers to the offset in memory from the start of the proto to the element you are reading. Changes are not stored on disc, and are not permanent. If you modify the protos, and then Fallout subsequently reloads the file your changes will be lost.
@@ -71,7 +66,7 @@ The `get_proto_data` and `set_proto_data` are used to manipulate the in memory c
 The `list_xxx` functions can be used to loop over all items on a map. `list_begin` takes an argument telling sfall what you want to list (defined in **sfall.h**). It returns a list pointer, which you iterate through with `list_next`. Finally, when you've finished with the list use `list_end` on it. Not calling `list_end` will result in a memory leak. Alternatively, use `list_as_array` to get the whole list at once as a temp array variable, which can be looped over using `len_array` and which you don't need to remember to free afterwards.
 
 The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an ID which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. These functions do not require **AllowDShowSound** to be set to 1 in **ddraw.ini**.
-Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, You need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
+Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, you need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
 
 Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad ID or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.\
 __NOTE:__ refer to **arrays.md** for detailed description of the array behavior and function usage.
@@ -79,6 +74,17 @@ __NOTE:__ refer to **arrays.md** for detailed description of the array behavior 
 The `force_aimed_shots` and `disable_aimed_shots` allow overriding the normal rules regarding which weapons are allowed to make aimed attacks. (e.g. weapons that cause explosive damage normally cannot normally make aimed shots.) `force_aimed_shots` will allow a weapon to make aimed shots even if it normally couldn't, and `disable_aimed_shots` stops a weapon from making aimed shots even if it normally could. Both of these functions affect player and NPCs alike. `force_aimed_shots` does not override the effects of the fast shot trait. The list of edited weapons is not saved over game loads, so you need to call the functions once at each reload. Use a pid of 0 to represent unarmed.
 
 The `get_critter_skill_points` and `set_critter_skill_points` will get or set the number of additional points a critter has in a skill, on top of whatever they have from their stats and other bonuses. Note that skill points are part of the proto, so calling `set_skill_points` on a critter will affect all critters that share the same proto.
+
+
+--------------------
+DEPRECATED FUNCTIONS
+--------------------
+
+Using global scripts in mode 1 requires the input wrapper to be enabled. Use `available_global_script_types` to check what is available.
+
+The input functions are only available if the user has the input hook turned on in **ddraw.ini**. Use `input_funcs_available` to check.
+
+The `nb_create_char` function is reserved for the brotherhood tactical training mod, and should be avoided.
 
 
 ---------------
@@ -106,7 +112,9 @@ FUNCTION REFERENCE
 
 -----
 ##### `void set_pipboy_available(int available)`
-- Sets the availability of the pipboy in the game. Use 0 to disable the pipboy, and 1 or 2 to enable it (value 2 does not mark the `VSUIT_MOVIE` movie as "played").
+- Sets the availability of the pipboy in the game. Use 0 to disable the pipboy, and 1 or 2 to enable it (value 2 does not change the player's default appearance).
+- The availability state will be reset each time the player reloads the game.
+- __NOTE:__ Starting from sfall 4.4.6/3.8.46, value 1 no longer marks the `VSUIT_MOVIE` movie as "played". Use `mark_movie_played(VSUIT_MOVIE)` instead if you want the old behavior.
 
 -----
 ##### `void inc_npc_level(int pid/string name)`
