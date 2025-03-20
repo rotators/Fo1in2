@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.5.1, built for Fallout 2 v1.02 US
+version 4.4.6, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -54,6 +54,26 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ** Changelog **
 ***************
 
+v4.4.6
+>Fixed a bug introduced in 4.3.1 that broke the debug message about a missing critter art file
+>Fixed an issue where an item with a unique ID in the inventory had its ID reset by a non-unique item
+>Restored the position of the ammo bar when ALTERNATE_AMMO_METRE=0 in f2_res.ini
+>Improved the fix for the display issue in the pipboy when the automap list is too long
+>Improved the compatibility mode check for newer Windows
+>Changed PipBoyAvailableAtGameStart option and set_pipboy_available script function to no longer modify the vault suit movie state
+>Added a fix for the main menu music not stopping when replaying the intro
+>Added a fix for display issues when highlighting a multiline dialogue option
+>Added a fix for the incorrect message being displayed when attempting to repair a dead robot
+>Added a fix for the double click sound when selecting a location in the Status section of the pipboy
+>Added a fix for extra hidden buttons below the location list in the Status section of the pipboy
+>Added a fix for map lighting from Night Vision perk not updating when loading a saved game
+>Added a fix for an animation glitch when death animations and combat start simultaneously
+>Added a fix to prevent the game from hanging when reloading a weapon overloaded with ammo via the interface bar
+>Added a few fixes for issues related to weapons with negative ammo
+>Added a tweak to replace death animations on critters with single-frame variants on map load
+>Added more options for tweaking some engine perks to the perks ini file
+>Reduced the green tone of the message window on the interface bar for text clarity
+
 v4.4.5.1
 >HRP: Fixed the behavior of IFACE_BAR_WIDTH for a modified fallout2.exe with Chinese/Japanese support
 >Fixed a bug in XPTable that caused leveling issues with Here and Now perk
@@ -63,7 +83,7 @@ v4.4.5
 >Fixed a bug introduced in 4.2.9 that caused game_loaded script function to always return 1 when called from normal scripts
 >Fixed a bug introduced in 4.4.4 that caused the information card for the hero appearance mod not to refresh properly
 >Fixed a crash bug in AutoSearchSFX when an ACM file has a name longer than 12 characters
->Fixed an issue with sfall not resetting data properly after attempting to load a corrupted saved game
+>Fixed an issue where sfall did not reset data properly after attempting to load a corrupted saved game
 >Fixed the inconsistent behavior of the escaped percent sign '%' in sprintf and string_format script functions
 >Fixed show/hide_iface_tag script functions to prevent unnecessary toggling of tags
 >Fixed using_skill script function returning garbage values when the arguments are not the player and Sneak skill
@@ -214,7 +234,7 @@ v4.3.6
 >New script function: get_terrain_name
 
 v4.3.5
->HRP: Fixed movie subtitles not showing up when setting MOVIE_SIZE=1 with certain combinations of screen and movie aspect ratios
+>HRP: Fixed movie subtitles not showing up when MOVIE_SIZE=1 with certain combinations of screen and movie aspect ratios
 >HRP: Disabled IFACE_BAR_WIDTH and SCALE_BUTTONS_AND_TEXT_MENU for a modified fallout2.exe with Chinese/Japanese support to prevent garbled text
 >HRP: Added support for SPLASH_SCRN_TIME option in f2_res.ini
 >Fixed the handling of obsolete script functions that are still recognized by script compiler and decompiler
@@ -236,7 +256,7 @@ v4.3.4
 v4.3.3.1
 >HRP: Fixed a possible crash in combat when enabling EXTRA_WIN_MSG_CHECKS
 >HRP: Fixed broke console messages when enabling ConsoleOutputPath
->HRP: Fixed the main menu still being stretched when setting MAIN_MENU_SIZE=0
+>HRP: Fixed the main menu still being stretched when MAIN_MENU_SIZE=0
 >Fixed a bug introduced in 4.3.1 that caused the game to print an incorrect item name in some cases
 >Fixed screenshots for DX9 graphics modes. Now the screenshots are saved in PNG format when in DX9 mode
 >Improved the functionality of AllowDShowMovies. Now you can take screenshots and press any key to skip AVI movies
@@ -341,7 +361,7 @@ v4.3
 >Added a fix to prevent the player name from being displayed at the bottom of the dialog review window when the text is longer than one screen
 >Added a fix for the in-game quest list not being in the same order as in quests.txt
 >Added a fix for multihex critters hitting themselves when they miss an attack with ranged weapons
->Added a fix to the placement of multihex critters in the player's party when entering a map or elevation
+>Added a fix for the placement of multihex critters in the player's party when entering a map or elevation
 >Added a fix to the starting position of the player's marker on the world map when starting a new game
 >Added a fix for AI not checking the safety of weapons based on the selected attack mode
 >Added a fix for the incorrect check and AP cost when AI reloads a weapon
@@ -434,7 +454,7 @@ v4.2.7
 >Fixed the default values for Movie1 - Movie17 options
 >Fixed the playback of additional movies defined in Movie18 - Movie32 options
 >Fixed OverrideMusicDir=2 not overriding the music path properly
->Fixed incorrect Melee Damage stat value being displayed when setting BonusHtHDamageFix=1 and DisplayBonusDamage=0
+>Fixed incorrect Melee Damage stat value being displayed when BonusHtHDamageFix=1 and DisplayBonusDamage=0
 >Fixed attack_complex script function not setting result flags correctly for the attacker and the target
 >Fixed and improved SFX and speech playback for alternative sound files
 >Fixed and improved the behavior of nested timer events in global scripts
@@ -738,7 +758,7 @@ v4.1.6
 >Added a fix for the reserved item FRM being displayed in the top-left corner when in the loot/barter screens
 >Added a fix for the active effects of drugs not being saved properly
 >Added a fix for NPC stuck in a loop of reloading melee/unarmed weapons when out of ammo
->Added a fix for critters not being healed over time when entering the map if 'dead_bodies_age=No' is set in maps.txt
+>Added a fix for critters not being healed over time when entering a map with 'dead_bodies_age=No' set in maps.txt
 >Added a fix for corpses being removed early after returning to the map
 >Added a fix for the removal of party member's corpse. Now items in party member's inventory are not removed along with the corpse
 >Added an option to change the timer for deleting corpses on a map after you leave
@@ -861,7 +881,7 @@ v4.1
 Original engine bug fixes and various features based on the work by Mr.Stalin:
 >Implemented a code injection system for game hooks. In previous versions, the code of game hooks was always executed even if there was no corresponding hook script. Now the code of a game hook is only injected into the game when the corresponding hook script exists
 >Code refactoring for some hook scripts
->Fixed an issue with file IDs of additional game msg files being shifted when a file in ExtraGameMsgFileList is missing
+>Fixed an issue where the file IDs of additional game msg files were shifted when a file in ExtraGameMsgFileList was missing
 >Fixed obj_can_see_obj script function not checking if source and target objects are on the same elevation before calling HOOK_WITHINPERCEPTION hook script
 >Improved the functionality of ExtraGameMsgFileList to allow manually assigning numbers to specific msg files
 >Improved the functionality of HOOK_AMMOCOST hook script when CheckWeaponAmmoCost is enabled
@@ -941,7 +961,7 @@ v4.0.1
 v4.0
 >The build environment is now Visual Studio 2015, and Win XP SP2 and Win 2000 are no longer supported
 >Extensive code reorganizing/rewrite was made in the effort to tidy up sfall code base accumulated over the years and make it easier to read, understand, and extend. Main code was split into separate 'modules'. Code for interacting with Fallout 2 engine was moved and expanded to allow for engine manipulations without using too much Assembly code
->Fixed an issue with the game being rendered before the hero appearance mod is loaded
+>Fixed an issue where the game was rendered before the hero appearance mod was loaded
 >Item highlighting mod is moved from sfall into a separate script (gl_highlighting.int) and extended with new options
 >NPC combat control mod is moved from sfall into a separate script (gl_partycontrol.int)
 >Related options of item highlighting and NPC combat control mods were moved from ddraw.ini into a separate sfall-mods.ini
