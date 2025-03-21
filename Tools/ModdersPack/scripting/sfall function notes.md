@@ -107,30 +107,30 @@ Data types mentioned in this document:
 FUNCTION REFERENCE
 ------------------
 
-##### `int game_loaded()`
+#### `int game_loaded()`
 - Returns 1 the first time it is called after a new game or game load, and 0 any time after. It works on an individual basis for each script, so one script wont interfere with others. Its primary use is for global scripts, so that they know when to call `set_global_script_repeat`, but it can be called from normal scripts too.
 
 -----
-##### `void set_pipboy_available(int available)`
+#### `void set_pipboy_available(int available)`
 - Sets the availability of the pipboy in the game. Use 0 to disable the pipboy, and 1 or 2 to enable it (value 2 does not change the player's default appearance).
 - The availability state will be reset each time the player reloads the game.
 - __NOTE:__ Starting from sfall 4.4.6/3.8.46, value 1 no longer marks the `VSUIT_MOVIE` movie as "played". Use `mark_movie_played(VSUIT_MOVIE)` instead if you want the old behavior.
 
 -----
-##### `void inc_npc_level(int pid/string name)`
+#### `void inc_npc_level(int pid/string name)`
 - Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party.
 - This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** or **PartyMemberNonRandomLevelUp** setting.
 
 -----
-##### `int get_npc_level(int pid/string name)`
+#### `int get_npc_level(int pid/string name)`
 - Also takes the party member PID or NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument, and returns the NPC's current level. Again, the NPC needs to be in your party.
 
 -----
-##### `void set_car_current_town(int town)`
+#### `void set_car_current_town(int town)`
 - Changes the current town index for the player's car.
 
 -----
-##### `int get_ini_setting(string setting)`
+#### `int get_ini_setting(string setting)`
 - Reads an integer value from an ini file in the Fallout directory.
 - It only takes a single argument; seperate the file name, section and key with a `|` character, e.g. `myvar := get_ini_setting("myini.ini|mysec|var1")`.
 - If the file or key cannot be found or the setting argument is in an invalid format, it returns -1.
@@ -139,64 +139,64 @@ FUNCTION REFERENCE
 - It can also be used to get sfall settings by using **ddraw.ini** as the file name.
 
 -----
-##### `string get_ini_string(string setting)`
+#### `string get_ini_string(string setting)`
 - Reads a string value from an ini file in the Fallout directory.
 - If the file or key cannot be found, it returns an empty string.
 - If the setting argument is in an invalid format, it returns -1 (integer).
 
 -----
-##### `int get_game_mode()`
+#### `int get_game_mode()`
 - Is a more flexible version of `in_world_map`. It will return a set of flags indicating which mode the game is currently in.
 - These flags are the same as those used in the `set_shader_mode` function.
 
 -----
-##### `int get_uptime()`
+#### `int get_uptime()`
 - Is just a wrapper around the windows `GetTickCount()` function. It's useful for making time fade effects in shaders, since they already have access to the current tick count.
 
 -----
-##### `bool in_world_map()`
+#### `bool in_world_map()`
 - Returns 1 if the player is looking at the world map, or 0 at any other time.
 - Obviously this is only useful in global scripts, since normal scripts will never get the chance to run on the world map.
 
 -----
-##### `void force_encounter(int map)`
+#### `void force_encounter(int map)`
 - Can be called either from a global script while traveling on the world map, or from a normal script while on a local map.
 - In either case the encounter occurs shortly after the next time the player moves on the world map.
 - The player will not get an outdoorsman skill check.
 
 -----
-##### `void force_encounter_with_flags(int map, int flags)`
+#### `void force_encounter_with_flags(int map, int flags)`
 - Does the same thing as `force_encounter`, but allows the specification of some extra options (see **sfall.h** for available flags).
 - Forcing a random encounter on a map that is not normally used for random encounters may cause the player to lose the car, if they have it.
 - In this case use `force_encounter_with_flags` with the `ENCOUNTER_FLAG_NO_CAR` flag set.
 
 -----
-##### `int get_light_level()`
+#### `int get_light_level()`
 - Ambient light level in range 0..65536
 - The value returned by `get_light_level` may not exactly match that set by `set_light_level`, as `set_light_level` applies modifiers from the night vision perk.
 
 -----
-##### `void set_map_time_multi(float multi)`
+#### `void set_map_time_multi(float multi)`
 - Adjusts how fast time passes while you're on the world map. It takes a single float as an argument, where 1 is the normal speed.
 - This function works in addition to the **WorldMapTimeMod** setting in **ddraw.ini** and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of pathfinder would result in time passing at 25% the normal speed on the world map.
 
 -----
-##### `void remove_script(object obj)`
+#### `void remove_script(object obj)`
 - Accepts a pointer to an object and will remove the script from that object.
 
 -----
-##### `void set_script(object obj, int scriptID)`
+#### `void set_script(object obj, int scriptID)`
 - Accepts a pointer to an object and **scriptID**, and applies the given script to an object (scriptID accepts the same values as `create_object_sid`)
 - If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided.
 - If you add `0x80000000` to the SID when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
 
 -----
-##### `int get_script(object obj)`
+#### `int get_script(object obj)`
 - Accepts a pointer to an object and returns its scriptID (line number in **scripts.lst**), or 0 if the object is unscripted.
 - Returns -1 on argument error.
 
 -----
-##### `void set_self(object setObj)`
+#### `void set_self(object setObj)`
 - Overrides the script's `self_obj` for the next function call.
 - It is primarily used to allow the calling of functions which take an implicit `self_obj` parameter (e.g. `drop_obj`) from global scripts, but it can also be used from normal scripts.
 - `self_obj` will be reverted to its original value after the next function call.
@@ -205,13 +205,13 @@ FUNCTION REFERENCE
 - __NOTE:__ for `use_obj` and `use_obj_on_obj` vanilla functions to work correctly, it is required to call `set_self` twice. You can also access the local variables in the script of an object after calling `set_self` twice.
 
 -----
-##### `void mod_skill_points_per_level(int x)`
+#### `void mod_skill_points_per_level(int x)`
 - Accepts a value of between -100 and 100, and modifies the number of skill points the player receives when they level up.
 - This is a modification of what would otherwise happen, rather than a replacement.
 - The value is not saved into the save game, so should be reset in the `game_loaded` section of a script.
 
 -----
-##### `void set_perk_freq(int x)`
+#### `void set_perk_freq(int x)`
 - Sets the number of levels between each perk.
 - Setting 0 will reset it back to the default.
 - This overrides the effects of the skilled trait.
@@ -219,201 +219,201 @@ FUNCTION REFERENCE
 - Be careful not to let the player obtain a perk when no perks are available to pick, or the game may crash.
 
 -----
-##### `object get_last_target(object critter)`
+#### `object get_last_target(object critter)`
 - Will return the last critter to be deliberately attacked.
 
 -----
-##### `object get_last_attacker(object critter)`
+#### `object get_last_attacker(object critter)`
 - Will return the last critter to deliberately launch an attack against the argument critter.
 - If a critter has not launched/received an attack, it will return 0. This is only stored for the duration of combat, and outside of combat both functions will always return 0.
 
 -----
-##### `void set_base_pickpocket_mod(int max, int mod)`
+#### `void set_base_pickpocket_mod(int max, int mod)`
 - Changes maximum chance of success and chance mod for each steal attempt.
 - `max` will replace 95% success chance cap (so you can set 100% maximum chance, for instance).
 - `mod` will add this much percent to each success chance. For example, if your chance is 50% and `mod` is 20, you will get 70% actual success rate.
 
 -----
-##### `void set_critter_pickpocket_mod(object critter, int max, int mod)`
+#### `void set_critter_pickpocket_mod(object critter, int max, int mod)`
 - The same as above, but applies only to specific critter.
 
 -----
-##### `int get_tile_fid(int tileData)`
+#### `int get_tile_fid(int tileData)`
 - Returns FID information about the square under the given tile at elevation 0.
 - Pass elevation as 4-bit number in bits 25-28 to access other elevations.
 - Pass result mode in bits 29-32: 0 - ground FID, 1 - roof FID, 2 - raw data. Following macros are available in **sfall.h**:
 
 -----
-##### `int get_tile_ground_fid(int tileNum, int elevation)`
+#### `int get_tile_ground_fid(int tileNum, int elevation)`
 - Returns FID of a ground tile at given tile number and elevation.
 
 -----
-##### `int get_tile_roof_fid(int tileNum, int elevation)`
+#### `int get_tile_roof_fid(int tileNum, int elevation)`
 - Returns FID of a roof tile at given tile number and elevation. Note that FID of 1 is used when there is no actual roof.
 
 -----
-##### `void reg_anim_combat_check(int enable)`
+#### `void reg_anim_combat_check(int enable)`
 - Allows enabling all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin() ... reg_anim_end()` code block.
 
 **Some additional `reg_anim_*` functions were introduced. They all work in the same convention as vanilla functions and use the same underlying code.**
 
-##### `void reg_anim_destroy(object obj)`
+#### `void reg_anim_destroy(object obj)`
 - Given object is destroyed at the end of current animation set.
 
 -----
-##### `void reg_anim_animate_and_hide(object obj, int animID, int delay)`
+#### `void reg_anim_animate_and_hide(object obj, int animID, int delay)`
 - Works exactly like `reg_anim_animate` but the object will automatically disappear after the last animation frame (but not destroyed).
 - `delay`: delay from the previous animation. A value of -1 will execute the specified animation immediately after the previous one in the sequence ends.
 
 -----
-##### `void reg_anim_light(object obj, int light, int delay)`
+#### `void reg_anim_light(object obj, int light, int delay)`
 - Change light of any object. light argument is a light radius (0-8), but you can use highest 2 bytes to pass light intensity as well (example: `0xFFFF0008` - intensity 65535 and radius 8). If highest 2 bytes are 0, intensity will not be changed. Intensity range is from 0 to 65535 (0xFFFF).
 
 -----
-##### `void reg_anim_change_fid(object obj, int fid, int delay)`
+#### `void reg_anim_change_fid(object obj, int fid, int delay)`
 - Should work like `art_change_fid_num` but in `reg_anim` sequence.
 
 -----
-##### `void reg_anim_take_out(object obj, holdFrameID, int delay)`
+#### `void reg_anim_take_out(object obj, holdFrameID, int delay)`
 - Plays "take out weapon" animation for given **holdFrameID**. It is not required to have such weapon in critter's inventory.
 
 -----
-##### `void reg_anim_turn_towards(object obj, int/object tile/target, int delay)`
+#### `void reg_anim_turn_towards(object obj, int/object tile/target, int delay)`
 - Makes object change its direction to face given tile number or target object.
 
 -----
-##### `void reg_anim_callback(procedure proc)`
+#### `void reg_anim_callback(procedure proc)`
 - Adds the given procedure to an animation sequence-list and executes it in the registered sequence.
 
 -----
-##### `int/array metarule2_explosions(int arg1, int arg2, int arg3)`
+#### `int/array metarule2_explosions(int arg1, int arg2, int arg3)`
 - Was made as a quick-and-dirty hack to enable dynamic changes to some explosion parameters for ranged attacks. All changed parameters are automatically reset to vanilla state after each attack action. Following macros are available in **sfall.h**:
 
 -----
-##### `void set_attack_explosion_pattern(int x, int y)`
+#### `void set_attack_explosion_pattern(int x, int y)`
 - Currently `y` is not used and `x` means: 1 - reduced explosion pattern (3 effects are spawned instead of 7), 0 - full pattern.
 
 -----
-##### `void set_attack_explosion_art(int x, int y)`
+#### `void set_attack_explosion_art(int x, int y)`
 - `y` is not used and `x` is a misc frame ID (last 3 bytes, without object type) to use for the next explosion.
 
 -----
-##### `void set_attack_explosion_radius(int x)`
+#### `void set_attack_explosion_radius(int x)`
 - Changes radius at which explosion will hit secondary targets for the next attack (from the experiments it is limited to something around 8 by the engine)
 
 -----
-##### `void set_attack_is_explosion_fire`
+#### `void set_attack_is_explosion_fire`
 - If you call this right before using a weapon with fire damage type (e.g. in `HOOK_AFTERHITROLL`), it will produce explosion effects (and radius damage) just like "explosion" type, but all targets will still receive fire damage.
 
 -----
-##### `void set_explosion_radius(int grenade, int rocket)`
+#### `void set_explosion_radius(int grenade, int rocket)`
 - Sets a permanent radius of the explosion for grenades and/or rockets. Passing 0 means not changing the corresponding radius.
 - Changed radius will be reset each time the player reloads the game.
 
 -----
-##### `array get_explosion_damage(int itemPid)`
+#### `array get_explosion_damage(int itemPid)`
 - Returns an array of the minimum and maximum damage of the explosive item.
 
 -----
-##### `void set_dynamite_damage(int minDmg, int maxDmg)`
+#### `void set_dynamite_damage(int minDmg, int maxDmg)`
 - Sets the minimum and maximum damage for Dynamite.
 - Changed damage will be reset each time the player reloads the game.
 
 -----
-##### `void set_plastic_damage(int minDmg, int maxDmg)`
+#### `void set_plastic_damage(int minDmg, int maxDmg)`
 - Sets the minimum and maximum damage for Plastic Explosives.
 - Changed damage will be reset each time the player reloads the game.
 
 -----
-##### `void set_explosion_max_targets(int x)`
+#### `void set_explosion_max_targets(int x)`
 - Sets the maximum number of additional targets for an explosion, valid range: 1..6 (default is 6)
 
 ---
 ### Some utility/math functions are available:
 
-##### `array string_split(string text, string split)`
+#### `array string_split(string text, string split)`
 - Takes a string and a separator, searches the string for all instances of the separator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the separator, the string is split into individual characters.
 - You can use this to search for a substring in a string like this: `strlen(get_array(string_split(haystack, needle), 0))`
 
 -----
-##### `string substr(string text, int start, int length)`
+#### `string substr(string text, int start, int length)`
 - Cuts a substring from a string starting at `start` up to `length` characters. The first character position is 0 (zero).
 - If `start` is negative - it indicates a position starting from the end of the string (for example, `substr("test", -2, 2)` will return last 2 charactes: "st").
 - If `length` is negative - it means so many characters will be omitted from the end of string (example: `substr("test", 0, -2)` will return string without last 2 characters: "te").
 - If `length` is zero - it will return a string from the starting position to the end of the string (**new behavior** since sfall 4.2.2/3.8.22).
 
 -----
-##### `int strlen(string text)`
+#### `int strlen(string text)`
 - Returns string length.
 
 -----
-##### `string sprintf(string format, any value)`
+#### `string sprintf(string format, any value)`
 - Formats given value using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting only 1 value.
 - Can be used to get character by ASCII code (`%c`).
 
 -----
-##### `int typeof(any value)`
+#### `int typeof(any value)`
 - Returns type of the given value: `VALTYPE_INT`, `VALTYPE_FLOAT` or `VALTYPE_STR`.
 
 -----
-##### `int charcode(string text)`
+#### `int charcode(string text)`
 - Returns ASCII code for the first character in given string.
 
 -----
-##### `div` operator (unsigned integer division)
+#### `div` operator (unsigned integer division)
 - Use as a division operator, like `3 + (20 div 5)`
 - If both dividend and divisor are integers, they will be treated as unsigned integers.
 - If one of them is a float, div will perform the signed division just like vanilla division operator.
 
 -----
-##### `^` operator (exponentiation)
+#### `^` operator (exponentiation)
 - Use as any other arithmetic operator, like `5 ^ (1 / 3)`
 - If exponent is an integer, you can use a negative base, otherwise you will get `NaN` with a negative base.
 - If both arguments are integers, the result will be an integer.
 
 -----
-##### `float log(float x)`
+#### `float log(float x)`
 - Natural logarithm of `x`.
 
 -----
-##### `float exponent(float x)`
+#### `float exponent(float x)`
 - `e ^ x`
 
 -----
-##### `int ceil(float x)`
+#### `int ceil(float x)`
 - Round `x` to the nearest integer that is not less than `x`.
 
 -----
-##### `int round(float x)`
+#### `int round(float x)`
 - Round `x` to the nearest integer.
 
 -----
-##### `float sqrt(float x)`
+#### `float sqrt(float x)`
 - Square root of `x`.
 
 -----
-##### `int/float abs(int/float x)`
+#### `int/float abs(int/float x)`
 - Absolute (positive) value of `x`.
 
 -----
-##### `float sin(float x)`
+#### `float sin(float x)`
 - Sine of `x`.
 
 -----
-##### `float cos(float x)`
+#### `float cos(float x)`
 - Cosine of `x`.
 
 -----
-##### `float tan(float x)`
+#### `float tan(float x)`
 - Tangent of `x`.
 
 -----
-##### `float arctan(float x, float y)`
+#### `float arctan(float x, float y)`
 - Arctangent of `x`.
 - Just pass 1 as `y` (don't ask...)
 
 -----
-##### `void register_hook_proc(int hookID, procedure proc)`
+#### `void register_hook_proc(int hookID, procedure proc)`
 - Works just like `register_hook`, but allows to specify which procedure to use for given hook script (instead of `start`).
 - Use zero (0) as second argument to unregister hook script from current global script.
 - Only use in global scripts.
@@ -421,67 +421,67 @@ FUNCTION REFERENCE
 - See **hookscripts.md** for more details.
 
 -----
-##### `void register_hook_proc_spec(int hookID, procedure proc)`
+#### `void register_hook_proc_spec(int hookID, procedure proc)`
 - Works just like `register_hook_proc`, but allows to register a script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script).
 - To unregister hook script from current global script, use the `register_hook_proc` function.
 
 -----
-##### `string message_str_game(int fileId, int messageId)`
+#### `string message_str_game(int fileId, int messageId)`
 - Works exactly the same as `message_str`, except you get messages from files in the `text\<language>\game\` directory.
 - Use `GAME_MSG_*` defines or `mstr_*` macros from **sfall.h** to use specific msg file.
 - Additional game msg files added by **ExtraGameMsgFileList** setting will have consecutive fileIds assigned beginning from `0x2000` to `0x2FFF`. (e.g. if you set `ExtraGameMsgFileList=foo,bar` in **ddraw.ini**, foo.msg will be associated with 0x2000 and bar.msg with 0x2001.)
 - If a file has a specific number assigned in **ExtraGameMsgFileList**, its fileId will be (`0x2000` + assigned number). (e.g. with `ExtraGameMsgFileList=foo,bar:2,foobar` in **ddraw.ini**, bar.msg will be associated with 0x2002 and foobar.msg with 0x2003.)
 
 -----
-##### `int sneak_success()`
+#### `int sneak_success()`
 - Returns 1 if the player is currently sneaking, and last sneak attempt (roll against skill) was successful; 0 otherwise.
 - This calls an internal engine function which is used to determine the perception range of critters (which you can override using `HOOK_WITHINPERCEPTION`).
 
 -----
-##### `int tile_light(int elevation, int tileNum)`
+#### `int tile_light(int elevation, int tileNum)`
 - Returns light intensity at the given tile in range from 0 to 65536.
 
 -----
-##### `object obj_blocking_line(object objFrom, int tileTo, int blockingType)`
+#### `object obj_blocking_line(object objFrom, int tileTo, int blockingType)`
 - Returns first object which blocks direct linear path from objFrom to tileTo using selected blocking function (see `BLOCKING_TYPE_*` constants in **sfall.h**).
 - If path is clear (no blocker was encountered by selected function) - returns 0.
 - `objFrom` is always excluded from calculations, but is required to be a valid object.
 
 -----
-##### `object obj_blocking_tile(int tileNum, int elevation, int blockingType)`
+#### `object obj_blocking_tile(int tileNum, int elevation, int blockingType)`
 - Returns first object blocking given tile using given blocking function or 0 if tile is clear.
 
 -----
-##### `array tile_get_objs(int tileNum, int elevation)`
+#### `array tile_get_objs(int tileNum, int elevation)`
 - Returns an array of all objects at given tile.
 - It will include any hidden, dead or system objects (like cursor), so make sure to check properly when iterating.
 
 -----
-##### `array party_member_list(int includeHidden)`
+#### `array party_member_list(int includeHidden)`
 - Returns an array of all current party members (0 - only critters that are alive and visible will be returned, 1 - all objects, including the car trunk, etc.)
 
 -----
-##### `array path_find_to(object objFrom, int tileTo, int blockingType)`
+#### `array path_find_to(object objFrom, int tileTo, int blockingType)`
 - Returns the shortest path to a given tile using given blocking function as an array of tile directions (0..5) to move on each step.
 - Array length equals to a number of steps.
 - Empty array means that specified target cannot be reached.
 
 -----
-##### `object create_spatial(int scriptID, int tile, int elevation, int radius)`
+#### `object create_spatial(int scriptID, int tile, int elevation, int radius)`
 - Creates new spatial script with given SID, at given tile, and radius.
 
 -----
-##### `int art_exists(int artFID)`
+#### `int art_exists(int artFID)`
 - Checks if given **artFID** exists in the game.
 - Useful when you want to check if critter can use specific weapon: `art_exists((artFid bwand 0xFFFF0FFF) bwor (weaponAnim * 0x1000))`
 
 -----
-##### `int obj_is_carrying_obj(object invenObj, object itemObj)`
+#### `int obj_is_carrying_obj(object invenObj, object itemObj)`
 - Returns number of itemObj inside invenObj's inventory, note that both arguments are object pointers.
 - Useful when dealing with different stacks of same item (`obj_is_carrying_obj_pid` just returns total for all stacks of the same PID).
 
 -----
-##### `any sfall_funcX(string funcName, ...)`
+#### `any sfall_funcX(string funcName, ...)`
 - These opcodes allows to use additional script functions, that do not require new opcode.
 - First argument is always function name (string).
 - There are 9 versions of this opcode for different number of additional arguments (for convenience).
@@ -576,7 +576,7 @@ sfall_funcX metarule functions
 - Gets the current value of object flags (see **define_extra.h** for available flags)
 
 -----
-##### set_flags
+#### set_flags
 `void sfall_func2("set_flags", object obj, int flags)`
 - Sets the current flags of an object
 - All flags are rewritten with given integer, so first get current flags with `get_flags` and use `bwor`/`bwand` to set/remove specific flag
@@ -802,7 +802,7 @@ sfall_funcX metarule functions
 - Use `AI_CAP_*` constants from **define_extra.h** for the aiParam argument to get AI value
 
 -----
-##### art_cache_clear
+#### art_cache_clear
 `void sfall_func0("art_cache_clear")`
 - Clears the cache of FRM image files loaded into memory
 
@@ -1095,7 +1095,7 @@ sfall_funcX metarule functions
 - Returns True if the object is openable (i.e. has an opening/closing animation), False otherwise
 
 ----
-##### set_spray_settings
+#### set_spray_settings
 `void sfall_func4("set_spray_settings", int centerMult, int centerDiv, int targetMult, int targetDiv)`
 
 - Allows changing the multipliers and divisors for the bullet distribution of burst attacks dynamically. All settings are automatically reset to default values (i.e. **ComputeSpray_\*** settings in **ddraw.ini**) after each attack action
@@ -1105,13 +1105,13 @@ sfall_funcX metarule functions
 - __NOTE:__ refer to the description of **ComputeSpray_\*** settings in **ddraw.ini** for details of the bullet distribution of burst attacks
 
 ----
-##### get_combat_free_move
+#### get_combat_free_move
 `int sfall_func0("get_combat_free_move")`
 
 - Returns available "bonus move" points of the current critter's turn. For NPCs, this is always 0 unless changed by `set_combat_free_move`
 
 ----
-##### set_combat_free_move
+#### set_combat_free_move
 `void sfall_func1("set_combat_free_move", int value)`
 
 - Allows changing "bonus move" points (yellow lights on the interface bar) that can only be used for movement, not attacking
