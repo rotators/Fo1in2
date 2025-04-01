@@ -5,4 +5,5 @@ Notable changes since last release ([v1.11.3575](https://github.com/rotators/Fo1
 - **Fixed**: Killing raiders in random encounter maps would increase the raiders reputations.
 - **Fixed**: Merchant caravan cars in encounters could randomly overlap. Added a minimum spawn distance from each other.
 - **Fixed**: Operations to increase SPECIAL attributes at the Brotherhood of Steel would advance too much time
+- **Fixed**: Peasants in coast and Shady Sands encounter could potentially spawn with wrong AI package.
 - **Tweaked**: Added fail-safe to Harold and Beth dialog to not accidentally reset the Deathclaw status when the player already killed it before in a random encounter.
