@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.6, built for Fallout 2 v1.02 US
+version 4.4.6.1, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -53,6 +53,11 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.4.6.1
+>The compatibility mode check now targets only unsupported Windows versions
+>Changed the way ProcessorIdle works to prevent conflicts with CPU_USAGE_FIX option in f2_res.ini
+>Added a fix to prevent out-of-bounds selection in the file list when loading a character file
 
 v4.4.6
 >Fixed a bug introduced in 4.3.1 that broke the debug message about a missing critter art file
