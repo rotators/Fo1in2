@@ -22,7 +22,11 @@ end*/
    return var;
 end*/
 
-// Parse keyboard shortcut definition
+/**
+ * Parses keyboard shortcut definition (key code + optional modifier key) from a string into an integer for later use in other hotkey procedures.
+ * @arg {string} string
+ * @ret {int}
+ */
 procedure parse_hotkey(variable string) begin
    variable lst;
    variable n;
@@ -35,7 +39,11 @@ procedure parse_hotkey(variable string) begin
    return n;
 end
 
-// Check if shortcut is pressed
+/**
+ * Checks if a given shortcut is currently pressed (see parse_hotkey).
+ * @arg {int} n - hotkey data parsed with *parse_hotkey*
+ * @ret {bool}
+ */
 procedure hotkey_pressed(variable n) begin
    if (n < 0x10000) then
       return key_pressed(n);
@@ -43,7 +51,12 @@ procedure hotkey_pressed(variable n) begin
       return key_pressed(n bwand 0xFFFF) and key_pressed((n bwand 0xFFFF0000) / 0x10000);
 end
 
-// same as above, but suited for hs_keypress hook when keycode is already known
+/**
+ * Checks if a shortcut is currently pressed, given that *key* is already pressed.
+ * @arg {int} n - hotkey data parsed with *parse_hotkey*
+ * @arg {int} key - DX scancode
+ * @ret {bool}
+ */
 procedure hotkey_pressed_now(variable n, variable key) begin
    if (n < 0x10000) then
       return key == n;
@@ -59,27 +72,23 @@ procedure hotkey_pressed_now(variable n, variable key) begin
    end
 end
 
-
-
 /**
-  Attempt to make list_as_array safe
-*/
-/*procedure list_as_array_safe(variable type) begin
-   variable list, item, arr, i;
-   list := list_begin(type);
-   arr := temp_array(100, 4);
-   i := 0;
-   item := list_next(list);
-   while (item) do begin
-      if (len_array(arr) == i) then resize_array(arr, len_array(arr) + 100);
-      arr[i] := item;
-      item := list_next(list);
-      i++;
+ * Loads ini section as map of keys and values parsed as integers (0 values will be skipped!)
+ * @arg {string} file
+ * @arg {string} section
+ * @arg {bool} [fixArray=false] - if true, *fix_array* will be called automatically on resulting array
+ * @ret {map}
+ */
+procedure get_ini_section_int_to_int(variable file, variable section, variable fixArray := false) begin
+   variable ar, ar2 := temp_array_map, k, v;
+   ar := get_ini_section(file, section);
+   foreach k: v in ar begin
+      ar2[atoi(k)] := atoi(v);
    end
-   resize_array(arr, i);
-   list_end(list);
-   return arr;
-end*/
+   if (fixArray) then
+      fix_array(ar2);
+   return ar2;
+end
 
 
 #endif
