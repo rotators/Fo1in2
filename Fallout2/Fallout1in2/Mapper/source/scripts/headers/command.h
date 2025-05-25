@@ -753,6 +753,7 @@ FLOAT_MSG_BLUE
 #define NMessage(x)                 gSay_Message(NAME,x,NEUTRAL_REACTION)
 #define BMessage(x)                 gSay_Message(NAME,x,BAD_REACTION)
 #define RMessage(x)                 gSay_Message(NAME,x,RND_REACTION)
+#define Reply_Blank                 gsay_reply(0, 0)
 
 // this converts a number from 0-100 to the text representing the number, ie: 1 -> "one", 40 -> "forty-one"
 #define num_to_num_text(x)          g_mstr(2000+x)
