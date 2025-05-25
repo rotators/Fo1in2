@@ -2,11 +2,13 @@
 
    Military Base - CoC technicians, VATS location.
 
+   NOTE:
+      This script has dialog for the Cathedral, but the critters are never used there.
+
 */
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
 
 #define NAME                    SCRIPT_CHOCTECH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -68,12 +70,13 @@ procedure critter_p_proc begin
             if (dude_is_armed) then begin
                if (not(said_stuff)) then begin
                   said_stuff := 1;
-                  if (Team9_Count > 0) then begin
-                     call ChocTech00;
-                  end
-                  else begin
+                  // Team9_Count is never > 0, so disabled the check
+                  //if (Team9_Count > 0) then begin
+                  //   call ChocTech00;
+                  //end
+                  //else begin
                      call ChocTech01;
-                  end
+                  //end
                end
             end
          end
@@ -90,13 +93,6 @@ procedure look_at_p_proc begin
 end
 
 procedure talk_p_proc begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := dude_armor;
-   dude_look_at_self;
-   if (LVar0) then begin
-      LVar1 := obj_pid(LVar0);
-   end
    if (global_var(GVAR_MASTER_DEAD) == 1) then begin
       start_dialog_at_node(ChocTech10);
    end
@@ -104,12 +100,17 @@ procedure talk_p_proc begin
       call ChocTech09;
    end
    else begin
-//    if (Team9_Count > 0) or (LVar1 == 113) then begin
+      /*
+         Team9 doesn't exist. Was thinking about changing it to Team8 in the same map, but
+         in doesn't make sense in the end. So better to just keep it disabled.
+         VSGTEAM9 and VATTEAM9 were the original guard scripts.
+      */
+      //if (Team9_Count > 0) then begin
          start_dialog_at_node(ChocTech02);
-//    end
-//    else begin
-//       call ChocTech01;
-//    end
+      //end
+      //else begin
+      //   call ChocTech01;
+      //end
    end
 end
 
@@ -128,14 +129,7 @@ procedure ChocTech00 begin
 end
 
 procedure ChocTech01 begin
-   variable LVar0;
-   LVar0 := random(0, 3);
-   if not(LVar0) then begin
-      float_msg(self_obj, mstr(random(103, 104)), FLOAT_MSG_NORMAL);
-   end
-   else begin
-      float_msg(self_obj, mstr(random(105, 107)), FLOAT_MSG_NORMAL);
-   end
+   float_msg(self_obj, mstr(random(105, 107)), FLOAT_MSG_NORMAL);
 end
 
 procedure ChocTech02 begin
