@@ -1,3 +1,9 @@
+/*
+
+   Raiders / Khans - Tandi cell door script
+
+*/
+
 #include "define.h"
 #include "command.h"
 #include "maps/raiders.h"
@@ -5,6 +11,7 @@
 #define NAME                     SCRIPT_DOOR
 
 procedure start;
+procedure map_enter_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 procedure description_p_proc;
@@ -12,19 +19,37 @@ procedure use_obj_on_p_proc;
 procedure map_update_p_proc;
 procedure damage_p_proc;
 
+#define STATE_ACTIVE       0
+#define STATE_INACTIVE     1
+
+#define LVAR_Locked                     (0)
+#define LVAR_Gave_Locks_XP              (5)
+
 import variable Cell_Door_Ptr;
 
 procedure start begin
 end
 
+procedure map_enter_p_proc begin
+   // If the player has unlocked and opened the cell door in a previous visit, close it again.
+   if tandi_is_kidnapped then begin
+      set_local_var(LVAR_Locked, STATE_ACTIVE);
+      set_map_var(MVAR_OPENING_DOOR, 0);
+
+      obj_close(self_obj);
+      obj_lock(self_obj);
+   end
+end
+
 procedure use_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
       obj_lock(self_obj);
    end
    else begin
       obj_unlock(self_obj);
    end
-   if ((local_var(0) == 0) and source_is_dude) then begin
+
+   if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
       script_overrides;
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
@@ -37,18 +62,23 @@ end
 
 procedure use_skill_on_p_proc begin
    variable LVar0 := 0;
-   if (local_var(0) == 0) then begin
-      if (action_being_used == SKILL_LOCKPICK) then begin
+
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
          script_overrides;
          LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
          if (is_success(LVar0)) then begin
-            set_local_var(0, 1);
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
             jam_lock(self_obj);
             if source_is_dude then
                display_msg(mstr(100));
             else
                display_msg(obj_name(source_obj) + message_str(SCRIPT_JUNKJAIL, 200));
-            give_xp(EXP_LOCKPICK_NORMAL);
+
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NORMAL);
+            end
          end
          else begin
             if (is_critical(LVar0)) then begin
@@ -66,14 +96,14 @@ procedure use_skill_on_p_proc begin
             end
          end
       end
-   end
-   else begin
-      display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      else begin
+         display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      end
    end
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
@@ -85,28 +115,36 @@ procedure use_obj_on_p_proc begin
    LVar0 := obj_being_used_with;
 
    if (item == PID_LOCKPICKS or item == PID_EXP_LOCKPICK_SET) then begin
-      script_overrides;
+      if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
+         script_overrides;
 
-      if (item == PID_EXP_LOCKPICK_SET) then
-         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
-      else
-         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+         if (item == PID_EXP_LOCKPICK_SET) then
+            test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
+         else
+            test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 
-      if (is_success(test)) then begin
-         set_local_var(0, 1);
-         display_msg(mstr(100));//{100}{}{You unlock the door.}
+         if (is_success(test)) then begin
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
+            display_msg(mstr(100));//{100}{}{You unlock the door.}
 
-         give_xp(EXP_LOCKPICK_NORMAL);
-      end
-      else begin
-         if (is_critical(test)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
-            display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NORMAL);
+            end
          end
          else begin
-            display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+            if (is_critical(test)) then begin
+               rm_obj_from_inven(dude_obj, LVar0);
+               destroy_object(LVar0);
+               display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
+            end
+            else begin
+               display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+            end
          end
+      end
+      else begin
+         display_msg(mstr(109));//{109}{}{The door is already unlocked.}
       end
    end
 end
@@ -114,9 +152,9 @@ end
 procedure map_update_p_proc begin
    Cell_Door_Ptr := self_obj;
    if (map_var(MVAR_OPENING_DOOR) != 0) then begin
-      set_local_var(0, 1);
+      set_local_var(LVAR_Locked, STATE_INACTIVE);
    end
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
       obj_lock(self_obj);
    end
    else begin
