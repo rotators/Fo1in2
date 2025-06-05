@@ -504,7 +504,7 @@ variable COC_TRESPASSING;
            else                                                      \
                set_local_var(LVAR_Sleeping, 1);                      \
        end \
-   end 
+   end
 
 procedure flee_dude begin
     variable LVar0 := 0;

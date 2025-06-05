@@ -39,6 +39,7 @@ variable $addr;
 //               write_byte(0x496E00, 20)
 
 // In Fo2, the perk gives a +20% light level increase, while in Fo1 it is only +10%.
+/*
 #define VOODOO_night_vision_bonus \
                begin                                        \
                 write_short(0x47A91D, 0xC069);              \
@@ -46,6 +47,7 @@ variable $addr;
                 call VOODOO_WriteNop(0x47A923, 15, true);   \
                end                                          \
                noop
+*/
 
 // This will change the credits and wordlmap music tracks, so that
 // the HQ music pack will not overwrite the Fo1 music with Fo2 tracks.
