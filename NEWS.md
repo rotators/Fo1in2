@@ -12,5 +12,6 @@ Notable changes since last release ([v1.12.3613](https://github.com/rotators/Fo1
 - **Fixed**: Removed built-in armor for Vasquez (he doesn't have armor in his slot).
 - **Tweaked**: Pulse Rifle can randomly spawn in special cavern encounter loot boxes (extremely rare)
 - **Tweaked**: Pulse Rifle will now need 2 ammo to fire
+- **Tweaked**: Theft prevention to out-of-bounds merchant box in Shady Sands
 - **Tweaked**: When cheating the Regulators Holodisk into players inventory and using, the quest with Jon Zimmerman can be progressed now, without having to talk to Razor first. It's a fail-safe and has no other effects on regular gameplay.
 - **Tweaked**: use.frm interface graphic had glass glare, which shouldn't be there. Now it looks the same as all the other interfaces.
