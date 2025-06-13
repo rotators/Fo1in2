@@ -447,7 +447,7 @@ std::vector<std::string> GetMaps(const std::string& path, const std::string& ext
         result.push_back(file.path().string());
     }
 
-    std::sort(result.begin(), result.end());
+    std::ranges::sort(result);
 
     return result;
 }

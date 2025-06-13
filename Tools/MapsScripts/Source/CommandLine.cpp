@@ -28,7 +28,7 @@ CommandLine::~CommandLine()
 
 bool CommandLine::IsOption( const std::string& option )
 {
-    return find( Cache.begin(), Cache.end(), "--" + option ) != Cache.end();
+    return std::ranges::find( Cache, "--" + option ) != Cache.end();
 }
 
 bool CommandLine::IsOptionEmpty( const std::string& option )
@@ -98,7 +98,7 @@ std::string CommandLine::GetStr( const std::string& option )
 
 std::string CommandLine::GetStr( const std::string& option, const std::string& default_value )
 {
-    std::vector<std::string>::const_iterator it = std::find( Cache.begin(), Cache.end(), "--" + option );
+    std::vector<std::string>::const_iterator it = std::ranges::find( Cache, "--" + option );
 
     if( it != Cache.end() && ++it != Cache.end() )
     {
