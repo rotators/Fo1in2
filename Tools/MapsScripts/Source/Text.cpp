@@ -30,7 +30,7 @@ std::string TextGetUpper(const std::string& text)
 {
     std::string result = text;
 
-    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return std::toupper(c); });
+    std::ranges::transform(result, result.begin(), [](unsigned char c) { return std::toupper(c); });
 
     return result;
 }
