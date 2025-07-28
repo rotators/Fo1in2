@@ -348,6 +348,10 @@ There are several changes in this version of sslc which may result in problems f
 
 ### Changelog
 
+**sfall 4.4.7:**
+- fixed leftover stack data caused by the `break` statement
+- added Linux & WebAssembly builds
+
 **sfall 4.4.4:**
 - fixed stringified procedure names shifting when the same name is called more than once
 - syntax improvements:

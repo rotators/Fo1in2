@@ -11,6 +11,7 @@ Notable changes since last release ([v1.12.3613](https://github.com/rotators/Fo1
 - **Fixed**: It wasn't possible to trade with Vance in the Hub if player has INT < 4 and doesn't know him.
 - **Fixed**: Lockpicking the Khans' cell door would always give XP.
 - **Fixed**: Removed built-in armor for Vasquez (he doesn't have armor in his slot).
+- **Fixed**: World map travel dot spacing over city terrain needs to be 1:3 instead of 1:2.
 - **Tweaked**: Pulse Rifle can randomly spawn in special cavern encounter loot boxes (extremely rare)
 - **Tweaked**: Pulse Rifle will now need 2 ammo to fire
 - **Tweaked**: Theft prevention to out-of-bounds merchant box in Shady Sands
