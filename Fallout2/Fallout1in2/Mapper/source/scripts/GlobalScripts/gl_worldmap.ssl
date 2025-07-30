@@ -215,11 +215,43 @@ procedure Encounter_handler begin
       set_sfall_return(mapID);
    end
    else if (event == 0) then begin
+      // Check for special encounters
+      variable special_enc_chance := (roll3d6 - 5);
+      special_enc_chance := special_enc_chance + dude_luck;
+      special_enc_chance := special_enc_chance + (2 * dude_perk(PERK_explorer));
+      debug_yellow("Special Encounter Chance: " + special_enc_chance);
+
+      if (special_enc_chance >= 18) then begin
+         mapID := 0;
+         special_enc_chance := random(1, 100);
+         debug_red("!SPECIAL ENCOUNTER! - The range is: " + special_enc_chance);
+
+         if ((global_var(GVAR_SPECIAL_FOOT) == 0)            and (special_enc_chance >= 1 and special_enc_chance <= 30)) then    mapID := MAP_FOOT;
+         else if ((global_var(GVAR_SPECIAL_TALKCOW) == 0)    and (special_enc_chance >= 31 and special_enc_chance <= 50)) then   mapID := MAP_TALKCOW;
+         else if ((global_var(GVAR_SPECIAL_USEDCAR) == 0)    and (special_enc_chance >= 51 and special_enc_chance <= 70)) then   mapID := MAP_USEDCAR;
+         else if ((global_var(GVAR_SPECIAL_TARDIS) == 0)     and (special_enc_chance >= 71 and special_enc_chance <= 80)) then   mapID := MAP_TARDIS;
+         else if ((global_var(GVAR_SPECIAL_FSAUSER) == 0)    and (special_enc_chance >= 81 and special_enc_chance <= 90)) then   mapID := MAP_FSAUSER;
+         else if ((global_var(GVAR_SPECIAL_COLATRUK) == 0)   and (special_enc_chance >= 91 and special_enc_chance <= 100)) then  mapID := MAP_COLATRUK;
+
+         // Fo1in2 special encounter
+         if (mapID == 0) then begin
+            special_enc_chance := random(1, 100);
+            if ((global_var(GVAR_SPECIAL_TEMPLE) == 0) and (special_enc_chance > 50)) then mapID := MAP_GUARDIAN;
+         end
+
+         if (mapID > 0) then begin
+            force_encounter_with_flags(mapID, ENCOUNTER_FLAG_ICON_SP); // TODO: Workaround for forcing blinking icon. Maybe it can be done better?
+            set_sfall_return(-1);
+         end
+      end
+
+      // Set encounter terrain map
       if is_terrain_city then begin
          if fo1in2_expanded_wrecks_enabled then
             Maps_List := [MAP_CITY1, MAP_CITY1, MAP_CITY2, MAP_CITY3, MAP_CITY4, MAP_CITY5];
          else
             Maps_List := [MAP_CITY1, MAP_CITY1, MAP_CITY2, MAP_CITY3];
+
          mapID := array_random_value(Maps_List);
          set_sfall_return(mapID);
       end
