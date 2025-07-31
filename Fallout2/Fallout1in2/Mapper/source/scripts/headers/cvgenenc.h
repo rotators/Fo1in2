@@ -284,7 +284,7 @@ procedure gold_mine begin
                Scenery2_List := [PID_ROCK];
             end
 
-            if (Scenery_Chance <= 10) then begin
+            if (Scenery_Chance <= 5) then begin
                Active_Scenery_List := 3;
                Scenery3_Range := random(0, 4);
                Scenery3_List := [PID_SHOVEL, PID_FLARE, PID_HUNTING_RIFLE, PID_10MM_PISTOL, PID_SLEDGEHAMMER];

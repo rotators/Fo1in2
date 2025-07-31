@@ -216,9 +216,7 @@ procedure Encounter_handler begin
    end
    else if (event == 0) then begin
       // Check for special encounters
-      variable special_enc_chance := (roll3d6 - 5);
-      special_enc_chance := special_enc_chance + dude_luck;
-      special_enc_chance := special_enc_chance + (2 * dude_perk(PERK_explorer));
+      variable special_enc_chance := (roll3d6 - 5) + dude_luck + (2 * dude_perk(PERK_explorer));
       debug_yellow("Special Encounter Chance: " + special_enc_chance);
 
       if (special_enc_chance >= 18) then begin
@@ -226,17 +224,17 @@ procedure Encounter_handler begin
          special_enc_chance := random(1, 100);
          debug_red("!SPECIAL ENCOUNTER! - The range is: " + special_enc_chance);
 
-         if ((global_var(GVAR_SPECIAL_FOOT) == 0)            and (special_enc_chance >= 1 and special_enc_chance <= 30)) then    mapID := MAP_FOOT;
-         else if ((global_var(GVAR_SPECIAL_TALKCOW) == 0)    and (special_enc_chance >= 31 and special_enc_chance <= 50)) then   mapID := MAP_TALKCOW;
-         else if ((global_var(GVAR_SPECIAL_USEDCAR) == 0)    and (special_enc_chance >= 51 and special_enc_chance <= 70)) then   mapID := MAP_USEDCAR;
-         else if ((global_var(GVAR_SPECIAL_TARDIS) == 0)     and (special_enc_chance >= 71 and special_enc_chance <= 80)) then   mapID := MAP_TARDIS;
-         else if ((global_var(GVAR_SPECIAL_FSAUSER) == 0)    and (special_enc_chance >= 81 and special_enc_chance <= 90)) then   mapID := MAP_FSAUSER;
-         else if ((global_var(GVAR_SPECIAL_COLATRUK) == 0)   and (special_enc_chance >= 91 and special_enc_chance <= 100)) then  mapID := MAP_COLATRUK;
+         if ((global_var(GVAR_SPECIAL_FOOT) == 0)            AndAlso (special_enc_chance >= 1  and special_enc_chance <= 30))  then  mapID := MAP_FOOT;
+         else if ((global_var(GVAR_SPECIAL_TALKCOW) == 0)    AndAlso (special_enc_chance >= 31 and special_enc_chance <= 50))  then  mapID := MAP_TALKCOW;
+         else if ((global_var(GVAR_SPECIAL_USEDCAR) == 0)    AndAlso (special_enc_chance >= 51 and special_enc_chance <= 70))  then  mapID := MAP_USEDCAR;
+         else if ((global_var(GVAR_SPECIAL_TARDIS) == 0)     AndAlso (special_enc_chance >= 71 and special_enc_chance <= 80))  then  mapID := MAP_TARDIS;
+         else if ((global_var(GVAR_SPECIAL_FSAUSER) == 0)    AndAlso (special_enc_chance >= 81 and special_enc_chance <= 90))  then  mapID := MAP_FSAUSER;
+         else if ((global_var(GVAR_SPECIAL_COLATRUK) == 0)   AndAlso (special_enc_chance >= 91 and special_enc_chance <= 100)) then  mapID := MAP_COLATRUK;
 
          // Fo1in2 special encounter
          if (mapID == 0) then begin
             special_enc_chance := random(1, 100);
-            if ((global_var(GVAR_SPECIAL_TEMPLE) == 0) and (special_enc_chance > 50)) then mapID := MAP_GUARDIAN;
+            if ((global_var(GVAR_SPECIAL_TEMPLE) == 0) and (special_enc_chance > 75)) then mapID := MAP_GUARDIAN;
          end
 
          if (mapID > 0) then begin
@@ -263,13 +261,13 @@ procedure Encounter_handler begin
          if south_table then Bonus := 15;
          else if glow_table then Bonus := 35;
          else Bonus := 0;
-         Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20);
-         debug("Cavern chance is " + rnd_cave + " and cavern bonus is " + bonus + ".");
+         Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20) + (2 * dude_perk(PERK_explorer));
+         debug_yellow("Cavern chance is " + rnd_cave + " and cavern bonus is " + bonus + ".");
 
          if (fo1in2_cave_maps_enabled AndAlso (rnd_cave <= (15 + Bonus))) then begin
             if glow_table then Bonus := 35;
             else Bonus := 0;
-            Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20);
+            Bonus := Bonus + (has_skill(dude_obj, SKILL_OUTDOORSMAN) / 20) + (2 * dude_perk(PERK_explorer));
 
             if (south_table or vats_table or glow_table) and (random(1, 100) <= (5 + Bonus)) then
                Maps_List := [MAP_MINE1, MAP_MINE2, MAP_MINE3];
@@ -301,7 +299,6 @@ variable terrain_time, time, skill;
    if fo1in2_radiation_enabled then call SetRadiation;
 
    // Override Fo2 wm travel time to match Fo1 more closely
-   //skill := has_skill(dude_obj, SKILL_OUTDOORSMAN);
    skill := has_skill_party(SKILL_OUTDOORSMAN);
    if (skill > 100) then skill := 100;
 
