@@ -11,17 +11,32 @@
     Generic Defines
 ************************************************/
 // Killian
-#define shop_open_time              (650)
-#define shop_closed_time            (1900)
-#define darkwaters_shop_open        (game_time_hour > shop_open_time and game_time_hour < shop_closed_time)
+#define shop_open_time                    (650)
+#define shop_closed_time                  (1900)
+#define darkwaters_shop_open              (game_time_hour > shop_open_time and game_time_hour < shop_closed_time)
+
+#define quest_capture_gizmo_inactiv       (global_var(GVAR_CAPTURE_GIZMO) == 0)
+#define quest_capture_gizmo_active        (global_var(GVAR_CAPTURE_GIZMO) == 1)
+#define quest_capture_gizmo_completed     (global_var(GVAR_CAPTURE_GIZMO) == 2)
+
+#define set_quest_capture_gizmo_active    set_global_var(GVAR_CAPTURE_GIZMO, 1)
+#define set_quest_capture_gizmo_completed set_global_var(GVAR_CAPTURE_GIZMO, 2)
+
 
 // Gizmo
-#define gizmo_hex                   (16523)
+#define gizmo_hex                         (16523)
 
-#define set_gizmo_remains_timer     if (global_var(GVAR_GIZMO_REMAINS_TIMER) == 0) then set_global_var(GVAR_GIZMO_REMAINS_TIMER, game_time)
+#define set_gizmo_remains_timer           if (global_var(GVAR_GIZMO_REMAINS_TIMER) == 0) then set_global_var(GVAR_GIZMO_REMAINS_TIMER, game_time)
 
-#define gizmo_remains_rotting       (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * corpse_timer)))
-#define gizmo_remains_empty_desk    (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * (corpse_timer * 2))))
+#define gizmo_remains_rotting             (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * corpse_timer)))
+#define gizmo_remains_empty_desk          (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * (corpse_timer * 2))))
+
+#define set_quest_kill_killian_active      set_global_var(GVAR_KILL_KILLIAN, 1)
+#define set_quest_kill_killian_completed   set_global_var(GVAR_KILL_KILLIAN, 2)
+
+#define quest_kill_killian_inactiv        (global_var(GVAR_KILL_KILLIAN) == 0)
+#define quest_kill_killian_active         (global_var(GVAR_KILL_KILLIAN) == 1)
+#define quest_kill_killian_completed      (global_var(GVAR_KILL_KILLIAN) == 2)
 
 // Skum Pitt:
 #define check_noise_hex    (19274)

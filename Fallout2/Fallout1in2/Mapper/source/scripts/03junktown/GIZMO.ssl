@@ -137,6 +137,7 @@ end
 
 procedure destroy_p_proc begin
    set_gizmo_remains_timer;
+   set_quest_kill_killian_completed; // In case quest was active, disable it now
 
    if source_is_dude then begin
       inc_junktown_rep(REP_BONUS_KILLED_GIZMO);
@@ -168,7 +169,7 @@ procedure map_enter_p_proc begin
    set_self_team(TEAM_JUNKTOWN_GIZMO);
    set_self_ai(AI_GIZMO);
 
-   if (global_var(GVAR_CAPTURE_GIZMO) == 2) and (map_var(MVAR_GIZMO_REMAINS) == 0) then begin
+   if quest_capture_gizmo_completed and (map_var(MVAR_GIZMO_REMAINS) == 0) then begin
       set_map_var(MVAR_GIZMO_REMAINS, 1);
 
       remains := create_object(PID_GIZMO_REMAINS, self_tile, 0);
@@ -248,41 +249,35 @@ procedure Gizmo01 begin
    BLowOption(105, Gizmo01b);
 end
 
-procedure Gizmo01_1
-begin
+procedure Gizmo01_1 begin
    DownReactLevel// was Up
    set_local_var(5, 1);
    call Gizmo02;
 end
 
-procedure Gizmo01b
-begin
+procedure Gizmo01b begin
    BMessage(106);
    call Gizmox2;
 end
 
-procedure Gizmo02
-begin
+procedure Gizmo02 begin
    Reply(107);
    BOption(108, Gizmo11, 5);
    NOption(109, Gizmo04, 4);
 end
 
-procedure Gizmo04
-begin
+procedure Gizmo04 begin
    Reply(110);
    NOption(111, Gizmo05, 4);
    BOption(112, Gizmo04_1, 4);
 end
 
-procedure Gizmo04a
-begin
+procedure Gizmo04a begin
    NMessage(113);
    call Gizmo05;
 end
 
-procedure Gizmo04_1
-begin
+procedure Gizmo04_1 begin
    set_local_var(5, local_var(5) + 1);
    if (local_var(5) > 1) then begin
       call Gizmo11;
@@ -292,8 +287,7 @@ begin
    end
 end
 
-procedure Gizmo05
-begin
+procedure Gizmo05 begin
    Reply(114);
    NOption(115, Gizmo06, 7);
    if (not(dude_stat_success(STAT_lu, 0))) then begin
@@ -304,14 +298,12 @@ begin
    NOption(119, Gizmo08, 5);
 end
 
-procedure Gizmo05_1
-begin
+procedure Gizmo05_1 begin
    DownReactLevel
    call Gizmo10;
 end
 
-procedure Gizmo06
-begin
+procedure Gizmo06 begin
    Reply(120);
    GOption(121, Gizmo07, 7);
    GOption(122, Gizmo07, 4);
@@ -324,13 +316,14 @@ end
 procedure Gizmo07 begin
    set_local_var(LVAR_Herebefore, 1);
    set_global_var(GVAR_HIRED_BY_GIZMO, 1);
+   set_quest_kill_killian_active;
+
    GMessage(127);
    set_global_var(GVAR_GIZMO_NICE_SHOWDOOR, 1);
    call Gizmox;
 end
 
-procedure Gizmo08
-begin
+procedure Gizmo08 begin
    Reply(128);
    GOption(129, Gizmo07, 4);
    NOption(130, Gizmo09, 6);
@@ -338,8 +331,7 @@ begin
    BOption(132, badmouth, 5);
 end
 
-procedure Gizmo09
-begin
+procedure Gizmo09 begin
    set_local_var(7, 1500);
    Reply(133);
    GOption(134, Gizmo07, 4);
@@ -348,14 +340,12 @@ begin
    BOption(137, Gizmo10, 4);
 end
 
-procedure Gizmo10
-begin
+procedure Gizmo10 begin
    BMessage(138);
    call Gizmox1;
 end
 
-procedure Gizmo11
-begin
+procedure Gizmo11 begin
    BMessage(139);
    call Gizmox1;
 end
@@ -463,8 +453,7 @@ procedure Gizmo20 begin
    end
 end
 
-procedure Gizmo21
-begin
+procedure Gizmo21 begin
    Reply(165);
    if (is_killian_alive) then begin
       NOption(166, Gizmo22, 7);
@@ -478,8 +467,7 @@ begin
    BLowOption(105, Gizmo01b);
 end
 
-procedure Gizmo22
-begin
+procedure Gizmo22 begin
    Reply(170);
    if (dude_iq >= 7) then begin
       NOption(171, Gizmo23, 7);
@@ -493,8 +481,7 @@ begin
    BOption(175, Gizmo32, 4);
 end
 
-procedure Gizmo23
-begin
+procedure Gizmo23 begin
    Reply(176);
    GOption(177, Gizmo24, 7);
    BOption(178, Gizmo34, 5);
@@ -502,8 +489,7 @@ begin
    GOption(223, Gizmo24, 4);
 end
 
-procedure Gizmo24
-begin
+procedure Gizmo24 begin
    if (dude_is_male) then begin
       Reply(180);
    end
@@ -515,31 +501,27 @@ begin
    GOption(224, Gizmo26, 4);
 end
 
-procedure Gizmo25
-begin
+procedure Gizmo25 begin
    Reply(183);
    NOption(184, Gizmo26, 7);
    NOption(185, Gizmo26, 4);
 end
 
-procedure Gizmo26
-begin
+procedure Gizmo26 begin
    Reply(186);
    NOption(187, Gizmo27, 7);
    NOption(188, Gizmo30, 4);
    NOption(189, Gizmo27, 4);
 end
 
-procedure Gizmo27
-begin
+procedure Gizmo27 begin
    Reply(190);
    BOption(191, Gizmo34, 6);
    NOption(192, Gizmo28, 6);
    NOption(225, Gizmo28, 4);
 end
 
-procedure Gizmo28
-begin
+procedure Gizmo28 begin
    Reply(193);
    if (global_var(GVAR_HIRED_BY_KILLIAN) == 1) then begin
       if (dude_item_count(PID_TAPE_RECORDER)) then begin
@@ -559,74 +541,61 @@ procedure Gizmo29 begin
    call Gizmox;
 end
 
-procedure Gizmo30
-begin
+procedure Gizmo30 begin
    BMessage(199);
    call Gizmox1;
 end
 
-procedure Gizmo32
-begin
+procedure Gizmo32 begin
    BMessage(200);
    call Gizmox2;
 end
 
-procedure Gizmo33
-begin
+procedure Gizmo33 begin
    Reply(201);
    NOption(202, Gizmo25, 5);
    NOption(203, Gizmo32, 4);
 end
 
-procedure Gizmo34
-begin
+procedure Gizmo34 begin
    NMessage(204);
    call Gizmox1;
 end
 
-procedure Gizmo35
-begin
+procedure Gizmo35 begin
    BMessage(205);
    call Gizmox1;
 end
 
-procedure Gizmo36
-begin
+procedure Gizmo36 begin
    NMessage(206);
 end
 
-procedure Gizmo37
-begin
+procedure Gizmo37 begin
    NMessage(207);
 end
 
-procedure Gizmo38
-begin
+procedure Gizmo38 begin
    NMessage(208);
 end
 
-procedure Gizmo39
-begin
+procedure Gizmo39 begin
    NMessage(209);
 end
 
-procedure Gizmo42
-begin
+procedure Gizmo42 begin
    NMessage(210);
 end
 
-procedure Gizmo43
-begin
+procedure Gizmo43 begin
    NMessage(211);
 end
 
-procedure Gizmo44
-begin
+procedure Gizmo44 begin
    NMessage(212);
 end
 
-procedure Gizmo45
-begin
+procedure Gizmo45 begin
    Gizmo_is_angry := 1;
    set_local_var(8, 1);
    stealing := 0;
@@ -638,18 +607,15 @@ begin
    end
 end
 
-procedure Gizmo47
-begin
+procedure Gizmo47 begin
    NMessage(215);
 end
 
-procedure Gizmo48
-begin
+procedure Gizmo48 begin
    NMessage(216);
 end
 
-procedure Gizmo19a
-begin
+procedure Gizmo19a begin
    DownReactLevel
    call Gizmo11;
 end
@@ -659,14 +625,12 @@ procedure Gizmox begin
    show_to_door := 1;
 end
 
-procedure Gizmox1
-begin
+procedure Gizmox1 begin
    Gizmo_is_angry := 1;
    set_local_var(8, 1);
 end
 
-procedure Gizmox2
-begin
+procedure Gizmox2 begin
    set_local_var(8, 1);
 end
 
