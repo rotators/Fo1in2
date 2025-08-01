@@ -18,6 +18,7 @@
 procedure start;
 procedure damage_p_proc;
 procedure destroy_p_proc;
+procedure timed_event_p_proc;
 procedure talk_p_proc;
 
 procedure garretend;
@@ -45,6 +46,7 @@ import variable Garret_ptr;
 
 #define LVAR_Herebefore    (4)
 #define LVAR_Fridge        (5)
+#define LVAR_Home_Tile     (7)
 
 variable Shotgun_ptr;
 variable Shells_ptr;
@@ -52,26 +54,22 @@ variable Cola_ptr;
 variable Flare_ptr;
 variable Hostile;
 variable init := 0;
-variable maxleash := 9;
-variable noevent;
-variable loopcount;
-variable new_tile;
-variable gavelist;
 variable moving;
-variable stuff;
 variable indlog;
 variable robbed;
 variable flare_count;
 variable cola_count;
 variable CASH;
-variable THRONE;
 variable target_hex := 20113;
 variable my_hex;
+variable in_timer_event;
+
+#define EVENT_CLOSE_FRIDGE    (1)
 
 procedure start begin
    if (not(init)) then begin
-      if (local_var(7) == 0) then begin
-         set_local_var(7, self_tile);
+      if (local_var(LVAR_Home_Tile) == 0) then begin
+         set_local_var(LVAR_Home_Tile, self_tile);
       end
       set_self_team(TEAM_NECROPOLIS_GANGER);
       set_self_ai(AI_GHOUL_NASTY);
@@ -121,17 +119,15 @@ procedure critter_p_proc begin
          end
          else if (local_var(LVAR_Fridge) == 2) then begin
             moving := 1;
-            if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
-               call reward;
-               set_local_var(LVAR_Fridge, 3);
-               use_obj(Fridge_ptr);
-               obj_close(Fridge_ptr);
-               obj_lock(Fridge_ptr);
+            if ((tile_distance_objs(self_obj, dude_obj) < 5) and (in_timer_event == 0)) then begin
+               // Needed to move this into a timer event, because the script bugs out and won't close the fridge correctly
+               in_timer_event := 1;
+               add_timer_event(self_obj, game_ticks(1), EVENT_CLOSE_FRIDGE);
             end
          end
          else if (local_var(LVAR_Fridge) == 3) then begin
             moving := 1;
-            target_hex := local_var(7);
+            target_hex := local_var(LVAR_Home_Tile);
             if (my_hex != target_hex) then begin
                self_walk_to_tile(target_hex);
             end
@@ -148,6 +144,16 @@ procedure destroy_p_proc begin
    set_global_var(GVAR_ENEMY_NECROPOLIS, 1);
    set_global_var(GVAR_GARRET_STATUS, 3);
    inc_inv_evil_crit
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_CLOSE_FRIDGE) then begin
+      call reward;
+      set_local_var(LVAR_Fridge, 3);
+      use_obj(Fridge_ptr);
+      obj_close(Fridge_ptr);
+      obj_lock(Fridge_ptr);
+   end
 end
 
 procedure talk_p_proc begin
