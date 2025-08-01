@@ -41,6 +41,8 @@
 // Skum Pitt:
 #define check_noise_hex    (19274)
 
+
+
 // Skullz:
 #define quest_join_skullz_inactive        (global_var(GVAR_JOIN_SKULLZ) == 0)
 #define quest_join_skullz_active          (global_var(GVAR_JOIN_SKULLZ) == 1)
