@@ -57,6 +57,11 @@ variable close2dude;
 variable direction;
 variable prev_dist;
 
+#define set_trent_herebefore  set_global_var(GVAR_TRENT_STATUS, global_var(GVAR_TRENT_STATUS) bwor 1)
+#define set_trent_killed      set_global_var(GVAR_TRENT_STATUS, global_var(GVAR_TRENT_STATUS) bwor 8)
+
+#define already_met_once      ((global_var(GVAR_TRENT_STATUS) bwand 1) != 0)
+
 procedure start begin
    if (not(initial) and map_first_run) then begin
       set_self_team(TEAM_HUB_WATER_MERCHANTS);
@@ -103,7 +108,7 @@ end
 
 procedure destroy_p_proc begin
    inc_good_critter
-   set_global_var(GVAR_TRENT_STATUS, global_var(GVAR_TRENT_STATUS) bwor 8);
+   set_trent_killed;
 end
 
 procedure pickup_p_proc begin
@@ -112,7 +117,7 @@ end
 
 procedure use_obj_on_p_proc begin
    variable LVar0 := 0;
-   if ((obj_pid(obj_being_used_with) == PID_IGUANA_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_MEAT_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_WATER_FLASK)) then begin
+   if ((obj_pid(obj_being_used_with) == PID_IGUANA_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_MEAT_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_WATER_FLASK) or (obj_pid(obj_being_used_with) == PID_MEAT_JERKY)) then begin
       LVar0 := obj_being_used_with;
       rm_obj_from_inven(source_obj, obj_being_used_with);
       destroy_object(LVar0);
@@ -150,7 +155,7 @@ procedure talk_p_proc begin
          call Trent16;
       end
       else begin
-         if ((global_var(GVAR_TRENT_STATUS) bwand 1) != 0) then begin
+         if already_met_once then begin
             call Trent02;
          end
          else begin
@@ -167,7 +172,7 @@ procedure Trent00 begin
 end
 
 procedure Trent01 begin
-   set_global_var(GVAR_TRENT_STATUS, global_var(GVAR_TRENT_STATUS) bwor 1);
+   set_trent_herebefore;
    Reply(101);
    if (global_var(GVAR_MISSING_CARAVAN) == 1) then begin
       NOption(102, Trent03, 7);
@@ -208,8 +213,7 @@ procedure Trent04 begin
    NOption(120, Trent15, 4);
 end
 
-procedure Trent05
-begin
+procedure Trent05 begin
    variable LVar0 := 0;
    variable LVar1 := 0;
    calm := 0;

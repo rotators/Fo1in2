@@ -83,6 +83,7 @@ export variable signal_mutants;
 
 variable rnd_critter;
 variable RadsTimer;
+variable special_table;
 
 procedure start begin
 end
@@ -126,16 +127,20 @@ procedure map_enter_p_proc begin
                call roll_encounter;
             end
 
+            // The Fixt-table addition is not bad in itself, but let's make it not happen as often.
+            // We keep the chance to roll the original Vault-table, unless Fixt is specifically enabled in settings.
+            special_table := random(1,100);
+
             if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
                call North_table;
             end
             else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
                call South_table;
             end
-            else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+            else if ((global_var(GVAR_WORLDMAP_TABLE) == 11) andAlso (fixt_enabled or special_table > 75)) then begin // This table was added by Fixt. Originally it would run the Vault table
                call Vats_table;
             end
-            else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
+            else if((global_var(GVAR_WORLDMAP_TABLE) == 12) andAlso (fixt_enabled or special_table > 50)) then begin // This table was added by Fixt. Originally it would run the Vault table
                call Glow_table;
             end
             else begin
