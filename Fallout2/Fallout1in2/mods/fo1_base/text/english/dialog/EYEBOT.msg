@@ -14,7 +14,7 @@
 # You gain x ...
 {159}{}{ experience for successfully repairing the robots sensors.}
 {160}{}{You fail to repair the robots sensors.}
-{161}{}{You rewrie a bunch of cables. Now it might be posible to use a Small Energy or a Microfusion cell as a replacement battery.}
+{161}{}{You rewire a bunch of cables. Now it might be posible to use a Small Energy or a Microfusion cell as a replacement battery.}
 # You gain x ...
 {162}{}{ experience for replacing the built-in battery with a hotwired Microfusion cell.}
 {163}{}{The robot might not be as effective anymore as 100 years ago, but it works.}
