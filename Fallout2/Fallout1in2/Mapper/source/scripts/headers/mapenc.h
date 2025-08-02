@@ -21,14 +21,6 @@
 // NOTE: We "secretly" tripple the PE bonus from 3 to 12, otherwise the effect is impossible to notice in the Fo1 encounter spawn system.
 #define dude_enc_perception            (dude_perception + (9 * dude_perk(PERK_cautious_nature_perk)))
 
-// Worldmap tile names - unused for now, maybe useful once wm parsing in gl_worldmap.ssl is deprecated
-/*
-#define is_terrain_desert              (get_current_terrain_name == mstr_worldmap(1000))
-#define is_terrain_mountains           (get_current_terrain_name == mstr_worldmap(1001))
-#define is_terrain_city                (get_current_terrain_name == mstr_worldmap(1002))
-#define is_terrain_coast               (get_current_terrain_name == mstr_worldmap(1003))
-*/
-
 // Check if the player is currently traveling the wm with car
 #define car_on_wm                      ((global_var(GVAR_PLAYER_GOT_CAR) != 0) and (global_var(GVAR_CAR_CUR_MAP) == -1))
 

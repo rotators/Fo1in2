@@ -1,0 +1,107 @@
+/*
+
+   Automatically walk through party members without having to manually push them
+
+   NOTE:
+      This is experimental and unoptimized.
+      Needs to be expanded to cover all critters that can be pushed.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+#include "sfall/sfall.h"
+#include "sfall/define_extra.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+
+procedure combatturn_handler;
+procedure set_block_flag(variable who, variable state);
+procedure push_critter(variable who);
+
+#define BLOCK     (1)
+#define NOBLOCK   (0)
+
+#define set_noblock           set_flags(who, (get_flags(who) bwor FLAG_NOBLOCK))
+#define set_block             set_flags(who, (get_flags(who) bwand bwnot(FLAG_NOBLOCK)))
+
+#define who_inv_rot           (get_cur_rot(who) + 3)%6
+
+variable arrayPid;
+variable who;
+
+procedure start begin
+   if not(fo1in2_auto_push_enabled) then return;
+
+   if game_loaded then begin
+      set_global_script_repeat(60);
+      register_hook_proc(HOOK_COMBATTURN, combatturn_handler);
+      call map_enter_p_proc;
+   end
+   else begin
+      foreach (who in party_member_list_critters) begin
+         if combat_is_initialized then begin
+            call set_block_flag(who, BLOCK);
+         end
+         else begin
+            call set_block_flag(who, NOBLOCK);
+            call push_critter(who);
+         end
+      end
+   end
+end
+
+procedure map_enter_p_proc begin
+   if not(fo1in2_auto_push_enabled) then return;
+
+   foreach (who in party_member_list_critters) begin
+      call set_block_flag(who, NOBLOCK);
+   end
+end
+
+procedure combatturn_handler begin
+   foreach (who in party_member_list_critters) begin
+      call set_block_flag(who, BLOCK);
+   end
+end
+
+procedure push_critter(variable who) begin
+   if (who == dude_obj) then return;
+
+   variable obj_array :=  tile_get_objs(tile_num(who), elevation(who));
+   variable obj;
+
+   // If *any* critter is on the same hex, walk away
+   foreach (obj in obj_array) begin
+      if (obj_type(obj) == OBJ_TYPE_CRITTER) then begin
+         if (obj != who) then begin
+            variable tile := tile_num_in_direction(tile_num(who), who_inv_rot + random(-2,2), 1);
+            animate_move_obj_to_tile(who, tile, ANIMATE_WALK);
+            break;
+         end
+      end
+   end
+
+   //variable tile := tile_num_in_direction(tile_num(who), who_inv_rot + random(-2,2), 1);
+   //animate_move_obj_to_tile(who, tile, ANIMATE_WALK);
+end
+
+procedure set_block_flag(variable who, variable state) begin
+   if (who != dude_obj) then begin
+      if (state == NOBLOCK) then begin
+         if (tile_distance_objs(who, dude_obj) <= 2) then begin
+            set_noblock;
+         end
+         else begin
+            set_block;
+         end
+      end
+      else begin
+         set_block;
+      end
+   end
+end
+            
