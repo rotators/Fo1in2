@@ -81,6 +81,12 @@
 
 #define is_story_finished           (global_var(GVAR_GAME_CONTINUES) > 0)
 
+#define disableV13Entrance \
+   mark_map_entrance_state(MAP_VAULT13, 0);           \
+   mark_map_entrance_elev_state(MAP_VAULT13, 0, 0);   \
+   mark_map_entrance_elev_state(MAP_VAULT13, 1, 0);   \
+   mark_map_entrance_elev_state(MAP_VAULT13, 2, 0)
+
 /*********************************************************
     Quests:
 *********************************************************/
