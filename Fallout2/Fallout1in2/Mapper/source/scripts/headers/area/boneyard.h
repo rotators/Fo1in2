@@ -25,6 +25,18 @@
    if (not(get_blades_attack_finished) and (get_zimmermann_turned or get_blades_attacking)) then \
       set_self_team(TEAM_PLAYER)
 
+// Deathclaw spawn positions
+#define get_roamclaw_spawn_hex \
+   rnd := random(1, 7); \
+   if (rnd == 1) then      hex := 16890; \
+   else if (rnd == 2) then hex := 17269; \
+   else if (rnd == 3) then hex := 23492; \
+   else if (rnd == 4) then hex := 15885; \
+   else if (rnd == 5) then hex := 12287; \
+   else if (rnd == 6) then hex := 17511; \
+   else if (rnd == 7) then hex := 15475
+
+
 //******************** Quest: Blades vs. Regulators conflict
 //--- Gun Runners:
 // PipBoy quest tracker:
