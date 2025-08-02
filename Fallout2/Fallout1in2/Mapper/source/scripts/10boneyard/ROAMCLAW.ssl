@@ -18,6 +18,8 @@ procedure damage_p_proc;
 
 variable tmp_hostile;
 variable Only_Once := 1;
+variable hex;
+variable rnd;
 
 procedure start begin
    if Only_Once then begin
@@ -35,6 +37,28 @@ procedure map_enter_p_proc begin
          obj_rotate(critter, random(0, 5));
          destroy_object(self_obj);
       end
+   end
+
+   // Fail-safe, in case a Roamclaw gets out of bounds.
+   // Hex coordinates are taken from LARIPPER.ssl for consistency.
+   if (days_since_visited > 0) then begin
+      rnd := random(1, 7);
+      if (rnd == 1) then
+         hex := 16890;
+      else if (rnd == 2) then
+         hex := 17269;
+      else if (rnd == 3) then
+         hex := 23492;
+      else if (rnd == 4) then
+         hex := 15885;
+      else if (rnd == 5) then
+         hex := 12287;
+      else if (rnd == 6) then
+         hex := 17511;
+      else if (rnd == 7) then
+         hex := 15475;
+
+      critter_attempt_placement(self_obj, hex, self_elevation);
    end
 end
 

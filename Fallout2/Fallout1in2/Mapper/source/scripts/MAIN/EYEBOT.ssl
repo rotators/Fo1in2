@@ -37,6 +37,7 @@ procedure use_skill_on_p_proc;
 procedure use_obj_on_p_proc;
 procedure destroy_p_proc;
 
+procedure repair_robot;
 procedure repair_battery;
 
 procedure Node998;
@@ -71,6 +72,7 @@ procedure Heal_Robo(variable bonus);
 
 variable initial := 0;
 variable tmp_hostile := 0;
+variable repair_bonus := 0;
 
 #define LVAR_RobotExp                     (3)
 #define LVAR_AnimStatus                   (4)
@@ -350,45 +352,8 @@ procedure use_skill_on_p_proc begin
       script_overrides;
    end // Science End
    else if (action_being_used == SKILL_REPAIR) then begin
-      // Repair the defect sensors
-      if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
-         skill := roll_vs_skill(dude_obj, SKILL_REPAIR, -10);
-         if robot_online then begin
-            call flee_dude;
-            display_msg(mstr(155));
-         end
-         else if is_success(skill) then begin
-            set_local_var(LVAR_RobotState, STATE_IDLE);
-            give_xp_msg(EXP_REPAIR_ROBOT_SENSORS, mstr(159));
-            critter_uninjure(self_obj, DAM_BLIND);
-         end
-         else begin
-            display_msg(mstr(160));
-         end
-         script_overrides;
-      end
-
-      // Investigate the defect battery
-      else if (CUR_MAP_GLOWENT and robot_offline) then begin
-         if (local_var(LVAR_PowerState) >= 2) then begin
-            if (dude_skill_success(SKILL_REPAIR, -30) or (local_var(LVAR_PowerState) == 3)) then begin
-               if (local_var(LVAR_PowerState) < 3) then begin
-                  set_local_var(LVAR_PowerState, 3);
-                  gfade_out(ONE_GAME_SECOND);
-                     game_time_advance((ONE_GAME_MINUTE * random(10, 60)));
-                     display_msg(mstr(161));
-                  gfade_in(ONE_GAME_SECOND);
-               end
-            end
-            else begin
-               display_msg(mstr(152));
-            end
-         end
-         else begin
-            display_msg(mstr(154));
-         end
-         script_overrides;
-      end
+      repair_bonus := 0;
+      call repair_robot;
    end // Repair End
 
 end
@@ -455,6 +420,55 @@ procedure use_obj_on_p_proc begin
          script_overrides;
          call Heal_Robo(SUPER_TOOL);
       end
+   end
+
+   if (tool == PID_MULTI_TOOL or tool == PID_SUPER_TOOL_KIT) then begin
+      repair_bonus := 10;
+      call repair_robot;
+   end
+end
+
+procedure repair_robot begin
+   variable skill;
+
+   // Repair the defect sensors
+   if (local_var(LVAR_RobotState) == STATE_SENSORS_DEFECT) then begin
+      skill := roll_vs_skill(dude_obj, SKILL_REPAIR, (-10 + repair_bonus));
+      if robot_online then begin
+         call flee_dude;
+         display_msg(mstr(155));
+      end
+      else if is_success(skill) then begin
+         set_local_var(LVAR_RobotState, STATE_IDLE);
+         give_xp_msg(EXP_REPAIR_ROBOT_SENSORS, mstr(159));
+         critter_uninjure(self_obj, DAM_BLIND);
+      end
+      else begin
+         display_msg(mstr(160));
+      end
+      script_overrides;
+   end
+
+   // Investigate the defect battery
+   else if (CUR_MAP_GLOWENT and robot_offline) then begin
+      if (local_var(LVAR_PowerState) >= 2) then begin
+         gfade_out(ONE_GAME_SECOND);
+         if (dude_skill_success(SKILL_REPAIR, (-30 + repair_bonus)) or (local_var(LVAR_PowerState) == 3)) then begin
+            if (local_var(LVAR_PowerState) < 3) then begin
+               set_local_var(LVAR_PowerState, 3);
+               display_msg(mstr(161));
+            end
+         end
+         else begin
+            display_msg(mstr(152));
+         end
+         game_time_advance((ONE_GAME_MINUTE * random(10, 60)));
+         gfade_in(ONE_GAME_SECOND);
+      end
+      else begin
+         display_msg(mstr(154));
+      end
+      script_overrides;
    end
 end
 

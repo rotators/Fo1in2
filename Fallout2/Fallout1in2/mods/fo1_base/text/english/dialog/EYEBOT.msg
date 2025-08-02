@@ -4,7 +4,7 @@
 # Message log entries from investigating and using skills
 {150}{}{The robot is offline.}
 {151}{}{unused}
-{152}{}{The built-in battery is dead and needs to be replaced.}
+{152}{}{The built-in battery is dead and needs to be replaced, but you can't figure out how.}
 {153}{}{It seems the robot is tied to the Glow power system. It can't operate outside.}
 {154}{}{You have no idea what is wrong with the robot.}
 {155}{}{The robots motions are too frantic. You can't inspect it.}
@@ -14,7 +14,7 @@
 # You gain x ...
 {159}{}{ experience for successfully repairing the robots sensors.}
 {160}{}{You fail to repair the robots sensors.}
-{161}{}{You might be able to use a Small Energy or a Microfusion cell to build a replacement battery.}
+{161}{}{You rewrie a bunch of cables. Now it might be posible to use a Small Energy or a Microfusion cell as a replacement battery.}
 # You gain x ...
 {162}{}{ experience for replacing the built-in battery with a hotwired Microfusion cell.}
 {163}{}{The robot might not be as effective anymore as 100 years ago, but it works.}
