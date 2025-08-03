@@ -5,7 +5,7 @@
 {110}{}{WOOOAAAAAH!}
 {111}{}{WHAT IS THIS?!}
 {112}{}{WAA!}
-{113}{}{LOOK THIS!}
+{113}{}{LOOK!}
 {114}{}{BRRRRRRRR!}
 {115}{}{SO COOOOL!}
 {116}{}{WOAH!}
@@ -33,7 +33,7 @@
 {156}{}{I wish Jason could see this!}
 {157}{}{Can I go with you?}
 {158}{}{Let's go! BRRRRRR!}
-{159}{}{This is better than stupid Brahmin carts all day.}
+{159}{}{This is better than stupid Brahmin carts!}
 {160}{}{Are you from around here?}
 {161}{}{I haven't seen you before.}
 {162}{}{You are new here, right?}
