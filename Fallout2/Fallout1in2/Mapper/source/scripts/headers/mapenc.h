@@ -165,7 +165,27 @@ variable
    Item,
    Outer_ring;
 
-procedure Place_critter;
+
+variable restrict_range;
+procedure Place_critter begin
+   variable Facing := 0;
+   variable Distance := 0;
+   variable Ring := 0;
+   Critter := create_object_sid(Critter_type, 0, 0, Critter_script);
+   Ring := random(Inner_ring, Outer_ring);
+   if (restrict_range) then begin
+      Facing := random(0, 2);
+   end
+   else begin
+      Facing := random(0, 5);
+   end
+   Critter_tile := tile_num_in_direction(dude_tile, Critter_direction, Ring);
+   Distance := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
+   if ((tile_distance(dude_tile, Distance) <= Outer_ring) and (tile_distance(dude_tile, Distance) >= Inner_ring)) then begin
+      Critter_tile := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
+   end
+   critter_attempt_placement(Critter, Critter_tile, dude_elevation);
+end
 
 /************************************************
     Generate Scenery for Desert maps
