@@ -139,6 +139,7 @@
 variable
    scenery_elevation := 0,
    Range,
+   restrict_range,
 
    dude_pos,
    dude_rot,
@@ -166,7 +167,6 @@ variable
    Outer_ring;
 
 
-variable restrict_range;
 procedure Place_critter begin
    variable Facing := 0;
    variable Distance := 0;
