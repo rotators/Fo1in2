@@ -67,19 +67,26 @@ procedure map_enter_p_proc begin
    Lighting;
 
    if (map_first_run) then begin
+      // Array is top left of crossroad, ruined house, crossroad center
+      dude_pos := [20100, 16716, 22092]; // default pos
       dude_rot := random(0, 5);
 
-      dude_pos := [20100, 16716, 22092];
+      // Position fixes for non-vanilla maps
+      if (CUR_MAP_CITY2 or CUR_MAP_CITY3) then begin
+         dude_pos := [19501, 17719, 19300];
+      end
+      else if CUR_MAP_CITY4 then begin
+         dude_pos := [20100, 16716, 22293];
+      end
+      else if CUR_MAP_CITY5 then begin
+         dude_pos := [20100, 18316, 19900];
+      end
       dude_pos := array_random_value(dude_pos);
 
-      // Position fix, to not spawn inside a wall
-      if (CUR_MAP_CITY5 and dude_pos == 16716) then begin
-         dude_pos := 18316;
-      end
-
       override_map_start_hex(dude_pos, 0, dude_rot);
+      debug_red("dude_tile: " + dude_tile);
+      debug_red("cur_map: " + cur_map_index);
    end
-
    Critter_spawn_hex := dude_tile;
 
    if (global_var(GVAR_LOAD_MAP_INDEX) != 1) and (map_first_run) then begin
@@ -689,13 +696,12 @@ procedure Bone_2 begin
    display_msg(mstr(101));
    group_angle := random(0, 5);
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-      Critter := create_object(PID_FIRE_PIT, 0, 0);
+      Critter := create_object(PID_BURNING_BARREL, 0, 0);
       Critter_tile := tile_num_in_direction(Critter_spawn_hex, group_angle, 4);
       critter_attempt_placement(Critter, Critter_tile, dude_elevation);
-      Critter := create_object(PID_FIRE_PIT, 0, 0);
 
+      Critter := create_object(PID_BURNING_BARREL, 0, 0);
       enc_group_angle(Item)
-
       Critter_tile := tile_num_in_direction(Critter_spawn_hex, Item, 4);
       critter_attempt_placement(Critter, Critter_tile, dude_elevation);
    end
@@ -933,72 +939,6 @@ procedure Bone_4 begin
    end
    start_attack := 1;
    call Add_Mysterious_Stranger;
-
-   // Fixt:
-   /*display_msg(message_str(SCRIPT_RNDDESRT, 310));
-   Outer_ring := (dude_enc_perception / 2) + 6;
-   Inner_ring := (dude_enc_perception / 2) + 2;
-   Tot_Critter_A := random(2, 3);
-   group_angle := random(0, 5);
-
-   Critter_type := PID_GEN_THUG;
-   Critter_script := SCRIPT_GENRAIDA;
-   while(Tot_Critter_A) do begin
-      Critter_direction := group_angle + random(0, 2 * 2) - 2;
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      if (random(0, 1)) then begin
-         Item := create_object(PID_10MM_PISTOL, 0, 0);
-      end
-      else begin
-         Item := create_object(PID_10MM_SMG, 0, 0);
-      end
-      if (random(1, 3) > 1) then set_weapon_ammo_pid(Item, PID_10MM_AP);
-      add_obj_to_inven(Critter, Item);
-      if (random(0, 2) == 0) then begin
-         item_caps_adjust(Critter, fortune_finder(random(4, 25)));
-      end
-      Tot_Critter_A := Tot_Critter_A - 1;
-   end
-
-   Critter_type := PID_MAN_JEANS;
-   Critter_script := SCRIPT_GENRAIDA;
-   Critter_direction := group_angle + random(0, 2 * 2) - 2;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_FIRST_AID_KIT, 0, 0);
-   add_obj_to_inven(Critter, Item);
-   item_caps_adjust(Critter, fortune_finder(random(25, 100)));
-   if (random(0, 1)) then begin
-      Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
-      add_mult_objs_to_inven(Critter, Item, dude_perk(PERK_scrounger) + 1);
-   end
-   if (random(0, 1)) then begin
-      Item := create_object(PID_SLEDGEHAMMER, 0, 0);
-      add_obj_to_inven(Critter, Item);
-   end
-   if (random(0, 1)) then begin
-      Item := create_object(PID_44_MAGNUM_JHP, 0, 0);
-      add_mult_objs_to_inven(Critter, Item, dude_perk(PERK_scrounger) + 1);
-   end
-   if (random(0, 1)) then begin
-      Item := create_object(PID_KNIFE, 0, 0);
-      add_obj_to_inven(Critter, Item);
-   end
-
-   call Add_Mysterious_Stranger;*/
 end
 
 procedure Bone_5 begin
