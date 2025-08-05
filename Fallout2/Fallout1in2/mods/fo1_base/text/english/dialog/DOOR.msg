@@ -354,3 +354,8 @@
 {501}{}{Looks like you need to get the generator working first.}
 {502}{}{You see: Elevator door.}
 {503}{}{Looks like you need an electric device to open this lock.}
+
+# Taken from RPU
+# Crowbar bent
+{620}{}{You bend the crowbar beyond recognition. It's useless now.}
+{621}{}{ bends the crowbar beyond recognition. It's useless now.}
