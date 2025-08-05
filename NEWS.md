@@ -2,6 +2,7 @@ Notable changes since last release ([v1.13.3643](https://github.com/rotators/Fo1
 
 - **Added**: Auto-push feature for party members.
 - **Fixed**: "Kill Killian"-quest marker wouldn't show up.
+- **Fixed**: Encounter spawn positions for city maps 2 to 5 have been adjusted to more resemble the original Fo1 spawn points (Fo1 only has a single city encounter map).
 - **Fixed**: Garret's fridge would still not close correctly.
 - **Fixed**: Invisible Vasquez would occasionally open doors.
 - **Fixed**: Players with INT < 4 wouldn't get moved to the V13 library after returning the water chip.
@@ -12,7 +13,9 @@ Notable changes since last release ([v1.13.3643](https://github.com/rotators/Fo1
 - **Fixed**: Vault 13 Town/World interface entry points would disable already after just destroying either the Cathedral or Mariposa.
 - **Tweaked**: "Glow" and "Vats" mountain encounter table chances are reduced (this was a Fixt addition). If the roll fails, the original "Vault" table is used instead.
 - **Tweaked**: Cavern / Mine encounter spawn chance increases slightly if the player has the Explorer perk.
+- **Tweaked**: City encounter tables are closer to original Fo1 again. Removed the Boneyard table that was added with Fixt and merged reasonable tweaks into the default City encounter table to reduce code bloat.
 - **Tweaked**: Improved the eyeboat companion script and dialog a little bit for clarity. It can also be repaired with tools now.
 - **Tweaked**: Meat Jerky item is a "drug" now and can be used in the same way as iguana-on-a-stick.
+- **Tweaked**: Necropolis desert encounters are mostly changed back to the original Fo1 version. Bigger changes are now behind the Fixt-toggle option in the fo1_settings.ini file.
 - **Tweaked**: Super mutant patrols in the mountains around Mariposa will be smaller now (was a Fixt addition, tweaked for better vanilla compatibility).
 - **Tweaked**: When getting kicked out by Hightower in the Hub, the whole party will be moved out of the house now, not just the player.
