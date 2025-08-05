@@ -44,8 +44,11 @@
 #define LOCK_STATUS                     STATE_STANDARD_LOCK
 #define CLOSE_STATUS                    STATE_DOOR_CLOSE
 
-#define is_metal_door                  (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_DOOR_METAL_VAULT_EW or self_pid == PID_DOOR_METAL_VAULT_NS)
-#define is_wood_door                   not(is_metal_door)
+#define is_metal_door                   (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW or self_pid == PID_JAIL_DOOR_N_S or self_pid == PID_JAIL_DOOR_E_W or self_pid == PID_BANK_DOOR)
+#define is_wood_door                    not(is_metal_door)
+
+/* Penalties for forcing the door open using strength */
+//#define Crowbar_Bonus                   (0)
 
 /* Penalties for Lock difficulty based on whether or not you are using lockpicks. */
 #define Lock_Bonus                      (-20)
@@ -56,9 +59,6 @@
 #define Trap_Bonus                      (0)
 #define Trap_Set_Bonus                  (Trap_Bonus-10)
 
-/* Penalties for forcing the door open using strength */
-#define Crowbar_Bonus                   (0)
-
 /* Max and Min damage for the trap */
 #define DOOR_STRENGTH                   (2)
 #define MIN_DAMAGE                      (10)
@@ -68,6 +68,13 @@
 /* Experience Points for Skills */
 #define Lockpick_Exp                    EXP_LOCKPICK_NORMAL
 #define Traps_Exp                       EXP_TRAPS_NORMAL
+
+#define set_gave_xp \
+   if (local_var(LVAR_Gave_Locks_XP) == 0) then begin \
+      set_local_var(LVAR_Gave_Locks_XP, 1); \
+      give_xp(Lockpick_Exp); \
+   end \
+   noop
 
 /* Door close distance */
 #define DOOR_CLOSE_DIST                 (10) // vanilla : 3
@@ -102,6 +109,9 @@ procedure Set_Lock;
 procedure Set_Lockpick_Lock;
 procedure Super_Set_Lockpick_Lock;
 procedure Set_Trap;
+procedure roll_critical;
+procedure roll_pry_success;
+procedure roll_pry_destroy_crowbar;
 procedure Pry_Door;
 procedure Damage_Critter;
 
@@ -135,6 +145,7 @@ procedure Damage_Critter;
 variable Locks_Roll;
 variable Traps_Roll;
 variable last_source_obj;
+variable Crowbar_Bonus;
 
 
 /*******************************************************************
@@ -1227,10 +1238,7 @@ procedure Lockpick_Door begin
       else
          display_msg(obj_name(source_obj)+mstr(173));
 
-      if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-         set_local_var(LVAR_Gave_Locks_XP, 1);
-         give_xp(Lockpick_Exp);
-      end
+      set_gave_xp;
    end
    else if (is_critical(Locks_Roll)) then begin
       jam_lock(self_obj);
@@ -1301,10 +1309,7 @@ procedure Lock_Door begin
       else
          display_msg(obj_name(source_obj)+mstr(191));
 
-      if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-         set_local_var(LVAR_Gave_Locks_XP, 1);
-         give_xp(Lockpick_Exp);
-      end
+      set_gave_xp;
    end
    else begin
       if source_is_dude then
@@ -1319,49 +1324,112 @@ end
    This procedure is used should the player try to pry the door open using a
    crowbar or some similar instrument.
 ***************************************************************************/
+// Unbiased critical, used for prying with Crowbar.
+procedure roll_critical begin
+   variable rnd = random(1,20);
+   if rnd == 20 then return true;
+   return false;
+end
+
+// For wood doors, Crowbar_Bonus = 0, which means always success
+procedure roll_pry_success begin
+   variable rnd = random(1,10);
+   if rnd <= (get_critter_stat(source_obj,STAT_st) + Crowbar_Bonus) then return true;
+   return false;
+end
+
+// Sturdier doors and high strength provide more chance to mangle the crowbar
+// Any STR char + wood door = 1% chance to destroy
+// 5 STR char + metal door = 10% chance to destroy
+// 10 STR char + metal door = 20% chance to destroy
+procedure roll_pry_destroy_crowbar begin
+   variable rnd = random(1,100);
+   variable str = get_critter_stat(source_obj,STAT_st);
+   // Base Crowbar_Bonus = 0 (wood door). For metal doors, default is -2
+   variable penalty = str * Crowbar_Bonus;
+   if rnd + penalty <= 1 then return true;
+   return false;
+end
 
 procedure Pry_Door begin
-   variable Stat_Roll;
+   variable pry_success;
+   variable pry_strain;
+   variable pry_destroy_crowbar;
 
-   Stat_Roll := do_check(source_obj, STAT_st, Crowbar_Bonus);
-
-   if (is_success(Stat_Roll)) then begin
-      set_local_var(LVAR_Locked, STATE_INACTIVE);
-      obj_unlock(self_obj);
-
-      if source_is_dude then
-         display_msg(mstr(176));
-      else
-         display_msg(mstr(181));
+   if not obj_is_locked(self_obj) then begin
+      display_msg(mstr(105));
+      return;
    end
-   else if (is_critical(Stat_Roll)) then begin
-      critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
-      if source_is_dude then begin
-         if (Crowbar_Strain == 1) then
-            display_msg(mstr(177));
-         else
-            display_msg(mstr(178)+Crowbar_Strain + mstr(179));
-      end
-      else begin
-         if (get_is_male(source_obj)) then begin
-            if (Crowbar_Strain == 1) then
-               display_msg(mstr(182));
-            else
-               display_msg(mstr(183)+Crowbar_Strain + mstr(184));
-         end
-         else begin
-            if (Crowbar_Strain == 1) then
-               display_msg(mstr(186));
-            else
-               display_msg(mstr(187)+Crowbar_Strain + mstr(188));
-         end
-      end
+
+
+   /* Penalties for forcing the door open using strength */
+   if is_metal_door then begin
+      Crowbar_Bonus := -2;
    end
    else begin
-      if source_is_dude then
-         display_msg(mstr(180));
-      else
-         display_msg(mstr(185));
+      Crowbar_Bonus := 0;
+   end
+
+
+   // crowbar destroy runs always, discouraging high STR characters from spamming it
+   pry_destroy_crowbar = roll_pry_destroy_crowbar();
+   if pry_destroy_crowbar then begin
+      variable crowbar = get_item(source_obj, PID_CROWBAR);
+      rm_obj_from_inven(source_obj, crowbar);
+      destroy_object(crowbar);
+      if (source_obj == dude_obj) then display_msg(mstr(620));
+      else display_msg(obj_name(source_obj) + mstr(621));
+      return;
+   end
+
+   pry_success = roll_pry_success();
+   if pry_success then begin
+      obj_unlock(self_obj);
+      if (source_obj == dude_obj) then begin
+         display_msg(mstr(176));
+      end else begin
+         display_msg(obj_name(source_obj) + mstr(181));
+      end
+      set_gave_xp;
+      return;
+   end
+
+   // failure: damage
+   pry_strain = roll_critical();
+   if pry_strain then begin
+      critter_dmg(source_obj,Crowbar_Strain,(DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+      if (source_obj == dude_obj) then begin
+         if (Crowbar_Strain == 1) then begin
+            display_msg(mstr(177));
+         end
+         else begin
+            display_msg(mstr(178) + Crowbar_Strain + mstr(179));
+         end
+      end
+      else begin
+         if source_is_dude then begin
+            if (Crowbar_Strain == 1) then begin
+               display_msg(obj_name(source_obj) + mstr(182));
+            end
+            else begin
+               display_msg(obj_name(source_obj) + mstr(183) + Crowbar_Strain + mstr(184));
+            end
+         end
+         else begin
+            if (Crowbar_Strain == 1) then begin
+               display_msg(obj_name(source_obj) + mstr(186));
+            end
+            else begin
+               display_msg(obj_name(source_obj) + mstr(187) + Crowbar_Strain + mstr(188));
+            end
+         end
+      end
+   end
+
+   // regular failure
+   if not(pry_strain) then begin
+      if (source_obj == dude_obj) then display_msg(mstr(180));
+      else display_msg(obj_name(source_obj) + mstr(185));
    end
 end
 

@@ -202,7 +202,9 @@ variable Scenery_Creation_Ptr;
 #define PID_BED_2                           (33554641)
 
 // Doors
+#define PID_JAIL_DOOR_E_W                   (33555077)
 #define PID_JAIL_DOOR_N_S                   (33555013)
+#define PID_BANK_DOOR                       (33555258)
 
 // Slagged Door
 #define PID_SLAGGED_DOOR_BOTTOM             (33555810)

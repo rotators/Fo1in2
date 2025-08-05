@@ -12,11 +12,19 @@ procedure use_p_proc;
 procedure use_obj_on_p_proc;
 procedure damage_p_proc;
 
+procedure roll_critical;
+procedure roll_pry_destroy_crowbar;
+
+#define mstr_door(x)             message_str(SCRIPT_DOOR, x)
+
 #define float_dude(x)             float_msg(dude_obj, mstr(x), FLOAT_COLOR_NORMAL)
 
 #define EVENT_OPEN_DOOR    (1)
 
 #define LVAR_Door_Open     (0)
+
+#define Crowbar_Strain     (2)
+#define Crowbar_Bonus      (-2)
 
 variable stats_combined := 0;
 variable crowbar := 0;
@@ -69,11 +77,58 @@ end
 
 procedure use_obj_on_p_proc begin
 variable object;
+variable pry_success;
+variable pry_strain;
+variable pry_destroy_crowbar;
    object := obj_pid(obj_being_used_with);
 
    if (object == PID_CROWBAR) then begin
-      crowbar := 2;
-      call use_p_proc;
+      // crowbar destroy runs always, discouraging high STR characters from spamming it
+      pry_destroy_crowbar = roll_pry_destroy_crowbar();
+      if pry_destroy_crowbar then begin
+         variable crowbar = get_item(source_obj, PID_CROWBAR);
+         rm_obj_from_inven(source_obj, crowbar);
+         destroy_object(crowbar);
+         if (source_obj == dude_obj) then display_msg(mstr_door(620));
+         else display_msg(obj_name(source_obj) + mstr_door(621));
+         return;
+      end
+
+      // failure: damage
+      pry_strain = roll_critical();
+      if pry_strain then begin
+         critter_dmg(source_obj,Crowbar_Strain,(DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+         if (source_obj == dude_obj) then begin
+            if (Crowbar_Strain == 1) then begin
+               display_msg(mstr_door(177));
+            end
+            else begin
+               display_msg(mstr_door(178) + Crowbar_Strain + mstr_door(179));
+            end
+         end
+         else begin
+            if source_is_dude then begin
+               if (Crowbar_Strain == 1) then begin
+                  display_msg(obj_name(source_obj) + mstr_door(182));
+               end
+               else begin
+                  display_msg(obj_name(source_obj) + mstr_door(183) + Crowbar_Strain + mstr_door(184));
+               end
+            end
+            else begin
+               if (Crowbar_Strain == 1) then begin
+                  display_msg(obj_name(source_obj) + mstr_door(186));
+               end
+               else begin
+                  display_msg(obj_name(source_obj) + mstr_door(187) + Crowbar_Strain + mstr_door(188));
+               end
+            end
+         end
+      end
+      else begin
+         crowbar := 2;
+         call use_p_proc;
+      end
    end
 end
 
@@ -82,4 +137,28 @@ procedure damage_p_proc begin
 
    if (weapon_dmg_type(target_obj) == DMG_explosion) then
       display_msg(message_str(SCRIPT_DOOR, 193));
+end
+
+/***************************************************************************
+   This procedure is used should the player try to pry the door open using a
+   crowbar or some similar instrument.
+***************************************************************************/
+// Unbiased critical, used for prying with Crowbar.
+procedure roll_critical begin
+   variable rnd = random(1,20);
+   if rnd == 20 then return true;
+   return false;
+end
+
+// Sturdier doors and high strength provide more chance to mangle the crowbar
+// Any STR char + wood door = 1% chance to destroy
+// 5 STR char + metal door = 10% chance to destroy
+// 10 STR char + metal door = 20% chance to destroy
+procedure roll_pry_destroy_crowbar begin
+   variable rnd = random(1,100);
+   variable str = get_critter_stat(source_obj,STAT_st);
+   // Base Crowbar_Bonus = 0 (wood door). For metal doors, default is -2
+   variable penalty = str * Crowbar_Bonus;
+   if rnd + penalty <= 1 then return true;
+   return false;
 end
