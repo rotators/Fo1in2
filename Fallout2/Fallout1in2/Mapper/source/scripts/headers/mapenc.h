@@ -617,7 +617,7 @@ procedure drink_water begin
       debug("ERROR! Can't find item for dehydration encounter event!");
 end
 
-// Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
+// Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table, Raiders table
 procedure dehydration_a begin
    TimeHours := random(1, 6);
 
