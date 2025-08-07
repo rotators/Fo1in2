@@ -4,7 +4,9 @@ Notable changes since last release ([v1.13.3643](https://github.com/rotators/Fo1
 - **Fixed**: "Kill Killian"-quest marker wouldn't show up.
 - **Fixed**: Encounter spawn positions for city maps 2 to 5 have been adjusted to more resemble the original Fo1 spawn points (Fo1 only has a single city encounter map).
 - **Fixed**: Garret's fridge would still not close correctly.
+- **Fixed**: Generic Guard A in encounters would float in gray text while it should be green in (original Fo1).
 - **Fixed**: Invisible Vasquez would occasionally open doors.
+- **Fixed**: Missing invisible blockers on car scenery in City4 encounter map.
 - **Fixed**: Players with INT < 4 wouldn't get moved to the V13 library after returning the water chip.
 - **Fixed**: Removed Cat's Paw magazine from Shady Sands map (was added by Fixt for some reason).
 - **Fixed**: The Special Encounters mechanic has been moved into script and is now selecting maps with the same chances as in original Fo1.
@@ -14,8 +16,11 @@ Notable changes since last release ([v1.13.3643](https://github.com/rotators/Fo1
 - **Tweaked**: "Glow" and "Vats" mountain encounter table chances are reduced (this was a Fixt addition). If the roll fails, the original "Vault" table is used instead.
 - **Tweaked**: Cavern / Mine encounter spawn chance increases slightly if the player has the Explorer perk.
 - **Tweaked**: City encounter tables are closer to original Fo1 again. Removed the Boneyard table that was added with Fixt and merged reasonable tweaks into the default City encounter table to reduce code bloat.
+- **Tweaked**: Desert, Coast, and Mountain encounter tables overhauled. Lots of Fixt changes have either been reverted to how they were in Fo1, or put behind the fixt_enabled setting in the fo1_settings.ini file.
 - **Tweaked**: Improved the eyeboat companion script and dialog a little bit for clarity. It can also be repaired with tools now.
 - **Tweaked**: Meat Jerky item is a "drug" now and can be used in the same way as iguana-on-a-stick.
 - **Tweaked**: Necropolis desert encounters are mostly changed back to the original Fo1 version. Bigger changes are now behind the Fixt-toggle option in the fo1_settings.ini file.
 - **Tweaked**: Super mutant patrols in the mountains around Mariposa will be smaller now (was a Fixt addition, tweaked for better vanilla compatibility).
+- **Tweaked**: Using a crowbar to open locks now has the chance to break it (using improved crowbar code by RPU).
 - **Tweaked**: When getting kicked out by Hightower in the Hub, the whole party will be moved out of the house now, not just the player.
+- **Tweaked**: fo1_settings.ini file text descriptions a little for clarity.
