@@ -45,7 +45,7 @@
 {2001}{}{[More]}
 {2002}{}{[Irwine explains the directions in great detail. So much so, you're almost falling asleep. Minutes go by till you finally plotted the directions on your PipBoy]}
 # Floats, Irwine is back at his farm:
-{2500}{}{Thank your for giving me my farm back.}
+{2500}{}{Thank you for giving me my farm back.}
 {2501}{}{Thanks again.}
 {2502}{}{There is much work to do.}
 {2503}{}{These raiders trashed my table.}
