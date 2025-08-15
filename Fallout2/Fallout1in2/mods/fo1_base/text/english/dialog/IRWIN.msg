@@ -43,8 +43,8 @@
 # Fo1in2:
 {2000}{}{First, right after leaving the Hub you will follow the main road eastwards for a few miles, past the old rail road station. Then circle down south, you will find the old Cooper farm (you can't miss it). Walk right past it, and then ... }
 {2001}{}{[More]}
-{2002}{}{[Irwine explains the directions in great detail. So much so, you're almost falling asleep. Minutes go by till you finally plotted the directions on your PipBoy]}
-# Floats, Irwine is back at his farm:
+{2002}{}{[Irwin explains the directions in great detail. So much so, you're almost falling asleep. Minutes go by till you finally plotted the directions on your PipBoy]}
+# Floats, Irwin is back at his farm:
 {2500}{}{Thank you for giving me my farm back.}
 {2501}{}{Thanks again.}
 {2502}{}{There is much work to do.}
