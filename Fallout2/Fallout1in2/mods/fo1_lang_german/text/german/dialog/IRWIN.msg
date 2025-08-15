@@ -1,59 +1,59 @@
 {100}{}{Du siehst Irwin.}
 {101}{}{Ach Junge, kannst du mich nicht in Ruhe lassen? Ich hab' schon genug Probleme.}
 {102}{}{Probleme? Vielleicht kann ich helfen.}
-{103}{}{Als ob nur du Probleme hättest.}
-{104}{}{Okay, okay. Musst mich ja nicht gleich anbrüllen.}
-{105}{}{Hmm ... Ich weiß nicht. Ich brauch' 'ne andere Sorte Held als dich. Hör mal, warum kommst du nicht wieder, wenn du ein bisschen Erfahrung gesammelt hast?}
-{106}{}{Es ist eine Tragödie, kannst du mir glauben. Nichts ist so, wie es mal war. Ich habe 'nen kleinen Bauernhof vor der Stadt, und vor ein paar Tagen ist ein Haufen Raiders aufgekreuzt und benutzt mein Heim jetzt als Lager. Sie haben Pugsley, meinen Esel, getötet und mir gedroht, dass sie mit mir dasselbe machen, wenn ich es wage zurückzukehren.}
-{107}{}{Sag mir wo, und ich kümmer' mich um den Rest.}
+{103}{}{Als ob nur du Probleme hÃ¤ttest.}
+{104}{}{Okay, okay. Musst mich ja nicht gleich anbrÃ¼llen.}
+{105}{}{Hmm ... Ich weiÃŸ nicht. Ich brauch' 'ne andere Sorte Held als dich. HÃ¶r mal, warum kommst du nicht wieder, wenn du ein bisschen Erfahrung gesammelt hast?}
+{106}{}{Es ist eine TragÃ¶die, kannst du mir glauben. Nichts ist so, wie es mal war. Ich habe 'nen kleinen Bauernhof vor der Stadt, und vor ein paar Tagen ist ein Haufen Raiders aufgekreuzt und benutzt mein Heim jetzt als Lager. Sie haben Pugsley, meinen Esel, getÃ¶tet und mir gedroht, dass sie mit mir dasselbe machen, wenn ich es wage zurÃ¼ckzukehren.}
+{107}{}{Sag mir wo, und ich kÃ¼mmer' mich um den Rest.}
 {108}{}{Tut mir leid, Irwin, aber ich habe Wichtigeres zu tun.}
-{109}{}{Wirklich, würdest du das tun? Weißt du, ich trau' mich nicht mehr zurück. Warum kommst du nicht wieder und sagst mir, wenn ich wieder sicher nach Hause kann?}
-{110}{}{Hör zu, du Typ! Ich hab' von Anfang an gesagt, dass du mich in Ruhe lassen sollst. Jetzt hau ab!}
+{109}{}{Wirklich, wÃ¼rdest du das tun? WeiÃŸt du, ich trau' mich nicht mehr zurÃ¼ck. Warum kommst du nicht wieder und sagst mir, wenn ich wieder sicher nach Hause kann?}
+{110}{}{HÃ¶r zu, du Typ! Ich hab' von Anfang an gesagt, dass du mich in Ruhe lassen sollst. Jetzt hau ab!}
 {111}{}{Ich hab' gewusst, dass du kneifst. Jeder kneift vor den Raiders.}
 {112}{}{Hast du den Raiders eine Lektion erteilt? Ist mein Zuhause wieder sicher?}
 {113}{}{Aber klar doch, Kumpel!}
-{114}{}{Ich hatte noch nicht die Zeit, mich darum zu kümmern.}
-{115}{}{Oh, herzlichsten Dank. Ich kann dir leider keine Reichtümer schenken, aber da, nimm diese Pistole als Belohnung dafür, dass du mein Heim gerettet hast.}
-{116}{}{Du willst mich auf den Arm nehmen, stimmt's? Spiel bitte nicht mit mir. Komm zurück und sag's mir, wenn ich wieder sicher nach Hause kann, okay?}
+{114}{}{Ich hatte noch nicht die Zeit, mich darum zu kÃ¼mmern.}
+{115}{}{Oh, herzlichsten Dank. Ich kann dir leider keine ReichtÃ¼mer schenken, aber da, nimm diese Pistole als Belohnung dafÃ¼r, dass du mein Heim gerettet hast.}
+{116}{}{Du willst mich auf den Arm nehmen, stimmt's? Spiel bitte nicht mit mir. Komm zurÃ¼ck und sag's mir, wenn ich wieder sicher nach Hause kann, okay?}
 {117}{}{Vielen Dank, dass du mir hilfst.}
 
 # Nimrod
-{200}{}{Du erhältst }
-{201}{}{ Erfahrungspunkte dafür, dass du Irwin's Farm gerettet hast.}
+{200}{}{Du erhÃ¤ltst }
+{201}{}{ Erfahrungspunkte dafÃ¼r, dass du Irwin's Farm gerettet hast.}
 
 #for Stupid characters
 {118}{}{Grunk?}
-{119}{}{Hör zu, ich habe keine Zeit für Idioten. Komm zurück, wenn du schlauer bist.}
-{120}{}{Äh. Häh. Äh. Häh. Getan.}
+{119}{}{HÃ¶r zu, ich habe keine Zeit fÃ¼r Idioten. Komm zurÃ¼ck, wenn du schlauer bist.}
+{120}{}{Ã„h. HÃ¤h. Ã„h. HÃ¤h. Getan.}
 {121}{}{Ich noch nichts gemacht.}
 {123}{}{Nicht finde Farm. Du zeigen?}
 {403}{}{Dank-e!}
 
 # the Raiders at his farm
-{300}{}{Tritt vor deinen Schöpfer!}
+{300}{}{Tritt vor deinen SchÃ¶pfer!}
 {301}{}{Macht ihn platt!}
-{302}{}{Das war dein letztes Käsebrot!}
-{303}{}{Gleich siehst du aus wie Schweizer Käse, voller Löcher!}
+{302}{}{Das war dein letztes KÃ¤sebrot!}
+{303}{}{Gleich siehst du aus wie Schweizer KÃ¤se, voller LÃ¶cher!}
 
 # TODO: TRANSLATE
 # Sduibek
-{400}{}{Nicht ganz. Könntest du mir erneut beschreiben wie ich hin komme?}
-{401}{}{Mache ich, aber beeile dich bitte. Ich will entlich zurück nach Hause.}
+{400}{}{Nicht ganz. KÃ¶nntest du mir erneut beschreiben wie ich hin komme?}
+{401}{}{Mache ich, aber beeile dich bitte. Ich will entlich zurÃ¼ck nach Hause.}
 {402}{}{Danke.}
 
 # Fo1in2:
-{2000}{}{Gleich nach dem Verlassen des Hubs folgst du zunächst der Hauptstraße einige Kilometer nach Osten, vorbei am alten Bahnhof. Dreh' dann ab nach Süden und du findest die alte Cooper Farm. Kannst sie wirklich nicht verfehlen. Geh' direkt dran vorbei, und dann... }
+{2000}{}{Gleich nach dem Verlassen des Hubs folgst du zunÃ¤chst der HauptstraÃŸe einige Kilometer nach Osten, vorbei am alten Bahnhof. Dreh' dann ab nach SÃ¼den und du findest die alte Cooper Farm. Kannst sie wirklich nicht verfehlen. Geh' direkt dran vorbei, und dann... }
 {2001}{}{[MEHR]}
-{2002}{}{[Irwin erklärt die Anweisungen derart detailliert, dass du fast einschläfst. Einige Minuten vergehen, bis du endlich die Anweisungen auf den PipBoy übertragen hast.]}
-# Floats, Irwine is back at his farm:
-{2500}{}{Danke, dass du mir meine Farm zurückgegeben hast.}
+{2002}{}{[Irwin erklÃ¤rt die Anweisungen derart detailliert, dass du fast einschlÃ¤fst. Einige Minuten vergehen, bis du endlich die Anweisungen auf den PipBoy Ã¼bertragen hast.]}
+# Floats, Irwin is back at his farm:
+{2500}{}{Danke, dass du mir meine Farm zurÃ¼ckgegeben hast.}
 {2501}{}{Danke noch einmal.}
 {2502}{}{Es gibt viel zu tun.}
-{2503}{}{Die Raider haben meinen Tisch verwüstet.}
+{2503}{}{Die Raider haben meinen Tisch verwÃ¼stet.}
 {2504}{}{Oh Gott, sieh dir das an!}
 {2505}{}{Hallo.}
 {2506}{}{Du bist immer noch hier?}
-{2507}{}{Ich hoffe du benutzt die Waffe für einen guten Zweck!}
+{2507}{}{Ich hoffe du benutzt die Waffe fÃ¼r einen guten Zweck!}
 {2508}{}{Es wird eine Weile dauern, bis meine Farm wieder was abwirft. *seufz*}
-{2509}{}{Schön dich zu sehen.}
+{2509}{}{SchÃ¶n dich zu sehen.}
 {2510}{}{Wie geht's?}
