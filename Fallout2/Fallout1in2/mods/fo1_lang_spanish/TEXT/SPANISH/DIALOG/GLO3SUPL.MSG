@@ -1,0 +1,3 @@
+{100}{}{La cabeza nuclear ha volado estas puertas.}
+{101}{}{La puerta está tan atascada que no la puedes abrir.}
+
