@@ -101,7 +101,7 @@
 {200}{}{[Laughs] Me, I'd rather screw someone rather than get screwed. But we shouldn't talk like this out in the open. The zombies don't like it.}
 {201}{}{Ya know, there are a lot of other people around here who think like that. Go bother them.}
 {202}{}{I ain't saying nothing to you, pal. Go to hell.}
-{203}{}{The guy dresses in black, he does his preacher act, then he goes upstairs and counts his scrip. Man, I wish I had it that easy! But I better stop talking about him behind his back, or the Nightkin might hear.}
+{203}{}{The guy dresses in purple, he does his preacher act, then he goes upstairs and counts his scrip. Man, I wish I had it that easy! But I better stop talking about him behind his back, or the Nightkin might hear.}
 {204}{}{What are you afraid of?}
 {205}{}{I want to know more.}
 {206}{}{Where's all the caps around here?}
