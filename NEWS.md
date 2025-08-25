@@ -11,6 +11,8 @@ Notable changes since last release ([v1.13.3643](https://github.com/rotators/Fo1
 - **Fixed**: Removed Cat's Paw magazine from Shady Sands map (was added by Fixt for some reason).
 - **Fixed**: The Special Encounters mechanic has been moved into script and is now selecting maps with the same chances as in original Fo1.
 - **Fixed**: The position of the roaming deathclaws in the Boneyard will reset after some time has passed to prevent rare out-of-bounds issue.
+- **Fixed**: Typo in Irwin dialog.
+- **Fixed**: Typo in Irwin floating dialog.
 - **Fixed**: Using the stealing skill on the disabled Mr Handy in Mariposa would print an error-message.
 - **Fixed**: Vault 13 Town/World interface entry points would disable already after just destroying either the Cathedral or Mariposa.
 - **Tweaked**: "Glow" and "Vats" mountain encounter table chances are reduced (this was a Fixt addition). If the roll fails, the original "Vault" table is used instead.
