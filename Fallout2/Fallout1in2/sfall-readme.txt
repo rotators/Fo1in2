@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.7, built for Fallout 2 v1.02 US
+version 4.4.7.1, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -54,13 +54,19 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ** Changelog **
 ***************
 
+v4.4.7.1
+>Added a fix for a crash when an encounter between two groups fighting each other fails to spawn one group
+>Added a fix to use the art\splash\ directory as the fallback for loading splash screens for non-English languages
+>Added a fix for file seeking in uncompressed .dat files
+>Added an option to disable the engine's processing of Arroyo-related events
+
 v4.4.7
 >Fixed potential undefined behavior in FullItemDescInBarter
 >Fixed the behavior of 'break' statement in script compiler and decompiler (compile.exe and int2ssl.exe in the modders pack)
 >Improved the fix for removing floating text messages on the map when moving to another map or elevation
 >Improved the error handling for missing main .dat files
 >Removed glass glare from the 'Use Inventory Item On' window to match other game interfaces
->Added a fix for a crash when a critter with a powered melee/unarmed weapon ran out of ammo and there was ammo nearby
+>Added a fix for a crash when a critter with a powered melee/unarmed weapon runs out of ammo and there is ammo nearby
 >Added a fix to prevent a potential crash when using skills on non-critter objects
 >Added a fix for the duplicate click sound for the 'Done' button in the 'Move Items' and 'Set Timer' windows
 >Added a few fixes for slightly misaligned buttons in the pipboy, character screen, and barter screen
@@ -390,7 +396,7 @@ v4.3
 >Added a tweak to prevent NPC aggression when non-hostile NPCs accidentally hit the player or members of the player's team
 >Added a tweak to play the 'magic hands' animation when using an item on an object. This also prevents a few issues with scripted animations not playing
 >Added a tweak to remove the unspent skill points limit
->Added an option to disable the special handling of city areas 45 and 46 in the engine when visiting Area 45
+>Added an option to disable the engine's special handling of city areas 45 and 46 when visiting Area 45
 >Added a new value to AIDrugUsePerfFix to allow NPCs to use only the drugs listed in chem_primary_desire and healing drugs
 >Added support for loading premade character GCD/BIO files from the premade\<language>\ directory for non-English languages
 >Added support for loading fonts from the fonts\<language>\ directory for non-English languages
@@ -752,7 +758,7 @@ v4.1.7
 >Added a fix to prevent the reserved object IDs of the player and party members from being generated for other objects
 >Added a fix for the display issue in the pipboy when the automap list is too long
 >Added a fix for the start procedure not being called correctly if the required standard script procedure is missing (from Crafty)
->Added an option to disable the special handling of map IDs 19 and 37 in the engine when entering the maps
+>Added an option to disable the engine's special handling of map IDs 19 and 37 when entering those maps
 >Added support for the new 'automap=yes/no' parameter to maps.txt. This parameter overrides the hardcoded values for displaying the map in the pipboy automaps for the first 160 maps
 >Added a new 'picking up item' event to HOOK_INVENTORYMOVE hook script
 >Added files for using 32-bit images for talking heads to the modders pack
