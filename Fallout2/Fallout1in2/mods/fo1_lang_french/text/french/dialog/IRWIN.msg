@@ -44,7 +44,7 @@
 {2000}{}{D'abord, juste après avoir quitté le Centre, vous suivrez la route à l'Est pour quelques kilomètres, après la gare ferroviaire. Bifurquez vers le Sud, et vous tomberez sur la ferme du vieux Cooper (vous pouvez pas la rater). Passez là et ensuite... }
 {2001}{}{[Continue]}
 {2002}{}{[Irwin t'explique la route à suivre en grands détails. Tellement, que tu dois lutter contre le sommeil. Après quelques minutes, tu réussi à ajouter l'emplacement sur ton PipBoy]}
-# Floats, Irwine is back at his farm:
+# Floats, Irwin is back at his farm:
 {2500}{}{Merci de m'avoir rendu ma ferme.}
 {2501}{}{Encore merci.}
 {2502}{}{Il y a tellement de travail à faire.}

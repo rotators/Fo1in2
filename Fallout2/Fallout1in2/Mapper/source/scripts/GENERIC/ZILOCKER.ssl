@@ -369,15 +369,15 @@ end
 ***************************************************************************/
 // Unbiased critical, used for prying with Crowbar.
 procedure roll_critical begin
-   variable rnd = random(1,20);
+   variable rnd = random(1, 20);
    if rnd == 20 then return true;
    return false;
 end
 
 // For wood doors, Crowbar_Bonus = 0, which means always success
 procedure roll_pry_success begin
-   variable rnd = random(1,10);
-   if rnd <= (get_critter_stat(source_obj,STAT_st) + PRY_CROWBAR_MOD) then return true;
+   variable rnd = random(1, 10);
+   if rnd <= (get_strength(source_obj) + PRY_CROWBAR_MOD) then return true;
    return false;
 end
 
@@ -386,8 +386,8 @@ end
 // 5 STR char + metal door = 10% chance to destroy
 // 10 STR char + metal door = 20% chance to destroy
 procedure roll_pry_destroy_crowbar begin
-   variable rnd = random(1,100);
-   variable str = get_critter_stat(source_obj,STAT_st);
+   variable rnd = random(1, 100);
+   variable str = get_strength(source_obj);
    // Base Crowbar_Bonus = 0 (wood door). For metal doors, default is -2
    variable penalty = str * PRY_CROWBAR_MOD;
    if rnd + penalty <= 1 then return true;
@@ -425,7 +425,7 @@ procedure Pry_Container begin
    // failure: damage
    pry_strain = roll_critical();
    if pry_strain then begin
-      critter_dmg(source_obj,Crowbar_Strain,(DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+      critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
       if (source_obj == dude_obj) then begin
          if (Crowbar_Strain == 1) then begin
             display_msg(mstr_door(177));
@@ -460,4 +460,3 @@ procedure Pry_Container begin
       else display_msg(obj_name(source_obj) + mstr_door(185));
    end
 end
-

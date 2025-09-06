@@ -45,7 +45,7 @@
 {2000}{}{Gleich nach dem Verlassen des Hubs folgst du zunächst der Hauptstraße einige Kilometer nach Osten, vorbei am alten Bahnhof. Dreh' dann ab nach Süden und du findest die alte Cooper Farm. Kannst sie wirklich nicht verfehlen. Geh' direkt dran vorbei, und dann... }
 {2001}{}{[MEHR]}
 {2002}{}{[Irwin erklärt die Anweisungen derart detailliert, dass du fast einschläfst. Einige Minuten vergehen, bis du endlich die Anweisungen auf den PipBoy übertragen hast.]}
-# Floats, Irwine is back at his farm:
+# Floats, Irwin is back at his farm:
 {2500}{}{Danke, dass du mir meine Farm zurückgegeben hast.}
 {2501}{}{Danke noch einmal.}
 {2502}{}{Es gibt viel zu tun.}
