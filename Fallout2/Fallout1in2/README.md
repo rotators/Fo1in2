@@ -46,7 +46,7 @@ MOD INSTALLATION
 
 - Extract the files.
 
-That's it. The game can now be played!
+That's it. The game can now be played using `Fallout1in2\Fallout2.exe`!
 
 When using Linux with Wine, if there are issues running the game correctly, set the *.dll override priorities in Wine: `WINEDLLOVERRIDES="ddraw.dll=n,b" wine Fallout2.exe`
 
@@ -137,3 +137,4 @@ SPECIAL THANKS
 
 We would like to thank NovaRain and Mr.Stalin for their never-ending amounts of patience, scripting advices, sfall tweaks, testing sessions and general support while we was working on the project.
 We love you guys!
+
