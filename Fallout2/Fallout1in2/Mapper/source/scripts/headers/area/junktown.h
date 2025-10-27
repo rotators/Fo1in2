@@ -33,10 +33,12 @@
 
 #define set_quest_kill_killian_active      set_global_var(GVAR_KILL_KILLIAN, 1)
 #define set_quest_kill_killian_completed   set_global_var(GVAR_KILL_KILLIAN, 2)
+#define set_quest_kill_killian_canceled    set_global_var(GVAR_KILL_KILLIAN, 3)
 
 #define quest_kill_killian_inactiv        (global_var(GVAR_KILL_KILLIAN) == 0)
 #define quest_kill_killian_active         (global_var(GVAR_KILL_KILLIAN) == 1)
 #define quest_kill_killian_completed      (global_var(GVAR_KILL_KILLIAN) == 2)
+#define quest_kill_killian_canceled       (global_var(GVAR_KILL_KILLIAN) == 3)
 
 // Skum Pitt:
 #define check_noise_hex    (19274)
