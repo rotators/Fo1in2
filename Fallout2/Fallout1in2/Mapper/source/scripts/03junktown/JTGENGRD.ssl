@@ -80,7 +80,7 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-   if not(combat_is_initialized) then begin
+   if not(combat_is_initialized) and not(CUR_MAP_JUNKCSNO) then begin
       if is_shopguard then begin
          if not(darkwaters_shop_open) and (self_tile != nightguard_hex) then begin
             //self_walk_to_tile(nightguard_hex);
@@ -117,13 +117,13 @@ procedure critter_p_proc begin
          end
       end
 
-      if ((CUR_MAP_JUNKKILL) or (CUR_MAP_JUNKENT)) then begin
+      if (CUR_MAP_JUNKKILL or CUR_MAP_JUNKENT) then begin
          if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
             if REP_ENEMY_JUNKTOWN then begin
                float_msg(self_obj, mstr(138), FLOAT_MSG_RED);
                tmp_hostile := 1;
             end
-            else if (dude_is_armed) and (local_var(4) == 0) and (map_var(2) == 0) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0) and quest_capture_gizmo_inactiv and (CUR_MAP_JUNKKILL) then begin
+            else if (dude_is_armed) and (local_var(4) == 0) and (map_var(2) == 0) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0) and quest_capture_gizmo_inactiv and CUR_MAP_JUNKKILL then begin
                if (not(weapon_checked)) then begin
                   weapon_checked := 1;
                   add_timer_event(self_obj, game_ticks(10), 1);
@@ -136,7 +136,7 @@ procedure critter_p_proc begin
                add_timer_event(self_obj, game_ticks(5), EVENT_RESET_SNEAK);
                dialogue_system_enter;
             end
-            else if (CUR_MAP_JUNKKILL) then begin
+            else if CUR_MAP_JUNKKILL then begin
                if ((map_var(MVAR_dude_messing_with_Killians_door) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
                   set_map_var(MVAR_dude_messing_with_Killians_door, 0);
                   float_msg(self_obj, mstr(136), FLOAT_MSG_RED);
@@ -150,7 +150,7 @@ procedure critter_p_proc begin
             end
          end
       end
-      else if (CUR_MAP_JUNKCSNO) then begin
+      else if CUR_MAP_JUNKCSNO then begin
          if (map_var(2) == 2) then begin
             if (waypoint != 0) then begin
                if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
@@ -161,7 +161,7 @@ procedure critter_p_proc begin
                   waypoint := 2;
                end
                else if (waypoint == 2) then begin
-                  tmp_dest_tile := 26855;
+                  tmp_dest_tile := 26851; //26855; tweaked hex for HiRes patch
                   waypoint := 3;
                end
                else if (waypoint == 3) then begin
@@ -188,7 +188,7 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   if (CUR_MAP_JUNKCSNO) then begin
+   if CUR_MAP_JUNKCSNO then begin
       if (map_var(2) == 1) then begin
          set_map_var(1, (map_var(1) - 1));
       end

@@ -170,7 +170,7 @@ variable PartyHealingItem;
                                              end
 
 #define obj_heal(who)                        if (obj_is_carrying_obj_pid(who,PID_SUPER_STIMPAK)) then begin                     \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -180,7 +180,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used super stimpak.");                                \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_STIMPAK)) then begin                      \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -189,7 +189,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used stimpak.");                                      \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_HEALING_POWDER)) then begin               \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -198,7 +198,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used healing powder.");                               \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_DOCTORS_BAG)) then begin                  \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -207,7 +207,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used doctor's bag kit.");                             \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_FIRST_AID_KIT)) then begin                \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -216,7 +216,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used First Aid kit.");                                \
                                              end                                                                                \
                                              else if (has_skill(who,SKILL_DOCTOR) > has_skill(who,SKILL_FIRST_AID)) then begin  \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(ONE_GAME_HOUR)                                                 \
                                                    gfade_in(600);                                                               \
@@ -227,7 +227,7 @@ variable PartyHealingItem;
                                                 end                                                                             \
                                              end                                                                                \
                                              else begin                                                                         \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(15*ONE_GAME_MINUTE)                                            \
                                                    gfade_in(600);                                                               \
@@ -239,7 +239,7 @@ variable PartyHealingItem;
                                              end
 
 #define obj_heal_no_skill(who)               if (obj_is_carrying_obj_pid(who,PID_SUPER_STIMPAK)) then begin                     \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -249,7 +249,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used super stimpak.");                                \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_STIMPAK)) then begin                      \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -258,7 +258,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used stimpak.");                                      \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_HEALING_POWDER)) then begin               \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -267,7 +267,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used healing powder.");                               \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_DOCTORS_BAG)) then begin                  \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \
@@ -276,7 +276,7 @@ variable PartyHealingItem;
                                                 debug_msg(obj_name(who)+" used doctor's bag kit.");                             \
                                              end                                                                                \
                                              else if (obj_is_carrying_obj_pid(who,PID_FIRST_AID_KIT)) then begin                \
-                                                if ((global_temp == 0) and not(combat_is_initialized)) then begin         \
+                                                if ((global_temp == 0) and (combat_is_initialized == false)) then begin         \
                                                    gfade_out(600);                                                              \
                                                    obj_heal_time(0)                                                             \
                                                    gfade_in(600);                                                               \

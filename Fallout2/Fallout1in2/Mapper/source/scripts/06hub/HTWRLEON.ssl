@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "define.h"
-//#include "area/necropolis.h"
+#include "area/hub.h"
+#include "maps/hubheigt.h"
 
 #define NAME                    SCRIPT_HTWRLEON
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -42,6 +43,8 @@ procedure LeonKickOut;
 procedure LeonPerformDump;
 procedure LeonCombat;
 
+#define LVAR_Herebefore          (4)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable visible := 1;
@@ -74,13 +77,13 @@ procedure critter_p_proc begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      if (map_var(5) == 1) then begin
+      if (map_var(MVAR_Hightower_Hostile) == 1) then begin
          if (/*(self_can_hear_dude) or*/ (self_can_see_dude)) then begin
             call combat;
          end
       end
       else begin
-         if (map_var(1) == 1) then begin
+         if (map_var(MVAR_Leon_Show_Player_Out) == 1) then begin
             call LeonPerformDump;
          end
       end
@@ -123,8 +126,8 @@ procedure talk_p_proc begin
          call combat;
       end
       else begin
-         if (local_var(4) == 0) then begin
-            set_local_var(4, 1);
+         if (local_var(LVAR_Herebefore) == 0) then begin
+            set_local_var(LVAR_Herebefore, 1);
             start_dialog_at_node(Leon01);
          end
          else begin
@@ -144,7 +147,7 @@ procedure look_at_p_proc begin
 end
 
 procedure damage_p_proc begin
-   set_map_var(5, 1);
+   set_map_var(MVAR_Hightower_Hostile, 1);
 end
 
 procedure Leon01 begin
@@ -251,17 +254,17 @@ procedure LeonEnd begin
 end
 
 procedure LeonKickOut begin
-   set_map_var(1, 1);
+   set_map_var(MVAR_Leon_Show_Player_Out, 1);
 end
 
 procedure LeonPerformDump begin
-   set_map_var(1, 0);
-   set_map_var(3, 0);
+   set_map_var(MVAR_Leon_Show_Player_Out, 0);
+   set_map_var(MVAR_Let_Player_Through, 0);
    gfade_out(1);
    obj_close(Front_Door_Ptr);
    set_local_var(5, 0);
 
-   //move_to(dude_obj, 21931, 0);
+   move_to(dude_obj, 21931, 0);
    attempt_place_party(21931, 0)
 
    gfade_in(1);
