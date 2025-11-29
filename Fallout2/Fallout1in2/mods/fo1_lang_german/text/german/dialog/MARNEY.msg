@@ -1,6 +1,6 @@
 {100}{}{Du siehst Dr. Solone, M.D.}
 {101}{}{Du siehst Krankenschwester Marney.}
-{102}{}{Du siehst eine Ärtztin.}
+{102}{}{Du siehst eine Ärztin.}
 {103}{}{Du siehst eine Krankenschwester.}
 {104}{}{Willkommen. Womit kann ich dir heute helfen?}
 {105}{}{Hurrgh.}
