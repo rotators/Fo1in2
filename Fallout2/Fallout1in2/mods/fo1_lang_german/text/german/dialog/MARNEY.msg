@@ -1,32 +1,31 @@
-{100}{}{You see Dr. Solone, M.D.}
-{101}{}{You see Nurse Marney.}
-{102}{}{You see a doctor.}
-{103}{}{You see a nurse.}
-{104}{}{Welcome. How might I help you today?}
+{100}{}{Du siehst Dr. Solone, M.D.}
+{101}{}{Du siehst Krankenschwester Marney.}
+{102}{}{Du siehst eine Ärtztin.}
+{103}{}{Du siehst eine Krankenschwester.}
+{104}{}{Willkommen. Womit kann ich dir heute helfen?}
 {105}{}{Hurrgh.}
-{106}{}{I'm hurt. Can you fix me up?}
-{107}{}{Can you teach me about medicine?}
-{108}{}{Yes, I see that you are suffering from some damage. This
- may take some time. Would you like me to try to mend your
- wounds?}
-{109}{}{Uh huh.}
-{110}{}{Nuh uh.}
-{111}{}{Yes, please.}
-{112}{}{No, thank you.}
-{113}{}{There you go. That should have you all set. Please be more
- careful out there.}
-{114}{}{You're good at that. Can you teach me about trauma care?}
-{115}{}{Okay. Thank you.}
-{116}{}{I can teach you a little. But it will take several hours. Are you
- willing to stay?}
-{117}{}{Yes.}
-{118}{}{Sorry, too busy.}
-{119}{}{You are a very good student. I hope you remain on our
- side. Good bye.}
-{120}{}{As you wish. Good luck out there.}
-{121}{}{I can teach you a little, but not much. It will take some time.
- Are you willing to stay?}
-{122}{}{Yes.}
-{123}{}{I'm sorry, but I lack extra time.}
-{124}{}{You are an excellent student. Good luck to you.}
-{125}{}{Nothing right now. Thanks though.}
+{106}{}{Ich bin verletzt. Können Sie mich wieder zusammenflicken?}
+{107}{}{Können Sie mir etwas über Medizin beibringen?}
+{108}{}{Ja, ich sehe, dass Sie einige Verletzungen haben. Das
+kann eine Weile dauern. Soll ich versuchen, Ihre Wunden zu versorgen?}
+{109}{}{Ähä.}
+{110}{}{Nö.}
+{111}{}{Ja, bitte.}
+{112}{}{Nein, danke.}
+{113}{}{So, das war’s. Jetzt sollten Sie wieder fit sein. Passen Sie
+draußen bitte besser auf.}
+{114}{}{Sie sind gut darin. Können Sie mir etwas über die Versorgung schwerer Verletzungen beibringen?}
+{115}{}{Okay. Vielen Dank.}
+{116}{}{Ich kann Ihnen ein wenig beibringen. Aber es dauert
+mehrere Stunden. Haben Sie so viel Zeit?}
+{117}{}{Ja.}
+{118}{}{Tut mir leid, zu viel zu tun.}
+{119}{}{Sie sind ein sehr guter Schüler. Ich hoffe, Sie bleiben auf
+unserer Seite. Auf Wiedersehen.}
+{120}{}{Wie Sie wünschen. Viel Glück da draußen.}
+{121}{}{Ich kann Ihnen ein wenig beibringen, aber nicht viel.
+Es dauert trotzdem eine Weile. Haben Sie Zeit?}
+{122}{}{Ja.}
+{123}{}{Tut mir leid, ich habe gerade keine Zeit.}
+{124}{}{Sie sind ein hervorragender Schüler. Viel Glück weiterhin.}
+{125}{}{Im Moment nichts. Trotzdem danke.}
