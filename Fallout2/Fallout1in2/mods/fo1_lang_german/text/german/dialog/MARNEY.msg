@@ -18,7 +18,7 @@ kann eine Weile dauern. Soll ich versuchen, deine Wunden zu versorgen?}
 {116}{}{Ich kann dir ein wenig beibringen. Aber es dauert mehrere Stunden. Hast du so viel Zeit?}
 {117}{}{Ja.}
 {118}{}{Tut mir leid, zu viel zu tun.}
-{119}{}{Du bist ein sehr guter Schüler. Ich hoffe, su bleibst auf
+{119}{}{Du bist ein sehr guter Schüler. Ich hoffe, du bleibst auf
 unserer Seite. Auf Wiedersehen.}
 {120}{}{Wie du wünschst. Viel Glück da draußen.}
 {121}{}{Ich kann dir ein wenig beibringen, aber nicht viel.
