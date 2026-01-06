@@ -190,10 +190,10 @@ variable Finding_New_Tile;
 #define HUB_ADY_4_4_y                              (877)
 
 // Travel time in days
-#define TRAVEL_TIME_HUB_ADY               (2*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_NEC               (9*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_BOS               (15*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_JNK               (7*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_ADY               (4*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_NEC               (3*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_BOS               (7*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_JNK               (3*ONE_GAME_DAY)
 
 // Style of the caravan critters
 #define STYLE_NONE         (0)
