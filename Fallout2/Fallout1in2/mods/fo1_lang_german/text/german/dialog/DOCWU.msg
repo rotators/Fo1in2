@@ -77,7 +77,7 @@
 {177}{}{Gut, ich helf' dir!}
 {178}{}{Das hier wird dir richtig gut tun!}
 {179}{}{Hau ab, du Arschloch! Ich werd' schon bald lachend neben deiner Leiche stehen.}
-{180}{}{Du kleines Arschloch! Wer glaubst, wer du bist, dass du Dr. Wu belästigst? Blöder Scheißkopf!}
+{180}{}{Du kleines Arschloch! Wer glaubst du, wer du bist, dass du Dr. Wu belästigst? Blöder Scheißkopf!}
 {181}{}{Du hast dir ein paar Wunden zugezogen. Ich versorg' sie, Schwachkopf, wenn du stillhältst!}
 {182}{}{Fünf Knochen sind mindestens gebrochen, und du hast extrem viel Blut verloren. Dein Idiotendasein stellt eine Gefährdung deiner Gesundheit dar! Willst du, dass ich dir helfe?}
 {183}{}{Hängt davon ab, wie du 'Hilfe' definierst. Behandle mich, Doktor.}
