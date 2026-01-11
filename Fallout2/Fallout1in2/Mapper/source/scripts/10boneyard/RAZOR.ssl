@@ -93,6 +93,7 @@ variable DisplayMessage := 100;
 
 #define LVAR_Herebefore          (4)
 #define LVAR_TalkToZimmerman     (7)
+#define LVAR_KnowsAboutHolodisk  (8)
 
 procedure Start begin
    if Only_Once then begin
@@ -240,6 +241,7 @@ procedure map_update_p_proc begin
    end
 end
 
+// Initial dialog if player doesn't have the task to kill Razor
 procedure Razor01 begin
    Reply(100);
 
@@ -340,6 +342,9 @@ procedure Razor12 begin
 end
 
 procedure Razor13 begin
+   // Player learns about the holodisk here
+   set_local_var(LVAR_KnowsAboutHolodisk, 1);
+
    Reply(146);
    NOption(147, Razor14, 1);
 end
@@ -383,8 +388,9 @@ procedure Razor19 begin
    NOption(161, RazorEnd, 1);
 end
 
+// Initial dialog if the player has the task to kill Razor
 procedure Razor20 begin
-   // TODO: Experimental. Don't repeat the whole dialog if the player already went through it.
+   // Don't repeat the whole dialog if the player already went through it.
    // Taking "arm the Blades"-questline as a base for now, because anything else likely requires new dialog.
    if not(get_arming_blades) then begin
       Reply(162);
@@ -403,7 +409,7 @@ end
 
 procedure Razor21 begin
    Reply(166);
-   NOption(167, Razor22, 1);
+   NOption(167, Razor22, 1); // Zimmerman sent me
    NOption(168, Razor07, 1);
    NOption(169, RazorEnd, 1);
 end
@@ -491,9 +497,11 @@ procedure Razor33 begin
       Reply(400);
       NOption(401, Razor34, 4);
       NOption(402, Razor35, 4);
-
       if not(get_zimmermann_turned) then
          NOption(403, Razor36, 4);
+
+      if (local_var(LVAR_KnowsAboutHolodisk) == 1) then
+         NOption(404, Razor16, 4);
    end
    NLowOption(200, Razor41);
 end
