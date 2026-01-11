@@ -104,10 +104,10 @@
 {802}{}{Become a Knight.}
 {803}{}{Learn from the Library Computers.}
 {804}{}{Receive operations from Lori.}
-{805}{}{Seduce Jennifer.}
+{805}{}{Repair the Power Armor.}
 {806}{}{Seduce Lorri.}
 {807}{}{Steal the Systolic Motivator.}
-{808}{}{Help Sophia and Michael.}
+{808}{}{Deliver Pulse Grenades to Sophia.}
 {809}{}{Gain access to the Armory.}
 {810}{}{Find the Ruins Of The Ancient Order.}
 {811}{}{Scout the area to the North.}
