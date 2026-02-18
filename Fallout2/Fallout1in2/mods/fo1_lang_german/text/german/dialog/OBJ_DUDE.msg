@@ -253,7 +253,8 @@
 {4716}{}{Es ist wirklich eine Schande, was ihm passiert ist.}
 {4717}{}{Ich habe ihn in letzter Zeit nicht oft gesehen. Vielleicht ist er in seinem Wohnquartier?}
 {4718}{}{Oh, ich spreche nicht mehr viel mit ihr.}
-{4719}{}{Die Wasserreserven sind jetzt im Laggerraum. Eine Wache sorgt dafür, dass sie nicht gestohlen werden!}{4720}{}{Man sagt, die Außenwelt ist immernoch zu verstrahlt, um für uns sicher zu sein.}
+{4719}{}{Die Wasserreserven sind jetzt im Laggerraum. Eine Wache sorgt dafür, dass sie nicht gestohlen werden!}
+{4720}{}{Man sagt, die Außenwelt ist immernoch zu verstrahlt, um für uns sicher zu sein.}
 {4721}{}{Entschuldige, I weiß das wirklich nicht.}
 {4722}{}{Hat dir der Aufseher nicht gesagt, was zu tun ist?}
 
@@ -996,7 +997,7 @@
 {18918}{}{Im Norden gibt es die Followers, die Blades halten sich östlich von hier auf. Wenn du es durch das alte Kino nördlich von hier schaffst, gibt es auch noch die Gun Runners.}
 {18919}{}{Es gibt sicherlich viel Kriminalität im Boneyard. Die Regulatoren versuchen ihr Bestes, um all das aus Adytum fernzuhalten.}
 {18920}{}{Händlergruppen zahlen hier viel Geld für Schutz, sonst verlieren sie schnell ihre Brahmin.
-{18921}{}{Hier hatten die Rippers ihr Versteck, bevor etwas sie vertrieben hat.
+{18921}{}{Hier hatten die Rippers ihr Versteck, bevor etwas sie vertrieben hat.}
 {18922}{}{Du weißt schon ... so Sachen.}
 {18923}{}{Ich habe gehört, dass es irgendwo östlich von Blades ein Nest von ihnen gibt, aber ich habe es selbst noch nicht gesehen.}
 {18924}{}{Wenn du Vorräte tauschen möchtest, solltest du Adytum besuchen. Wenn es um Waffen geht, können dir vielleicht die Gun Runners östlich des alten Kinos weiterhelfen.}
