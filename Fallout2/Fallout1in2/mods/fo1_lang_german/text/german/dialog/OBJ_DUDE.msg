@@ -996,7 +996,7 @@
 {18917}{}{Im Boneyard aufzuwachsen ist hart. Wenn dich nicht der Mangel an Nahrung umbringt, dann tun es wahrscheinlich die Drogen oder die Gangs.}
 {18918}{}{Im Norden gibt es die Followers, die Blades halten sich östlich von hier auf. Wenn du es durch das alte Kino nördlich von hier schaffst, gibt es auch noch die Gun Runners.}
 {18919}{}{Es gibt sicherlich viel Kriminalität im Boneyard. Die Regulatoren versuchen ihr Bestes, um all das aus Adytum fernzuhalten.}
-{18920}{}{Händlergruppen zahlen hier viel Geld für Schutz, sonst verlieren sie schnell ihre Brahmin.
+{18920}{}{Händlergruppen zahlen hier viel Geld für Schutz, sonst verlieren sie schnell ihre Brahmin.}
 {18921}{}{Hier hatten die Rippers ihr Versteck, bevor etwas sie vertrieben hat.}
 {18922}{}{Du weißt schon ... so Sachen.}
 {18923}{}{Ich habe gehört, dass es irgendwo östlich von Blades ein Nest von ihnen gibt, aber ich habe es selbst noch nicht gesehen.}
