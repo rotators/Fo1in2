@@ -1422,28 +1422,27 @@
 {25714}{}{Dort leben alle reichen Händler. Der Anführer der Water Merchants, Daren Hightower, hat dort einen riesigen Palast.}
 {25715}{}{Ein Mythos, mit dem kleine Kinder erschreckt werden, damit sie sich ordentlich benehmen.}
 {25716}{}{Davon weiß ich überhaupt nichts.}
-
-{25117}{}{Die drei größten Karawanenunternehmen im Hub sind die Crimson Caravan, Far Go Trader und die Water Merchants.}
-{25118}{}{Ist es nicht das, worüber diese Leute von den Children of the Cathedral ständig reden?}
-{25119}{}{Du stehst gerade im Old Town des Hubs.}
-{25120}{}{Es ist ein kleines Dorf unten im Boneyard.}
-{25121}{}{Sie produzieren und verkaufen Waffen.}
-{25122}{}{Die Children of the Cathedral betreiben ein Krankenhaus im Südosten der Stadt, in der Nähe der Wasserhändler.}
-{25123}{}{Da die Karawanen heutzutage ständig durch die Ödnis ziehen, boomt der Handel im Hub.}
-{25124}{}{Du befindest dich im Old Town, mein Freund. Gehe nach Westen, um die Innenstadt zu erreichen. Weiter westlich liegen die Heights. Die Wasserhändler befinden sich südlich des Stadtzentrums.}
-{25125}{}{Organisiertes Verbrechen? Glaub nicht alles, was man so hört, mehr sage ich dazu nicht.}
-{25126}{}{Brahminen sind sehr wichtig für den Hub. Ohne sie wären wir nicht da, wo wir heute sind.}
-{25127}{}{Kannst du das glauben? Man sagt, der alte Slappy habe einen dieser Deathclaws gesehen. Soweit ich weiß, war er schon immer verrückt.}
-{25128}{}{Die Ärmsten des Hubs. Du findest sie hier im Old Town.}
-{25129}{}{Der Sheriff leitet die örtliche Polizei, um Recht und Ordnung im Hub aufrechtzuerhalten.}
-{25130}{}{Der All-N-One-Laden ist teuer, aber der beste Gemischtwarenladen im Marktviertel.}
-{25131}{}{Wenn du auf der Suche nach neuen Waffen bist, ist Beths Laden der beste im Marktviertel.}
-{25132}{}{Du hast zu wenig Deckel? Die Friendly Lending Company kann dir helfen.}
-{25133}{}{Der Maltese Falcon ist ein Nachtclub im Westen von Downtown.}
-{25134}{}{Begib dich nach Westen zum Handelsmarkt. Der Waffenladen, die Waffenkammer, die Friendly Lending Company und der Maltese Falcon befinden sich alle in dieser Gegend.}
-{25135}{}{Ich glaube du kannst leicht Arbeit bei einer der größeren Karawanengesellschaften finden. Da wären die Far Go Traders, die Crimson Caravan oder die Water Merchants gleich um die Ecke.}
-{25136}{}{Karawanen verschwinden immer wieder und niemand weiß genau, was mit ihnen passiert. Die Far Go Traders scheinen jedoch am meisten Pech zu haben.}
-{25137}{}{Ihm gehört der Maltese Falcon am Merchant Market.}
+{25717}{}{Die drei größten Karawanenunternehmen im Hub sind die Crimson Caravan, Far Go Trader und die Water Merchants.}
+{25718}{}{Ist es nicht das, worüber diese Leute von den Children of the Cathedral ständig reden?}
+{25719}{}{Du stehst gerade im Old Town des Hubs.}
+{25720}{}{Es ist ein kleines Dorf unten im Boneyard.}
+{25721}{}{Sie produzieren und verkaufen Waffen.}
+{25722}{}{Die Children of the Cathedral betreiben ein Krankenhaus im Südosten der Stadt, in der Nähe der Wasserhändler.}
+{25723}{}{Da die Karawanen heutzutage ständig durch die Ödnis ziehen, boomt der Handel im Hub.}
+{25724}{}{Du befindest dich im Old Town, mein Freund. Gehe nach Westen, um die Innenstadt zu erreichen. Weiter westlich liegen die Heights. Die Wasserhändler befinden sich südlich des Stadtzentrums.}
+{25725}{}{Organisiertes Verbrechen? Glaub nicht alles, was man so hört, mehr sage ich dazu nicht.}
+{25726}{}{Brahminen sind sehr wichtig für den Hub. Ohne sie wären wir nicht da, wo wir heute sind.}
+{25727}{}{Kannst du das glauben? Man sagt, der alte Slappy habe einen dieser Deathclaws gesehen. Soweit ich weiß, war er schon immer verrückt.}
+{25728}{}{Die Ärmsten des Hubs. Du findest sie hier im Old Town.}
+{25729}{}{Der Sheriff leitet die örtliche Polizei, um Recht und Ordnung im Hub aufrechtzuerhalten.}
+{25730}{}{Der All-N-One-Laden ist teuer, aber der beste Gemischtwarenladen im Marktviertel.}
+{25731}{}{Wenn du auf der Suche nach neuen Waffen bist, ist Beths Laden der beste im Marktviertel.}
+{25732}{}{Du hast zu wenig Deckel? Die Friendly Lending Company kann dir helfen.}
+{25733}{}{Der Maltese Falcon ist ein Nachtclub im Westen von Downtown.}
+{25734}{}{Begib dich nach Westen zum Handelsmarkt. Der Waffenladen, die Waffenkammer, die Friendly Lending Company und der Maltese Falcon befinden sich alle in dieser Gegend.}
+{25735}{}{Ich glaube du kannst leicht Arbeit bei einer der größeren Karawanengesellschaften finden. Da wären die Far Go Traders, die Crimson Caravan oder die Water Merchants gleich um die Ecke.}
+{25736}{}{Karawanen verschwinden immer wieder und niemand weiß genau, was mit ihnen passiert. Die Far Go Traders scheinen jedoch am meisten Pech zu haben.}
+{25737}{}{Ihm gehört der Maltese Falcon am Merchant Market.}
 
 #
 #    BLADES
