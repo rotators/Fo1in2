@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.8, built for Fallout 2 v1.02 US
+version 4.4.9, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -53,6 +53,16 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.4.9
+>Fixed the edge-scrolling speed when using the game speed tweak
+>Fixed incorrect unarmed damage being displayed in the inventory under specific conditions
+>Fixed a crash bug in the tweak that replaces death animations on critters with single-frame variants on map load
+>Improved the functionality of Fallout1Behavior to set the correct initial in-game time
+>Changed ProcessorIdle to be enabled by default
+>Changed SingleCore to be disabled by default as its usage is questionable on newer systems
+>Added a fix for script execution issues when calling critter_mod_skill in a loop
+>Added options to the tweaks ini file to override the PID of the mirrored shades and the stat they affect when equipped
 
 v4.4.8
 >HRP: Fixed a crash and a visual glitch in the interface bar at ultrawide resolutions
@@ -322,7 +332,7 @@ v4.3.2
 
 v4.3.1
 >Fixed the Jet addiction not being removed when using the antidote in some cases
->Fixed the key repeat delay and rate when enabling the game speed tweak
+>Fixed the key repeat delay and rate when using the game speed tweak
 >Fixed a possible crash at the end of the playback of alternative sound files
 >Fixed a rounding error in Glovz's damage formula
 >Fixed and improved NPC combat control mod and the behavior of SpeedInterfaceCounterAnims=3

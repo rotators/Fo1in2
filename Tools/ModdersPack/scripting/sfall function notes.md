@@ -107,7 +107,7 @@ Data types mentioned in this document:
 FUNCTION REFERENCE
 ------------------
 
-#### `int game_loaded()`
+#### `int game_loaded`
 - Returns 1 the first time it is called after a new game or game load, and 0 any time after. It works on an individual basis for each script, so one script wont interfere with others. Its primary use is for global scripts, so that they know when to call `set_global_script_repeat`, but it can be called from normal scripts too.
 
 -----
@@ -145,16 +145,16 @@ FUNCTION REFERENCE
 - If the setting argument is in an invalid format, it returns -1 (integer).
 
 -----
-#### `int get_game_mode()`
+#### `int get_game_mode`
 - Is a more flexible version of `in_world_map`. It will return a set of flags indicating which mode the game is currently in.
 - These flags are the same as those used in the `set_shader_mode` function.
 
 -----
-#### `int get_uptime()`
+#### `int get_uptime`
 - Is just a wrapper around the windows `GetTickCount()` function. It's useful for making time fade effects in shaders, since they already have access to the current tick count.
 
 -----
-#### `bool in_world_map()`
+#### `bool in_world_map`
 - Returns 1 if the player is looking at the world map, or 0 at any other time.
 - Obviously this is only useful in global scripts, since normal scripts will never get the chance to run on the world map.
 
@@ -171,7 +171,7 @@ FUNCTION REFERENCE
 - In this case use `force_encounter_with_flags` with the `ENCOUNTER_FLAG_NO_CAR` flag set.
 
 -----
-#### `int get_light_level()`
+#### `int get_light_level`
 - Ambient light level in range 0..65536
 - The value returned by `get_light_level` may not exactly match that set by `set_light_level`, as `set_light_level` applies modifiers from the night vision perk.
 
@@ -433,7 +433,7 @@ FUNCTION REFERENCE
 - If a file has a specific number assigned in **ExtraGameMsgFileList**, its fileId will be (`0x2000` + assigned number). (e.g. with `ExtraGameMsgFileList=foo,bar:2,foobar` in **ddraw.ini**, bar.msg will be associated with 0x2002 and foobar.msg with 0x2003.)
 
 -----
-#### `int sneak_success()`
+#### `int sneak_success`
 - Returns 1 if the player is currently sneaking, and last sneak attempt (roll against skill) was successful; 0 otherwise.
 - This calls an internal engine function which is used to determine the perception range of critters (which you can override using `HOOK_WITHINPERCEPTION`).
 
