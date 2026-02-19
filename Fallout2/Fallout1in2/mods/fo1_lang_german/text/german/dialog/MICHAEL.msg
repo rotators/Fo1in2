@@ -20,7 +20,7 @@
  überprüfe die Geräte und gebe Vorräte aus.}
 {117}{}{Mich hat... Bob gesandt. Er will, dass ich ihm...diese neue Hightech-Waffe besorge.
  Er hat gesagt, ich soll sie sofort bringen.}
-{118}{}{Ich möchte was überprüfen. Wie mach ich das?}
+{118}{}{Ich möchte etwas erhalten. Wie mach ich das?}
 {119}{}{Oh, schön. Wiedersehen.}
 {120}{}{[Misslungene Lüge] Bob? Bob wie? Von was redest du eigentlich? Welche neue
  Hightech-Waffe? Da musst du schon etwas genauer werden, und außerdem muss ich eine ordentliche
@@ -77,10 +77,10 @@
  durcheinander. Ich kann jeden neuen Plan lesen und verstehen, was sie mir vorlegen, aber wenn es
  um Frauen geht, bin ich eine echte Niete. Trotzdem danke.}
 {144}{}{Du brauchst eine richtige Genehmigung. Nur ein paar wenige Leute können die
- Genehmigung erteilen, die man braucht, um Dinge aus dem Versorgungsraum zu überprüfen.}
+ Genehmigung erteilen, die man braucht, um Dinge aus dem Versorgungsraum zu erhalten.}
 {145}{}{Oh. Okay, danke. Wen muss ich da ansprechen?}
-{146}{}{Ich hab eine Genehmigung dafür, was zu überprüfen. Kannst du mal den Terminal
- kontrollieren und schauen, ob es schon durchgegangen ist?}
+{146}{}{Ich hab eine Genehmigung dafür, etwas zu erhalten. Kannst du mal dein Terminal
+ kontrollieren und schauen, ob sie schon durchgegangen ist?}
 {147}{}{Wer kann mir die Genehmigung erteilen?}
 {148}{}{Also da gibt es schon ein paar Leute, aber ich würde dir raten, mit Talus zu reden.
  Du kannst auch mal zu Mathia gehen. Die könnte dir eventuell auch helfen.}
@@ -132,7 +132,7 @@
 {186}{}{Nichts, Wiedersehen.}
 {187}{}{Hast du mir überhaupt schon mal helfen können. Ich glaub nicht. Geh mir aus den Augen.}
 {188}{}{Okay, lass mich mal schauen.}
-{189}{}{Ah, Ja. Du hast die Genehmigung, was zu überprüfen.}
+{189}{}{Ah, Ja. Du hast die Genehmigung, etwas zu erhalten.}
 {190}{}{Nun ja. Sophia braucht einige Pulsgranaten, aber ich konnte sie ihr noch nicht runterbringen.
  Könntest du das vielleicht für mich erledigen?}
 {191}{}{Klar. Gib sie mir.}

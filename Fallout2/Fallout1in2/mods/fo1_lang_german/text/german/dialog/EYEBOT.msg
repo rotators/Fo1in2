@@ -1,97 +1,97 @@
 # Fo1in2
-{100}{}{You see: Floating Eye.}
+{100}{}{Du siehst: Augenbot}
 
-# Message log entries from investigating and using skills
-{150}{}{The robot is offline.}
-{151}{}{unused}
-{152}{}{The built-in battery is dead and needs to be replaced.}
-{153}{}{It seems the robot is tied to the Glow power system. It can't operate outside.}
-{154}{}{You have no idea what is wrong with the robot.}
-{155}{}{The robots motions are too frantic. You can't inspect it.}
-{156}{}{It seems its sensors are defect.}
-{157}{}{unused}
-{158}{}{It seems the robot is tied to the Glow power system. It can't operate outside.}
-# You gain x ...
-{159}{}{ experience for successfully repairing the robots sensors.}
-{160}{}{You fail to repair the robots sensors.}
-{161}{}{You might be able to use a Microfusion cell to build a replacement battery.}
-# You gain x ...
-{162}{}{ experience for replacing the built-in battery with a hotwired Microfusion cell.}
-{163}{}{The robot might not be as effective anymore as 100 years ago, but it works.}
-{164}{}{You have no idea what you are doing here and destroy the robot in the process.}
-{165}{}{You failed to improvise a battery.}
-{166}{}{ experience for replacing the built-in battery with a modified small energy cell.}
+# Meldungsprotokolleinträge aus Untersuchungen und der Verwendung von Fähigkeiten
+{150}{}{Der Roboter ist offline.}
+{151}{}{unbenutzt}
+{152}{}{Die eingebaute Batterie ist leer und muss ersetzt werden.}
+{153}{}{Der Roboter scheint an das Glow-Stromnetz angeschlossen zu sein. Er kann außerhalb nicht betrieben werden.}
+{154}{}{Du hast keine Ahnung, was mit dem Roboter nicht stimmt.}
+{155}{}{Die Bewegungen des Roboters sind zu hektisch. Du kannst ihn nicht untersuchen.}
+{156}{}{Seine Sensoren scheinen defekt zu sein.}
+{157}{}{unbenutzt}
+{158}{}{Der Roboter scheint an das Glow-Stromnetz angeschlossen zu sein. Er kann außerhalb nicht betrieben werden.}
+# Du erhältst x ...
+{159}{}{ Erfahrung für die erfolgreiche Reparatur der Sensoren des Roboters.}
+{160}{}{Die Reparatur der Sensoren des Roboters ist fehlgeschlagen.}
+{161}{}{Möglicherweise kannst du eine Mikrofusionszelle verwenden, um eine Ersatzbatterie zu bauen.}
+# Du erhältst x ...
+{162}{}{ Erfahrung für den Austausch der eingebauten Batterie durch eine heißverdrahtete Mikrofusionszelle.}
+{163}{}{Der Roboter ist vielleicht nicht mehr so effektiv wie vor 100 Jahren, aber er funktioniert.}
+{164}{}{Du hast keine Ahnung, was du hier tust, und zerstörst dabei den Roboter.}
+{165}{}{Es ist dir nicht gelungen, eine Batterie zu improvisieren.}
+{166}{}{ Erfahrungspunkte für den Austausch der eingebauten Batterie durch eine modifizierte kleine Energiezelle.}
 
-# Dialog after fixing the robot
-{200}{}{[Click] SYSTEM ERROR. [Beep] Unit unable to process the last active task. Task manager is not responding. Orders?}
-{201}{}{Do you understand me?}
+# Dialog nach der Reparatur des Roboters
+{200}{}{[Klick] SYSTEMFEHLER. [Piep] Einheit kann die letzte aktive Aufgabe nicht verarbeiten. Aufgabenverarbeitung reagiert nicht. Befehle?}
+{201}{}{Verstehst du mich?}
 
-{202}{}{Voice module online. System nominal. Orders?}
-{203}{}{What was your last task?}
+{202}{}{Sprachmodul online. System nominal. Befehle?}
+{203}{}{Was war deine letzte Aufgabe?}
 
-{204}{}{Accessing task queue ... Last task: Parameter security. Task canceled after suffering severe energy fluctuations. Battery overload. Hardware components damaged.}
-{205}{}{What is your status?}
+{204}{}{Zugriff auf Aufgabenliste ... Letzte Aufgabe: Parametersicherheit. Aufgabe nach starken Energieschwankungen abgebrochen. Batterieüberlastung. Hardwarekomponenten beschädigt.}
+{205}{}{Wie ist Ihr Status?}
 
-{206}{}{Maintenance status: OK ... Battery status: BAD ... Connection to local network: GOOD ... Weapon systems: ONLINE.}
-{207}{}{Can you follow me?}
+{206}{}{Wartungsstatus: OK ... Batteriestatus: SCHLECHT ... Verbindung zum lokalen Netzwerk: GUT ... Waffensysteme: ONLINE.}
+{207}{}{Könne folgen?}
 
-{208}{}{New task: NEGATIVE. Task queue full. Orders?}
-{209}{}{Wipe the memory.}
+{208}{}{Neue Aufgabe: NEGATIV. Aufgabenwarteschlange voll. Befehle?}
+{209}{}{Speicher löschen.}
 
-{210}{}{Processing. Please wait ... [Beep]}
-{211}{}{System rebooting. Please wait ... [Beep]}
-{212}{}{[Click] SYSTEM ONLINE ... MEMORY LOAD 39% ... All systems nominal. Orders?}
-{213}{}{Follow me.}
+{210}{}{Wird verarbeitet. Bitte warten ... [Piepton]}
+{211}{} {System wird neu gestartet. Bitte warten ... [Piepton]}
+{212}{}{[Klick] SYSTEM ONLINE ... SPEICHERBELASTUNG 39 % ... Alle Systeme nominal. Befehle?}
+{213}{}{Folge mir.}
 
-{214}{}{Uhh ... Maybe I should just wack you a little bit?}
-{215}{}{ERROR. [Beep] System rebooting. Please wait.}
-{216}{}{(You beat the robot, but nothing good happens)}
-{217}{}{Well, at least I tried.}
+{214}{}{Ähm ... Vielleicht sollte ich Sie einfach ein bisschen verprügeln?}
+{215}{}{FEHLER. [Piep] System wird neu gestartet. Bitte warten.}
+{216}{}{(Du hast den Roboter besiegt, aber es passiert nichts Gutes.)}
+{217}{}{Nun, zumindest habe ich es versucht.}
 
-# Repair partymember dialog
-{900}{}{Floating Eye can't be repaired anymore at this time.}
-{901}{}{Floating Eye has been repaired some.}
-{902}{}{Floating Eye is all fixed now.}
+# Dialog zur Reparatur von Gruppenmitgliedern
+{900}{}{Der Augenbot kann derzeit nicht mehr repariert werden.}
+{901}{}{Der Augenbot wurde teilweise repariert.}
+{902}{}{Der Augenbot ist jetzt vollständig repariert.}
 
-# Primary party dialog
-{1000}{}{Initialize parameters. All systems online. Orders?}
+# Primärer Party-Dialog
+{1000}{}{Parameter initialisieren. Alle Systeme online. Befehle?}
 {1001}{}{}
-	{1014}{}{You should perform maintenance on yourself now.}
-	{1015}{}{We need to talk about what you can do.}
-	{1020}{}{Let's talk about our formation.}
-	{1030}{}{Okay, thanks.}
-	{1040}{}{Follow me, I need your help again.}
-	{1050}{}{[Done]}
-	{1060}{}{Nevermind.}
+    {1014}{}{Du solltest jetzt eine Wartung an dir selbst durchführen.}
+	{1015}{}{Wir müssen darüber sprechen, was du tun kannst.}
+    {1020}{}{Lass uns über unsere Formation sprechen.}
+    {1030}{}{Okay, danke.}
+    {1040}{}{Folge mir, ich brauche wieder deine Hilfe.}
+    {1050}{}{[Erledigt]}
+	{1060}{}{Vergiss es.}
 
-{1004}{}{Processing orders ...}
-{1005}{}{Calibrating new parameters.}
-{1006}{}{Calibrating ...}
+{1004}{}{Befehle werden verarbeitet ...}
+{1005}{}{Neue Parameter werden kalibriert.}
+{1006}{}{Kalibrierung läuft ...}
 
-{1007}{}{Tasks?}
-{1008}{}{Tasks?}
-{1009}{}{Confirmed.}
-{1010}{}{[Beep] Unit #462 can perform nuclear reactor fuel core replacements, hazardous materials cleanup, radiation cleansing, basic mechanical repair procedures, and taking the dog out for a walk.}
-{1011}{}{[Beep] Unit #462 is programmed to use energy weapons and miniguns.}
+{1007}{}{Aufgaben?}
+{1008}{}{Aufgaben?}
+{1009}{}{Bestätigt.}
+{1010}{}{[Piep] Einheit Nr. 462 kann Kernbrennstoffwechsel in Kernreaktoren, die Beseitigung gefährlicher Stoffe, Strahlenreinigung, grundlegende mechanische Reparaturen und das Ausführen von Hunden durchführen.}
+{1011}{}{[Piep] Einheit Nr. 462 ist für den Einsatz von Energiewaffen und Miniguns programmiert.}
 
-{1100}{}{This eyebot is fully repaired and ready to go.}
-{1200}{}{Maintenance status: Good. No repairs necessary.}
-{1300}{}{Maintenance status: Damaged. Suggesting additional repairs in the near future.}
-{1400}{}{Maintenance status: Bad. Suggesting additional repairs in the near future.}
-{1401}{}{Battery status: OK.}
-{1402}{}{Battery status: GOOD.}
+{1100}{}{Dieser Augenbot ist vollständig repariert und einsatzbereit.}
+{1200}{}{Wartungsstatus: Gut. Keine Reparaturen erforderlich.}
+{1300}{}{Wartungsstatus: Beschädigt. Es werden zusätzliche Reparaturen in naher Zukunft empfohlen.}
+{1400}{}{Wartungsstatus: Schlecht. Es werden zusätzliche Reparaturen in naher Zukunft empfohlen.}
+{1401}{}{Batteriestatus: OK.}
+{1402}{}{Batteriestatus: GUT.}
 
-{1500}{}{We better stay together.}
-{1501}{}{Confirmed. Standby.}
-{1600}{}{Confirmed.}
-{1700}{}{Close range formation mode confirmed.}
-{1800}{}{Medium range formation mode confirmed.}
-{1900}{}{Long range formation mode confirmed.}
+{1500}{}{Wir sollten besser zusammenbleiben.}
+{1501}{}{Bestätigt. Bereit.}
+{1600}{}{Bestätigt.}
+{1700}{}{Nahbereichsformationsmodus bestätigt.}
+{1800}{}{Mittelbereichsformationsmodus bestätigt.}
+{1900}{}{Fernbereichsformationsmodus bestätigt.}
 
-# Too many party members
-{2000}{}{Task failed to process. ERROR: Sensory overload. due to exceeding group size. Remaining standby.}
-{2001}{}{Task confirmed. Cancel standby.}
-{2002}{}{Loading ... Recursive task created ... Terminating input.}
-	{2010}{}{Oh yeah, whatever then.}
+# Zu viele Gruppenmitglieder
+{2000}{}{Aufgabe konnte nicht verarbeitet werden. FEHLER: Sensorische Überlastung aufgrund zu großer Gruppengröße. Bleibe in Bereitschaft.}
+{2001}{}{Aufgabe bestätigt. Bereitschaftsmodus aufheben.}
+{2002}{}{Laden ... Rekursive Aufgabe erstellt ... Eingabe beenden.}
+    {2010}{}{Ach ja, wie auch immer.}
 
-{3500}{}{Maintenance status: Damaged. Additional repairs required.}
+{3500}{}{Wartungsstatus: Beschädigt. Zusätzliche Reparaturen erforderlich.}

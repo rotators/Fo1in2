@@ -14,6 +14,11 @@
 {113}{}{Der Computer widert dich an.}
 {114}{}{Du glaubst, das alle Ordner gesichert sind, hast aber deine Suche noch nicht beendet.}
 {115}{}{Du hast das Hauptsystem geknackt und musst nun die Energiefeldsteuerung umprogrammieren.}
-{116}{}{Du hast 800 Bonuspunkte für dein außergewöhnliches Computerhacking gewonnen. Sieg!}
+
+#
+# Du erhältst x...
+#
+{116}{}{ Bonuspunkte für dein außergewöhnliches Computerhacking gewonnen. Sieg!}
 {117}{}{Du verbindest das Funkgerät mit dem Energiefeldcomputer.}
+
 {118}{}{Dein Versuch, das Funkgerät mit dem Energiefeldcomputer zu verbinden, schlägt fehl.}

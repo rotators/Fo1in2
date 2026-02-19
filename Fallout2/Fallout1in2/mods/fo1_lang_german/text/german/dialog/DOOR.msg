@@ -11,8 +11,8 @@
 {110}{}{Du kannst dieses Schloss nicht aufbrechen.}
 
 # Fo1in2
-{111}{}{The lock is beyond }
-{112}{}{'s ability to pick.}
+{111}{}{Da Schloß erfordert mehr als }
+{112}{}{s Fähigkeit Schlösser zu knacken.}
 
 {120}{}{Du siehst eine Metalltür.}
 
