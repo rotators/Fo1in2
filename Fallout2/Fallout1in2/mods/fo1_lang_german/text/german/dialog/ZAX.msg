@@ -55,10 +55,13 @@
 {145}{}{Auf diese Weise bin ich im Grunde fähig, einen "Glauben" zu haben. Trotz gegenteiliger Beweise "glaube" ich daran, dass ich so etwas wie eine "Seele" besitze.}
     {146}{}{Kann ich dir ein paar andere Fragen stellen?}
     {147}{}{Ah ja, interessant}
+
+{148}{}{Darüber wär' ich hocherfreut.}
+
 #
-# 148 continues at 228, listing wins/draws/losses. Space is intentional.
+# 1481 continues at 228, listing wins/draws/losses. Space is intentional.
 #
-{148}{}{Darüber wär' ich hocherfreut.                                     Deine bisherige Statistik:                                           }
+{1481}{}{Darüber wär' ich hocherfreut. Deine bisherige Statistik: }
 {149}{}{Es scheint, du hast mich besiegt. Außerordentlich.}
 {150}{}{Sehr gut. Du benötigst jedoch etwas mehr Übung, um mich zu schlagen.}
     {151}{}{Noch ein Spiel?}
@@ -164,4 +167,4 @@
 #
 {228}{}{ Gewinne | }
 {229}{}{ Remis | }
-{230}{}{ Verluste                                 Bitte wähle Deine Farbe.}
+{230}{}{ Verluste. Bitte wähle Deine Farbe.}

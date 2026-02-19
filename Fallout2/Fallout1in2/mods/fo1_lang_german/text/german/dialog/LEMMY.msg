@@ -55,7 +55,7 @@
 {154}{}{Ich geb' dir 240.}
 {155}{}{Ich glaub', du musst es mir gleich sagen, ohne die Scheiß-Deckel!}
 {156}{}{Zu viel für meinen Geschmack.}
-{157}{}{Also, ich bin nicht ganz sicher, aber was man so hört, ist es nicht das, was jeder glaubt. Irgendein neuer Typ mit Mutanten rum. Aber erzähl' nicht rum, dass du das von mir hast.}
+{157}{}{Also, ich bin nicht ganz sicher, aber was man so hört, ist es nicht das, was jeder glaubt. Irgendein neuer Typ fängt gerade an was mit einer Art Mutanten abzuziehen oder so. Aber erzähl' nicht rum, dass du das von mir hast.}
 {158}{}{Klar. Kann man irgendwas von dir herumerzählen, Lemmy?}
 {159}{}{Kann ich dir noch 'ne Frage stellen?}
 {160}{}{Danke.}
