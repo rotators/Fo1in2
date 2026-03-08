@@ -475,6 +475,7 @@
 #define OBJ_DATA_DAMAGE_FLAGS       (0x44)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
 #define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
+#define OBJ_DATA_CRITTER_HP         (0x58)
 
 // compute attack result data offsets
 #define C_ATTACK_SOURCE             (0x00)
