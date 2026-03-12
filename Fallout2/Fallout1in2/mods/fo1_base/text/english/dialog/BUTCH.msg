@@ -216,7 +216,7 @@
 {311}{BUTCH103}{Last I heard, he's the mayor of Adytum.}
 {312}{BUTCH104}{Well, they run a big, ol' hospital on the southwest side of Downtown. Bunch of religious nuts, if you ask me.}
 {313}{BUTCH105}{He heads up the Children of the Cathedral down in the Boneyard.}
-{314}{BUTCH105a}{Jain's the High Priestess of the Children of the Cathedral and sets up the hospital here in the Hub.}
+{314}{BUTH105a}{Jain's the High Priestess of the Children of the Cathedral and sets up the hospital here in the Hub.}
 {315}{BUTCH106}{I uh... heard stories, that's all. No truth to them.}
 {316}{BUTCH107}{Best prices on the best guns in town. Everyone says so, it's not just that I own it! Just trot out this door and make a right. You can't miss it.}
 {317}{BUTCH108}{Now there's some good eating. Bob's has got the best charred iguana this side of the desert.}
@@ -261,7 +261,7 @@
 {501}{butch63a}{Hey! Knock that off!}
 {502}{BUTCH69a}{Like I told you...}
 {503}{BUTCH70b}{As I said...}
-{504}{BUTCH105b}{I've no idea what you're talking about.}
+{504}{BUTH105b}{I've no idea what you're talking about.}
 
 #
 # Tell-Me-Abouts generic responses
@@ -345,7 +345,7 @@
 {1127}{BUTCH103}{Last I heard, he's the mayor of Adytum.}
 {1128}{BUTCH104}{Well, they run a big, ol' hospital on the southwest side of Downtown. Bunch of religious nuts, if you ask me.}
 {1129}{BUTCH105}{He heads up the Children of the Cathedral down in the Boneyard.}
-{1130}{BUTCH105a}{Jain's the High Priestess of the Children of the Cathedral and sets up the hospital here in the Hub.}
+{1130}{BUTH105a}{Jain's the High Priestess of the Children of the Cathedral and sets up the hospital here in the Hub.}
 {1131}{BUTCH106}{I uh... heard stories, that's all. No truth to them.}
 {1132}{BUTCH107}{Best prices on the best guns in town. Everyone says so, it's not just that I own it! Just trot out this door and make a right. You can't miss it.}
 {1133}{BUTCH108}{Now there's some good eating. Bob's has got the best charred iguana this side of the desert.}
