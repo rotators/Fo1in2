@@ -72,7 +72,7 @@
 {171}{Harry203}{You kill my brother, Barry!}
 {172}{Harry204}{You kill Terry!}
 {173}{Harry205}{You kill Sally! He did have lousy name. But not reason to kill him!}
-{174}{Harry26}{Not bother me. Leave alone!}
+{174}{Harry206}{Not bother me. Leave alone!}
 {175}{Harry207}{Uhhh... Not know.}
 {176}{Harry300}{I dunno, but think he like a boss people.}
 {177}{Harry301}{He Lou Tenant. He my boss. Not tell him, but Harry could take on good day.}
