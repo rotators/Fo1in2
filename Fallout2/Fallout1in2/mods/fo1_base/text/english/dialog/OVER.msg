@@ -114,7 +114,7 @@
 {209}{Over_60}{Go back out and find it. It needs to be destroyed for the Vault to be safe. Try to the west, most of the mutants seem to be there.}
 {210}{Over_61}{What's that? You've killed the mutant leader?}
 {211}{}{Uh-huh, nuh, huh. Nuh-nuh.}
-{212}{Over_61aS}{There are still more mutants appearing? You need to destroy their vats? Great job! Go back out there and take care of it.}
+{212}{Over_61a}{There are still more mutants appearing? You need to destroy their vats? Great job! Go back out there and take care of it.}
 {213}{Over_62}{What news of the mutants?}
 {214}{}{I blew them up.}
 {215}{}{The mutant vats have been destroyed.}
