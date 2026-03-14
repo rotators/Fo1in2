@@ -1,0 +1,4 @@
+{100}{}{Vidíš feáka.}
+{101}{}{Podívej na ty barvy!}
+{102}{}{Óóóóó´, jéééééé! Já jím svou tváø...}
+{103}{}{Mami?}
