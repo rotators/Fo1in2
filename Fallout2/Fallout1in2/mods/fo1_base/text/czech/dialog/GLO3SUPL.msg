@@ -1,0 +1,2 @@
+{100}{}{Tyto dveøe byly sežehnuty nukleárním výbuchem.}
+{101}{}{Dveøe jsou pøiliš pevnì svaøeny, než aby šly otevøít.}
