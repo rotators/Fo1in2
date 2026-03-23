@@ -4,7 +4,7 @@
 {103}{}{Jako bys byl jedinı, kdo má problémy.}
 {104}{}{Dobøe, dobøe. Není nutnı na mì øvát.}
 {105}{}{Hmm... To nevím. Chtìlo by to hrdinu jinıho kalibru, ne jsi ty. Hele, co kdyby ses vrátil, a budeš mít trochu víc zkušeností?}
-{106}{}{Je to tragédie, vìø mi. Nic u není, co bıvalo. Mám malou farmu nedaleko odsud a pøed nìkolika dny se náhle vynoøila tlupa nájezdníkù, a teï pouívají mùj domov jako svojí základnu. Zabili Pugslyho, mého mazlíèka a øekli, e pokud bych se nìkdy zkusil vrátit, zabijí i mì.}
+{106}{}{Je to tragédie, vìø mi. Nic u není, co bıvalo. Mám malou farmu nedaleko odsud a pøed nìkolika dny se náhle vynoøila tlupa nájezdníkù, a teï pouívají mùj domov jako svoji základnu. Zabili Pugsleyho, mého osla, a øekli, e pokud bych se nìkdy zkusil vrátit, zabijí i mì.}
 {107}{}{Jenom mi øekni, kde to je a zbytek nech na mì.}
 {108}{}{Promiò Irwine, ale mám dùleitìjší vìci na práci.}
 {109}{}{Vánì bys to udìlal? Víš, já se tam netroufám vrátit. Co kdybys mi øekl, a bude bezpeèné vrátit se domù?}
@@ -13,9 +13,9 @@
 {112}{}{Tak co, dal jsi tìm parchantùm lekci? Je mùj domov opìt bezpeènı?}
 {113}{}{To si piš, kámo.}
 {114}{}{Ještì jsem nemìl èas, abych tu záleitost vyøídil.}
-{115}{}{Ó, díky, díky moc. Promiò, nemám nic cenného, co bych ti dal, tak pøijmi aspoò tuhle pušku.}
+{115}{}{Ó, díky, díky moc. Promiò, nemám ádnı bohatství, co bych ti dal, ale tady, vem si tohle za záchranu mıho domova. Patøila mımu tátovi, zdìdil ji po dìdovi Rickovi. Asi ji potøebuješ víc ne já.}
 {116}{}{Dìláš si ze mì blázny, co? Nech toho, prosím. Vra se, a bude mùj dùm opravdu bezpeènı.}
-{117}{}{Dìkuji ti mnohokrát za tvou nezištnou pomoc.}
+{117}{}{Mockrát ti dìkuju za pomoc.}
 
 # Nimrod
 {200}{}{Získáváš }
@@ -24,7 +24,7 @@
 #for Stupid characters
 {118}{}{Ehe?}
 {119}{}{Hele, nemám èas na kriply. Vra se, a budeš mít trochu rozumu.}
-{120}{}{Uh Huh, Uh Huh, Uh Huh.  To udìlám.}
+{120}{}{Uh Huh, Uh Huh, Uh Huh. To udìlám.}
 {121}{}{Já nespravit ještì to.}
 {123}{}{Nenajít farma. Ty ukázat?}
 {403}{}{dì-ku-ji!}
@@ -41,8 +41,8 @@
 {402}{}{Díky.}
 
 # Fo1in2:
-{2000}{}{Take, hned po opuštìní Hubu pùjdeš nìkolik kilometrù po hlavní silnici na vıchod, západnì od staré eleznièní stanice. Pak zamiø v pùlkruhu dolù na jih, kde najdeš starou farmu Cooperù (nemùeš ji minout). Projdi kolem ní a pak ... }
-{2001}{}{[Dále]}
+{2000}{}{Take, hned po opuštìní Hubu pùjdeš nìkolik kilometrù po hlavní silnici na vıchod, za starou eleznièní stanicí. Pak zamiø v pùlkruhu dolù na jih, kde najdeš starou farmu Cooperù (nemùeš ji minout). Projdi kolem ní a pak...}
+{2001}{}{[Pokraèovat]}
 {2002}{}{[Irwin vysvìtluje pokyny velmi podrobnì. Skoro u toho usínáš. Uplynou minuty, ne koneènì zadáš kompletní pokyny do svého PipBoye]}
 # Floats, Irwin is back at his farm:
 {2500}{}{Dìkuji za záchranu mojí farmy.}

@@ -1,7 +1,7 @@
 {100}{}{Vidíš technologicky vyspìlý poèítaè Bratrstva.}
 {101}{}{Pøístup do terminálu ti byl odepøen.}
 {102}{}{Lekce skonèila po šesti hodinách. Cítíš se vyèerpaný.}
-{103}{}{Už jsi se nauèil vše co jsi mohl.}
+{103}{}{Už jsi se nauèil vše, co jsi mohl.}
 #
 {200}{}{Vidíš poèítaè. Jsou na nìm podivné kousky pøipomínající lidské maso.}
 #

@@ -1,5 +1,5 @@
 {100}{}{Vidíš rozložitého, dobøe ozbrojeného muže.}
-{101}{}{Vidíš Gabriela, náèelníka Gun Runnerù.}
+{101}{}{Vidíš Gabriela, vùdce Gun Runnerù.}
 {102}{}{Nemíváme èasto hosty, jak ti mohu pomoci?}
 {103}{}{Proè nemíváte hosty?}
 {104}{}{Co tu dìláte?}
@@ -11,10 +11,10 @@
 {110}{}{Proè?}
 {111}{}{Už jsme oholili okolí o každý kousek kovu, který tu zùstal po válce, a teï jsme závislí na dodávkách surového materiálu z Adyta.}
 {112}{}{Co je tak špatné na tom, že vás zásobuje Adytum?}
-{113}{}{Nejdøív to bylo v pohodì. Zásobovali nás surovým materiálem a my jsme vyrábìli a prodávali zbranì. Pak pøed 3 roky Zimmerman najal nìjaké žoldáky, aby mu pomáhali chránit pøed Páraèi a obèasnými nájezdy Nájezdníkù. Ti Regulátoøi jsou chladnokrevné svinì a snaží se z nás vymáèknout všechno, co máme. My vyrobíme zbranì a oni se pak na nich napakujou.}
+{113}{}{Nejdøív to bylo v pohodì. Zásobovali nás surovinami a my jsme vyrábìli a prodávali zbranì. Pak pøed 3 roky Zimmerman najal nìjaké žoldáky, aby mu pomáhali chránit Adytum pøed Páraèi a obèasnými nájezdy nájezdníkù. Ti Regulátoøi jsou chladnokrevné svinì a snaží se z nás vymáèknout všechno, co máme. My vyrobíme zbranì a oni se pak na nich napakujou.}
 {114}{}{Proè se prostì neseberete a neusadíte nìkde jinde?}
 {115}{}{To je drsný. Co byste mi dali, kdybych se s Páraèi vypoøádal?}
-{116}{}{To bychom udìlali, kdybychom mohli. Ale stìhování je prakticky nemožné se všemi tìmi soustruhy a lisy. Ty se nedají jen tak sebrat a odvézt. Mohli bychom se pøestìhovat, ale kvùli Páraèùm je to prakticky nemožné.}
+{116}{}{To bychom udìlali, kdybychom mohli. Ale stìhování je prakticky nemožné se všemi tìmi soustruhy a frézami. Ty se nedají jen tak sebrat a odvézt. Mohli bychom se pøestìhovat, ale kvùli Páraèùm je to prakticky nemožné.}
 {117}{}{Vy, chlapi, vypadáte velice dobøe vyzbrojeni, tak proè nejdete a neodrovnáte je?}
 {118}{}{Jestli dokážeš zlikvidovat Páraèe na furt, tak si sám øekni cenu.}
 {119}{}{Chci zbranì a munici, a hodnì moc.}
@@ -23,7 +23,7 @@
 {122}{}{OK. Jsme dohodnutí.}
 {123}{}{Musím si to nechat projít hlavou.}
 {124}{}{Lidé, kteøí by vyøešili váš problém s Adytem.}
-{125}{}{Když vyhubíš všechny Páraèe, tak si vydìláš.}
+{125}{}{Když vyhubíš všechny Páraèe, máme dohodu.}
 {126}{}{OK. Udìlám to.}
 {127}{}{Musím si to nechat projít hlavou.}
 {128}{}{Ahoj zase.}
@@ -33,17 +33,17 @@
 {132}{}{Šlo to v pohodì.}
 {133}{}{Myslím, že jsem zabil všechny Páraèe.}
 {134}{}{Musíme si být jisti. V posledních dvou letech jsme jich zabili pøes 20 a oni se stále vracejí. A nikdy jsme nedokázali zjistit proè. Poèkáme pár dní a pokud se nevrátí, uvidíme, co pro tebe mùžem udìlat.}
-{135}{}{OK Dík}
+{135}{}{OK, dík.}
 {136}{}{Øekni nám, jak jsi se s Páraèi vypoøádal.}
 {137}{}{Jo. Uvidíme se, možná.}
-{138}{}{Já vím, povìz mi o tom.}
+{138}{}{Já vím, to mi povídej.}
 {139}{}{Uvidíme se, možná.}
 {140}{}{Nemáme èasto návštìvníky, mùžu ti nìjak pomoci?}
 {141}{}{Proè nemíváte návštìvníky?}
 {142}{}{Co tu dìláte?}
 {143}{}{Tohle místo není pøíliš pøístupné kvùli hnízdu tìch zatracených Páraèù, které je hned vedle továrny.}
 {144}{}{Zabil jsem všechny Páraèe. I ty jejich slizká vajíèka.}
-{145}{}{To bychom udìlali, kdybychom mohli. Ale stìhování je prakticky nemožné se všemi tìmi soustruhy a lisy. Ty se nedají jen tak sebrat a odvézt. Mohli bychom se pøestìhovat, ale kvùli Páraèùm je to prakticky nemožné.}
+{145}{}{To bychom udìlali, kdybychom mohli. Ale stìhování je prakticky nemožné se všemi tìmi soustruhy a frézami. Ty se nedají jen tak sebrat a odvézt. Mohli bychom se pøestìhovat, ale kvùli Páraèùm je to prakticky nemožné.}
 {146}{}{Zabil jsem všechny Páraèe. I ty jejich slizká vajíèka.}
 {147}{}{}
 {148}{}{Chci zbranì a munici, a hodnì moc.}
@@ -62,7 +62,7 @@
 {161}{}{Nic. Stejnì dìkuju.}
 {162}{}{}
 {163}{}{Skvìle. Co dneska máte, chlapi?}
-{164}{}{Hmm, Uvidíme se pozdìji.}
+{164}{}{Hmm, uvidíme se pozdìji.}
 {165}{}{}
 {166}{}{Jenom si tu vezmu pár vìcí. Co dneska máte?}
 {167}{}{Nic. Stejnì dìkuju.}
@@ -80,17 +80,17 @@
 {172}{}{Jak to jde, pøíteli?}
 {173}{}{Jak to jde, drahá pøítelkynì?}
 {174}{}{Cože? Zabils je všechny? Díky bohùm! Teï se mùžeme v klidu pøestìhovat nìkam, kde najdeme zásobu materiálu a nemusíme se spoléhat na ty hady z Adyta. Øekni si, co chceš a máš to, pøíteli.}
-{175}{}{Cože? Zabilas je všechny? Díky bohùm! Teï se mùžeme v klidu pøestìhovat nìkam, kde najdeme zásobu materiálu a nemusíme se spoléhat na ty hady z Adyta. Øekni si co chceš a máš to, drahá pøítelkynì.}
+{175}{}{Cože? Zabilas je všechny? Díky bohùm! Teï se mùžeme v klidu pøestìhovat nìkam, kde najdeme zásobu materiálu a nemusíme se spoléhat na ty hady z Adyta. Øekni si, co chceš, a máš to, drahá pøítelkynì.}
 {176}{}{To zní fér. Bylo pro nás potìšením s tebou obchodovat, pøíteli.}
-{177}{}{To zní fér. Bylo pro nás potìšením s tebou obchodovat, drahá pøítelkynì.}
+{177}{}{Platí. Bylo mi potìšením s tebou obchodovat, pøíteli.}
 {178}{}{Dokázals to. Øekni svým pøátelùm, že mají své zbranì.}
 {179}{}{Dokázalas to. Øekni svým pøátelùm, že mají své zbranì.}
 {180}{}{Dìkuji ti, pøíteli.}
 {181}{}{Dìkuji ti, drahá pøítelkynì.}
 {182}{}{Promiò, pøíteli, nemùžu teï mluvit. Máme napilno s balením vìcí na cestu. Vezmi si, cokoli potøebuješ.}
 {183}{}{Promiò, pøítelkynì, nemùžu teï mluvit. Máme napilno s balením vìcí na cestu. Vezmi si, cokoli potøebuješ.}
-{184}{}{Už není dùvod odejít, teï, když se tvoji pøátelé zbavili Regulátorù.}
-{185}{}{Už není dùvod odejít, teï, když se tvoji pøátelé zbavili Regulátorù.}
+{184}{}{Už není dùvod odejít, teï, když se tvoji pøátelé zbavili tìch zatracených Regulátorù.}
+{185}{}{Už není dùvod odejít, teï, když se tvoji pøátelé zbavili tìch zatracených Regulátorù.}
 {186}{}{Vítej, pøíteli, jak ti mohu pomoci?}
 {187}{}{Vítej, drahá pøítelkynì, jak ti mohu pomoci?}
 
@@ -100,4 +100,4 @@
 {188}{}{O obchodování musíš mluvit se Zackem.}
 
 # Fo1in2
-{300}{}{Bezva! Pokud budeš nìco potøebovat, tamhle Zack ti mùže prodat flintu nebo dvì.}
+{300}{}{Bezva! Pokud budeš nìco potøebovat, tamhle Zack by s tebou rád uzavøel obchod.}

@@ -1,6 +1,6 @@
-{100}{}{Vidíš disk s podivnými znaèkami, jenž je èásteènì pokrytý zaschlou krví.}
-{101}{}{Pip Boy zobrazuje: Soubor nalezen v systému. Pøerušuji stahování.}
-{102}{}{Pip Boy zobrazuje: Probíhá stahování dat z disku.}
+{100}{}{Vidíš disk s podivnými znaèkami a skvrnami, o kterých si myslíš, že by mohly být krev.}
+{101}{}{Pip-Boy 2000 zobrazuje: „Stahuji... Pøerušuji, data již existují!“}
+{102}{}{Pip-Boy 2000 zobrazuje: „Stahuji data... ... ... Hotovo. Hezký den!“}
 {103}{}{Holodisk vypadá, že byl použit k záznamu zvukových dat z vojenského rádiového relé.}
 #
 # for Fallout Fixt:

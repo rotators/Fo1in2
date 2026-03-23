@@ -1,8 +1,8 @@
 {100}{}{Vidíš vozku.}
 {101}{}{Dneska bude teda zabíraèka!}
 {102}{}{Dneska se mi fakt nechce makat.}
-{103}{}{Doufám, že nás nikdo nepøepadne . . . nebo se nestane nìco horšího.}
-{104}{}{Promiò, ale opravdu nepotøebujeme žádné další stráže . . . aspoò myslím.}
+{103}{}{Doufám, že nás nikdo nepøepadne... nebo se nestane nìco horšího.}
+{104}{}{Promiò, ale opravdu nepotøebujeme žádné další stráže... aspoò myslím.}
 {105}{}{Promiò, už nemáme místo.}
 {106}{}{Jestli sháníš práci, podívej se na Trh.}
 {107}{}{Snad prodáme všechno.}
@@ -12,7 +12,7 @@
 {111}{}{Dneska bylo ale vedro.}
 {112}{}{Teda já mám ale žízeò.}
 {113}{}{Co je dneska za den?}
-{114}{}{Až s tím skonèím, pùjdu do Falconu!}
+{114}{}{Až s tím skonèím, pùjdu do Sokola!}
 {115}{}{Promiò, právì jsme se vrátili.}
 {116}{}{Jestli hledáš práci, poohlédni se na Trhu.}
 {117}{}{Dneska jsou prachy!}

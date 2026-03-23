@@ -1,4 +1,4 @@
-{100}{}{Vidíš Boba, majitele "Bobovıch leguánù na špejli".}
+{100}{}{Vidíš Boba, majitele „Bobovıch leguánù na špejli“.}
 {101}{}{Dobøe, dobøe, tady máš své peníze.}
 {102}{}{Mìl jsem nìjaká vydání.  Musím zvıšit svoje poadavky.}
 {103}{}{Pøitlaè. Chci VŠECHNY tvoje peníze a hned, nebo je z tebe mrtvola.}
@@ -22,7 +22,7 @@
 {121}{}{To je opravdovej zkurvysyn.  Nezkoušej se s ním zaplést.  Ještì nìco?}
 {122}{}{Fajn.  Kolik po mnì chceš?}
 {123}{}{Chci }
-{124}{}{ babek kadıch pìt dní.}
+{124}{}{ zátek kadıch pìt dní.}
 {125}{}{Doktor Morbid?  Všechno co o nìm vím je, e bydlí nìkde v Junktownu a e je to ten nejlevnìjší dodavatel surovin, kterého bych mohl najít.  To je všechno!}
 {126}{}{Jen se raète podívat na naší nabídku.}
 {127}{}{Mám tu celého leguána za dvacku.}
@@ -38,16 +38,16 @@
 {137}{}{Nejde se ponoøit do sraèek a myslet si, e se nezamaeš.  Padej odsud!}
 {138}{}{No to urèitì.  Zmiz!}
 {139}{}{Lituji.  Leguáni u došli.}
-{140}{}{Máme pouze celého leguána na špejli.  Dvacet babek za jednoho.}
+{140}{}{Máme pouze celého leguána na špejli. Tøicet babek za jednoho. Lepší peèenıho leguána v celı pustinì nenajdeš, to ti garantuju!}
 {141}{}{Máme pouze pøímo vybrané kousky.  Ale chutnají skvìle.  Osm babek za jeden.}
 {142}{}{Jistì.  Máme buï celého leguána na špejli za dvacet nebo zvláš vybrané kousky za osm.}
 {143}{}{Vezmu si celého leguána.}
 {144}{}{Vezmu si jeden z tìch kouskù.}
-{145}{}{Víš, slyšel jsem, e ty tvoje vybrané kousky mají chu jako slepice.  Krájíš do nich snad enskı?}
+{145}{}{Slyšel jsem, e tvoje vıbìrovı maso chutná jako kuøe. Je takovı... mìkkı. To do toho melete jenom ty mìkkoty?}
 {146}{}{ádné hloupé kousky!  Já chtít celı leguán!  Ugh!}
 {147}{}{Hmm, hezky vonìt!  Já chtít ten kousek!}
-{148}{}{Nikdy jsem tu nic podobného nevidìl.  Kupci s vodou je nepotøebují.}
-{149}{}{Vodní kupci?}
+{148}{}{Nikdy jsem tu nic podobného nevidìl. Obchodníci s vodou je nepotøebují.}
+{149}{}{Obchodníci s vodou?}
 {150}{}{Pan Decker je vznešenı obchodník, kterı vede trochu ménì vznešenı byznys.  Ještì nìco?}
 {151}{}{Ehm... Dobøe...}
 {152}{}{Jakı je to druh byznysu?}
@@ -62,8 +62,8 @@
 {161}{}{Nìkdo sejmul šerifa Greene.  Ale nevím, co je s jeho zástupcem.}
 {162}{}{Daren Hightower byl zavradìn.  Ani všechny ty jeho prachy mu nepomohly.  To je ironie, co?}
 {163}{}{Nìkdo ukradl ze ètvrti Pahorky vzácnı náhrdelník.  Èlovìèe, mùu ti øíct, e ten nìkdo udìlal zatracenì velkou chybu.  U teï je po nìm!}
-{164}{}{Nìkdo zabil Jain, knìku Dìtí Katedrály.  Co jsem slyšel, tak to byla hroznì protivná enská!}
-{165}{}{No, jediná nová vìc, co vím, je, e Dìti Katedrály zabraly Nemocnici.  Jinak je tu poslední dobou hrozná nuda.}
+{164}{}{Nìkdo zabil Jain, knìku Dìtí katedrály.  Co jsem slyšel, tak to byla hroznì protivná enská!}
+{165}{}{No, jediná nová vìc, co vím, je, e Dìti katedrály zabraly Nemocnici.  Jinak je tu poslední dobou hrozná nuda.}
 {166}{}{Ještì nìco?}
 {167}{}{Chlape mizernej, bìhem tıdne budu na mizinì.  Ještì nìjaké pøání, ó velikı a mocnı?}
 {168}{}{Tvùj tón se mi nelíbí.}
@@ -77,22 +77,22 @@
 {176}{}{Co...co to?!  Aha, u vím, ty si dìláš legraci...}
 {177}{}{Jo jasnì, e si...}
 {178}{}{No, a já ne.  Hned uvidíš, jak zaplatíš za svùj zloèin.}
-{179}{}{No, a já ne.  A chci si trochu uít.}
-{180}{}{Musíš bıt asi ve mìstì novı, kdy se mì ptáš na Kupce s vodou.  Voda je ivot a kdo mùe bıt mocnìjší ne ten, kdo vládne nad ivotem a smrtí.}
-{181}{}{Kdo vede Kupce s vodou?}
+{179}{}{No, a já ne. A chci z toho taky nìco mít.}
+{180}{}{Musíš bıt asi ve mìstì novı, kdy se mì ptáš na Obchodníky s vodou. Voda je ivot a kdo mùe bıt mocnìjší ne ten, kdo vládne nad ivotem a smrtí.}
+{181}{}{Kdo vede Obchodníky s vodou?}
 {182}{}{Pokud je v Hubu nìco, co pùsobí bolest a utrpení, tak to Decker buï u kontroluje, nebo se to aspoò kontrolovat snaí.  Ještì nìco?}
 {183}{}{Vùbec nevím, o èem to mluvíš a nehodlám dál poslouchat tvoje pomluvy!  Doufám, e u se tu znovu neukáeš.}
 {184}{}{Nedìlej to!  Fajn, tak pouívám nìjaké ty trochu diskutabilní suroviny.  Ale to neznamená, e snad páchám vrady.  Zboí doktora Morbida u je mrtvé, nebo ne?}
 {185}{}{Ale jistì e jo, Bobe.  Pøeju krásnı den...}
 {186}{}{Kanibalismus je zloèin proti lidstvu, Bobe.  A já podívám, jak za to zaplatíš.}
-{187}{}{Moná to tak je.  Moná není.  Mnì je to fuk.  Já se chci jen pobavit.}
+{187}{}{Moná to tak je. Moná není. Mnì je to fuk. Chci z toho taky nìco mít.}
 {188}{}{Ne tak nahlas!  Není potøeba vyøvávat to na celı Hub...}
 {189}{}{Myslím, e jsem byl zbyteènì hrubı.  Mìj se...}
 {190}{}{Víš, policejní stanice je pøímo pøes ulici.  Moná bych si mìl udìlat malou procházku.}
 {191}{}{Mùu mluvit ještì hlasitìji.  Ale taky mùu mlèet.  Jde o to, jak se to vezme. Hluk je levnı, ticho je drahé.}
 {192}{}{Jak ti mám sakra platit, kdy vyereš celı mùj obchod?  Fajn!  Tady máš dalšího leguána!  Doufám, e se s ním zalkneš!}
 {193}{}{Tvùj tón se mi nelíbí.}
-{194}{}{To je tìkı.  Chceš peníze, dám ti je.  Chceš jídlo, dám ti ho.  Chceš umøít, zaøídím to.  Ale "jako" to není souèást dohody.}
+{194}{}{To je tìkı. Chceš peníze, dám ti je. Chceš jídlo, dám ti ho. Chceš umøít, zaøídím to. Ale 'líbení' není souèást dohody.}
 {195}{}{Nic.  A teï, kdy mì omluvíš, mám nìjakou práci.}
 {196}{}{Lituji, ale leguáni u nám došli.}
 {197}{}{Máme pouze leguána na špejli.  Dvacet babek.}
@@ -100,7 +100,7 @@
 {199}{}{U zase?  Èlovìèe, ty musíš mít ale hlad.  Máme leguána na špejli za dvacet a naše extra vybrané kousky z leguána za osm babek.}
 {200}{}{Vezmu si celého leguána.}
 {201}{}{Vezmu si jeden z tìch kouskù.}
-{202}{}{Víš, slyšel jsem, e ty tvoje vybrané kousky mají chu jako slepice.  Krájíš do nich snad enskı?}
+{202}{}{Slyšel jsem, e tvoje vıbìrovı maso chutná jako kuøe. Je takovı... mìkkı. To do toho melete jenom ty mìkkoty?}
 {203}{}{ádné hloupé kousky!  Já chtít celı leguán!  Ugh!}
 {204}{}{Hmm, hezky vonìt!  Já chtít ten kousek!}
 {205}{}{Jak ti mám sakra platit, kdy vyereš celı mùj obchod?  Fajn!  Tady máš dalšího leguána!  Doufám, e se s ním zalkneš!}
@@ -122,7 +122,7 @@
 {221}{}{Bıt tebou, pøíteli, tak si to rozmyslím.  Tady v Hubu umírají lidé velice rychle a snadno.}
 {222}{}{Fajn.  Jsme dohodnuti. }
 # TRANSLATION NOTE: A number of caps is inserted between lines 222 and 223. The space at the end of line 222 is intentional!
-{223}{}{ zátek, kadıch pìt dní.  Uvidíme se...}
+{223}{}{ zátek, splatnıch kadıch pìt dní. Tak se uvidíme za pìt dní...}
 {224}{}{Ani nápad.  V ádném pøípadì ti nemùu platit víc, ne co platím teï.}
 {225}{}{Smùla, Bobe.  Nerad, ale budu muset zaèít zpívat.}
 {226}{}{Fajn.  Zùstaneme na èástce, kterou jsme si dohodli... prozatím.}
@@ -145,8 +145,8 @@
 ##
 ##Sduibek -- Fallout Fixt
 ##
-{243}{}{30 zátek?! Dìláš si srandu?}
-{244}{}{Hele debile, ty jsi ten, kdo znièil moje ziskové mare. Take pokud se ti nelíbí moje ceny, tak kurva vypadni. Je tu spousta dalších stánkù s jídlem. Poèkej... Vlastnì není. Máš smùlu, hovado. }
+{243}{}{Tøicet zátek?! Dìláš si srandu?}
+{244}{}{Hele debile, ty jsi ten, kdo znièil moje ziskové mare. Take pokud se ti nelíbí moje ceny, tak kurva vypadni. Je tu spousta dalších stánkù s jídlem. Poèkej... Vlastnì není. Máš smùlu, hovado.}
 {245}{}{Špatnì, a je to tvoje vina. Pokud si nehodláš nic koupit, tak vypadni.}
 {246}{}{Jak chceš. Sbohem.}
 {247}{}{Vlastnì, kdy nad tím tak pøemıšlím, mám docela hlad.}
@@ -155,7 +155,7 @@
 {251}{}{Jak ti jdou obchody, Bobe?}
 #
 # 252 to 260 take place while Bob is in jail
-{252}{}{Co tu skara dìláš? Znièil jsi mé podnikání a urèitì jsi dostal velkou odmìnu. To jsi mì navštívil, aby jsi se mi mohl vysmívat, nebo co?}
+{252}{}{Co tu sakra dìláš? Znièil jsi mé podnikání a urèitì jsi dostal velkou odmìnu. To ses pøišel vysmívat, nebo co?}
 {253}{}{Jo, pøesnì tak. Jak jdou obchody, Bobe?}
 {254}{}{Ne, chci kouknout, jak se ti daøí.}
 {255}{}{Pøíšernì a je to tvá vina. Nejspíš mì tady nechají chcípnout.}

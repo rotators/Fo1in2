@@ -1,1 +1,1 @@
-{100}{}{Vıtah je rozbitı. Moná by jsi mohl zkusit ebøík.}
+{100}{}{Vıtah je rozbitı. Moná bys mohl zkusit ebøík.}

@@ -6,7 +6,7 @@
 {105}{}{Dveøe jsou otevøené.}
 {106}{}{Dveøe jsou zavøené, ale odemèené.}
 {107}{}{Dveøe jsou zamèené.}
-{108}{}{Dveøe se s zavrzáním otevírají.}
+{108}{}{Dveøe se se zavrzáním otevírají.}
 {109}{}{Dveøe ji byly odemèeny.}
 {110}{}{Tento zámek je nad tvoje síly.}
 
@@ -34,17 +34,17 @@
 # Perception Check Critical Success
 {1020}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a vysoce vıbušnou pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 {1030}{}{Vidíš bytelné dveøe se zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
-{1040}{}{Vidíš bytelné dveøe bez viditelného zámku a vysoce vıbušnou pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
+{1040}{}{Vidíš bytelné dveøe bez viditelného zámku a s vysoce vıbušnou pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 {1050}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 
 {1060}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 {1070}{}{Vidíš bytelné dveøe se zámkem a pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
-{1080}{}{Vidíš bytelné dveøe bez viditelného zámku a pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
+{1080}{}{Vidíš bytelné dveøe bez viditelného zámku a s pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 {1090}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a pastí umístìnou v zárubni dveøí, které by se daly vypáèit.}
 
 {1100}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a pøestøienım drátem v zárubni dveøí, které by se daly vypáèit.}
 {1110}{}{Vidíš bytelné dveøe se zámkem a pøerušenım drátem v zárubni dveøí, které by se daly vypáèit.}
-{1120}{}{Vidíš bytelné dveøe bez viditelného zámku a pøerušenım drátem v zárubni dveøí, které by se daly vypáèit.}
+{1120}{}{Vidíš bytelné dveøe bez viditelného zámku a s pøerušenım drátem v zárubni dveøí, které by se daly vypáèit.}
 {1130}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a pøestøienım drátem v zárubni dveøí, které by se daly vypáèit.}
 
 {1140}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem), které by se daly vypáèit.}
@@ -56,17 +56,17 @@
 
 {1180}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {1190}{}{Vidíš bytelné dveøe se zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
-{1200}{}{Vidíš bytelné dveøe bez viditelného zámku a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
+{1200}{}{Vidíš bytelné dveøe bez viditelného zámku a s vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {121}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 
 {122}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a pastí umístìnou v zárubni dveøí.}
 {123}{}{Vidíš bytelné dveøe se zámkem a pastí umístìnou v zárubni dveøí.}
-{124}{}{Vidíš bytelné dveøe bez viditelného zámku a pastí umístìnou v zárubni dveøí.}
+{124}{}{Vidíš bytelné dveøe bez viditelného zámku a s pastí umístìnou v zárubni dveøí.}
 {125}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a pastí umístìnou v zárubni dveøí.}
 
 {126}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem) a pøestøienım drátem v zárubni dveøí.}
 {127}{}{Vidíš bytelné dveøe se zámkem a pøerušenım drátem v zárubni dveøí.}
-{128}{}{Vidíš bytelné dveøe bez viditelného zámku a pøerušenım drátem v zárubni dveøí.}
+{128}{}{Vidíš bytelné dveøe bez viditelného zámku a s pøerušenım drátem v zárubni dveøí.}
 {129}{}{Vidíš bytelné dveøe se starım zrezivìlım zámkem a pøestøienım drátem v zárubni dveøí.}
 
 {130}{}{Vidíš bytelné dveøe se zámkem (kterı lze odemknout paklíèem).}
@@ -78,17 +78,17 @@
 
 {134}{}{Vidíš poškozené dveøe se zámkem (kterı lze odemknout paklíèem) a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {135}{}{Vidíš poškozené dveøe se zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
-{136}{}{Vidíš poškozené dveøe bez viditelného zámku a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
+{136}{}{Vidíš poškozené dveøe bez viditelného zámku a s vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {137}{}{Vidíš poškozené dveøe se starım zrezivìlım zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 
 {138}{}{Vidíš poškozené dveøe se zámkem (kterı lze odemknout paklíèem) a pastí umístìnou v zárubni dveøí.}
 {139}{}{Vidíš poškozené dveøe se zámkem a pastí v zárubni.}
-{140}{}{Vidíš poškozené dveøe bez viditelného zámku a pastí umístìnou v zárubni dveøí.}
+{140}{}{Vidíš poškozené dveøe bez viditelného zámku a s pastí umístìnou v zárubni dveøí.}
 {141}{}{Vidíš poškozené dveøe se starım zrezivìlım zámkem a pastí v zárubni dveøí.}
 
 {142}{}{Vidíš poškozené dveøe se zámkem (kterı lze odemknout paklíèem) a pøestøienım drátem v zárubni dveøí.}
 {143}{}{Vidíš poškozené dveøe se zámkem a pøerušenım drátem v zárubni dveøí.}
-{144}{}{Vidíš poškozené dveøe bez viditelného zámku a pøerušenım drátem v zárubni dveøí.}
+{144}{}{Vidíš poškozené dveøe bez viditelného zámku a s pøerušenım drátem v zárubni dveøí.}
 {145}{}{Vidíš poškozené dveøe se starım zrezivìlım zámkem a pøestøienım drátem v zárubni dveøí.}
 
 {146}{}{Vidíš poškozené dveøe se zámkem (kterı lze odemknout paklíèem).}
@@ -100,17 +100,17 @@
 
 {150}{}{Vidíš staré dveøe se zámkem (kterı lze odemknout paklíèem) a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {151}{}{Vidíš staré dveøe se zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
-{152}{}{Vidíš staré dveøe bez viditelného zámku a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
+{152}{}{Vidíš staré dveøe bez viditelného zámku a s vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 {153}{}{Vidíš staré dveøe se starım zrezivìlım zámkem a vysoce vıbušnou pastí umístìnou v zárubni dveøí.}
 
 {154}{}{Vidíš staré dveøe se zámkem (kterı lze odemknout paklíèem) a pastí umístìnou v zárubni dveøí.}
 {155}{}{Vidíš staré dveøe se zámkem a pastí v zárubni dveøí.}
-{156}{}{Vidíš staré dveøe bez viditelného zámku a pastí umístìnou v zárubni dveøí.}
+{156}{}{Vidíš staré dveøe bez viditelného zámku a s pastí umístìnou v zárubni dveøí.}
 {157}{}{Vidíš staré dveøe se starım zrezivìlım zámkem a pastí v zárubni dveøí.}
 
 {158}{}{Vidíš staré dveøe se zámkem (kterı lze odemknout paklíèem) a pøestøienım drátem v zárubni dveøí.}
 {159}{}{Vidíš staré dveøe se zámkem a pøerušenım drátem v zárubni dveøí.}
-{160}{}{Vidíš staré dveøe bez viditelného zámku a pøerušenım drátem v zárubni dveøí.}
+{160}{}{Vidíš staré dveøe bez viditelného zámku a s pøerušenım drátem v zárubni dveøí.}
 {161}{}{Vidíš staré dveøe se starım zrezivìlım zámkem a pøestøienım drátem v zárubni dveøí.}
 
 {162}{}{Vidíš staré dveøe se zámkem (kterı lze odemknout paklíèem).}
@@ -215,7 +215,7 @@
 # NPC strains her back while trying to bust the lock and
 # takes [x] points of damage
 
-{187}{}{ si namohla záda pøi pokusu rozbít zámek a ztratila}
+{187}{}{ si namohla záda pøi pokusu rozbít zámek a ztratila }
 {188}{}{ hit bodù.}
 
 #############################################################

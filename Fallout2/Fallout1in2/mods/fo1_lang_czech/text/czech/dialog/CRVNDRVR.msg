@@ -1,7 +1,7 @@
-{100}{}{Vidíš velitele karavany.}
+{100}{}{Vidíš honáka karavany.}
 {101}{}{Promiò, ale neznám tì.  Jestli chceš práci, musíš si nejdøív promluvit s Rutgerem.}
 {102}{}{Se mnou o tom nediskutuj. Jestli chceš práci, zajdi si za Rutgerem.}
-{103}{}{Co, utratil jsi snad všechny prachy za fet? Kdy to tak povedeš dál, brzo si najdeš svùj novı domov mezi tìmi zatracenci ve Starém Mìstì.}
+{103}{}{Co, utratil jsi snad všechny prachy za fet? Kdy to tak povedeš dál, brzo si najdeš svùj novı domov mezi tìmi ztroskotanci ve Starém Mìstì.}
 {104}{}{Radši se z toho nejdøív vyspi.  A vra se, a budeš moci pracovat.}
 {105}{}{Hledáš novou práci?}
 {106}{}{Jasnì.}
@@ -39,13 +39,13 @@
 {138}{}{Støevo.}
 {139}{}{Opilce nenajímáme.}
 {140}{}{Feáky nenajímáme.}
-{141}{}{(Ignoruje tì)}
+{141}{}{(Ignoruje tì.)}
 {142}{}{Vra se, a se z toho vyspíš.}
 {143}{}{Idiote. Vra se zpátky do ohrady.}
 {144}{}{V poøádku? Nikdy nesmíš opustit karavanu, dokud nedorazí na místo setkání. Najali jsme tì jako stráce na CELOU trasu.}
 {145}{}{No, nikdo mi neøekl, e nemám odcházet!}
 {146}{}{Je mi to moc líto, u se to nikdy nestane.}
-{147}{}{Uklidni se.}
+{147}{}{Jdi do háje.}
 {148}{}{Co? Byla to snad tvoje první karavana?  Kde tì proboha sebrali? Tohle je velice delikátní a dùleitá práce a musí se brát vánì. Spousta ivotù je v sázce. V karavanách i v mìstech, která zásobujeme.}
 {149}{}{Musíš bıt na sebe opravdu hrdı.}
 {150}{}{Coe?  Èekáš snad medaili nebo co?}
@@ -59,15 +59,15 @@
 {158}{}{Jsi idiot!}
 {159}{}{Musím jít.  Sbohem.}
 {160}{}{Uh, no jo.  Tohle je tvrdá a špinavá práce! Riskujeme naše ivoty pro ty uboáky, kteøí ijí tam venku v té pustinì.}
-{161}{}{A ijete! }
+{161}{}{Seeò si ivot!}
 {162}{}{Oh?  A co ti uboáci, co ti ijí hned u nosu?}
 {163}{}{Máš pravdu. Mùu tedy dostat tu práci nebo ne?}
-{164}{}{Co? Vùbec nevím, o èem to mluvíš! Ach tak, ty myslíš ty ztracence ze Starého mìsta?  Ti se nepoèítají. Sami tak chtìjí ít.}
+{164}{}{Co? Vùbec nevím, o èem to mluvíš! Ach tak, ty myslíš ty ztroskotance ze Starého Mìsta? Ti se nepoèítají. Sami tak chtìjí ít.}
 {165}{}{Myslím, e máš pravdu.}
 {166}{}{Já se z tebe zvencnu.}
 {167}{}{Musím u bìet.}
-{168}{}{Co? Co bych na to mìl øíct?}
-{169}{}{Samozøejmì e mám. Já jsem dobrák od kosti . . . vìtšinou.}
+{168}{}{Co? Co jsem øekl?}
+{169}{}{Samozøejmì e mám. Já jsem dobrák od kosti... vìtšinou.}
 {170}{}{Ovšeme jsi.  Dostanu tedy tu práci nebo co bude?}
 {171}{}{Musím u jít.}
 {172}{}{Tohle je mi elán!  Bohuel ti ale další práci dát nemùu.}
@@ -76,14 +76,14 @@
 {175}{}{To je fajn. Ale pro nás u nikdy dìlat nebudeš!}
 {176}{}{Oh, prosím!  U se to nikdy nestane!}
 {177}{}{Já o to taky vùbec nestojím!}
-{178}{}{Dobrá tedy dostaneš ještì jednu šanci. Naše další karavana odjídí }
+{178}{}{Dobrá, tedy dostaneš ještì jednu šanci. Naše další karavana odjídí }
 {179}{}{dneska}
 {180}{}{zítra}
 {181}{}{ }
 {182}{}{osmého}
 {183}{}{osmnáctého}
 {184}{}{osmadvacátého}
-{185}{}{. Dej mi vìdìt, a budeš pøipraven vyrazit. Platíme standardních 400.}
+{185}{}{. Dej mi vìdìt, a budeš pøipraven vyrazit. Platíme standardních 400 zátek.}
 {186}{}{Je mi líto, ale u jsem jednu velkou chybu udìlal, kdy jsem ti dal šanci minule.}
 {187}{}{Vıbornì a kterou trasu si vybereš?}
 {188}{}{Ahoj.  Karavana odjídí a zítra.  Mìl by ses tedy dostavit zítra, jestli chceš poøád ještì ten dob.}
@@ -94,7 +94,7 @@
 {193}{}{Nazdar. Jsi tu brzo. Moc brzo. Naše další karavana odjídí }
 {194}{}{osmého}
 {195}{}{osmnáctého.}
-{196}{}{28-tého.}
+{196}{}{osmadvacátého.}
 {197}{}{. Jestli budeš mít poøád ještì zájem, dostav se sem.}
 {198}{}{Nechci tu práci.}
 {199}{}{Zkusím to.}
@@ -103,11 +103,11 @@
 {202}{}{OK.  Mnì je to fuk.}
 {203}{}{Sakra, mì je fuk, jestli se tu ukáeš nebo ne. Lidi se u nás hlásí o práci kadı boí den.  Jestli se neobjevíš, je to tvoje vìc.}
 {204}{}{U jsem ti to øekl.  O to se neboj.  Kdy to nemùeš udìlat ty, já mùu.}
-{205}{}{Bratrstvo Oceli}
-{206}{}{Pohøebištì}
+{205}{}{Bratrstvo oceli}
+{206}{}{L.A. kostnice}
 {207}{}{Junktown}
 {208}{}{To je jedno.  Já tu práci po tom všem nechci.}
-{209}{}{Skvìlı naèasování, naše karavana vyráí právì dneska. Plat je standardnì 400 babek.  Na jakou trasu se chceš vydat?}
+{209}{}{Skvìlı naèasování, naše karavana vyráí právì dneska. Plat je standardnì 400 zátek. Na jakou trasu se chceš vydat?}
 {210}{}{Skvìle.  Naše další karavana vyráí }
 {211}{}{osmého}
 {212}{}{osmnáctého}
@@ -121,19 +121,19 @@
 {220}{}{Dobøe. Vyrazíme do sídla Bratrstva, hned jak dám dohromady zbytek lidí.}
 {221}{}{Oukej. Hned jak shromádím zbytek posádky, mùeme vyrazit k Bratrstvu.}
 {222}{}{Tak jdeme! Ale dávej pozor, a se moc nepøiblííme k horám.}
-{223}{}{Pohøebištì je nevlídné místo -- dávej si pozor. A sleduj, a kadı dìlá poøádnì svojí práci.}
-{224}{}{Posádka u je skoro kompletní. Jinak jsem slyšel, e v Pohøebišti byly poslední dobou nìjaké problémy -- tak si hlídejte záda.}
-{225}{}{Oukej, karavana do Pohøebištì je kompletní a pøipravená vyrazit.}
-{226}{}{Junktown bıvá obvykle krátkı a snadnı vılet -- nemìli byste mít ádné zvláštní problémy.}
+{223}{}{L.A. kostnice je nevlídné místo — dávej si pozor. A sleduj, a kadı dìlá poøádnì svoji práci.}
+{224}{}{Posádka u je skoro kompletní. Jinak jsem slyšel, e v L.A. kostnici byly poslední dobou nìjaké problémy — tak si hlídejte záda.}
+{225}{}{Oukej, karavana do L.A. kostnice je kompletní a pøipravená vyrazit.}
+{226}{}{Junktown bıvá obvykle krátkı a snadnı vılet — nemìli byste mít ádné zvláštní problémy.}
 {227}{}{Dobøe, posádka pro karavanu do Junktownu je pøipravená.}
 {228}{}{Dobrá. Junktown èeká, tak jedem.}
-{229}{}{Nazdar. Jestli jsem dobøe rozumìl, hledáš práci. Sice mì pøekvapuje, e tì Rutger pøijal, ale zøejmì má pro to nìjaké svoje dùvody. Naše karavany odjídìjí tøikrát mìsíènì:  osmého, osmnáctého a osmadvacátého.  Pravidelnì jezdíme na tøi místa: k Bratrstvu oceli, do Junktownu a do Pohøebištì. Za jednu cestu se platí standardnì 400 zátek. Pokud se s karavanou vrátíš do Hubu, dostáváš dalších 400.}
+{229}{}{Nazdar. Jestli jsem dobøe rozumìl, hledáš práci. Sice mì pøekvapuje, e tì Rutger pøijal, ale zøejmì má pro to nìjaké svoje dùvody. Naše karavany odjídìjí tøikrát mìsíènì:  osmého, osmnáctého a osmadvacátého.  Pravidelnì jezdíme na tøi místa: k Bratrstvu oceli, do Junktownu a do L.A. kostnice. Za jednu cestu se platí standardnì 400 zátek. Pokud se s karavanou vrátíš do Hubu, dostáváš dalších 400.}
 {230}{}{Máš to skvìle naèasovanı, protoe všechny naše karavany odjídí právì dneska.}
 {231}{}{Všechny naše karavany odjídí zítra.}
 {232}{}{Všechny naše karavany odjídí za }
 {233}{}{ dny.}
 {234}{}{Máš zájem?}
-{235}{}{Tak co, chceš tu práci? }
+{235}{}{Tak co, chceš tu práci?}
 {236}{}{Všechny karavany vyráí dneska.}
 {237}{}{Všechny karavany vyráí zítra.}
 {238}{}{Všechny karavany vyráí za }
@@ -141,12 +141,12 @@
 {240}{}{Pøedpokládám, e chceš práci.  Já ti jí mùu dát.  Máš zájem?}
 {241}{}{Jistì.}
 {242}{}{Ne.}
-{243}{}{OK. Kde najdeš svojí karavanu, víš.}
+{243}{}{Víš, kam si tu svoji karavanu mùeš strèit.}
 {244}{}{Nevím. Budu se muset vrátit zpátky k tobì.}
 {245}{}{Ug.}
 {246}{}{Kterou trasu si vybereš?}
-{247}{}{Bratrstvo Oceli.}
-{248}{}{Pohøebištì.}
+{247}{}{Bratrstvo oceli.}
+{248}{}{L.A. kostnice.}
 {249}{}{Junktown.}
 {250}{}{Promiò, rozmyslel jsem si to.}
 {251}{}{Dobøe, vra se }
@@ -155,8 +155,8 @@
 {254}{}{osmadvacátého}
 {255}{}{ a seznámím tì s ostatní osádkou.}
 {256}{}{Co máš za problém?}
-{257}{}{Ty jsi ten problém a moje pìst je jeho koneèné øešení. }
+{257}{}{Ty jsi ten problém a moje pìst je jeho koneèné øešení.}
 {258}{}{Dej si bacha.}
 {260}{}{Ty jsi.}
-{261}{}{No problem.}
+{261}{}{ádnı problém.}
 {262}{}{Jo, oukej. Vra se, kdy zmìníš názor.}

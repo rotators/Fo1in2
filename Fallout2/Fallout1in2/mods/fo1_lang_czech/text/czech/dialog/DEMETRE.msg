@@ -1,6 +1,6 @@
 {100}{}{Vidíš Demetreho.}
 {101}{}{Nazdar! Jak se vede? Jmenuju se Demetre, Demetre Romara, šéf sakra nejlepších karavan v pustinách. Hledáš práci?}
-{102}{}{Hmmm, nevypadáš zrovna nejsilnìjší, ale ... ale MUSÍŠ být hodnì zruènej støelec, abys tam venku pøežil! Sakra, možná, když to pøijde, budeš velkej bojovník!}
+{102}{}{Hmmm, nevypadáš zrovna nejsilnìjší, ale... ale MUSÍŠ být hodnì zruènej støelec, abys tam venku pøežil! Sakra, možná, když to pøijde, budeš velkej bojovník!}
 {103}{}{Vypadáš celkem zdravì.}
 {104}{}{Vypadáš celkem silnì.}
 {105}{}{Sakra, vypadáš jako silák!}
@@ -16,7 +16,7 @@
 {115}{}{Co víš o mizejících karavanách?}
 {116}{}{Musím jít.}
 {117}{}{Ugggg uggg!}
-{118}{}{Platíme 600 babek za jeden džob! Na každej pád! Sakra, lidi øíkají, že si vybíráme ty nejnebezpeènìjší cesty, ale to je pøece nejzábavnìjší. A v životì je potøeba zábavy, nemám pravdu? Jistìže mám!}
+{118}{}{Platíme 600 babek za kšeft! A to za každou cestu! Sakra, lidi øíkaj, že bereme ty nejnebezpeènìjší trasy, ale já øíkám, že jsou ty nejvíc vzrušující! Èlovìk potøebuje v životì trochu vzrušení, nemám pravdu? Jasnì, že mám!}
 {119}{}{Sakra, to je pøesnì to, co hledám!}
 {120}{}{Vždycky takhle øveš?}
 {121}{}{Nebezpeèné?}
@@ -31,10 +31,10 @@
 {130}{}{Ha! Nebo oboje! Dobrá, skoè vedle za Keri, pokud chceš nìjakou práci.}
 {131}{}{Jseš malej zasranej chytrák, co? Mì je to jedno! Dokud budeš chránit karavany, budu spokojen. Teï skoè vedle za Keri, pokud chceš nìjakou práci.}
 {132}{}{Ha! Vtipálek! Jestli se nebojíš temnoty, pøijï za mnou.}
-{133}{}{Jistì, že je to nebezpeèné, proè by to bylo jinak za 600?}
+{133}{}{Jistì, že je to nebezpeèné — proè bych jinak cpal 600 babek?}
 {134}{}{Aha, jo, sbohem.}
 {135}{}{Stejnì tu práci vezmu.}
-{136}{}{Vypadni, než ti utrhnu tu tvojí hlavu!}
+{136}{}{Vypadni, než ti utrhnu tu tvoji hlavu!}
 {137}{}{Vrazím ti tvou hlavu do tvýho vlastního zadku!}
 {138}{}{To je ono!}
 {139}{}{Jistìže! Skoè vedle za Keri, ta dìlá rozpisy.}
@@ -43,11 +43,11 @@
 {142}{}{Hmm, vodní èip? Hmmm, nikdy jsem o nìm neslyšel. Zkus nìkterej z obchodù okolo, mají spoustu harampádí. Takže, chtìls práci?}
 {143}{}{Dobrá, kolik platíte?}
 {144}{}{Ne, vlastnì ne.}
-{145}{}{Ne, zas tolik jich nezmizelo. Vlastnì jenom dvì. Vážnì nevím, proè si nejèastìji vybírají Far Go Traders.}
+{145}{}{Ne, zas tolik jich nezmizelo. Vlastnì jenom dvì. Vážnì nevím, proè si nejèastìji vybírají Obchodníky Far Go.}
 {146}{}{Nìjaká podezøení?}
 {147}{}{Co cesty a náklad?}
 {148}{}{Jo, dík.}
-{149}{}{Kdokoli to dìlá, musí bejt pekelnì vybavenej. Naše karavany jsou dobøe ozbrojený a stejnì si jen tak zmizí. Nezanechají vùbec stopy.}
+{149}{}{Kdokoli to dìlá, musí mít pekelnì silnej oddíl. Naše karavany jsou dobøe ozbrojený a èlovìk by øekl, že by aspoò nìkdo utekl. Ale ne. Nezanechají vùbec stopy.}
 {150}{}{Takže, kolik platíte?}
 {151}{}{A co vaše cesty a náklad?}
 {152}{}{Jo, dík.}
@@ -57,7 +57,7 @@
 {156}{}{Strašnì kecáš!}
 {157}{}{Dobrá, možná - možná není lepší, ale máme pestøejší nabídku než oni.}
 {158}{}{Jo, dík.}
-{159}{}{Víš, Beth nìco kdákala o Páraèích. Možná bych se po tom porozhlídnul, na tvým místì! Z jinejch zdrojù jsem slyšel o podezøelejch zvucích, který se v noci ozývaj odnìkud ze severozápadního sektoru.}
+{159}{}{Víš, Beth nìco kdákala o Páraèi. Na tvým místì bych se po tom porozhlídnul! Z jinejch zdrojù jsem slyšel, že se v noci severozápadnì od Hubu nìco potuluje.}
 {160}{}{Platíme dobøe, abychom se ujistili, že práce bude splnìna! Najímáme jen ty nejlepší! Musíme mít spolehlivé posádky našich karavan!}
 {161}{}{Jako já chtìl práci, ty uøvanej blbèe!}
 {162}{}{Promiò, že jsem obtìžoval.}
@@ -70,15 +70,15 @@
 {169}{}{Zapomeò na to.}
 {170}{}{Demetre tì ignoruje.}
 {171}{}{Kurva, nenajímám špinavý narkomany! Jestli chceš práci, radši zkus nejdøív vystøízlivìt!}
-{172}{}{Nejsem závislák . . . Teda . . . Arg!}
+{172}{}{Nejsem závislák... Teda... Arg!}
 {173}{}{Bla, bla!}
 {174}{}{Prášky, co? Sakra, dobøe, že už tì nikdy nenajmeme!}
-{175}{}{Sakra, ne! Ty si neuvìdomuješ co je všechno v sázce! Nemùžeme si dovolit takový riziko! Sakra, nevím, jak se Far Go Traders držej nad vodou po všech tìch zmizelejch karavanách!}
+{175}{}{Sakra, ne! Ty si neuvìdomuješ, co je všechno v sázce! Nemùžeme si dovolit takový riziko! Sakra, nevím, jak se Obchodníci Far Go držej nad vodou po všech tìch zmizelejch karavanách!}
 {176}{}{Sory, budeš se muset zeptat jinde. Nemùžu si dovolit vzít dalšího.}
 {177}{}{Vypadni, než se z tebe pobleju!}
 {178}{}{Hej! Co si myslíš, že dìláš?}
 {179}{}{To vede do našeho skladištì.}
-{180}{}{To mùže být otevøeno pouze z druhé strany.}
+{180}{}{Jdou otevøít jenom z druhý strany.}
 {181}{}{Ty jsi ale podivín.}
 {182}{}{Ztrácíš èas.}
 {183}{}{Ignoruje tì.}
@@ -101,24 +101,24 @@
 {200}{}{Nenajímáme, tak co chceš?}
 {201}{}{Vodpal! Nenajímáme.}
 {202}{}{Potøebuju vodní èip.}
-{203}{}{Co víš o ztracených karavanách.}
+{203}{}{Co víš o ztracených karavanách?}
 {204}{}{Chci aby ses mi ztratil z oèí!}
-{205}{}{Chci tvojí hlavu napíchnutou na kùlu!}
+{205}{}{Chci tvoji hlavu napíchnutou na kùlu!}
 {206}{}{Hmmm.}
 {207}{}{Ruk luk?}
-{208}{}{Myslíš si, že jsi drsnej? Nenech se vysmát!}
+{208}{}{Myslíš si, že jsi drsnej? Nerozesmívej mì!}
 {209}{}{Dobrá, mìl by sis promluvit s mou dcerou Keri; ona se o to všechno stará! Je ve vedlejší místnosti.}
 {210}{}{Už jsem øekl. Promluv si s Keri, je vedle.}
 {211}{}{Tvá dcera?}
 {212}{}{Ta nechutnost je tvoje dcera? To mnohé vysvìtluje!}
 {213}{}{Jo.}
-{214}{}{Ano, je to moje pýcha a radost! Není krásná? Promluv s ní, jestli chceš další práci. Jednou . . . snad brzy, budu moci skonèit s touhle prací a ona to po mì pøevezme.}
+{214}{}{Ano, je to moje pýcha a radost! Není krásná? Promluv s ní, jestli chceš další práci. Jednou... snad brzy, budu moci skonèit s touhle prací a ona to po mì pøevezme.}
 {215}{}{Ne, pokud budete oba mrtví!}
 {216}{}{Jo, dík.}
 {217}{}{Troufáš si urážet cizí rodinu? Mìl bych ti vyrvat srdce z tìla!}
 {218}{}{Omlouvám se, jen jsem žertoval!}
 {219}{}{Udìlám víc, než jen urážky!}
-{220}{}{Pøíliš pozdì na omluvy! [Jeho tváø zrudne . . . pak tichým, ovládajícím se hlasem.] No tak, nebo budu muset splnit svoje výhrùžky!}
+{220}{}{Pøíliš pozdì na omluvy! [Jeho tváø zrudne... pak tichým, ovládajícím se hlasem.] Vypadni, nebo budu muset splnit svoje výhrùžky!}
 {221}{}{Je to ubohý pokus o výhrùžku?}
 {222}{}{To není výhrùžka! Brzo zemøeš!}
 {223}{}{Jo, dobrá, zkus to!}
@@ -131,11 +131,11 @@
 {230}{}{Ještì nejsou pøipraveny k odjezdu.}
 {231}{}{Ještì pøedtím musím nìco udìlat.}
 {232}{}{Potøebuju vodní èip.}
-{233}{}{Co víš o ztracených karavanách.}
+{233}{}{Co víš o ztracených karavanách?}
 {234}{}{Jo, zatím zdar.}
 {235}{}{Rik rok?}
 {236}{}{Roerow?}
-{237}{}{Do háje! Propásnul jsi dobrou akci! Urèitì se na karavanu chystají mraky šelem, lidí a jiných potvor! Nic se nevyrovná poøádné pøestøelce! Na - vezmi si zatím tohle na hraní, než bude nachystaná další karavana. [Podává ti ruèní granát.]}
+{237}{}{Do háje! Propásnul jsi dobrou akci! Urèitì se na karavanu chystají mraky šelem, lidí a jiných potvor! Nic se nevyrovná poøádné pøestøelce! Na — vezmi si zatím tohle na hraní, než bude nachystaná další karavana. [Podává ti tøíštivý granát.]}
 {238}{}{Sakra! Vyjedou vùbec nìkdy naše karavany?}
 {239}{}{A co vaše loï?}
 {240}{}{Moc se nezdržuj.}
@@ -143,4 +143,4 @@
 {242}{}{Musíš zabít nepøátele døív, než tì dostanou!}
 {243}{}{Nic se nevyrovná ždímání duší z nepøátel!}
 {244}{}{Sakra seš!}
-{245}{}{Kurva, kde mám zbraò!}
+{245}{}{Kurva, kde mám zbraò?!}

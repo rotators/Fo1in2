@@ -1,4 +1,4 @@
-{100}{}{Ta osoba se podobá èlenùm Bratrstva Oceli.}
+{100}{}{Ta osoba se podobá èlenùm Bratrstva oceli.}
 {101}{}{Pøemıšlíš, co mohlo zpùsobit taková zranìní èlenu Bratrstva.}
 {102}{}{A to udìlal kdokoliv, vypadá, e u tady není.}
 {103}{}{Ten, kdo to udìlal, se mùe skrıvat v niších patrech komplexu. Bude lepší dávat si tu velkı pozor.}

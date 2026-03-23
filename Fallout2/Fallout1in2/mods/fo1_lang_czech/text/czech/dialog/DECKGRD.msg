@@ -1,5 +1,5 @@
 {100}{}{Vidíš jednoho z Deckerových strážných.}
-{101}{}{Potøebuju mluvit se šéfem.}
+{101}{}{Potøebuješ mluvit se šéfem.}
 {102}{}{Radìji zùstaò na naší stranì.}
 {103}{}{Budeme tì sledovat.}
 {104}{}{Zbraní se ani nedotkni.}

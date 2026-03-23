@@ -2,7 +2,7 @@
 {101}{}{Ty asi žertuješ. Jsou to samý vraky.}
 {102}{}{He, nic, díky.}
 {103}{}{Táhni!}
-{104}{}{Oh, Promiò, ale nevypadáš, že by sis mohl dovolit naše ceny.}
+{104}{}{Oh, promiò, ale nevypadáš, že by sis mohl dovolit naše ceny.}
 {105}{}{Ale pane, to jsou nádherné kousky motorových vozidel.}
 {106}{}{Madam, tohle jsou excelentní vozidla.}
 {107}{}{Ty nemohou být provozuschopné.}

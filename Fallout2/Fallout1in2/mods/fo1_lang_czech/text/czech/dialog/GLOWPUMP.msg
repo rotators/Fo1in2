@@ -1,3 +1,3 @@
-{100}{}{Vidíš vodní pumpu.}
-{101}{}{Tahle pumpa vypadá úplnì jinak ne ta, kterou znáš z rodného Vaultu.}
-{102}{}{Zjišuješ, e souèástky této pumpy by byly v pumpì tvého rodného Vaultu nepouitelné.}
+{100}{}{Vidíš vodní èerpadlo.}
+{101}{}{Tohle èerpadlo vypadá úplnì jinak ne to, které znáš z rodného Vaultu.}
+{102}{}{Zjišuješ, e souèástky tohoto èerpadla by byly v èerpadle tvého rodného Vaultu nepouitelné.}

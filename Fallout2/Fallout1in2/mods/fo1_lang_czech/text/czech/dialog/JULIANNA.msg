@@ -16,13 +16,13 @@
 {115}{}{Øíká, e s tebou konèí.}
 {116}{}{Øíká, e tì miluje.}
 {117}{}{Posílá tenhle medailón jako dùkaz.}
-{118}{}{Ne . . . to nemùe bıt pravda . . . já . . .}
+{118}{}{Ne... to nemùe bıt pravda... já...}
 {119}{}{Nic jiného neudìlal?}
 {120}{}{Ne, je mi líto.}
 {121}{}{Ale jo, posílá tenhle medailón.}
-{122}{}{Jak romantické! Oh, nìjak ho musím spatøit! Jen kdyby . . . moná . . . moná Lorraine by mu mohla donést zprávu . . .}
-{123}{}{Oh! Díky moc za tvou pomoc! Rozhodli jsme se ít tady teï s Následníky v míru. Díky za podporu naší lásky.}
+{122}{}{Jak romantické! Oh, nìjak ho musím spatøit! Jen kdyby... moná... moná Lorraine by mu mohla donést zprávu...}
+{123}{}{Oh! Díky moc za tvou pomoc! Rozhodli jsme se ít tady s Následovníky v míru. Díky za podporu naší lásky.}
 {124}{}{Nemohu bez nìj ít!}
 {125}{}{Julianna vytahuje nù a vráí si ho do srdce!}
 
-{126}{}{ zkušenosti za pomoc milencùm doruèením Romerova medailónu Juliannì.}
+{126}{}{ zkušeností za pomoc nešastnım milencùm doruèením Romerova medailónu Juliannì.}

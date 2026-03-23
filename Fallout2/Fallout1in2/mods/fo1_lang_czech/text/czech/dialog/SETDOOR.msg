@@ -1,9 +1,9 @@
 {100}{}{Vidíš pevnou zeï.}
 {101}{}{Na tomhle kousku zdi je nìco divného.}
-{102}{}{Vidíš šoupací dveøe.}
+{102}{}{Vidíš posuvné dveøe.}
 {103}{}{Dveøe jsou zamèené.}
-{104}{}{Zlikvidoval jsi past na dveøích.}
-{105}{}{ objevena past na dveøích.}
+{104}{}{Spustil jsi past na dveøích.}
+{105}{}{ objevuje past na dveøích.}
 {106}{}{Objevil jsi past na tìchto dveøích.}
 {107}{}{Nic to nedìlá.}
 {108}{}{Dveøe už jsou odemèeny.}

@@ -20,4 +20,4 @@
 {401}{}{Nepodaøilo se ti vypáèit objekt.}
 # other critter
 {500}{}{ úspìšnì vypáèil objekt.}
-{501}{}{ nedokázal vypáèil objekt.}
+{501}{}{ nedokázal vypáèit objekt.}

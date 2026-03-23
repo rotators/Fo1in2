@@ -1,6 +1,6 @@
 {100}{}{Vidíš unaveného poutníka.}
-{101}{}{Vidíš Lanceho, strážce shadysandských zvìdù.}
-{102}{}{Jenom stùj kde si. Slyšeli jsme o tobì v Shady Sands a nechceme s tebou mít cokoliv spoleèného.}
+{101}{}{Vidíš Lanceho, jednoho ze strážcù dálkových hlídek ze Shady Sands.}
+{102}{}{Jen zùstaò, kde si. Slyšeli jsme o tobì v Shady Sands a nechceme s tebou mít nic spoleènýho.}
 {103}{}{Jediná vìc, která mì na tobì zajímá, je tvoje vybavení. Tak ho naval!}
 {104}{}{Nechci žádný rozpory, kámo.}
 {105}{}{Hele, nezachránil jsem Tandy a nepobil všechny ty radškorpióny?}
@@ -29,24 +29,24 @@
 {125}{}{Lidí øíkaj rùzný vìci. Koho to zajímá?}
 {126}{}{JÁ nejsem žádnej tvùj pøítel! A jestli se jen blbì pohneš, tak se podívám na tvoje støeva. Jasný?}
 {127}{}{Jaký 'vìci'?}
-{128}{}{Jasnì. To je všechno pravda. A teï mi radši dej všechno, co máš, nebo . . .}
+{128}{}{Jasnì. To je všechno pravda. A teï mi radši dej všechno, co máš, nebo...}
 {129}{}{Možná sem udìlal pár vìcí, kterejch lituju, ale sám bys mìl posoudit, kterejm blábolùm uvìøíš a kterejm ne.}
 {130}{}{. No to jsem rád, že si to ty a ne nìjakej nájezdník! Jak se vede? Já jsem Lance, patøím ke stráži ze Shady Sands. Sorry, že jsme na tebe byli takový, když si poprvé pøišel do mìsta!}
 {131}{}{Èau Lanci, co se dìje?}
-{132}{}{Èau Lanci. Býval jsem dobrák, ale èasy se mìní. Teï mi dej všechno co máš, jinak . . .}
+{132}{}{Èau Lanci. Býval jsem dobrák, ale èasy se mìní. Teï mi dej všechno co máš, jinak...}
 {133}{}{Vyžvejkni se Lanci. Copak tu sám dìláš?}
 {134}{}{Dobøe. Ale tohle si zapamatuju.}
-{135}{}{Zvedni svoje.}
+{135}{}{Polib mi prdel.}
 {136}{}{Ušetøi mì tìch kecù, chlapèe. Dìti jako ty si dávám k obìdu. Naval všechno, co máš, a možná tì nechám jít.}
 {137}{}{Pokud si opravdu myslíš, že pøedstavuju ohrožení, tak mì zabij.}
-{138}{}{Jen se pohni. Sem zvìdavej, jak vypadaj tvoje vnitønosti.}
+{138}{}{Tak schválnì, udìlejme nìjakou chybu. Vždycky jsem chtìl vidìt, jak vypadají moje vnitønosti.}
 {139}{}{To bylo tehdy a teï je teï. Co si pro nás poslední dobou udìlal? Mìl bys radši vypadnout, než se naštvu.}
 {140}{}{To my taky rádi. Hlavnì že v tom nemáš svý pazoury. Teï padej.}
 {141}{}{Èlovìèe, tys to nìjak s tím opalováním v Kráteru pøehnal!}
 {142}{}{Já nevím, co je to vodní èip. Sorry.}
 {143}{}{To je taková elektronická vìcièka, co se používá v zaøízeních èistících vodu.}
 {144}{}{Co je s tìma radškorpiónama?}
-{145}{}{Nájezdníci jí dostali. Už jsem jí hledali a myslíme, že jí drží v táboøe na jih od Shady Sands. Ale dej si bacha, Khanové tam mají takovou menší pevnost.}
+{145}{}{Nájezdníci ji dostali. Už ji hledáme a myslíme, že ji drží v táboøe na jih od Shady Sands. Ale dej si bacha, Khanové tam mají takovou menší pevnost.}
 {146}{}{Mùžeš mì vzít do Shady Sands?}
 {147}{}{Mùžeš mì vzít ke Khanùm?}
 {148}{}{Musíme vymyslet, jak ji dostat nazpátek.}
@@ -65,10 +65,10 @@
 {161}{}{Máte tam nìjaké vodní èipy?}
 {162}{}{Jo, to vypadá jako pìkné místo.}
 {163}{}{Dobøe, nech si své tajemství a já si nechám své. Sbohem.}
-{164}{}{Možná že je. I když lítostivý.}
+{164}{}{Možná že je. Ale je to škoda.}
 {165}{}{Byl jsem v Junktownu. Myslím, že to je jihozápadnì odtud, ale cestuju už tak dlouho, že si tím nejsem jistý.}
 {166}{}{Jo, pravda. Všechny Vaulty byly znièený. Øekni mi ještì nìco.}
-{167}{}{To není to, na co sem se ptal . . . oh, to nevadí!}
+{167}{}{To není to, na co sem se ptal... oh, to nevadí!}
 {168}{}{To není odpovìï. Øíkají o tobì, že si vrah, zlodìj a vykradaè hrobù! Øíkají, že sejmeš kohokoliv, kdo ti stojí v cestì. Je to pravda?}
 {169}{}{No, tebe sem zatím nesejmul, takže aspoò nìkdo kecal.}
 {170}{}{Docela dost. Mìl jsem taky svùj podíl na dobrejch èasech.}
@@ -86,21 +86,21 @@
 {182}{}{Ještì na nì obèas narazíme, nejspíš migrují z pouští nebo od Kráteru. Ale je to mnohem lepší, hlavnì díky tobì.}
 {183}{}{To zní dobøe. Mìj se.}
 {184}{}{Jasnì, jdeme.}
-{185}{}{Chlape, asi sem se pomátnul. Ale vezmu tì. Jdeme..}
+{185}{}{Chlape, asi sem se pomátnul. Ale vezmu tì. Jdeme.}
 {186}{}{Pøíjemnou sebevraždu, kámo. Doufám, že to za to stojí, hodnì štìstí.}
-{187}{}{Míøím pryè. Mìj se.}
+{187}{}{Míøím pryè. Opatruj se.}
 {188}{}{No, nemám moc, ale co je moje je teï i tvoje.}
 {189}{}{Nic o èem bych uvažoval. Míøím pryè. Opatruj se.}
 {190}{}{Budeme. Míøím pryè. Opatruj se.}
 {191}{}{No dobøe, jdeme.}
 {192}{}{Nedovedu domù nìkoho, kdo je možná nepøítel. Pokud se nìkdy zastavíš v Shady Sands, tak si dej pozor.}
-{193}{}{Málo. Žijeme z chovu brahminù. Je to pìknì drsnej kraj a pastviny jsou tady velice vzácný.}
-{194}{}{Brahminí buranov? Musíte být blázni! Nejspíš tu v okruhu dvou set mil nebude jediný kousek funkèní elektroniky.}
+{193}{}{Malý. Žijeme z chovu brahmín. Je to pìknì drsnej kraj a pastviny jsou tady velice vzácný.}
+{194}{}{V takovým brahmíním zapadákovì? To ses musel zbláznit! Široko daleko na dvì stì mil tu nejspíš nenajdeš jedinej kousek funkèní elektroniky.}
 {195}{}{Uhodils høebíèek na hlavièku. Myslím ale, že musíme být opatrní a žít dál naším životem. Ale na tvém místì bych nìco udìlal se svojí povìstí, pokud nemáš radši, když ti lidé nevìøí nebo tì nenávidí.}
 {196}{}{Mìl jsem tì zabít hned. Ještì jednou mi zkøížíš cestu a je z tebe mrtvola. Teï padej.}
 {197}{}{Jdeme.}
 {198}{}{Nech mì hádat, nìkdo ti øekl o mém chrápání. No dobøe. Opatruj se.}
-{199}{}{To je. No, míøím pryè. opatruj se.}
+{199}{}{To je. No, míøím pryè. Opatruj se.}
 {200}{}{Jen zùstaò kde jsi. Nevím, jestli si ve spojení s tìmi mutanty, ale jestli ano, tak tì zabiju.}
 {201}{}{Jakými mutanty?}
 {202}{}{Kdo jsi?}
@@ -108,5 +108,5 @@
 {204}{}{Dobrý, no to je hezký.}
 {205}{}{Ru-co?}
 {206}{}{Mutanti napadli Shady Sands. Vìtšina z nás je už mrtvá. Hádám, že to je jenom otázka èasu než dostanou i ty ostatní.}
-{207}{}{Nezajímá mì, co kecáš nebo na co se ptáš. Všichni jsme mrtvoly! Všichni! A to jsem si myslel, že radškorpióni nebo nájezdníci byli hrozní . . . proti tomuhle to byla švanda! Ha! Ha ha ha!}
-{208}{}{Sklapni! Nesnáším prázdný žvatlání. To nic nevyøeší! Jenom mì tím nasereš . . .}
+{207}{}{Nezajímá mì, co kecáš nebo na co se ptáš. Všichni jsme mrtvoly! Všichni! A to jsem si myslel, že radškorpióni nebo nájezdníci byli hrozní... proti tomuhle to byla švanda! Ha! Ha ha ha!}
+{208}{}{Sklapni! Nesnáším prázdný žvatlání. To nic nevyøeší! Jenom mì tím nasereš...}

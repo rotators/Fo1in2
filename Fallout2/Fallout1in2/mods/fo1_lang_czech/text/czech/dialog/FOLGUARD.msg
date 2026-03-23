@@ -1,20 +1,20 @@
-{100}{}{Vidíš jednoho ze strážcù Následníkù - Savila.}
-{101}{}{Vidíš jednoho ze strážcù Následníkù - Nancy.}
-{102}{}{Vidíš jednoho ze strážcù Následníkù - Jelissu.}
-{103}{}{Vidíš jednoho ze strážcù Následníkù - Lyndu.}
-{104}{}{Vidíš jednoho ze strážcù Následníkù - Jessicu.}
-{105}{}{Vidíš jednoho ze strážcù Následníkù - Shannon.}
-{106}{}{Vidíš jednoho ze strážcù Následníkù - Mohandki.}
-{107}{}{Vidíš jednoho ze strážcù Následníkù - Percyho.}
-{108}{}{Vidíš jednoho ze strážcù Následníkù - Henryho.}
-{109}{}{Vidíš jednoho ze strážcù Následníkù - Heriona.}
-{110}{}{Kdo pøichází do síní Následníkù?}
+{100}{}{Vidíš jednoho ze strážcù Následovníkù – Savila.}
+{101}{}{Vidíš jednu ze strážcù Následovníkù – Nancy.}
+{102}{}{Vidíš jednu ze strážcù Následovníkù – Jelissu.}
+{103}{}{Vidíš jednu ze strážcù Následovníkù – Lyndu.}
+{104}{}{Vidíš jednu ze strážcù Následovníkù – Jessicu.}
+{105}{}{Vidíš jednu ze strážcù Následovníkù – Shannon.}
+{106}{}{Vidíš jednoho ze strážcù Následovníkù – Mohandki.}
+{107}{}{Vidíš jednoho ze strážcù Následovníkù – Percyho.}
+{108}{}{Vidíš jednoho ze strážcù Následovníkù – Henryho.}
+{109}{}{Vidíš jednoho ze strážcù Následovníkù – Heriona.}
+{110}{}{Kdo pøichází do síní Následovníkù?}
 {111}{}{Co to?}
 {112}{}{Jsem }
 {113}{}{. Pøicházím v míru.}
 {114}{}{Jsem }
 {115}{}{. Vaše zhouba.}
-{116}{}{Kdo jsou to Následníci?}
+{116}{}{Kdo jsou to Následovníci?}
 {117}{}{OK. Vidím, že jsi trochu pomalejší. Kdo ty?}
 {118}{}{Já }
 {119}{}{. Ty mrtvola.}
@@ -31,7 +31,7 @@
 {130}{}{Co jsou zaè ty Dìti?}
 {131}{}{Proè bych mìl chtít zabíjet dìti?}
 {132}{}{Výbornì! Jdi za Nicole a ta ti prozradí, jak nejlépe prospìješ naší vìci.}
-{133}{}{Dìti jsou náboženský kult, který se klaní nìjakému temnému bohu. Osobnì si myslím, že nìco na nìm vyslovenì páchne zlem.}
+{133}{}{Dìti jsou náboženský kult, který se klaní nìjakému temnému bohu. Osobnì si myslím, že nìco na nich vyslovenì páchne zlem.}
 {134}{}{Pozabíjím je.}
 {135}{}{No, nevím. Zdají se mi trochu moc silní.}
 {136}{}{Co pro vás mùžu udìlat?}
@@ -39,20 +39,20 @@
 {138}{}{Pravda, jsou celkem silní, ale pro bojovníka tvých kvalit by nemìl být problém dát se s nimi do boje a pomoci nám je znièit.}
 {139}{}{Pak tedy dobrá.}
 {140}{}{Ne. Myslím, že vám nepomohu.}
-{141}{}{Jak myslíš. Až zachvátí celé Pustiny, neøíkej, že jsme tì nevarovali.}
+{141}{}{Jak myslíš. Až zachvátí celou pustinu, neøíkej, že jsme tì nevarovali.}
 {142}{}{Promluv si s Nicole, ta ti nastíní, jak s nimi zatoèit.}
 {143}{}{Díky. Sbohem.}
-{144}{}{Ne malé dìti. Na ubližování dìtem jsme ani nepomysleli. Ne. Tohle jsou Dìti Katedrály. Pìknì nepøíjemná skupinka lidí.}
-{145}{}{V tom pøípadì, ano - znièím je.}
-{146}{}{Och. Myslel, jsem, že se mluví o miminech. Ale to nevadí, stejnì vám nepomùžu.}
+{144}{}{Ne malé dìti. Na ubližování dìtem jsme ani nepomysleli. Ne. Tohle jsou Dìti katedrály. Pìknì nepøíjemná skupinka lidí.}
+{145}{}{V tom pøípadì, ano – znièím je.}
+{146}{}{Och. Myslel jsem, že se mluví o miminech. Ale to nevadí, stejnì vám nepomùžu.}
 {147}{}{Co mi mùžeš o tìch Dìtech øíct?}
-{148}{}{My jsme Následníci Apokalypsy. Snažíme se do Pustin pøinést vytoužený mír.}
+{148}{}{My jsme Následovníci apokalypsy. Snažíme se do pustiny pøinést vytoužený mír.}
 {149}{}{To zní jako dobrý nápad. Hodnì štìstí.}
 {150}{}{Jak to chystáte udìlat?}
 {151}{}{To vypadá hodnì nepravdìpodobnì.}
-{152}{}{Chceme, aby zavládla tolerance mezi tìmi, kdo vinou radiace zmutovali a potomky tìch, kdo toto utrpení zpùsobili.}
+{152}{}{Chceme, aby zavládla tolerance mezi tìmi, kdo vinou radiace zmutovali, a potomky tìch, kdo toto utrpení zpùsobili.}
 {153}{}{To zní jako dobrý nápad. Hodnì štìstí.}
-{154}{}{V celé historii se nám nepodaøilo dosáhnou tolerance. Proè myslíš, že došlo k Válce?}
+{154}{}{V celé historii se nám nepodaøilo dosáhnout tolerance. Proè myslíš, že došlo k Válce?}
 {155}{}{To jsou jen kecy.}
 {156}{}{Máš pravdu, že jsme my, lidé, omezení. Ale nadìje tu vždycky zùstává.}
 {157}{}{To zní jako dobrý nápad. Hodnì štìstí.}
@@ -64,16 +64,16 @@
 {163}{}{Myslím, že se tu nìkde potlouká špeh.}
 {164}{}{Vím. To já jim prodávám ty informace.}
 {165}{}{Myslím, že si jen vymýšlíš. Jak by nìco mohli vìdìt?}
-{166}{}{Vážnì? dost jsem o tom pøemýšlel, ale bál jsem se, že by ta teorie nikdy nezískala velkou podporu.}
+{166}{}{Vážnì? Dost jsem o tom pøemýšlel, ale bál jsem se, že by ta teorie nikdy nezískala velkou podporu.}
 {167}{}{Tušíš aspoò trochu, kdo by to mohl být?}
 {168}{}{To rád slyším. Díky za tvùj èas.}
 {169}{}{Ty jsi dvojitý agent!}
-{170}{}{Spíš ne. Jediné, co si myslím, je, že ta osoba musí mít pøístup k informacím a dostat se ven. Takže bych se porozhlédnul mezi nováèky a zvìdy.}
+{170}{}{Spíš ne. Jediné, co si myslím, je, že ta osoba musí mít pøístup k informacím a dostat se ven. Takže bych se porozhlédl mezi nováèky a zvìdy.}
 {171}{}{Díky. Sbohem.}
 {172}{}{Nicole bude potìšena, že jsem toho agenta zabil.}
 {173}{}{Musíš mít pravdu. Díky za ukázání správného smìru.}
 {174}{}{Myslím, že pracuješ pro obì strany. Zkoušíš mì ošálit, co? No, za to ZEMØEŠ!}
-{175}{}{Dobrá práce, likvidace toho agenta. Teï bychom mohli zúètovat s tìmi Dìtmi.}
+{175}{}{Dobrá práce s likvidací toho agenta. Teï bychom mohli zúètovat s tìmi Dìtmi.}
 {176}{}{Hodnì štìstí.}
 {177}{}{Mohu vás nauèit pár bojových trikù, abyste mìli v boji vìtší šanci.}
 {178}{}{Vážnì? To by bylo skvìlé.}

@@ -1,6 +1,6 @@
 {100}{}{Vidíš Marcelles.}
 {101}{}{Vidíš drsnì vyhlíející enu.}
-{102}{}{Díkybohu, e jsi tady! Nìjakı magor drí Sinthii jako rukojmí. Vyhrouje, e jí zabije! Musíš jí pomoct.}
+{102}{}{Díkybohu, e jsi tady! Nìjakı magor drí Sinthii jako rukojmí. Vyhrouje, e ji zabije! Musíš jí pomoct.}
 {103}{}{Ále, neotravuj.}
 {104}{}{Hmm. Mrknu se na to.}
 {105}{}{Hovno!}
@@ -15,14 +15,14 @@
 {114}{}{V pohodì. Pokoj è. 1. Pojï za mnou.}
 {115}{}{A se ti tu líbí. Nedìlej potíe.}
 {116}{}{Mohl jsi Sinthii zachránit. To e je mrtvá, je tvoje chyba. Doufám, e jsi za to na sebe pyšnı.}
-{117}{}{Nojo, poøád.}
+{117}{}{No jo, jak myslíš.}
 {118}{}{Hnnn.}
-{119}{}{Vítej v Crash House. Èím poslouím, cizinèe?}
+{119}{}{Vítej v Chrápárnì. Èím poslouím, cizinèe?}
 {120}{}{Dal bych si pití.}
 {121}{}{Potøeboval bych slušnej pokoj.}
 {122}{}{Sháním pár informací.}
 {123}{}{Hnnn.}
-{124}{}{Jo, takovı taky obsluhujeme. Za noc úètujeme 25$, tıdenní nájem pokoje tì pøijde na 150$.}
+{124}{}{Jo, takovı taky obsluhujeme. Za noc úètujeme 25 zátek, tıdenní nájem pokoje tì pøijde na 150 zátek.}
 {125}{}{Neehe.}
 {126}{}{Ahaa.}
 {127}{}{Ahaa. Tejden.}
@@ -30,14 +30,14 @@
 {129}{}{Hm, díky. Máš pokoj è. 1. Pojï za mnou. A uvnitø ádnı støílení, jasnı?}
 {130}{}{Uij si to.}
 {131}{}{Musíš mít peníze, abych ti pronajala pokoj.}
-{132}{}{Pak bys mìl zkusit Skum Pitt. Tam mùeš prohnat hrdlem spoustu dobrého chlastu.}
+{132}{}{Pak bys mìl zkusit Špinadíru. Slyšela jsem, e tam dostaneš spoustu vody v chlastu.}
 {133}{}{O tom nevím, ale pronajmu ti pokoj. Odpoèineš si a uzdravíš se. Za noc úètujeme 25 zátek, tıdenní nájem pokoje tì pøijde na 150. Vìtšina lidí si zaplatí na celı tıden. Jestli chceš tıdenní pronájem, øekni mi.}
 {134}{}{Platí. Tak na tejden.}
 {135}{}{Jenom na jednu noc.}
 {136}{}{Ne, díky.}
-{137}{}{Jsem manaerka hotelu. Nemám èas vykecávat s klienty... tak mì moc nezdruj.}
+{137}{}{Jsem jenom správcová hotelu, pøíteli. Nechtìj po mnì nemonı.}
 {138}{}{Tady máš 50, øekni, co víš.}
-{139}{}{Asi se divíš, e tady nepobíhají ádné dìti co? Pøed èasem se tu stala tragédie. Jistej obchodník Bob našim dìtem nabídl, e jim dá pár zátek, kdy pùjdou za barikády pochytat pár leguánù. Bob byl toti kuchaø a leguán na špejli byla jeho specialita. Nejvíc ještìrek bylo u starıch aut. Dìcka tam bìhaly celej tıden a se jednou nevrátili domù. Nejdøív jsme mysleli, e je chytili Khánové, ale našli jsme roztrhané obleèení a plno krve. Stopy vedly a k jeskyni plné Geckonù velkıch jako já! Zaloili jsme tam ohništì a všechny je pobily! Ale dost tìch klepù, teï si o 50 zátek chudší. Vra se, a budeš chtít pokoj.}
+{139}{}{Teï víš, e jsi o 50 zátek chudší. Drby tady neprodávám, jasnı? Vra se, a budeš chtít pokoj.}
 {140}{}{Kdo si myslíš, e jsem? Magor? Jestli mì chceš uplatit, pøiprav si dost penìz.}
 {141}{}{Vítej zpìt, co pro tebe mùu udìlat?}
 {142}{}{Chci si najmout pokoj.}
@@ -48,11 +48,11 @@
 {147}{}{Joo.}
 {148}{}{Nee.}
 {149}{}{Tak tohle je ještì poøád tvùj pokoj. Hezkej pobyt.}
-{150}{}{Víš, jak to chodí. Jeden den za 25$. Tejden za 150$.}
+{150}{}{Víš, jak to chodí. Jeden den za 25 zátek. Tejden za 150 zátek.}
 {151}{}{Nee.}
 {152}{}{Daa.}
-{153}{}{Uii.}
-{154}{}{Jistì. Den za 25$ nebo tejden za 150$.}
+{153}{}{Tıı.}
+{154}{}{Jistì. Den za 25 zátek nebo tejden za 150 zátek.}
 {155}{}{Fajn, na tejden.}
 {156}{}{Jen na jednu noc.}
 {157}{}{Ne, díky.}
@@ -64,7 +64,7 @@
 {163}{}{Nelíbíš se mi. ádnej pokoj ti nepronajmu.}
 {164}{}{Potøebuju nìkde pøespat.}
 {165}{}{Ne. Dobrou noc.}
-{166}{}{Fajn. Jednu noc. 100$.}
+{166}{}{Fajn. Jednu noc. 100 zátek.}
 {167}{}{Coe! To je ostudnı!}
 {168}{}{Fajn.}
 {169}{}{Ber to tak. Ano nebo ne.}
@@ -76,7 +76,7 @@
 {175}{}{Ne, to jsem nebyl já. Vánì ne.}
 {176}{}{Hnn.}
 {177}{}{Vypadni! Jsi pøíliš blbej na to, abys pochopil, co jsi provedl. Mùj ivot se teï promìní v peklo!}
-{178}{}{Ty zkurvysyne. Nemùu uvìøit tomu, es ho zabil. Byl to fér chlap, a teï u tu zbyli jenom samí parchanti . . . vypadni a u se nevracej.}
+{178}{}{Ty zkurvysyne. Nemùu uvìøit tomu, es ho zabil. Byl to fér chlap, a teï u tu zbyli jenom samí parchanti... vypadni a u se nevracej.}
 {179}{}{No, to urèitì, ale já slyšela nìco jinıho. Radši se tu chovej slušnì, nebo dostaneš nálo brokù do prdele z mı starı dobrı Betsy.}
 {180}{}{Je pozdì. Doufám, e mì neprudíš jen tak.}
 {181}{}{Hej! Ta lednièka je jenom pro hotelovı hosty!}

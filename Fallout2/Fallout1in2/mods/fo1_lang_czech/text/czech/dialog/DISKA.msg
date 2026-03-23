@@ -1,6 +1,6 @@
-{100}{}{To je divné, vypadá, že to lze použít do Pip boye.}
-{101}{}{Displej Pip Boye: Soubor nalezen v systému. Nahrávání pøerušeno.}
-{102}{}{Displej Pip Boye: Nahrávám data z disku.}
+{100}{}{Tohle je nìjaká podivnì vypadající disketa. Možná ji pùjde použít v Pip-Boyi 2000.}
+{101}{}{Displej Pip-Boye 2000: „Stahuji... Pøerušuji, data již existují!“}
+{102}{}{Displej Pip-Boye 2000: „Stahuji data... ... ... Hotovo. Hezký den!“}
 #
 # For Fallout Fixt:
 #

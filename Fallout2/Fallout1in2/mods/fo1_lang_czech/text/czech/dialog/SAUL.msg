@@ -9,9 +9,9 @@
 {108}{}{Drsòák, co? Vsadim se, že bych tì dostal.}
 {109}{}{Jmenuju se }
 {110}{}{. Jenom se tu porozhlížim.}
-{111}{}{[Saul se srdeènì smìje.] Já jsem boxer! Proè se ptáš?}
+{111}{}{[Saul se srdeènì smìje.] No, já jsem boxer!}
 {112}{}{He, nakopal bych ti prdel.}
-{113}{}{Hmm. A co ješte?}
+{113}{}{Hmm. A co ještì?}
 {114}{}{Ehm, ne díky.}
 {115}{}{Saul je v bezvìdomí.}
 {116}{}{}
@@ -43,12 +43,12 @@
 {142}{}{Co se stalo tvým bratrùm?}
 {143}{}{Co se dá v tomhle mìstì dìlat?}
 {144}{}{Mùžeš mi øíct nìco o svém šéfovi?}
-{145}{}{Jestli sháníš zásoby, nejlepší bude zastavit se v obchodì Killiana Darkwatera, najdeš ho na jihovýchod od nás. Ubytování se dá zajistit v hotlu Crash House, ten je tady poblíž. Jestli se tu zdržíš dýl, na sklenièku mùžeš zaskoèit do Skum Pittu, ale dej pøi tom pozor na gang Lebkounù.}
+{145}{}{Jestli sháníš zásoby, nejlepší bude zastavit se v obchodì Killiana Darkwatera, najdeš ho na jihovýchod od nás. Ubytování se dá zajistit v Chrápárnì, ta je tady poblíž. Jestli se tu zdržíš dýl, na sklenièku mùžeš zaskoèit do Špinadíry, ale dej pøi tom pozor na gang Lebkounù.}
 {146}{}{Co jsou zaè ty Lebkouni?}
 {147}{}{Tak mi øekni nìco o kasinu.}
-{148}{}{Gizmovo kasino je rájem všech hazardních hráèù. Je tam spousta pøíležitostí, jak strávit èas hazardem, pokud tì to baví! Podle mì je to nejlepší místo na sever od Hubu!}
+{148}{}{Gizmovo kasíno je rájem všech hazardních hráèù. Je tam spousta pøíležitostí, jak strávit èas hazardem, pokud tì to baví! Podle mì je to nejlepší místo na sever od Hubu!}
 {149}{}{Co jinýho se tu dá ještì dìlat?}
-{150}{}{Mýho bráchu Jamese zabili pøi nájezdu pøed pár lety. Krátce potom se sebral mùj druhej brácha, Darrell, a vyrazil nìkam na jih hledat mýtickej Kráter, místo, kde se prej daj najít starý poklady, nebo tak nìco. Nikdy už se nevrátil.}
+{150}{}{Mýho bráchu Jamese zabili pøi nájezdu pøed pár lety. Krátce potom se sebral mùj druhej brácha, Darrell, a vyrazil nìkam na jih hledat mýtickej Kráter, místo, kde se prej daj najít starý poklady, nebo tak nìco. Nikdy se už nevrátil.}
 {151}{}{Proè zùstáváš v Junktownu?}
 {152}{}{Uf, nezmìníme radìji téma?}
 {153}{}{Tvoje ztráta mì mrzí.}
@@ -59,12 +59,12 @@
 {158}{}{Ah. Tak fajn. Nevadí, když zmìníme téma?}
 {159}{}{Jo, Trish jsem potkal.}
 {160}{}{Dobrá, co tedy?}
-{161}{}{Život tady je drsnej. Nejde o to, jak tvrdý dáváš rány, ale jak tvrdý rány umíš pøijmout a pokraèovat dál. Nezapomínej, možná boxuješ skvìle, ale já jsem skvìlej boxer. A nezapomeò mít ruce vzhùru a hýbat boky jako bys tanèil... pìknì do rytmu, levá... pravá... úhyb... úder, úder... S èím ti ještì mohu pomoci?}
+{161}{}{S èím ti mùžu pomoci?}
 {162}{}{Co se tu dá dìlat?}
 {163}{}{Prozradíš mi ještì nìco o svém šéfovi?}
-{164}{}{[Poklepáváš na svou zbraò] Chci aby ses seznámil s mým pøítelíèkem.}
+{164}{}{[Poklepáváš na svou zbraò] Chci, aby ses seznámil s mým pøítelíèkem.}
 {165}{}{Díky za pokec. Ještì se uvidíme.}
-{166}{}{Lebkouni jsou jen banda místních spratkù. Zdržují se v zadní èásti Crash House nebo ve Skum Pittu. Dej si na nì pozor... Rádi vyvolávají rvaèky a hrajou si s nožema.}
+{166}{}{Lebkouni jsou parta grázlù, co se zdržuje v zadní èásti Chrápárny nebo ve Špinadíøe. Dej si na nì pozor, rádi si hrají s nožema.}
 {167}{}{Díky za radu. Dám si pozor.}
 {168}{}{Aha. Ještì nìco, co bych mìl vìdìt?}
 {169}{}{Dobøe, pracky pryè, jasný?}
@@ -80,7 +80,7 @@
 {179}{}{Na vidìnou.}
 {180}{}{Á, zase ty. Co potøebuješ?}
 {181}{}{Zdravím tì.}
-{182}{}{Myslím že jsi slaboch a hravì tì porazím! Dáme zápas?}
+{182}{}{Pøišel jsem, abych tì nauèil slušnýmu chování.}
 {183}{}{Potøebuju si s tebou promluvit o Trish.}
 {184}{}{Prozradíš mi nìco o Junktownu?}
 {185}{}{Podle toho, co jsem slyšel, Kráter je hluboká ïoura, která v noci záøí do dálky. Mìl by být hodnì daleko na jihu, ale kde pøesnì, to nevím. Øíká se, že Kráter obývají hordy všemožných zmutovaných pøíšer, které stráží technologie z pøedváleèné éry.}

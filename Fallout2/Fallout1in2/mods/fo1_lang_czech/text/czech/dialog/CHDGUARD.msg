@@ -1,11 +1,11 @@
-{100}{}{Pøed sebou vidíš mrzutého prùzkumníka.}
+{100}{}{Pøed sebou vidíš mrzutého strážného.}
 {101}{}{Kdo je tam?}
 {102}{}{Já. Já.}
 {103}{}{Kdo je tam?}
 {104}{}{Pøece já!}
 {105}{}{Tvoje smrt!}
 {106}{}{Uklidni se. Já jsem pøítel.}
-{107}{}{Jája? Jdi odsud! Tohle je majetek Dìtí Katedrály.}
+{107}{}{Jája? Co je to za jméno? Jdi odsud! Tohle je majetek Dìtí katedrály.}
 {108}{}{Huh? Já zùstat!}
 {109}{}{Huh? Ty umøít!}
 {110}{}{Já nechtít odejít.}
@@ -14,7 +14,7 @@
 {113}{}{Nyts.}
 {114}{}{Pomoft tobje.}
 {115}{}{OK. Navrhuju ti, abys odsud zmizel døív, než pøijdeš k úrazu.}
-{116}{}{Ty mi chceš pomoct? Tomu vìøím. Co máš?}
+{116}{}{Ty mi chceš pomoct? To pochybuju. Co máš?}
 {117}{}{Nyts.}
 {118}{}{Tóodle!}
 {119}{}{Vaut.}
@@ -33,9 +33,9 @@
 {132}{}{Já zabít! Já zabít!}
 {133}{}{Sbohem.}
 {134}{}{Mùžeš to zkusit. Nejsem si ale jistý, že budeš mít nìjaký úspìch. Hodnì štìstí.}
-{135}{}{Uh oh je to správné slovo. Jsou hrozní. Snažíme se, aby porozumìli tomu, že lidé i monstra mohou žít spolu.}
+{135}{}{No nazdar, to je tento správné slovo. Jsou hrozní. Snažíme se, aby porozumìli tomu, že lidé i monstra mohou žít spolu.}
 {136}{}{Oh. OK. Sbohem.}
-{137}{}{Prostì mi jen øekni, kdo jsi než ti rozbiju hlavu.}
+{137}{}{Prostì mi jen øekni, kdo jsi, než ti rozbiju hlavu.}
 {138}{}{Jsem Následovník. Kam všichni odešli?}
 {139}{}{Jsem jeden z vás. A teï mì nech jít.}
 {140}{}{Jsem }
@@ -45,19 +45,19 @@
 {144}{}{Pojï se mnou. Ukážu ti kam všichni odešli.}
 {145}{}{Tak ty jsi Následovník?}
 {146}{}{Samozøejmì! Kdo jiný bych mìl být?}
-{147}{}{Ne, já jsem èlen Dìtí Katedrály.}
-{148}{}{Neutahuj si ze mnì. Spletl jsem si tì s nìkým jiným. Pojï se mnou. Ukážu ti cestu.}
+{147}{}{Ne, já jsem èlen Dìtí katedrály.}
+{148}{}{No to jsem trouba, spletl jsem si tì s nìkým jiným. Pojï se mnou, ukážu ti cestu.}
 {149}{}{Nepamatuju si tì. Jak se jmenuješ?}
 {150}{}{Jsem }
 {151}{}{. Jak jsi na mì mohl zapomenout?}
 {152}{}{To tì nemusí zajímat.}
-{153}{}{Do toho ti nic není.}
+{153}{}{Jsem tvá nejhorší noèní mùra.}
 {154}{}{Je mi líto, poøád si na tebe nevzpomínám. Možná si na tebe vzpomene nìkdo jiný.}
 {155}{}{Ano, vzpomínám si na tebe. Øíkali nám, abychom tì našli. Pomsta bude má!}
 {156}{}{Jsi v mé zónì, takže mi do toho je zatracenì moc. Mluv nebo je po tobì!}
 {157}{}{Fajn. Jsem }
 {158}{}{. Už se ti rozsvítilo?}
-{159}{}{Hmmm. Myslím . . . ZABÍT!}
+{159}{}{Hmmm. Myslím... ZABÍT!}
 {160}{}{Nech mì chvíli pøemýšlet.}
 {161}{}{Musím se podívat. Je to }
 {162}{}{. Správnì?}
@@ -76,16 +76,16 @@
 {175}{}{Smrt, jo? Spíš mi pøipadáš jak žrádlo pro èervy.}
 {176}{}{Jestli jsi pøítel, tak to dokaž.}
 {177}{}{Pomohl jsem zlikvidovat Následovníky.}
-{178}{}{Pomohl jsem zlikvidovat Rippery.}
+{178}{}{Pomohl jsem zlikvidovat Rozparovaèe.}
 {179}{}{Pomohl jsem zlikvidovat mutanty.}
-{180}{}{Pomohl jsem zlikvidovat Dìti Katedrály.}
+{180}{}{Pomohl jsem zlikvidovat Dìti katedrály.}
 {181}{}{Opravdu? Myslím, že mùj šéf by o tom rád slyšel víc. Jdi najít Orfea. Odmìní se ti za tvou pomoc.}
-{182}{}{Na nìkoho, kdo pøichází v míru, jsi dost velký zabiják. Ale tihle Rippers dìlali spoustu potíží. Orfeo se ti za tvou námahu odmìní.}
+{182}{}{Na nìkoho, kdo pøichází v míru, jsi dost velký zabiják. Ale tihle Rozparovaèi dìlali spoustu potíží. Orfeo se ti za tvou námahu odmìní.}
 {183}{}{Zabiješ neškodné zrùdy, které jsou jen koneèným dùsledkem destruktivní lidské povahy, a ještì máš tu drzost hlásat mír?}
 {184}{}{Je mi líto. Byli hroznì oškliví, tak jsem je odstøelil.}
 {185}{}{Na spoustì míst ubližovali lidem.}
 {186}{}{Jo. A teï oddìlám tebe.}
-{187}{}{Nechám tì žít. Myslím, že je lepší nechat tì, aby ses vypoøádal sám se sebou.}
+{187}{}{Nechám tì žít. Ale myslím, že bude lepší tì vzít s sebou a nechat tì oèistit od tìch destruktivních myšlenek.}
 {188}{}{Legraèní. Myslel jsem, že jsem pár z nich vidìl na ulici, jak se to tam snaží vyèistit od gangù.}
 {189}{}{Oni napadli Blades?}
 {190}{}{Co se stalo v Adytu?}

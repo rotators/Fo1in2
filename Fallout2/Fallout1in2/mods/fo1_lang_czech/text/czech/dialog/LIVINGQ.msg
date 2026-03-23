@@ -1,1 +1,1 @@
-{100}{}{Tohle jsou obývací prostory Vaultu. Standardní pøedváleèný design.}
+{100}{}{Tohle jsou ubikace Vaultu 15. Standardní pøedváleèný design.}

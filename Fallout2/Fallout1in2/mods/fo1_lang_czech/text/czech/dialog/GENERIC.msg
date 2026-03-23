@@ -9,21 +9,21 @@
 {101}{}{Nech mì bıt.}
 {102}{}{Co?}
 {103}{}{Nešahej na moje vìci.}
-{104}{}{Hi.}
+{104}{}{Ahoj.}
 {105}{}{Arrrr!}
 {106}{}{Grrrrr!}
 {107}{}{Uungh.}
 {108}{}{Uhh.}
 {109}{}{Hej, slyšel jsi, e Seta nìkdo odprásknul?}
-{110}{}{[zpívá si] Set's dead. Set's dead. Set's dead...}
+{110}{}{Set je mrtvej. Set je mrtvej. Set je mrtvej...}
 {111}{}{Máme dost vody pro všechny. Set se o to postaral.}
 {112}{}{Slyšel jsem, e z mìsta vyhnali mutanty.}
 {113}{}{Od tı doby, co mutanti odešli, je tady mnohem líp.}
 {114}{}{Ahoj.}
-{200}{}{Prozkoumal jsi to ubohé stvoøení, ale nemùeš pøijít na to co zpùsobilo jeho souèasnı stav.}
+{200}{}{Prozkoumal jsi to ubohé stvoøení, ale nemùeš pøijít na to, co zpùsobilo jeho souèasnı stav.}
 {201}{}{Zdá se, e to kdysi byl èlovìk, nebo to je alespoò potomek lidí. Nekrózu tkánì nejspíš zpùsobila kyselina nebo radiace.}
 {202}{}{Tìlo tohoto humanoida bylo silnì ozáøeno, ale vypadá e stále funguje. Aèkoliv bıval lidskou bytostí, teï není víc ne zvíøe.}
-{203}{}{Tìlo tohoto humanoida bylo silnì ozáøeno a utrpìla tím pøedevším svalová a mozková tkáò. Zdá se však, e se jedná o potomka lidí, kteøí vystoupili z Vault.}
+{203}{}{Tìlo tohoto humanoida bylo silnì ozáøeno a utrpìla tím pøedevším svalová a mozková tkáò. Zdá se však, e se jedná o potomka lidí, kteøí vstoupili do Vaultù.}
 {204}{}{Ne, díky.}
 {205}{}{Ne, díky.}
 {206}{}{Jasnì.}
@@ -45,10 +45,10 @@
 #############################################################
 {350}{}{[KONEC]}
 {351}{}{[NASHLE]}
-{352}{}{[Více]}
-{353}{}{Pokraèovat.}
+{352}{}{[Pokraèovat]}
+{353}{}{[POKRAÈOVAT]}
 {354}{}{[BOJ]}
-{355}{}{[Dát peníze]}
+{355}{}{[DÁT PENÍZE]}
 
 #############################################################
 #  The following lines are generic departure dialogs        #
@@ -80,7 +80,7 @@
 
 {950}{}{Bereš si trochu èasu na vyzkoušení nìkterıch pohybù. Tvoje dovednost Boj beze zbranì se zlepšila o 5%.}
 
-{951}{}{Bojující krtèí potkan jde zasadit koneènı úder.}
+{951}{}{Bojující krtkopotkan jde zasadit smrtící úder.}
 {952}{}{Zápas skonèil.}
 {953}{}{Vìnoval jsi chvíli k procvièení pár chvatù.}
 {954}{}{Aktivoval jsi noèní vidìní.}
@@ -94,11 +94,11 @@
 {962}{}{Nauèil jsi se spoustu o pastech a vıbušninách.}
 {963}{}{Tvé komunikaèní schopnosti se zlepšily.}
 {964}{}{Nauèil jsi se mnoho o obchodování.}
-{965}{}{Chybí ti inteligence potøebná k pochopení této knihy. }
+{965}{}{Chybí ti inteligence potøebná k pochopení této knihy.}
 {966}{}{Tato kniha je pro tvé souèasné znalosti tohoto oboru pøíliš pokroèilá.}
 {967}{}{Díky pilnému studiu získáš nové dovednosti.}
-{968}{}{Tvá slovní zásoba se zvıšila. }
-{969}{}{Tvá vımluvnost se zlepšila. }
+{968}{}{Tvá slovní zásoba se zvıšila.}
+{969}{}{Tvá vımluvnost se zlepšila.}
 {970}{}{Nauèil jsi se spoustu o pøeití v divoèinì.}
 {971}{}{Nauèil jsi se spoustu o opravování elektroniky.}
 
@@ -111,7 +111,7 @@
 {1012}{}{VAROVÁNÍ! Hrozí kompletní roztavení reaktoru!}
 {1013}{}{VAROVÁNÍ! TOXINY vypuštìny do ventilaèních šachet.}
 
-{1050}{}{Z toxinu škorpiona získáváš protijed.}
+{1050}{}{Z toxinu radškorpióna získáváš protijed.}
 
 #############################################################
 #  These are for converting numeric values to number words. #
@@ -269,7 +269,7 @@
 {3325}{}{Vra všechno tam, kam to patøí.}
 {3326}{}{Víš, není hezké brát nìco, co ti nepatøí.}
 {3327}{}{Vypadni odsud, hajzle!}
-{3328}{}{Hlavnì mi neøíkej, e "hledáš klíèe." Vypadni odsud!}
+{3328}{}{Hlavnì mi neøíkej, e „hledáš klíèe.“ Vypadni odsud!}
 {3329}{}{A u hledáš cokoliv, tak tam to není. Rozumíš?}
 
 # Tough Citizen (3350-3374)
@@ -439,7 +439,7 @@
 {4275}{}{}
 
 # Custom (4300-4499)
-{4300}{}{Yes Master?}
+{4300}{}{Ano, pane?}
 {4301}{}{}
 
 ######
@@ -500,14 +500,14 @@
 ########################################
 
 # Watched Comments(5400-5599)
-{5400}{}{Tam nemùeš.}
+{5400}{}{Dr se od toho dál.}
 
 # For Repair Bots
 {9000}{}{Opravy ukonèeny.}
 {9001}{}{Pøezbrojení ukonèeno.}
 {9002}{}{Opravuji fyzické poškození.}
 {9003}{}{Nebylo nalezeno ádné fyzické poškození.}
-{9004}{}{Oprava dokonèena.}
+{9004}{}{Opravná funkce.}
 {9005}{}{Zadejte pøíkaz.}
 {9006}{}{Hlídej tuto oblast.}
 {9007}{}{Inicializace funkce stráce.}
@@ -515,14 +515,14 @@
 {9009}{}{Nevlastníš poadovanou zbraò.}
 {9010}{}{Plazmová puška.}
 {9011}{}{Laserová puška.}
-{9012}{}{Rotaèní kulomet.}
-{9013}{}{Laserovı rotaèní kulomet.}
+{9012}{}{Gatling.}
+{9013}{}{Laserovı rotaèák.}
 {9014}{}{Zbranì.}
 {9015}{}{Munice.}
 {9016}{}{5mm JHP.}
 {9017}{}{5mm AP.}
 {9018}{}{Energetické èlánky.}
-{9019}{}{Mr. Handy je naprogramovanı k pouívání energetickıch zbraní a rotaèních kulometù.}
+{9019}{}{Mr. Handy je naprogramovanı k pouívání energetickıch zbraní a gatlingù.}
 
 # default options for party members
 {10000}{}{Povìz mi nìco.}

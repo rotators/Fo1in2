@@ -11,7 +11,7 @@
 {110}{}{Nebyl jsem si úplnì jistý, že to dokážeš, ale teï ti vìøím.}
 {111}{}{Díky! Díky!}
 {112}{}{Jsi hrdina. Mùj malý chlapec chce být jako ty, až vyroste. Nevím, jestli je to dobøe.}
-{113}{}{Jsi hrdinka. Moje malá holèièka chce být jako ty, až vyroste. Nevím jestli je to dobøe.}
+{113}{}{Jsi hrdinka. Moje malá holèièka chce být jako ty, až vyroste. Nevím, jestli je to dobøe.}
 {114}{}{Jsi skvìlej chlap!}
 {115}{}{Jsi skvìlá buchta!}
 {116}{}{Opravdu tohle potøebuješ?}
@@ -29,7 +29,7 @@
 {128}{}{Jsem rád, že se ti vede. Pokraèuj v dobré práci.}
 {129}{}{Nerad to øíkám, ale jestli nenajdeš ten èip brzo, všichni tu zemøeme.}
 {130}{}{Mùj malièký se každou noc budí, pláèe a chce napít a já mu nemùžu nic dát.}
-{131}{}{To snad neudìláme, ne?}
+{131}{}{My to nepøežijeme, že ne?}
 {132}{}{Pøídìly vody konèí.}
 {133}{}{Hydroponická sekce je zavøená. To znamená, že nám dochází zásoby jídla.}
 {134}{}{Hmm. Furt mi pøipadáš jako èlovìk. Nemùže to být venku tak špatné.}
@@ -51,17 +51,17 @@
 {150}{}{Myslím, že bys mìl nechat mne a mou rodinu na pokoji.}
 {151}{}{Bylo by to nejlepší.}
 {152}{}{Mìl by ses za sebe stydìt.}
-{153}{}{Když si pomyslím, že jsme bývali pøáteli }
+{153}{}{Když si pomyslím, že jsem tì mìl kdysi rád.}
 {154}{}{Obyvatel Vaultu se s tebou odmítá bavit.}
 {155}{}{Místo rozhovoru vidíš jen prázdný pohled.}
 {156}{}{Lituji, že jsme vybrali tebe, abys šel ven.}
 {157}{}{Voda je hnusná, ale tvoje spoleènost ještì horší.}
-{158}{}{Jdi pryè. Prostì odejdi. Mùžeš se vykoupit tím, že najdeš èip.}
+{158}{}{Jdi pryè. Prostì odejdi. Mùžeš se vykoupit tím, že najdeš ten vodní èip.}
 {159}{}{Doufám, že jsi spokojený.}
 {160}{}{Obyvatel Vaultu se s tebou odmítá bavit.}
-{161}{}{Ty za tohle mùžeš! Možná jsi rozbil i ten bývalý vodní èip!}
+{161}{}{Ty za to mùžeš! Urèitì jsi ten vodní èip rozbil hned na zaèátku taky ty!}
 {162}{}{Nenávidím tì. Opravdu, opravdu tì nenávidím.}
-{163}{}{Vidíš jen obrovské slzy koulející se tváøi.}
+{163}{}{Obyvatel Vaultu jen usedavì vzlyká a roní slzy jako hrachy.}
 {164}{}{Tvùj pokus o rozhovor narazil na chladný pohled.}
 {165}{}{Díky.}
 {166}{}{Je pozdì. Pøijï nìkdy jindy.}

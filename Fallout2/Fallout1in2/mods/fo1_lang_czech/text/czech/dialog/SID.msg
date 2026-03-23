@@ -3,8 +3,8 @@
 {102}{}{Dobré odpoledne, pane!}
 {103}{}{Dobré odpoledne, madam!}
 {104}{}{Dobrý veèer.}
-{105}{}{Já vím, já vím . . . [šeptá] nezavøe pusu, co.}
-{106}{}{Vítej v Bethinì krámu se zbranìmi a zdroji informací.}
+{105}{}{Já vím, já vím... [šeptá] nezavøe pusu, co.}
+{106}{}{Vítej v Bethinì krámu se zbranìmi a mlýnu na drby.}
 {107}{}{Beth, nìkdo tì chce vidìt.}
 {108}{}{Vítej v Bethinì paláci rozkoší.}
 {109}{}{Pøinášíš nìjaké dary?}
@@ -13,7 +13,7 @@
 {112}{}{Zbranì zdarma! Pøijïte si vybrat!}
 {113}{}{Speciál svìtle modrý, tøetí ulièka.}
 {114}{}{Je moje, ani na to nepomysli!}
-{115}{}{Ráda jde tvrdì za vìcí.}
+{115}{}{Ráda si hraje na nedostupnou.}
 {116}{}{Pauza na snídani.}
 {117}{}{Polední pauza!}
 {118}{}{Dobrý veèer.}
@@ -28,4 +28,4 @@
 {127}{}{To je maskování, perfektnì splýváš. Stùj! Kams šel?}
 {128}{}{Jo, perfektnì vypadající vohoz.}
 {129}{}{Ne, já!}
-{130}{}{Hej! To je plechovka! Jak to dìláš?}
+{130}{}{Hej! To je plechovka! Jak se máš?}

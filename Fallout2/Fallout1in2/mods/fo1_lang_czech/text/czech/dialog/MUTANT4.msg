@@ -1,1 +1,1 @@
-{100}{}{Je to druh nìjakého obrovského supermutanta! A má zatracenì velkou zbraò!}
+{100}{}{Je to nìjaký obrovský supermutant! A má zatracenì velkou zbraò!}

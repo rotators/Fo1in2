@@ -1,11 +1,11 @@
-{100}{}{Vidíš Viktora.}
+{100}{}{Vidíš Victora.}
 {101}{}{Vidíš èlena gangu.}
-{102}{}{Aaaaggghhh . . .}
+{102}{}{Aaaaggghhh...}
 {103}{}{Nová krev. Heh. Heh heh.}
-{104}{}{Um, Jóó. Uh, Myslím, e pùjdu.}
+{104}{}{Um, jóó. Uh, myslím, e pùjdu.}
 {105}{}{Ty nejsi pøíliš šastnı èlovìk, e ne?}
 {106}{}{Huh huh!}
-{107}{}{Ne, nikam nepùjdeš! To jako co zkùšaš?! Co?! Myslím, e tady chvíli se mnou ještì zùstaneš!}
+{107}{}{Ne, vlastnì si tì tu ještì na chvíli nechám.}
 {108}{}{Proè to øíkáš? Já jsem šastnı. Jsem šastnı, protoe tady všude je spousta vìcí, ze kterejch cáká krev.}
 {109}{}{Jsi fakt nechutnej, víš to?}
 {110}{}{Um, Jo. Èau.}

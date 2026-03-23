@@ -30,7 +30,7 @@
 {26}{}{Pro tuhle vìc tu není dostatek volného místa.}
 {27}{}{Souhlasím. To je dobrý obchod.}
 {28}{}{Ne, tvoje nabídka není dost dobrá.}
-{29}{}{Získáváš %d zkuš. bodù za úspìšné použití dovednosti "Kradení".}
+{29}{}{Získáváš %d zkuš. bodù za úspìšné použití dovednosti „Kradení“.}
 {30}{}{Váha}
 {31}{}{Promiò, ale víc už neuneseš.}
 {32}{}{Promiò, ale je to pøíliš tìžké.}

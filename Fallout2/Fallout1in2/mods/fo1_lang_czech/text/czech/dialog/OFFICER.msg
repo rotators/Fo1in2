@@ -1,6 +1,6 @@
 {100}{}{Hej ty! Stùj, kde jseš, a zodpovídej se zákonu!}
 {101}{}{Díky za nový vodní èip. To opravdu pozvedne morálku a lidé nebudou porušovat zákony Vaultu.}
-{102}{}{Ráda tì zase vidím. Mohu pro tebe nìco udìlat?}
+{102}{}{Rád tì zase vidím. Mohu pro tebe nìco udìlat?}
 {103}{}{Co máš za práci?}
 {104}{}{Jo, potøeboval bych nìjaké zbranì.}
 {105}{}{Proè musejí být ve Vaultu zamèené dveøe?}
@@ -14,8 +14,8 @@
 {113}{}{Vidìl jsem venku pár míst, kde lidé strádali právì kvùli chybìjící zákonnosti.}
 {114}{}{No, i když jsou tam venku zbranì nezbytné, nemanipuluj tady s nimi žádným zpùsobem, který by se dal považovat za výhrùžku. Jinak si myslím, že tady nic specifického není.}
 {115}{}{Díky.}
-{116}{}{Víš, vìdìla jsem, že se to mùže stát. To, že lidé dodržují zákon je jediná možnost, jak zachránit Vault pøed bídou a znièením. Pokraèuj ve své záslužné práci.}
-{117}{}{Správce mi nepovolil otevøít zbrojnici a vydat ti více zbraní. Je mi líto, ale nemohu ti pomoci. }
+{116}{}{Víš, vìdìl jsem, že se to mùže stát. To, že lidé dodržují zákon, je jediná možnost, jak zachránit Vault pøed bídou a znièením. Pokraèuj ve své záslužné práci.}
+{117}{}{Správce mi nepovolil otevøít zbrojnici a vydat ti více zbraní. Je mi líto, ale nemohu ti pomoci.}
 {118}{}{Prosím! Vážnì je potøebuju!}
 {119}{}{Ok. I tak díky.}
 {120}{}{Ne. To nemohu.}
@@ -45,7 +45,7 @@
 {144}{}{Dej si pozor na jazyk, nebo tì zatknu pro útok na veøejného èinitele.}
 {145}{}{Jo, dobøe. Uvidíme se.}
 {146}{}{To je to. Mám už toho dost, jak se ke mì chováš.}
-{147}{}{Hmm. Asi. Mìla by to být moje práce, být nestranný, ale možná jsem tentokrát zašel trochu daleko. Budu se v budoucnu snažit pracovat lépe.}
+{147}{}{Hmm. Možná. Mìl bych být sice nestranný, ale tentokrát jsem nejspíš pøekroèil mez. V budoucnu se polepším.}
 {148}{}{Hmm. Ne. Asi ne dost hrubý.}
 {149}{}{Hodnì štìstí. Doufám, že na tu práci máš.}
 {150}{}{Radìji bys mì nemìl zklamat.}

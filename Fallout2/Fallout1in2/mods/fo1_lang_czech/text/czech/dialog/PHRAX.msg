@@ -10,11 +10,11 @@
 {109}{}{V té lednièce nic k pití nenajdeš. Dr se od ní dál.}
 {110}{}{Nemìl si sahat na vìci co ti nepatøí. A tohle ti teda rozhodnì nepatøí. Máš smùlu mladej...}
 {111}{}{Moná e patøíš k Krypákùm, ale tohle není tvùj pokoj. Na nic nesahej.}
-{112}{}{Pøišel jsi na špatné místo ve špatnı èas!.}
+{112}{}{Pøišel jsi na špatné místo ve špatnı èas!}
 {113}{}{Tohle není tvùj pokoj. Na nic nesahej, nebo se mi budeš zodpovídat.}
-{114}{}{[HOTOVO]}
-{115}{}{[VÍCE]}
+{114}{}{[Odejít]}
+{115}{}{[Pokraèovat]}
 {116}{}{Phil má víc kuráe ne jakıkoliv Harlekın!}
-{117}{}{FIALOVİ PAVIÁN!}
-{118}{}{Brahminy mají víc rozumu ne Harlekıni.}
+{117}{}{FIALOVÍ PAVIÁNI!}
+{118}{}{Brahmíny mají víc rozumu ne Harlekıni.}
 {119}{}{Harlekıni jsou slabí, dokonce i Lex je zvládne všechny zmlátit.}

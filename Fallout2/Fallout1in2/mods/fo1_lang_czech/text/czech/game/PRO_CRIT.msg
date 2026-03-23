@@ -11,7 +11,7 @@
 {600}{}{Obyvatel Vaultu}
 {601}{}{}
 {700}{}{Energo zbroj}
-{800}{}{Stránıce Vaultu}
+{800}{}{Správce Vaultu}
 {900}{}{Supermutant}
 {901}{}{}
 {1000}{}{Velkı krtko-potkan}
@@ -21,7 +21,7 @@
 {1200}{}{Osoba v rouchu}
 {1300}{}{Obchodník}
 {1301}{}{}
-{1400}{}{Zombie}
+{1400}{}{Ghúlí strá}
 {1401}{}{}
 {1500}{}{ena v kevlarové zbroji}
 {1600}{}{Záøící}
@@ -31,11 +31,11 @@
 {1900}{}{ena v koeném kabátì}
 {2000}{}{Obyvatel}
 {2100}{}{Mu v bojové zbroji}
-{2200}{}{Mìšan}
+{2200}{}{Mìšanka}
 {2201}{}{ena v dobøe vypadající ocelové zbroji.}
 {2300}{}{Poruèík supermutantù}
 {2301}{}{}
-{2400}{}{Mìšan}
+{2400}{}{Mìšanka}
 {2401}{}{ena v ochranném koeném obleku.}
 {2500}{}{Nightkin}
 {2501}{}{}
@@ -68,7 +68,7 @@
 {4300}{}{Malı kentaur}
 {4301}{}{}
 {4400}{}{Mr. Handy}
-{4500}{}{Slizoun}
+{4500}{}{Floater}
 {4501}{}{}
 {4600}{}{Písaø}
 {4700}{}{Správce}
@@ -97,7 +97,7 @@
 {6001}{}{}
 {6100}{}{Dìlník}
 {6101}{}{}
-{6200}{}{Student}
+{6200}{}{Student Katedrály}
 {6201}{}{}
 {6300}{}{Tandi}
 {6400}{}{Aradesh}
@@ -106,7 +106,7 @@
 {6601}{}{}
 {6700}{}{Stránı}
 {6701}{}{}
-{6800}{}{Mantis}
+{6800}{}{Kudlanka}
 {6801}{}{}
 {6900}{}{Robobrain}
 {7000}{}{Nájezdník}
@@ -161,7 +161,7 @@
 {9901}{}{}
 {10000}{}{Cizinec}
 {10001}{}{}
-{10100}{}{Dítì Katedrály}
+{10100}{}{Dítì katedrály}
 {10200}{}{Vinnie}
 {10201}{}{}
 {10300}{}{Cestovatel}
@@ -170,7 +170,7 @@
 {10500}{}{Garret}
 {10600}{}{Ghúl}
 {10601}{}{}
-{10700}{}{Nightkin}
+{10700}{}{Stránı Nightkinù}
 {10701}{}{}
 {10800}{}{Odolnı supermutant}
 {10801}{}{}
@@ -205,14 +205,14 @@
 {13500}{}{Surf}
 {13600}{}{Lasher}
 {13700}{}{Barracus}
-{13800}{}{Jeremiah}
+{13800}{}{Jeremiáš}
 {13900}{}{Supermutant Medik}
 {14000}{}{Gideon}
 {14001}{}{Jeho ruce záøí podivnou energií.}
 {14100}{}{Dominic}
 {14101}{}{Z jeho oèí vyzaøuje podivné svìtlo.}
 {14200}{}{Lucy}
-{14201}{}{Její ruce záøí podivnou energií.}
+{14201}{}{Její hlava záøí podivnou energií.}
 {14300}{}{Wiggup}
 {14301}{}{Kolem jeho tìla se objevují malé záblesky energie.}
 {14400}{}{Viscious}
@@ -246,7 +246,7 @@
 {16501}{}{}
 {16600}{}{Odpornı radškorpión}
 {16601}{}{}
-{16700}{}{Krvavı slizoun}
+{16700}{}{Krvavı Floater}
 {16701}{}{}
 {16800}{}{Vìtší kentaur}
 {16801}{}{}
@@ -284,7 +284,7 @@
 {18401}{}{}
 {18500}{}{Stránı}
 {18501}{}{}
-{18600}{}{Supermutant}
+{18600}{}{Stránı supermutantù}
 {18601}{}{}
 {18700}{}{Podlı supermutant}
 {18701}{}{}
@@ -322,7 +322,7 @@
 {20501}{}{}
 {20600}{}{Obyvatel Vaultu}
 {20700}{}{Garl}
-{20800}{}{Doktor Morbid}
+{20800}{}{doktor Morbid}
 {20900}{}{Gretch}
 {21000}{}{Tycho}
 {21100}{}{Jonathan}
@@ -378,35 +378,35 @@
 {26100}{}{Lupiè}
 {26200}{}{oldák}
 {26300}{}{Stránı}
-{26400}{}{Vysvìcenı rytíø}
-{26500}{}{Starší vysvìcenı rytíø}
+{26400}{}{Rytíø-zasvìcenec}
+{26500}{}{Starší rytíø-zasvìcenec}
 {26600}{}{Rytíø-uèedník}
 {26700}{}{Rytíø-tovaryš}
-{26800}{}{Rytíø-staøešina}
-{26900}{}{Vysvìcenı rytíø}
-{27000}{}{Starší vysvìcenı rytíø}
+{26800}{}{Zaslouilı rytíø}
+{26900}{}{Rytíø-zasvìcenec}
+{27000}{}{Starší rytíø-zasvìcenec}
 {27100}{}{Rytíø-uèedník}
 {27200}{}{Rytíø-tovaryš}
-{27300}{}{Rytíø-staøešina}
+{27300}{}{Zaslouilı rytíø}
 {27400}{}{Mladší paladin}
 {27500}{}{Paladin}
 {27600}{}{Starší paladin}
-{27700}{}{Junior paladin}
+{27700}{}{Mladší paladin}
 {27800}{}{Paladin}
 {27900}{}{Starší paladin}
-{28000}{}{Vysvìcenı písaø}
-{28100}{}{Starší vysvìcenı písaø}
+{28000}{}{Písaø-zasvìcenec}
+{28100}{}{Starší písaø-zasvìcenec}
 {28200}{}{Písaø-uèedník}
 {28300}{}{Písaø-tovaryš}
-{28400}{}{Starší písaø}
-{28500}{}{Vysvìcenı písaø}
-{28600}{}{Starší vysvìcenı písaø}
+{28400}{}{Zaslouilı písaø}
+{28500}{}{Písaø-zasvìcenec}
+{28600}{}{Starší písaø-zasvìcenec}
 {28700}{}{Písaø-uèedník}
 {28800}{}{Písaø-tovaryš}
-{28900}{}{Starší písaø}
+{28900}{}{Zaslouilı písaø}
 {29000}{}{Mu v rouchu}
 {29100}{}{Vùdcovo dítì}
-{29200}{}{Student}
+{29200}{}{Student Katedrály}
 {29300}{}{ena v rouchu}
 {29400}{}{Vùdcovo dítì}
 {29500}{}{Vùdcùv mazlíèek}
@@ -418,8 +418,8 @@
 {30100}{}{Doktor}
 {30200}{}{Katja}
 {30300}{}{Sasha}
-{30301}{}{Vidíš sibiøského Huskyho trpìlivì èekajícího na svého pána.}
-{30400}{}{Záhadnı cizinec}
+{30301}{}{Vidíš sibiøskou Husky trpìlivì èekající na svého pána.}
+{30400}{}{Tajemnı cizinec}
 {30500}{}{Vypatlanej ghúl}
 {30600}{}{Eyeball, Mk II}
 {30700}{}{Vejce}
@@ -446,22 +446,22 @@
 {32700}{}{Dogmeat - Úroveò 2}
 {32800}{}{Dogmeat - Úroveò 3}
 {32900}{}{Dogmeat - Úroveò 4}
-{33000}{}{Záhadnı cizinec}
+{33000}{}{Tajemnı cizinec}
 {33100}{}{Dr. Buker}
 {33200}{}{Radškorpión}
 {33201}{}{Malı zmutovanı škorpión.}
-{33300}{}{Masoravá rostlina}
-{33301}{}{Rostlina která se iví masem.}
+{33300}{}{Vıtrusnice}
+{33301}{}{Rostlina vystøelující vıtrusy.}
 {33400}{}{Bezpeènostní robot}
 {33500}{}{Geckon}
-{33600}{}{Zlatı Geckon}
-{33700}{}{Ohnivı Geckon}
+{33600}{}{Zlatı geckon}
+{33700}{}{Ohnivı geckon}
 {33800}{}{Obrovskı mravenec}
 {33900}{}{Domorodı lovec}
 {34000}{}{Domorodı lovec}
 {34100}{}{Hope}
 {34101}{}{Nádherná mladá ena v elegantních èernıch šatech.}
-{34200}{}{Mládì paráèe}
+{34200}{}{Mládì páraèe}
 {34300}{}{Divokı pes}
 {34301}{}{Divokı pes smíšeného plemene.}
 {34400}{}{Král stoky}

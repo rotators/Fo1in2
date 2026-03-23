@@ -11,11 +11,11 @@
 {110}{}{Všímáš si èervených znaèek na dveøích.}
 {111}{}{Všímáš si èervených znaèek na dveøích.}
 {112}{}{Zajímalo by tì, co by mohlo dveøe otevøít.}
-{113}{}{Podaøilo se ti úspìšnì obejít bezpeèností systém.}
+{113}{}{Podaøilo se ti úspìšnì obejít bezpeènostní systém.}
 {114}{}{Byl jsi zasažen bezpeènostním systémem za }
 {115}{}{ hit bodù.}
 {116}{}{Nenašel jsi na dveøích žádné pasti.}
-{117}{}{Podaøilo se ti úspìšnì obejít bezpeèností systém.}
+{117}{}{Podaøilo se ti úspìšnì obejít bezpeènostní systém.}
 {118}{}{Byl jsi zasažen bezpeènostním systémem za }
 {119}{}{ hit bodù.}
 {120}{}{Nenašel jsi na dveøích žádné pasti.}

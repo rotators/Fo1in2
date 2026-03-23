@@ -8,7 +8,7 @@
 # NPC name prepends this line
 {103}{}{ vidí vystouplou dlaždici.}
 
-{104}{}{Spustil jsi past a jen o vlásek se vyhnul støele ze zdi.}
+{104}{}{Spustíš past a jen o vlásek se vyhneš støele ze zdi.}
 
 # NPC name prepends this line
 {105}{}{ spustí past a jen o vlásek se vyhne støele ze zdi.}

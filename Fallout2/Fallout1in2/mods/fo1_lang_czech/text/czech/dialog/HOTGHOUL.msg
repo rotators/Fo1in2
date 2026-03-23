@@ -7,13 +7,13 @@
 {106}{}{Grrrrr!}
 {107}{}{Uungh.}
 {108}{}{Uhh.}
-{109}{}{Hej, slyšel jsi o tom že nìkdo si otevøel hubu na Seta?}
-{110}{}{(Prozpìvuje si) Set is dead. Set is dead. Set is dead...}
-{111}{}{Je tu dost vody pro všechny. Set se o to postaral.}
+{109}{}{Hej, slyšel jsi, že Seta nìkdo odpráskl?}
+{110}{}{Set je mrtvej. Set je mrtvej. Set je mrtvej...}
+{111}{}{Vody je dost pro všechny. Set na to dohlíží.}
 {112}{}{Slyšel jsem, že nìkdo vyhnal mutanty.}
-{113}{}{Od té doby co mutanti odešli je tady líp.}
+{113}{}{Od té doby, co mutanti odešli, je tady líp.}
 {114}{}{Ahoj.}
-{200}{}{Prozkoumal jsi tu nebohou vìc, ale nemáš tušení co zpùsobilo její souèasný stav.}
+{200}{}{Prozkoumal jsi tu nebohou vìc, ale nemáš tušení, co zpùsobilo její souèasný stav.}
 {201}{}{Vypadá to, že to kdysi byl èlovìk. Tipuješ, že nekrózu tkánì zpùsobila kyselina nebo radiace.}
 {202}{}{Tìlo tohoto humanoida vypadá, že je vysoce ozáøené, ale stále docela funkèní. Aèkoliv to kdysi byl èlovìk, zdá se, že se navrátil k životnímu stylu zvíøat.}
-{203}{}{Tìlo tohoto humanoida vypadá, že je vysoce ozáøené a velká èást svalové a mozkové hmoty zdegenerovala. Genetické ukazatele tì však vedou k pøesvìdèení, že se jednalo o jednoho z pøeživších obyvatel Vaultu.}
+{203}{}{Tìlo humanoida vypadá silnì ozáøenì a vìtšina svalové i mozkové hmoty se zdá být v rozkladu. Genetické ukazatele tì však vedou k pøesvìdèení, že jeho pùvod sahá – stejnì jako tvùj – k tìm, kteøí se kdysi uchýlili do Vaultù.}

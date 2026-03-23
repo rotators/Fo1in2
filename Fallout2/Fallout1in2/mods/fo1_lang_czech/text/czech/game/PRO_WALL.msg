@@ -1139,10 +1139,10 @@
 {113200}{}{Chodba}
 {113300}{}{Chodba}
 {113400}{}{Chodba}
-{113500}{}{Emitor silového pole}
-{113600}{}{Emitor silového pole}
-{113700}{}{Emitor silového pole}
-{113800}{}{Emitor silového pole}
+{113500}{}{Generátor silového pole}
+{113600}{}{Generátor silového pole}
+{113700}{}{Generátor silového pole}
+{113800}{}{Generátor silového pole}
 {113900}{}{Stìna}
 {114000}{}{Stìna}
 {114100}{}{Stìna}
@@ -1564,11 +1564,11 @@
 {155000}{}{Stìna raketoplánu}
 {155100}{}{Stìna raketoplánu}
 {155200}{}{Stìna raketoplánu}
-{155300}{}{Emitor silového pole}
+{155300}{}{Generátor silového pole}
 {155400}{}{Stìna}
 {155500}{}{Stìna}
 {155600}{}{Stìna}
-{155700}{}{Emitor silového pole}
+{155700}{}{Generátor silového pole}
 {155800}{}{Chodba}
 {155900}{}{Chodba}
 {156000}{}{Chodba}
@@ -1586,16 +1586,16 @@
 {157200}{}{Chodba}
 {157300}{}{Chodba}
 {157400}{}{Stìna}
-{157500}{}{Emitor silového pole}
+{157500}{}{Generátor silového pole}
 {157600}{}{Stìna}
 {157700}{}{Stìna}
-{157800}{}{Emitor silového pole}
-{157900}{}{Emitor silového pole}
-{158000}{}{Emitor silového pole}
+{157800}{}{Generátor silového pole}
+{157900}{}{Generátor silového pole}
+{158000}{}{Generátor silového pole}
 {158100}{}{Stìna}
 {158200}{}{Stìna}
-{158300}{}{Emitor silového pole}
-{158400}{}{Emitor silového pole}
+{158300}{}{Generátor silového pole}
+{158400}{}{Generátor silového pole}
 {158500}{}{Stìna}
 {158600}{}{Stìna}
 {158700}{}{Chodba}
@@ -1645,5 +1645,5 @@
 {163100}{}{Chodba}
 {163200}{}{Chodba}
 {163300}{}{Stìna}
-{163400}{}{Emitor silového pole}
-{163500}{}{Emitor silového pole}
+{163400}{}{Generátor silového pole}
+{163500}{}{Generátor silového pole}

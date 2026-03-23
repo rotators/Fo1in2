@@ -2,10 +2,10 @@
 {100}{}{Vidíš nìkolik odpornıch plovoucích zvíøat...}
 #
 # Coast2  4 to 7 manti or great manti
-{111}{}{Z nièeho nic tì napadla skupinka mantisù!}
+{111}{}{Z nièeho nic tì napadl roj zmutovanıch kudlanek!}
 #
 # Coast3  8 to 12 rats
-{101}{}{Vidíš, jak se pøibliuje menší skupina krys.}
+{101}{}{Rychle se blíí hejno krys!}
 #
 # Coast4  3 to 4 raiders, 3 to 5 peasants
 {102}{}{Vidíš, jak nájezdníci napadli malou skupinku rolníkù!}
@@ -17,7 +17,7 @@
 {103}{}{Vidíš, jak nìkolik lidí rybaøí.}
 #
 # Coast7  free items
-{104}{}{Poblí je mrtvola grizzlyho, kterı u byl z èásti snìden.}
+{104}{}{Poblí leí ohavná mrtvola, která je napùl seraná. Právì ti pøešla chu k jídlu.}
 #
 
 #
@@ -26,6 +26,6 @@
 {105}{}{Šlápnul jsi do nìjakıch louí.}
 {106}{}{Hnán strašnou ízní ses napil vody... Nechutná zrovna nejlíp.}
 {107}{}{Voda vypadá jako radioaktivní a zneèištìná.}
-{108}{}{Ahhh..}
-{109}{}{Arrgg..}
+{108}{}{Ahhh...}
+{109}{}{Arrgg...}
 {110}{}{Ajíík!}

@@ -111,8 +111,8 @@
 {114}{}{Bratrstvo}          # BROHD12.MAP
 {115}{}{Bratrstvo}          # BROHD34.MAP
 {116}{}{Shady Sands}                   # CAVES.MAP
-{117}{}{DÏti Katedr·ly}     # CHILDRN1.MAP
-{118}{}{DÏti Katedr·ly}     # CHILDRN2.MAP
+{117}{}{DÏti katedr·ly}     # CHILDRN1.MAP
+{118}{}{DÏti katedr·ly}     # CHILDRN2.MAP
 {119}{}{Ruiny mÏsta}                    # CITY1.MAP
 {120}{}{Pob¯eûÌ}                         # COAST1.MAP
 {121}{}{Pob¯eûÌ}                         # COAST2.MAP
@@ -122,8 +122,8 @@
 {125}{}{Shady Sands}                   # SHADYE.MAP
 {126}{}{Shady Sands}                   # SHADYW.MAP
 {127}{}{Kr·ter}                          # GLOWENT.MAP
-{128}{}{Poh¯ebiötÏ}                      # LAADYTUM.MAP
-{129}{}{Poh¯ebiötÏ}                      # LAFOLLWR.MAP
+{128}{}{Kostnice}                      # LAADYTUM.MAP
+{129}{}{Kostnice}                      # LAFOLLWR.MAP
 {130}{}{Vojensk· z·kladna}                 # MBENT.MAP
 {131}{}{Vojensk· z·kladna}                 # MBSTRG12.MAP
 {132}{}{Vojensk· z·kladna}                 # MBVATS12.MAP
@@ -138,9 +138,9 @@
 {141}{}{Hub}                           # HUBWATER.MAP
 {142}{}{Kr·ter}                          # GLOW1.MAP
 {143}{}{Kr·ter}                          # GLOW2.MAP
-{144}{}{Poh¯ebiötÏ}                      # LABLADES.MAP
-{145}{}{Poh¯ebiötÏ}                      # LARIPPER.MAP
-{146}{}{Poh¯ebiötÏ}                      # LAGUNRUN.MAP
+{144}{}{Kostnice}                      # LABLADES.MAP
+{145}{}{Kostnice}                      # LARIPPER.MAP
+{146}{}{Kostnice}                      # LAGUNRUN.MAP
 {147}{}{Katedr·la}     # CHILDEAD.MAP
 {148}{}{Vojensk· z·kladna}                 # MBDEAD.MAP
 {149}{}{Hory}                     # MOUNTN1.MAP
@@ -155,10 +155,10 @@
 {158}{}{Hory}                     # MNTCRVN1.MAP
 {159}{}{Hory}                     # MNTCRVN2.MAP
 {160}{}{T·bor ZmijÌ}                        # DESCRVN3.MAP
-{161}{}{Pouöù}                     # MNTCRVN3.MAP
-{162}{}{Hory}                        # DESCRVN4.MAP
-{163}{}{Pouöù}                     # MNTCRVN4.MAP
-{164}{}{Hory}                        # DESERT1.MAP
+{161}{}{Hory}                     # MNTCRVN3.MAP
+{162}{}{Pouöù}                        # DESCRVN4.MAP
+{163}{}{Hory}                     # MNTCRVN4.MAP
+{164}{}{Pouöù}                        # DESERT1.MAP
 
 {165}{}{Pouöù}                        # FOOT.MAP
 {166}{}{Pouöù}                        # TARDIS.MAP
@@ -169,7 +169,7 @@
 {171}{}{Chr·m}                        # ARTEMPLE.MAP
 {172}{}{Chr·m}                        # ARTEMPLE.MAP
 {173}{}{Pouöù}                        # rndforvr.MAP
-{174}{}{SmÏtiötÏ}                     # JUNKDEMO.MAP
+{174}{}{ärotiötÏ}                     # JUNKDEMO.MAP
 
 {175}{}{Shady Sands}                   # CAVES.MAP
 {176}{}{Hub}                           # HUBMIS0.MAP
@@ -220,20 +220,20 @@
 {217}{}{}
 # Vault 13, VAULT13.MAP
 {218}{}{Vstup}
-{219}{}{ObytnÈ prostory}
-{220}{}{KontrolnÌ stanoviötÏ}
+{219}{}{Ubikace}
+{220}{}{VelÌn}
 # Buried Vault Entrance, VAULTENT.MAP
 {221}{}{Vstup do jeskynÏ}
 {222}{}{}
 {223}{}{}
 # Buried Vault,  VAULTBUR.MAP
 {224}{}{JeskynÏ}
-{225}{}{ObytnÈ prostory}
-{226}{}{KontrolnÌ stanoviötÏ}
+{225}{}{Ubikace}
+{226}{}{VelÌn}
 # Necropolis Vault, VAULTNEC.MAP
 {227}{}{Stoky}
-{228}{}{ObytnÈ prostory}
-{229}{}{KontrolnÌ stanoviötÏ}
+{228}{}{Ubikace}
+{229}{}{VelÌn}
 # Junktown Entrance, JUNKENT.MAP
 {230}{}{Vstup}
 {231}{}{Laborato¯}
@@ -243,7 +243,7 @@
 {234}{}{}
 {235}{}{}
 # Junktown Killian's, JUNKKILL.MAP
-{236}{}{Crash House}
+{236}{}{Chr·p·rna}
 {237}{}{}
 {238}{}{}
 # Brotherhood of Steel Entrance, BROHDENT.MAP
@@ -308,11 +308,11 @@
 {283}{}{}
 # LAADYTUM.MAP
 {284}{}{Adytum}
-{285}{}{PodzemÌ}
+{285}{}{PodsvÏtÌ}
 {286}{}{}
 # LAFOLLWR.MAP
 {287}{}{Knihovna}
-{288}{}{PodzemÌ}
+{288}{}{PodsvÏtÌ}
 {289}{}{}
 # Military Base Entrance, MBENT.MAP
 {290}{}{Vstup}
@@ -355,8 +355,8 @@
 {318}{}{}
 {319}{}{}
 # Hub Old Town, HUBOLDTN.MAP
-{320}{}{StarÈ mÏsto}
-{321}{}{Cech zlodÏj˘}
+{320}{}{StarÈ MÏsto}
+{321}{}{Kruh zlodÏj˘}
 {322}{}{}
 # HUBWATER.MAP
 {323}{}{ObchodnÌci}
@@ -375,11 +375,11 @@
 {333}{}{}
 {334}{}{}
 # LARIPPER.MAP
-{335}{}{Kino}
-{336}{}{PodzemÌ}
+{335}{}{Sklad}
+{336}{}{PodsvÏtÌ}
 {337}{}{}
 # LAGUNRUN.MAP
-{338}{}{Gun Runnerove}
+{338}{}{Pevnost}
 {339}{}{}
 {340}{}{}
 # CHILDEAD.MAP
@@ -592,7 +592,7 @@
 {1507}{}{Bratrstvo}
 {1508}{}{Vojensk· z·kladna}
 {1509}{}{Kr·ter}
-{1510}{}{Poh¯ebiötÏ}
+{1510}{}{Kostnice}
 {1511}{}{Katedr·la}
 {1512}{}{unused} # Crater
 {1513}{}{unused} # Ruins
@@ -640,12 +640,12 @@
 {1555}{}{Bobova pouûit· auta}      # USEDCAR
 {1556}{}{N·klaÔ·k s Nuka-Colou}     # COLATRUK
 {1557}{}{HavarovanÈ UFO}      # FSAUSER
-{1558}{}{Stado Brahmin}        # TALKCOW
+{1558}{}{St·do brahmÌn}        # TALKCOW
 {1559}{}{Str·ûce VÏËnosti} # Guardian of Forever
-{1560}{}{SmetiötÏ}           # Fo1 Demo
+{1560}{}{ärotiötÏ}           # Fo1 Demo
 {1561}{}{JeskynÏ}
-{1562}{}{Irwinova Farma}
-{1563}{}{DoupÏ Par·k˘}
+{1562}{}{Irwinova farma}
+{1563}{}{DoupÏ P·raË˘}
 {1564}{}{ }                   # Holds all cavern encounter maps
 
 #

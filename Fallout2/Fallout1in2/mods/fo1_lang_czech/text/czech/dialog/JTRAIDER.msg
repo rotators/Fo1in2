@@ -1,6 +1,6 @@
 {100}{}{Vidíš nájezdníka, kterı vypadá trochu mimo.}
 {101}{}{Hele! Nepøibliuj se. Nebo jí zabiju. Pøísahám.}
-{102}{}{Ale!}
+{102}{}{Nung!}
 {103}{}{Nedìlej to!}
 {104}{}{Pokud ji nepustíš, zabiju tì.}
 {105}{}{Násilí není nutné. Promluvme si o tom.}
@@ -17,9 +17,9 @@
 {116}{}{Jo. Nic nezkoušej, nebo to koupí.}
 {117}{}{mu}
 {118}{}{ena}
-{119}{}{Oh, velkej chlap. Tak se mrkneme. Ale nejdøív . . .}
-{120}{}{Oh, velká enská. Tak se mrkneme. Ale nejdøív . . .}
-{121}{}{Zùstaò, kde jsi . . . Nechci jí ublíit, ale budu muset.}
+{119}{}{Oh, velkej chlap. Tak se mrkneme. Ale nejdøív...}
+{120}{}{Oh, velká enská. Tak se mrkneme. Ale nejdøív...}
+{121}{}{Zùstaò, kde jsi... Nechci jí ublíit, ale budu muset.}
 {122}{}{Ne, nebo ublíím já tobì.}
 {123}{}{Proè jí chceš ublíit?}
 {124}{}{Zkus to, a ona zemøe jako první. Tak o èem jsi to mluvil?}
@@ -28,7 +28,7 @@
 {127}{}{Jakou díru?}
 {128}{}{Tu, kterou se ti zrovna chystám udìlat.}
 {129}{}{Budu se s tebou bavit dál, dokud budeš chtít, ale zkus mì podrazit a ona to má spoèítanı.}
-{130}{}{Nemusím nic dìlat. Ty bys to mìl udìlat, a není tøeba tak prudce.}
+{130}{}{Já nemusím dìlat nic. Hıbat se musíš ty, a zatím se teda zrovna nepøedvádíš.}
 {131}{}{Smála se mi. Všichni se mi smáli. Za to mi zaplatí, to pøísahám.}
 {132}{}{Vìøím ti. Zkusíme to vyøešit, ok?}
 {133}{}{Moná. Nevím.}
@@ -40,7 +40,7 @@
 {139}{}{A je po tvém.}
 {140}{}{Musíš mì poslouchat. Tvùj ivot i ivot té dívky na tom závisí.}
 {141}{}{Jen se uklidni. Neublíím ti. Jenom chci poslouchat to, co chceš øíct.}
-{142}{}{U zase, vyhrouješ mi. Zemøi!}
+{142}{}{U zase, vyhrouješ mi. Zemøi!!}
 {143}{}{Nebudu tì poslouchat. Chceš mì jenom podrazit tìmi svımi slovíèky. Nevìøím ti. Jdi pryè.}
 {144}{}{Moná je to tak. Doka mi to.}
 {145}{}{Kam odsud pùjdeme?}
@@ -51,33 +51,33 @@
 {150}{}{ádné peníze, ale mùeš odejít. Nikdo nebude nic podnikat. Slibuji.}
 {151}{}{Ok, ale nejdøív propus tu dívku. Uka trochu dùvìry a i já ti budu vìøit.}
 {152}{}{Lhal jsi mi!}
-{153}{}{Ok. Chci 100$. Pak odsud odejdeme. Nikdo za námi nepùjde a na kraji mìsta ji propustím.}
+{153}{}{Ok. Chci 100 zátek. Pak odsud odejdeme. Nikdo za námi nepùjde a na kraji mìsta ji propustím.}
 {154}{}{Tady jsou ty peníze.}
 {155}{}{Nemám tyhle prachy.}
-{156}{}{Pak si myslím, e to dostane.}
+{156}{}{Tak to holt odskáèe ona.}
 {157}{}{To je ok, pøedpokládám.}
 {158}{}{To se mi nelíbí. Co ti zabrání, abys mì zezadu støelil, a budu vycházet ven?}
 {159}{}{Nestøelím tì. Vìø mi.}
 {160}{}{Nic, budeš muset vìøit tomu, co øíkám.}
 {161}{}{Ne a ne! Nevìøím ti!}
 {162}{}{Dobrá. Uvidíme, co se stane, co?}
-{163}{}{Tady je $100. Mìj se.}
+{163}{}{Tady je 100 zátek. Mìj se.}
 {164}{}{Mùeš v klidu odejít.}
-{165}{}{Chci peníze. Chci $200.}
+{165}{}{Chci peníze. Chci 200 zátek.}
 {166}{}{Nemám dost penìz.}
 {167}{}{Tady jsou.}
-{168}{}{Vypadáš jako lháø a podvádíš mì.}
-{169}{}{Nech tu dívku jít.}
+{168}{}{Vypadáš jako lháø a podvodník.}
+{169}{}{Ten pocit je vzájemnej, kámo. Nech tu dívku jít.}
 {170}{}{mu}
 {171}{}{ena}
 {172}{}{Proè nevezmeš za rukojmí místo ní mì? Uvidíme, co dokáe opravdovı mu.}
 {173}{}{Proè nevezmeš za rukojmí místo ní mì? Uvidíme, co dokáe opravdová ena.}
 {174}{}{Ne! Neøíkej mi, co mám dìlat! Nemùeš mi øíkat, co mám dìlat!}
 {175}{}{Jo, já ti ukáu.}
-{176}{}{Stál si tuhle kurvu ivot!}
+{176}{}{Stál jsi tuhle kurvu ivot!}
 {177}{}{Nech mì bıt, sakra!}
 {178}{}{Nájezdník, soustøedìnı na svou práci, tì ignoruje.}
-{179}{}{Hmmm . . .}
+{179}{}{Hmmm...}
 {180}{}{Hej, pojï na to, buchto. Mám prachy, pokud máš èas.}
 {181}{}{Takhle se mnou mluvit nebudeš, dìvko! Nikdo se mnou takhle nemluví!}
 {182}{}{Tohle tì bude stát ivot!}

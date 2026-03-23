@@ -1,4 +1,4 @@
-{100}{}{Vidíš ghoula z podzemí.}
+{100}{}{Vidíš podzemníka.}
 {101}{}{Jenom chceme být sami.}
 {102}{}{Set je strašný vùl, který nás všechny nechá pobít.}
 {103}{}{Supermutanti nás jednou zabijou a Set nám nepomùže.}

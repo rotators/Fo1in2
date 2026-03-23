@@ -1,4 +1,4 @@
-{100}{}{Vidíš pøed sebou stùl na kostky. Jedna hra stojí 20 babek.}
+{100}{}{Vidíš pøed sebou stùl na kostky. Jedna hra stojí 20 zátek.}
 {101}{}{Hodil jsi 7. Vyhrál jsi!}
 #TRANSLATION NOTE: "Snake Eyes" in English means each of the dice rolled a 1.
 {102}{}{Hodils hadí oèi. Prohráls.}

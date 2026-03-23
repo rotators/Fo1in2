@@ -42,7 +42,7 @@
 {134}{}{Na minimální úrovni.}        # 1
 {135}{}{Nelze sníit.}  # 2
 {136}{}{Nemáš dost dovednostních bodù.}
-{137}{}{}
+{137}{}{Základ:}
 {138}{}{TALENTY}
 {139}{}{CHARAKTEROVÉ RYSY}
 {140}{}{Tvá postava mùe mít maximálnì} # 1
@@ -94,7 +94,7 @@
 {301}{}{Akèní body}
 {302}{}{Tøída zbroje}
 {303}{}{Boj beze zbranì}
-{304}{}{Boj zblízka}
+{304}{}{Boj na blízko}
 {305}{}{Odol. v. pošk.}
 {306}{}{Odol. v. jedu}
 {307}{}{Odol. v. radiaci}
@@ -118,15 +118,15 @@
 # Radiation
 {401}{}{Tvá postava trpí nemocí z ozáøení. Pro zjištìní aktuálního stupnì ozáøení pouij Geigerùv poèítaè. Hodnoty nad 150 radù ovlivní tvé zákl. vlastnosti. Nad 1000 radù je nutná léèba do 24 hodin, jinak postava zemøe.}
 # Eye Damage
-{402}{}{Tvá postava byla vánì zasaena do jednoho nebo obou oèí. To má bohuel negativní vliv na tvé VNÍMÁNÍ. Tvá pøesnost v boji se vıraznì sníí. K vyléèení pouij dovednost "Léèení" a potøebné lékaøské vybavení.}
+{402}{}{Tvá postava byla vánì zasaena do jednoho nebo obou oèí. To má bohuel negativní vliv na tvé VNÍMÁNÍ. Tvá pøesnost v boji se vıraznì sníí. K vyléèení pouij dovednost „Léèení“ a potøebné lékaøské vybavení.}
 # Crippled right arm
-{403}{}{Tvá pravá ruka je zmrzaèena. Pokud máš zmrzaèenou jednu ruku, nemùeš pouívat obouruèní zbranì. Pokud obì, nemùeš pouívat ádnou zbraò. Pouij dovednost "Léèení" a potøebné lékaøské vybavení nebo navštiv doktora.}
+{403}{}{Tvá pravá ruka je zmrzaèena. Pokud máš zmrzaèenou jednu ruku, nemùeš pouívat obouruèní zbranì. Pokud obì, nemùeš pouívat ádnou zbraò. Pouij dovednost „Léèení“ a potøebné lékaøské vybavení nebo navštiv doktora.}
 # Crippled left arm
-{404}{}{Tvá levá ruka je zmrzaèena. Pokud máš zmrzaèenou jednu ruku, nemùeš pouívat obouruèní zbranì. Pokud obì, nemùeš pouívat ádnou zbraò. Pouij dovednost "Léèení" a potøebné lékaøské vybavení nebo navštiv doktora.}
+{404}{}{Tvá levá ruka je zmrzaèena. Pokud máš zmrzaèenou jednu ruku, nemùeš pouívat obouruèní zbranì. Pokud obì, nemùeš pouívat ádnou zbraò. Pouij dovednost „Léèení“ a potøebné lékaøské vybavení nebo navštiv doktora.}
 # Crippled right leg
-{405}{}{Tvá pravá noha je zmrzaèena. Pokud máš zmrzaèenou nohu, nemùeš bìhat. V boji také spotøebuješ více akèních bodù na pohyb. K vyléèení pouij dovednost "Léèení" a potøebné lékaøské vybavení nebo navštiv doktora.}
+{405}{}{Tvá pravá noha je zmrzaèena. Pokud máš zmrzaèenou nohu, nemùeš bìhat. V boji také spotøebuješ více akèních bodù na pohyb. K vyléèení pouij dovednost „Léèení“ a potøebné lékaøské vybavení nebo navštiv doktora.}
 # Crippled left leg
-{406}{}{Tvá levá noha je zmrzaèena. Pokud máš zmrzaèenou nohu, nemùeš bìhat. V boji také spotøebuješ více akèních bodù na pohyb. K vyléèení pouij dovednost "Léèení" a potøebné lékaøské vybavení nebo navštiv doktora.}
+{406}{}{Tvá levá noha je zmrzaèena. Pokud máš zmrzaèenou nohu, nemùeš bìhat. V boji také spotøebuješ více akèních bodù na pohyb. K vyléèení pouij dovednost „Léèení“ a potøebné lékaøské vybavení nebo navštiv doktora.}
 
 # Month strings
 {500}{}{Leden}
@@ -170,7 +170,7 @@
 #
 {620}{}{FALLOUT}                   # Title line 1
 {621}{}{OSOBNÍ ZÁZNAMY VAULTU 13} # Title line 2
-{622}{}{hours} # Title line 3
+{622}{}{hodin} # Title line 3
 # -
 # -
 #      Strength: 00        Hit Points: 000/000          Sequence: 00
@@ -195,7 +195,7 @@
 {632}{}{      Kritickı zásah:}
 # -
 {633}{}{   Charisma:}
-{634}{}{         Boj zblízka:}
+{634}{}{         Boj na blízko:}
 {635}{}{             Nosnost:}
 # -
 {636}{}{Inteligence:}
@@ -240,7 +240,7 @@
 {1001}{}{Berserk}
 {1002}{}{Šampión}
 {1003}{}{Vrah dìtí}
-{1004}{}{Závislost na Nuka Cole}
+{1004}{}{Závislost na Nuka-Cole}
 {1005}{}{Závislost na Buffoutu}
 {1006}{}{Závislost na Mentats}
 {1007}{}{Závislost na Psycho}
@@ -270,19 +270,19 @@
 {1101}{}{Zabil jsi spoustu lidí. A to není moc dobrı zpùsob, jak se proslavit. Lidé z podsvìtí si tì ale váí a respektují tì.}
 {1102}{}{Tvé èiny z tebe udìlaly v oèích lidí šampióna. Tvùj boj se zlem a hanebností je všeobecnì známı. Èestní lidé si tì váí a uznávají tì.}
 {1103}{}{Co ti k tomu mám øíct? Zabíjíš nevinné a neozbrojené dìti. Chceš opravdu slyšet, co si o tobì myslíme?}
-{1104}{}{Umíš si dùkladnì vychutnat Nuka Colu, nealko nápoj postnukleárního svìta. Moná a moc dùkladnì. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
+{1104}{}{Umíš si dùkladnì vychutnat Nuka-Colu, nealko nápoj postnukleárního svìta. Moná a moc dùkladnì. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1105}{}{Jsi závislı na droze zvané Buffout. Musíš ho pravidelnì brát, jinak pocítíš nepøíjemné následky abstinenèních pøíznakù. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1106}{}{Stal ses závislım na pilulkách Mentats. Musíš je pravidelnì brát, jinak pocítíš nepøíjemné následky abstinenèních pøíznakù. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1107}{}{Jsi feák. Pokud pravidelnì nebereš svoje Psycho, trpíš. Pokud ano, trpí ostatní. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1108}{}{Tvoje tìlo potøebuje stálı pøísun léku RadAway. Nijak tì to sice neohrouje na ivotì, nicménì ho musíš brát pravidelnì. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1109}{}{Máš menší problém s alkoholem. No, vlastnì je to spíš vìtší problém. Pokud se chceš závislosti zbavit, pomùe ti jen dlouhá abstinence.}
 {1110}{}{Jsi závislı na droze zvané Jet. Musíš ho pravidelnì brát, jinak pocítíš nepøíjemné následky abstinenèních pøíznakù. Pokud se chceš závislosti zbavit, pomùe ti jen protilátka. Abstinence v tomto pøípadì nepomùe.}
-{1111}{}{Bohuel, u je to tak. Jsi závislı na karetní høe "Tragic the Garnering". Cítíš neustálé nutkání shánìt nové a nové sady karet.}
+{1111}{}{Bohuel, u je to tak. Jsi závislı na karetní høe „Tragic the Garnering“. Cítíš neustálé nutkání shánìt nové a nové sady karet.}
 {1112}{}{TEMPORARY - What is this?}
 {1113}{}{Víš o sexu všechno. Obzvláš pøedehra je tvou silnou stránkou. Víš, jak potìšit pøíslušníka opaèného pohlaví a vzbudit v nìm touhu si to s tebou zopakovat.}
-{1114}{}{Jsi šampiónem severní Kalifornie v tìké váze. Získal sis slávu, obdiv i lásku tisícù fanouškù... a taky bonus k "Odolnosti vùèi poškození" a dovednosti "Boj beze zbranì".}
+{1114}{}{Jsi šampiónem severní Kalifornie v tìké váze. Získal sis slávu, obdiv i lásku tisícù fanouškù... a taky bonus k „Odolnosti vùèi poškození“ a dovednosti „Boj beze zbranì“.}
 {1115}{}{Buï k sobì upøímnı: Jsi ochotnı spát s èímkoliv, co má dvì nohy. A èas od èasu ti poèet dolních konèetin pøijde jako nechutnì diskriminující faktor.}
-{1116}{}{Jsou mrtví, tak jim to mùe bıt ukradené zní tvé heslo. Vykopávání mrtvol je pro tebe víc ne jen koníèek.}
+{1116}{}{„Jsou mrtví, tak jim to mùe bıt ukradené,“ zní tvé heslo. Vykopávání mrtvol je pro tebe víc ne jen koníèek.}
 {1117}{}{Jsi váenım èlenem rodiny Salvatore. Kadı tì zná, kadı tì respektuje a v tom klobouku vypadáš zatracenì dobøe.}
 {1118}{}{Nechal ses dotáhnout k oltáøi. Nekoukej se tak, to je tvùj problém, ne náš.}
 {1119}{}{Jsi veliká a záøivá hvìzda domácího videa. Tvoje sexuální vıkony, tváø a velikost tvıch pohlavních orgánù jsou známé v celém New Renu.}

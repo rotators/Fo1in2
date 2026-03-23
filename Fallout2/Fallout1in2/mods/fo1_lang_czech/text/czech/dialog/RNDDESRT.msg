@@ -4,12 +4,12 @@
 {178}{}{Ano.}
 {179}{}{Ne.}
 {180}{}{Získáváš }
-{181}{}{ zkušeností za úspìšné použití schopnosti Zálesák.}
+{181}{}{ zkušeností za úspìšné použití schopnosti Pøežití v pustinì.}
 # Line 182 is appended after 177 and the encounter type. Period and space is intentional.
 {182}{}{. Chceš se setkat?}
 # These are apended to line 177.
 {183}{}{Floatery}
-{184}{}{Mantisy}
+{184}{}{Kudlanky}
 {185}{}{Krysy}
 {186}{}{farmáøe pod útokem nájezdníkù}
 
@@ -20,7 +20,7 @@
 #
 # 100 to 103 are NOT USED, looks like it was old code for finding the Radscorpion Cave from the worldmap.
 #
-{100}{}{Musí mít hnízdo nìkde blízko. Nemùžou cestovat daleko.}
+{100}{}{Podle toho, jak to tu vypadá, se nemohli dostat moc daleko. Nìkde poblíž musí mít doupì.}
 {101}{}{Zdá se, že se sem dostali odnìkud zblízka.}
 {102}{}{Zdá se, že se sem dostali odnìkud ze severu.}
 {103}{}{Oèividnì se pouze toulali pustinou.}
@@ -39,11 +39,11 @@
 {115}{}{ hodin ti nevyšlo. Vážná dehydratace ti zpùsobila zranìní }
 {116}{}{ hit bodù.}
 {117}{}{Zkusil jsi hodinu v poušti pátrat po vodì, ale nepodaøilo se ti jí najít tolik, abys plnì uspokojil svou žízeò. Byl jsi zranìn za jeden hit bod.}
-{118}{}{ Zkusil jsi hodinu v poušti pátrat po vodì, ale nepodaøilo se ti jí najít tolik, abys plnì uspokojil svou žízeò. Byl jsi zranìn za }
+{118}{}{Zkusil jsi hodinu v poušti pátrat po vodì, ale nepodaøilo se ti jí najít tolik, abys plnì uspokojil svou žízeò. Byl jsi zranìn za }
 {119}{}{ hit bodù.}
 {120}{}{Zkusil jsi v poušti po dobu }
 {121}{}{ hodin pátrat po vodì, ale nepodaøilo se ti jí najít tolik, abys plnì uspokojil svou žízeò. Byl jsi zranìn za jeden hit bod.}
-{122}{}{ Zkusil jsi v poušti po dobu }
+{122}{}{Zkusil jsi v poušti po dobu }
 {123}{}{ hodin pátrat po vodì, ale nepodaøilo se ti jí najít tolik, abys plnì uspokojil svou žízeò. Byl jsi zranìn za }
 {124}{}{ hit bodù.}
 
@@ -59,7 +59,7 @@
 {159}{}{cutory}
 {160}{}{ èistou vodou.}
 {165}{}{Získáváš }
-{166}{}{ zkušeností za úspìšné použití schopnosti Zálesák.}
+{166}{}{ zkušeností za úspìšné použití schopnosti Pøežití v pustinì.}
 
 # NORTH_TABLE ENCOUNTERS
 #
@@ -145,8 +145,8 @@
 # Shady
 #
 {126}{}{Pøipletl jsi se k lovu radškorpiónù na krtko-potkany.}
-{127}{}{Vyzáblý nepøátelský humanoid se zelenou kùží se pøibližuje.}
-{128}{}{Všude se povaluje harampádí a kameny.}
+{127}{}{Vyzáblí nepøátelští humanoidi se zelenou kùží se pøibližují.}
+{128}{}{Všude se povaluje harampádí a kameny. Øíkáš si, jestli tu po nìèem hodnotném nezbyl ani šluk...}
 #
 # UNUSED ENTRY:
 {129}{}{Zaútoèil na tebe osamocený radškorpión!}
@@ -172,11 +172,11 @@
 # Raider2 - half chance of either msg displayed, but encounter the same
 #
 {143}{}{Nájezdníci!!!}
-{197}{}{Uh oh . . . loupežná výprava!}
+{197}{}{Uh oh... loupežná výprava!}
 #
 # Raider3
 #
-{173}{}{Zahlednul jsi zbytky vyloupené karavany.}
+{173}{}{Zahlédl jsi zbytky karavany právì vykrádané nájezdníky.}
 #
 # Raider4
 #
@@ -193,18 +193,18 @@
 #plus 196
 #
 #
-{223}{}{Zahlédnul jsi párek koèovných kojotù.}
+{223}{}{Zahlédnul jsi potulnou smeèku divokých kojotù.}
 {200}{}{Radškorpióni útoèí!}
 {224}{}{Zahlédl jsi prùzkumnou skupinu.}
 {225}{}{Procházíš kolem malé skupinky obchodníkù a strážných.}
-{226}{}{Vidíš probíhat malou válku - muži proti mutantùm!}
+{226}{}{Vidíš probíhat malou válku – lidi proti mutantùm!}
 {227}{}{Blíží se k tobì ohromná horda radškorpiónù!}
 #
-{250}{}{Pøibližuje se nìkolik mužù v energozbrojích.}
+{250}{}{Pøibližuje se nìkolik mužù v energo zbrojích.}
 {251}{}{Vidíš skupinu obchodníkù s doprovodem.}
-{252}{}{Vidíš krutou bitvu mezi pouštními nájezdníky a skupinou mužù v energozbrojích.}
+{252}{}{Vidíš krutou bitvu mezi pouštními nájezdníky a skupinou mužù v energo zbrojích.}
 {253}{}{Vidíš pár mutantù zkoumajících nehostinnou zem.}
-{254}{}{Pøed sebou vidíš nìjaká podivná stvoøení . . .}
+{254}{}{Pøed sebou vidíš nìjaká podivná stvoøení...}
 {256}{}{Tìsnì kolem tebe prochází patrola supermutantù!}
 
 {257}{}{V dáli vidíš trosky malé vesnice.}
@@ -215,12 +215,12 @@
 {279}{}{Pøed sebou vidíš haraburdí zapadlé v písku.}
 {280}{}{Narazil jsi na váleènou výpravu supermutantù.}
 {281}{}{Narazil jsi na skupinu bizarních stvoøení.}
-{282}{}{Narazil jsi na skupiny vyhládlých radškorpiónù.}
-{283}{}{Cítíš se unaven. Vzduch v dáli se horkem mihotá.}
-{284}{}{Narazils na pár bizarních zmutovaných stvoøení.}
+{282}{}{Narazil jsi na skupinu vyhládlých radškorpiónù.}
+{283}{}{Cítíš se pod psa a vzduch v dáli se horkem mihotá. Najednou se k tobì pøiblíží zmutovaný tvor!}
+{284}{}{Narazil jsi na pár bizarních zmutovaných stvoøení.}
 {285}{}{Narazil jsi na nìco jako ze starých sci-fi filmù.}
-{286}{}{Páraè!}
-{287}{}{Narazil jsi na migrující skupinu radškorpiónù.}
+{286}{}{Páraè!!}
+{287}{}{Narazil jsi na migrující skupinu radškorpiónù. Zdá se, že pøed nìèím prchají...}
 {288}{}{Narazil jsi na zmutovanou pouštní pøíšeru.}
 #
 {299}{}{V dálce vidíš nìkolik radškorpiónù.}
@@ -228,26 +228,26 @@
 {301}{}{Narazil jsi na krtko-potkana.}
 
 # was: "The Deathclaw!!"
-{302}{}{Mladý Páraè se tì chystá posvaèit.}
+{302}{}{Mladý páraè se tì chystá posvaèit.}
 
 {303}{}{Narazil jsi na migrující skupinu radškorpiónù.}
 #
 {306}{}{Blízko prochází jednotka supermutantù spolu s nìkolika podivnými tvory!}
 {307}{}{Pøepadl tì malej oddíl supermutantù.}
 {308}{}{Zdá se, že jsi se pøipletl k válce gangù!}
-{309}{}{Skupina nepøátelských nájezdníkù prchá pryè!}
+{309}{}{Skupina nepøátelských gangsterù se vyøítila vpøed!}
 {311}{}{Malá skupinka èlenù gangù útoèí!}
 {313}{}{Neoèekávanì na tebe zaútoèilo hejno kudlanek!}
 
 # UNUSED ENTRY:
-{312}{}{Neoèekávanì na tebe zaútoèili krysy!}
+{312}{}{Neoèekávanì na tebe zaútoèily krysy!}
 
 # SPECIAL ENCOUNTERS TEXT:
 {314}{}{Hej! Vážnì tam jsou.}
 {315}{}{V dálce vidíš pøevrácený náklaïák.}
-{316}{}{Uprostøed Pustiny jsi "zakopnul" o nìkolik vrakù aut.}
+{316}{}{Uprostøed pustiny jsi „zakopnul“ o nìkolik vrakù aut.}
 {317}{}{Na severovýchodì jsi spatøil policejní budku.}
-{318}{}{Dorazil jsi k stádu divokých Brahminù. Cítíš, že je nìco špatnì...}
+{318}{}{Dorazil jsi ke stádu divokých brahmin. Cítíš, že je nìco špatnì...}
 #
 # Fo1in2:
 {400}{}{Narazil jsi na skupinku geckonù.}

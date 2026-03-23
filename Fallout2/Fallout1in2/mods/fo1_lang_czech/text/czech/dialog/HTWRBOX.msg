@@ -4,13 +4,13 @@
 
 {103}{}{Pøi otevírání trezoru se ti povedlo najít a vyøadit past.}
 {104}{}{Pøi otevírání trezoru se ti povedlo najít past, ale náhodnì jsi ji spustil.}
-{105}{}{Pøi otevírání trezoru se ti povedlo najít past, ale nepodaøilo se ti jí zneškodnit.}
+{105}{}{Pøi otevírání trezoru se ti povedlo najít past, ale nepodaøilo se ti ji zneškodnit.}
 {106}{}{Trezor je už odemèen.}
 {107}{}{Úspìšnì se ti povedlo odemknout trezor.}
 {108}{}{Tvoje opakované pokusy odemknout trezor zpùsobily spuštìní pasti.}
 {109}{}{Nepovedlo se ti odemknout trezor a zámek se zasekl.}
 {110}{}{Nepovedlo se ti odemknout trezor.}
-{111}{}{Na trezoru jsi našel past a povedlo se ti ji úspìšnì obejít.}
+{111}{}{Na trezoru jsi našel past a povedlo se ti ji úspìšnì zneškodnit.}
 {112}{}{Na trezoru se ti povedlo objevit past.}
 {113}{}{Pøi hledání pastí se ti povedlo jednu náhodnì spustit.}
 {114}{}{Pøi hledání pasti trezoru se ti nepovedlo nic najít.}
@@ -21,8 +21,8 @@
 # Fo1in2
 # ex: Katja's multiple attempts ...
 {200}{}{ opakované pokusy odemknout trezor zpùsobily spuštìní pasti.}
-{201}{}{ nebyla schopná otevøít trezor a zámek se zaseknul.}
-{202}{}{ nebyla schopná otevøít trezor.}
-{203}{}{ našla na trezoru past a úspìšnì ji zneškodnila.}
-{204}{}{ našla na trezoru past.}
-{205}{}{ úspìšnì odemkla trezor.}
+{201}{}{ nedokáže pokladnici otevøít a zámek se nadobro zasekl.}
+{202}{}{ nedokáže pokladnici otevøít.}
+{203}{}{ nachází na trezoru past a úspìšnì ji zneškodní.}
+{204}{}{ nachází na trezoru past.}
+{205}{}{ úspìšnì odemyká trezor.}

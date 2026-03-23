@@ -13,5 +13,5 @@
 #messagebox messages
 #
 {104}{}{Zasvìcenec tì ignoruje.}
-{105}{}{Zle se na tebe podívá a pak zase pokraèuje ve sledování Thomas.}
+{105}{}{Žák se na tebe letmo podívá a pak zase pokraèuje ve sledování Thomase.}
 {106}{}{Zasvìcenec na okamžik svraštil oboèí.}

@@ -1,16 +1,16 @@
 {100}{}{Tento poèítaè je oznaèen jako Pøístupový poèítaè bomby.}
 {101}{}{Ze vstupního poèítaèe vedou kabely do jaderné hlavice za poèítaèem.}
-{102}{}{Právì jsi aktivoval jadernou hlavici. Ètyrminutové odpoèítávání zaèíná.}
-{103}{}{Právì jsi zajistil nukleární hlavici.}
+{102}{}{Právì jsi aktivoval jadernou hlavici. Ètyøminutové odpoèítávání zaèíná.}
+{103}{}{Právì jsi zajistil jadernou hlavici.}
 {104}{}{BUUUUUUUUUUUM! [Právì jsi odpálil atomovou bombu!]}
 {105}{}{Nezdá se, že by to fungovalo.}
-{106}{}{Odpoèítávání stále bìží...možná bys mìl pøestøihnout ten èervený drát.}
+{106}{}{Odpoèítávání stále bìží... možná bys mìl pøestøihnout ten èervený drát.}
 {107}{}{Možná musíš také použít ten klíè.}
 {108}{}{Tento poèítaè je vybaven bezpeènostním zaøízením, které zabrání aktivovat bombu bez pøíslušného klíèe.}
 {109}{}{Je nemožné odemknout tento komplikovaný bezpeènostní zámek.}
 {110}{}{Tento poèítaè není možné opravit.}
 {111}{}{Nemùžeš zkoušet své léèky na tento poèítaè.}
-{112}{}{K pøelstìní bezpeènostního mechanismusu nemáš dost zkušeností.}
+{112}{}{K pøelstìní bezpeènostního mechanismu nemáš dost zkušeností.}
 
 # Fo1in2:
-{113}{}{Nepodaøilo se ti zneškodnit nukleární hlavici. Potøebuješ speciální klíè.}
+{113}{}{Nepodaøilo se ti zneškodnit jadernou hlavici. Potøebuješ speciální klíè.}

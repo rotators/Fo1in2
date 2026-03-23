@@ -1,8 +1,8 @@
 {100}{}{Vidíš Harolda.}
 
 {101}{HROLD0}{Nemáš pár drobných, kamaráde?  Co takhle trochu pomoct ubohému mutantovi v té jeho bídì? [Kašel]}
-{102}{}{Jo, tady máš 25 babek. Užij je ve zdraví.}
-{103}{}{Co takhle 5 babek.}
+{102}{}{Jo, tady máš 25 zátek. Užij je ve zdraví.}
+{103}{}{Co takhle 5 zátek.}
 {104}{}{Sorry, ale žádné peníze nemám.}
 {105}{}{Drž se ode mnì dál!}
 {106}{}{Uhhh?}
@@ -26,7 +26,7 @@
 {124}{HROLD7}{Byl jsem obchodník.  Dìlali jsme okružní cesty mezi tìmi, kdo pøežili.  Ale ztratili jsme pøitom spoustu skvìlých lidí. [Kašle]}
 {125}{}{Jak?}
 {126}{HROLD8}{Dostali je banditi.  Ti mrchožrouti útoèí na všechny karavany.  A pak ti mutanti. Èert mì vem, jestli pøi každý naší cestì nevyskakovali ze zemì jak králíci. [kašel] Když jsi chtìl obchodovat, musel jsi mít s sebou armádu hlídaèù.}
-{127}{}{Stráže vám nepomáhali?}
+{127}{}{Stráže vám nepomáhaly?}
 {128}{}{A odkud ti mutanti pøicházeli?}
 {129}{HROLD9}{Samozøejmì že pomáhali, ty trotle!  Ale jich bylo moc. Nešlo to zvládnout!}
 {130}{}{Jak jsi pøežil ty útoky mutantù?}
@@ -64,14 +64,14 @@
 {162}{}{Proti èemu jste bojovali?}
 {163}{HROLD19}{Roboti a tak.  Bylo jich tam spousty.  Hroznì nás pøekvapilo, že po všech tìch letech války a všeho okolo poøád fungovali.  Hú, èlovìèe, ti nás pìknì proèesali.}
 {164}{}{Co se stalo potom, když jste se probili pøes ty roboty?}
-{165}{HROLD20}{Protože to tam vypadalo, jako kdyby na ty mutanty nìkdo dostal zakázku!  Ježíši!  A za každého poøádný balík!  Neumím si pøedstavit jinej dùvod, než že to byla továrna.}
+{165}{HROLD20}{Protože to vypadalo, jako by nìkdo vyrazil na výprodej do Mutantlandu! Paneèku! Celý tucty za pár šupù! Nedává mi smysl nic jinýho, než že to byla továrna.}
 {166}{}{Prozkoumali jste tu základnu dùkladnìji?}
 {167}{HROLD21}{Dostali jsme se dovnitø pìknì hluboko.  Ale moc už nás nezbylo.  Grey, já a ještì dva další.}
 {168}{}{A potom?}
 {169}{HROLD22}{Jeden z tìch robotù dostal Francine.  Mark byl zranìný, tak jsme ho poslali zpátky na povrch.  Pak jsme zùstali jen já a Grey.}
 {170}{}{Co se stalo s Markem?}
 {171}{}{Co se stalo potom?}
-{172}{HROLD23}{Dodneška nevím.  Nikdy se sem nevrátil, a...no já...už jsem nemohl jít zpátky do Pustiny, takže já...nikdy jsem po nìm nepátral.}
+{172}{HROLD23}{Dodneška nevím. Nikdy se sem nevrátil, a...no já...už jsem nemohl jít zpátky do pustiny, takže já...nikdy jsem po nìm nepátral.}
 {173}{}{Co ty a Grey?}
 {174}{HROLD24}{Našli jsme nìjakou centrálu a jakési zvláštní zaøízení.  A potom se to stalo.}
 {175}{}{Co?}
@@ -110,15 +110,15 @@
 {208}{HROLD37}{Jsi stejnì zlý, jako ti ostatní. [Sípavì kašle]}
 {209}{HROLD38}{No dobøe, stejnì ti dìkuju. [kašel]}
 {210}{HROLD39}{Hej, mùžeš mi trochu píchnout, pøíteli?}
-{211}{}{Jo, tady je 25 babek.}
-{212}{}{Tady máš 5 babek.}
+{211}{}{Jo, tady je 25 zátek.}
+{212}{}{Tady máš 5 zátek.}
 {213}{}{Neotravuj mì.}
 {214}{}{Uhhh?}
 {215}{HROLD40}{Hej, vážím si toho! Musím pøiznat, že když jsem tì poprvé uvidìl, [kašel] myslel jsem si, že s tebou budou problémy.}
 {216}{}{Proè to øíkáš?}
 {217}{}{Nah, já ne!}
-{218}{HROLD41}{Hej, rád tì zase vidím}
-{219}{}{Tady je 20 babek, snad se ti budou hodit.}
+{218}{HROLD41}{Hej, rád tì zase vidím.}
+{219}{}{Tady je 20 zátek, snad se ti budou hodit.}
 {220}{}{Ahoj.}
 {221}{}{Uhh?}
 {222}{hrold42}{Jen mì zkoušíš, huh?}
@@ -128,20 +128,20 @@
 {226}{}{Tak jaký je tvùj pøíbìh?}
 {227}{}{Ne}
 {228}{hrold43a}{Úplnej?  No...}
-{229}{HROLD44}{Oooh, dík.  Doufám, že jsem na tebe moc netlaèil. [kašle]}
+{229}{HROLD44}{Oooh, dík. Doufám, že to pro tebe nebyl pøíliš velkej nápor. [kašle]}
 {230}{HROLD45}{Oooh, tak tohleto tì zajímá.  Pøíteli, tak to je noèní mùra celého mìsta.  Proè se mì na to sakra ptáš?}
 {231}{}{Chci to zabít.}
 {232}{}{Kdybych se s tím setkal, tak chci vìdìt, co mám dìlat.}
-{233}{HROLD47}{Oukej.  No, je to zatracenì velká potvora.  Má drápy a zuby, které projdou skrz to nejtìžší brnìní.  Ale nenech se zmást jeho velikostí, je setsakramentsky rychlý.}
+{233}{HROLD47}{Oukej. No, je to zatracenì velká potvora. Má drápy a bodce, které projdou skrz to nejtìžší brnìní. Ale nenech se zmást jeho velikostí, je setsakramentsky rychlý.}
 {234}{}{Má nìjaké slabiny?}
 {235}{HROLD49}{No, z toho co jsem slyšel, co takhle míøit na hlavu?  Já bych zkusil oèi.  Je tu ale jeden problém.}
 {236}{}{Jaký problém?}
-{237}{HROLD50}{Nesmíš se do nich podívat!  Øíká se, že Páraè mùže èlovìka jedním pohledem zhypnotizovat.  Potom k tobì pøijde a "bum", má tì!}
+{237}{HROLD50}{Nesmíš se do nich podívat!  Øíká se, že Páraè mùže èlovìka jedním pohledem zhypnotizovat.  Potom k tobì pøijde a „bum“, má tì!}
 {238}{}{Výbornì, díky.}
 {239}{HROLD51}{Hodnì štìstí...budeš ho potøebovat.}
 {240}{}{Mùže být.}
 {241}{HROLD52}{Ty nechceš nic vìdìt o Páraèi a já ti o nìm nic neøeknu.}
-{242}{HROLD53}{No, slyšel jsem, že jeden z Deckerových chlapù drží nìkoho z Bratrstva Oceli pod zámkem. Nìkde tady ve Starém Mìstì.}
+{242}{HROLD53}{No, slyšel jsem, že jeden z Deckerových chlapù drží nìkoho z Bratrstva oceli pod zámkem. Nìkde tady ve Starém Mìstì.}
 {243}{}{Díky.}
 {244}{HROLD54}{Já tomu sice moc nevìøím, ale øíká se, že se na nás chystá armáda mutantù. [kašel]}
 {245}{}{Díky.}
@@ -157,9 +157,9 @@
 {254}{hrold203}{Umm...Decker tì hledá.  Chce s tebou mluvit. [kašel]}
 {255}{hrold204}{Všechno, co mám, jsou tyhle hadry a moje svoboda. A to poslední je navíc dost diskutabilní.}
 {256}{hrold300}{Skvìlý chlapík.  Doktor a filosof.  Pøed dávnými èasy vedl tu výpravu, pøi které jsem se zmìnil na mutanta.}
-{257}{hrold301}{Kdo?  To je nìjakej druh sexuální terapie?  No to by se mi docela hodilo.}
+{257}{hrold301}{Kdo? To je nìjakej sexuální terapeut? No to by se mi docela hodilo.}
 {258}{hrold302}{Mutanti.  Nezáleží na tom, jak si øíkají.}
-{259}{hrold303}{Oh, tenhle.  Vede Cech zlodìjù.  Myslí si o sobì, že je nìco jako Robin Hood. [kašel] Ale myslím, že je celkem v pohodì.}
+{259}{hrold303}{Oh, tenhle. Vede Kruh zlodìjù. Myslí si o sobì, že je nìco jako Robin Hood. [kašel] Ale myslím, že je celkem v pohodì.}
 {260}{hrold304}{Už jsem vidìl všelijaká náboženství pøicházet i odcházet a doufám, že tohle odejde.  A brzy.}
 {261}{hrold305}{Jo, já pocházím z Vaultu.  Pøíliš mnoho lidí, pøíliš málo jídla a vody.  Ale o tom ty nic nevíš, nebo snad jo?}
 {262}{hrold306}{Hrùza.  Celý svìt tenkrát zešílel.  Už je to dávno, ale já na to nikdy nezapomenu.  Nikdy.}
@@ -204,9 +204,9 @@
 {1009}{}{Obchod}
 
 {1100}{hrold300}{Skvìlý chlapík.  Doktor a filosof.  Kdysi dávno vedl tu výpravu, pøi které jsem se zmìnil na mutanta.}
-{1101}{hrold301}{Kdo?  To je nìjakej druh sexuální terapie?  No to by se mi docela hodilo.}
+{1101}{hrold301}{Kdo? To je nìjakej sexuální terapeut? No to by se mi docela hodilo.}
 {1102}{hrold302}{Mutanti.  Nezáleží na tom, jak si øíkají.}
-{1103}{hrold303}{Oh, tenhle.  Vede Cech zlodìjù.  Myslí si o sobì, že je nìco jako Robin Hood. [kašel] Ale myslím, že je celkem v pohodì.}
+{1103}{hrold303}{Oh, tenhle. Vede Kruh zlodìjù. Myslí si o sobì, že je nìco jako Robin Hood. [kašel] Ale myslím, že je celkem v pohodì.}
 {1104}{hrold304}{Už jsem vidìl všelijaká náboženství pøicházet i odcházet a doufám, že tohle odejde. A brzy.}
 {1105}{hrold305}{Jo, já pocházím z Vaultu.  Pøíliš mnoho lidí, pøíliš málo jídla a vody.  Ale o tom ty nic nevíš, nebo snad jo?}
 {1106}{hrold306}{Hrùza.  Celý svìt tenkrát zešílel.  Už je to dávno, ale já na to nikdy nezapomenu. Nikdy.}

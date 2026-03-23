@@ -5,7 +5,7 @@
 {104}{}{Ještì ne. Zatím jsem nemìl štìstí.}
 {105}{}{Zatím jsem nemìl štìstí, ale já vím, e ho jednou najdu. Mimochodem, jak se máš?}
 {106}{}{Urgh!}
-{107}{}{Oh . . . ty mi nerozumíš. Myslím, e po tom všem nám u moc nadìje nezbıvá. Odpus mi, e pláèu.}
+{107}{}{Oh... ty mi nerozumíš. Myslím, e po tom všem nám u moc nadìje nezbıvá. Odpus mi, e pláèu.}
 {108}{}{Urrgh!}
 {109}{}{Prosím najdi ho, døív ne všichni zemøeme ízní.}
 {110}{}{Ty ho musíš najít! Nenech nás takhle umøít!}
@@ -20,7 +20,7 @@
 {119}{}{To je hrozné! Co mùu udìlat?}
 {120}{}{Moná bys to mìl zastavit, a u to dìlá kdokoli.}
 {121}{}{Podívám se na to.}
-{122}{}{Ty jsi ten zlodìj vody?! Jak jsi to mohla udìlat?}
+{122}{}{Ty jsi ten zlodìj vody?! Jak jsi to mohl udìlat?}
 {123}{}{Díky za to, es nás všechny zachránil.}
 {124}{}{To byla skvìlá práce, e jsi chytil toho zlodìje. Ale pospìš si prosím a najdi ten vodní èip.}
 {125}{}{Jak jsi nás jen mohl zradit? Teï tu všichni zemøou! Ale to je ti jedno, co?}

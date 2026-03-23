@@ -7,7 +7,7 @@
 {100}{}{Potøebuješ %d akèních bodù.}
 {101}{}{Došla ti munice.}
 {102}{}{Cíl je mimo dosah.}
-{103}{}{Nemùžeš jen tak ukonèit boj, když se to okolo hemží nepøáteli. To sis mìl holenku rozmyslet døív.}
+{103}{}{Nemùžeš ukonèit boj, když jsou poblíž nepøátelští tvorové.}
 {104}{}{Nìco ti stojí v cestì.}
 {105}{}{Nemùžeš použít zbraò, máš-li obì ruce zmrzaèeny.}
 {106}{}{Nemùžeš použít dvouruèní zbraò s jednou rukou zmrzaèenou.}
@@ -26,7 +26,7 @@
 {207}{}{byl jsi zabit}
 {208}{}{byl jsi zasažen}
 {209}{}{kriticky}
-{210}{}{v palbì}
+{210}{}{v plamenech}
 {211}{}{byl jsi zasažen do nechránìného místa}
 {212}{}{zbraò ti vybuchla v rukou}
 {213}{}{tvá zbraò byla znièena}
@@ -52,13 +52,13 @@
 {257}{}{byla jsi zabita}
 {258}{}{byla jsi zasažena}
 {259}{}{kriticky}
-{260}{}{v palbì}
+{260}{}{v plamenech}
 {261}{}{byla jsi zasažena do nechránìného místa}
 {262}{}{zbraò ti vybuchla v rukou}
 {263}{}{tvá zbraò byla znièena}
 {264}{}{zbraò ti upadla na zem}
 {265}{}{ztratila jsi svùj další tah}
-{266}{}{zasáhl jsi sám sebe}
+{266}{}{zasáhla jsi sama sebe}
 {267}{}{ztratila jsi zbytek munice}
 {268}{}{nezasáhla jsi nic}
 {269}{}{zranila jsi sama sebe}
@@ -78,7 +78,7 @@
 {307}{}{byl zabit}
 {308}{}{byl zasažen}
 {309}{}{kriticky}
-{310}{}{v palbì}
+{310}{}{v plamenech}
 {311}{}{byl zasažen do nechránìného místa}
 {312}{}{jeho zbraò vybuchla}
 {313}{}{jeho zbraò byla znièena}
@@ -104,7 +104,7 @@
 {407}{}{byla zabita}
 {408}{}{byla zasažena}
 {409}{}{kriticky}
-{410}{}{v palbì}
+{410}{}{v plamenech}
 {411}{}{byla zasažena do nechránìného místa}
 {412}{}{její zbraò explodovala}
 {413}{}{její zbraò byla znièena}
@@ -128,7 +128,7 @@
 #          in the 1000's in this file, with the exception of line 509
 #          where the second %s is the name of another creature
 {506}{}{}
-{509}{}{Jejda! %s Byl jsi zasažen namísto cíle: %s}
+{509}{}{Jejda! %s byl jsi zasažen namísto cíle: %s!}
 {511}{}{%s Byl jsi kriticky zasažen a ztratil jsi %d hit bodù. Místo zásahu: %s.}
 {512}{}{%s Byl jsi zasažen a ztratil jsi %d hit bodù. Místo zásahu: %s.}
 {513}{}{%s Byl jsi zasažen a ztratil jsi %d hit bodù}
@@ -143,8 +143,8 @@
 {526}{}{%s Byl jsi zasažen, ale útok ti nezpùsobil žádné zranìní. Místo zásahu: %s.}
 {527}{}{%s Byl jsi zasažen, ale útok ti nezpùsobil žádné zranìní}
 {528}{}{%s Byl jsi kriticky zasažen, ale útok ti nezpùsobil žádné zranìní}
-{533}{}{%s Kriticky jsi minul a ještì si se zranil za 1 hit bod}
-{534}{}{%s Kriticky jsi minul a ještì si se zranil za %d hit bodù}
+{533}{}{%s Kriticky jsi minul a ještì ses zranil za 1 hit bod}
+{534}{}{%s Kriticky jsi minul a ještì ses zranil za %d hit bodù}
 #
 # Miscellaneous combat messages (all of these happen to you, the female player)
 # Note: the first %s will be replaced by the value of line 556, which
@@ -156,7 +156,7 @@
 #          in the 1000's in this file, with the exception of line 559
 #          where the second %s is the name of another creature
 {556}{}{}
-{559}{}{Jejda! %s Byla jsi kriticky zasažena namísto cíle: %s!}
+{559}{}{Jejda! %s Byla jsi zasažena namísto cíle: %s!}
 {561}{}{%s Byla jsi kriticky zasažena a ztratila jsi %d hit bodù. Místo zásahu: %s.}
 {562}{}{%s Byla jsi zasažena a ztratila jsi %d hit bodù. Místo zásahu: %s.}
 {563}{}{%s Byla jsi zasažena a ztratila jsi %d hit bodù}
@@ -171,8 +171,8 @@
 {576}{}{%s Byla jsi zasažena, ale útok ti nezpùsobil žádné zranìní. Místo zásahu: %s.}
 {577}{}{%s Byla jsi zasažena, ale útok ti nezpùsobil žádné zranìní}
 {578}{}{%s Byla jsi kriticky zasažena, ale útok ti nezpùsobil žádné zranìní}
-{583}{}{%s Kriticky jsi minula a ještì si se zranila za 1 hit bod}
-{584}{}{%s Kriticky jsi minula a ještì si se zranila za %d hit bodù}
+{583}{}{%s Kriticky jsi minula a ještì ses zranila za 1 hit bod}
+{584}{}{%s Kriticky jsi minula a ještì ses zranila za %d hit bodù}
 #
 # Miscellaneous combat messages (all of these happen to a male)
 # Note: the first %s is the name of the male creature
@@ -215,7 +215,7 @@
 {714}{}{%s kriticky minula}
 {715}{}{%s minula}
 {720}{}{%s byla kriticky zasažena, ztratila %d hit bodù}
-{721}{}{%s byla kriticky zasažena a ztratila 1 hit bod. Místo zásahu: %s. }
+{721}{}{%s byla kriticky zasažena a ztratila 1 hit bod. Místo zásahu: %s.}
 {722}{}{%s byla zasažena a ztratila 1 hit bod. Místo zásahu: %s.}
 {723}{}{%s byla zasažena a ztratila 1 hit bod}
 {724}{}{%s byla kriticky zasažena a ztratila 1 hit bod}
@@ -238,7 +238,7 @@
 {1115}{}{levá noha}
 {1116}{}{oèi}
 {1117}{}{genitálie}
-{1118}{}{genitálie}
+{1118}{}{necílený zásah}
 #
 # Brahmin (Mutant 2-Headed Cows)
 #
@@ -250,7 +250,7 @@
 {1155}{}{levá pøední noha}
 {1156}{}{oèi}
 {1157}{}{vemeno}
-{1158}{}{genitálie}
+{1158}{}{necílený zásah}
 #
 # dogs
 #
@@ -262,7 +262,7 @@
 {1165}{}{pøední noha}
 {1166}{}{oèi}
 {1167}{}{genitálie}
-{1168}{}{genitálie}
+{1168}{}{necílený zásah}
 #
 # Mr. Handy
 #
@@ -286,7 +286,7 @@
 {1185}{}{levá noha}
 {1186}{}{oèi}
 {1187}{}{genitálie}
-{1188}{}{genitálie}
+{1188}{}{necílený zásah}
 #
 # Mole-Rat
 #
@@ -298,7 +298,7 @@
 {1195}{}{levá noha}
 {1196}{}{oèi}
 {1197}{}{genitálie}
-{1198}{}{genitálie}
+{1198}{}{necílený zásah}
 #
 # big humans and mutants
 #
@@ -310,7 +310,7 @@
 {1215}{}{levá noha}
 {1216}{}{oèi}
 {1217}{}{genitálie}
-{1218}{}{genitálie}
+{1218}{}{necílený zásah}
 #
 # Radscorpion
 #
@@ -334,7 +334,7 @@
 {1235}{}{ocas}
 {1236}{}{uzlina}
 {1237}{}{kladélko}
-{1238}{}{genitálie}
+{1238}{}{necílený zásah}
 #
 # masrat? a rat perhaps?
 #
@@ -346,7 +346,7 @@
 {1245}{}{levá noha}
 {1246}{}{oèi}
 {1247}{}{genitálie}
-{1248}{}{genitálie}
+{1248}{}{necílený zásah}
 #
 # Centaur
 #
@@ -358,7 +358,7 @@
 {1255}{}{levá noha}
 {1256}{}{oèi}
 {1257}{}{genitálie}
-{1258}{}{genitálie}
+{1258}{}{necílený zásah}
 #
 # human midgets and children
 #
@@ -370,7 +370,7 @@
 {1275}{}{levá noha}
 {1276}{}{oèi}
 {1277}{}{genitálie}
-{1278}{}{genitálie}
+{1278}{}{necílený zásah}
 #
 # Overseer                  # Fallout 2: Reserved?
 #
@@ -382,7 +382,7 @@
 {1465}{}{levá noha}
 {1466}{}{oèi}
 {1467}{}{genitálie}
-{1468}{}{genitálie}
+{1468}{}{necílený zásah}
 #
 # Gizmo                     # Fallout 2: Reserved?
 #
@@ -394,7 +394,7 @@
 {1495}{}{levá noha}
 {1496}{}{oèi}
 {1497}{}{pupek}
-{1498}{}{genitálie}
+{1498}{}{necílený zásah}
 #
 # The Master!               # Fallout 2: Reserved?
 #
@@ -406,7 +406,7 @@
 {1505}{}{???}
 {1506}{}{oèi}
 {1507}{}{CPU}
-{1508}{}{jedny z jeho genitálií.}
+{1508}{}{necílený zásah}
 #
 # Death Claw
 #
@@ -418,7 +418,7 @@
 {1515}{}{levá noha}
 {1516}{}{oèi}
 {1517}{}{genitálie}
-{1518}{}{genitálie}
+{1518}{}{necílený zásah}
 #
 # Mantis
 #
@@ -429,8 +429,8 @@
 {1524}{}{zadní nohy}
 {1525}{}{køídla}
 {1526}{}{oèi}
-{1527}{}{krunýø}
-{1528}{}{kladélko}
+{1527}{}{zadohruï}
+{1528}{}{necílený zásah}
 #
 # Robobrain
 #
@@ -466,7 +466,7 @@
 {1555}{}{levá noha}
 {1556}{}{oèi}
 {1557}{}{genitálie}
-{1558}{}{genitálie}
+{1558}{}{necílený zásah}
 #
 # Deathclaw Egg
 #
@@ -478,7 +478,7 @@
 {1585}{}{skoøápka}
 {1586}{}{skoøápka}
 {1587}{}{skoøápka}
-{1588}{}{skoøápka}
+{1588}{}{necílený zásah}
 #
 # Lesser Radscorpion
 #
@@ -605,11 +605,11 @@
 {1970}{}{hlava}
 {1971}{}{levá pøední noha}
 {1972}{}{pravá pøední noha}
-{1973}{}{krunýø}
+{1973}{}{zadeèek}
 {1974}{}{pravá zadní noha}
 {1975}{}{levá zadní noha}
 {1976}{}{tykadla}
-{1977}{}{kladélko}
+{1977}{}{zadohruï}
 {1978}{}{uncalled}
 #
 # Goris Robed
@@ -660,7 +660,7 @@
 {5003}{}{. Drtivá rána ho dokonale omráèila}
 {5004}{}{. Rána ho srazila k zemi}
 {5005}{}{. Silná rána do hlavy ho úplnì knokautovala}
-{5006}{}{. Rána mu urvala nejvìtší mužskou chloubu. Jeho pøítelkynì teï už budou moci jen se slzou v oku vzpomínat}
+{5006}{}{. Rána mu rozdrtila spánek. Tak dobrou noc, princezno}
 {5007}{}{, smrt nastala okamžitì}
 {5008}{}{, rána mu zpùsobila velice bolestivý tenisový loket}
 {5009}{}{, rána mu urvala ruku}
@@ -671,7 +671,7 @@
 {5014}{}{, zanechávajíc pravou ruku zcela ochromenou}
 {5015}{}{. Jeho pravá ruka byla touto strašlivou ranou rozdrcena na kaši}
 {5016}{}{ pøi tomto rychlém a brutálním útoku}
-{5017}{}{, protože rána pronikla skrz jeho brnìní.}
+{5017}{}{, protože rána pronikla skrz jeho brnìní}
 {5018}{}{, útok byl velice devastující.}
 {5019}{}{, rána ho zasáhla tìsnì vedle brnìní a srazila ho k zemi}
 {5020}{}{, rána mu vyrazila dech a on upadl na zem, definitivnì tímto vyøazen z boje}
@@ -691,7 +691,7 @@
 {5034}{}{, a poprvé v životì mìl pøíležitost zahlédnout na kratièký okamžik své vnitønosti}
 {5035}{}{, zlomil se v pase, upadl na zem a v agónii zaèal chroptìt}
 {5036}{}{. Bolest ze zranìní byla tak hrozná, že se zhroutil jako panák z hadrù}
-{5037}{}{. Skoro neslyšnì zamumlal "Mami!" a jeho oèi se pomalu obrátily v sloup}
+{5037}{}{. Skoro neslyšnì zamumlal „Mami!“ a jeho oèi se pomalu obrátily v sloup}
 #
 # series 5100 - women
 #
@@ -701,7 +701,7 @@
 {5103}{}{. Drtivá rána jí srazila do bezvìdomí}
 {5104}{}{. Rána jí srazila k zemi}
 {5105}{}{. Silná rána do hlavy jí úplnì knokautovala}
-{5106}{}{. Rána znièila chrám jejího ženství. Sbohem a díky za všechny orgasmy}
+{5106}{}{. Rána jí rozdrtila spánek. Sbohem a díky za všechny orgasmy}
 {5107}{}{, smrt následovala okamžitì}
 {5108}{}{, rána jí zpùsobila velice ošklivý tenisový loket}
 {5109}{}{, rána jí urvala ruku}
@@ -793,7 +793,7 @@
 {5401}{}{. Tato šlupka ghúla definitivnì pohøbila}
 {5402}{}{. Ghúlova ruka efektnì odplachtila vzduchem}
 {5403}{}{, rána pronikla skrz brnìní a zpùsobila mu rozsáhlá poranìní}
-{5404}{}{, rána pronikla skrz brnìní a  odtrhla mu témìø celé rameno}
+{5404}{}{, rána pronikla skrz brnìní a odtrhla mu témìø celé rameno}
 {5405}{}{. Vypadá to, že byl ve špatný èas na špatném místì. Právì pøišel o oko, což jeho vzhledu urèitì neprospìje}
 {5406}{}{. Tento ghúl nemìl obleèeno žádné brnìní}
 {5407}{}{ a útok ho úplnì oslepil}
@@ -812,9 +812,9 @@
 {5508}{}{, rána oslepila obì hlavy zvíøete. To se zapotácelo a kleslo k zemi}
 {5509}{}{, rána zvíøe úplnì oslepila a odhodila ho stranou}
 {5510}{}{, zvíøe na chvíli strnulo bez pohnutí}
-{5511}{}{. obrovské zvíøe se tøese vztekem}
-{5512}{}{. kráva zafunìla bolestí}
-{5513}{}{. útok rozdrtil zvíøeti vemeno. Tváøí se víc než pøekvapenì}
+{5511}{}{. Obrovské zvíøe se tøese vztekem}
+{5512}{}{. Kráva zafunìla bolestí}
+{5513}{}{. Útok rozdrtil zvíøeti vemeno. Tváøí se víc než pøekvapenì}
 #
 # series 5600 - Radscorpions
 #
@@ -926,7 +926,7 @@
 #
 # series 6300 - Deathclaw
 #
-{6300}{}{. Zvíøe se bylo tímto omraèujícím útokem dokonale zaskoèeno}
+{6300}{}{. I tato bestie byla tímto omraèujícím útokem dokonale zaskoèena}
 {6301}{}{, rána ho tìžce ochromila. Páraè rozevøel své obrovské èelisti, zachvìl se a divoce zavrèel}
 {6302}{}{. Výsledkem je masivní poškození páraèových oèí}
 #
@@ -944,14 +944,14 @@
 #
 {6500}{}{. Pokud se dožiješ zítøka, bude tì poøádnì bolet hlava}
 {6501}{}{. Proti tomuto skvìle míøenému zásahu ti tvoje brnìní nebylo nic platné}
-{6502}{}{. Na kratièkou chvíli jsi pocítil pøíšernou bolest a potom tì pohltila tma..}
+{6502}{}{. Na kratièkou chvíli jsi pocítil pøíšernou bolest a potom tì pohltila tma...}
 {6503}{}{, rána prorazila tvoji ochranu. Odletìl jsi dozadu jako míè}
 {6504}{}{, ten šok uvrhl všechno kolem na okamžik do tmy. Po chvíli jsi uvidìl, že nevidíš}
 {6505}{}{. Mìl jsi pøíležitost zahlédnout svoje tìlo a poprvé v životì jsi vidìl i svoje záda, když tvá hlava plachtila vzduchem}
-{6506}{}{. kupodivu tohle zranìní nevypadá hùø než obvykle}
+{6506}{}{. Kupodivu tohle zranìní nevypadá hùø než obvykle}
 {6507}{}{, rána tì na chvíli omráèila}
 {6508}{}{. Cítíš bolest}
-{6509}{}{. Tak prudký útok uèinil tvoje brnìní zbyteèným}
+{6509}{}{. Útok zanechal tvoji ruku nepoužitelnou}
 {6510}{}{, zásah prorazil tvojí zbroj. Z ruky ti trèí zlomená kost}
 {6511}{}{, zásah prorazil tvoje brnìní. Tvoje ruka zùstala bezvládnì viset}
 {6512}{}{. Podlitina bude vypadat krásnì a s tìmi jizvami se budeš moci pochlubit na mejdanu}

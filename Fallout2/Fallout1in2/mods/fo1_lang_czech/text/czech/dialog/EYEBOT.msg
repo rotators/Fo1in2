@@ -12,24 +12,24 @@
 {157}{}{unused}
 {158}{}{Zdá se, že robot je napojen na energetický systém Kráteru. Nemùže pracovat venku.}
 # You gain x ...
-{159}{}{ zkušenosti za úspìšnou opravou senzorù.}
+{159}{}{ zkušenosti za úspìšnou opravu senzorù.}
 {160}{}{Nepodaøilo se ti opravit senzory.}
-{161}{}{Pøepojíš pár kabelù. Teï by mìlo jít použít Malý energetický nebo Mikrofúzní èlánek.}
+{161}{}{Pøepojíš pár kabelù. Teï by mìlo být možné použít jako náhradní baterii malý energetický nebo mikrofúzní èlánek.}
 # You gain x ...
-{162}{}{ zkušenosti za výmìnou vestavìného akumulátoru za po domácku vyrobenou baterii.}
+{162}{}{ zkušenosti za výmìnu vestavìného akumulátoru za po domácku vyrobenou baterii.}
 {163}{}{Robot už možná není tak úèinný jako byl pøed 100 lety, ale funguje.}
-{164}{}{Nemáš ponatí co dìláš a díky své nešikovnosti jsi robota znièil.}
+{164}{}{Nemáš ponìtí co dìláš a díky své nešikovnosti jsi robota znièil.}
 {165}{}{Selhal jsi pøi výrobì provizorní baterie.}
-{166}{}{ zkušenosti za výmìnou vestavìného akumulátoru za po domácku vyrobenou baterii.}
+{166}{}{ zkušenosti za výmìnu vestavìného akumulátoru za po domácku vyrobenou baterii.}
 
 # Dialog after fixing the robot
 {200}{}{[Cvak] SYSTEM ERROR. [Píp] Jednotka nemùže zpracovat poslední aktivní úlohu. Správce úloh neodpovídá. Rozkazy?}
 {201}{}{Rozumíš mi?}
 
-{202}{}{Hlasový modul online. Registruji nového uživatele. Rozkazy?}
+{202}{}{Hlasový modul online. Systém v normálu. Rozkazy?}
 {203}{}{Jaký byl tvùj poslední úkol?}
 
-{204}{}{Pøístup k frontì úloh ... Poslední úloha: Zabezpeèení perymetrù. Úloha zrušena poté, co došlo k silným energetickým výkyvùm. Pøetížení baterie. Poškození hardwaru.}
+{204}{}{Pøístup k frontì úloh... Poslední úloha: Zabezpeèení perimetrù. Úloha zrušena poté, co došlo k silným energetickým výkyvùm. Pøetížení baterie. Poškození hardwaru.}
 {205}{}{Jaký je tvùj status?}
 
 {206}{}{Stav údržby: OK ... Stav baterie: ... ŠPATNÝ ... Pøipojení k místní síti: DOBRÉ ... Zbraòový systém: ONLINE.}
@@ -56,20 +56,20 @@
 # Primary party dialog
 {1000}{}{Inicializace parametrù. Všechny systémy jsou online. Rozkazy?}
 {1001}{}{}
-	{1014}{}{Jaký je stav tvého hardware?}
+	{1014}{}{Mìl bys provést údržbu.}
 	{1015}{}{Chci si promluvit o tom co dokážeš.}
 	{1020}{}{Promluvme si o formaci.}
 	{1030}{}{Ok, díky.}
 	{1040}{}{Pojï se mnou, znovu potøebuju tvou pomoc.}
-	{1050}{}{[Hotovo]}
+	{1050}{}{[Odejít]}
 	{1060}{}{Zapomeò na to.}
 
 {1004}{}{Zpracovávám pøíkazy...}
 {1005}{}{Kalibruji nové parametry.}
 {1006}{}{Kalibruji...}
 
-{1007}{}{Rozkazy?}
-{1008}{}{Rozkazy?}
+{1007}{}{Úkoly?}
+{1008}{}{Úkoly?}
 {1009}{}{Potvrzuji.}
 {1010}{}{[Cvak] Tato jednotka je naprogramována tak, aby se øídila automatizovanými parametry a/nebo VIP bezpeènostním protokolem. Tato jednotka má také vestavìný systém skeneru s dlouhým dosahem pro vèasné rozpoznání hrozeb.}
 {1011}{}{[Píp] Tato jednotka je vybavena vylepšeným taserovým systémem Wattz 2.4 pro rychlý boj na blízko.}
@@ -78,8 +78,8 @@
 {1200}{}{Stav údržby: DOBRÝ. Údržba není nutná.}
 {1300}{}{Stav údržby: POŠKOZEN. V blízké budoucnosti je doporuèeno provést opravu.}
 {1400}{}{Stav údržby: ŠPATNÝ. V nejbližší dobì je nutné provést dùkladnou opravu.}
-{1401}{}{Stav Baterie: OK.}
-{1402}{}{Stav Baterie: DOBRÝ.}
+{1401}{}{Stav baterie: OK.}
+{1402}{}{Stav baterie: DOBRÝ.}
 
 {1500}{}{Mìli bychom zùstat pohromadì.}
 {1501}{}{Potvrzuji. Standby.}

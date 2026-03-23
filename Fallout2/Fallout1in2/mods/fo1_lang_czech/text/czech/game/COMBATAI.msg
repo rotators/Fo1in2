@@ -16,8 +16,8 @@
 #
 {1000}{}{}
 {1001}{}{}
-{1002}{}{Padáme!}
-{1003}{}{Padáme!}
+{1002}{}{Ústup!}
+{1003}{}{Ústup!}
 {1004}{}{Tohle za chcípnutí nestojí!}
 {1005}{}{Tak to mi staèí}
 #
@@ -54,14 +54,14 @@
 #
 # target hit in head
 #
-{1028}{}{Oooh! Ty zkurvy....}
+{1028}{}{Oooh! Ty zkurvy...}
 {1029}{}{Tak za tohle tì zabiju}
 {1030}{}{}
 #
 # target hit in left arm
 #
 {1031}{}{Áuu, moje ruka}
-{1032}{}{Sakra, mám v prdeli levou ruku}
+{1032}{}{Sakra, mám v prdeli ruku!}
 {1033}{}{Moje rukááá!}
 #
 # target hit in right arm
@@ -197,7 +197,7 @@
 {1152}{}{Uuuf!}
 {1153}{}{Nemùu...dı..dıch..dıchat...}
 {1154}{}{Nemùu...dıch..dıchat...}
-{1155}{}{Ty sráèi....}
+{1155}{}{Ty sráèi...}
 
 # 3. Guard 3 (Sadistic)
 # Guard 3 is the henchman of really nasty people. He likes to hurt people, and makes no bones about it and is a bit of a coward.
@@ -289,7 +289,7 @@
 # target hit in groin
 #
 {1252}{}{Oooohh, mùj rozkrok!}
-{1253}{}{Ouu! Tak tohle se musím nauèit....}
+{1253}{}{Ouu! Tak tohle se musím nauèit...}
 {1254}{}{Uff!}
 {1255}{}{Uch!}
 {1256}{}{Uhhh!}
@@ -311,7 +311,7 @@
 #
 {1306}{}{Udìlám z tebe rozlámanej preclík}
 {1307}{}{Koukni! Rozvázala se ti bota!}
-{1308}{}{Poèkej a tì dostanu.....}
+{1308}{}{Poèkej a tì dostanu...}
 {1309}{}{}
 {1310}{}{Já ti dám takovou nakládaèku}
 {1311}{}{}
@@ -520,7 +520,7 @@
 {1515}{}{}
 {1516}{}{Teï tì pošlu pod kytky...}
 {1517}{}{}
-{1518}{}{Pøeijí jen ti nesilnìjší, ty jsi mimo}
+{1518}{}{Pøeijí jen ti nejsilnìjší, ty jsi mimo}
 {1519}{}{}
 {1520}{}{Dìlej mrtvıho!}
 {1521}{}{Budu to poslední, co uvidíš!}
@@ -696,8 +696,8 @@
 {1700}{}{Kvùli tomuhle chcípnout nechci!}
 {1701}{}{To mi za to nestojí!}
 {1702}{}{Mìl bych se zdejchnout!}
-{1703}{}{Musím za svım právníkem...}
-{1704}{}{Nenechám se od tebe serat}
+{1703}{}{Moje povìst je v háji...}
+{1704}{}{S tebou nemám problém}
 {1705}{}{Pryè od tohohle šílence}
 #
 # moving in to attack
@@ -1013,7 +1013,7 @@
 # target being missed
 #
 {2022}{}{}
-{2023}{}{Ha ha. A teï to zkus s otevøenıma oèima}
+{2023}{}{Vidìl jsem chytøejší brahmíny ne ty}
 {2024}{}{Jóóó!}
 {2025}{}{Na mì si jen tak nepøijdeš}
 {2026}{}{Díky bohu}
@@ -1520,7 +1520,7 @@
 #
 # target hit in torso
 #
-{2537}{}{Aaau!  To bolelo!}
+{2537}{}{Aaau! To bolelo!}
 {2538}{}{!*&^@#!}
 {2539}{}{Oh, oh, To bolelo!}
 {2540}{}{Aaau!}
@@ -1573,7 +1573,7 @@
 {2608}{}{Èas zemøít!}
 {2609}{}{Tady nemáš co pohledávat!}
 {2610}{}{Je èas vynést tohle smetí ven...}
-{2611}{}{Budeš pykat za svoje "høíchy"...}
+{2611}{}{Budeš pykat za svoje „høíchy“...}
 #
 # attacking
 #
@@ -1583,10 +1583,10 @@
 {2615}{}{Tak pojï, ty srabe, jestli si troufneš!}
 {2616}{}{Já s tebou zatoèím}
 {2617}{}{Já s tebou zatoèím}
-{2618}{}{}
-{2619}{}{}
-{2620}{}{Polib mùj svatı plamen, kámo!}
-{2621}{}{Polib mùj svatı plamen, kámo!}
+{2618}{}{Èas zemøít...}
+{2619}{}{Èas zemøít...}
+{2620}{}{Polib mùj Svatı plamen, kámo!}
+{2621}{}{Polib mùj Svatı plamen, kámo!}
 #
 # target being missed
 #
@@ -1717,7 +1717,7 @@
 {2800}{}{Musím zmizet!}
 {2801}{}{Hned jsem zpátky...}
 {2802}{}{Dneska mì neoddìláš!}
-{2803}{}{Ještì se uvidíme!}
+{2803}{}{Zatím, normále!}
 {2804}{}{Neslyšel jsi o mnì naposled!}
 {2805}{}{Za to mi zaplatíš -- jindy!}
 #
@@ -1772,7 +1772,7 @@
 #
 # target hit in torso
 #
-{2837}{}{(Grunt!)}
+{2837}{}{[Grunt!]}
 {2839}{}{Kurva!}
 {2840}{}{Grrr!}
 {2841}{}{Toho budeš litovat!}
@@ -1813,7 +1813,7 @@
 #  running away
 #
 {2900}{}{Kliï se! Padej!}
-{2901}{}{Dneska  mì nedostaneš!}
+{2901}{}{Dneska mì nedostaneš!}
 {2902}{}{Ještì jsme spolu neskonèili!}
 {2903}{}{Kámoši tì odkráglujou za mì!}
 {2904}{}{Tohle si odskáèeš -- pozdìjc!}
@@ -1873,7 +1873,7 @@
 {2937}{}{Nekropolis bude kvùli tobì trpìt}
 {2938}{}{Uff!}
 {2939}{}{Arg!}
-{2940}{}{Pápìrko!}
+{2940}{}{[Úsmìv]}
 {2941}{}{To nebolí!}
 {2942}{}{Pøece nejsi takovej sráè}
 {2943}{}{I ghúlové jsou silnìjší ne ty!}
@@ -2106,7 +2106,7 @@
 {3157}{}{Ooo! budeš trpìt...svinì...}
 {3158}{}{Ooo! ...zabiju...tì...}
 {3159}{}{Ooo! utrhnu..ti tvoje........}
-{3160}{}{I polovièního ho budu mít delšího ne ty}
+{3160}{}{Urp!}
 {3161}{}{Moje muství mi nevezmeš!}
 
 # 23. Peasant, Shady Sands
@@ -2147,7 +2147,7 @@
 #
 {3222}{}{Jsi horší ne si myslíš...}
 {3223}{}{}
-{3224}{}{Jsi tupìjší ne krtek}
+{3224}{}{Jsi tupìjší ne krtkopotkan}
 {3225}{}{Shady Sands se nebojí nikoho a nièeho}
 {3226}{}{}
 {3227}{}{To byla tvoje poslední chyba}
@@ -2228,7 +2228,7 @@
 {3307}{}{Co zas chceš?}
 {3308}{}{Já to vyjednám...}
 {3309}{}{Snad ne další obejda!}
-{3310}{}{Kdy to nejsou ty škorpióni, tak jsou tu zas nájezdníci...}
+{3310}{}{Kdy to nejsou radškorpióni, tak jsou tu zas ty zatracenı nájezdníci...}
 {3311}{}{}
 #
 # attacking
@@ -2273,7 +2273,7 @@
 #
 # target hit in torso
 #
-{3337}{}{Sakra ! To bolelo!}
+{3337}{}{Sakra! To bolelo!}
 {3338}{}{Aaau!}
 {3339}{}{AAuuuu}
 {3340}{}{}
@@ -2286,7 +2286,7 @@
 #
 # target hit in right leg
 #
-{3347}{}{}
+{3347}{}{Aauuu}
 {3348}{}{Aauuu, moje koleno!}
 {3349}{}{Aauuu, moje noha!}
 #
@@ -2326,11 +2326,11 @@
 #
 # moving in to attack
 #
-{3406}{}{Teï´s to posral, kámo}
+{3406}{}{Teï jsi to posral, kámo}
 {3407}{}{Co zas?}
 {3408}{}{Tenhle je mùj...}
 {3409}{}{Zas nìjakej kretén!}
-{3410}{}{Kdy to nejsou škorpióni, tak jsou to tyhle zmrdi...}
+{3410}{}{Kdy to nejsou radškorpióni, tak jsou to tyhle zmrdi...}
 {3411}{}{}
 #
 # attacking
@@ -2384,7 +2384,7 @@
 {3443}{}{Aaau! To nebylo dvakrát pøíjemnı}
 {3444}{}{Aauuu, proè???}
 {3445}{}{Arg! Mìl bych se ovládat...}
-{3446}{}{Aook! Vypadáš jak škorpióní hovno!}
+{3446}{}{Aook! Vypadáš jak radškorpióní hovno!}
 #
 # target hit in right leg
 #
@@ -2409,7 +2409,7 @@
 #
 {3456}{}{Oooooo, moje nebohı koule!}
 {3457}{}{Aieee!}
-{3458}{}{}
+{3458}{}{[kòuèení]}
 {3459}{}{Ouff!}
 {3460}{}{Oooooo! To jsem neral! Aauuu}
 {3461}{}{Oooooo! To bolelo. Asi stárnu nebo co.}
@@ -2555,7 +2555,7 @@
 {3623}{}{Nic moc}
 {3624}{}{No ták, pøedveï se trochu!}
 {3625}{}{}
-{3626}{}{Tvoje máti chrápala s Ripperama, viï!}
+{3626}{}{Tvoje máti chrápala s Rozparovaèema, viï!}
 {3627}{}{Odháníš mouchy, slabochu?}
 #
 # target hit in head
@@ -2606,7 +2606,7 @@
 #
 {3653}{}{Jsem slepı!}
 {3654}{}{Nic nevidím!}
-{3655}{}{Moje oèi! Ty jeden zmrde Ripperskej...}
+{3655}{}{Moje oèi! Ty jeden zmrde Rozparovaèskej...}
 #
 # target hit in groin
 #
@@ -2662,7 +2662,7 @@
 #
 # target hit in head
 #
-{3728}{}{Aauuu, ty zkurvy....}
+{3728}{}{Aauuu, ty zkurvy...}
 {3729}{}{Já tì zabiju}
 {3730}{}{Urazím ti hlavu!}
 #
@@ -2833,7 +2833,7 @@
 #
 # attacking
 #
-{3912}{}{Tohle je za Adutum!}
+{3912}{}{Tohle je za Adytum!}
 {3913}{}{Se zvíøatama tu dìláme tohle..!}
 {3914}{}{Vítej v pekle, padouchu!}
 {3915}{}{Na tvım místì bych to vzdal}
@@ -3041,7 +3041,7 @@
 {4116}{}{}
 {4117}{}{}
 {4118}{}{}
-{4119}{}{Pryè s havìtí z Pohøebištì}
+{4119}{}{O jednu havì v Kostnici ménì.}
 {4120}{}{}
 {4121}{}{Tohle dohraješ do konce}
 #
@@ -3142,7 +3142,7 @@
 {4216}{}{Tohle bude bolet}
 {4217}{}{Oddìlám tì...}
 {4218}{}{}
-{4219}{}{Pryè s havìtí z Pohøebištì}
+{4219}{}{Pryè s havìtí z Kostnice}
 {4220}{}{}
 {4221}{}{Tohle si dohraješ do konce}
 #
@@ -3340,7 +3340,7 @@
 {4412}{}{Vyøeu si z tebe totem!}
 {4413}{}{}
 {4414}{}{Ještì neumírej, chci tì vidìt trpìt.}
-{4415}{}{Urazil jsi Krále Pohøebištì!}
+{4415}{}{Urazil jsi Krále Kostnice!}
 {4416}{}{}
 {4417}{}{Bude z tebe krásná mrtvolka}
 {4418}{}{Chcípni! Chcípni! Chcípni!}
@@ -3438,7 +3438,7 @@
 #
 # attacking
 #
-{4512}{}{Já jsem váš Vùdce!}
+{4512}{}{Já jsem váš pán!}
 {4513}{}{Chcípni!}
 {4514}{}{Skrèku..}
 {4515}{}{Ne nadarmo nám øíkaj Blades}
@@ -3454,7 +3454,7 @@
 {4522}{}{...spravedlivìjší ne bùh..!}
 {4523}{}{}
 {4524}{}{No tak, pøedveï se trochu!}
-{4525}{}{Jseš slabej jak nejhorší Ripper!}
+{4525}{}{Jseš slabej jak nejhorší Rozparovaè!}
 {4526}{}{}
 {4527}{}{Je vidìt, e nejsi Blade!}
 #
@@ -3553,7 +3553,7 @@
 #
 # target being missed
 #
-{4622}{}{Já jsem tvùj Vùdce!}
+{4622}{}{Já jsem tvùj pán!}
 {4623}{}{}
 {4624}{}{No tak, pøedveï se trochu!}
 {4625}{}{Jseš mùj!}
@@ -3664,7 +3664,7 @@
 #
 # target hit in head
 #
-{4728}{}{Aauuu, ty jeden zkurvy....}
+{4728}{}{Aauuu, ty jeden zkurvy...}
 {4729}{}{Já tì zabiju, ty svinì!}
 {4730}{}{Urazím ti šišku!}
 #
@@ -3950,7 +3950,7 @@
 {5016}{}{Atomovı oheò!}
 {5017}{}{}
 {5018}{}{Nemìl sis s náma zaèínat}
-{5019}{}{Do pekla s tebou!}
+{5019}{}{Do Kráteru s tebou!}
 {5020}{}{Zatluèu ti rakev}
 {5021}{}{Jseš mrtvej!}
 #
@@ -4029,7 +4029,7 @@
 #
 {5100}{}{Zpátky!}
 {5101}{}{Ústup!}
-{5102}{}{!}
+{5102}{}{Pøeskupit!}
 {5103}{}{Ještì není po všem!}
 {5104}{}{Já se vrátím!}
 {5105}{}{Nevidíš nás naposled!}
@@ -4045,7 +4045,7 @@
 #
 # attacking
 #
-{5112}{}{K ïáblu s tebou!}
+{5112}{}{Do Kráteru s tebou!}
 {5113}{}{}
 {5114}{}{Špinavá lidská èeládka!}
 {5115}{}{}
@@ -5081,7 +5081,7 @@
 #
 # target hit in head
 #
-{6128}{}{Aauuu, ty zkrurvys...}
+{6128}{}{Aauuu, ty zkurvys...}
 {6129}{}{Zlomil jsi mi nos!}
 {6130}{}{Urvu ti uši!}
 #
@@ -5107,7 +5107,7 @@
 {6142}{}{Aaau!}
 {6143}{}{Áaaa!}
 {6144}{}{Oh, to mi prasklo ebro!}
-{6145}{}{Aauuu!! Mùj aludek!}
+{6145}{}{Aauuu!! Moje slezina!}
 {6146}{}{Uff!}
 #
 # target hit in right leg
@@ -5264,7 +5264,7 @@
 {6314}{}{To se ti musí líbit.}
 {6315}{}{}
 {6316}{}{Psùm budeš chutnat}
-{6317}{}{Nikdo nám Junktoun nevezme}
+{6317}{}{Nikdo nám Junktown nevezme}
 {6318}{}{}
 {6319}{}{Za tebe bude pøíplatek}
 {6320}{}{Pa!}
@@ -5485,13 +5485,13 @@
 #
 # target hit in left arm
 #
-{6531}{}{Ty ubohej pse...}
+{6531}{}{Ty špinavej, radškorpióny líbající...}
 {6532}{}{Zlomil jsi mi ruku!}
 {6533}{}{Moje ruka! Moje ruka!}
 #
 # target hit in right arm
 #
-{6534}{}{Ty ubohej pse...}
+{6534}{}{Ty špinavej, radškorpióny líbající...}
 {6535}{}{Zlomil jsi mi ruku!}
 {6536}{}{Moje ruka! Moje ruka!}
 #
@@ -5511,13 +5511,13 @@
 # target hit in right leg
 #
 {6547}{}{Sakra, moje noha}
-{6548}{}{Mùu... skoro... stát...}
+{6548}{}{Sotva... stojím...}
 {6549}{}{Do prdele, moje koleno!}
 #
 # target hit in left leg
 #
 {6550}{}{Sakra, moje noha}
-{6551}{}{Mùu... skoro... stát...}
+{6551}{}{Sotva... stojím...}
 {6552}{}{Do prdele, moje koleno}
 #
 # target hit in eyes
@@ -5676,8 +5676,8 @@
 {6723}{}{Víc neumíš?}
 {6724}{}{Nulo! Bojuj!}
 {6725}{}{}
-{6726}{}{Ty jsi opravdovı Mistr bojovıch umìní!}
-{6727}{}{Tohle by ti šlo}
+{6726}{}{My jsme mistøi boje!}
+{6727}{}{Na Bratrstvo nemáš!}
 #
 # target hit in head (3)
 #
@@ -5734,7 +5734,7 @@
 {6757}{}{}
 {6758}{}{Koule v prdeli...}
 {6759}{}{Jen...co...popadnu...dech...}
-{6760}{}{I polovièního ho budu mít delšího ne ty!}
+{6760}{}{Za to ti to vrátím!}
 {6761}{}{Ty srabe...}
 
 # 59. Brotherhood_Scribe
@@ -5778,7 +5778,7 @@
 {6824}{}{Ty malej chudáèku}
 {6825}{}{To byla ubohost}
 {6826}{}{Tvoje neschopnost mì uráí}
-{6827}{}{Na koho jsi míøil?}
+{6827}{}{Na Bratrstvo si nepøijdeš!}
 #
 # target hit in head (3)
 #
@@ -5805,7 +5805,7 @@
 {6839}{}{}
 {6840}{}{Uff! Bolest je moje stará známá}
 {6841}{}{}
-{6842}{}{Uff! Bratøi mì pomstí!}
+{6842}{}{Uff! Bratrstvo pomstí mou smrt!}
 {6843}{}{Aaau!}
 {6844}{}{}
 {6845}{}{Oh! Do eber. Proè?}
@@ -6007,7 +6007,7 @@
 {7039}{}{Aaau!}
 {7040}{}{Uff! Máma mì tloukla silnìjc}
 {7041}{}{Aauuu, ty hulváte!}
-{7042}{}{Uff! Bratrstvo pomstí mou smrt!}
+{7042}{}{Uff! Bratrstvo mì pomstí!}
 {7043}{}{Ovládnu svou bolest stejnì jako tebe!}
 {7044}{}{Jo...bolest je mùj starej pøítel}
 {7045}{}{}
@@ -6208,7 +6208,7 @@
 {7239}{}{Uff! Drzá kryso! Tìš se!}
 {7240}{}{Aauuu, teï jsi udìlal chybu}
 {7241}{}{Aaau!}
-{7242}{}{Uff! Bratrstvo mì pomstí}
+{7242}{}{Uff! Bratrstvo pomstí mou smrt}
 {7243}{}{Uff!}
 {7244}{}{Bolest mi nevadí}
 {7245}{}{To bolelo!}
@@ -6278,7 +6278,7 @@
 # target being missed
 #
 {7322}{}{To je nuda}
-{7323}{}{Nebyl jsem léta v gangu jen tak pro nic za nic!}
+{7323}{}{Nebyl jsem léta u Rozparovaèù jen tak pro nic za nic!}
 {7324}{}{Smìšné}
 {7325}{}{Kurvy se perou líp}
 {7326}{}{Jsi po nemoci, nebo je se na víc nezmùeš?}
@@ -6337,7 +6337,7 @@
 # target hit in groin
 #
 {7356}{}{Oooooo, do vajec!}
-{7357}{}{I polovièního ho budu mít delšího ne ty}
+{7357}{}{Aieee!}
 {7358}{}{To mi zaplatíš!}
 {7359}{}{Ouff!}
 {7360}{}{To hle tì bude stát ivot!}
@@ -6798,13 +6798,13 @@
 #
 # target hit in left arm
 #
-{7831}{}{Ty slizká špinavá skvrno...}
+{7831}{}{Ty špinavej, radškorpióny líbající...}
 {7832}{}{Zlomil jsi mi ruku!}
 {7833}{}{Moje ruka! Moje ruka!}
 #
 # target hit in right arm
 #
-{7834}{}{Ty slizká špinavá skvrno...}
+{7834}{}{Ty špinavej, radškorpióny líbající...}
 {7835}{}{Zlomil jsi mi ruku!}
 {7836}{}{Moje ruka! Moje ruka!}
 #
@@ -6844,7 +6844,7 @@
 {7856}{}{Oooooo, pøed chvílí byly dvì!}
 {7857}{}{Ooo! Dobrá trefa, hajzle}
 {7858}{}{Ooo! Teï sis podepsal ortel, hovado}
-{7859}{}{Ooo! Upeèu tì zaiva v Kráteru!}
+{7859}{}{Ooo! Zaiva tì upeèu v Kráteru!}
 {7860}{}{Urp!}
 {7861}{}{Aauuu, za to chcípneš!}
 
@@ -7312,7 +7312,7 @@
 #
 {8417}{}{Uff!}
 {8418}{}{Áaaa!}
-{8419}{}{Za to zaplatíš . . .}
+{8419}{}{Za to zaplatíš...}
 {8420}{}{No tak, zkus to znova!}
 #
 # target hit in right leg
@@ -7332,7 +7332,7 @@
 #
 # target hit in groin
 #
-{8427}{}{Oooohhh . . .}
+{8427}{}{Oooohhh...}
 
 # 76. Tycho
 # Desert ranger
@@ -7362,12 +7362,12 @@
 {8508}{}{Ou. Dobrá trefa.}
 {8509}{}{Uff}
 {8510}{}{Další kousek ucha v hajzlu . . .}
-{8511}{}{Ksakru, fo byl mùj fub. . .}
+{8511}{}{Ksakru, fo byl mùj fub...}
 #
 # target hit in left arm
 #
 {8512}{}{Uff}
-{8513}{}{Tuhle ruku stejnì nepouívám}
+{8513}{}{Tu ruku jsem stejnì nepotøeboval.}
 #
 # target hit in right arm
 #
@@ -7398,7 +7398,7 @@
 # target hit in groin
 #
 {8525}{}{Ugh! Øeknìme remíza?!}
-{8526}{}{Oh, moje koule . . .}
+{8526}{}{Oh, moje koule...}
 {8527}{}{To bolelo.}
 
 # 77. Vault Dwellers

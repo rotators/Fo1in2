@@ -74,9 +74,9 @@
 {2900}{}{Není to nìjakı dùleitı tıpek?}
 {2901}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
 {2902}{}{Právì v nìm stojíš. Tedy, v tom co z nìj zbylo. Tohle místo pomalu, ale jistì umírá.}
-{2903}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Hale.}
+{2903}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Síni.}
 {2904}{}{Najdeš ji na severu. Dej si pozor na stráe, berou svoji práci opravdu vánì.}
-{2905}{}{Místo kde Set pøijímá prosebníky. Hala mrtvıch.}
+{2905}{}{Jsi tady, kde Set vyøizuje svoje záleitosti. Síò mrtvıch.}
 {2906}{}{Tady ádnou pomoc nenajdeš.}
 {2907}{}{Kadı sám za sebe.}
 {2908}{}{Neobchodujeme s takovıma jako jsi ty.}
@@ -84,7 +84,7 @@
 {2910}{}{Vìtšina z nás pochází z Vaultu.}
 {2911}{}{Radiace v pustinì je pro normální lidi smrtelná, ale nám nevadí.}
 {2912}{}{Pokud chceš cestovat po mìstì, musíš pouívat stoky.}
-{2913}{}{Ghoul mìl bıt volitelná rasa...}
+{2913}{}{To je, kdy déš svítí?}
 {2914}{}{Kdy tì chytí, vykuchají tì zaiva.}
 {2915}{}{O tom nic nevím a ani mì to nezajímá.}
 {2916}{}{Pro naše lidi je radiace neškodná a pøíjemná, jako teplé objetí.}
@@ -128,17 +128,17 @@
 {3500}{}{Není to nìjakı dùleitı tıpek?}
 {3501}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
 {3502}{}{Právì v nìm stojíš. Tedy, v tom co z nìj zbylo. Tohle místo pomalu, ale jistì umírá.}
-{3503}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Hale.}
+{3503}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Síni.}
 {3504}{}{Najdeš ji na severu. Dej si pozor na stráe, berou svoji práci opravdu vánì.}
-{3505}{}{Hala mrtvıch. Místo kde Set pøijímá prosebníky. Je to srdce celého mìsta.}
+{3505}{}{Síò mrtvıch. Místo kde Set pøijímá prosebníky. Je to srdce celého mìsta.}
 {3506}{}{Tady ádnou pomoc nenajdeš.}
 {3507}{}{Kadı sám za sebe.}
-{3508}{}{Obèas obchodujeme s Crimson Caravan. Pøijídí k nám z Hubu.}
+{3508}{}{Obèas obchodujeme s Karmínovou karavanou. Pøijídí k nám z Hubu.}
 {3509}{}{Já ti rozhodnì ádnou nedám.}
 {3510}{}{Vìtšina z nás pochází z Vaultu.}
 {3511}{}{Radiace v pustinì je pro normální lidi smrtelná, ale nám nevadí.}
 {3512}{}{Teï se nacházíš v Hotelu. Pokud chceš cestovat po mìstì, musíš to vzít stokami.}
-{3513}{}{Ghoul mìl bıt volitelná rasa...}
+{3513}{}{To je, kdy déš svítí?}
 {3514}{}{Kdy tì chytí, vykuchají tì zaiva.}
 {3515}{}{Nachází se pár dnù cesty na západ.}
 {3516}{}{Pro naše lidi je radiace neškodná a pøíjemná, jako teplé objetí.}
@@ -182,17 +182,17 @@
 {4100}{}{Není to nìjakı dùleitı tıpek?}
 {4101}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
 {4102}{}{Právì v nìm stojíš. Tedy, v tom co z nìj zbylo. Tohle místo pomalu, ale jistì umírá.}
-{4103}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Hale.}
+{4103}{}{Oh, je to fakt dobrı chlapík. Najdeš ho v Síni.}
 {4104}{}{Dej si pozor na stráe. Berou svoji práci velmi vánì.}
-{4105}{}{Hala mrtvıch. Místo kde Set pøijímá prosebníky. Je to srdce celého mìsta.}
+{4105}{}{Síò mrtvıch. Místo kde Set pøijímá prosebníky. Je to srdce celého mìsta.}
 {4106}{}{Tady ádnou pomoc nenajdeš.}
-{4107}{}{Dìti Katedrály by ti mohly pomoct.}
-{4108}{}{Obèas obchodujeme s Crimson Caravan. Pøijídí k nám z Hubu.}
+{4107}{}{Dìti katedrály by ti mohly pomoct.}
+{4108}{}{Obèas obchodujeme s Karmínovou karavanou. Pøijídí k nám z Hubu.}
 {4109}{}{Já ti rozhodnì ádnou nedám.}
 {4110}{}{Máme jeden starı Vault pøímo pod vodárnou.}
 {4111}{}{Radiace v pustinì je pro normální lidi smrtelná, ale nám nevadí.}
 {4112}{}{Teï se nacházíš v Hotelu. Pokud chceš cestovat po mìstì, musíš to vzít stokami.}
-{4113}{}{Ghoul mìl bıt volitelná rasa...}
+{4113}{}{To je, kdy déš svítí?}
 {4114}{}{Kdy tì chytí, vykuchají tì zaiva.}
 {4115}{}{Nachází se pár dnù cesty na západ.}
 {4116}{}{Pro naše lidi je radiace neškodná a pøíjemná, jako teplé objetí.}
@@ -200,7 +200,7 @@
 {4118}{}{Set je nasranej, protoe se utáboøili ve vodárnì a on nemá dost lidí na to, aby je vyhnal.}
 {4119}{}{Usadili se na západ od vodárny.}
 {4120}{}{Nejlepší jsou kulky v tìstíèku.}
-{4121}{}{Set by pro tebe mohl nìco mít. Pokud jsi to ještì neudìlal, tak ho navštiv v Hale mrtvıch.}
+{4121}{}{Set by pro tebe mohl nìco mít. Pokud jsi to ještì neudìlal, tak ho navštiv v Síni mrtvıch.}
 {4122}{}{Stoky jsou jedinı zpùsob, jak se vyhnout troskám na povrchu.}
 {4123}{}{To jsme my.}
 
@@ -252,7 +252,7 @@
 {4717}{}{Poslední dobou jsem ho nevidìl. Zkoušel jsi se podívat do jeho pokoje?}
 {4718}{}{Oh, s ní se moc nebavím.}
 {4719}{}{Ve skladišti máme naše zásoby s vodou. Strá dává pozor na to, aby nikdo nic neukradl!}
-{4720}{}{Øíkají, e radiace ve vnìjším svìt je stále pøíliš vysoká a musíme zùstat ve Vaultu.}
+{4720}{}{Øíkají, e radiace ve vnìjším svìtì je stále pøíliš vysoká a musíme zùstat ve Vaultu.}
 {4721}{}{Promiò, s tím ti nepomùu.}
 {4722}{}{Správce ti neøekl co máš dìlat?}
 
@@ -276,7 +276,7 @@
 {7013}{}{Fallout}
 {7014}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
 {7015}{}{Nekropolis}
-{7016}{}{Pohrebiste|pohrebiste}
+{7016}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {7017}{}{Zvesti|zvesti}
 {7018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
 {7019}{}{Lebkouni|lebkouni}
@@ -302,7 +302,7 @@
 {7110}{}{Killian Darkwater vede místní obchod. Prodává a kupuje všechno moné.}
 {7111}{}{Máme v okolí hlídky. Pustina je nebezpeèné místo, ale zvládáme to.}
 {7112}{}{Pokud hledáš drink, bar Skum Pitt je na severním konci mìsta. Hodláš nakupovat nebo prodávat? Killianùv obchod je pøímo uprostøed mìsta. Samozøejmì je zde také Gizmoovo kasino na západní stranì, pokud máš chu prohrát nìjaké peníze.}
-{7113}{}{To se snaíš prorazit ètvrtou stìnu, nebo co?}
+{7113}{}{Ještì e u takhle nìjakou dobu nepršelo.}
 {7114}{}{Kdy tì pøistihnou pøi krádei, tak tì povìsí.}
 {7115}{}{Myslíš Mìsto mrtvıch? Slyšel jsem o nìm jenom fámy a povìsti.}
 {7116}{}{Myslím, e je to mìsto nìkde daleko na jihu.}
@@ -338,7 +338,7 @@
 {7613}{}{Fallout}
 {7614}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
 {7615}{}{Nekropolis}
-{7616}{}{Pohrebiste|pohrebiste}
+{7616}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {7617}{}{Zvesti|zvesti}
 {7618}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
 {7619}{}{Lebkouni|lebkouni}
@@ -363,7 +363,7 @@
 {7710}{}{Killian Darkwater vede místní obchod. Prodává a kupuje všechno moné.}
 {7711}{}{Máme v okolí hlídky. Pustina je nebezpeèné místo, ale zvládáme to.}
 {7712}{}{Pokud hledáš drink, bar Skum Pitt je na severním konci mìsta. Killianùv obchod je pøímo uprostøed mìsta. Gizmoovo kasino je hned za rohem, pokud se chceš trochu pobavit.}
-{7713}{}{To se snaíš prorazit ètvrtou stìnu, nebo co?}
+{7713}{}{Ještì e u takhle nìjakou dobu nepršelo.}
 {7714}{}{Kdy tì pøistihnou pøi krádei, tak tì povìsí.}
 {7715}{}{Myslíš Mìsto mrtvıch? Slyšel jsem o nìm jenom fámy a povìsti.}
 {7716}{}{Myslím, e je to mìsto nìkde daleko na jihu.}
@@ -398,7 +398,7 @@
 {8213}{}{Fallout}
 {8214}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
 {8215}{}{Nekropolis}
-{8216}{}{Pohrebiste|pohrebiste}
+{8216}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {8217}{}{Zvesti|zvesti}
 {8218}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
 {8219}{}{Lebkouni|lebkouni}
@@ -423,7 +423,7 @@
 {8310}{}{Killian Darkwater vede místní obchod. Tam najdeš všechno co mùeš potøebovat.}
 {8311}{}{Máme v okolí hlídky. Pustina je nebezpeèné místo, ale zvládáme to.}
 {8312}{}{Killianùv obchod je hned za rohem. Jestli hledáš drink, bar Skum Pitt je na severním konci mìsta. Pak je tady ještì Gizmoovo kasino, pokud se chceš trochu pobavit.}
-{8313}{}{To se snaíš prorazit ètvrtou stìnu, nebo co?}
+{8313}{}{Ještì e u takhle nìjakou dobu nepršelo.}
 {8314}{}{Kdy tì pøistihnou pøi krádei, tak tì povìsí.}
 {8315}{}{Myslíš Mìsto mrtvıch? Slyšel jsem o nìm jenom fámy a povìsti.}
 {8316}{}{Myslím, e je to mìsto nìkde daleko na jihu.}
@@ -480,7 +480,7 @@
 {8902}{}{Tìké a smutné rozhodnutí. Ztratili jsme mnoho lidí, jen se rozhodli odejít na vlastní pìst, místo aby cestovali s hlavní silou hledající bezpeèné útoèištì.}
 {8903}{}{Moc toho o nich nevím. V hlášeních se píše, e se shromaïují nìkde na sever od nás.}
 {8904}{}{Tak se jmenuje náš øád.}
-{8905}{}{Kupci s vodou jsou mizerní zlodìji, ale o ostatních kupeckıch frakcích nic nevím.}
+{8905}{}{Ti Obchodníci s vodou jsou mizerní zlodìji, ale o ostatních kupeckıch frakcích nic nevím.}
 {8906}{}{O tom nic nevím.}
 {8907}{}{Slizká jáma tìch odpornıch obchodníkù. Aèkoliv obèas vymìníme nìjaké zboí s jednou z tìch civilizovanìjších spoleèností.}
 {8908}{}{Kult urèenı k vymıvání mozku.}
@@ -489,8 +489,8 @@
 {8911}{}{To jsou naši technici a zbrojíøi.}
 {8912}{}{Jsou to ochránci Bratrstva.}
 {8913}{}{Nemám nejmenší ponìtí o èem to mluvíš.}
-{8914}{}{Doktorku Lorri najdeš na druhém patøe.}
-{8915}{}{V poslední dobì je generál Maxson vìtšinou ve svém pokoji na ètvrtém patøe. }
+{8914}{}{Doktorku Lorri najdeš na druhém patøe. }
+{8915}{}{V poslední dobì je generál Maxson vìtšinou ve svém pokoji na ètvrtém patøe.}
 {8916}{}{Vrchní Paladin Rhombus? Najdeš ho na prvním patøe.}
 {8917}{}{Oh, Vree je v knihovnì na tøetím patøe.}
 {8918}{}{Pokud jsi zranìnı, doktorka Lorry se o tebe postará. Její ošetøovna je na druhém patøe.}
@@ -545,7 +545,7 @@
 {11311}{}{Oh, v naší katedrále máme malı obchod.}
 {11312}{}{Veleknìz øíká, e promìníme pustinu v ráj pro všechny!}
 {11313}{}{Veleknìz ti urèitì pomùe s nasmìrováním.}
-{11314}{}{Má na dnešní dobu ponìkud zastaralou grafiku, nemyslíš?}
+{11314}{}{Myslím, e z toho vznikli mutanti.}
 {11315}{}{Nemìj strach! I kdy tvé svìdomí tíí høíchy, Svatı plamen nikoho neodmítne.}
 {11316}{}{Je to náš uèitel.}
 {11317}{}{Moc ho nemusím, ale co si myslím já není dùleité.}
@@ -591,7 +591,7 @@
 {15507}{}{Naše strategická poradkynì. Plánuje nájezdy.}
 {15508}{}{To je naše zbrojíøka. Opravuje nám vıbavu.}
 {15509}{}{Je Garlova zástupkynì.}
-{15510}{}{Vybírá pøíspìvky od "dobrovolnıch" dárcù.}
+{15510}{}{Vybírá pøíspìvky od „dobrovolnıch“ dárcù.}
 {15511}{}{Je to náš kuchaø, ale zvládne maximálnì tak peèenou krysu, nebo pøipálenıho leguána...}
 {15512}{}{Máš nìjakı?}
 {15513}{}{Vánì nechápu, proè jsme tu vesnici ještì nevybílili.}
@@ -724,7 +724,7 @@
 {17812}{}{Krater|krater}
 {17813}{}{Regulatori}
 {17814}{}{Sberaci|sberaci}
-{17815}{}{Pohrebiste|pohrebiste}
+{17815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {17816}{}{Doktor|doktor}
 {17817}{}{Pustina|pustina}
 {17818}{}{Oblast|oblast}
@@ -752,7 +752,7 @@
 {17912}{}{To je jen povìst.}
 {17913}{}{Chrání Adytum.}
 {17914}{}{Hledají vìci v nebezpeènıch èástech pustiny.}
-{17915}{}{Jsi úplnì blbej? Pohøebištì je tady; stojíš v nìm.}
+{17915}{}{Jsi úplnì blbej? Kostnice je tady; stojíš v ní.}
 {17916}{}{Nemám páru.}
 {17917}{}{Je to tam vánì drsnı.}
 {17918}{}{Máme tady Následovníky, Blades a Gun Runnery.}
@@ -783,7 +783,7 @@
 {18012}{}{Krater|krater}
 {18013}{}{Regulatori}
 {18014}{}{Sberaci|sberaci}
-{18015}{}{Pohrebiste|pohrebiste}
+{18015}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18016}{}{Doktor|doktor}
 {18017}{}{Pustina|pustina}
 {18018}{}{Oblast|oblast}
@@ -809,11 +809,11 @@
 {18110}{}{Náš starosta. Odvádí dobrou práci.}
 {18111}{}{Je to mìsto mrtvıch. Leí nìkolik dní cesty na vıchod.}
 {18112}{}{Prı je nìkde daleko na jihu.}
-{18113}{}{Chrání nás pøed gagny a udrují mír.}
+{18113}{}{Chrání nás pøed gangy a udrují mír.}
 {18114}{}{Chodí do pustiny a hledají pro nás rùzné vìci.}
-{18115}{}{Jsi úplnì blbej? Pohøebištì je tady; stojíš v nìm.}
+{18115}{}{Jsi úplnì blbej? Kostnice je tady; stojíš v ní.}
 {18116}{}{Ještì pøed nìkolika lety jsme mìli malou nemocnici s lékaøem. Regulátoøi ho ale zastøelili, protoe nás okrádal!}
-{18117}{}{Vyrùstat na Pohøebišti je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
+{18117}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {18118}{}{Na severu jsou zalezlí Následovníci. Blades mùeš najít na vıchodì.}
 {18119}{}{Regulátoøi kadého zlodìje zastøelí.}
 {18120}{}{Pokud cestuješ s brahminami, gangy si tì urèitì vyhlídnou.}
@@ -842,7 +842,7 @@
 {18212}{}{Krater|krater}
 {18213}{}{Regulatori}
 {18214}{}{Sberaci|sberaci}
-{18215}{}{Pohrebiste|pohrebiste}
+{18215}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18216}{}{Doktor|doktor}
 {18217}{}{Pustina|pustina}
 {18218}{}{Oblast|oblast}
@@ -857,7 +857,7 @@
 
 {18300}{}{Jsme potomci obyvatel starého Vaultu, kterı bıval pod jiní stranou mìsta.}
 {18301}{}{Následovníci jsou vzdìlaní mírumilovní lidé. ijí ve staré knihovnì na severu.}
-{18302}{}{Dìti katedrály uctívají nìjakého tajemného Boha. Zdají se neškodní, ale nìco se mi na nich nezdá. Katedrálu najdeš na jihu.}
+{18302}{}{Dìti katedrály uctívají nìjakého tajemného temného boha. Zdají se neškodní, ale nìco se mi na nich nezdá. Katedrálu najdeš na jihu.}
 {18303}{}{Mají opevnìnou základnu a okloní ní spoustu pastí. Èasto berou zajatce, aby je pøed tím ne je zabijou, mohli celé dny muèit.}
 {18304}{}{Blades jsou známí pro své motorové noe. Jsou to zapøísáhlí nepøátelé Ripperù. Jejich vùdce je ena jménem Razor.}
 {18305}{}{Kdysi to byl obyèejnı gang, ale pak se usadili ve starém skladišti na severu a zaèali lidem prodávat zbranì.}
@@ -869,18 +869,18 @@
 {18311}{}{Mìsto mrtvıch? Prı je to místo obıvané podivnımi kanibaly daleko na vıchodì. Bıt tebou, nechodil bych tam.}
 {18312}{}{Øíká se, e je to silnì radioaktivní oblast, nìkde daleko na jihu.}
 {18313}{}{Vojenská a policejní síla Adytua. Chrání nás pøed gangy. Caleb je jejich vùdce.}
-{18314}{}{Sbìraèi prohledávají Pohøebištì a nosí nám cenné pøedmìty. Vede je mu jménem Sammael.}
-{18315}{}{Pohøebištì je to, co zbylo z døívìjšího mìsta Los Angeles. My se nacházíme v jeho støedu.}
+{18314}{}{Sbìraèi prohledávají Kostnici a nosí nám cenné pøedmìty. Vede je mu jménem Sammael.}
+{18315}{}{Andìlská kostnice je to, co zbylo z døívìjšího mìsta Los Angeles. My se nacházíme v jejím støedu.}
 {18316}{}{Ještì pøed pár lety jsme mìli malou nemocnici s doktorem. Regulátoøi ho zastøelili, protoe obchodoval i s gangy.}
-{18317}{}{Vyrùstat na Pohøebišti je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
+{18317}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {18318}{}{Následovníci jsou na severu, Blades se poflakují na vıchodì. Pokud se probiješ pøes staré kino na severu, mùeš si nìco nakoupit u Gun Runnerù.}
-{18319}{}{Na Pobøebišti to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
+{18319}{}{V Kostnici to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
 {18320}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahminy.}
 {18321}{}{Sídlili tam Rippeøi, ale nìco je od tamtud vyhnalo.}
 {18322}{}{Proslıchá se, e mají doupì nìkde na vıchod od teritoria Blades.}
 {18323}{}{Drby mì nezajímají.}
 {18324}{}{Myslíš našeho vìštce? Jeho stan je v jihovıchodní èásti Adytua.}
-{18325}{}{Je to vùdce Regulatorù. Obvykle ho najdeš nìkde blízko brány.}
+{18325}{}{Je to vùdce Regulátorù. Obvykle ho najdeš nìkde blízko brány.}
 {18326}{}{Zkus se zeptat Milese nebo Sammaela.}
 
 #
@@ -897,11 +897,11 @@
 {18407}{}{Junktown|Junk Town}
 {18408}{}{Vodni cip|vodni cip}
 {18409}{}{Nicole}
-{18410}{}{Pohrebiste|pohrebiste}
+{18410}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18411}{}{Prace|prace|Penize|penize}
 
 {18500}{}{To je vesnice na jihu.}
-{18501}{}{My jsme Nasledovníci apokalypsy.}
+{18501}{}{My jsme Následovníci apokalypsy.}
 {18502}{}{Kult jinì od Adyta.}
 {18503}{}{Gang na západì.}
 {18504}{}{Gang na vıchodì.}
@@ -909,8 +909,8 @@
 {18506}{}{Obchodní uzel celé této oblasti. Je na severovıchodì.}
 {18507}{}{Støednì velké mìsto na sever od Hubu.}
 {18508}{}{S tím ti nepomùu, promiò.}
-{18509}{}{Je náš vùdce.}
-{18510}{}{Tohle je pohøebištì.}
+{18509}{}{Je naše vùdkynì.}
+{18510}{}{Tohle je Kostnice.}
 {18511}{}{S tím ti nepomùu, promiò.}
 
 #
@@ -926,21 +926,21 @@
 {18607}{}{Junktown|Junk Town}
 {18608}{}{Vodni cip|vodni cip}
 {18609}{}{Nicole}
-{18610}{}{Pohrebiste|pohrebiste}
+{18610}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18611}{}{Prace|prace|Penize|penize}
 
 {18700}{}{Malé mìsto na jihu. Obèas nás nìkdo z nich navštíví.}
-{18701}{}{My jsme Nasledovníci apokalypsy. To jméno jsme si vybrali, protoe pøicházíme po vichrech války, abychom svìtu pøinesli náplast míru.}
-{18702}{}{Zvláštní kult jinì od Adyta a zbytku Pohøebištì. Nicol si myslí, e nejsou takoví svatoušci, jak se tváøí.}
+{18701}{}{My jsme Následovníci apokalypsy. To jméno jsme si vybrali, protoe pøicházíme po vichrech války, abychom svìtu pøinesli náplast míru.}
+{18702}{}{Zvláštní kult jinì od Adyta a zbytku Kostnice. Nicole si myslí, e nìco chystají.}
 {18703}{}{Extrémnì násilnı gang na západì.}
 {18704}{}{Gang na vıchodì. Pouívají vibraèní noe.}
 {18705}{}{Gang kterı pøišel z Hubu, a nyní prodává zbranì. Najdeš je na sever od nás.}
 {18706}{}{Hub je velké mìsto a centrum veškerého obchodu v této oblasti. Leí na vıchodì.}
 {18707}{}{Junktown je malé mìsto na sever od Hubu.}
 {18708}{}{S tím ti nepomùu.}
-{18709}{}{Je náš vùdce. Usiluje a mírumilovné spojení všech frakcí pustiny.}
-{18710}{}{Pohøebištì je novı název této oblasti, ale døív zde stávalo mìsto Los Angeles.}
-{18711}{}{U jsi mluvil s Nicol?}
+{18709}{}{Je náš vùdce. Usiluje o mírumilovné spojení všech frakcí pustiny.}
+{18710}{}{Tohle místo je Andìlská kostnice, pozùstatek starého mìsta Los Angeles.}
+{18711}{}{U jsi mluvil s Nicole?}
 
 #
 # Info level 3 [People who know more than something but less than everything]
@@ -955,12 +955,12 @@
 {18807}{}{Junktown|Junk Town}
 {18808}{}{Vodni cip|vodni cip}
 {18809}{}{Nicole}
-{18810}{}{Pohrebiste|pohrebiste}
+{18810}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18811}{}{Nekropolis}
 {18812}{}{Krater|krater}
 {18813}{}{Regulatori}
 {18814}{}{Sberaci|sberaci}
-{18815}{}{Pohrebiste|pohrebiste}
+{18815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {18816}{}{Doktor|doktor}
 {18817}{}{Pustina|pustina}
 {18818}{}{Oblast|oblast}
@@ -974,30 +974,30 @@
 
 {18900}{}{Malé mìsto na jihu. Jsou to dobøí lidé, ale trochu paranoidní. Obèas s nìkterımi spolupracujeme.}
 {18901}{}{My jsme Následovníci apokalypsy. Je naší povinností pøinést svìtu mír a staré znalosti. Nesmíme dopustit, aby zbranì války opìt zjizvily naši planetu.}
-{18902}{}{Katedrála je obrovská budova jinì od Pohøebištì. Dìti jsou kultem uctívajícím temného a zlého boha. Musí bıt zastaveni, ne zaènou své náboenství šíøit násilím.}
+{18902}{}{Katedrála je obrovská budova jinì od Kostnice. Dìti jsou kultem uctívajícím temného a zlého boha. Musí bıt zastaveni, ne zaènou své náboenství šíøit násilím.}
 {18903}{}{Odporní barbaøi. Útoèí na kadého kdo se pøiblíí. ijí na západì v pevnosti obklopené pastmi.}
-{18904}{}{Mimoøádnì nebezpeèná skupina která ije na vıchodì a pouívá vibraèní noe. Jejich vùdce, Razor, pøišel z Hubu a vštìpil jim disciplínu.}
+{18904}{}{Mimoøádnì nebezpeèná skupina která ije na vıchodì a pouívá vibraèní noe. Jejich vùdkynì, Razor, pøišla z Hubu a vštìpila jim disciplínu.}
 {18905}{}{Je to gang kterı ije ve skladu na severu, obklopeného pøíkopem radioaktivního kalu. Prodávají zbranì ostatním gangùm.}
 {18906}{}{Hub je obchodní mìsto daleko na vıchodì. Jejich karavany cestují všude monì, vèetnì Adyta.}
 {18907}{}{Malé mìsto na sever od Hubu. Øíká se, e je to vítaná zastávka pro kadého znaveného poutníka.}
 {18908}{}{Aèkoliv toho vím hodnì o technologiích Vaultù, tohle je nad moje síly.}
-{18909}{}{Nicol je naše vùdkynì. Snaí se do válkou znièeného svìta pøinést opìt mír.}
-{18910}{}{Toto je srdce Pohøebištì, bıvalého mìsta Los Angeles.}
+{18909}{}{Nicole je naše vùdkynì. Snaí se do válkou znièeného svìta pøinést opìt mír.}
+{18910}{}{Tohle je srdce Andìlské kostnice, pojmenované podle starého mìsta Los Angeles a koster mrtvıch, které tu po Bombì leely všude kolem.}
 {18911}{}{Mìsto mrtvıch? Obchodníci o nìm obèas mluví, ale já o nìm nic nevím.}
 {18912}{}{Øíká se, e je to silnì radioaktivní oblast, nìkde daleko na jihu.}
-{18913}{}{Je to samozvaná "policejní síla" Adyta. Dr se od nich dál, nedá se jim vìøit.}
-{18914}{}{Sbìraèi prohledávají Pohøebištì a nosí nám cenné pøedmìty. Vede je mu jménem Sammael.}
-{18915}{}{Pohøebištì je to, co zbylo z døívìjšího mìsta Los Angeles. My se nacházíme v jeho støedu.}
+{18913}{}{Je to samozvaná „policejní síla“ Adyta. Dr se od nich dál, nedá se jim vìøit.}
+{18914}{}{Sbìraèi prohledávají Kostnici a nosí nám cenné pøedmìty. Vede je mu jménem Sammael.}
+{18915}{}{Andìlská kostnice je to, co zbylo z døívìjšího mìsta Los Angeles. My se nacházíme v jejím støedu.}
 {18916}{}{Je mi líto, ale nikde v okolí není nikdo, kdo by ti mohl pomoci.}
-{18917}{}{Vyrùstat na Pohøebišti je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
+{18917}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {18918}{}{Následovníci jsou na severu, Blades se poflakují na vıchodì. Pokud se probiješ pøes staré kino na severu, mùeš si nìco nakoupit u Gun Runnerù.}
-{18919}{}{Na Pohøebišti to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
+{18919}{}{V Kostnici to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
 {18920}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahminy.}
 {18921}{}{Sídlili tam Rippeøi, ale nìco je odtamtud vyhnalo.}
 {18922}{}{Nenapadá mì nic, co by tì mohlo zajímat.}
 {18923}{}{Proslıchá se, e mají doupì nìkde na vıchod od teritoria Blades.}
 {18924}{}{Pokud potøebuješ nakoupit zásoby, zkus navštívit Adytum. Jestli hledáš spíše zbranì, Gun Runneøi na vıchod od starého kina mají opravdu velkou nabídku.}
-{18925}{}{Nicol je náš vùdce. Moná by pro tebe nìco mohla mít.}
+{18925}{}{Nicole je naše vùdkynì. Moná by pro tebe nìco mohla mít.}
 
 #
 # Mariposa MBASE     (19000) # Used by Super Mutants and Cathedral Prisoners
@@ -1035,7 +1035,7 @@
 {22607}{}{Junktown|Junk Town}
 {22608}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
 {22609}{}{Shady Sands|Shady|Sands}
-{22610}{}{Pohrebiste|pohrebiste}
+{22610}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {22611}{}{Vodojem|vodojem}
 {22612}{}{Stare mesto|stare mesto}
 {22613}{}{Trziste|trziste|Kupecky trh|kupecky trh}
@@ -1069,27 +1069,27 @@
 {22701}{}{Ovládají veškerou vodu v Hubu. Kontrolují vodojem a nyní jim lidé musí platit za vodu.}
 {22702}{}{Bláznivá skupina obchodníkù, kteøí šílenì riskují, aby se udreli na vrcholu.}
 {22703}{}{Støednì velká skupina obchodníkù, kteøí nabízejí férové ceny, ani by museli riskovat velké nebezpeèí.}
-{22704}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Kupcù s vodou.}
+{22704}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Obchodníkù s vodou.}
 {22705}{}{Strašidelné místo. Nìkteøí øíkají, e je obıvané mrtvımi, kteøí jedí lidské mozky. Je nìkde na vıchod od Hubu.}
 {22706}{}{Existuje nìkolik pøíbìhù, které øíkají, e jihovıchodì odtud je místo, které zasáhla jaderná hlavice.}
 {22707}{}{To je na sever od nás. Èasto s nimi obchodujeme. Místní bossové, Killian a Gizmo, si jdou navzájem v krku.}
 {22708}{}{Ti ijou na severozápad odtud. Je to banda techno bláznù, co uctívá technologie. Jsou to velmi nebezpeèní lidé.}
 {22709}{}{Malá vesnice daleko na sever odtud. Moc toho o nich nevíme, protoe nemají dost penìz na to, aby s námi obchodovali.}
 {22710}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
-{22711}{}{Ty skladují vodu pro Hub. Patøí Kupcùm s vodou.}
+{22711}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {22712}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
 {22713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
-{22714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Kupcù s vodou Daren Hightower tam má obrovské sídlo.}
+{22714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {22715}{}{Pohádka, kterou se straší malé dìti.}
 {22716}{}{O tom nic nevím.}
-{22717}{}{Tøi nejvìtší firmy v Hubu jsou Crimson caravan, Far Go Trader a Kupci s vodou.}
+{22717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
 {22718}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {22719}{}{Zrovna stojíš u hlavního vstupu do Hubu.}
-{22720}{}{Malá vesnice na Pohøebišti.}
+{22720}{}{Malá vesnice v Kostnici.}
 {22721}{}{Vyrábí a prodávají zbranì.}
-{22722}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Kupcù s vodou.}
+{22722}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Obchodníkù s vodou.}
 {22723}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá.}
-{22724}{}{Pokud se vydáš po silnici na jih, dostaneš se na trištì. Odtud jdi na západ a tam najdeš Pahorky. Staré mìsto je na vıchodì a Kupci s vodou na jihu.}
+{22724}{}{Pokud se vydáš po silnici na jih, dostaneš se na trištì. Odtud jdi na západ a tam najdeš Pahorky. Staré mìsto je na vıchodì a Obchodníci s vodou na jihu.}
 {22725}{}{Øíká se, e v Hubu sídlí „Gilda zlodìjù“. Naprostá ptákovina. Jako... kdyby to byla pravda, šerif Greene by je u dávno našel a zavøel.}
 {22726}{}{Brahminy jsou pro Hub velmi dùleité. Bez nich bychom se nikdy nestali centrem obchodu.}
 {22727}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
@@ -1100,7 +1100,7 @@
 {22732}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
 {22733}{}{Maltese Falcon je místní noèní klub.}
 {22734}{}{Dej se po cestì na jih a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a noèní klub Maltese Falcon.}
-{22735}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Crimson caravan nebo Kupce s vodou.}
+{22735}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
 {22736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
 {22737}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 {22738}{}{Butch vlastní Far Go Traders. Je to dobrı èlovìk a dá se mu vìøit.}
@@ -1118,7 +1118,7 @@
 {23807}{}{Junktown|Junk Town}
 {23808}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
 {23809}{}{Shady Sands|Shady|Sands}
-{23810}{}{Pohrebiste|pohrebiste}
+{23810}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {23811}{}{Vodojem|vodojem}
 {23812}{}{Stare mesto|stare mesto}
 {23813}{}{Trziste|trziste|Kupecky trh|kupecky trh}
@@ -1155,27 +1155,27 @@
 {23901}{}{Ovládají veškerou vodu v Hubu. Kontrolují vodojem a nyní jim lidé musí platit za vodu.}
 {23902}{}{Bláznivá skupina obchodníkù, kteøí šílenì riskují, aby se udreli na vrcholu.}
 {23903}{}{Støednì velká skupina obchodníkù, kteøí nabízejí férové ceny, ani by museli riskovat velké nebezpeèí.}
-{23904}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Kupcù s vodou.}
+{23904}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Obchodníkù s vodou.}
 {23905}{}{Strašidelné místo. Nìkteøí øíkají, e je obıvané mrtvımi, kteøí jedí lidské mozky. Je nìkde na vıchod od Hubu.}
 {23906}{}{Existuje nìkolik pøíbìhù, které øíkají, e na jihovıchodì odtud je místo, které zasáhla jaderná hlavice.}
 {23907}{}{To je na sever od nás. Èasto s nimi obchodujeme. Místní bossové, Killian a Gizmo, si jdou navzájem v krku.}
 {23908}{}{Ti ijou na severozápad odtud. Je to banda techno bláznù, co uctívá technologie. Jsou to velmi nebezpeèní lidé.}
 {23909}{}{Malá vesnice daleko na sever odtud. Moc toho o nich nevíme, protoe nemají dost penìz na to, aby s námi obchodovali.}
 {23910}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
-{23911}{}{Ty skladují vodu pro Hub. Patøí Kupcùm s vodou.}
+{23911}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {23912}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
 {23913}{}{Teï jsi na trišti. Je tady obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{23914}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Kupcù s vodou Daren Hightower tam má obrovské sídlo.}
+{23914}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {23915}{}{Pohádka, kterou se straší malé dìti.}
 {23916}{}{O tom nic nevím.}
-{23917}{}{Tøi nejvìtší firmy v Hubu jsou Crimson caravan, Far Go Trader a Kupci s vodou.}
+{23917}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
 {23918}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {23919}{}{Teï jsi na trišti.}
-{23920}{}{Malá vesnice na Pohøebišti.}
+{23920}{}{Malá vesnice v Kostnici.}
 {23921}{}{Vyrábí a prodávají zbranì.}
-{23922}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Kupcù s vodou.}
+{23922}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Obchodníkù s vodou.}
 {23923}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá.}
-{23924}{}{Teï jsi na trišti. Dej se na západ a najdeš Pahorky, nebo jdi na vıchod do Starého mìsta. Kupci s vodou sídlí na jihu.}
+{23924}{}{Teï jsi na trišti. Dej se na západ a najdeš Pahorky, nebo jdi na vıchod do Starého mìsta. Obchodníci s vodou sídlí na jihu.}
 {23925}{}{Øíká se, e v Hubu sídlí „Gilda zlodìjù“. Naprostá ptákovina. Jako... kdyby to byla pravda, šerif Greene by je u dávno našel a zavøel.}
 {23926}{}{Brahminy jsou pro Hub velmi dùleité. Bez nich bychom se nikdy nestali centrem obchodu.}
 {23927}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
@@ -1207,7 +1207,7 @@
 {24407}{}{Junktown|Junk Town}
 {24408}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
 {24409}{}{Shady Sands|Shady|Sands}
-{24410}{}{Pohrebiste|pohrebiste}
+{24410}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {24411}{}{Vodojem|vodojem}
 {24412}{}{Stare mesto|stare mesto}
 {24413}{}{Trziste|trziste|Kupecky trh|kupecky trh}
@@ -1240,28 +1240,28 @@
 {24501}{}{Ovládají veškerou vodu v Hubu. Kontrolují vodojem a nyní jim lidé musí platit za vodu.}
 {24502}{}{Bláznivá skupina obchodníkù, kteøí šílenì riskují, aby se udreli na vrcholu.}
 {24503}{}{Støednì velká skupina obchodníkù, kteøí nabízejí férové ceny, ani by museli riskovat velké nebezpeèí.}
-{24504}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Kupcù s vodou.}
+{24504}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Obchodníkù s vodou.}
 {24505}{}{Strašidelné místo. Nìkteøí øíkají, e je obıvané mrtvımi, kteøí jedí lidské mozky. Je nìkde na vıchod od Hubu.}
 {24506}{}{Existuje nìkolik pøíbìhù, které øíkají, e na jihovıchodì odtud je místo, které zasáhla jaderná hlavice.}
 {24507}{}{To je na sever od nás. Èasto s nimi obchodujeme. Místní bossové, Killian a Gizmo, si jdou navzájem v krku.}
 {24508}{}{Ti ijou na severozápad odtud. Je to banda techno bláznù, co uctívá technologie. Jsou to velmi nebezpeèní lidé.}
 {24509}{}{Malá vesnice daleko na sever odtud. Moc toho o nich nevíme, protoe nemají dost penìz na to, aby s námi obchodovali.}
 {24510}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
-{24511}{}{Ty skladují vodu pro Hub. Patøí Kupcùm s vodou.}
+{24511}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {24512}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
 {24513}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
-{24514}{}{Tam ijí všichni ti bohatí obchodníci. Vùdce Kupcù s vodou, Daren Hightower, tam má obrovské sídlo.}
+{24514}{}{Tam ijí všichni ti bohatí obchodníci. Vùdce Obchodníkù s vodou, Daren Hightower, tam má obrovské sídlo.}
 {24515}{}{Pohádka, kterou se straší malé dìti.}
 {24516}{}{O tom nic nevím.}
-{24517}{}{Tøi nejvìtší firmy v Hubu jsou Crimson caravan, Far Go Trader a Kupci s vodou.}
+{24517}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
 {24518}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {24519}{}{U jsi v Hubu. Zrovna stojíš ve ètvrti Pahorky.}
-{24520}{}{Malá vesnice na Pohøebišti.}
+{24520}{}{Malá vesnice v Kostnici.}
 {24521}{}{Vyrábí a prodávají zbranì.}
-{24522}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Kupcù s vodou.}
+{24522}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Obchodníkù s vodou.}
 {24523}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá.}
-{24524}{}{Tohle je ètvr Pahorky. Dej se na vıchod a dojdeš na trištì. Jdi ještì dál na vıchod a dostaneš se do Starého mìsta. Kupci s vodou jsou na jih od trištì.}
-{24525}{}{Øíká se, e v Hubu sídlí „Gilda zlodìjù“. Naprostá ptákovina. Jako... kdyby to byla pravda, šerif Greene by je u dávno našel a zavøel. }
+{24524}{}{Tohle je ètvr Pahorky. Dej se na vıchod a dojdeš na trištì. Jdi ještì dál na vıchod a dostaneš se do Starého mìsta. Obchodníci s vodou jsou na jih od trištì.}
+{24525}{}{Øíká se, e v Hubu sídlí „Gilda zlodìjù“. Naprostá ptákovina. Jako... kdyby to byla pravda, šerif Greene by je u dávno našel a zavøel.}
 {24526}{}{Brahminy jsou pro Hub velmi dùleité. Bez nich bychom se nikdy nestali centrem obchodu.}
 {24527}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
 {24528}{}{Skagové ijí ve Starém mìstì. Nejsou to zrovna dobøí lidé, take se od nich dr dál.}
@@ -1271,7 +1271,7 @@
 {24532}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
 {24533}{}{Maltese Falcon je místní noèní klub.}
 {24534}{}{Dej se na vıchod a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{24535}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Crimson caravan nebo Kupce s vodou.}
+{24535}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
 {24536}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
 {24537}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
@@ -1288,7 +1288,7 @@
 {25007}{}{Junktown|Junk Town}
 {25008}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
 {25009}{}{Shady Sands|Shady|Sands}
-{25010}{}{Pohrebiste|pohrebiste}
+{25010}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {25011}{}{Vodojem|vodojem}
 {25012}{}{Stare mesto|stare mesto}
 {25013}{}{Trziste|trziste|Kupecky trh|kupecky trh}
@@ -1321,27 +1321,27 @@
 {25101}{}{Ovládají veškerou vodu v Hubu. Kontrolují vodojem a nyní jim lidé musí platit za vodu.}
 {25102}{}{Bláznivá skupina obchodníkù, kteøí šílenì riskují, aby se udreli na vrcholu.}
 {25103}{}{Støednì velká skupina obchodníkù, kteøí nabízejí férové ceny, ani by museli riskovat velké nebezpeèí.}
-{25104}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Kupcù s vodou.}
+{25104}{}{Náboenskı kult, kterı uctívá nìkoho, kdo se nazıvá Vùdce. Provozují nemocnici na jihovıchodní stranì mìsta, blízko Obchodníkù s vodou.}
 {25105}{}{Strašidelné místo. Nìkteøí øíkají, e je obıvané mrtvımi, kteøí jedí lidské mozky. Je nìkde na vıchod od Hubu.}
 {25106}{}{Existuje nìkolik pøíbìhù, které øíkají, e na jihovıchodì odtud je místo, které zasáhla jaderná hlavice.}
 {25107}{}{To je na sever od nás. Èasto s nimi obchodujeme. Místní bossové, Killian a Gizmo, si jdou navzájem v krku.}
 {25108}{}{Ti ijou na severozápad odtud. Je to banda techno bláznù, co uctívá technologie. Jsou to velmi nebezpeèní lidé.}
 {25109}{}{Malá vesnice daleko na sever odtud. Moc toho o nich nevíme, protoe nemají dost penìz na to, aby s námi obchodovali.}
 {25110}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
-{25111}{}{Ty skladují vodu pro Hub. Patøí Kupcùm s vodou.}
+{25111}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {25112}{}{Tady najdeš ty nejchudší z celého Hubu.}
 {25113}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
-{25114}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Kupcù s vodou Daren Hightower tam má obrovské sídlo.}
+{25114}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {25115}{}{Pohádka, kterou se straší malé dìti.}
 {25116}{}{O tom nic nevím.}
-{25117}{}{Tøi nejvìtší firmy v Hubu jsou Crimson caravan, Far Go Trader a Kupci s vodou.}
+{25117}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
 {25118}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {25119}{}{Nacházíš se v Hubu a teï stojíš ve ètvrti Staré mìsto.}
-{25120}{}{Malá vesnice na Pohøebišti.}
+{25120}{}{Malá vesnice v Kostnici.}
 {25121}{}{Vyrábí a prodávají zbranì.}
-{25122}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Kupcù s vodou.}
+{25122}{}{Dìti katedrály provozují nemocnici na jihovıchodní stranì mìsta, kousek od Obchodníkù s vodou.}
 {25123}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá.}
-{25124}{}{Teï jsi ve Starém mìstì, pøíteli. Dej se na západ a dojdeš na trištì. Jdi ještì dál na západ a dostaneš se do Pahorkù. Kupci s vodou jsou na jih od trištì.}
+{25124}{}{Teï jsi ve Starém mìstì, pøíteli. Dej se na západ a dojdeš na trištì. Jdi ještì dál na západ a dostaneš se do Pahorkù. Obchodníci s vodou jsou na jih od trištì.}
 {25125}{}{Organizovanı zloèin? Nesmíš vìøit kadému drbu.}
 {25126}{}{Brahminy jsou pro Hub velmi dùleité. Bez nich bychom se nikdy nestali centrem obchodu.}
 {25127}{}{Vìøil bys tomu? Øíká se, e starı Slappy vidìl jednoho z tìch Páraèù. Ten chudák byl vdycky trochu na hlavu.}
@@ -1352,7 +1352,7 @@
 {25132}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
 {25133}{}{Maltese Falcon je místní noèní klub.}
 {25134}{}{Dej se na západ a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{25135}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Crimson caravan nebo Kupce s vodou.}
+{25135}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
 {25136}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
 {25137}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
@@ -1369,7 +1369,7 @@
 {25607}{}{Junktown|Junk Town}
 {25608}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
 {25609}{}{Shady Sands|Shady|Sands}
-{25610}{}{Pohrebiste|pohrebiste}
+{25610}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {25611}{}{Vodojem|vodojem}
 {25612}{}{Stare mesto|stare mesto}
 {25613}{}{Trziste|trziste|Kupecky trh|kupecky trh}
@@ -1409,20 +1409,20 @@
 {25708}{}{Ti ijou na severozápad odtud. Je to banda techno bláznù, co uctívá technologie. Jsou to velmi nebezpeèní lidé.}
 {25709}{}{Malá vesnice daleko na sever odtud. Moc toho o nich nevíme, protoe nemají dost penìz na to, aby s námi obchodovali.}
 {25710}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
-{25711}{}{Ty skladují vodu pro Hub. Patøí Kupcùm s vodou.}
+{25711}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {25712}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
 {25713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
-{25714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Kupcù s vodou Daren Hightower tam má obrovské sídlo.}
+{25714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {25715}{}{Pohádka, kterou se straší malé dìti.}
 {25716}{}{O tom nic nevím.}
-{25717}{}{Tøi nejvìtší firmy v Hubu jsou Crimson caravan, Far Go Trader a Kupci s vodou.}
+{25717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
 {25718}{}{Není to ta blbost, o které mluví Dìti katedrály?}
 {25719}{}{Tohle je Hub.}
-{25720}{}{Malá vesnice na Pohøebišti.}
+{25720}{}{Malá vesnice v Kostnici.}
 {25721}{}{Vyrábí a prodávají zbranì.}
 {25722}{}{Na jihovıchodní stranì mìsta u Kupcù s vodou je nemocnice.}
-{25723}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá. }
-{25724}{}{Kupce s vodou najdeš u vodojemu. Na severu je trištì. Pahorky leí na západ od trištì a Staré mìsto na vıchod.}
+{25723}{}{Vzhledem k tomu, e naše karavany neustále cestují Pustinou, obchod v Hubu vzkvétá.}
+{25724}{}{Obchodníky s vodou najdeš u vodojemu. Na severu je trištì. Pahorky leí na západ od trištì a Staré mìsto na vıchod.}
 {25725}{}{Øíká se, e v Hubu sídlí „Gilda zlodìjù“. Naprostá ptákovina. Jako... kdyby to byla pravda, šerif Greene by je u dávno našel a zavøel.}
 {25726}{}{Brahminy jsou pro Hub velmi dùleité. Bez nich bychom se nikdy nestali centrem obchodu.}
 {25727}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
@@ -1433,7 +1433,7 @@
 {25732}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
 {25733}{}{Maltese Falcon je místní noèní klub.}
 {25734}{}{Dej se na sever a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{25735}{}{No, hádám e mùeš zkusit Kupce s vodou.}
+{25735}{}{No, hádám e mùeš zkusit Obchodníky s vodou.}
 {25736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
 {25737}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
@@ -1453,10 +1453,10 @@
 {27409}{}{Razor}
 {27410}{}{Nekropolis}
 {27411}{}{Krater|krater}
-{27412}{}{Pohrebiste|pohrebiste}
+{27412}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27413}{}{Regulatori}
 {27414}{}{Sberaci|sberaci}
-{27415}{}{Pohrebiste|pohrebiste}
+{27415}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27416}{}{Doktor|doktor}
 {27417}{}{Pustina|pustina}
 {27418}{}{Oblast|oblast}
@@ -1479,14 +1479,14 @@
 {27509}{}{Je to náš vùdce a nejdrsnìjší dìvka v celé pustinì!}
 {27510}{}{Nekro- co? To je hnusnı.}
 {27511}{}{Dìláš si srandu?}
-{27512}{}{Tohle je pohøebištì.}
+{27512}{}{Tohle je Kostnice.}
 {27513}{}{Støílejí po nás bez varování.}
 {27514}{}{Hledají vìci v nebezpeènıch èástech pustiny.}
-{27515}{}{Jsi úplnì blbej? Pohøebištì je tady; stojíš v nìm.}
+{27515}{}{Jsi úplnì blbej? Kostnice je tady; stojíš v ní.}
 {27516}{}{Nemám páru.}
 {27517}{}{Je to tam vánì drsnı.}
 {27518}{}{Máme tady Následovníky a Gun Runnery. Pokud zamíøíš na jih, dojdeš do Adyta.}
-{27519}{}{Pohøebištì je drsné místo. Radìji si hlídej záda, kámo.}
+{27519}{}{Kostnice je drsné místo. Radìji si hlídej záda, kámo.}
 {27520}{}{No jo, taky mám hlad.}
 {27521}{}{Od toho se dr dál, není to tam bezpeèné.}
 {27522}{}{Slyšel jsem nìjaké zvìsti, ale myslím e je to jen pohádka na strašení dìtí.}
@@ -1508,10 +1508,10 @@
 {27609}{}{Razor}
 {27610}{}{Nekropolis}
 {27611}{}{Krater|krater}
-{27612}{}{Pohrebiste|pohrebiste}
+{27612}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27613}{}{Regulatori}
 {27614}{}{Sberaci|sberaci}
-{27615}{}{Pohrebiste|pohrebiste}
+{27615}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27616}{}{Doktor|doktor}
 {27617}{}{Pustina|pustina}
 {27618}{}{Oblast|oblast}
@@ -1534,14 +1534,14 @@
 {27709}{}{Razor je naše nejlepší váleènice. Povede nás k vítìzství.}
 {27710}{}{Stará dìcká povídaèka o mìstì kanibalù.}
 {27711}{}{Tam asi padla ta atomovka.}
-{27712}{}{Tohle je pohøebištì.}
+{27712}{}{Tohle je Kostnice.}
 {27713}{}{Chrání nás pøed gangy a udrují poøádek ve mìstì.}
 {27714}{}{Hledají v sutinách rùzné uiteèné vìci.}
-{27715}{}{Jsi úplnì blbej? Pohøebištì je tady; stojíš v nìm.}
+{27715}{}{Jsi úplnì blbej? Kostnice je tady; stojíš v ní.}
 {27716}{}{Kdysi jsme tu mìli doktora. Regulátoøi ho zastøelili za obchodování s gangy.}
-{27717}{}{Vyrùstat na Pohøebišti je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
+{27717}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {27718}{}{Adytum je na jihu. Pokud se vydáš po hlavní silnici na západ a potom na sever, narazíš na Následovníky.}
-{27719}{}{Pohøebištì je drsné místo. Radìji si hlídej záda, kámo.}
+{27719}{}{Kostnice je drsné místo. Radìji si hlídej záda, kámo.}
 {27720}{}{Pokud cestuješ s brahminou, gangy tì zaruèenì pøepadnou.}
 {27721}{}{Stará základna Ripperù.}
 {27722}{}{Proslıchá se e mají doupì nìkde na vıchodì.}
@@ -1563,10 +1563,10 @@
 {27809}{}{Razor}
 {27810}{}{Nekropolis}
 {27811}{}{Krater|krater}
-{27812}{}{Pohrebiste|pohrebiste}
+{27812}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27813}{}{Regulatori}
 {27814}{}{Sberaci|sberaci}
-{27815}{}{Pohrebiste|pohrebiste}
+{27815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {27816}{}{Doktor|doktor}
 {27817}{}{Pustina|pustina}
 {27818}{}{Oblast|oblast}
@@ -1590,19 +1590,19 @@
 {27909}{}{Razor je náš vùdce a nejlepší váleèník. Nepochybuju o tom, e nás dovede k vítìzství nad Rippery.}
 {27910}{}{Je daleko na vıchodì. Proslıchá se, e tam ijí lidoraví ghoulové.}
 {27911}{}{To jsou zbytky místa, co dostalo pøímı zásah atomovkou. Myslím, e je nìkde na jihu.}
-{27912}{}{Tohle je pohøebištì.}
+{27912}{}{Tohle je Kostnice.}
 {27913}{}{Policejní síla Adyta. Støílí po nás bez varování. Ten parchant Caleb je jejich vùdce.}
-{27914}{}{Sbìraèi prohledávají Pohøebištì a nosí nám rùzné vzácné souèástky a technologie. Sammael je vede.}
-{27915}{}{Pohøebištì je to, co zbylo z mìsta Los Angeles. My se nacházíme ve støedu Pohøebištì.}
+{27914}{}{Sbìraèi prohledávají Kostnici a nosí nám rùzné vzácné souèástky a technologie. Sammael je vede.}
+{27915}{}{Andìlská kostnice je to, co zbylo z mìsta Los Angeles. My se nacházíme v jejím støedu.}
 {27916}{}{Kdysi jsme tu mìli doktora. Regulátoøi ho zastøelili za kráde zásob ... Ale ve skuteènosti pouze odmítnul pracovat vıhradnì pro nì.}
-{27917}{}{Vyrùstat na Pohøebišti je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
+{27917}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {27918}{}{Adytum je na jihu. Následovníci jsou zalezlí na severozápadu. Kdy zvládneš projít pøes staré kino, mùeš si nìco nakoupit u Gun Runnerù.}
-{27919}{}{Na Pohøebišti ije spousta kriminálníkù. Nejsme úplnì bez viny, ale Regulátoøi jsou mnohem horší.}
+{27919}{}{V Kostnici ije spousta kriminálníkù. Nejsme úplnì bez viny, ale Regulátoøi jsou mnohem horší.}
 {27920}{}{Obchodníci platí tìké prachy za ochranu, jinak rychle pøijdou o své brahminy.}
 {27921}{}{Rippeøi tam døív mìli základnu, ale nìco je z ní vyhnalo.}
 {27922}{}{Proslıchá se e mají doupì nìkde na vıchodì.}
 {27923}{}{Øíká se, e páraèi teï mají doupì ve starém kinì.}
-{27924}{}{Velkej šéfík Regulátorù. Nikdy neopouští Adytum. Dobøe ví, e by se na nìj sesypaly všechny gangy z celého Pohøebištì.}
+{27924}{}{Velkej šéfík Regulátorù. Z Adyta skoro nevytáhne paty. Vsadím se, e dobøe ví, e bychom po nìm hned šli.}
 {27925}{}{Pokud hledáš práci, jsi na špatném místì, amígo.}
 
 #
@@ -1618,7 +1618,7 @@
 {28606}{}{Hub}
 {28607}{}{Junktown|Junk Town}
 {28608}{}{Vodni cip|vodni cip}
-{28609}{}{Pohrebiste|pohrebiste}
+{28609}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {28610}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
 {28611}{}{Doktor|doktor}
 {28612}{}{Pustina|pustina}
@@ -1640,7 +1640,7 @@
 {28706}{}{Nakupujeme od nich zbranì a pak je prodáváme takovım jako jsi ty.}
 {28707}{}{Malé mìsto severnì od Hubu.}
 {28708}{}{Coe to?}
-{28709}{}{Tohle je pohøebištì.}
+{28709}{}{Tohle je Kostnice.}
 {28710}{}{Zack uvnitø pevnosti se stará o veškerı obchod.}
 {28711}{}{Kadı sám za sebe.}
 {28712}{}{Pokud pùjdeš okolo ruin, dej si pozor na gangy.}
@@ -1665,7 +1665,7 @@
 {28806}{}{Hub}
 {28807}{}{Junktown|Junk Town}
 {28808}{}{Vodni cip|vodni cip}
-{28809}{}{Pohrebiste|pohrebiste}
+{28809}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {28810}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
 {28811}{}{Doktor|doktor}
 {28812}{}{Pustina|pustina}
@@ -1680,14 +1680,14 @@
 
 {28900}{}{Malá vesnice na jihu. Mají tam obstojné opevnìní.}
 {28901}{}{Banda cáklıch hypíkù na jihu. Mìli bychom se jich zbavit.}
-{28902}{}{Myslíš ty pošahanı mnichy? Straší jim ve vìi... Jejich kostel je na jih od pohøebištì.}
+{28902}{}{Myslíš ty pošahanı mnichy? Straší jim ve vìi... Jejich kostel je na jih od Kostnice.}
 {28903}{}{Rozumu moc nepobrali, ale jsou to naši nejlepší zákazníci!}
 {28904}{}{Pouívají ty své podivné noe. Rád bych jeden dostal do rukou... Ale taky od nás nakupují zbranì.}
 {28905}{}{To jsme my.}
 {28906}{}{Velké obchodní centrum na severu. Èasto obchodnujeme s místními gildami.}
 {28907}{}{Malé mìsto severnì od Hubu. Místo jsou v pohodì.}
 {28908}{}{O tom jsem nikdy neslyšel.}
-{28909}{}{Teï jsi na severní stranì Pohøebištì.}
+{28909}{}{Teï jsi na severní stranì Kostnice.}
 {28910}{}{Pokud si chceš nìco koupit, promluv si se Zackem.}
 {28911}{}{Promiò, ale s tím ti nepomohu.}
 {28912}{}{Pokud pùjdeš okolo ruin, dej si pozor na gangy.}
@@ -1712,7 +1712,7 @@
 {29006}{}{Hub}
 {29007}{}{Junktown|Junk Town}
 {29008}{}{Vodni cip|vodni cip}
-{29009}{}{Pohrebiste|pohrebiste}
+{29009}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {29010}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
 {29011}{}{Doktor|doktor}
 {29012}{}{Pustina|pustina}
@@ -1727,14 +1727,14 @@
 
 {29100}{}{Malé mìsto na jihu. Nepatøí mezi naše zákazníky, take se o nì nestaráme.}
 {29101}{}{Jsou zalezlí ve staré knihovnì na jihu a poøád dokola káou o míru. Nejsou dobøí pro obchod!}
-{29102}{}{Katedrála je takovı velkı kostel jinì od Pohøebištì, kde nìjakı podivnı kult uctívá temného boha. Myslím, e jsou trochu na hlavu.}
+{29102}{}{Katedrála je takovı velkı kostel jinì od Kostnice, kde nìjakı podivnı kult uctívá temného boha. Myslím, e jsou trochu na hlavu.}
 {29103}{}{Rippeøi jsou jedna velká rodina. Doslova. Je nemoné s nimi o nìèem jednat, pokud tì neznají, take to ani nezkoušej. Jsou ve velké opevnìné pevnosti jihozápadnì od nás. Dávej pozor na miny, pokud jsi natolik hloupı, e je hodláš obtìovat.}
 {29104}{}{Pøestavìli nìkolik malıch budov na svou základnu. Jsou docela dobøe organizovaní a chytøejší ne Rippeøi. Nìkdy se k ni pøidají i cizinci. Jejich vùdce, Razor, je fakt drsnı kus enské.}
 {29105}{}{To jsme my. Prodáváme zbranì místním gangùm.}
 {29106}{}{To je obchodní mìsto na sever odtud. Nakupujeme tam vìtšinu zbraní. Všude posílají karavany. Pravdìpodobnì by ses mohl k nìkteré pøidat, a se zase objeví v Adytu.}
 {29107}{}{Malé mìsto severnì od Hubu. Mají tam fajn kasíno, ale místní starosta je trochu moc pøecitlivìlı.}
 {29108}{}{Nemám tušení o èem to mluvíš.}
-{29109}{}{Toto je severní strana Pohøebištì.}
+{29109}{}{Toto je severní strana Kostnice. Je to vtipné, lidi ze vzdálenıch oblastí to pouívají jako nadávku – kdy je nìco špatnì, øíkají, e to „kouše do kosti“. Ale a si zvykneš, tak je to tady docela v pohodì.}
 {29110}{}{Pokud chceš nakupovat, mám docela slušnı vıbìr.}
 {29111}{}{Promiò, ale s tím ti nepomohu.}
 {29112}{}{Pokud pùjdeš okolo ruin, dej si pozor na gangy.}

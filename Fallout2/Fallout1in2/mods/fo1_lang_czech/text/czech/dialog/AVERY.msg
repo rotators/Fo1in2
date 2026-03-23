@@ -1,3 +1,3 @@
-{100}{}{Vidíš stráž u FLC.}
+{100}{}{Vidíš stráž u Pøátelské úvìrové spoleènosti.}
 {101}{}{Zatracenì! Sejmi ho!}
-{102}{}{Zatracenì! Sejmi jí!}
+{102}{}{Zatracenì! Sejmi ji!}

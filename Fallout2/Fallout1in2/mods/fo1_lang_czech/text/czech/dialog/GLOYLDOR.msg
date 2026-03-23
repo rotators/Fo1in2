@@ -1,5 +1,5 @@
-{100}{}{Na rámu bezpeènostních dveøí se dají rozpoznat zbytky modré barvy.}
-{101}{}{Dostal jsi slabou elektrickou ránu od dveøí.}
+{100}{}{Na rámu bezpeènostních dveøí jsou vidìt zbytky modré barvy.}
+{101}{}{Dostal jsi slabou elektrickou ránu od dveøí a pøišel jsi o jeden hit bod.}
 {102}{}{Dostal jsi silnou elektrickou ránu od dveøí. Byl jsi zranìn za }
 {103}{}{ hit bodù.}
 {104}{}{Dokázal jsi dveøe otevøít.}
@@ -112,9 +112,9 @@
 {203}{}{Na tìchto lutıch dveøích vidíš vysokonapìovı bezpeènostní systém. Zajímalo by tì, jestli je nìjakı klíè, kterım by šel pøekonat.}
 
 {204}{}{Na dveøích jsi si všimnul pasti.}
-{205}{}{Vıtah nefunguje. Vyaduje vìtší napìtí.}
+{205}{}{Vıtah nefunguje. Vypadá to, e potøebuje napájení.}
 
 # Fo1in2
-{400}{}{ odemknul zámek na dveøích ani by spustil bezpeènostní systém.}
+{400}{}{ pøekonal zámek na dveøích, ani by spustil bezpeènostní systém.}
 {401}{}{ nedokázal odemknout zámek na dveøích.}
 {402}{}{ neuspìl pøi odemykání zámku.}

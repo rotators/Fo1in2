@@ -9,24 +9,24 @@
 {108}{}{Vidíš hodnì naštvaného hráèe.}
 {109}{}{Vidíš žoldáka.}
 {110}{}{Ponech mì mému zármutku.}
-{111}{}{Je to mùj nejlepší pøítel.}
-{112}{}{Proè jsi . . . (hic) kde to vlastnì sem?}
+{111}{}{Seš mùj nejlepší pøítel.}
+{112}{}{Proè jsi... (hic) kde to vlastnì sem?}
 {113}{}{Kdo jsi?}
 {114}{}{Znám tì?}
 {115}{}{Je mi trochu špatnì.}
-{116}{}{Pití je na mì a myslím to vážnì.}
+{116}{}{Pití platím já, teda ty.}
 {117}{}{Proè jste dva vedle sebe?}
-{118}{}{Buïte v klidu sleèno!}
+{118}{}{Stùj klidnì, mladíku!}
 {119}{}{Buï v klidu holèièko!}
-{120}{}{Zbavme se té mršiny!}
+{120}{}{Odprejskni, ty vymetáku!}
 {121}{}{Kazíš nám úroveò tohohle místa.}
 {122}{}{Zmiz, nosíš mi smùlu!}
-{123}{}{Neruš mojí koncentraci.}
+{123}{}{Neruš moji koncentraci.}
 {124}{}{Jednou tuhle proklatou hru vyhraju!}
-{125}{}{Dìlá ti to dobøe?}
+{125}{}{Rozumíš tomu?}
 {126}{}{Vidìl jsi to? To bylo neuvìøitelné!}
 {127}{}{Myslím, že podvádìjí.}
-{128}{}{Hmm, tohle je ponìkud zvláštní.}
+{128}{}{Tyhle šance se líbí.}
 {129}{}{To je jistá vìc.}
 {130}{}{Co? Jak jsem jen mohl prohrát?}
 {131}{}{Tenhle stùl je cinknutej!}
@@ -34,7 +34,7 @@
 {133}{}{Nevidíš, že tady u toho stolu hraju?}
 {134}{}{Vsaï si nebo vypadni.}
 {135}{}{Nech nás být nebo zavolám stráž.}
-{136}{}{Bacha, jsem blízký pøítel Frye.}
+{136}{}{Dávej si bacha, dobøe se znám se zástupcem šerifa Fryem.}
 {137}{}{Dovolil bys?}
 {138}{}{Žádný peep show!}
 {139}{}{Skupináè nedìlám.}
@@ -46,12 +46,12 @@
 {145}{}{Zavolám policajty!}
 {146}{}{Na to ani nemysli!}
 {147}{}{Vypadni!}
-{148}{}{Ser na to!}
+{148}{}{Vypadni!}
 {149}{}{Na co èumíš?}
 {150}{}{Dovolíš?}
 {151}{}{Vypadni sakra z pokoje!}
 {152}{}{Ven!}
-{153}{}{Jste snad na mì dva?}
+{153}{}{Chceš se k nám pøidat?}
 {154}{}{Nech toho úchyle!}
 {155}{}{Co máš za problém?}
 {156}{}{Nech toho, nebo se naštvu.}
@@ -68,12 +68,12 @@
 {167}{}{Tomu nevìøím!}
 {168}{}{Chtìl jsem to tak udìlat.}
 {169}{}{Sázejte.}
-{170}{}{Ruce pryè pane.}
+{170}{}{Ruce pryè, pane.}
 {171}{}{Vítìz!}
 {172}{}{Sory lidi, možná pøíštì.}
 {173}{}{Další vítìz!}
 {174}{}{Ruce pryè!}
-{175}{}{Jste na øadì pane.}
+{175}{}{Jste na øadì, pane.}
 {176}{}{Promiòte, ale tahle sázka je neplatná.}
 {177}{}{To je ono.}
 {178}{}{Nìkdo další?}

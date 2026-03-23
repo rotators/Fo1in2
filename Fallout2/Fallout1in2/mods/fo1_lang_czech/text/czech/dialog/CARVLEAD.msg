@@ -1,13 +1,13 @@
-{100}{}{Vidíš vùdce karavany.}
+{100}{}{Vidíš vedoucího karavany.}
 {101}{}{Tak jsme tu. Tady je tvıch }
-{102}{}{ babek. [Vytahuje starı váèek z psí kùe a podává ti z nìj peníze.] Dostaneš dalších }
-{103}{}{, kdy se s námi vrátíš do Hubu. Nìjakou dobu si tu odpoèineme, ale nevzdaluj se pøíliš daleko, jinak karavana odcestuje bez tebe.}
+{102}{}{ babek. [Vytahuje starı ohmatanı pytlík a podává ti zátky.] Dostaneš dalších }
+{103}{}{ zátek, kdy se s námi vrátíš do Hubu. Nìjakou dobu si tu odpoèineme, ale nevzdaluj se pøíliš daleko, jinak karavana odcestuje bez tebe.}
 {104}{}{Aaa... OK.}
 {105}{}{Jak dlouho tu zùstanete?}
 {106}{}{Co mi mùeš øíct o Junktownu?}
-{107}{}{Co mi mùeš øíct o Pohøebišti?}
-{108}{}{Co mi mùeš øíct o Bratrstvu Oceli?}
-{109}{}{Nevím, jestli mi budeš rozumìt, ale za dvì hodiny odjídíme, a u s námi pùjdeš nebo ne.}
+{107}{}{Co mi mùeš øíct o L.A. kostnici?}
+{108}{}{Co mi mùeš øíct o Bratrstvu oceli?}
+{109}{}{Nevím, jestli tomu budeš rozumìt, ale vyráíme za dvì hodiny, nebo kdykoliv budeš pøipraven.}
 {110}{}{Um...}
 {111}{}{Hunh?}
 {112}{}{Jít. To dobré.}
@@ -16,12 +16,12 @@
 {115}{}{Myslím, e se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
 {116}{}{OK.  Tak mùeme vyrazit do Hubu.  Ani já tu nemusím nic vidìt.}
 {117}{}{Co mi mùeš øíct o Junktownu?}
-{118}{}{Co mi mùeš øíct o Pohøebišti?}
-{119}{}{Co mi mùeš øíct o Bratrstvu Oceli?}
+{118}{}{Co mi mùeš øíct o L.A. kostnici?}
+{119}{}{Co mi mùeš øíct o Bratrstvu oceli?}
 {120}{}{No, je to tu trochu jako v Hubu, opravdu. Mají tu ty samé problémy: gangy, vrazi, zlodìji, však víš... obvyklé vìci.  Tak jako tak, je to mùj typ mìsta. [Smìje se]}
 {121}{}{Jak dlouho tu karavana zùstane?}
 {122}{}{Myslím, e se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
-{123}{}{Tahle èást Pohøebištì se jmenuje Adytum.  V Pohøebišti vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor. Adytum øídí Regulátoøi. Chtìjí si tohle místo udret za kadou cenu. K cizincùm se chovají velice podezíravì, tak jestli jsi s nimi ještì nemluvil, doporuèuju ti, abys to udìlal døív, ne se jim tu zaèneš courat.}
+{123}{}{Tahle èást L.A. kostnice se jmenuje Adytum. V L.A. kostnici vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor. Adytum øídí Regulátoøi. Snaí se tohle místo udret pohromadì i pøes všechny ty gangsterskı války. K cizincùm se chovají pochopitelnì podezíravì, tak jestli jsi s nimi ještì nemluvil, doporuèuju ti, abys to udìlal døív, ne se jim tu zaèneš courat.}
 {124}{}{Prázdnı}
 {125}{}{Jak dlouho tu karavana zùstane?}
 {126}{}{Myslím, e se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
@@ -32,11 +32,11 @@
 {131}{}{Jedem!}
 {132}{}{Ne.  Ještì poøád se tu rozhlíím.}
 {133}{}{Jo.  Mùeme jet.}
-{134}{}{Tahle èást Pohøebištì se jmenuje Adytum.  V Pohøebišti vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor.}
+{134}{}{Tahle èást L.A. kostnice se jmenuje Adytum. V L.A. kostnici vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor.}
 {135}{}{Jak dlouho tu karavana zùstane?}
 {136}{}{Myslím, e se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
-{137}{}{OK.  Jak chceš. Tady je tvıch }
-{138}{}{ babek.  Pokud budeš chtít ještì práci, staèí si promluvit se šéfem.  Budu víc ne šastnı, kdy s tebou budu moct znovu dìlat. e jsi to ty, tak za tebe ztratím u šéfíka slovo. Mìj se.}
+{137}{}{OK. Zvládl jsi to. Tady je tvıch }
+{138}{}{ babek. Pokud budeš chtít ještì práci, staèí si promluvit se šéfem. Budu víc ne rád, kdy s tebou budu moct znovu dìlat. Pøimluvím se za tebe u šéfa. Mìj se.}
 {139}{}{Pá pá.}
 {140}{}{Nashle.}
 {141}{}{Hej, jak se vede?}
@@ -55,15 +55,15 @@
 {300}{}{Hleï si svıho, jasnı?}
 {400}{}{Za kecání mì neplatí.}
 {501}{}{Tak to mi teda øekni, proè jsi tu zatacenou karavanu opustil? Já tomu nemùu uvìøit! Máš z prdele kliku, e to chlapi dotáhli do konce bez tebe! Vypadni! Nedostaneš ani hovno!}
-{502}{}{Já tomu nemùu uvìøit! Jsem nasranej jak pes! Pøišli jsme o všechny karavany! Vypadni! Nedostaneš ode mì ani hovno!}
-{504}{}{Jdi za šéfem a sna se vymyslet nìjakou opradu dobrou historku o tom, proè jsi musel opustit karavanu. Moná pak dostaneš svoje prachy.}
-{505}{}{Já tomu nemùu uvìøit! Pøišli jsme o všechny karavany! Nemyslím si, e bych ti mìl zaplatit. Jdi a promluv si s šéfem.}
+{502}{}{Já tomu nemùu uvìøit! Pøišli jsme o celou karavanu! Vypadni! Nedostaneš ode mì ani hovno!}
+{504}{}{Jdi za šéfem a sna se vymyslet nìjakou opravdu dobrou historku o tom, proè jsi musel opustit tu zasranou karavanu. Moná pak dostaneš svoje prachy, ale pochybuju.}
+{505}{}{Já tomu nemùu uvìøit! Pøišli jsme o celou karavanu! Nedostaneš ode mì ani vindru. Vypadni mi z oèí.}
 {600}{}{No, tak jsme tady. Nemùu ti zaplatit normální sazbu, protoe jsme ztratili èást karavany. Musíme pokrıt naše ztráty. Tady je tvùj plat }
-{601}{}{ zátek. (Vytáhne starı koenı pytel a odpoèítá ti zátky) Dostaneš dalších }
-{602}{}{Pokud chceš další práci, promluv s šéfem. Tìším se na naši budoucí spolupráci.}
-{603}{}{ zátek. (Vytáhne starı koenı pytel a odpoèítá ti zátky) }
-{604}{}{Take jsi to pøeil. Nemùu ti nic zaplatit, protoe jsme ztratili celou karavanu. Musíme pokrıt naše ztráty. Je mi líto, ale takové jsou pravidla.}
-{605}{}{Take jsi to pøeil. Nemùu ti nic zaplatit, protoe všechny brahminy zemøely. Stál jsi nás hodnì penìz. ádné brahminy, ádná karavana, ádné peníze. Doufám, e spolu u nikdy nebudeme pracovat.}
+{601}{}{ zátek. [Vytáhne starı ohmatanı pytlík a odpoèítá ti zátky.] Dostaneš dalších }
+{602}{}{Pokud chceš další práci, promluv se šéfem. Nevadilo by mi s tebou znovu dìlat. Mìj se.}
+{603}{}{ zátek. [Vytáhne starı ohmatanı pytlík a odpoèítá ti zátky.] }
+{604}{}{Take jsi to pøeil. Nemùu ti nic zaplatit, protoe jsme ztratili celou karavanu. Musíme pokrıt naše ztráty, však víš. Je mi líto, ale takovı jsou pravidla.}
+{605}{}{Take jsi to pøeil. Nemùu ti nic zaplatit, protoe všechny brahmíny chcíply. Stál jsi nás hodnì penìz, chlapèe. ádnı brahmíny, ádná karavana, ádnı prachy. Doufám, e tì s náma u nikdy nenechaj dìlat.}
 #
 # Unload caravan quest - WG@RestorationProject
 #

@@ -15,15 +15,15 @@
 {114}{}{Ne, ještì ne.}
 {115}{}{Jistì. Jak se vám daøí?}
 {116}{}{Ughh!}
-{117}{}{Oh . . . ty mi nerozumíš. Mám pocit, že už nám pøíliš nadìje po tom všem nezbývá. Omluv mì, že pláèu.}
+{117}{}{Oh... ty mi nerozumíš. Mám pocit, že už nám pøíliš nadìje po tom všem nezbývá. Omluv mì, že pláèu.}
 {118}{}{Ugg!}
 {119}{}{Prosím najdi to, než moje dítì zemøe žízní.}
-{120}{}{[Hotovo]}
+{120}{}{[Odejít]}
 {121}{}{Musíš ho najít! Nesmíš nás nechat takhle umøít!}
-{122}{}{[Hotovo]}
+{122}{}{[Odejít]}
 {123}{}{Snaž se. Vìøím ti. Vìøím, že udìláš všechno, abys nás zachránil.}
-{124}{}{[Hotovo]}
-{125}{}{Bojím se toho, co se stane. Nìkdo nám tu krade vodu, takže všichni jedou už jen na rezervu.}
+{124}{}{[Odejít]}
+{125}{}{Bojím se toho, co se dìje. Nìkdo nám tu krade vodu, takže všichni jedou už jen na rezervu.}
 {126}{}{Kdo by takovou vìc udìlal?}
 {127}{}{Co se stalo?}
 {128}{}{Pár lidí už bylo obvinìno, nìkdo se kvùli tomu i popral, ale poøád se vlastnì neví, kdo to byl.}

@@ -12,9 +12,9 @@
 {110}{}{Hmph! Netipoval jsem tì na arogantního kreténa. Kliï se mi z oèí.}
 {111}{}{Zabere to maximálnì dva dny. Pojïme!}
 {112}{}{SHADYW.MAP}
-{113}{}{Moc lidí nezvládne Pustiny bez doprovodu. Kdo jsi?}
+{113}{}{Moc lidí nezvládne pustinu bez doprovodu. Kdo jsi?}
 {114}{}{Do toho ti nic není.}
-{115}{}{Jsem}
+{115}{}{Jsem }
 {116}{}{.}
 
 #TRANSLATION NOTE: 117 & 132 are for Stupid characters,

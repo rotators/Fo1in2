@@ -11,8 +11,8 @@
 {108}{}{Ruk?}
 {109}{}{Co se šeptá v souvislosti se zmizelımi karavanami?}
 # the Deathclaw is male
-{110}{}{Co víš o Páraèích?}
-{111}{}{Mùeš mi to o tìch Páraèích zopakovat?}
+{110}{}{Co víš o páraèích?}
+{111}{}{Mùeš mi to o tom Páraèi zopakovat?}
 # Decker is male
 {112}{}{Co mi mùeš øíct o Deckerovi?}
 {113}{}{Co mi mùeš øíct o ostatních obchodnících?}
@@ -22,17 +22,17 @@
 # Jain is a female religious figure
 {117}{}{No, já obvykle nešíøím fámy, ale slyšela jsem, e Deckerova smrt má jakousi spojitost s nájemnou vradou Jain.}
 # The Maltese Falcon is a bar
-{118}{}{Znám nìkoho, kdo zná kohosi, kdo vidìl jít do Maltese Falcona tøi hodnì velké postavy zahalené do hábitù - tìsnì pøed vradou.}
+{118}{}{Znám nìkoho, kdo zná kohosi, kdo vidìl jít do Maltézského sokola tøi hodnì velké postavy zahalené do hábitù - tìsnì pøed vradou.}
 # the Children of the Cathedral is an organization - religious
-{119}{}{Slyšela jsem, e nìkdo zabil Jain, Matku Pøedstavenou Dìtí Katedrály. Mì osobnì jsou popel, ale nevím, co by komu mohla udìlat, e si zaslouila takovı konec.}
+{119}{}{Slyšela jsem, e nìkdo zabil Jain, veleknìku Dìtí katedrály. Mì osobnì jsou popel, ale nevím, co by komu mohla udìlat, e si zaslouila takovı konec.}
 # The Brotherhood of Steel is an organization - religious
-{121}{}{Jeden mùj pøítel obchodník vidìl skupinu mutantù potloukající se pouští u Bratrstva Oceli, daleko na severozápad.}
-{122}{}{Slyšela jsem, e se Dìti Katedrály ptají lidí, kde jsi. Bıt tebou, dávala bych si pozor. Jsou to divní pavouci.}
+{121}{}{Jeden mùj pøítel obchodník vidìl skupinu mutantù potloukající se pouští u Bratrstva oceli, daleko na severozápad.}
+{122}{}{Slyšela jsem, e se Dìti katedrály ptají lidí, kde jsi. Bıt tebou, dávala bych si pozor. Jsou to divní pavouci.}
 {123}{}{No já obvykle nešíøím fámy, ale slyšela jsem, e Deckerova smrt má jakousi spojitost s nájemnou vradou Jain.}
-{124}{}{A ještì nìco. Znám nìkoho, kdo zná kohosi, kdo vidìl jít do Maltese Falcona tøi hodnì velké postavy zahalené do hábitù - tìsnì pøed vradou.}
-{125}{}{A ještì nìco. Nìkdo zabil Jain, Matku Pøedstavenou Dìtí Katedrály. Mì osobnì jsou popel, ale nevím, co by komu mohla udìlat, e si zaslouila takovı konec.}
-{126}{}{A ještì nìco. Mùj pøítel obchodník vidìl skupinu mutantù potloukající se pouští u Bratrstva Oceli, daleko na severozápad.}
-{127}{}{A ještì nìco. Dìti Katedrály se ptají lidí, kde jsi. Bıt tebou, dávala bych si pozor. Jsou to divní pavouci.}
+{124}{}{A ještì nìco. Znám nìkoho, kdo zná kohosi, kdo vidìl jít do Maltézského sokola tøi hodnì velké postavy zahalené do hábitù - tìsnì pøed vradou.}
+{125}{}{A ještì nìco. Nìkdo zabil Jain, veleknìku Dìtí katedrály. Mì osobnì jsou popel, ale nevím, co by komu mohla udìlat, e si zaslouila takovı konec.}
+{126}{}{A ještì nìco. Mùj pøítel obchodník vidìl skupinu mutantù potloukající se pouští u Bratrstva oceli, daleko na severozápad.}
+{127}{}{A ještì nìco. Dìti katedrály se ptají lidí, kde jsi. Bıt tebou, dávala bych si pozor. Jsou to divní pavouci.}
 {128}{}{Ještì nìco?}
 {129}{}{Dík. Mùu se zeptat ještì na nìco?}
 {130}{}{OK, dík.}
@@ -55,14 +55,14 @@
 {145}{}{Ano.}
 {146}{}{Ne.}
 {147}{}{No, vra se brzy. Nemusíš se tu cítit jako cizinec.}
-{148}{}{No, to je nìkdo, s kım není zdravé si zahrávat, dìsí mì. On 'vlastní' Maltese Falcon.}
-{149}{}{Proè ten tón? On 'vlastní' Maltese Falcon.}
+{148}{}{No, to je nìkdo, s kım není zdravé si zahrávat, dìsí mì. On 'vlastní' Maltézskı sokol.}
+{149}{}{Proè ten tón? On 'vlastní' Maltézskı sokol.}
 {150}{}{Proè tì dìsí?}
 {151}{}{Promiò, ale vyvolává ve mnì vzpomínky na pøítele, jemu ten bar patøil pøed ním. Decker chtìl ten bar za kadou cenu, ale mùj pøítel øekl, e není na prodej. O dva dny pozdìji ho našli mrtvého vzadu v aleji Starého Mìsta.}
 {152}{}{Proè si myslíš, e je za to zodpovìdnı Decker?}
 {153}{}{No, tvùj pøítel mìl vìdìt, e si hraje s ohnìm.}
 {154}{}{Promiò, ale musím jít.}
-{155}{}{Mùj pøítel nebyl úplnej blázen. Neprošel by se by jen sto metrù od Starého Mìsta. Ty díry, co mìl v sobì, vrtal doktor Magnum. Toho si nemùe dovolit nikdo ze Starého Mìsta. A navíc - byl støelen dvakrát zezadu, a pak do hlavy. Zní to jako loupe? Mùj pøítel se jenom snail vrátit svùj ivot do normálních kolejí.}
+{155}{}{Mùj pøítel nebyl úplnej blázen. Neprošel by se by jen sto metrù od Starého Mìsta. Ty díry, co mìl v sobì, vrtal doktor Magnum. Toho si nemùe dovolit nikdo ze Starého Mìsta. A navíc - byl støelen dvakrát zezadu a pak do hlavy. Zní to jako loupe? Mùj pøítel se jenom snail vrátit svùj ivot do normálních kolejí.}
 {156}{}{Jo, líbí se mi jeho styl. Poté, co parchanta poslal k zemi, odnesl jeho tìlo do míst, kde mu u zaiva chladla krev v ilách.}
 {157}{}{Do normálních kolejí?}
 {158}{}{To je mi líto.}
@@ -73,14 +73,14 @@
 {163}{}{To je ta nejblbìjší vìc, jaká kdy prošla mım sluchovım ústrojím!}
 {164}{}{Je tu ještì nìco, v èem ti mùu pomoct?}
 {165}{}{No tak sory. Ten, kdo se tu ptal, jseš TY!}
-{166}{}{Ten chlap zabil prej víc lidí ne cholera. Øíká se, e to tu celé vlastní. Kromì obchodníkù a policie. Jestli mu hodláš zkøíit cestu, udìlej to fofrem, ne tì stihne pøeválcovat.}
-{167}{}{To mu ale nedává "licenci zabíjet".}
+{166}{}{Ten chlap zabil prej víc lidí ne cholera. Øíká se, e to tu celé vlastní — ne obchodníci, ne policie, ale on. Jestli mu hodláš zkøíit cestu, udìlej to fofrem, ne tì stihne pøeválcovat.}
+{167}{}{To mu ale nedává „licenci zabíjet“.}
 {168}{}{Dìlá se mi z tebe šoufl. Je mi jasnı, e mu tvá spoleènost zcela urèitì chybí.}
-{169}{}{No, máme tu tøi obchodní skupiny. Jsou tu Kupci s vodou, Crimson caravan a Far Go Trader. Oni jsou taky Mìstská rada. O èem se chceš dozvìdìt?}
-{170}{}{Kupci s vodou.}
-{172}{}{Crimson caravan.}
-{173}{}{Far Go Trader.}
-{174}{}{Mìstská Rada.}
+{169}{}{No, máme tu tøi obchodní skupiny. Jsou tu Obchodníci s vodou, Karmínová karavana a Obchodníci Far Go. Oni jsou taky mìstská rada. O èem se chceš dozvìdìt?}
+{170}{}{Obchodníci s vodou.}
+{172}{}{Karmínová karavana.}
+{173}{}{Obchodníci Far Go.}
+{174}{}{Mìstská rada.}
 {175}{}{To je všechno. Díky za informaci.}
 {176}{}{No vlastnì - zapomeò na to.}
 {177}{}{Oni mají pod palcem všechnu vodu. Chamtiví lidi, nechtìla bych pro nì dìlat. Platìj hroznì a práce na tom není o nic líp.}
@@ -89,43 +89,43 @@
 {180}{}{Díky, další otázka o obchodnících...}
 {181}{}{Dík, sbohem.}
 {182}{}{Co chceš ještì vìdìt?}
-{183}{}{Ne. Podle toho, co jsem slyšela, pøed nìjakım èasem skupina obchodníkù pøevzala kontrolu nad vodním rezervoárem a prohlásila, e jsou Kupci s vodou a lidé si museli zaèít vodu kupovat. Obchodní válka zuøila po léta a do doby, kdy obchodník jménem Roy Greene - ano, dìdeèek Justina, pomohl dohodnout usnesení, které válku ukonèilo.}
+{183}{}{Ne. Podle toho, co jsem slyšela, pøed nìjakım èasem skupina obchodníkù pøevzala kontrolu nad vodojemem a prohlásila, e jsou Obchodníci s vodou a lidé si museli zaèít vodu kupovat. Obchodnická válka zuøila po léta a do doby, kdy obchodník jménem Roy Greene - ano, dìdeèek Justina, pomohl dohodnout usnesení, které válku ukonèilo.}
 {184}{}{Jakı druh usnesení?}
 {185}{}{Zatr-. Sory e jsem se vùbec ptal.}
 {186}{}{Dík, a ještì otázeèku o obchodnících...}
 {187}{}{Dík, èau.}
-{188}{}{No, on zaloil Mìstskou Radu a stanovil maximální cenu za galon vody. Já osobnì si myslím, e jim mìli dát poøádnì na prdel - oh, promiò. Chci jenom øíct, e Rada mìla ukázat, kdo je tady šéf.}
+{188}{}{No, on zaloil mìstskou radu a stanovil maximální cenu za galon vody. Já osobnì si myslím, e jim mìli dát poøádnì na prdel - oh, promiò. Chci jenom øíct, e rada mìla ukázat, kdo je tady šéf.}
 {189}{}{Supr! Sice jsem toho nepotøeboval vìdìt tolik, ale i tak díky!}
 {190}{}{Díky, a ještì otázeèku o obchodnících...}
 {191}{}{Dík, èau.}
 {192}{}{Sory, e se obèas nechám unést. Je tu ještì, co chceš vìdìt?}
-{193}{}{Crimson caravan je spolek šílencù. Odvedou jakoukoliv práci, na riziku nezáleí. Pøekvapuje mì jen, e nepostrádají víc karavan ne ty, co hlásí k dnešku.}
+{193}{}{Karmínová karavana je spolek šílencù. Odvedou jakoukoliv práci, na riziku nezáleí. Pøekvapuje mì jen, e nepostrádají víc karavan ne ty, co hlásí k dnešku.}
 {194}{}{Oni také postrádají karavany?}
 {195}{}{Jak riskantní?}
 {196}{}{Díky, a ještì otázeèku o obchodnících...}
 {197}{}{Díky a sbohem.}
-{198}{}{Projídìjí rovnou skrz území, na kterém útoèí Nájezdníci. Nechají si tuènì zaplatit, take si mohou dovolit extra vıpomoc. Platí dobøe, ale aby jeden ty prachy utratil, tak musí nejdøív dejchat, ne?}
+{198}{}{Projídìjí rovnou skrz území, na kterém útoèí nájezdníci. Nechají si tuènì zaplatit, take si mohou dovolit extra vıpomoc. Platí dobøe, ale aby jeden ty prachy utratil, tak musí nejdøív dejchat, ne?}
 {199}{}{Oni také postrádají karavany?}
 {200}{}{Díky, a ještì otázeèku o obchodnících...}
 {201}{}{Díky, sbohem!}
-{202}{}{Vlastnì kadému obchodnickému kartelu se ztrácejí karavany. Far Go Traders nemají zkrátka štìstí, alespoò to tak vypadá.}
+{202}{}{Vlastnì kadému obchodnickému kartelu se ztrácejí karavany. Obchodníci Far Go nemají zkrátka štìstí, alespoò to tak vypadá.}
 {203}{}{Jak riskantní?}
 {204}{}{Díky, a ještì otázeèku o obchodnících...}
 {205}{}{Díky, sbohem.}
-{206}{}{Far Go Traders platí dobøe a náplò práce pro není zas tak smrtonosná. Butchovi patøí tenhle kvelb; je to dobrej chlap. Far Go Traders jsou spravedliví a nechávají mì, a si s tímhle místem dìlám co chci; ráda pro nì pracuji. Jo a navíc - jestli dìláš pro Butche, dostaneš slevu na všechno, co prodávám.}
-{207}{}{Já osobnì si to nemyslím. Myslím, e to byli Páraèi nebo Bratrstvo Oceli.}
-{208}{}{Proè si myslíš, e to nebyli Kupci s vodou?}
-{209}{}{Co pøesnì je Páraè?}
-{210}{}{Mùeš mi to prosím zopakovat o tìch Páraèích?}
-{211}{}{Co je Bratrstvo Oceli?}
+{206}{}{Obchodníci Far Go platí dobøe a náplò práce pro nì není zas tak smrtonosná. Butchovi patøí tenhle kvelb; je to dobrej chlap. Obchodníci Far Go jsou spravedliví a nechávají mì, a si s tímhle místem dìlám co chci; ráda pro nì pracuji. Jo a navíc - jestli dìláš pro Butche, dostaneš slevu na všechno, co prodávám.}
+{207}{}{Já osobnì si to nemyslím. Myslím, e to byl Páraè nebo moná Bratrstvo oceli.}
+{208}{}{Proè si myslíš, e to nebyli Obchodníci s vodou?}
+{209}{}{Co pøesnì je páraè?}
+{210}{}{Mùeš mi to prosím zopakovat o tom Páraèovi?}
+{211}{}{Co je Bratrstvo oceli?}
 {212}{}{Proè si myslíš, e to bylo Bratrstvo?}
 {213}{}{Díky, vrame se zpìt k obchodníkùm.}
 {214}{}{OK, no u musím jít.}
-{215}{}{Nìkteøí lidé si myslí, e za to mùou Kupci s vodou, ale všichni jsou vedle. Já si myslím, e to byli ti zatrácení Páraèi, nebo moná lidi z Bratrstva Oceli.}
+{215}{}{Nìkteøí lidé si myslí, e za to mùou Obchodníci s vodou, ale všichni jsou vedle. Já si myslím, e to byl ten zatracenej Páraè, nebo moná lidi z Bratrstva oceli.}
 {216}{}{No, myslela jsem, e je to ono, co nièí karavany, ale asi se mılím. Je to stále tam venku. Kolem je slyšet moc zneklidòujících zpráv na to, aby to neexistovalo.}
-{217}{}{Myslím, e to je to, kvùli èemu mizí karavany. Taky by to mohlo bıt Bratrstvo Oceli; jsou to divní pavouci. Nìkteøí lidé si myslí, e to jsou Kupci s vodou, ale ti jsou vedle.}
+{217}{}{Myslím, e to je to, kvùli èemu mizí karavany. Taky by to mohlo bıt Bratrstvo oceli; jsou to divní pavouci. Nìkteøí lidé si myslí, e to jsou Obchodníci s vodou, ale ti jsou vedle.}
 {218}{}{Jistì.}
-{219}{}{Protoe, jak u jsem kadému øíkala, také se jim ztratilo pár karavan. Nic tak váeného jako u Far Go Traders, ale postieni tím jsou všichni.}
+{219}{}{Protoe, jak u jsem kadému øíkala, také se jim ztratilo pár karavan. Nic tak váného jako u Obchodníkù Far Go, ale postieni tím jsou všichni.}
 {220}{}{Mùou buï lhát, nebo to mùe bıt èást jejich plánu - pøesvìdèení širší veøejnosti, e oni za to nemùou.}
 {221}{}{Jak je moné, e se to stává pøedevším Far Go Traders?}
 {222}{}{Ještì jednu otázeèku ohlednì tìch ztracenıch karavan...}
@@ -139,19 +139,19 @@
 {230}{}{Další otázka ohlednì karavan...}
 {231}{}{Díky, vrame se teï zpìt k obchodníkùm.}
 {232}{}{Díky, ale musím jít.}
-{233}{}{Moná smùla? Nevím, ale moná, e cestují po jinıch trasách, ne ostatní. Moná e je to proto, e nejsou tak dobøe chránìni jako Crimson caravan, ale... moná, e mají prostì cennìjší náklady, ne Kupci s vodou. Kdo ví? Nezdá se, e by byl mezi nimi nìjakı jasnı rozdíl.}
-{234}{}{Kupci s vodou mùou buï lhát, nebo to mùe bıt èást jejich plánu - pøesvìdèení širší veøejnosti, e oni za to nemùou.}
+{233}{}{Moná smùla? Nevím, ale moná, e cestují po jinıch trasách, ne ostatní. Moná e je to proto, e nejsou tak dobøe chránìni jako Karmínová karavana, ale... moná, e mají prostì cennìjší náklady, ne Obchodníci s vodou. Kdo ví? Nezdá se, e by byl mezi nimi nìjakı jasnı rozdíl.}
+{234}{}{Obchodníci s vodou mùou buï lhát, nebo to mùe bıt èást jejich plánu - pøesvìdèení širší veøejnosti, e oni za to nemùou.}
 {235}{}{Další otázka ohlednì karavan...}
 {236}{}{Díky, vrame se teï zpìt k obchodníkùm.}
 {237}{}{Ty si NIKDY nepøestaneš povídat, co?!}
 {238}{}{Díky, ale musím padat.}
 {239}{}{Omluv mì! Mùeš samozøejmì odejít kdy chceš. Jestli jsi nechtìl slyšet odpovìï, pak ses nemìl ptát - borèe...}
-{240}{}{Páraè je ta nejhorší vìc, která povstala z popela po Válce. Nìkdo tvrdí, e je to silnı Démon války, kterı nenechává zemi zapomenout. S duchem to má spoleènı maximálnì prdy - to mi vìø. Je to reálná bytost jako ty a já. Je vysoká šest a pùl metru a má zuby velkı jako tvoje pøedloktí. Je to nìjakı druh stvùry, která si našla cestu do našeho svìta, kdy se matièka Zemì koupala v lázni z ohnì a radiace. }
+{240}{}{Páraè je ta nejhorší vìc, která povstala z popela po Válce. Nìkdo tvrdí, e je to silnı démon války, kterı nenechává zemi zapomenout. S duchem to má spoleènı maximálnì prdy - to mi vìø. Je to reálná bytost jako ty a já. Je vysoká šest a pùl metru a má zuby velkı jako tvoje pøedloktí. Je to nìjakı druh stvùry, která si našla cestu do našeho svìta, kdy se matièka Zemì koupala v lázni z ohnì a radiace.}
 {241}{}{Uh, sory, e jsem se vùbec ptal.}
 {242}{}{Ty jsi šílenec! Neboj se, ukonèím tvé trápení tady a teï!}
-{243}{}{Víš ještì nìco o Páraèi?}
+{243}{}{Víš ještì nìco o tom Páraèi?}
 {244}{}{Jù! Víš kde to je?}
-{245}{}{No - znám jednoho starıho mutanta, Harold se jmenuje. On tu vìc vidìl - a pøeil. Je jedinı koho znám, e vidìl Páraèe a il natolik dlouho, aby o ní mohl vyprávìt i svım potomkùm.}
+{245}{}{No - znám jednoho starıho mutanta, Harold se jmenuje. On tu vìc vidìl - a pøeil.}
 {246}{}{Jedinı, kdo vidìl a pøeil?}
 {247}{}{Jo jistì, já jsem papá Páraè.}
 {248}{}{Jo jistì, já jsem mamá Páraè.}
@@ -163,21 +163,21 @@
 {254}{}{Dík, vrame se k obchodníkùm.}
 {255}{}{Díky, mrknu se na to. Sbohem!}
 {256}{}{Uvidíš!}
-{257}{}{Jo, docela zajímavé, e? Je to kdesi jihozápadnì odsud. Ve Starém Mìstì ije starı mutant Harold. On tu vìc vidìl v doupìti. Je to ten nejmilejší mùa, jakého znám.}
+{257}{}{Jo, docela zajímavé, e? Je to kdesi jihozápadnì odsud. Ve Starém Mìstì ije starı mutant Harold. On tu vìc vidìl v doupìti. Je to ten nejmilejší ztroskotanec, jakého znám.}
 {258}{}{Další otázka ohlednì zmizelıch karavan...}
 {259}{}{Díky, vrame se teï k obchodníkùm.}
 {260}{}{Díky, mrknu se na to. Sbohem!}
-{261}{}{Bratrstvo Oceli je plné bláznù, co vzıvají technologii jako kult; jsou severozápadnì odsud. Provádìjí lidské obìti a dìlají mnoho jinıch odpornıch vìcí.}
+{261}{}{Bratrstvo oceli je plné bláznù, co vzıvají technologii jako kult; jsou severozápadnì odsud. Provádìjí lidské obìti a dìlají mnoho jinıch odpornıch vìcí.}
 {262}{}{To je absurdní! Kdo ti to øekl?}
 {263}{}{Další otázka ohlednì karavan...}
 {264}{}{Díky, vrame se nyní k obchodníkùm.}
 {265}{}{To je hrozné! Díky za varování.}
-{266}{}{Mno, ech... Hm. Nepamatuju se, ale a u to øekl kdokoliv, tak nelhal... Chci tím øíct, e to "mùe" bıt pravda! Prostì dávat si pozor není nikdy na škodu.}
+{266}{}{Mno, ech... Hm. Nepamatuju se, ale a u to øekl kdokoliv, tak nelhal... Chci tím øíct, e to „mùe“ bıt pravda! Prostì dávat si pozor není nikdy na škodu.}
 {267}{}{Další otázka ohlednì zmizelıch karavan...}
 {268}{}{No, vrame se k obchodníkùm.}
 {269}{}{Ty jseš debil!}
 {270}{}{Jeíšmarjá, to u je tolik? Musím padat, èau!}
-{271}{}{Coe, ty to nevíš? [šeptem] Kolují fámy, e provádìjí lidské obìti a dìlají i jiné hrozné vìci.}
+{271}{}{Coe, ty to nevíš? [šeptem] Kolují fámy, e provádìjí lidské obìti a dìlají i jiné hrozné vìci!}
 {272}{}{Ano, to dìláme. A co je na tom špatného?}
 {273}{}{Jako 'ÈLEN' Bratrstva, tì mohu UJISTIT, e se nic takového NEDÌJE.}
 {274}{}{Opravdu? Byl jsem tam a skuteènì vypadali divnì. Ale rozhodnì nevypadali jako nìkdo, kdo zbyteènì prolévá lidskou krev.}
@@ -231,7 +231,7 @@
 {321}{}{Tady jsi! U je tomu tıden, co jsi se stavil naposledy. Musíš mi o sobì dávat vìdìt èastìji, protoe ty JSI mùj oblíbenı zákazník!}
 {322}{}{Ano?}
 {323}{}{Co?}
-{324}{}{Pøišel jste nìco koupit, nebo co?}
+{324}{}{Pøišel jsi nìco koupit, nebo co?}
 {325}{}{Tohle je mùj krám, tak se podle toho chovej.}
 {326}{}{Co je to!}
 {327}{}{Zase vy?}
@@ -293,17 +293,17 @@
 {383}{}{Hej. Zùstaò, kde jsi, Side!}
 {384}{}{Nemyslím si, chytráku.}
 {385}{}{Udìlám z tebe modráka, jestli nenecháš mé zákazníky na pokoji!}
-{386}{}{Prosím omluv mého "vlezlého" stráce.}
+{386}{}{Prosím omluv mého „vlezlého“ stráce.}
 {387}{}{Ty jseš TAKOVEJ vùl!}
 {388}{}{Side!}
 {389}{}{Miláèku? Kde jsi pøišla k tìmhle znervózòujícím jménùm?}
-{390}{}{[Beth zakuòká] Já...}
+{390}{}{[Beth si povzdechne] Já...}
 {391}{}{ bych ho mìla dát pod zámek, co myslíš?}
 {392}{}{Myslím, e árlí!}
 {393}{}{Side! Nebuï sprostı na zákazníky!}
-{394}{}{Neznáš ještì nìkoho, kdo by mohl vìdìt nìco o Páraèi?}
+{394}{}{Neznáš ještì nìkoho, kdo by mohl vìdìt nìco o tom Páraèi?}
 {395}{}{Nashledanou.}
 {396}{}{Díky.}
 {397}{}{O-oukej.}
-{398}{}{Je tu ve mìstì nìjaké místo, které "nechci navštívit"?}
-{399}{}{Pokud mùu radit, udruj si bezpeènou vzdálenost od Maltese Falcona. Decker a jeho umaštìnı nohsled Kane pøinášejí pouze zlé zprávy. Kdy nebudeš opatrnı, tak ti sedøou kùi z tìla, ani nemrkneš... Lidé mající rádi vlastní ivot také chodí širokım obloukem kolem Lorenza z Friendly Lending Company.}
+{398}{}{Je tu ve mìstì nìjaké místo, které „nechci navštívit“?}
+{399}{}{Pokud mùu radit, udruj si bezpeènou vzdálenost od Maltézského sokola. Decker a jeho umaštìnı nohsled Kane pøinášejí pouze zlé zprávy. Kdy nebudeš opatrnı, tak ti sedøou kùi z tìla, ani nemrkneš... Lidé mající rádi vlastní ivot také chodí širokım obloukem kolem Lorenza z Friendly Lending Company.}

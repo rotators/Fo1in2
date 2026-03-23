@@ -19,10 +19,10 @@
 {118}{}{Vodpal.}
 {119}{}{Pro chudáky tu nemáme místo.}
 {120}{}{Gizmo je rovný chlap. Práce je snadná, platí dobøe. Nedìlej potíže a všichni budou v pohodì.}
-{121}{}{Skoè si na pár drinkù do Skum Pitu. Bezva grog. Otvírají ve ètyøi. Teï mì nech na pokoji.}
+{121}{}{Skoè si na pár drinkù do Špinadíry. Bezva grog. Otvírají ve ètyøi. Teï mì nech na pokoji.}
 {122}{}{Proè si nejdeš nakoupit ke Killianovi? Má obchod na jihovýchod odsud. Teï zmiz.}
 {123}{}{Promluv si s krupiery.}
-{124}{}{Hej, pokud se chceš trochu pobavit, ptej se na Sinthii v Crash House. Stojí za to.}
+{124}{}{Hej, pokud se chceš trochu pobavit, ptej se na Sinthii v Chrápárnì. Stojí za to.}
 {125}{}{Žádný triky.}
 {126}{}{Dlužníci budou zastøeleni.}
 {127}{}{Teda, ten krk mì ale bolí.}

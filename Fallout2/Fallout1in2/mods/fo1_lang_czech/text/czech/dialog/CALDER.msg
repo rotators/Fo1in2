@@ -17,16 +17,16 @@
 {116}{}{Zdravím tì, paní. Nepotøebuješ meditaèní kvìtinu?}
 {117}{}{Stalo se tu v poslední dobì nìco zajímavého, hochu?}
 {118}{}{Jistì, mé dítì.}
-{119}{}{Ne teï ne.}
+{119}{}{Ne, teï ne.}
 {120}{}{Kytka bıt dobrá?}
 {121}{}{Nestrkej mi ten plevel pod nos, ty mròavej spratku!}
-{122}{}{Slyšel jsem, e Otce Morphea navštívil sám Vùdce. Je teï velmi šastnı.}
+{122}{}{Slyšel jsem, e otce Morphea navštívil sám Vùdce. Je teï velmi šastnı.}
 {123}{}{Ještì nìco?}
 {124}{}{To se vsadím.}
-{125}{}{Ne teï ne.}
+{125}{}{Ne, teï ne.}
 {126}{}{Kytka bıt dobrá?}
 {127}{}{Nestrkej mi ten plevel pod nos, ty mròavej spratku!}
-{128}{}{Otec Lasher øíká, e bych mìl tu svojí velkou pusu dret zavøenou. Není s ním ádná legrace!}
+{128}{}{Otec Lasher øíká, e bych mìl tu svoji velkou pusu dret zavøenou. Není s ním ádná legrace!}
 {129}{}{Sakra kluku. Urèitì jsi nìco vidìt musel!}
 {130}{}{Otec Lasher?}
 {131}{}{Legrace bıt dobrá.}
@@ -38,7 +38,7 @@
 {137}{}{Klidnì. A já jim povím o tobì.}
 {138}{}{Zkus o mnì nìkomu vykládat, prcku a je po tobì!}
 {139}{}{Ovšeme. Sám jsem ji utrhl v lesíku nedaleko mìsta. No, rád jsem se s tebou setkal. Nech ti Vùdce ehná.}
-{140}{}{Co mùu udìlat? Co mùu udìlat?!}
+{140}{}{Co jsem udìlal? Co jsem udìlal?!}
 {141}{}{Opravdu nechcete kvìtinu?}
 {142}{}{Vezmu si ji, kdy mi øekneš, co se tu dìje.}
 {143}{}{Fajn. Vezmu si ji.}
@@ -53,9 +53,9 @@
 {152}{}{Uèitel? Kdo potøebuje uèitele?}
 {153}{}{A poøád ještì ses nenauèil, kdy máš dret hubu? Ty musíš mít o koleèko míò, hochu.}
 {154}{}{Uh, sbohem!}
-{155}{}{Jo. To je. No sbohem_ a_ a ti Vùdce poehná!}
-{156}{}{Ale Nightkinové mì mají rádi! Øekli mi, e kdyby mì nìkdo obtìoval, tak ho zabijou. Tak teï je ta chvíle!}
-{157}{}{Slyšel jsem, e je tu nìkde tajnı prùchod, ale ještì se mi ho nepodaøilo najít. Je to hroznì nebezpeèné. Do tìch míst smí jen Morpheus a Nightkinové. No, radìji u pùjdu. Chvalte Vùdce!}
+{155}{}{Jo. To je. No, sbohem a a ti Vùdce poehná!}
+{156}{}{Ale Nightkinové mì mají rádi! Øekli mi, e kdyby mì nìkdo obtìoval, tak ho zabijou. Tak vida!}
+{157}{}{Slyšel jsem, e je tu nìkde tajnı prùchod, ale ještì se mi ho nepodaøilo najít. Je to hroznì nebezpeèné. Do tìch míst smí jen Morpheus a Nightkinové. No, radìji u pùjdu. Chvála Vùdci!}
 {158}{}{To je škoda. Nech ti Vùdce poehná.}
 {159}{}{Prosím neøíkej mu, e jsem ti nìco øíkal! Prosím!}
 {160}{}{Neboj se. A s ním skonèím, nevzpomene si u ani na to, jak se jmenuje.}
@@ -67,12 +67,12 @@
 {166}{}{Prosím ne! On mì miluje! On je ten jedinı, kdo mì má rád.}
 {167}{}{To bude oukej, urèitì. A ti Vùdce ehná. Sbohem.}
 {168}{}{Díky! Oh díky! Nech Vùdce poehná tobì. Sbohem.}
-{169}{}{Dobrá . . . (vzlyká) Snad ke mnì, a Vùdce dobude svìt, bude Otec Lasher laskavìjší.}
+{169}{}{Dobrá... *šmrk* Snad ke mnì bude otec Lasher laskavìjší, a Vùdce dobude svìt.}
 {171}{}{A kdy Vùdce hodlá dobıt svìt?}
 {172}{}{Øekni mi o tom nìco víc, hochu.}
 {173}{}{To nebude. Bude ještì horší. Ale jestli si chytrı, staò se jeho oblíbencem a on tì zase nechá trápit ty nové dìti, které sem pøijdou a po tobì.}
 {174}{}{Ugh! Já mít rád laskavost.}
-{175}{}{Brzy, aspoò tak mi to øekli. Všude bude mír, jednota a Svatı Oheò bude osvìcovat tu krásu. A moná i Otec Morpheus nebude tak hlasitı.}
+{175}{}{Brzy, aspoò tak mi to øekli. Všude bude mír, Jednota a Svatı plamen bude osvìcovat tu krásu. A moná i otec Morpheus nebude tak hlasitı.}
 {176}{}{Ještì nìco?}
 {177}{}{Otec Morpheus?}
 {178}{}{Rámus je únavnı!}
@@ -87,9 +87,9 @@
 {187}{}{Èau prcku. Mùeš mi øíct, co je tohle místo zaè?}
 {188}{}{Èau kluku. Co ty dìláš v tıhle putyce?}
 {189}{}{Èau prcku. Jak se vede?}
-{190}{}{jdi mi z oèí, fakane, nebo si tvojí kùi naøeu na øemeny!}
+{190}{}{Jdi mi z oèí, fakane, nebo si tvojí kùi naøeu na øemeny!}
 {191}{}{Ahoj? Tanèit s kvìtinou! To je legrace!}
-{192}{}{Toto je Katedrála øádu Dìti Katedrály. Ani nevím, proè je tam ta Katedrála dvakrát. Uctíváme našeho Vùdce, a hodnì se tu taky køièí o Míru a Jednotì. Zní to trochu jako blbost, ale Vùdce je opravdu moudrı, tak si myslím, e na tom nìco bıt musí.}
+{192}{}{Toto je Katedrála øádu Dìti katedrály. Ani nevím, proè je tam ta katedrála dvakrát. Uctíváme našeho Vùdce a hodnì se tu taky køièí o míru a Jednotì. Zní to trochu jako blbost, ale Vùdce je opravdu moudrı, tak si myslím, e na tom nìco bıt musí.}
 {193}{}{Øekni mi o tom Vùdci víc.}
 {194}{}{Mnì to taky zní jako pìkná blbost. A co tu dìláš?}
 {195}{}{Prosím, nemluv tak o našich pøedstavenıch, ano?}
@@ -99,12 +99,12 @@
 {199}{}{Jistì.}
 {200}{}{Ne, díky.}
 {201}{}{Seru na mír. Seru na jednotu. A nestrkej mi tu pitomou kytku pøed ksicht!}
-{202}{}{Otec Lasher øíká, e bych nemìl mluvit s cizinci . . . ne dokud nebudeme mít Jednotu, samozøejmì; protoe pak u nikdo nebude cizincem. Sbohem!}
+{202}{}{Otec Lasher øíká, e bych nemìl mluvit s cizinci... ne dokud nebudeme mít Jednotu, samozøejmì; protoe pak u nikdo nebude cizincem. Sbohem!}
 {203}{}{Já jsem oukej. Aspoò do pøíští lekce Otce Lashera.}
 {204}{}{Moná, kdybys studoval trochu usilovnìji, nebyly by takové lekce potøeba.}
 {205}{}{Øekni mi o Otci Lasherovi trochu víc.}
 {206}{}{Jaké lekce?}
 {207}{}{Pøestaò kvièet, ty mròavej zmetku, a buï rád, e se nìkdo vùbec namáhá, aby tì nìco nauèil!}
 {208}{}{Já nikdy nic nedìlám dost dobøe! Nikdy!}
-{209}{}{[Konec]}
+{209}{}{[Odejít]}
 #

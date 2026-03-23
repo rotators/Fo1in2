@@ -37,12 +37,12 @@
 {1102}{}{Nevím.}
 {1103}{}{Velcí smraïoši.}
 {1104}{}{Zeptej se mámy.}
-{1105}{}{Hodný lidi. Dávají mi bonbóny.}
+{1105}{}{Legraèní písnièky o moøi.}
 {1106}{}{Strašnì zlobí!}
 {1107}{}{Ošklivej pán.}
 {1108}{}{To ti nepovím.}
 {1109}{}{Velký mìsto.}
-{1110}{}{To se neøíká.}
+{1110}{}{To ti neøeknu.}
 {1111}{}{Néévíím.}
 {1112}{}{Máma nechce, abych o nìm mluvil.}
 {1113}{}{Táta o nìm øíká, že je legraèní.}
@@ -55,7 +55,7 @@
 {2004}{}{Nekropolis}
 {2005}{}{Spot}
 {2006}{}{Bratrstvo}
-{2007}{}{Pohrebiste}
+{2007}{}{Boneyard|BONEYARD|LA|LOS ANGELES|Kostnice}
 {2008}{}{Veze}
 {2009}{}{Mesto}
 {2010}{}{Centrum}

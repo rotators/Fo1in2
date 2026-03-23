@@ -5,4 +5,4 @@
 {104}{}{Na obrazovce se objevily rùznì zbarvené pruhy.}
 {105}{}{Obrazovka poèítaèe ukazuje malé zelené bomby nekoneènì padající k zemi.}
 {106}{}{Nemùžeš se hacknout do poèítaèe.}
-{107}{}{Získal jsi pøístup k nìjakým elektronickým poznámkám. Nejzajímavìjší je zpráva od poruèíka "...další lidské objekty k transformaci. Pošlete je okamžitì do vojenské základny."}
+{107}{}{Získal jsi pøístup k nìjakým elektronickým poznámkám. Nejzajímavìjší je zpráva od Poruèíka: „...další lidské subjekty k ponoøení. Pošlete je okamžitì na vojenskou základnu.“}

@@ -1,8 +1,8 @@
-{100}{}{Vidíš Orfea, staršího èlena Dìtí Katedrály.}
-{101}{}{Ach. Nová promìnìnec. Fítej.}
-{102}{}{To bude moje smrt!}
-{103}{}{Nejsem promìnìný!}
-{104}{}{Díky, brácho.}
-{105}{}{Za chfilka tedy mùžeme ten problém fyøešit.}
-{106}{}{Nejdøíf tì musíme odstranit ty neèistota z Pustina. Pojï.}
+{100}{}{Vidíš Orfea, staršího èlena Dìtí katedrály.}
+{101}{}{Ach. Nový promìnìnec. Fítej.}
+{102}{}{Já zabít!!!}
+{103}{}{Nejsem promìnìnec!}
+{104}{}{Díky, bratøe.}
+{105}{}{Za chfilku tedy mùžeme ten problém fyøešit.}
+{106}{}{Nejdøíf tì musíme oèistit od tìch neèishtot z pushtiny. Pojï.}
 {107}{}{My tì oèistíme!}

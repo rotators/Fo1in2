@@ -1,1 +1,1 @@
-{100}{}{Exploze na mocných dveøí Vaultu nezanechala ani škrábanec.}
+{100}{}{Exploze na mocných dveøích Vaultu nezanechala ani škrábanec.}

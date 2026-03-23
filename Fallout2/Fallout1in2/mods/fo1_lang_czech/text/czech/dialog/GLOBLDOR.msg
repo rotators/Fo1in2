@@ -1,5 +1,5 @@
 {100}{}{Rám tìchto dveøí nese zbytky modrého oznaèení.}
-{101}{}{Dostal jsi od dveøí slabou elektrickou ránu.}
+{101}{}{Dostal jsi od dveøí slabou elektrickou ránu a utrpìl jsi jeden hit bod.}
 {102}{}{Dostal jsi od dveøí silnou elektrickou ránu. Byl jsi zranìn za }
 {103}{}{ hit bodù.}
 {104}{}{Dokázal jsi dveøe otevøít.}
@@ -37,8 +37,8 @@
 {135}{}{Vidíš zamèené dveøe s vysokonapìovım bezpeènostním systémem v provozu.}
 {136}{}{Zámek na tìchto èervenıch dveøích asi vyaduje speciální klíè.}
 {137}{}{Zámek na tìchto èervenıch dveøích asi vyaduje speciální klíè.}
-{138}{}{Zámek na tìchto dveøích asi vyaduje speciální èervenı klíè. Navíc jsi zpozoroval záøící rudé pole pøede dveømi.}
-{139}{}{Zámek na tìchto dveøích asi vyaduje speciální èervenı klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeèností systém.}
+{138}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi zpozoroval záøící rudé pole pøede dveømi.}
+{139}{}{Zámek na tìchto dveøích asi vyaduje speciální èervenı klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeènostní systém.}
 
 {140}{}{Vidíš odemèené dveøe.}
 {141}{}{Vidíš odemèené dveøe.}
@@ -54,8 +54,8 @@
 {151}{}{Vidíš zamèené dveøe s vysokonapìovım bezpeènostním systémem v provozu.}
 {152}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè.}
 {153}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè.}
-{154}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi zpozoroval záøící rudé pole pøede dveømi.}
-{155}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeèností systém.}
+{154}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi zpozoroval záøící pole pøede dveømi.}
+{155}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeènostní systém.}
 
 {156}{}{Vidíš odemèené dveøe s modrou kresbou.}
 {157}{}{Vidíš odemèené dveøe s modrou kresbou.}
@@ -72,7 +72,7 @@
 {168}{}{Zámek na tìchto modrıch dveøích asi vyaduje speciální klíè.}
 {169}{}{Zámek na tìchto modrıch dveøích asi vyaduje speciální klíè.}
 {170}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi zpozoroval záøící modré pole pøede dveømi.}
-{171}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeèností systém.}
+{171}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeènostní systém.}
 
 {172}{}{Vidíš odemèené dveøe s modrou kresbou.}
 {173}{}{Vidíš odemèené dveøe s modrou kresbou.}
@@ -88,8 +88,8 @@
 {183}{}{Vidíš zamèené dveøe s vysokonapìovım bezpeènostním systémem v provozu.}
 {184}{}{Zámek na tìchto modrıch dveøích asi vyaduje speciální klíè.}
 {185}{}{Zámek na tìchto modrıch dveøích asi vyaduje speciální klíè.}
-{186}{}{Zámek na tìchto dveøích asi vyaduje speciální modrı klíè. Navíc jsi zpozoroval záøící modré pole pøede dveømi.}
-{187}{}{Zámek na tìchto dveøích asi vyaduje speciální modrı klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeèností systém.}
+{186}{}{Zámek na tìchto dveøích asi vyaduje speciální klíè. Navíc jsi zpozoroval záøící modré pole pøede dveømi.}
+{187}{}{Zámek na tìchto dveøích asi vyaduje speciální modrı klíè. Navíc jsi na dveøích zpozoroval vysokonapìovı bezpeènostní systém.}
 
 {188}{}{Vidíš dveøe s èervenou kresbou.}
 {189}{}{Vidíš dveøe s pohyblivım èervenım polem pøed sebou.}
@@ -112,4 +112,4 @@
 {203}{}{Vidíš modré dveøe s vysokonapìovım bezpeènostním systémem v provozu. Zajímalo by tì, zda je tu klíè na jeho pøekonání.}
 
 {204}{}{Na dveøích jsi si všimnul pasti.}
-{205}{}{Vıtah nefunguje. Vyaduje vìtší napìtí, ne dodává nouzové zdroj.}
+{205}{}{Vıtah nefunguje. Vyaduje vìtší napìtí, ne dodává nouzovı zdroj.}

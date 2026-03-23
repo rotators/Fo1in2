@@ -18,7 +18,7 @@
 {117}{}{Prosím o odpuštìní, pane. Èím mohu sloužit?}
 {118}{}{Prosím o odpuštìní, paní. Èím mohu sloužit?}
 {119}{}{Buï se mnou budeš pøíštì mluvit s úctou, nebo už si nepromluvíš s nikým!}
-{120}{}{Vùdcova pravda je odhalena, výsledkem jsou zvýšené mentální schopnosti. [potøásá hlavou] Ale ty nebohé duše se definitivnì zblázní, a pak ty chudáky musíme separovat a vymýt jim mozky, aby nemohli ublížit sobì ani ostatním.}
+{120}{}{Ukáže se Vùdcova pravda, což vede k posílení psychických schopností. [Potøásá hlavou.] Ty nebohé duše však propadnou nevyléèitelnému šílenství, a tak je musíme izolovat a anulovat, aby nemohly ublížit sobì ani ostatním.}
 {121}{}{Och, jak ohleduplné...}
 {122}{}{Kde jsou drženi?}
 {123}{}{Ty necitelnej øezníku! Myslím, že ti vymeju mozek a separuju ho od zbytku tìla! Chcípni, ty zrùdo!}
@@ -29,7 +29,7 @@
 {128}{}{Nemám èas na tvoje šaškárny!}
 {129}{}{Jak fascinující nápad! Hned to musím vyzkoušet!}
 {130}{}{Uf, kde skladujete ty nepodaøené experimenty?}
-{131}{}{Nemluv o tom.}
+{131}{}{Nemáš zaè.}
 {132}{}{Jasnì! Zkusme to na tobì!}
 {133}{}{Vincente! Pøichystej našeho nejnovìjšího dobrovolníka!}
 {134}{}{Cože? To je ta nejabsurdnìjší vìc, co jsem kdy slyšel! [dívá se na tebe podezíravì] Kdo vlastnì jsi?}
@@ -40,18 +40,18 @@
 {139}{}{Tak jo. No, jak to jde?}
 {140}{}{Tvùj postoj mi prozradil všechno, co jsem potøeboval. Sbohem.}
 {141}{}{Aha! Vetøelec! Já to tušil. Vincente!}
-{142}{}{Kdo jsi? A proè máš tuhle róbu? [sám k sobì] Takovou už jsem pìknì dlouho nevidìl.}
+{142}{}{Kdo jsi? A proè máš na sobì ten oblek? [sám k sobì] Takový už jsem pìknì dlouho nevidìl.}
 {143}{}{Jsem v pøestrojení. Vetøelci pronikli do Vùdcova úkrytu. Jsem obleèen jako oni, abych si získal jejich dùvìru.}
-{144}{}{Jak se opovažuješ ptát se na Vùdcovy tajné operace!}
-{145}{}{A kdy jsi takové róby vidìl?}
-{146}{}{Je to leštìná guma, takže to bude snadné omýt, až tì zabiju!}
-{147}{}{No, víš, když jsme dostali tu poslední dávku èistých lidí v... Myslím, že jeden ještì zùstal v celách. Proè se ptáš?}
+{144}{}{Jak se opovažuješ zpochybòovat jednoho z Vùdcových tajných agentù!}
+{145}{}{A kdy jsi takový oblek vidìl?}
+{146}{}{Je z lisovaný gumy, takže po tobì bude snadný setøít krev, až tì zabiju!}
+{147}{}{No, víš, když jsme dostali tu poslední dávku èistokrevných lidí... Myslím, že jeden ještì zùstal v celách. Proè se ptáš?}
 {148}{}{Jen tak. Jak jdou pokusy?}
 {149}{}{Musím podat hlášení Vùdci. Na tohle nemám èas.}
-{150}{}{[potøásá hlavou] Bohužel, ty nebohé duše se definitivnì zblázní a my  musíme ty chudáky separovat a vymýt jim mozky, aby nemohli ublížit sobì ani ostatním.}
+{150}{}{[Potøásá hlavou.] Ach, ty nebohé duše... propadnou nevyléèitelnému šílenství, takže je musíme izolovat a anulovat, aby nemohly ublížit sobì ani ostatním.}
 {151}{}{Och, jak ohleduplné...}
-{152}{}{Ty necitelnej øezníku! Myslím že ti vymeju mozek a separuju ho od zbytku tìla! Chcípni, ty zrùdo!}
-{200}{}{Vidíš Vindenta, supermutantího strážného. Vypadá znudìnì.}
+{152}{}{Ty necitelnej hajzle! Myslím, že ti vymeju mozek a separuju ho od zbytku tìla! Chcípni, ty zrùdo!}
+{200}{}{Vidíš Vincenta, supermutantího strážného. Vypadá znudìnì.}
 {201}{}{Vidíš supermutanta, který zjevnì hlídá vìdce. Vypadá znudìnì.}
 {202}{}{Vetøelci!}
 {203}{}{Jenom kontroluju cvoky. Nemluv na mì.}

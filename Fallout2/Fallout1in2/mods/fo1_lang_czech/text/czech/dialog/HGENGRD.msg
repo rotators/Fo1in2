@@ -1,4 +1,4 @@
-{100}{}{Vidíš hlídku.}
+{100}{}{Vidíš strážného.}
 {101}{}{Hej! Ty tu nemáš co dìlat.}
 {102}{}{Nevidíš, že si chci odpoèinout?}
 {103}{}{Je èas na malou relaxaci.}
@@ -8,10 +8,10 @@
 {107}{}{Ty jsi nový?}
 {108}{}{Nech mì na pokoji, mám toho dost.}
 {109}{}{Chce si nìkdo zahrát karty?}
-{110}{}{Kdo chce mojí noèní šichtu?}
-{111}{}{Zítra vyrazíme do Falconu.}
+{110}{}{Kdo chce moji noèní šichtu?}
+{111}{}{Zítra vyrazíme do Sokola.}
 {112}{}{Jasnì.}
-{113}{}{Kdo chce jít tenhle týden lovit škorpióny?}
+{113}{}{Kdo chce jít tenhle týden lovit radškorpióny?}
 {114}{}{Bolí mì nohy.}
 {115}{}{Chtìlo by to dát si dvacet.}
 {116}{}{Bude dneska výplata?}

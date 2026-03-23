@@ -3,5 +3,5 @@
 {102}{}{Dveøe nejsou zamèené.}
 {103}{}{Obejdeš bezpeènostní kód a otevíráš dveøe.}
 {104}{}{Nemùžeš odemknout dveøe.}
-{105}{}{Nemùžeš odemknout dveøe. Možný by bylo snadnìjší, kdybys použil sadu paklíèù.}
+{105}{}{Nemùžeš odemknout dveøe. Možná by bylo snazší, kdybys použil sadu paklíèù.}
 {106}{}{Exploze byla silná, ale na bezpeènostních dveøích neudìlala ani škrábanec.}

@@ -1,11 +1,11 @@
-{100}{}{Vidíš lupièe.}
+{100}{}{Vidíš rváèe.}
 {101}{}{Hej, nejsi náhodou ten parchant, kterej nás podrazil? Sakra, to seš na špatnı adrese!}
 {102}{}{Hej, nejsi náhodou ta mrcha, která nás podrazila? Sakra, to seš na špatnı adrese a teï za to zaplatíš!}
 {103}{}{Jsem na vaší stranì, tak táhni z cesty!}
-{104}{}{Pleteš se. V Pustinì vypadají všichni stejnì.}
+{104}{}{Pleteš se. V pustinì vypadají všichni stejnì.}
 {105}{}{Špatná adresa? Dobøe si mì prohlídni!}
 {106}{}{Chceš si nìco zaèít? Radši padni na kolena ne nìco zkusím já. Do toho, tak jen do toho! A teèe krev!}
-{107}{}{Špatná adresa? Já neprohrávám!}
+{107}{}{Špatnı místo? Já se neztratit!}
 {108}{}{Jo. Vo co de?}
 {109}{}{Kruci, chci mluvit s nìjakım skuteènım èlovìkem. Z tìchhle zombií mám akorát husí kùi.}
 {110}{}{Bratøe, nepokloníš se Vùdci se mnou?}
@@ -15,7 +15,7 @@
 {114}{}{Jídlo! Já chtít jíst!}
 {115}{}{Hej, neslyšel u jsem o tobì? To jsi byl ty, cos vytlouk všechen ten póvl, co? Co tì k nám pøivádí?}
 {116}{}{Slyšel jsem o pár podivnejch událostech, co se tu staly. Tak o co bìí?}
-{117}{}{Mír, sjednocení, a tak podobnì.}
+{117}{}{Mír, Jednota, a tak podobnì.}
 {118}{}{Kde je Vùdce?}
 {119}{}{Prostì hledám kámoše. Nìkoho na pokec.}
 {120}{}{Øíká se, e prej tu nalejváte kvalitní zboí.}
@@ -31,8 +31,8 @@
 {130}{}{Chci mluvit s Vùdcem.}
 {131}{}{Chci mluvit s nìkım, kdo tomu tady velí.}
 {132}{}{To! To-to-to-to-to-to-to!}
-{133}{}{Hromady kecù. Mír. Sjednocení. Láska. Spousty idiotù pobíhaj okolo jak zombie. Morpheus poèítá svoje prachy nahoøe ve vìi. Lasher se øídí podle nìj. Chtìls to vìdìt, tak co na to øíkáš?}
-{134}{}{Slyšel jsem, e podnikáte spoustu vìcí, které se dají tìko nazvat "mír a láska".}
+{133}{}{Hromady kecù. Mír. Jednota. Láska. Spousty idiotù pobíhaj okolo jak zombie. Morpheus poèítá svoje prachy nahoøe ve vìi. Lasher dìlá èest svımu jménu. Chtìls to vìdìt, tak co na to øíkáš?}
+{134}{}{Slyšel jsem, e podnikáte spoustu vìcí, které se dají tìko nazvat „mír a láska“.}
 {135}{}{A co Morpheus?}
 {136}{}{A co je zaè ten Lasher?}
 {137}{}{Fajn. Co tedy chceš?}
@@ -40,7 +40,7 @@
 {139}{}{O co tady bìí?}
 {140}{}{Kde je Vùdce?}
 {141}{}{Jen hledám pøítele.}
-{142}{}{K dokonèení toho, co bomba zapoèala.}
+{142}{}{Dokonèit to, co bomba zapoèala.}
 {143}{}{Hej, nepøibliuj se k nìmu! Je úplnì... Nevím, jestli ho budu schopen popsat. Pøedstav si jednoho jediného èlovìka na Zemi, kterého bys nechtìl potkat. Lasher je horší.}
 {144}{}{Spolupracuje s Morpheem?}
 {145}{}{Tak co udìlal? Proè je tak špatnı?}
@@ -49,7 +49,7 @@
 {148}{}{Nemyslím, e to bude chtít udìlat. Mám zajímavou informaci.}
 {149}{}{Proè by to chtìl udìlat?}
 {150}{}{Co to má spoleèného s Morpheem?}
-{151}{}{Podívej, tenhle svìt je "zabij nebo zemøi" a já jsem poøád naivu!}
+{151}{}{Podívej, tenhle svìt je „zabij nebo zemøi“ a já jsem poøád naivu!}
 {152}{}{Jo, a co je to za informaci?}
 {153}{}{Je tady špión. Potøebuju ihned mluvit s nìkım ve slubì.}
 {154}{}{Prozradím ti to, ale budu tì pak muset zabít.}
@@ -78,7 +78,7 @@
 {177}{}{Bez téhle róby bych tì zabil. Vlastnì tì chci zabít. Radìji odejdi. Hned.}
 {178}{}{Ty ale nejsi Nightkin. Stráe! Máme tu špióna...}
 {179}{}{Odkud ses tu k èertu vzal? A proè se tam zase rychle nevrátíš? Zmiz odsud!}
-{180}{}{U jsme skoro pøipraveni na válku! Zachráníme svìt! Tak proè to neobalit kecama jako Mír a Sjednocení.}
+{180}{}{U jsme skoro pøipraveni na válku! Zachráníme svìt! Tak proè to neobalit kecama jako Mír a Jednota.}
 {181}{}{Válka? Kde to má vypuknout?}
 {182}{}{Kecy? Ty snad ertuješ! To musí bejt pravda! [mrká]}
 {183}{}{Kecy? Ty snad ertuješ! To musí bejt pravda! [pøímı pohled]}
@@ -101,7 +101,7 @@
 {200}{}{[Smích] Radši nìkoho sjedu ne naopak. Ale nemìli bysme takhle kecat na veøejnosti. Zombíci to neradi slyšej.}
 {201}{}{Víš, je tu spousta dalších lidí, kterı takhle uvaujou. Pojï je trochu vyprudit.}
 {202}{}{Nic ti neøeknu, kámo. Táhni k èertu.}
-{203}{}{Ten chlapík v èerném - odøíká si svoje kázání, pak zmizí nahoru a pohoda. Sakra, tak by se chtìl taky mít. Ale radši bych mìl dret zobák, nebo mì ještì uslyší nìkdo z Nightkinù.}
+{203}{}{Ten chlapík v èerném – odøíká si svoje kázání, pak zmizí nahoru a poèítá své prachy. Sakra, tak by se taky chtìl mít! Ale radši bych mìl dret zobák, nebo mì ještì uslyší nìkdo z Nightkinù.}
 {204}{}{Èeho se bojíš?}
 {205}{}{Chci vìdìt víc.}
 {206}{}{Kam se podìjou všechny ty prachy?}
@@ -113,18 +113,18 @@
 {212}{}{Tak co vlastnì provedl? Kvùli èemu je takovı netvor?}
 {213}{}{Hej, ještì jsi mì ani nepoznal!}
 {214}{}{Pøíštì votravuj nìkoho jinıho.}
-{215}{}{Sakra, mít tak nìco poøádnıho k pití! Po hodinách poslouchání kecù jako "sláva tomu" nebo "mír a jednota", bych se chtìl poøádnì opít!}
+{215}{}{Sakra, mít tak nìco poøádnıho k pití! Po hodinách poslouchání kecù jako „sláva tomu“ nebo „Mír a Jednota“, bych se chtìl poøádnì opít!}
 {216}{}{ertuješ? Tohle je chrám! A von by chtìl chlast!}
 {217}{}{ádnı pití? Kurva drát!}
 {218}{}{Pokud nemám dost chlastu, nahrazuju to pitím krve.}
-{219}{}{To je Morpheus. Náš vùdce. Myslím, e je nìkde nahoøe.}
+{219}{}{To je Morpheus. Náš šéf. Myslím, e je nahoøe ve vìi.}
 {220}{}{Vùdce? A kam vás vede?}
 {221}{}{Ale no tak. To mi nic neøíká. Pus nìco poøádnıho!}
 {222}{}{Je v tomhle spolku ještì nìkdo dùleitej?}
 {223}{}{Pomohls mi. Díky, pøíteli.}
-{224}{}{Nevypil nìco? Jsou to nìjakı milenci?}
+{224}{}{Nemá u sebe nìjakej chlast? Je v tomhle baráku vùbec nìjaká kapka?}
 {225}{}{Hmm, klidné a tiché místo, nikdo nebude rušit, a ho tady zabiju.}
-{226}{}{Ty snad ertuješ. Nightkinové jsou zabijáci. Køivì se na nì podíváš a rozsekaj tì na kousky, ty opeèou, a pak tì s nima nakrmìj. Jsou neporazitelní. Jsou to Vùdcovi nohsledi a pro nìj klidnì znièí svìt. Víc u neøeknu!}
+{226}{}{Ty snad ertuješ. Nightkinové jsou zabijáci. Køivì se na nì podíváš a rozsekaj tì na kousky, ty opeèou a pak tì s nima nakrmìj. Jsou neporazitelní. Jsou to Vùdcovi pochopi a pro nìj klidnì znièí svìt. Víc u neøeknu!}
 {227}{}{U není co dodat a pokud jsi trochu chytrej, ani nic víc nebudeš chtít vìdìt!}
 {228}{}{Nevim. Sám jsem je hledal! Slyšel jsem o Morpheovì úkrytu, ale Nightkinové stráí ten hlavní. Znal jsem chlápky, co hledali tajné prùchody a u je nikdo nespatøil. Já toho nechal, a pokud máš rozum, vùbec s tím nebudeš zaèínat! Nestojí to za to!}
 {229}{}{Ty snad ertuješ. Mluvit se zombíkama, pche!}
@@ -137,20 +137,20 @@
 {236}{}{Hledám jenom pøítele.}
 {237}{}{Chci se jenom napít. Co tøeba šáva z radškorpiónù?}
 {238}{}{Chtìl bych jenom nìkoho, kdo by mì dokázal poøádnì naštvat. Vyrval bych mu jazyk, naloil si ho a nosil na krku jako pøipomínku toho, jak dokáou bıt lidi tupí.}
-{239}{}{Vùdce mi mùe políbit... Dokud dokáu vyhrávat, je mi to úplnì jedno. Rozumíš!}
+{239}{}{Vùdce mi mùe políbit prdel. Je mi úplnì jedno, co se dìje, hlavnì kdy skonèím na stranì vítìzù. Jasnı, ty zombíku?}
 {240}{}{Koneènì! Normální lidská bytost!}
 {241}{}{Pøíteli, proè je tvùj ivot naplnìn bolestí a strádáním? Svìø se Vùdci!}
 {242}{}{Jak tady mùeš pøeít s takovım postojem?}
 {243}{}{Jo, vysvìtlil jsi to úplnì jasnì.}
 {244}{}{Tak to ne. Jestli se nìkdo nazıvá 'Vùdcem' a chce mì dostat, zabiju ho.}
-{245}{}{Protoe dìlám dobøe svùj dob. Minulı mìsíc jsem sejmul tøi podìlanı Následníky Apokalypsy. Nikdo na mì nebude srát. Co ty?  Máš zájem?}
+{245}{}{Protoe dìlám dobøe svùj dob. Minulı mìsíc jsem sejmul tøi podìlanı Následovníky apokalypsy. Nikdo na mì nebude srát. Co ty? Máš zájem?}
 {246}{}{To mì zajímá. Chlapík jako ty musí vìdìt, o co tady ve skuteènosti jde...}
-{247}{}{Následníci, jo? To maj bejt nìjakı drsòáci?}
+{247}{}{Následovníci, jo? To maj bejt nìjakı drsòáci?}
 {248}{}{Tøi? A to je všechno? Mìl bys vidìt moje záøezy!}
 {249}{}{Ani nápad.}
 {250}{}{Vsadím se, e ti tvoji neøvali tak hlasitì, jako ti moji. Líbí se mi, kdy øvou.}
 {251}{}{Hej! Chlápek s bouchaèkou je poøád chlápek s bouchaèkou! Myslíš, e to zvládneš líp?}
-{252}{}{Nikoli, pøíteli. Jsem zasvìcen míru, lásce a jednotì.}
+{252}{}{Nikoli, pøíteli. Jsem zasvìcen míru, lásce a Jednotì.}
 {253}{}{Chlápek se zbraní je nebezpeènej. Chlápek nebo enská se zbraní A mozkem jsou smrtící.}
 {254}{}{Chlápek se zbraní je nebezpeènej. Chlápek se zbraní A mozkem je smrtící.}
 {255}{}{Jo, jsem lepší.}
@@ -167,11 +167,11 @@
 {266}{}{Poèkej, nejsi ten chlápek, kterej.. do hajzlu, já mizim!}
 {267}{}{Poèkej, nejsi ta enská, která.. do hajzlu, já mizim!}
 {268}{}{Nejsem nièí pøítel. Prostì nejsem ten tıpek. [dlouhá vıznamná pauza] Teï by ses mi mohl klidit z cesty.}
-{269}{}{Nìco tu zkusíme a Nightkini nás roztrhaj na kousky. Zkusíme se pozdìji sejít venku.}
+{269}{}{Nìco tu zkusíme a Nightkinové nás roztrhaj na kousky. Zkusíme se pozdìji sejít venku.}
 {270}{}{Moná. Nebo zmìníme téma a budeme kecat o kravinách. Tøeba o tom, vo co se tady dìje.}
 {271}{}{Posero!}
 {272}{}{Jasnì. Bude sranda.}
 {273}{}{Do práce.}
 {274}{}{Hovado!}
-{275}{}{Protoe lidi stojící na jeho stranì pøed sebou nemají moc dlouhı ivot!}
-{276}{}{[Hotovo]}
+{275}{}{Protoe lidi, co se mu znelíbí, tady dlouho nepobydou!}
+{276}{}{[Odejít]}

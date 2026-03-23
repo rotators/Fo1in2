@@ -1,6 +1,6 @@
 {100}{}{Rozzlobil jsi Barryho!}
 {101}{}{Vidíš Barryho.}
-{102}{}{Hej! Jen ghoulové mají nárok na pøídìl vody.}
+{102}{}{Hej! Jen ghúlové mají nárok na pøídìl vody.}
 {103}{}{Za to, žes mì vzbudil, teï nìco uvidíš!}
 {104}{}{Ten mutant tì ignoruje.}
 
@@ -13,11 +13,11 @@
 {1006}{}{Ghoulove}
 {1007}{}{Normalove}
 
-{1100}{}{To mì nezajímá.}
-{1101}{}{Stojíš na tom.}
-{1102}{}{Je to srab. Mìli bysme zlikvidovat jeho i ty jeho ghouly.}
+{1100}{}{Nevím.}
+{1101}{}{Stojíš v ní.}
+{1102}{}{Je to srab. Mìli bysme zlikvidovat jeho i ty jeho ghúly.}
 {1103}{}{To je tady.}
-{1104}{}{To mì nezajímá.}
-{1105}{}{To je Harryho šéf.}
+{1104}{}{Nevím.}
+{1105}{}{Von je Harryho šéf.}
 {1106}{}{Zbabìlí chudáci.}
-{1107}{}{Zbabìlejší než ghoulové.}
+{1107}{}{Zbabìlejší než ghúlové.}

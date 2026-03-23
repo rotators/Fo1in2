@@ -1,5 +1,5 @@
 {100}{}{Rám tìchto dveøí nese zbytky èerveného nátìru.}
-{101}{}{Dostal jsi od dveøí slabou elektrickou ránu.}
+{101}{}{Dostal jsi od dveøí slabou elektrickou ránu a utrpìl jsi jeden bod poškození.}
 {102}{}{Dostal jsi od dveøí silnou elektrickou ránu. Byl jsi zranìn za }
 {103}{}{ hit bodù.}
 {104}{}{Dokázal jsi dveøe otevøít.}
@@ -113,4 +113,4 @@
 {203}{}{Vidíš èervené dveøe s vysokonapìovım bezpeènostním systémem v provozu. Zajímalo by tì, zda je tu klíè na jeho pøekonání.}
 
 {204}{}{Na dveøích jsi si všimnul pasti.}
-{205}{}{Vıtah nefunguje. Vyaduje vìtší napìtí, ne dodává nouzové zdroj.}
+{205}{}{Vıtah nefunguje. Zdá se, e potøebuje napájení.}

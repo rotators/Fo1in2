@@ -21,4 +21,4 @@
 {116}{}{Další manipulace s generátorem nemá žádný výsledek.}
 {117}{}{Tato dovednost nemá na generátor žádný efekt.}
 {118}{}{Generátor už funguje bez problémù.}
-{119}{}{Nejsi schopen nahodit generátor, protože byl znièen.}
+{119}{}{Nejsi schopen nahodit generátor, protože je rozbitý.}

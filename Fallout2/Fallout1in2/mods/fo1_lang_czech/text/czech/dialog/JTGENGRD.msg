@@ -12,11 +12,11 @@
 {111}{}{Schovat co?}
 {112}{}{Neøíkej mi, co mám dìlat, ty nulo.}
 {113}{}{To zní fér. Mimochodem, jakı je místní zákon o zbraních?}
-{114}{}{Uh,oh.}
+{114}{}{No nazdar.}
 {115}{}{Tvou zbraò, idiote. Killian ti zbranì neodebere, ale mìl bys je mít radìji schované.}
 {116}{}{Oh, pardon.}
 {117}{}{Ani náhodou! Svoje støíkaèky neschovám kvùli nikomu!}
-{118}{}{Radìji se chovej slušnì a dodruj zákon, protoe ten tady hlídám já. Skryj svou zbraò a netas ji, dokud se nebudeš v tísni, pokud nechceš mít problémy s námi. Porušuj ten zákon a pošleme tì zpìt do Pustin - mrtvého nebo ivého.}
+{118}{}{Radìji se chovej slušnì a dodruj zákon, protoe ten tady hlídám já. Skryj svou zbraò a netas ji, dokud se nebudeš v tísni, pokud nechceš mít problémy s námi. Porušuj ten zákon a pošleme tì zpìt do pustiny – mrtvého nebo ivého.}
 {119}{}{Jistì, kdy je to takhle.}
 {120}{}{Seru na vaše zákony!}
 {121}{}{No, uf, u mì dobrı. Ale ty bys mìl bıt opatrnìjší.}
@@ -35,6 +35,6 @@
 {134}{}{Dej tu zbraò pryè, nebo poèítej s následky!}
 {135}{}{Dobøe, byl jsi dostateènì varován. Opus mìsto hned a nikdy se nevracej, nebo poneseš následky!}
 {136}{}{Hej! Co si myslíš, e dìláš?}
-{137}{}{Pøesnì tak, kápnuls na to, kámo.}
-{138}{}{Dostal ses do problémù . . .}
+{137}{}{A je to, máš to spoèítanı, kámo.}
+{138}{}{Dostal ses do problémù...}
 {139}{}{Lebkouni, jste všichni zatèeni!}

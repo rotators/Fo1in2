@@ -1,46 +1,46 @@
 {101}{}{}                                               #  obj_dude
-{102}{}{Staøešina.}                                          #  elder
+{102}{}{Starší}                                          #  elder
 {103}{}{Smìnaø}                                      #  barter
 {104}{}{Bodyguard}                                      #  bguard
-{105}{}{Brahnina}                                            #  cow
+{105}{}{Brahmína}                                            #  cow
 {106}{}{Hlídaè u pøíkopu}                           #  MoatGrd
-{107}{}{Hlídaè z Shady Sands}                              #  guard
+{107}{}{Stránı Shady Sands}                              #  guard
 {108}{}{Chudák}                                          #  loser
 {109}{}{Obyvatel Shady Sands}                            #  pleasant
-{110}{}{Gunrunner}                                      #  GunRnr
+{110}{}{Gun Runner}                                      #  GunRnr
 {111}{}{Vstup na mapu}                                #  map_init
 {112}{}{Radškorpión}                                    #  radscorp
-{113}{}{Supermutantí stránı }                            #  mutant2
+{113}{}{Supermutantí hlídka}                            #  mutant2
 {114}{}{Studna}                               #  sswell
 {115}{}{Set}                                            #  set
 {116}{}{Harry}                                          #  harry
 {117}{}{Stimpak}                                        #  stimpack
-{118}{}{Víko poklopu }                                  #  cover
+{118}{}{Víko poklopu}                                  #  cover
 {119}{}{Poklop}                                        #  manhole
 {120}{}{ebøík}                                         #  ladder
 {121}{}{idle}                                          #  chair
-{122}{}{Automat na Nuka Colu}                              #  coke
+{122}{}{Automat na Nuka-Colu}                              #  coke
 {123}{}{Správcùv stùl}                                 #  computer
 {124}{}{Tìlo}                                         #  dead
-{125}{}{Deska}                                           #  desk
-{126}{}{Tìlo ghoula}                                   #  1dedgul1
+{125}{}{Stùl}                                           #  desk
+{126}{}{Tìlo ghúla}                                   #  1dedgul1
 {127}{}{Krtko-potkan}                                       #  1molrat1
 {128}{}{Poklop}                                        #  1manhol1
 {129}{}{ebøík}                                         #  1ladder1
-{130}{}{Ghoul správce}                                  #  ghoul
+{130}{}{Ghúlí správce}                                  #  ghoul
 {131}{}{Mapovı popisek}                                     #  alphhotl
-{132}{}{Ghoul}                                          #  genghoul
+{132}{}{Ghúl}                                          #  genghoul
 {133}{}{Aradesh}                                        #  Aradesh
-{134}{}{Brahmina}                                        #  Brahmin
+{134}{}{Brahmína}                                        #  Brahmin
 {135}{}{Cougar}                                         #  Cougar
 {136}{}{Flash}                                          #  Flash
 {137}{}{Stránı z Junktownu}                                 #  JtGenGrd
 {138}{}{Obyvatel Junktownu}                               #  JtPeasnt
-{139}{}{Drsòák}                                          #  Butch
+{139}{}{Butch}                                          #  Butch
 {140}{}{Cabbot}                                         #  Cabbot
-{141}{}{Èlen Dìtí Katedrály}               #  Childmem
+{141}{}{Èlen Dìtí katedrály}               #  Childmem
 {142}{}{Decker}                                         #  Decker
-{143}{}{Staøešina}                                          #  Elder
+{143}{}{Starší}                                          #  Elder
 {144}{}{Gizmo}                                          #  Gizmo
 {145}{}{Harold}                                         #  Harold
 {146}{}{Jain}                                           #  Jain
@@ -61,34 +61,34 @@
 {161}{}{Barry}                                          #  Barry
 {162}{}{Poèítaè}                                       #  DeadComp
 {163}{}{Dveøe}                                           #  Door
-{164}{}{Ghoul pøedák}                                   #  Ganger
+{164}{}{Ghúlí pøedák}                                   #  Ganger
 {165}{}{Gary}                                           #  Gary
-{166}{}{Ghoul}                                          #  Generic
-{167}{}{Staøešina}                                                #  TMPLELDR.int     ; Temple elder script
+{166}{}{Ghúl}                                          #  Generic
+{167}{}{Starší}                                                #  TMPLELDR.int     ; Temple elder script
 {168}{}{Záøící}                                    #  GenGlow1
-{169}{}{Tìlo ghoula}                                   #  GhDead
-{170}{}{Ghoul stránı}                                   #  GhDorGrd
-{171}{}{Tìlo ghoula}                                   #  GhGenDed
+{169}{}{Tìlo ghúla}                                   #  GhDead
+{170}{}{Ghúlí stránı}                                   #  GhDorGrd
+{171}{}{Tìlo ghúla}                                   #  GhGenDed
 {172}{}{Setùv hlídaè}                                    #  GhGuard
 {173}{}{Vybité auto}                                                  #  CARDESRT.int    ; car out of gas!
-{174}{}{Ghoul uprchlík}                                  #  GhRefuge
-{175}{}{Ghoul hlídaè}                                    #  GhZero
+{174}{}{Ghúlí uprchlík}                                  #  GhRefuge
+{175}{}{Ghúlí hlídaè}                                    #  GhZero
 {176}{}{Uvìznìnı Záøící}                              #  GlowOne
-{177}{}{Podzemní ghoul}                                  #  Groundr
-{178}{}{Vıtrusná rostlina}                                    #  ECPlant.int
+{177}{}{Podzemník}                                  #  Groundr
+{178}{}{Vıtrusnice}                                    #  ECPlant.int
 {179}{}{Geckon}                                               #  ECGecko.int
 {180}{}{Larry}                                          #  Larry
 {181}{}{Velitel gangu}                                  #  Leader
-{182}{}{Ghoul správce}                                  #  Manager
+{182}{}{Ghúlí správce}                                  #  Manager
 {183}{}{Znetvoøené tìlo}                                 #  Mangled
-{184}{}{Ghoul ebrák}                                  #  Meander
+{184}{}{Ghúlí vesnièan}                                  #  Meander
 {185}{}{Sliz}                                            #  KTGoo.int       ; Toxic Goo in the rat caves (Klamath)
 {186}{}{Vodní poèítaè}                                 #  NH2OComp
-{187}{}{Vodní pumpa}                                     #  NH2OPump
+{187}{}{Vodní èerpadlo}                                     #  NH2OPump
 {188}{}{Stìna}                                           #  OddWall
-{189}{}{Uvìznìnı ghoul}                                 #  Prisonr
+{189}{}{Uvìznìnı ghúl}                                 #  Prisonr
 {190}{}{Sally}                                          #  Sally
-{191}{}{Grafitti}                                       #  graffiti
+{191}{}{Graffiti}                                       #  graffiti
 {192}{}{Setùv vìtrák}                                   #  SetColer
 {193}{}{Setùv stùl}                                     #  SetDesk
 {194}{}{Dveøe}                                           #  SetDoor1
@@ -104,11 +104,11 @@
 {204}{}{Morbid}                                         #  Morbid
 {205}{}{Dumar}                                          #  Dumar
 {206}{}{Barstow}                                        #  Barstow
-{207}{}{Zasvìcenec Dìtí Katedrály}             #  Genint
-{208}{}{Léèitel Dìtí Katedrály}               #  JtChidMem
-{209}{}{Stanovištì podzemních ghoulù}                          #  Lookout
+{207}{}{Zasvìcenec Dìtí katedrály}             #  Genint
+{208}{}{Léèitel Dìtí katedrály}               #  JtChidMem
+{209}{}{Hlídka podzemníkù}                          #  Lookout
 {210}{}{Poèítaè}                                       #  MachIV
-{211}{}{Cedule "Mimo provoz"}                           #  ziClosed.int    ; Generic "Out of Business" signs
+{211}{}{Cedule „Mimo provoz“}                           #  ziClosed.int    ; Generic "Out of Business" signs
 {212}{}{Pouš}                                         #  RndDesrt
 {213}{}{Stránı Shady Sands}                              #  TGuard
 {214}{}{Kuchaø z Shady Sands}                               #  cook
@@ -121,7 +121,7 @@
 {221}{}{Hounì}                                            #  ShadyRug
 {222}{}{Knihovna}                                       #  SBokcase
 {223}{}{Nádoba na ovoce}                                      #  MuteJar
-{224}{}{Deska}                                           #  ShadDesk
+{224}{}{Stùl}                                           #  ShadDesk
 {225}{}{Police}                                          #  CookShel
 {226}{}{Stùl}                                          #  CookTabl
 {227}{}{Zmutované ovoce}                                  #  Fruit
@@ -130,7 +130,7 @@
 {230}{}{Obyvatel Vaultu 13}                               #  ValtCtzn
 {231}{}{Pøechodová komora Vaultu 13}                               #  ValtLock
 {232}{}{Monitor}                               #  ValtMon
-{233}{}{Hlavní jádro Vaultu 13}                          #  CoreComp
+{233}{}{Centrála Vaultu 13}                          #  CoreComp
 {234}{}{Knihovní poèítaè Vaultu 13}                      #  LibComp
 {235}{}{Kalnor}                                         #  Assblow
 {236}{}{Nájezdník}                                         #  GenRaidr
@@ -141,18 +141,18 @@
 {241}{}{Gwen}                                           #  Gwen
 {242}{}{Diana}                                          #  Diana
 {243}{}{Alya}                                           #  Alya
-{244}{}{Obytná èást}                                #  LivingQ
+{244}{}{Ubikace}                                #  LivingQ
 {245}{}{Konferenèní místnost}                                   #  Meeting
 {246}{}{Skladištì}                                      #  BVStore
 {247}{}{Knihovna}                                        #  BVLib
 {248}{}{Hlavní jádro}                                   #  BVCore
 {249}{}{Konferenèní místnost}                                   #  BVMeet
-{250}{}{Obytná èást}                                #  BVLive
-{251}{}{Obytná èást}                                #  UndrBed
+{250}{}{Ubikace}                                #  BVLive
+{251}{}{Ubikace}                                #  UndrBed
 {252}{}{Neprùchodnı prùchod}                                #  RubChip
 {253}{}{Neprùchodnı prùchod}                                #  RubCore
 {254}{}{Pøechodová komora}                                        #  BVAirL
-{255}{}{Hala mrtvıch}                               #  HallDed1
+{255}{}{Síò mrtvıch}                               #  HallDed1
 {256}{}{Gabriel}                                        #  Gabriel
 {257}{}{Stùl na kostky}                                    #  HiCraps
 {258}{}{Poklop}                                        #  NUp2Dwn1
@@ -170,7 +170,7 @@
 {270}{}{ebøík}                                         #  NWDn2Up2
 {271}{}{ebøík}                                         #  NWDn2Up3
 {272}{}{Andrew}                                         #  Andrew.int
-{273}{}{Hotel Mrtvıch}                              #  HotelMap
+{273}{}{Hotel mrtvıch}                              #  HotelMap
 {274}{}{Lorriane}                                       #  Lorian
 {275}{}{Poklop}                                        #  NHUp2Dn1
 {276}{}{Poklop}                                        #  NHUp2Dn2
@@ -184,7 +184,7 @@
 {284}{}{Medik z Vaultu 13}                                 #  Medic
 {285}{}{Obyvatel Vaultu 13}                               #  GenVault
 {286}{}{Junktown Kasino}                                #  JunkCas
-{287}{}{Junktown Crash house}                            #  JunkKill
+{287}{}{Junktown Chrápárna}                            #  JunkKill
 {288}{}{Vstup do Junktownu}                              #  JunkEnt
 {289}{}{Boxovací pytel}                                   #  ZSPnchBg.int    ; Punching Bag in the Sierra Depot
 {290}{}{Pøechodová komora}                                        #  BVAir
@@ -202,12 +202,12 @@
 {302}{}{Vıtah}                                       #  BVElv2W
 {303}{}{Vıtah}                                       #  BVElv3
 {304}{}{Rozbitı vıtah}                                #  BVBroken
-{305}{}{Vstup do Bratrstva Oceli}                  #  BroHdEnt
+{305}{}{Vstup do Bratrstva oceli}                  #  BroHdEnt
 {306}{}{Líheò krys}                               #  RatPit
 {307}{}{Temnota}                                       #  FearDark
 {308}{}{Vchod do jeskynì}                                  #  ValtLeav
 {309}{}{Obyvatel Vaultu 13}                               #  ValtCupl
-{310}{}{Tvoje obytná èást}                           #  YourRoom
+{310}{}{Tvoje ubikace}                           #  YourRoom
 {311}{}{Katrina}                                        #  SSGuide
 {312}{}{Vchod do jeskynì}                                  #  LiteLeav
 {313}{}{Centrála Vaultu 13}                          #  ValtCore
@@ -217,7 +217,7 @@
 {317}{}{Skladištì Vaultu 13}                               #  ValtStor
 {318}{}{Konferenèní místnost Vaultu 13}                          #  ValtMeet
 {319}{}{Zdravotní laboratoø Vaultu 13}                           #  ValtMed
-{320}{}{Šrot }                                      #  JunkDemo
+{320}{}{Šrotištì}                                      #  JunkDemo
 {321}{}{Stránı z Junktownu}                                 #  GuarDemo
 {322}{}{}                                               #  WanRats
 {323}{}{Svìtlice}                                          #  Flare
@@ -227,10 +227,10 @@
 {327}{}{Vıtah}                                       #  ValEl3
 {328}{}{Vault 15}                                       #  Vaultbur
 {329}{}{Pes}                                            #  dog
-{330}{}{Ghoul hlídaè}                                    #  GhRndGrd
-{331}{}{Naštvanej ghoul}                                    #  GhKick
+{330}{}{Ghúlí hlídaè}                                    #  GhRndGrd
+{331}{}{Naštvanej ghúl}                                    #  GhKick
 {332}{}{Stránı supermutantù}                             #  Mutant3
-{333}{}{Hlídaè supermutantù}                            #  Mutant4
+{333}{}{Supermutantí hlídka}                            #  Mutant4
 {334}{}{Supermutant}                                   #  Mutant5
 {335}{}{Ian}                                            #  Ian
 {336}{}{Curtis}                                         #  Curtis
@@ -248,7 +248,7 @@
 {348}{}{Jeskynì}                                          #  VaultEnt
 {349}{}{Miles}                                          #  Miles
 {350}{}{Smitty}                                         #  Smitty
-{351}{}{Adytowner}                                      #  Adytownr
+{351}{}{Obyvatel Adyta}                                      #  Adytownr
 {352}{}{Regulátor}                                      #  Regulatr
 {353}{}{Vùdcùv mazlíèek}                                   #  ECHCENTR.int    ; Centaur from Centaur Handler encounter
 {354}{}{Sammael}                                        #  Sammael
@@ -258,11 +258,11 @@
 {358}{}{Uèenec Následovníkù}                              #  FolSchol
 {359}{}{Zasvìcenec Následovníkù}                             #  FolInit
 {360}{}{Zvìd Nightkinù}                                 #  FlSupMut
-{361}{}{Uèenec Dìtí Katedrály}              #  ChidScol
-{362}{}{Zasvìcenec Dìtí Katedrály}             #  ChidInit
+{361}{}{Uèenec Dìtí katedrály}              #  ChidScol
+{362}{}{Zasvìcenec Dìtí katedrály}             #  ChidInit
 {363}{}{Zvìd Následovníkù}                                #  FolScout
 {364}{}{Strá Následovníkù}                                #  FolGuard
-{365}{}{Pøemıšlivı Super Mutant}                           #  ThSupMut
+{365}{}{Pøemıšlivı supermutant}                           #  ThSupMut
 {366}{}{Heather}                                        #  Heather
 {367}{}{Peter}                                          #  Peter
 {368}{}{Jake}                                           #  Jake
@@ -272,10 +272,10 @@
 {372}{}{Amber}                                          #  Amber
 {373}{}{Uthern}                                         #  Uthern
 {374}{}{Talius}                                         #  Talius
-{375}{}{Stránı Dìtí Katedrály}                #  ChdGuard
-{376}{}{Zvìd Dìtí Katedrály}                #  ChdScout
+{375}{}{Stránı Dìtí katedrály}                #  ChdGuard
+{376}{}{Zvìd Dìtí katedrály}                #  ChdScout
 {377}{}{Zvìd supermutantù}                             #  ScSupMut
-{378}{}{iletka}                                          #  Razor
+{378}{}{Razor}                                          #  Razor
 {379}{}{Èlen Blades}                                  #  Blade
 {380}{}{Oheò}                                           #  Fire
 {381}{}{Beca}                                           #  Beca
@@ -283,8 +283,8 @@
 {383}{}{Michelle}                                       #  Michelle
 {384}{}{Noèní stránı Blades}                          #  Dragon
 {385}{}{Romero}                                         #  Romero
-{386}{}{Bratrstvo Oceli}                           #  Brohd12
-{387}{}{Bratrstvo Oceli}                           #  Brohd34
+{386}{}{Bratrstvo oceli}                           #  Brohd12
+{387}{}{Bratrstvo oceli}                           #  Brohd34
 {388}{}{Jon}                                            #  Jon
 {389}{}{Vìzeò}                                       #  RippPris
 {390}{}{Písaø Bratrstva}                             #  SCRIBEB
@@ -299,8 +299,8 @@
 {399}{}{Poèítaè}                                       #  GloComp
 {400}{}{Bezpeènostní dveøe}                                    #  Glo3Supl
 {401}{}{Generátor}                                      #  GlowGen
-{402}{}{Vodní pumpa}                                     #  GlowPump
-{403}{}{Obytná èást}                                #  SciRoom
+{402}{}{Vodní èerpadlo}                                     #  GlowPump
+{403}{}{Ubikace}                                #  SciRoom
 {404}{}{Automatická hlídková zbraò}                                     #  SentryGn
 {405}{}{Dveøe s èervenou znaèkou}                      #  GloRdDor
 {406}{}{Dveøe s modrou znaèkou}                     #  GloBlDor
@@ -314,7 +314,7 @@
 {414}{}{Poznámka}                                           #  Freezer
 {415}{}{Farli}                                          #  Farli
 {416}{}{Darrel}                                         #  Darrel
-{417}{}{Paladin hlídaè}                      #  PalGuard
+{417}{}{Stránı paladin Bratrstva}                      #  PalGuard
 {418}{}{Talus}                                          #  Talus
 {419}{}{Sophia}                                         #  Sophia
 {420}{}{Michael}                                        #  Michael
@@ -323,7 +323,7 @@
 {423}{}{Divokı pes}                                       #  ECWldDog.int    ; Random Encounter Wild Dogs
 {424}{}{Paladin hlídaè}                     #  Sentry
 {425}{}{Paladin Bratrstva}                            #  PaladinA
-{426}{}{Paladin stránı}                      #  PaladinB
+{426}{}{Stránı paladin Bratrstva}                      #  PaladinB
 {427}{}{Paladin Bratrstva}                            #  PaladinC
 {428}{}{Vıtah s modrou znaèkou}                 #  GloBlElv
 {429}{}{Rytíø Bratrstva}                             #  KnightA
@@ -332,7 +332,7 @@
 {432}{}{Aktivované zbraòové systémy}                          #  WeapSys
 {433}{}{Podivnı holodisk}                               #  Artifact
 {434}{}{Skøíòka}                                        #  GloCabn
-{435}{}{Nezdravé vıpary}                                  #  GasTrap
+{435}{}{Jedovaté vıpary}                                  #  GasTrap
 {436}{}{Lasery}                                         #  LazrTrap
 {437}{}{Šílenı nájezdník}                                  #  JtRaider
 {438}{}{Sinthia}                                        #  Sinthia
@@ -355,7 +355,7 @@
 {455}{}{Automat}                                   #  GoodSlot
 {456}{}{Stùl pro blackjack}                                #  LowJack
 {457}{}{Stùl pro blackjack}                                #  HighJack
-{458}{}{Technik Dìtí Katedrály}           #  ChocTech
+{458}{}{Technik Dìtí katedrály}           #  ChocTech
 {459}{}{Abel}                                           #  Abel
 {460}{}{Silové pole}                                    #  FieldA
 {461}{}{Rádio}                                          #  Radio
@@ -367,7 +367,7 @@
 {467}{}{Flip}                                           #  Flip
 {468}{}{Poèítaè}                                       #  RobCtrl
 {469}{}{Nightkin serant}                              #  VSgTeam9
-{470}{}{Nightkin stránı}                                #  VatTeam9
+{470}{}{Strá Nightkinù}                                #  VatTeam9
 {471}{}{Poèítaè}                                       #  VConComp
 {472}{}{Lenore}                                         #  PeasantD
 {473}{}{Poèítaè}                                       #  DemoComp
@@ -391,7 +391,7 @@
 {491}{}{Slummer}                                        #  Slummer
 {492}{}{Zark}                                           #  Zark
 {493}{}{Calder}                                         #  Calder
-{494}{}{Nightkiní hlídaè}                                #  ChidNite
+{494}{}{Strá Nightkinù}                                #  ChidNite
 {495}{}{Dítì s názorem}                         #  ChidGAB
 {496}{}{Zpìvák}                                        #  GenChant
 {497}{}{Ton}                                            #  Barracus
@@ -401,12 +401,12 @@
 {501}{}{Rutger}                                         #  Rutger
 {502}{}{Phrax}                                          #  Phrax
 {503}{}{Generátor}                                      #  DemoGen
-{504}{}{Èlen gangu Krypákù}                                   #  DemoCryp
-{505}{}{Èlen gangu Harlekınù}                                    #  DemoFool
+{504}{}{Krypák}                                   #  DemoCryp
+{505}{}{Harlekın}                                    #  DemoFool
 {506}{}{Lenny}                                          #  Lenny
 {507}{}{Cepín}                                        #  Icepick
 {508}{}{Skizzer}                                        #  Skizzer
-{509}{}{ebrák}                              #  Pez
+{509}{}{Obyvatel Šrotištì}                              #  Pez
 {510}{}{Rock}                                           #  Rock
 {511}{}{Lex}                                            #  Lex.int
 {512}{}{Rayze}                                          #  Rayze.int
@@ -414,7 +414,7 @@
 {514}{}{Baka}                                           #  Baka.int
 {515}{}{Špeh pro Krypáky}                               #  scoutc.int
 {516}{}{Špeh pro Harlekıny}                                #  scoutf.int
-{517}{}{Následovníci Apokalypsy}                     #  FollMap.int
+{517}{}{Následovník apokalypsy}                     #  FollMap.int
 {518}{}{Poèítaè}                                       #  SemiComp
 {519}{}{Ozáøenı potkan}                                 #  RadRat
 {520}{}{Lednièka}                                  #  NGarFrdg
@@ -424,13 +424,13 @@
 {524}{}{Poklop}                                        #  WtrHole
 {525}{}{Nekropolis Vault}                               #  ValtNec
 {526}{}{Mapa mìsta}                                       #  TownMap
-{527}{}{Dveøe do pøechodovı komory}                                   #  MVAirloc.ssl
+{527}{}{Dveøe do pøechodové komory}                                   #  MVAirloc.ssl
 {528}{}{Regál}                                      #  MVBShelf.ssl
 {529}{}{Regál}                                      #  MVSctShf.ssl
 {530}{}{Jeskynì}                                          #  V13Cave
 {531}{}{Bezpeènostní dveøe}                                    #  MvRCrDor
 {532}{}{Velín}                                 #  COmmand
-{533}{}{Supermutantí hlídaè}                            #  GenSupr
+{533}{}{Supermutantí hlídka}                            #  GenSupr
 {534}{}{Krupper}                                        #  Krupper
 {535}{}{VanHaggen}                                      #  Vanhag
 {536}{}{Vasquez}                                        #  Vasquez
@@ -441,12 +441,12 @@
 {541}{}{Pevnost}                                     #  MBStrong
 {542}{}{Nádre}                                           #  MBVats
 {543}{}{Vstup do vojenské základny}                         #  MBEnt
-{544}{}{Dìti Katedrály}                      #  Childrn1.int
-{545}{}{Dìti Katedrály}                      #  Childrn2.int
+{544}{}{Dìti katedrály}                      #  Childrn1.int
+{545}{}{Dìti katedrály}                      #  Childrn2.int
 {546}{}{Vùdcùv Vault}                                 #  Master1.int
 {547}{}{Vùdcùv Vault}                                 #  Master2.int
 {548}{}{Poèítaè}                                       #  MVComp
-{549}{}{Nukleární hlavice}                                #  MVNuke
+{549}{}{Jaderná hlavice}                                #  MVNuke
 {550}{}{Vıtah}                                       #  MVDwn2Up.int
 {551}{}{Vıtah}                                       #  MVUp2Dwn.int
 {552}{}{Šachta}                                      #  Chid2Mas.int
@@ -454,7 +454,7 @@
 {554}{}{Schodištì}                                      #  Chid2Twr.int
 {555}{}{Šachta}                                      #  Tow2Chid.int
 {556}{}{Dveøe}                                           #  COCDoor.int
-{557}{}{Jeskynì}                                      #  BARTRBOX.int
+{557}{}{Nádoba}                                      #  BARTRBOX.int
 {558}{}{Vault 13}                                       #  V132Cave.int
 {559}{}{Bezpeènostní dveøe}                                    #  SecDoor.int
 {560}{}{Kuel svìtla}                                     #  SPOTLITE
@@ -472,15 +472,15 @@
 {572}{}{Vıtah}                                       #  Elev6.int
 {573}{}{Opilec}                                         #  Barfly.int
 {574}{}{Vault 15}                                       #  BV2Vault.int
-{575}{}{Auto s Nuka Colou}                                #  ColaTruk.int
+{575}{}{Auto s Nuka-Colou}                                #  ColaTruk.int
 {576}{}{Létající talíø}                                  #  FSauser.int
 {577}{}{Kráter}                                       #  Glowent.int
 {578}{}{Kráter}                                       #  GlowMap1.int
 {579}{}{Kráter}                                       #  GlowMap2.int
-{580}{}{L.A. Pohøebištì}                                  #  LAAdytum.int
-{581}{}{L.A. Pohøebištì}                                  #  LABlades.int
-{582}{}{L.A. Pohøebištì}                                  #  LAGunRun.int
-{583}{}{L.A. Pohøebištì}                                  #  LARipper.int
+{580}{}{L.A. kostnice}                                  #  LAAdytum.int
+{581}{}{L.A. kostnice}                                  #  LABlades.int
+{582}{}{L.A. kostnice}                                  #  LAGunRun.int
+{583}{}{L.A. kostnice}                                  #  LARipper.int
 {584}{}{Hub}                                        #  HubEnt.int
 {585}{}{Hub}                                        #  HubDwnTn.int
 {586}{}{Hub}                                        #  HubHeigt.int
@@ -490,7 +490,7 @@
 {590}{}{Podivná telefonní budka}                               #  DrWhoMap.int
 {591}{}{Velká stopa}                                #  LgFtPrnt.int
 {592}{}{Obchod s ojetinami}                                   #  UsedCar.int
-{593}{}{Stádo brahminù}                                #  TalkCows.int
+{593}{}{Stádo brahmín}                                #  TalkCows.int
 {594}{}{Poklop}                                        #  JTUp2Dn.int
 {595}{}{ebøík}                                         #  JTDn2Up.int
 {596}{}{Viola}                                          #  Viola.int
@@ -499,7 +499,7 @@
 {599}{}{Dane}                                           #  Dane.int
 {600}{}{Jonathan}                                       #  Jonathan.int
 {601}{}{Student Bratrstva}                            #  Student.int
-{602}{}{Dìti Katedrály}                      #  Cath2MV.int
+{602}{}{Dìti katedrály}                      #  Cath2MV.int
 {603}{}{Bezpeènostní dveøe}                                    #  Glo4Supl.int
 {604}{}{Skøíòka}                                         #  LORRIBOX.int
 {605}{}{Irataba}                                        #  ECHUNTRA.int     ; Encounter - Gecko hunter - Father
@@ -524,16 +524,16 @@
 {624}{}{Supermutantí voják}                           #  GenMutan.int
 {625}{}{Supermutantí serant}                          #  GenSarg.int
 {626}{}{Bytelné bezpeènostní dveøe}                               #  MBOut2In.int
-{627}{}{Trophy}                                         #  Trophy.int
+{627}{}{Trofej}                                         #  Trophy.int
 {628}{}{Saul}                                           #  Saul.int
 {629}{}{Gustofer}                                       #  Gustofer.int
 {630}{}{Robot}                                          #  Robot.int
-{631}{}{Nightkiní hlídaè}                                #  VGateMut.int
-{632}{}{Serant Nightkinù}                              #  VPLotMut.int
-{633}{}{Nightkiní hlídaè}                                #  VFenceMt.int
+{631}{}{Strá Nightkinù}                                #  VGateMut.int
+{632}{}{Nightkin serant}                              #  VPLotMut.int
+{633}{}{Strá Nightkinù}                                #  VFenceMt.int
 {634}{}{Holodisk}                                       #  DoorCode.int
-{635}{}{Podkroví}                                         #  Guard2.int
-{636}{}{Supermutantí hlídaè}                             #  VDoorMut.int
+{635}{}{Garret}                                         #  Guard2.int
+{636}{}{Stránı supermutantù}                             #  VDoorMut.int
 {637}{}{Silové pole}                                    #  FieldB.int
 {638}{}{Silové pole}                                    #  FieldC.int
 {639}{}{Silové pole}                                    #  FieldD.int
@@ -543,14 +543,14 @@
 {643}{}{Silové pole}                                    #  FieldH.int
 {644}{}{Silové pole}                                    #  FieldI.int
 {645}{}{Poèítaè}                                       #  ForceCon.int
-{646}{}{Supermutantí hlídaè}                             #  VTeam1.int
-{647}{}{Supermutantí hlídaè}                             #  VTeam2.int
-{648}{}{Supermutantí hlídaè}                             #  VTeam3.int
-{649}{}{Supermutantí hlídaè}                             #  VTeam4.int
-{650}{}{Supermutantí hlídaè}                             #  VTeam5.int
-{651}{}{Supermutantí hlídaè}                             #  VTeam6.int
-{652}{}{Supermutantí hlídaè}                             #  VTeam7.int
-{653}{}{Supermutantí hlídaè}                             #  VTeam8.int
+{646}{}{Stránı supermutantù}                             #  VTeam1.int
+{647}{}{Stránı supermutantù}                             #  VTeam2.int
+{648}{}{Stránı supermutantù}                             #  VTeam3.int
+{649}{}{Stránı supermutantù}                             #  VTeam4.int
+{650}{}{Stránı supermutantù}                             #  VTeam5.int
+{651}{}{Stránı supermutantù}                             #  VTeam6.int
+{652}{}{Stránı supermutantù}                             #  VTeam7.int
+{653}{}{Stránı supermutantù}                             #  VTeam8.int
 {654}{}{Lorenzùv bodyguard}                                #  avery.int
 {655}{}{Lorenzùv bodyguard}                                #  bill.int
 {656}{}{Billy}                                          #  billy.int
@@ -558,13 +558,13 @@
 {658}{}{Znak}                                           #  bobsign.int
 {659}{}{Lorenzùv hlídaè}                                #  cally.int
 {660}{}{Cleo}                                           #  cleo.int
-{661}{}{Øidiè karavany}                                 #  crvndrvr.int
+{661}{}{Honák karavany}                                 #  crvndrvr.int
 {662}{}{Dan}                                            #  dan.int
 {663}{}{Danova ena}                                     #  danwife.int
-{664}{}{Hubian}                                        #  deadguy.int
+{664}{}{Huban}                                        #  deadguy.int
 {665}{}{Deckerùv hlídaè}                                 #  deckgrd.int
 {666}{}{Demetre}                                        #  demetre.int
-{667}{}{Zástupce Philip Fry}                                     #  fry.int
+{667}{}{Zástupce šerifa Fry}                                     #  fry.int
 {668}{}{Dveøe}                                           #  jondoor.int    ; Adytum - Door to Jon Zimmerman's room
 {669}{}{Bytelné bezpeènostní dveøe}                               #  elecdoor.int
 {670}{}{Podlaha}                                          #  electrap.int
@@ -576,18 +576,18 @@
 {676}{}{Guido}                                          #  guido.int
 {677}{}{Bezpeènostní dveøe}                                    #  gunlock.int
 {678}{}{Osobní stráce}                                      #  hbodgrd2.int
-{679}{}{Stráce Dìtí Katedrály}                #  hchdgrd.int
+{679}{}{Stránı Dìtí katedrály}                #  hchdgrd.int
 {680}{}{Farmáø}                                         #  hgenfarm.int
 {681}{}{Strá z Hubu}                                  #  hgengrd.int
 {682}{}{Daren Hightower}                                #  hightowr.int
 {683}{}{Hightowerùv stránı}                              #  htwrgrd.int
 {684}{}{Hightowerova ena}                               #  htwrwife.int
-{685}{}{Hubian}                                         #  hubber.int
+{685}{}{Huban}                                         #  hubber.int
 {686}{}{Obchodník z karavany}                               #  hubcarvn.int
 {687}{}{Dùstojník policie z Hubu}                         #  hubcop.int
-{688}{}{Dítì kvìtin}                                   #  hubflrcd.int
+{688}{}{Dítì s kvìtinami}                                   #  hubflrcd.int
 {689}{}{Jake}                                           #  hubjake.int
-{690}{}{Pacient Dìtí Katedrály}              #  hubpatnt.int
+{690}{}{Pacient Dìtí katedrály}              #  hubpatnt.int
 {691}{}{Smitty}                                         #  hubsmity.int
 {692}{}{Jasmine}                                        #  jasmine.int
 {693}{}{Pracovní vıvìska}                                       #  jobpost.int
@@ -598,14 +598,14 @@
 {698}{}{Mistr obchodník}                                #  mstmerch.int
 {699}{}{Richie}                                         #  richie.int
 {700}{}{Rufus}                                          #  rufus.int
-{701}{}{Rutger}                                     #  nkingrat.int
+{701}{}{Král stoky}                                     #  nkingrat.int
 {702}{}{Sid}                                            #  sid.int
 {703}{}{Thorndyke}                                      #  thorndyk.int
 {704}{}{Troy}                                           #  troy.int
-{705}{}{Kupec s vodou}                          #  wmcarvn.int
-{706}{}{Strá Kupcù s vodou}                           #  wtrMGrd.int
+{705}{}{Obchodník s vodou}                          #  wmcarvn.int
+{706}{}{Stránı obchodníkù s vodou}                           #  wtrMGrd.int
 {707}{}{Poèítaè}                                       #  RadioCom.int
-{708}{}{Supermutantí stránı}                            #  Comptrol.int
+{708}{}{Supermutantí hlídka}                            #  Comptrol.int
 {709}{}{Obchodník z karavany}                               #  HGenCvan.int
 {710}{}{Varování}                                        #  VatWarn.int
 {711}{}{Poplach}                                          #  VatAlert.int
@@ -628,7 +628,7 @@
 {728}{}{Schodištì}                                      #  HDtDn2Up.int
 {729}{}{Šachta}                                      #  HDtUp2Dn.int
 {730}{}{Bezpeènostní dveøe}                               #  HDtVault.int
-{731}{}{Pan Handy}                                      #  MrHandyC.int
+{731}{}{Mr. Handy}                                      #  MrHandyC.int
 {732}{}{Student Bratrstva}                            #  Student.int
 {733}{}{Thomas}                                         #  Thomas.int
 {734}{}{Zmìna reakce}                                #  ModReact.int
@@ -637,17 +637,17 @@
 {737}{}{Poklop}                                        #  Ady2Cell.int
 {738}{}{ebøík}                                         #  Cell2Ady.int
 {739}{}{Gizmùv bodyguard}                                  #  GizGuard.int
-{740}{}{Èlen Ripperù}                                  #  ripper.int
+{740}{}{Rozparovaè}                                  #  ripper.int
 {741}{}{Holodisk}                                       #  MutDisk.int
 {742}{}{Páraè}                                      #  DethClaw.int
-{743}{}{Potìr páraèù}                                #  Deathspr.int
+{743}{}{Mládì páraèe}                                #  Deathspr.int
 {744}{}{Rybáø}                                      #  FishrMan.int
 {745}{}{Rybáøùv syn}                                #  FishrSon.int
 {746}{}{Neobvyklá telefonní budka}                               #  Tardis.int
 {747}{}{Velká stopa}                                #  FootMap.int
 {748}{}{Neobvyklá telefonní budka}                               #  WhoMap.int
-{749}{}{Brahmina}                                        #  TalkCow.int
-{750}{}{Stádo Brahminù}                                #  TCowMap.int
+{749}{}{Brahmína}                                        #  TalkCow.int
+{750}{}{Stádo brahminù}                                #  TCowMap.int
 {751}{}{Zranìnı venkovan}                                #  MissBro
 {752}{}{Drsnı hlídaè}                                    #  HubCaptr.int
 {753}{}{ivoucí navdy}                                #  animfrvr.int
@@ -656,8 +656,8 @@
 {756}{}{Automat na noviny}                              #  MVNews.int
 {757}{}{Obchodník s ojetinami}                              #  Dealer.int
 {758}{}{Obchod s ojetinami}                                   #  UsedCar.int
-{759}{}{Bratrstvo Oceli}                           #  BroDead.int
-{760}{}{Dìti Katedrály}                      #  ChilDead.int
+{759}{}{Bratrstvo oceli}                           #  BroDead.int
+{760}{}{Dìti katedrály}                      #  ChilDead.int
 {761}{}{Vstup do vojenské základny}                         #  MBDead.int
 {762}{}{Sarah}                                          #  Sarah.int
 {763}{}{Agatha}                                         #  Agatha.int
@@ -669,9 +669,9 @@
 {769}{}{Rozhnìvanı na tebe}                                   #  Enemy.int
 {770}{}{Alex}                                           #  Alex.int
 {771}{}{Gideon}                                         #  Gideon.int
-{772}{}{Jeremiah}                                       #  Jerem.int
-{773}{}{Supermutantí hlídaè}                             #  AirGrd.int
-{774}{}{Supermutantí hlídaè}                             #  AirGrd2.int
+{772}{}{Jeremiáš}                                       #  Jerem.int
+{773}{}{Stránı supermutantù}                             #  AirGrd.int
+{774}{}{Stránı supermutantù}                             #  AirGrd2.int
 {775}{}{Dr. Lorri}                                      #  BOSLori.int
 {776}{}{Moore}                                          #  Moore.int
 {777}{}{Lucy}                                           #  Lucy.int
@@ -692,7 +692,7 @@
 {792}{}{Zasvìcenec Bratrstva}                  #  GenInit.int
 {793}{}{Kojot}                                         #  Coyote.int
 {794}{}{Supermutantí hlídaè}                             #  Smone.int
-{795}{}{Supermutantí stránı}                             #  SMTwo.int
+{795}{}{Stránı supermutantù}                             #  SMTwo.int
 {796}{}{Šerif Greene}                                 #  Justin.int
 {797}{}{Barman}                                      #  Falcon1.int
 {798}{}{Obchodník z Hubu}                               #  Merch1.int
@@ -709,7 +709,7 @@
 {809}{}{John}                                           #  HJohn.int
 {810}{}{Krupiér}                                         #  HGenDeal.int
 {811}{}{Modlící se supermutant}                           #  Smpray.int
-{812}{}{Modlící se Dítì Katedrály}                 #  Cpray.int
+{812}{}{Modlící se Dítì katedrály}                 #  Cpray.int
 {813}{}{Venkovan}                                        #  PeasVict.int
 {814}{}{Krupiér}                                #  HRoulet.int
 {815}{}{Rolník z Junktownu}                               #  JunkPeas.int
@@ -731,8 +731,8 @@
 {831}{}{Poèítaèovı terminál}                              #  term6.int
 {832}{}{Poèítaèovı terminál}                              #  term7.int
 {833}{}{Poèítaèovı terminál}                              #  term8.int
-{834}{}{Skøínka}                                         #  Lccker.int
-{835}{}{Mantis}                                         #  Mantis.int
+{834}{}{Skøíòka}                                         #  Lccker.int
+{835}{}{Kudlanka}                                         #  Mantis.int
 {836}{}{Pracovní stùl}                                     #  WkTbl.int
 {837}{}{Šílenı vìdec}                                  #  MadBrot.int
 {838}{}{Vìzeòkynì}                                 #  Women.int
@@ -740,7 +740,7 @@
 {840}{}{Koridor hnusu}                          #  Revulse.int
 {841}{}{Generátor}                                      #  fieldgen.int
 {842}{}{Poèítaè}                                       #  ElevCon.int
-{843}{}{Divokı ghoul}                                   #  genzombi.int
+{843}{}{Ghúlí strá}                                   #  genzombi.int
 {844}{}{Holodisk}                                       #  BroHist.int
 {845}{}{Holodisk}                                       #  SopDisk.int
 {846}{}{Holodisk}                                       #  MaxDisk.int
@@ -763,21 +763,21 @@
 {863}{}{Nájezdník}                                         #  CrvnEnmy.int
 {864}{}{Zboí na prodej}                                 #  KillStor.int
 {865}{}{Cestující}                             #  CarEnctr.int
-{866}{}{Commonly Said Things}                           #  GenChat.int
+{866}{}{Bìné hlášky}                           #  GenChat.int
 {867}{}{Doèasné místo}                                #  TEMP
 {868}{}{Doèasné místo}                                #  TEMP
 {869}{}{Doèasné místo}                                #  TEMP
 {870}{}{Rytíø Larry}                                   #  LaryKnig.int
-{871}{}{Vreeho písaø}                                  #  VreScrib.int
-{872}{}{Vreeho bodyguard}                                   #  vregrd.int
+{871}{}{Vreeina písaøka}                                  #  VreScrib.int
+{872}{}{Vreeina strá}                                   #  vregrd.int
 {873}{}{Maxsonùv stránı}                                 #  MaxGrd.int
-{874}{}{Jeremiah}                                       #  Jerem2.int
+{874}{}{Jeremiáš}                                       #  Jerem2.int
 {875}{}{Dveøe}                                           #  WoodDoor.int
 {876}{}{Robustní dveøe}                                    #  MetlDoor.int
 {877}{}{Cestující}                             #  HubEnctr.int
 {878}{}{Kupec z karavany}                               #  HGenVan2.int
 {879}{}{Obchodník Far Go Traders}                        #  FGTRtnVn.int
-{880}{}{Obchodník Crimson Caravan}                      #  CCRtnVn.int
+{880}{}{Obchodník Karmínové karavany}                      #  CCRtnVn.int
 {881}{}{Obchodník s vodou}                         #  WMRtnVn.int
 {882}{}{Mitch}                                          #  AllNOne.int
 {883}{}{Prodavaè}                                     #  Armory.int
@@ -785,10 +785,10 @@
 {885}{}{Pohasínající svìtlo}                              #  ExitLite.int
 {886}{}{Provaz}                                           #  Rope.int
 {887}{}{Jake}                                           #  ArmsDeal.int
-{888}{}{Ghoul hlídaè}                                    #  GDoor.int
+{888}{}{Ghúlí hlídaè}                                    #  GDoor.int
 {889}{}{Vìzeòská cela}                             #  JunkJail.int
-{890}{}{Ghoul hlídaè}                                   #  Tread.int
-{891}{}{Ghoul hlídaè}                                   #  Dirtnap.int
+{890}{}{Ghúlí hlídaè}                                   #  Tread.int
+{891}{}{Ghúlí hlídaè}                                   #  Dirtnap.int
 {892}{}{Záøící}                                    #  Valtglo.int
 {893}{}{Poèítaè}                                       #  ValtComp.int
 {894}{}{Farmáø}                                         #  RedFarm.int
@@ -808,7 +808,7 @@
 {908}{}{Dveøe}                                           #  JakeDoor.int
 {909}{}{Stùl}                                           #  JakeDesk.int
 {910}{}{Knihovna}                                       #  Bookcase.int
-{911}{}{Technik Dìtí Katedrály}           #  MLOps.int
+{911}{}{Technik Dìtí katedrály}           #  MLOps.int
 {912}{}{Viscious}                                       #  Viscious.int
 {913}{}{Schránka na pøídìly vody}                      #  VaultBox.int
 {914}{}{Poèítaè}                                       #  MstrComp.int
@@ -829,11 +829,11 @@
 {929}{}{Stopy}                                     #  FootPrnt.int
 {930}{}{Stránı obchodníkù s vodou}                           #  WMGuard.int
 {931}{}{Stránı robot}                                   #  GSenRob.int
-{932}{}{Bezpeèností dveøe}                                    #  GloYlDor.int
+{932}{}{Bezpeènostní dveøe}                                    #  GloYlDor.int
 {933}{}{Obchodník}                                       #  WMGroup.int
-{934}{}{Hlídaè Crimson Caravan}                          #  CCGuard.int
+{934}{}{Hlídaè Karmínové karavany}                          #  CCGuard.int
 {935}{}{Boxující hlídaè}                                   #  BoxGuard.int
-{936}{}{Skøínka}                                         #  GunCache.int
+{936}{}{Skøíòka}                                         #  GunCache.int
 {937}{}{Velmi bytelné dveøe}                                #  SDoor.int
 {938}{}{Stupidní mutant}                                  #  PowerMut.int
 {939}{}{Nástìnka}                                 #  bullbord.int
@@ -848,7 +848,7 @@
 {948}{}{Supermutant-obchùzkáø}                             #  DCMutant.int
 {949}{}{Èlen karavany Far Go Trader}                       #  FGTCarvn.int
 {950}{}{Supermutant-obchùzkáø}                         #  MutAmbsh.int
-{951}{}{Bezpeèností schránka}                                        #  DocLokr.int
+{951}{}{Bezpeènostní schránka}                                        #  DocLokr.int
 {952}{}{Lednièka}                                  #  CrashBox.int
 {953}{}{Dveøe}                                           #  SkumDoor.int
 {954}{}{Supermutant-obchùzkáø}                         #  SupAmbsh.int
@@ -856,8 +856,8 @@
 {956}{}{Tajemnı cizinec}                            #  Stranger.int
 {957}{}{}                                               #  SupGrd.int
 {958}{}{Velmi bytelné dveøe}                               #  SupDoor.int
-{959}{}{Skøínka}                                         #  VWepLokr.int
-{960}{}{Skøínka Bratrstva}                             #  BroLock.int
+{959}{}{Skøíòka}                                         #  VWepLokr.int
+{960}{}{Skøíòka Bratrstva}                             #  BroLock.int
 {961}{}{Holodisk s daty Vaultu}                            #  ValtDisk.int
 {962}{}{Paní Stapletonová}                                    #  Staple.int
 {963}{}{Svìtla poplašného zaøízení}                                    #  Klaxon.int
@@ -872,40 +872,40 @@
 {972}{}{Trezor}                                      #  HtwrBox.int
 {973}{}{Dveøe}                                           #  KilDoor1.int
 {974}{}{Dveøe}                                           #  KilDoor2.int
-{975}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{975}{}{Generátor silového pole}                            #  Emiter1a.int
 {976}{}{Silové pole}                                    #  Field1a.int
 {977}{}{Chladiè}                                         #  MorbCool.int
 {978}{}{Dveøe}                                           #  HtwrDoor.int
 {979}{}{Silové pole}                                    #  Field1a.int
-{980}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{980}{}{Generátor silového pole}                            #  Emiter1a.int
 {981}{}{Silové pole}                                    #  Field1a.int
-{982}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{982}{}{Generátor silového pole}                            #  Emiter1a.int
 {983}{}{Silové pole}                                    #  Field1a.int
-{984}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{984}{}{Generátor silového pole}                            #  Emiter1a.int
 {985}{}{Silové pole}                                    #  Field1a.int
-{986}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{986}{}{Generátor silového pole}                            #  Emiter1a.int
 {987}{}{Silové pole}                                    #  Field1a.int
-{988}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{988}{}{Generátor silového pole}                            #  Emiter1a.int
 {989}{}{Zmutované monstrum}                                               #  Floater.int
 {990}{}{Lenore}                                         #  Lenore.int
 {991}{}{Bob}                                            #  BitsBob.int
 {992}{}{Dveøe}                                           #  KaneDoor.int
 {993}{}{Silové pole}                                    #  Field1a.int
-{994}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{994}{}{Generátor silového pole}                            #  Emiter1a.int
 {995}{}{Silové pole}                                    #  Field1a.int
-{996}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{996}{}{Generátor silového pole}                            #  Emiter1a.int
 {997}{}{Pole bolesti}                                     #  PainFeld.int
 {998}{}{Silové pole}                                    #  Field1a.int
-{999}{}{Vysílaè silového pole}                            #  Emiter1a.int
+{999}{}{Generátor silového pole}                            #  Emiter1a.int
 {1000}{}{Silové pole}                                   #  Field1a.int
-{1001}{}{Vysílaè silového pole}                           #  Emiter1a.int
+{1001}{}{Generátor silového pole}                           #  Emiter1a.int
 {1002}{}{Silové pole}                                   #  Field1a.int
-{1003}{}{Vysílaè silového pole}                           #  Emiter1a.int
+{1003}{}{Generátor silového pole}                           #  Emiter1a.int
 {1004}{}{Dveøe od vıtahu}                                 #  VBrokElv.int
 {1005}{}{}                                              #  Stuff.int
 {1006}{}{Zabezpeèené dveøe}                                  #  ArmDoor.int
 {1007}{}{Hlídaè Regulátorù}                               #  RegGuard.int
-{1008}{}{Ghoul}                                         #  HotGhoul.int
+{1008}{}{Ghúl}                                         #  HotGhoul.int
 {1009}{}{Poruèíkùv hlídaè}                                   #  LtGuard.int
 {1010}{}{Poèítaè}                                      #  MorpComp.int
 {1011}{}{Zeï}                                          #  SetDoor.int
@@ -916,34 +916,34 @@
 {1016}{}{Vùdcùv voják}                              #  Hord.int
 {1017}{}{Dugan}                                         #  Dugan.int
 {1018}{}{MacRae}                                        #  MacRae.int
-{1019}{}{Strá Crimson Caravan}                         #  CCGuard1.int
-{1020}{}{Strá Crimson Caravan}                         #  CCGuard2.int
-{1021}{}{Královna Páraèù}                              #  MomClaw.int
+{1019}{}{Strá Karmínové karavany}                         #  CCGuard1.int
+{1020}{}{Strá Karmínové karavany}                         #  CCGuard2.int
+{1021}{}{Královna páraèù}                              #  MomClaw.int
 {1022}{}{Páraè}                                     #  RoamClaw.int
 {1023}{}{Micheal}                                       #  BYMike.int
 {1024}{}{Christine}                                     #  BYChris.int
 {1025}{}{Greg}                                          #  BYGreg.int
 {1026}{}{Blade}                                         #  InBlade.int
-{1027}{}{Vejce Páraèù}                                 #  EggClaw.int
+{1027}{}{Vejce páraèù}                                 #  EggClaw.int
 {1028}{}{Radškorpión}                                   #  Radscor2.int
 {1029}{}{Bedna}                                           #  VanceBox.int
 {1030}{}{Bedna}                                           #  BethBox.int
-{1031}{}{Vysílaè silového pole}                           #  Emiter1a.int
+{1031}{}{Generátor silového pole}                           #  Emiter1a.int
 {1032}{}{Dveøe}                                          #  RhomDoor.int
 {1033}{}{Skøíòka}                                        #  RhomLock.int
 {1034}{}{Krysa}                                           #  WanRat2.int
 {1035}{}{Irwin}                                         #  Irwin.int
 {1036}{}{Energo zbroj}                                   #  Armor.int
-{1037}{}{Bezpeèností schránka}                                       #  MitchBox.int
+{1037}{}{Bezpeènostní schránka}                                       #  MitchBox.int
 {1038}{}{Nájezdník}                                        #  FarmRaid.int
 {1039}{}{Mathia}                                        #  Mathia.int
 {1040}{}{Podlaha}                                         #  JTile.int
-{1041}{}{Brahmina}                                       #  Stampede.int
-{1042}{}{Staøešina Bratrstva}                             #  HighEld.int
+{1041}{}{Brahmína}                                       #  Stampede.int
+{1042}{}{Starší Bratrstva}                             #  HighEld.int
 {1043}{}{Krtko-potkan}                                      #  MoleRat2.int
-{1044}{}{Staøešina Bratrstva}                             #  BroEld.int
-{1045}{}{Ghoul}                                         #  RanGhoul.int
-{1046}{}{Chladící støínka}                                     #  IceChest.int
+{1044}{}{Starší Bratrstva}                             #  BroEld.int
+{1045}{}{Ghúl}                                         #  RanGhoul.int
+{1046}{}{Chladící skøínka}                                     #  IceChest.int
 {1047}{}{Holodisk}                                      #  LtCodes.int
 {1048}{}{Silové pole}                                   #  PrisFeld.int
 {1049}{}{Silové pole}                                   #  PsyField.int
@@ -954,20 +954,20 @@
 {1054}{}{Skøíòka}                                        #  GenLock.int
 {1055}{}{Holodisk}                                      #  RegDisk.int
 {1056}{}{Vìzeò}                                      #  HubPris.int
-{1057}{}{Následníci}                                     #  LAFollwr.int
+{1057}{}{Následovníci apokalypsy}                                     #  LAFollwr.int
 {1058}{}{Dveøe}                                          #  RaidDoor.int
-{1059}{}{Poškozenı zdroj silového pole}                   #  GenEmit.int
+{1059}{}{Poškozenı generátor silového pole}                   #  GenEmit.int
 {1060}{}{Test}                                          #
 {1061}{}{Cheater Item}                                           #  Peasdog.int    ; Dog victim for random encounters.
 {1062}{}{Zákazník karavany}                              #  carcust.int
 {1063}{}{Boxer}                                         #  jboxer.int
 {1064}{}{}                                              #  stapbox.int
 {1065}{}{}                                              #  invaded.int    ; msg file for random encounter                                               # local_vars=15
-{1066}{}{Brahmina}                                       #  carcow.int     ; caravan cow                                                                 # local_vars=15
+{1066}{}{Brahmína}                                       #  carcow.int     ; caravan cow                                                                 # local_vars=15
 {1067}{}{}                                              #  fke_dude.int   ; NOT USED  fake script for Rad Poison examine mod                      # local_vars=15
 {1068}{}{}                                              #  alldogs.int    ; Combined entries from all dog's MSG files [Sduibek, Fallout Fixt]           # local_vars=15
 {1069}{}{}                                              #  bobstand.int   ; Bob's Iguana Stand (the actual stand itself) [Sduibek, Fallout Fixt]        # local_vars=15
-{1070}{}{Hooker}                                        #  HHookerD.int   ; "deactive" Hooker (from vanilla) at the Falcon in the Hub                   # local_vars=15
+{1070}{}{Prostitutka}                                        #  HHookerD.int   ; "deactive" Hooker (from vanilla) at the Falcon in the Hub                   # local_vars=15
 {1071}{}{}                                              #  massacre.int   ; dead critters that spawn after Mutant Invasion(s) [Fallout Fixt]            # local_vars=15
 {1072}{}{}                                              #  redfield.int   ; script allowing the red fields in MB to be destroyed [Fallout Fixt]         # local_vars=15
 {1073}{}{}                                              #  GrnMtArm.int   ; GREEN MUTANT ARMOR - FEV Jar for Play As Super Mutant [Fallout Fixt]        # local_vars=15

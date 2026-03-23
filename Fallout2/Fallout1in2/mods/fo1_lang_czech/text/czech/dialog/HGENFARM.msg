@@ -9,7 +9,7 @@
 {104}{}{Pùda je moc tvrdá.}
 {105}{}{Tyhle hloupé kytky se nikdy neuchytí.}
 {106}{}{Proè já jsem se jen stal farmáøem?}
-{107}{}{Bylo by lepší, kdyby ty zmutovanı krávy nechcaly na moje obilí.}
+{107}{}{A se ty èoklové neopovaujou chcát mi na úrodu!}
 # pissing == urinating
 
 {108}{}{Nenávidím psy!}

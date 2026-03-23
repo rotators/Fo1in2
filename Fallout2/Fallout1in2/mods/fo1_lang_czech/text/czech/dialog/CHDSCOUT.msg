@@ -5,7 +5,7 @@
 {104}{}{Pøece já!}
 {105}{}{Tvoje smrt!}
 {106}{}{Uklidni se. Já jsem pøítel.}
-{107}{}{Jája? Jdi odsud! Tohle je majetek Dìtí Katedrály.}
+{107}{}{Jája? Jdi odsud! Tohle je majetek Dìtí katedrály.}
 {108}{}{Huh? Já zùstat!}
 {109}{}{Huh? Ty umøít!}
 {110}{}{Já nechtít odejít.}
@@ -14,7 +14,7 @@
 {113}{}{Nyts.}
 {114}{}{Pomoft tobje.}
 {115}{}{OK. Navrhuju ti, abys odsud zmizel døív, než pøijdeš k úrazu.}
-{116}{}{Ty mi chceš pomoct? Tomu vìøím. Co máš?}
+{116}{}{Ty mi chceš pomoct? Tomu nevìøím. Co máš?}
 {117}{}{Nyts.}
 {118}{}{Tóodle!}
 {119}{}{Vaut.}
@@ -24,7 +24,7 @@
 {123}{}{Nyts.}
 {124}{}{Valt! Valt!}
 {125}{}{Aha, ty chceš cukøíèek? Sorry, ale žádnej nemám. Sbohem.}
-{126}{}{Aha Vault. No to je moc hezké. Možná by sis o tom mohl promluvit s mými pøedstavenými. Zrovna teï mám totiž dost práce.}
+{126}{}{Aha, Vault. No to je moc hezké. Možná by sis o tom mohl promluvit s mými pøedstavenými. Zrovna teï mám totiž dost práce.}
 {127}{}{Tady je to hroznì nebezpeèný. Velký, zlý pøíšery ovládly tohle místo. Zkoušíme zachránit, co se dá, døív než se sem vrátí.}
 {128}{}{Ne jít! Ne jít!}
 {129}{}{Uh, oh.}
@@ -33,7 +33,7 @@
 {132}{}{Já zabít! Já zabít!}
 {133}{}{Sbochem.}
 {134}{}{Mùžeš to zkusit. Nejsem si ale jistý, že budeš mít nìjaký úspìch. Hodnì štìstí.}
-{135}{}{Uh oh je to správné slovo. Jsou hrozní. Snažíme se, aby porozumìli tomu, že lidé i monstra mohou žít spolu.}
+{135}{}{Uh oh, to je správné slovo. Jsou hrozní. Snažíme se, aby porozumìli tomu, že lidé i monstra mohou žít spolu.}
 {136}{}{Oh. OK. Sbochem.}
 {137}{}{Prostì mi jen øekni, kdo jsi, než ti rozbiju hlavu.}
 {138}{}{Jsem Následovník. Kam všichni odešli?}
@@ -42,11 +42,11 @@
 {141}{}{. Zapamatuj si to!}
 {142}{}{To nebude potøeba.}
 {143}{}{CHCÍPNI!}
-{144}{}{Pojï se mnou. Ukážu ti kam všichni odešli.}
+{144}{}{Pojï se mnou. Ukážu ti, kam všichni odešli.}
 {145}{}{Tak ty jsi Následovník?}
 {146}{}{Samozøejmì! Kdo jiný bych mìl být?}
-{147}{}{Ne, já jsem èlen Dìtí Katedrály.}
-{148}{}{Neutahuj si ze mnì. Spletl jsem si tì s nìkým jiným. Pojï se mnou. Ukážu ti cestu.}
+{147}{}{Ne, já jsem èlen Dìtí katedrály.}
+{148}{}{Neutahuj si ze mì. Spletl jsem si tì s nìkým jiným. Pojï se mnou. Ukážu ti cestu.}
 {149}{}{Nepamatuju si tì. Jak se jmenuješ?}
 {150}{}{Jsem }
 {151}{}{. Jak jsi na mì mohl zapomenout?}
@@ -57,9 +57,9 @@
 {156}{}{Jsi v mé zónì, takže mi do toho je zatracenì moc. Mluv nebo je po tobì!}
 {157}{}{Fajn. Jsem }
 {158}{}{. Už se ti rozsvítilo?}
-{159}{}{Hmmm. Myslím . . . ZABÍT!}
+{159}{}{Hmmm. Myslím... ZABÍT!}
 {160}{}{Nech mì chvíli pøemýšlet.}
-{161}{}{Musím se podívat. Je to }
+{161}{}{Tak moment. Je to }
 {162}{}{. Správnì?}
 {163}{}{Jo, ty pitomèe.}
 {164}{}{Jo.}
@@ -76,16 +76,16 @@
 {175}{}{Smrt, jo? Spíš mi pøipadáš jak žrádlo pro èervy.}
 {176}{}{Jestli jsi pøítel, tak to dokaž.}
 {177}{}{Pomohl jsem zlikvidovat Následovníky.}
-{178}{}{Pomohl jsem zlikvidovat Rippery.}
+{178}{}{Pomohl jsem zlikvidovat Rozparovaèe.}
 {179}{}{Pomohl jsem zlikvidovat mutanty.}
-{180}{}{Pomohl jsem zlikvidovat Dìti Katedrály.}
+{180}{}{Pomohl jsem zlikvidovat Dìti katedrály.}
 {181}{}{Opravdu? Myslím, že mùj šéf by o tom rád slyšel víc. Jdi najít Orfea. Odmìní se ti za tvou pomoc.}
-{182}{}{Na nìkoho, kdo pøichází v míru, jsi dost velký zabiják. Ale tihle Rippers dìlali spoustu potíží. Orfeo se ti za tvou námahu odmìní.}
-{183}{}{Zabiješ neškodné zrùdy, které jsou jen koneèným dùsledkem destruktivní lidské povahy, a ještì máš tu drzost hlásat mír?}
+{182}{}{Na nìkoho, kdo pøichází v míru, jsi dost velký zabiják. Ale tihle Rozparovaèi dìlali spoustu potíží. Orfeo se ti za tvou námahu odmìní.}
+{183}{}{Zabiješ neškodné tvory, kteøí jsou jen koneèným dùsledkem destruktivní lidské povahy, a ještì máš tu drzost hlásat mír?}
 {184}{}{Je mi líto. Byli hroznì oškliví, tak jsem je odstøelil.}
 {185}{}{Na spoustì míst ubližovali lidem.}
 {186}{}{Jo. A teï oddìlám tebe.}
-{187}{}{Nechám tì žít. Myslím, že je lepší nechat tì, aby ses vypoøádal sám se sebou.}
+{187}{}{Nechám tì žít. Ale myslím, že bude lepší tì vzít k nám a nechat tì oèistit od tìchhle destruktivních myšlenek.}
 {188}{}{Legraèní. Myslel jsem, že jsem pár z nich vidìl na ulici, jak se to tam snaží vyèistit od gangù.}
 {189}{}{Oni napadli Blades?}
 {190}{}{Co se stalo v Adytu?}

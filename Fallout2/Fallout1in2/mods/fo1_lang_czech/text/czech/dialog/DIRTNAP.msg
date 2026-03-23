@@ -1,4 +1,4 @@
-{100}{}{Vidíš fosforeskujícího ghoula.}
-{101}{}{Neèistý spánek pøichází, když jsou uèinìny zmìny. Poslední zde to zkusil.}
-{102}{}{Plamen uhasíná, stejnì jako tvùj život.}
-{103}{}{Dìkuji ti za opravu vodní pumpy.}
+{100}{}{Vidíš záøícího ghúla.}
+{101}{}{Kdo se pokusí o úpravy, toho èeká vìènej spánek v hlínì. Ten poslední to zkusil.}
+{102}{}{Proud se zastavil. Stejnì jako tvùj život.}
+{103}{}{Dìkuji ti za opravu vodního èerpadla.}

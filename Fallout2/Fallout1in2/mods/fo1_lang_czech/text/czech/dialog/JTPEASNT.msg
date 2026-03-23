@@ -3,4 +3,4 @@
 {102}{}{Slyšel jsem o tobì ošklivé vìci, je to pravda?}
 {103}{}{Ahoj.}
 {104}{}{To je naše místo. Chceš se zdret?}
-{105}{}{Hmmm, vypadáš jedle . . .}
+{105}{}{Hmmm, vypadáš šavnatì...}

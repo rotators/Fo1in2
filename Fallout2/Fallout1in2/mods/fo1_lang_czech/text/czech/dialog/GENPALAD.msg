@@ -1,9 +1,9 @@
 {100}{}{Vidíš Paladina.}
 {101}{}{Promiò, nemohu mluvit, Zasvìcenèe.}
 {102}{}{Dobrý den.}
-{103}{}{Vìdìl jsi, že mùžeš v silném ochranném obleku pøežít týdny bez vody?}
+{103}{}{Vìdìl jsi, že mùžeš v energo zbroji pøežít týdny bez vody?}
 {104}{}{Copak nemiluješ poøádnou bitku?}
-{105}{}{Mnì se fakt líbí ta nová laserová puška, ale staré laserové pistole jsou pøesto moje favoritky.}
+{105}{}{Mnì se fakt líbí ty nový laserový pušky, ale starý laserový pistole jsou pøesto moje favoritky.}
 {106}{}{Noèní hlídky v oblasti jsou velmi nebezpeèné. Být tebou, nechodil bych pøíliš daleko.}
 {107}{}{Buï opatrný, je tu životu nebezpeèno.}
 {108}{}{Na mojí zbroji je flek!}

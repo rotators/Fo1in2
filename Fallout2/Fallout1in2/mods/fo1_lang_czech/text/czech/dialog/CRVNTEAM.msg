@@ -1,7 +1,7 @@
 {100}{}{Vracíme se zpátky do Hubu.}
 {101}{}{Vracíš se s námi?}
 {102}{}{Pøipraveni.}
-{103}{}{Doufám, že mám dost nábojù.}
+{103}{}{Doufám, že mám dost nábojù...}
 {104}{}{Tuhle práci prostì miluju!}
 {105}{}{Vyrážíme!}
 {106}{}{Hnìte se!}

@@ -3,5 +3,5 @@
 #
 {100}{}{Rozjedem to!}
 {101}{}{Vypadáš, že by se ti hodila pomocná ruka.}
-{102}{}{Pomùžu ti.}
+{102}{}{Pomohu ti.}
 {103}{}{Moc toho nenamluvím. Promiò.}

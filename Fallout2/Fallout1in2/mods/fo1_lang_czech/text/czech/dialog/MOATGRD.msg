@@ -20,4 +20,4 @@
 {119}{}{Chci koupit zbranì od Zacka.}
 
 # Fo1in2:
-{200}{}{Jdi si pokecat se Zackem, má pøesnì ty vìci které by tì mohly zajímat.}
+{200}{}{Jdi za Zackem, vybaví tì vším, co potøebuješ.}

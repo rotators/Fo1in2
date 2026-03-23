@@ -1,4 +1,4 @@
-{100}{}{Vidíš Skaga.}
+{100}{}{Vidíš povaleèe.}
 {101}{}{Tohle je pìkné místo! O dost lepší, než to, kde jsem byl døív.}
 {102}{}{Líbí se mi tu!}
 {103}{}{Je tu tolik prostoru. Kdybych mìl nìjaké vìci, mìl bych na nì spoustu místa.}
@@ -9,8 +9,8 @@
 {108}{}{Je èas spát?}
 {109}{}{Mùžeš zabrat moje starý místo.}
 {110}{}{Jsem unavený, co tu dìláš?}
-{111}{}{Tohle je mùj domov! Odejdi!}
-{112}{}{Tohle je mùj domov! Odejdi!}
+{111}{}{Tohle mùj domov! Vypadni!}
+{112}{}{Tohle mùj domov! Vypadni!}
 {113}{}{Kde mám polštáø?}
 {114}{}{Chce se mi spát.}
 {115}{}{Neubližuj mi.}

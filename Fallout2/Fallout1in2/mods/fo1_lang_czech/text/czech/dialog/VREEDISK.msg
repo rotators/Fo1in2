@@ -1,7 +1,7 @@
 {100}{}{Na tomto disku jsou Vreeiny pitevní zprávy.}
-{101}{}{Pip Boy zpráva: Složka v systému nalezena. Ruším nahrávání.}
-{102}{}{Pip Boy zpráva: Nahrávám data z disku.}
-{103}{}{Tento holodisk obsahuje lékaøské data, které potvrzují že všichni supermutanti jsou neplodní.}
+{101}{}{Pip-Boy 2000 hlásí: „Stahuji... Pøerušuji, data již existují!“}
+{102}{}{Pip-Boy 2000 hlásí: „Stahuji data... ... ... Hotovo. Hezký den!“}
+{103}{}{Tento holodisk obsahuje lékaøské dùkazy od Vree z Bratrstva oceli, které potvrzují, že supermutanti jsou neplodní.}
 #
 # for Fallout Fixt:
 #

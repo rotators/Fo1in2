@@ -18,7 +18,7 @@
 {114}{}{Mrzí mì, že tì zranili.}
 {115}{}{Kde je Hub a Junktown?}
 {116}{}{Mùžeš mi øíct víc o nájezdnících?}
-{117}{}{Shady Sands je malá sobìstaèná, spoleènost. Jediný problém tu jsou nájezdníci a radškorpióni.}
+{117}{}{Shady Sands je malá, sobìstaèná spoleènost. Jediný problém tu jsou nájezdníci a radškorpióni.}
 {118}{}{Co je to za problém s tìmi radškorpióny?}
 {119}{}{Je v okolí hodnì nájezdníkù?}
 {120}{}{Je jich nìkolik. A jsou to rùzné tlupy. Kradou naše jídlo a obèas i nìkoho zabijí. Seth organizuje hlídky, abychom se jim ubránili.}
@@ -44,7 +44,7 @@
 {136}{}{Øekni mi o Sethovi.}
 {137}{}{Prozradíš mi kudy se dostanu do Hubu a do Junktownu?}
 {138}{}{Nic, díky.}
-{139}{}{Hub je velké obchodní centrum daleko na jih od Shady Sands. Ovládá ho pár skupin karavanních obchodníkù: Kupci s vodou, Crimson Caravan a Far Go Traders. Junktown je mírnì na jihozápad. Je menší, ale stejnì se v nìm dá zastavit na pár panákù. Celému mìstu šéfuje chlapík jménem Killian Darkwater, místní majitel obchodu, šerif a starosta v jedné osobì.}
+{139}{}{Hub je velké obchodní centrum daleko na jih od Shady Sands. Ovládá ho pár skupin karavanních obchodníkù: Obchodníci s vodou, Karmínová karavana a Far Go Traders. Junktown je mírnì na jihozápad. Je menší, ale stejnì se v nìm dá zastavit na pár panákù. Celému mìstu šéfuje chlapík jménem Killian Darkwater, místní majitel obchodu, šerif a starosta v jedné osobì.}
 {140}{}{Díky.}
 {141}{}{Možná už nejsem tak skvìlý bojovník, ale na tobì podobné ještì poøád staèím!}
 
@@ -69,7 +69,7 @@
 {154}{}{Co se tu kurva stalo?}
 {155}{}{Tohle bude tìžkej oøíšek k rozlousknutí.}
 
-{156}{}{Hmm. Zajímavá nabídka, tady už se zaèínám nudit. Nìco ti øeknu. Bìžná  taxa. 100 babek na ruku a jsem tvùj èlovìk.}
+{156}{}{Hmm. Zajímavá nabídka, tady už se zaèínám nudit. Nìco ti øeknu. Bìžná taxa. 100 babek na ruku a jsem tvùj èlovìk.}
 {157}{}{Platí.}
 {158}{}{Ne, díky.}
 {159}{}{A co takhle místo toho trochu akce?}
@@ -78,16 +78,16 @@
 
 {162}{}{Tohle je obchod se zbranìmi. Vede ho Beth. Na zbranì je dobrá, ale na drby ještì lepší.}
 {163}{}{Jakeovy zbranì. Vysoké ceny, ale výborná kvalita.}
-{164}{}{Kanceláø Kupcù s vodou. To jsou nejvìtší bossové v Hubu, protože mají pod palcem vodní zásoby, tak to všechno øídí.}
-{165}{}{To je Crimson Caravan. Pracoval jsem pro nì. Pouštìjí se do tìch nejriskantnìjších podnikù.}
+{164}{}{Kanceláø Obchodníkù s vodou. To jsou nejvìtší bossové v Hubu, protože mají pod palcem vodní zásoby, tak to všechno øídí.}
+{165}{}{To je Karmínová karavana. Pracoval jsem pro nì. Pouštìjí se do tìch nejriskantnìjších podnikù.}
 {166}{}{Far Go Traders, vlastníkem je Butch Harris. Je trochu jako uøvanej lampasák, jestli mi rozumíš.}
-{167}{}{Á, to je Maltese Falcon. Dobrá hudba, dobrý pití, vybraná spoleènost.}
+{167}{}{Á, to je Maltézský sokol. Dobrá hudba, dobrý pití, vybraná spoleènost.}
 
 {168}{}{To je ale hnusnej zkurvysyn!}
 
 {169}{}{ zkušenostních bodù za pøemluvení Iana, aby se k tobì pøipojil.}
 
-{170}{}{Už jsem o podobnejch místech slyšel, ale nikdy jsem v žádným nebyl. Vypadá pìknì a èistì . . . trochu moc èistì, na mùj vkus.}
+{170}{}{Už jsem o podobnejch místech slyšel, ale nikdy jsem v žádným nebyl. Vypadá pìknì a èistì... trochu moc èistì, na mùj vkus.}
 
 {171}{}{Ne že ses mì ptal, ale èlovìk ti potøebuje dát prostor k nadechnutí.}
 
@@ -103,10 +103,10 @@
 # mutants' military base.
 #
 
-{175}{}{Myslím, že Pohøebištì je horší.}
+{175}{}{Myslím, že L.A. kostnice je horší.}
 
 
-{200}{}{Vytas v pøíští bitvì nejlepší zbraò co máš.}
+{200}{}{Vytáhni v pøíští bitvì nejlepší zbraò, co máš.}
 {201}{}{Provedu.}
 {202}{}{Mùžu pro tebe nìco udìlat, než pùjdu?}
 {203}{}{Uhm, jo. Nakonec si myslím, že bychom mìli zùstat spolu.}
@@ -114,8 +114,8 @@
 
 # Healing
 {300}{}{Jsem v pohodì.}
-{301}{}{Stále mám pár škrábancù.}
-{302}{}{Už je mi lépe, ale nedomítnul bych stimpak nebo dva.}
+{301}{}{V pohodì, víceménì všechno je zacelené.}
+{302}{}{Už je mi lépe, ale neodmítnul bych stimpak nebo dva.}
 {303}{}{Nejsem na tom moc dobøe. Pokud máš nìjaké stimpaky, rozhodnì bych je využil. Ale chodit ještì stále zvládnu.}
 
 # Pushing
@@ -155,7 +155,7 @@
 {1024}{}{Vault13}
 {1025}{}{Killian}
 {1026}{}{Gizmo}
-{1027}{}{Pohrebiste}
+{1027}{}{Boneyard|Angels Boneyard|Kostnice|Andelska kostnice}
 {1028}{}{kasino}
 {1029}{}{obchod}
 {1030}{}{parac}
@@ -168,7 +168,7 @@
 {1037}{}{nadrze}
 {1038}{}{vojenska}
 {1039}{}{zakladna}
-{1040}{}{Koupit|Kupovat|Prodat|Prodávat|Obchod|Vymìnit|Mìnit|Kšeft}
+{1040}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|Koupit|Kupovat|Prodat|Prodavat|Obchod|Vymenit|Menit|Kseft}
 {1041}{}{apokalypsa}
 {1042}{}{Mutanti}
 {1043}{}{Morpheus}
@@ -196,14 +196,14 @@
 {1065}{}{obchodnici}
 
 {1100}{}{Nemám tušení, co je to vodní èip. Promiò, kamaráde.}
-{1101}{}{Stalo se to pøed pár desítkama let. V zásadì se pár státù poøádnì nasralo a následovalo poøádný BUM!}
-{1102}{}{Malá mírumilovná vesnice. Pravdìpodobnì nejslibnìjší spoleènost v Pustinách.}
+{1101}{}{Stalo se to pøed stovkou let. V zásadì se pár státù poøádnì nasralo a následovalo poøádný BUM!}
+{1102}{}{Malá mírumilovná vesnice. Pravdìpodobnì nejslibnìjší spoleènost v pustinách.}
 {1103}{}{Støednì velké mìsto postavené ze šrotu, vede to tam šerif Killian. Je to jen pár dní na jihozápad od Shady Sands.}
-{1104}{}{Hub je nejvìtší obchodní centrum Nového západu. Hlavní slovo v nìm mají Kupci s vodou, ale najdou se tam i jiné skupiny obchodníkù. Je to mìsto na vzestupu, ale je tam spousta politikaøení mezi jednotlivými obchodnickými seskupeními.}
+{1104}{}{Hub je nejvìtší obchodní centrum Nového západu. Hlavní slovo v nìm mají Obchodníci s vodou, ale najdou se tam i jiné skupiny obchodníkù. Je to mìsto na vzestupu, ale je tam spousta politikaøení mezi jednotlivými obchodnickými seskupeními.}
 {1105}{}{Je tu nìkolik rùzných skupin nájezdníkù. Nejuspoøádanìjší je tlupa, která si øíká Khanové; ti si snad myslí, že by mohli dobýt celý svìt.}
-{1106}{}{Vìtšina karavan vyjíždí z Hubu. Cestují do všech koutù. Pracoval jsem pro skupinu zvanou Crimson Caravan, pøed tím zranìním.}
+{1106}{}{Vìtšina karavan vyjíždí z Hubu. Cestují do všech koutù. Pracoval jsem pro skupinu zvanou Karmínová karavana, pøed tím zranìním.}
 {1107}{}{Nemám tušení, co je to vodní èip. Promiò, kamaráde.}
-{1108}{}{Malá mírumilovná vesnice. Pravdìpodobnì nejslibnìjší spoleènost v Pustinách.}
+{1108}{}{Malá mírumilovná vesnice. Pravdìpodobnì nejslibnìjší spoleènost v pustinách.}
 {1109}{}{Promiò, kámo. Moc toho nevím.}
 {1110}{}{Promiò, kámo. Moc toho nevím.}
 {1111}{}{Garl je nìjakej pošahanej zmrd, kterej si myslí, že by mohl s tìma svýma všivýma nájezdníkama vládnout svìtu. Jo, to urèitì.}
@@ -217,9 +217,9 @@
 {1119}{}{Promiò, kámo. Moc toho nevím.}
 {1120}{}{Razlo je výborný doktor. Mìl bys ho navštívit, pokud jsi zranìn.}
 {1121}{}{Razlo umí uzdravovat fakt dobøe, a jeho kapky jsou proslavený!}
-{1122}{}{Promiò, kámo. Moc toho nevím.}
-{1123}{}{Promiò, kámo. Moc toho nevím.}
-{1124}{}{Promiò, kámo. Moc toho nevím.}
+{1122}{}{Ovládají veškerou vodu v Hubu. Zmocnili se vodojemu a teï musí lidi platit, aby se napili.}
+{1123}{}{Jedna z nejvìtších firem v Hubu. Pracoval jsem pro nì, než jsem skonèil v Shady Sands.}
+{1124}{}{Skupinka umírnìných obchodníkù v Hubu, kteøí nabízejí férové ceny, aniž by se pouštìli do nebezpeèí.}
 {1125}{}{Killian je starosta Junktownu. Má tam i obchod. Je to férovej chlap. Nikdy jsem pro nìj nemakal, ale vypadá v pohodì.}
 {1126}{}{Gizmo má v Junktownu kasino. Slyšel jsem, že jsou tam krupiéøi svinì, co tì oškubou o poslední zátku a na hracích automaty jaktìživ nikdo nic nevyhrál.}
 {1127}{}{Promiò, kámo. Moc toho nevím.}
@@ -234,10 +234,10 @@
 {1136}{}{Promiò, kámo. Moc toho nevím.}
 {1137}{}{Promiò, kámo. Moc toho nevím.}
 {1138}{}{Promiò, kámo. Moc toho nevím.}
-{1139}{}{Promiò, kámo. Moc toho nevím.}
+{1139}{}{Radškorpióni jsou velmi nebezpeèní. Mají jedovaté žihadlo na ocase a jsou hroznì rychlí.}
 {1140}{}{Pokud ti budou chybìt zátky, zkus nìkterou z karavanových spoleèností v Hubu.}
 {1141}{}{Víš, my vždycky povedeme války. Jenomže ta pøíští bude bojována s klackama.}
-{1142}{}{Vidìl jsem hodnì podivných vìcí, když jsem hlídal karavany z Hubu. Mutovaní kojoti, kudlanky, škorpióni a tak.}
+{1142}{}{Vidìl jsem hodnì podivných vìcí, když jsem hlídal karavany z Hubu. Mutovaní kojoti, kudlanky, radškorpióni a tak.}
 {1143}{}{Promiò, kámo. Moc toho nevím.}
 {1144}{}{Je to ubohá skupinka nájezdníkù, kteøí pøepadají Shady Sands a myslí si, že by mohli ovládnout svìt nebo podobnou kravinu.}
 {1145}{}{Je to Aradeshova dcera. Je dost pìkná, ale na mì už jedna doma èeká.}
@@ -259,19 +259,19 @@
 {1161}{}{Promiò, kámo. Moc toho nevím.}
 {1162}{}{Nevím. Možná že nìco, ale nejsou žádný dùkazy.}
 {1163}{}{Promiò, kámo. Moc toho nevím.}
-{1164}{}{Promiò, kámo. Moc toho nevím.}
+{1164}{}{To jsem já.}
 {1165}{}{Nìkteøí kupci pøicházejí z Hubu do Junktownu za obchodem. To je vše, co vím.}
 
 {1999}{}{Nauèil jsem se nìjaké nové triky.}
 {2000}{}{Promluvme si o naší taktice v boji.}
 {2001}{}{Jo?}
 {2010}{}{Schovej svoji zbraò.}
-{2011}{}{Zmìò svoji zbroj.}
+{2011}{}{Sundej si zbroj.}
 {2012}{}{Dávej pøednost boji na dálku pøed bojem zblízka.}
 {2013}{}{Dávej pøednost boji zblízka pøed bojem na dálku.}
 {2014}{}{Vyber si sám, jak chceš bojovat.}
 {2015}{}{To je pro teï vše.}
-{2100}{}{Jasnì.}
+{2100}{}{Jasnì, kámo.}
 
 # Party member stuff / Too many party members
 {2500}{}{Sorry kámo, ale tohle je na mì trochu moc velká skupina.}
@@ -279,7 +279,7 @@
 {2510}{}{Dobrá. Promluvíme si nìkdy jindy.}
 {2520}{}{Tak jdeme.}
 
-{2600}{}{[VÍCE]}
+{2600}{}{[Pokraèovat]}
 {2601}{}{Ještì nìco?}
 
 # Ask about current town location
@@ -288,7 +288,7 @@
 {2611}{}{Junktown je støednì velké mìsto. Než natáhnul baèkory, velel tam chlápek jménem Killian.}
 {2612}{}{Junktown je støednì velké mìsto. Od tý doby co Killian natáhnul baèkory, velí tam tomu chlápek jménem Gizmo. Ale poøád je to dobrý místo.}
 # Hub
-{2620}{}{The Hub je tím nejvìtším obchodním centrem na Novém západì. Vede to tam hlavnì skupina zvaná Kupci s vodou, ale jsou zde i další obchodníci, napøíklad Karmínová karavana a Far Go Traders. Je to vzkvétající mìsto, ale mezi obchodníky je spousta politických bojù.}
+{2620}{}{Hub je nejvìtší obchodní centrum na Novém západì. Vede to tam hlavnì skupina zvaná Obchodníci s vodou, ale jsou zde i další obchodníci, napøíklad Karmínová karavana a Far Go Traders. Je to vzkvétající mìsto, ale mezi obchodníky je spousta politických bojù.}
 # Raiders
 {2630}{}{Khanové; opravdu vìøí, že mùžou dobýt celý svìt. Moc rozumu nejspíš nepobrali.}
 {2631}{}{Khanové si mysleli, že mùžou dobýt celý svìt. Teï jsou všichni mrtví.}

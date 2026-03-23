@@ -10,7 +10,7 @@
 {106}{}{Tenhle barák není pro takové, jako jsi ty.}
 # "You are not permitted to enter the house."
 
-{107}{}{Cože,...  Sakra!}
+{107}{}{Co se to... Na nì!}
 {108}{}{To byla velká chyba sem pøijít!}
 {109}{}{Co tady dìláš? Je po tobì.}
 # "You're dead meat" == "i'm going to kill you"
@@ -18,7 +18,7 @@
 {110}{}{Mmmm, to vypadá dobøe.}
 # refering to food
 
-{111}{}{Že by to byl brahmin, co tu tak smrdí?}
+{111}{}{To je brahmína, co cítím?}
 
 {112}{}{Hoï to sem!}
 # referring to getting more alcohol

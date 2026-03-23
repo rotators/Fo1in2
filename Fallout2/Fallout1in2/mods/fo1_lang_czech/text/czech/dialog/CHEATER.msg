@@ -43,7 +43,7 @@
 {203}{}{Poison}
 {204}{}{Radiation}
 {205}{}{Delete ALL items from my inventory - Includes equipped!}
-{206}{}{Toggle "BUG FIXES ONLY" global variable [gvar 0]}
+{206}{}{Toggle „BUG FIXES ONLY“ global variable [gvar 0]}
 {207}{}{Nothing. [close dialog]}
 {208}{}{Fixes Only mode currently ENABLED. Disable?}
 {209}{}{Yes, Disable it.}

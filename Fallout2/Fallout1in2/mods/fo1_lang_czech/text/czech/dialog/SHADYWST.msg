@@ -6,11 +6,11 @@
 #
 # Vault 15:
 #
-{102}{}{Jen malá bouda zùstala stát v tìchto místech. Naštìstí víš, že se tu nachází vedlejší vstup do Vaultu-15.}
+{102}{}{Jen malá bouda zùstala stát v tìchto místech. Naštìstí víš, že se tu nachází vedlejší vstup do Vaultu 15.}
 #
 # Raiders:
 #
-{103}{}{Vidíš malou stavbu obklopenou nìkolika stany. Obyvatelé jsou špinaví a nechutní.}
+{103}{}{Na severozápadì vidíš malou stavbu obklopenou nìkolika stany. Obyvatelé jsou špinaví a nechutní.}
 #
 # Junktown:
 #
@@ -61,13 +61,13 @@
 # WastelandGhost, Restoration Mod
 #
 {150}{}{Pøed tebou leží tiché mìsto plné mrtvol a krveprolití. Tady se stalo nìco hrozného.}
-{155}{}{Na severu vidíš stavbu obklopenou drátìným plotem. Vypadá to, že byl poškozen výbuchem. Zápach smrti je zde témìø nesnesitelný.}
+{155}{}{Na severu vidíš stavbu obklopenou drátìným plotem. Vypadá to, že byla poškozena výbuchem. Zápach smrti je zde témìø nesnesitelný.}
 #
 # Sduibek, Fallout Fixt:
 #
 {151}{}{Toto mìsto je tiché a zlovìstné, plné mrtvých tìl. Stalo se tu nìco hrozného...}
 {152}{}{Zápach smrti je zde témìø nesnesitelný. Supermutanti hlídkují v celé oblasti.}
-{153}{}{Vše co na tomto místì nacházíš je smrt a pouštní vítr.}
+{153}{}{Vše, co na tomto místì nacházíš, je smrt a pouštní vítr.}
 {154}{}{Dorazil jsi na místo masakru. Zdá se, že nikdo nepøežil, i když je slyšet slabý zvuk pohybu.}
 #
 

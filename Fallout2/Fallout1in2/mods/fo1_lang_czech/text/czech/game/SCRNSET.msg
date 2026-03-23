@@ -19,7 +19,7 @@
 {60}{}{}
 
 {100}{}{Hi-Res}
-{101}{}{FULLSCREEN}
+{101}{}{ROZLIŠENÍ}
 {102}{}{Barvy}
 {103}{}{8 Bitù}
 {104}{}{16 Bitù}
@@ -57,7 +57,7 @@
 {155}{}{Splash}
 {156}{}{Nápovìda}
 {157}{}{Smrt}
-{158}{}{Autoøi}
+{158}{}{Závìreèné snímky}
 {159}{}{Menu}
 
 {200}{}{Sfall}
@@ -78,7 +78,7 @@
 {258}{}{Tmavší}
 {259}{}{Svìtlejší}
 
-{300}{}{Pro zrušení ZMÁÈKNÌTE LIBOVOLNOU KLÁVESU nebo ESC.}
+{300}{}{ZMÁÈKNÌTE KLÁVESU nebo ESC pro zrušení.}
 
 {500}{}{Nastavení Hi-Res patche.}
 {501}{}{Nastavení rozlišení obrazovky, barevné hloubky a obnovovací frekvence ve fullscreenu.}
@@ -92,8 +92,8 @@
 {509}{}{Název vybrané klávesy.}
 {510}{}{Povolit mìøítko X2. Minimální rozlišení se zvýší na 1280x960 a hra v oknì zabere 2x vìtší prostor.}
 {511}{}{Zapnout nebo vypnout mlhu. Je doporuèeno toto nastavení zapnout pøed vstupem do hry.}
-{512}{}{Nastavení svìtlosti podlahy, zdí a scenérie pøi použití mlhy. Dále ovlivòuje chování funkce "podívat se".}
-{513}{}{Podlahy, zdi a scenérie budou vždy viditelné a funkce "podívat se" se bude chovat normálnì.}
+{512}{}{Nastavení svìtlosti podlahy, zdí a scenérie pøi použití mlhy. Dále ovlivòuje chování funkce „podívat se“.}
+{513}{}{Podlahy, zdi a scenérie budou vždy viditelné a funkce „podívat se“ se bude chovat normálnì.}
 {514}{}{Podlahy, zdi a scenérie budou zatmavené a prozkoumat pùjdou jen tehdy, pokud budou pøímo vidìt.}
 {515}{}{Pøi zaškrnutí nastaví neomezenou vzdálenost scrolování od postavy hráèe. Doporuèeno používat s mlhou.}
 {516}{}{Zvýšením poètu vyhledávacích procesù zvýšíte vzdálenost vyhledávání cesty. 20 úrovní s pøírustky po 2000.}

@@ -4,20 +4,20 @@
 {103}{}{Mìl by se nauèit vypoøádat se se svými problémy.}
 {104}{}{To není dùležité. Dùležité je, abych s ním mluvil.}
 {105}{}{Mìl by sis promluvit se Setem.}
-{106}{}{Dostáváš: brokovnici, 10 nábojù, 4 svìtlice, 4 láhve Coly a $200.}
-{107}{}{Dostáváš: brokovnici, 10 nábojù a $100.}
-{108}{}{Dostáváš: 4 svìtlice, 4 lahve Coly a $50.}
+{106}{}{Dostáváš: brokovnici, 10 nábojù, 4 svìtlice, 4 láhve Nuka-Coly a 200 zátek.}
+{107}{}{Dostáváš: brokovnici, 10 nábojù a 100 zátek.}
+{108}{}{Dostáváš: 4 svìtlice, 4 láhve Nuka-Coly a 50 zátek.}
 {109}{}{Radìji teï zmiz.}
 {110}{}{Uvidíme se.}
 {111}{}{To je všechno, co dostanu? Zasloužím si víc, a ty mi to radìji dej!}
 {112}{}{Yerg.}
-{113}{}{Musíš odejít . . . ihned.}
-{114}{}{Následuj mne. Podíváme se na tvoji odmìnu.}
-{115}{}{Doufám, že ne, v tvém zájmu. Set nebyl zrovna odvázaný, že musel použít tebe. Byl by to docela dobrý nápad odejít z Nekropolisu ... co nejdøív.}
+{113}{}{Musíš odejít... ihned.}
+{114}{}{Následuj mì. Podíváme se na tvoji odmìnu.}
+{115}{}{Doufám, že ne, v tvém zájmu. Set nebyl zrovna nadšený, že musel použít tebe. Byl by to docela dobrý nápad odejít z Nekropolis... co nejdøív.}
 {116}{}{Øíkal jsem ti, abys odešel.}
-{117}{}{Cokoli.}
+{117}{}{Jak chceš.}
 {118}{}{Snad. Hmm. Tohle si vem taky.}
-{119}{}{Dostáváš $100.}
+{119}{}{Dostáváš 100 zátek.}
 {120}{}{Teï odejdi.}
 {121}{}{Hmm. Nìco chybí v lednièce. Vypadá to, že jsme byli vykradeni.}
 {200}{}{Garret tì ignoruje.}
@@ -28,6 +28,6 @@
 {205}{}{nìkolik nábojù}
 {206}{}{nìkolik svìtlic}
 {207}{}{svìtlice}
-{208}{}{pár láhví Coly}
-{209}{}{láhev Coly}
+{208}{}{pár láhví Nuka-Coly}
+{209}{}{láhev Nuka-Coly}
 {210}{}{ zátek}

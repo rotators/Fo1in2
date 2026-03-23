@@ -1,5 +1,5 @@
 {100}{}{Vidíš mue v plášti a zaprášeném koeném brnìní s plynovou maskou.}
-{101}{}{Vidíš Tycha.}
+{101}{}{Vidíš Tycha, pouštního rangera.}
 
 {102}{}{Další nová tváø. S poutníky to tu jde od desíti k pìti, ale ty vypadáš nìjak jinak. Nedáš si se mnou nìco k pití?}
 	{103}{}{Promiò, ale mám hroznì málo èasu.}
@@ -16,19 +16,19 @@
 
 {112}{}{Jo, byla to dlouhá cesta, ale nelituji toho. Tohle místo se mi zaèalo celkem líbit... jen kdyby ho nìkdo vyèistil od té gangsterské spodiny.}
 	{113}{}{Proè to neudìláš ty?}
-	{114}{}{Jo, postøeh jsem to. Co víš o tìch kreténech?}
+	{114}{}{Jo, všiml jsem si. Co víš o tìch kreténech?}
 
 {115}{}{Mìl jsem dobrı trénink a také hodnì slušné zbranì. Mùj dìda bıval kdysi dávno Ranger, a ten nauèil všechno, co vìdìl, mého otce, a pak to mùj otec pøedal i mì. Díky tomu toho vím dost, tøeba e se nemá pít svìtélkující voda, a další podobné vìci.}
 	{116}{}{Zajímavé. Díky za pití.}
 	{117}{}{Opravdu? Pøeít dnes není lehké. Musíš toho dost vìdìt.}
 
-{118}{}{To není pro mì. Radìji bych se Killianovi nepletl do cesty. A se sem  dostane, asi to tu rychle vyèistí. Opravdovı mu váí má slova. Dávej si taky  bacha na Gizma. Pøipomíná mi trochu jednoho obtloustlého èuráèka, o kterém mi øekl  mùj otec ještì v Las Vegas.}
+{118}{}{Do toho mi nic není. Ostatnì, Killianovi bych se radši do cesty nepletl. On to tu vyèistí, a na to pøijde èas. Je to dobrej chlap, pamatuj na moje slova. Ale dávej si bacha na toho Gizma. Pøipomíná mi jinıho tlustıho magora, o kterım mi vyprávìl táta v Las Vegas.}
 	{119}{}{Dík za tip a za pití.}
 
-{120}{}{Jsou tady dvì party neøádù. Jedna jsou gang Lebkounù, kterı se skrıvají v zadní èásti Marcellesina hotelu. Jsou to jen puberáci a druhoøadí debílci. Ale ta druhá parta pracuje pro toho tlustıho zmrda, jeho jméno jsi u asi uhodl. Patøí mu kasino. Tihle chlápci jsou organizovaní a mnohem lépe vyzbrojeni.}
+{120}{}{Jsou tady dvì party neøádù. Jedna jsou Lebkouni, gang co se schovává v zadní èásti Marcellesiny Chrápárny. Jsou to jen puberáci a druhoøadí debílci. Ale ta druhá parta pracuje pro toho tlustıho zmrda, jeho jméno jsi u asi uhodl. Patøí mu kasino. Tihle chlápci jsou organizovaní a nebezpeèní.}
 	{121}{}{Aha. Dík za info.}
 
-{122}{}{Víš, moje rodina mì nauèila všechno, co je potøeba k tomu, abych pøeil. Napøíklad abych nepil vodu, ve které plave mrtvı hmyz nebo jiná neèistota, nebo e pøíliš èistá voda zase mùe bıt radioaktivní èi otrávená. Pak je tu samozøejmì  ještì spousta dalších vìcí, které je dobré si hlídat.}
+{122}{}{Víš, moje rodina mì nauèila všechno, co je potøeba k tomu, abych pøeil. Napøíklad abych nepil vodu, která je pøíliš èistá a bez hmyzu a mechu - jedinì jedovatá nebo radioaktivní voda by byla v pustinì takhle èistá. Pak je tu samozøejmì ještì spousta dalších vìcí, které je dobré si hlídat.}
 	{123}{}{Co tøeba?}
 
 {124}{}{No, jestli máš trochu èas, moh bych ti pár nejdùleitìjších vìcí prozradit.}
@@ -51,25 +51,25 @@
 	{138}{}{Potøebuji informace o mìstì.}
 
 {139}{}{Ahoj. Jak ti mohu pomoct?}
-	{140}{}{Killian mì poádal abych proèistil mìsto a byl bych rád, kdybys mi  pomohl.}
+	{140}{}{Killian mì poádal, abych proèistil mìsto, a byl bych rád, kdybys mi pomohl.}
 
-{141}{}{Víš, tohle je Scum Pitt, odporné hnízdo hanebnosti a všeho neøádstva. Na západ odsud je Gizmovo velké kasino. Øíká se, e hry jsou tam zmanipulované. Lehce  na jih odsud je hotel Crash House, kterı vede Marcelles, kde si mùeš zaplatit  nocleh, ale je to pøíliš drahé. Za hotelem najdeš Killiana. Killian tam vede  obchod, a zároveò dohlíí na zákon a poøádek ve mìstì - je to dobrák. Jinì  odsud provádí svou praxi doktor Morbid, jeho operace jsou trochu zvláštní, jestli víš, co tím myslím.}
+{141}{}{Víš, tohle je Špinadíra, odporné hnízdo hanebnosti a všeho neøádstva. Na západ odsud je Gizmovo velké kasino. Øíká se, e hry jsou tam zmanipulované. Lehce na jih odsud je Chrápárna, kterou vede Marcelles, kde si mùeš zaplatit nocleh, ale je to pøíliš drahé. Za ní najdeš Killiana. Killian tam vede obchod, a zároveò dohlíí na zákon a poøádek ve mìstì – je to dobrák. Jinì odsud provádí svou praxi doktor Morbid, jeho operace jsou trochu zvláštní, jestli víš, co tím myslím.}
 {142}{}{Doufám, e ti moje rady, alespoò trochu pomohly.}
 {143}{}{}
 
-{144}{}{Øíká se, e máš nìjakı kšefty s Gizmem. Bıt tebou, radìji bych chodil  okolo té beèky sádla opatrnì.}
-	{145}{}{Do to ti nic není.}
+{144}{}{Øíká se, e máš nìjakı kšefty s Gizmem. Bıt tebou, radìji bych chodil okolo té beèky sádla opatrnì.}
+	{145}{}{Do toho ti nic není.}
 	{146}{}{Jo, teï dìlám pro Gizma. Co je ti po tom?}
 
-{147}{}{Dík za upøímnost, ale dávej si pozor. Gizmo je známı tím, e není ke svım  zamìstnancùm pøíliš ohleduplnı.}
+{147}{}{Dík za upøímnost, ale dávej si pozor. Gizmo je známı tím, e není ke svım zamìstnancùm pøíliš ohleduplnı.}
 {148}{}{Staèí, kdy ti øeknu, e tvùj zamìstnavatel v tomto mìstì zpùsobil nejednu potyèku. Ode mì proto pøíliš pomoc neoèekávej a nejménì pak od Gizma. Hmm, škoda. Mìl jsi šanci zmìnit tohle mìsto k lepšímu.}
 
 {149}{}{Co pro tebe mohu udìlat?}
 	{150}{}{Nìjaká doporuèení?}
 	{151}{}{Díky za tvou pomoc. Myslím, e je èas se rozejít.}
-{152}{}{Jo, zùstanu na míle daleko od èehokoliv, co tohle zpùsobilo. Vánì, nikdy jsem nic takového nevidìl. Myslím, e naše nejlepší volba je zmizet, a to hodnì  rychle.}
+{152}{}{Jo, zùstanu na míle daleko od èehokoliv, co tohle zpùsobilo. Vánì, nikdy jsem nic takového nevidìl. Myslím, e naše nejlepší volba je zmizet, a to hodnì rychle.}
 {153}{}{Velmi dobøe. Musím øíct, e to byla èest a potìšení.}
-{154}{}{Dávej si pozor na radioaktivní území. Tohle místo viditelnì pøeilo pøímı  atomovı útok, a sekundární vlna radiace mùe bıt více ne zlá. Doporuèoval bych se tomu zcela vyhnout, pokud to jen trochu pùjde.}
+{154}{}{Dávej si pozor na radioaktivní území. Tohle místo viditelnì pøeilo pøímı atomovı útok, a sekundární vlna radiace mùe bıt více ne zlá. Doporuèoval bych se tomu zcela vyhnout, pokud to jen trochu pùjde.}
 {155}{}{Všimni si, e tady není témìø ádnı ivot. A ty hromady kostí. A u zde ije cokoliv, musí to bıt strašná bestie. Mìj svou zbraò pøipravenou.}
 {156}{}{Vojenské místo, jako je tohle, musí mít nìkde svùj velín.}
 {157}{}{Sázím se, e s trochou rizika mùeme probìhnout silová pole generátorù nebo nìkde najdeme poèítaè, kterı silová pole øídí, a vypneme ho.}
@@ -80,7 +80,7 @@
 	{162}{}{Dr se ve støední vzdálenosti.}
 	{163}{}{Udruj si vìtší vzdálenost.}
 	{164}{}{V èem si vycvièenı?}
-{165}{}{Kvalitní ranger trénink: Ovládám kopí do posledního detailu; a také umím zacházet s pistolemi a puškami.}
+{165}{}{Kvalitní rangerskı trénink: Ovládám kopí do posledního detailu; a také umím zacházet s pistolemi a puškami.}
 	{166}{}{Vlastnì nic.}
 
 #
@@ -89,7 +89,7 @@
 # (See Katja.msg for particulars about Katja).
 #
 
-{167}{}{Jo, jestli máš ráda dobøe udìlanou ještìrku.}
+{167}{}{Jo, jestli máš rád dobøe udìlanou ještìrku.}
 
 #
 # TRANSLATION NOTE: The following two lines are identical in English, but they
@@ -118,7 +118,7 @@
 {181}{}{Vidíš Tycha.}
 
 # Healing
-{300}{}{Jsem ve skvelé formì.}
+{300}{}{Jsem ve skvìlé formì.}
 {301}{}{Pár škrábancù mì nezpomalí.}
 {302}{}{Nemáš nìjakı stimpak?}
 {303}{}{Moc dobøe se necítím.}
@@ -156,7 +156,7 @@
 {1020}{}{Vault13}
 {1021}{}{Killian}
 {1022}{}{Gizmo}
-{1023}{}{Pohrebiste}
+{1023}{}{Kostnice}
 {1024}{}{Shady}
 {1025}{}{Sands}
 {1026}{}{Hub}
@@ -189,7 +189,7 @@
 {1055}{}{Razlo}
 {1056}{}{Zimmerman}
 {1057}{}{Regulatori}
-{1058}{}{Hledaci}
+{1058}{}{Sberaci}
 {1059}{}{Blades}
 {1060}{}{Nicole}
 {1061}{}{Porucik}
@@ -198,10 +198,10 @@
 {1064}{}{Policie}
 {1065}{}{Obchodnici}
 
-{1100}{}{No, Junktown není mùj domov, ale je to zajímavé mìsto. Má velkı  potenciál, aèkoliv si nejsem jistı, zda se na troskách budov znièenıch minulosti dá stavìt budoucnost.}
-{1101}{}{Rangeøi pocházejí z vıchodu, kterému se døíve øíkalo Nevada. Naše minulost sahá a k dobám texaskıch Rangerù. Nauèili jsem se jak pøeít a bojovat, abychom mohli vyrazit do svìta a snaili se ho udìlat lepším.}
+{1100}{}{No, Junktown není mùj domov, ale je to zajímavé mìsto. Má velkı potenciál, aèkoliv si nejsem jistı, zda se na troskách budov znièenıch minulostí dá stavìt budoucnost.}
+{1101}{}{Rangeøi pocházejí z vıchodu, kterému se døíve øíkalo Nevada. Naše minulost sahá a k dobám texaskıch Rangerù. Nauèili jsme se jak pøeít a bojovat, abychom mohli vyrazit do svìta a snaili se ho udìlat lepším.}
 {1102}{}{Takovou relikvii staré technologie, jako je vodní èip, jsem u dlouho nevidìl. Mezi náma, radìji bys mìl spoléhat na sebe a ne na nìjakı kus eleza, kterı nejde opravit.}
-{1103}{}{Válka byla závìtí lidské chamtivosti a šílenosti. Doufejme jen, e jsme  se dostateènì pouèili, aby se to u nikdy neopakovalo.}
+{1103}{}{Válka byla svìdectvím lidské chamtivosti a šílenosti. Doufejme jen, e jsme se dostateènì pouèili, aby se to u nikdy neopakovalo.}
 {1104}{}{Pustina je nehostinná a nebezpeèná i pro zkušeného cestovatele. Radiace a podivné kreatury si jistì vyádají své obìti. Mìj se na pozoru, a pamatuj, e všechno, co vidíš a slyšíš, ti mùe bıt ku prospìchu.}
 {1105}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1106}{}{Lituji, ale s tím ti nemohu pomoci.}
@@ -210,7 +210,7 @@
 {1109}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1110}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1111}{}{Lituji, ale s tím ti nemohu pomoci.}
-{1112}{}{Ten název "Mìsto Smrti" sedí. Je to na místì, kde bıvalo mìsto Bakersfield. Teï je to domov ghúlù a všemoné spodiny.}
+{1112}{}{Ten název „Mìsto Smrti“ sedí. Je to na místì, kde bıvalo mìsto Bakersfield. Teï je to domov ghúlù a všemoné spodiny.}
 {1113}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1114}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1115}{}{Lituji, ale s tím ti nemohu pomoci.}
@@ -220,14 +220,14 @@
 {1119}{}{Slyšel jsem o obrovskıch podzemních Vaultech. Nic víc o tom ale nevím.}
 {1120}{}{Slyšel jsem o obrovskıch podzemních Vaultech. Nic víc o tom ale nevím.}
 {1121}{}{Killian je dobrı chlapík, kterı dìlá tìkou práci.}
-{1122}{}{Gizmo je . . . víš, pøipadá mi jako hajzlík. Ten to tady jednou znièí.}
-{1123}{}{Pohøebištì? Bylo mi øeèeno, e je to místo plné gangù, které se nachází poblí pobøeí.}
+{1122}{}{Gizmo je... no, pøipadá mi jako pìknej køivák. Však on na to jednou dojede.}
+{1123}{}{L.A. kostnice? Bylo mi øeèeno, e je to místo plné gangù a tvrdého ivota poblí pobøeí.}
 {1124}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1125}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1126}{}{V Hubu je obrovská obchodní komunita, jen pár krokù jinì od Junktownu.}
 {1127}{}{Gizmovo kasino je pravdìpodobnì jedno z posledních míst, které bych chtìl navštívit, dokud bych si na nìho poøádnì nevyšlápnul. Ani tak bych ale asi nepøekroèil tu horu velrybího sádla.}
 {1128}{}{Killian má v Junktownu skromnı obchod.}
-{1129}{}{Slyšel jsem nìjaké zvìsti o nìèem rychlejším, vìtším, a chytøejším, ne kterékoliv ijící zvíøe na zemi. Ale tìch zvìstí není moc, co zøejmì znamená, e setkání s tím stvoøením moc lidí nepøeilo. Velká kusadla a další smrtící parametry.}
+{1129}{}{Slyšel jsem nìjaké zvìsti o nìèem rychlejším, vìtším, a zuøivìjším, ne kterékoliv ijící zvíøe na zemi. Ale tìch zvìstí není moc, co zøejmì znamená, e setkání s tím stvoøením moc lidí nepøeilo. Velké drápy a divoká povaha.}
 {1130}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1131}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1132}{}{Lituji, ale s tím ti nemohu pomoci.}
@@ -238,7 +238,7 @@
 {1138}{}{Co vím, tak armáda mìla nìkolik tajnıch izolovanıch základen. Nevím ale pøesnì kde.}
 {1139}{}{Co vím, tak armáda mìla nìkolik tajnıch izolovanıch základen. Nevím ale pøesnì kde.}
 {1141}{}{Nukleární armageddon byl vısledkem hrdosti a pošetilosti. Teï za to platíme.}
-{1142}{}{Jisté je, e tam venku je nìco hodnì divného. Vidìl jsem zmutované škorpióny a krávy a slyšel jsem, e v Nekropolis jsou ghúlové, kteøí vypadají jako lidé, ale ve skuteènosti jsou úplnì jiní.}
+{1142}{}{Jisté je, e tam venku je nìco hodnì divného. Vidìl jsem zmutované škorpióny a dvouhlavé krávy a slyšel jsem, e v Nekropolis jsou ghúlové, kteøí vypadají jako lidé, ale ve skuteènosti jsou úplnì jiní.}
 {1143}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1144}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1145}{}{Lituji, ale s tím ti nemohu pomoci.}
@@ -258,10 +258,10 @@
 {1159}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1160}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1161}{}{Lituji, ale s tím ti nemohu pomoci.}
-{1162}{}{Ty myslíš telepatii? He . . . vánì, tak tohle neberu.}
+{1162}{}{Ty myslíš telepatii? He... vánì, tak tohle neberu.}
 {1163}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1164}{}{Lituji, ale s tím ti nemohu pomoci.}
-{1165}{}{Nìkteøí obchodníci z Hubu navštìvují Junktown a jiná místa velmi  pravidelnì.}
+{1165}{}{Nìkteøí obchodníci z Hubu navštìvují Junktown a jiná místa velmi pravidelnì.}
 
 {1999}{}{Zdá se e jsem se dostal do formy!}
 	{2000}{}{Promluvme si o naší taktice v boji.}
@@ -282,7 +282,7 @@
 # Too many party members
 {2500}{}{Lákavá nabídka... Ale jsem spíše samotáø a nelíbí se mi pøedstava, e bych mìl cestovat s takhle velkou skupinou. Pokud bude tvùj tım trochu menší, rád se pøipojím.}
 {2510}{}{Dobrá.}
-{2511}{}{[Hotovo]}
+{2511}{}{[Odejít]}
 
 {3500}{}{Pochroumali mi konèetiny. Hodil by se nìjakı dobrı felèar.}
 {3501}{}{Zaèínám záøit jako vánoèní stromeèek. Nemáš nìjaké antiradièní léky?}

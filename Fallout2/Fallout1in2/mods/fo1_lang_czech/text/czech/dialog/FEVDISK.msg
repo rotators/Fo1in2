@@ -1,7 +1,7 @@
-{100}{}{Tohle je podivné. Vypadá to, jako by se to dalo použít ve tvém Pip Boyi.}
-{101}{}{Pip Boy zobrazuje: Soubor nalezen v systému. Pøerušuji stahování.}
-{102}{}{Pip Boy zobrazuje: Probíhá stahování dat z disku.}
-{103}{}{Na disku je již témìø neèitelný štítek: "FEV záznamy o experimentech".}
+{100}{}{Tohle je podivná disketa. Možná se dá použít ve tvém Pip-Boyi 2000.}
+{101}{}{Pip-Boy 2000 zobrazuje: „Stahuji... Pøerušuji, data již existují!“}
+{102}{}{Pip-Boy 2000 zobrazuje: „Stahuji data... ... ... Hotovo. Pìkný den!“}
+{103}{}{Na disku je vybledlý, opotøebovaný štítek: „Záznam experimentù s FEV“.}
 #
 # For Fallout Fixt:
 #

@@ -92,11 +92,11 @@
 {551}{}{Neobjevuješ ádnou past.}
 {552}{}{Nic nového ses nenauèil.}
 {553}{}{Tohle nemùeš opravit.}
-{570}{}{Pøistihli tì pøi krádei objektu: %s.}
-{571}{}{Podaøilo se ti ukrást objekt: %s.}
-{572}{}{Pøistihli tì pøi umisování objektu: %s.}
-{573}{}{Podaøilo se ti umístit objekt: %s.}
-{590}{}{Pøemohla tì únava, proto teï tuto dovednost nemùeš pouit. Musíš chvíli poèkat.}
+{570}{}{Pøistihli tì pøi krádei: %s.}
+{571}{}{Podaøilo se ti ukrást: %s.}
+{572}{}{Pøistihli tì pøi podstrkování: %s.}
+{573}{}{Podaøilo se ti podstrèit: %s.}
+{590}{}{Pøemohla tì únava, proto teï tuto dovednost nemùeš pouít. Musíš chvíli poèkat.}
 {591}{}{Únava ti nedovolí dále pokraèovat v této èinnosti.}
 {592}{}{Únava je pøíliš velká. Další vypìtí by tì mohlo zabít.}
 

@@ -1,10 +1,10 @@
 {100}{}{Vidíš Neala, barmana.}
 {101}{}{Vidíš barmana.}
-{102}{}{Vypadá pøepracovanì}
-{103}{}{Hej! Nechystáš se s tím zmizet, ty zlodìji!}
-{104}{}{Máme zavøeno. Pøijïte kolem ètvrté hodiny.}
+{102}{}{Vypadá pøepracovanì.}
+{103}{}{Hej! Nemysli si, e s tím jen tak zmizíš, ty zlodìji!}
+{104}{}{Máme zavøeno. Pøijï kolem ètvrté hodiny.}
 {105}{}{Chrrrrrrr}
-{106}{}{Vítejte ve Skum Pittu. Co pro vás mùu udelat? Ráèíte si nìco objednat, vašnosti? [Neal tì pøátelskı vítá.]}
+{106}{}{Vítejte ve Špinadíøe. Co pro vás mùu udìlat?}
 {107}{}{Uff, dám si sklenièku.}
 {108}{}{Sháním nìjaké informace.}
 {109}{}{Jmenuji se }
@@ -12,21 +12,21 @@
 {111}{}{Gaa hnnngh!}
 {112}{}{Skvìlé! Co chcete?}
 
-{113}{}{Nuka-kolu, 3 zátky.}
+{113}{}{Nuka-Colu, 3 zátky.}
 {114}{}{Pivo, 5 zátek.}
 {115}{}{Nìco ostøejšího, 20 zátek.}
 
-{116}{}{Jen se posaï a napij se... Za tu dobu co tu nalejvám znám mnoho pøíbìhù a drbù. Slyšels o chlápkovi jménem Lopaák Joe? Je to legenda. Kdy byl mladı, køioval se svımi sedmi bratry pustinou. Napravovali køivdy, lámali srdce, bili se s nájezdníky a chránili karavany, hledali cennosti v ruinách starejch mìst. Tedy, alespoò se to øíká. Skuteènost nejspíš nebyla tak èernobílá a navíc u je to opravdu dlouho... Ze všech bratøí zbyl nakonec jen Joe a ten teï bloumá pustinou a hledá místa skonu svıch bratrù, aby jim dopøál køesanského odpoèinku. Nedávno se zde zastavil na sklenku whisky s chlápkem co mìl koenou bundu a strašnì ošklivého psa. }
-{117}{}{Tohle je fakt díra. Je tady kromì této hospody ještì nìco?}
+{116}{}{Tak dobøe, co chceš vìdìt?}
+{117}{}{Co se tak dìje tady ve mìstì?}
 {118}{}{Kdo je ten nebezpeènì vypadající cizinec támhle v rohu?}
 {119}{}{Kdo jsou ti kreténi?}
-{120}{}{[Neal se na tebe na moment tázavì podíval.] Copak jsi nikdy pøedtím nebyl v baru, cizinèe? Tohle je moje malá hospoda, Skum Pitt. Bude panstvo jenom chlastat? Nebo mi vašnosti dá i nìjakej tuzér? Dıško? Bakšiš??}
+{120}{}{[Neal se na tebe na moment tázavì podívá.] Copak jsi nikdy pøedtím nebyl v baru, cizinèe? Tohle je mùj podnik, Špinadíra. Tady se kupuje chlast. A dává se dıško.}
 {121}{}{Uff, správnì. Já to vìdìl. Tak mùu dostat toho panáka?}
 {122}{}{Jéé. Hm, tak co mi ještì mùeš øíct?}
 {123}{}{Óoo. Díky.}
 {124}{}{Jóóó, tobì taky, kámo.}
 {125}{}{Co je to za trofej na tı polici?}
-{126}{}{Ale jo, támhle na západ od nás je Gizmovo kasino. Pøekvapilo by mì, kdybys o nìm ještì neslyšel. Vìtšina lidí tady, jsou právì ti, kteøí tam právì prohráli své peníze. Tady v té druhé èásti mìsta máme Killianovo smíšené zboí a Marcellin Crash House Hotel. Killian je férovej chlapík, provozuje slušnej krámek a obstará ti všechno, co potøebuješ. V Crash House se zas mùete protáhnout, pokud zde plánujete zùstat delší dobu. [Podezøele se pochichtává.]}
+{126}{}{Ale jo, támhle na západ od nás je Gizmovo kasíno. Pøekvapilo by mì, kdybys o nìm ještì neslyšel. Vìtšina lidí tady jsou právì ti, kteøí tam právì prohráli své peníze. V té druhé èásti mìsta máš Killianovo smíšené zboí a Marcellinu Chrápárnu. Killian je férovej chlapík, provozuje slušnej krámek a obstará ti všechno, co potøebuješ. Chrápárna je zas místo, kde se vyspíš, kdy tu zùstaneš pøíliš dlouho. [Neal se pochichtává.]}
 {127}{}{Díky. Mùu dostat panáka?}
 {128}{}{Díky za informace. Nashle!}
 {129}{}{Tomu chlapovi øíkají Tycho. Typickej zálesák z vıchodu nebo tak nìco. Docela nepøíjemnej rváè, teda, co jsem slyšel, ale jinak rovnej chlap.}
@@ -41,7 +41,7 @@
 {138}{}{Och.}
 {139}{}{Jóó, dám si panáka.}
 {140}{}{Vra se, a budeš mít prachy.}
-{141}{}{Tak, co to bude pøíteli?}
+{141}{}{Tak, co to bude, pøíteli?}
 {142}{}{Co se stalo s tou trofejí, co stávala tam nahoøe?}
 {143}{}{Dìkuji ti. Nemáš ani tušení, co pro mì ta vìc znamená. Ty u v tomhle baru za drink nikdy platit nemusíš, to slibuji.}
 {144}{}{Pøinesl jsem vám zpátky vaši urnu.}
@@ -55,9 +55,9 @@
 {200}{}{Co tady dìláš? Vypadni!}
 {201}{}{Co?}
 {202}{}{Zase?!}
-{203}{}{Muselo se mi to zdát...}
+{203}{}{Muselo se mi to zdát ...}
 
 # Free drinks:
-{210}{}{Nuka-Kolu.}
+{210}{}{Nuka-Colu.}
 {211}{}{Pivo.}
-{212}{}{Tvrdı alkohol.}
+{212}{}{Nìco ostøejšího.}

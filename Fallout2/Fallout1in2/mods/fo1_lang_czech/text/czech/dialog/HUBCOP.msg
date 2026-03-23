@@ -5,22 +5,22 @@
 {100}{}{Vidíš policejního dùstojníka.}
 # Police Officer is male
 
-{101}{}{Zdravíèko! Radši byste si mìli dávat pozor na svoje ... hm, myslím, no jen se podívejte ... (dùstojník se divnì dívá na ostatní dùstojníky a ukazuje hlavou ve tvém smìru).}
-{102}{}{Zdravíèko, cizinèe, ... hej poèkej! Já tì znám! Hledáme tì pro kráde! Stùj!}
+{101}{}{Zdravíèko! Radši byste si mìli dávat pozor na svoje... hm, myslím, no jen se podívejte... [dùstojník se divnì dívá na ostatní dùstojníky a ukazuje hlavou ve tvém smìru]}
+{102}{}{Zdravíèko, cizinèe... hej poèkej! Já tì znám! Hledáme tì pro kráde! Stùj!}
 # Stranger is the player. Consider Male.
 
-{103}{}{OK vzdávám se.}
+{103}{}{OK, vzdávám se.}
 {104}{}{Zabiju tì!}
 # "Eat lead" is equivalant to "I'm going to kill you."
 
 {105}{}{Chrr Prsk!}
 # "Kor Rok" is just garbled sounds a moronic player is saying.
 
-{106}{}{(Vzdej se sám)}
+{106}{}{[Vzdát se.]}
 {107}{}{Dávej si pozor na svùj zadek, tohle není bezpeèné místo.}
 
 # 108/109, 108/110 are lines which go together. "Watch your scripts, guy." or "Watch your scripts, lady."
-{108}{}{Dávej si pozor na své peníze, }
+{108}{}{Dávej si pozor na prachy, }
 # scripts are money
 
 {109}{}{chlapèe.}
@@ -31,7 +31,7 @@
 
 {113}{}{Tady to nìjak smrdí.}
 {114}{}{Mìli bychom to tu všechno zbourat.}
-{115}{}{Vím, e ten prokletej Cech zlodìjù je nìkde tady poblí.}
+{115}{}{Vím, e ten prokletej Kruh zlodìjù je nìkde tady poblí.}
 # the Thieve's Circle is similar to a Thieve's Guild. underground organization for thieves.
 
 {116}{}{Chudák Harold, mìl tìkı ivot.}
@@ -45,16 +45,16 @@
 {120}{}{Jestli tì chytneme v nìjaké další rvaèce, zabásneme tì!}
 # "You're going in" equals "You are going to jail"
 
-{121}{}{Slyšel jsi? Far Go Traders jsou vyøízení.}
+{121}{}{Slyšel jsi? Obchodníci Far Go jsou vyøízení.}
 # Far Go Traders is a merchant's guild
 
-{122}{}{Kupci s vodou jsou u minulost, zaplapánbùh.}
+{122}{}{Obchodníci s vodou jsou u minulost, zaplapánbùh.}
 # Water Merchants is a merchant's guild
 
 {123}{}{Nìkdo vyhladil Karmínovou karavanu.}
 # Crimson Caravans is a merchant's guild
 
-{124}{}{U to víš? Podzemí bylo definitivnì vyøízeno.}
+{124}{}{U to víš? Podsvìtí bylo definitivnì vyøízeno!}
 # Underground is a rough organization for assassins. Akin to the Mafia
 
 {125}{}{Decker je po smrti!}

@@ -7,8 +7,8 @@
 {301}{}{Seeò pro Krypáky info o Harlekınech.}
 {400}{}{Generátor}
 {401}{}{Bez generátoru èeká vesnièany tìkı ivot.}
-{402}{}{Generátor je tou nejdùleitìjší vìcí na Šrotišti. Ten kdo ho ovládá, ovládá celé Šrotištì.}
+{402}{}{Generátor je tou nejdùleitìjší vìcí na Šrotišti. Ten, kdo ho ovládá, ovládá celé Šrotištì.}
 {403}{}{Od generátoru vedou nìjaké obnaené dráty.}
 {500}{}{Philùv problém se psem}
 {501}{}{Phil má nìjakı problém se psem.}
-{502}{}{Pes vypadá dost dost hladovì na to, aby seral Phila i s botama.}
+{502}{}{Pes vypadá dost hladovì na to, aby seral Phila i s botama.}

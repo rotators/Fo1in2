@@ -9,14 +9,14 @@
 {107}{}{Uf, jaké sluby vlastnì nabízíš?}
 {108}{}{Proè si sakra øval na to nebohé dítì?!}
 {109}{}{Ehm.}
-{110}{}{Proè, starám se skoro o všechny karavany v tìchto konèinách. Jsem ten, na koho se obracejí, pokud cokoli potøebují pro své karavany. Sakra, Velká Trojka spolupracuje exkluzivnì se mnou.}
+{110}{}{Starám se skoro o všechny karavanní vozy a brahminy v tìchhle konèinách. Jsem ten, na koho se obracejí, pokud cokoli potøebují pro své karavany. Sakra, Velká Trojka spolupracuje exkluzivnì se mnou.}
 {111}{}{Co nebo kdo je Velká Trojka?}
 {112}{}{Ty seš mi ale dùleitej.}
 {113}{}{Vánì? Prima. Chci se pøipojit ke karavanì.}
 {114}{}{Fajn, musím jít. Sbohem.}
-{115}{}{Coe? Koukej odsud sakra vypadnout, ty zatracenı Odpade! Pøece nebudu ztrácet èas s takovou nulou, jako jsi ty.}
+{115}{}{Coe? Koukej odsud sakra vypadnout, ty zatracená špíno! A já si ještì myslel, e budu ztrácet èas s takovou nulou, jako jsi ty.}
 {118}{}{Sakra, chlapèe. Kdes byl celej svùj ivot? Zamèenej v jeskyni? Velká Trojka jsou tøi nejvìtší kupecká sdruení na svìtì. No, na svìtì moná ne, ale rozhodnì pokrıvaj velkou èást; kam jen dohlédneš.}
-{119}{}{Sakra, zlato. Kdes byla celej svùj ivot? Zamèená v jeskyni? Velká Trojka jsou tøi nejvìtší kupecká sdruení na svìtì. No, na svìtì moná ne, ale rozhodnì pokrıvaj velkou èást; kam jen dohlédneš.}
+{119}{}{Sakra, zlato. Kdes byla celej svùj ivot? Zamèená v jeskyni? Velká Trojka jsou tøi nejvìtší kupecká sdruení na svìtì. No, na svìtì moná ne, ale rozhodnì pokrıvaj velkou èást; kam jen dohlídneš.}
 {120}{}{Sám jdi k èertu, magore.}
 {121}{}{Aha. Myslel jsem, e mluvíš o nìèem jiném. Take, jak se mohu pøipojit ke karavanì?}
 {122}{}{Dobøe, díky. Sbohem.}
@@ -26,7 +26,7 @@
 {126}{}{Dùleitej, ne. Šastnı, ano; a pokud nechceš mít smùlu, mìl bys bıt zdvoøilejší k tìm, co potkáš. Mì je to jedno, ale mìsto je plné hrdloøezù, kteøí ti bez rozpakù podøíznou hrdlo, jen kdy se na nì køivì podíváš.}
 {127}{}{Zatracenì, ty seš ale poøádnì podìlanej zkurvysyn!}
 {128}{}{Kdy to øíkáš.}
-{129}{}{Dobøe, ale aspoò nemám zmutovanej losí ksicht. Tvoje matka musela bıt brahmina a tvùj otec krtko-potkan; to je jedinı monı vysvìtlení tvı vizáe. Kèertu, jsi ještì ošklivìjší ne já!}
+{129}{}{Dobøe, ale aspoò nemám zmutovanej losí ksicht. Tvoje matka musela bıt brahmína a tvùj otec krtkopotkan; to je jedinı monı vysvìtlení tvı vizáe. Kèertu, jsi ještì ošklivìjší ne já!}
 {130}{}{Nikdo nebude takhle mluvit o mı matce! Pøiprav se na smrt!}
 {131}{}{To není špatné. Vím o místech, kam jít, a o lidech, kterım napráskat. Mìj se, Dane.}
 {132}{}{Jo, jasnì. takhle to ale hraje kadej. ertuješ, co? Nevztáhnul bys pøece ruku na chudáka starıho Dana.}
@@ -38,18 +38,18 @@
 {138}{}{Sbohem. A dr se od mıch brahminù dál, ty malej bastarde.}
 {139}{}{Sbohem. A dr se od mıch brahminù dál, ty malá mrcho.}
 {141}{}{Stráe! Policie! Tenhle šílenec mì chce zabít!}
-{142}{}{Nemám ádnou pracovní nabídku, ale mrkni se k Velkı Trojce. Jsou tu pracovní vıvìsky poblí Kupeckého trištì, to by ti mohlo pomoct. Tam si všichni najímají potøebné mue.}
-{143}{}{A, pardon . . . a eny, samozøejmì.}
+{142}{}{Nemám ádnou pracovní nabídku, ale mrkni se k Velkı Trojce. Jsou tu pracovní vıvìsky poblí Trhu, to by ti mohlo pomoct. Tam si všichni najímají potøebnı lidi.}
+{143}{}{Á, pardon... a eny, samozøejmì.}
 {144}{}{Nemáš ádné nabídky? Jsi taky kupec?}
-{145}{}{Kudy na Kupecké trištì?}
+{145}{}{Kudy na Trh?}
 {146}{}{Jasnì, dík.}
 {147}{}{Vlastnì ne, ne pøesnì. Úzce spolupracuji s vìtšinou menších kupeckıch skupin, aèkoli, vím e nenajímáme.}
 {148}{}{Tvoje mínus.}
 {149}{}{Fajn, tak zatím, Dane.}
-{150}{}{Take kde je Kupecké trištì?}
-{151}{}{Jdi pøímo dolù touhle ulicí. Jsou to zánovní baráky v centru Hubu -- nemùeš to minout.}
+{150}{}{Take kde je Trh?}
+{151}{}{Jdi pøímo dolù touhle ulicí. Je to pøímo v centru Hubu — nemùeš to minout.}
 {152}{}{Do toho ti nic není, cizinèe.}
-{153}{}{Ale brzo bude, "cizinèe!"}
+{153}{}{Ale brzo bude, „cizinèe!“}
 {154}{}{Pardon za to vnucování.}
 {155}{}{Nazdárek, jak se vede?}
 {156}{}{Chci se pøipojit ke karavanì.}
@@ -65,7 +65,7 @@
 {169}{}{Nevidím ádnı dùvod bıt na nìj tak hrubı.}
 {170}{}{Co je špatného na kradení?}
 {171}{}{Ó, to je jiná! A trpí, hajzlík!}
-{172}{}{Jsi pitomec? To je nejistìjší zpùsob, jak shnít v cele nebo bıt vyhnán pryè nahı  a bez jídla i zbraní.}
+{172}{}{Jsi pitomec? To je nejistìjší zpùsob, jak shnít v cele nebo bıt vyhnán pryè nahı a bez jídla i zbraní.}
 {173}{}{To stále neospravedlòuje tvé zacházení s ním!}
 {174}{}{Aha, no jo.}
 {175}{}{Moná nejsem nejvìtší hvìzda v tomhle prokletém mìstì, ale jsem jedinı, kdo se tu stará a snaí se pomoci. Cos ty udìlal pro blaho spoleènosti?}
@@ -83,7 +83,7 @@
 {187}{}{Jo, cokoli.}
 {188}{}{Aha, jasnì, sbohem.}
 {189}{}{Jsi idiot.}
-{190}{}{No (odmlèí se a civí kamsi do prostoru) . . . moná máš pravdu, paráku. Budu o tom pøemıšlet, ale nic ti slíbit nemohu.}
+{190}{}{No... [Odmlèí se a civí kamsi do prostoru.] Moná máš pravdu, paráku. Budu o tom pøemıšlet, ale nic ti slíbit nemùu.}
 {191}{}{ertuješ? To je ještì víc nabudí! Moje zpùsoby moná nejsou perfektní, ale aspoò vím, e je to posílí a uèiní odpovìdnìjšími.}
 {192}{}{Sakra jasnı. Zabití nemocnı osoby není ten nejlepší zpùsob. Mìl bys najít lék, protoe to zase vyplouvá na povrch.}
 {193}{}{Bez ertù, Einsteine.}
@@ -103,7 +103,7 @@
 {210}{}{Dej pokoj, mám práci.}
 {211}{}{Proè mì lidi furt votravujou? Nevidíš, e mám práci?}
 {212}{}{Promluv si s kupcema, jestli chceš práci. Já nenajímám.}
-{213}{}{Proè radši nezajdeš do Maltese Falcona? Já nemám èas.}
+{213}{}{Proè radši nezajdeš do Maltézskıho sokola? Já nemám èas.}
 {214}{}{Co tady sakra dìláš? Vypadni!}
 {215}{}{Øekl jsem, zmiz! Já neertuju! Ustøelím ti tu tvojí zkurvenou hlavu!}
 {216}{}{Vy povaleèi se nikdy nepouèíte, co?}

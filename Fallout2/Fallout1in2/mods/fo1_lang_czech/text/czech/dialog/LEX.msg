@@ -1,8 +1,8 @@
 {100}{}{Vidíš Lexe.}
 {101}{}{Vidíš nìjakého uboáka.}
-{102}{}{[Více]}
-{103}{}{[Hotovo]}
-{104}{}{[Lex šeptá] Radìji buï opatrnı. Rock neøíká vdy pravdu.}
+{102}{}{[Pokraèovat]}
+{103}{}{[Odejít]}
+{104}{}{[Lex šeptá.] Radìji buï opatrnı. Rock neøíká vdy pravdu.}
 {105}{}{A proè mi to øíkáš?}
 {106}{}{Proè bych ti mìl vìøit?}
 {107}{}{Rock je èlen gangu Krypákù. Kvùli nìmu se spousta cizincù dostala do problémù. Kdy ho budeš poslouchat, nedopadne to s tebou dobøe.}
@@ -14,14 +14,14 @@
 {113}{}{A proè si to myslíš?}
 {114}{}{Kdybys nás mohl zbavit gangù, byli bychom ti nesmírnì vdìèní. Nemáme lidi ani sílu na to je zahnat a málokdo se o toto místo zajímá. Pokud nám pomùeš, moná bychom ti taky mohli s nìèím pomoci.}
 {115}{}{Co tím myslíš?}
-{116}{}{U jsem o tobì slyšel. Chceš najít ztracené mìsto Nekropolis. Vdìèní lidé by ti mohli poskytnou informace o tom kam se máš vydat.}
+{116}{}{U jsem o tobì slyšel. Chceš najít ztracené mìsto Nekropolis. Vdìèní lidé by ti mohli poskytnout informace o tom, kam se máš vydat.}
 {117}{}{Zváím tvou nabídku.}
 {118}{}{O nic víc ani neádám.}
 {119}{}{Sbohem.}
 {120}{}{Mám na tebe pár otázek.}
 {121}{}{A proè bys nemìl? Mám na srdci ty nejlepší zájmy svıch lidí a nechci aby se ti stalo nìco zlého.}
 {122}{}{Co tím myslíš?}
-{123}{}{Tady na Šrotišti pùsobí gangy, jen by tì mohly chtít vyuít a pokud to nebude moné, budou tì chtít vidìt dva metry pod zemí. Vybírej si své pøátele moudøe a své nepøátele ješte moudøeji. Pøeji ti hezkı den.}
+{123}{}{Tady na Šrotišti pùsobí gangy, je by tì mohly chtít vyuít, a pokud to nebude moné, budou tì chtít vidìt dva metry pod zemí. Vybírej si své pøátele moudøe a své nepøátele ještì moudøeji. Pøeji ti hezkı den.}
 {124}{}{Jo jo, hezkej den.}
 {125}{}{Dìkujeme ti, e jsi nás zbavil Krypákù a Harlekınù. Bez elektøiny kterou poskytoval generátor èekají toto mìsto tìké èasy. Myslíš, e bys jej dokázal opravit?}
 {126}{}{Samozøejmì.}
@@ -34,7 +34,7 @@
 {133}{}{Pokud potøebuješ podporu, tak já ti ji poskytnu, ale neádej nikoho dalšího z mıch lidí. Smrt a bolest si na nich vybraly svou daò. Pøipojím se k tobì, pokud si to pøeješ.}
 {134}{}{Ano, pojï se mnou a bojuj po mém boku.}
 {135}{}{Ne. Jen jsem tì pøišel pozdravit.}
-{136}{}{Jak jsem tušil, nezajímá tì nic kromì tvıch vlastních potøeb. Pøipojil ses se k našim nepøátelùm a tyranizuješ nevinnı lid tohoto mìsta.}
+{136}{}{Jak jsem tušil, nezajímá tì nic kromì tvıch vlastních potøeb. Pøipojil ses k našim nepøátelùm a tyranizuješ nevinnı lid tohoto mìsta.}
 {137}{}{Za to co jsi teï øekl tì zabiju.}
 {138}{}{Takovı je plán. Hodlám ten gang infiltrovat.}
 {139}{}{Dr hubu.}
@@ -48,6 +48,6 @@
 {147}{}{Øekni mi nìco o Šrotišti.}
 {148}{}{Nic nepotøebuju, dík.}
 {149}{}{Šrotištì je naše mìsto. Byl to náš domov. A snad se jím opìt znovu stane.}
-{150}{}{Generátor dodává veškerou elektøinu ve mìstì. Bez nìj bychom urèitì zemøeli. Je to nejdùleitìjší vìc ve mìstì. Ten kdo to ovládá, ovládá celé Šrotištì.}
-{151}{}{Krypáci jsou skupina vyšinutıch magorù, která se cházela na pøedváleènıch høibotech. Proto také ta pøezdívka. Právì teï je vede Rayze. Ten chlap se chová jako vzteklé zvíøe a má tu nejvìtší bouchaèku jakou jsem kdy vidìl! Chudáka Lennyho nechali ít jen proto, e se jim stará o brahmíny, jejich hovna pouívají jako palivo pro generátor. Doupì mají v tom velkém domì za mnou.}
+{150}{}{Generátor dodává veškerou elektøinu ve mìstì. Bez nìj bychom urèitì zemøeli. Je to nejdùleitìjší vìc ve mìstì. Ten, kdo ho ovládá, ovládá celé Šrotištì.}
+{151}{}{Krypáci jsou gang, kterej vede Rayze. Ten chlap se chová jako zvíøe a má tu nejvìtší bouchaèku, jakou jsem kdy vidìl. Lennyho nechávají ít, protoe se stará o brahmíny, kterı dávaj palivo pro generátor. Doupì maj v tom velkım domì.}
 {152}{}{Harlekıny vede Baka. Kdyby mìla trochu víc lidí, urèitì by na Krypáky zaútoèila a pokusila by se získat zpìt generátor. Krypáky od Harlekınù poznáš podle brnìní. Harlekıni nosí kov, Krypáci zase kùi.}

@@ -1,10 +1,10 @@
 # NORTH ENCOUNTERS
 
-{105}{}{Radškorpióni!}
+{105}{}{Radškorpióni!!}
 {121}{}{V dáli vidíš osamoceného poutníka.}
 {106}{}{Plíživý radškorpión se na tebe pokouší zaútoèit.}
 {107}{}{Jakoby odnikud na tebe náhle zaútoèil radškorpión!}
-{108}{}{Náhle jsi se ocitl uprostøed rodiny krtkopotkanù.}
+{108}{}{Náhle jsi se ocitl uprostøed rodiny krtko-potkanù.}
 {100}{}{Nechybìlo mnoho a byl jsi rozdrcen velkým kamenem z uvolnìné kamenné laviny.}
 {102}{}{Uvolnìný kámen má na sobì zbytky dlouho mrtvého poutníka.}
 
@@ -43,43 +43,43 @@
 #
 # TERRAIN ENCOUNTERS (NO MONSTERS)
 #
-{114}{}{Po hrbolatém terénu klopýtáš mezí pøíkrými útesy.}
+{114}{}{Po hrbolatém terénu klopýtáš mezi pøíkrými útesy.}
 {115}{}{Tvé horolezecké umìní na to naštìstí staèí.}
 {116}{}{Našel jsi malou jeskyni s vodním pramenem a po dlouhé dobì jsi se poøádnì vyspal.}
 {117}{}{Spadl jsi ze skály, a pøistál na nìkolika ostøejších kamenech.}
 {118}{}{Spadl jsi z útesu na skalnatou zem pod ním.}
-{109}{}{Nechybìlo mnoho a byl jsi rozdrcen velkým kamenem z menší kamenné laviny.}
-{123}{}{Nechybìlo mnoho a byl jsi rozdrcen velkým kamenem z menší kamenné laviny.}
+{109}{}{Zastihl tì sesuv pùdy.}
+{123}{}{Na skalnatém terénu jsi ztratil rovnováhu.}
 {132}{}{Na nerovném terénu jsi spadl a bolestivì jsi si vyvrknul kotník.}
 {133}{}{Na nerovném terénu jsi spadl a sedøel jsi se do masa.}
 #
 # No Damage
 #
 {101}{}{Podaøilo se ti vyklouznout bez zranìní.}
-{110}{}{Podaøilo se ti vyklouznout bez zranìní.}
+{110}{}{Neuvìøitelné, ale vyvázl jsi bez zranìní.}
 {124}{}{Podaøilo se ti vyklouznout bez zranìní.}
-{131}{}{Málem jsi díky nerovnému terénu spadl.}
+{131}{}{Málem jsi díky nerovnému terénu spadl. Tady by se hodil nìjakej krajinnej architekt.}
 #
 # Small Damage
 #
-{104}{}{Pár kamínkù ti lehce poranilo tváø a nohy, ale unikl jsi bez vážnìjšího poranìní.}
-{113}{}{Pár kamínkù ti lehce poranilo tváø a nohy, ale unikl jsi bez vážnìjšího poranìní.}
-{127}{}{Pár kamínkù ti lehce poranilo tváø a nohy, ale unikl jsi bez vážnìjšího poranìní.}
+{104}{}{Pár kamínkù ti lehce poranilo tváø a ruce, ale unikl jsi bez vážnìjšího poranìní.}
+{113}{}{Pár kamínkù ti lehce poranilo tváø a ruce, ale unikl jsi bez vážnìjšího poranìní.}
+{127}{}{Pár kamínkù ti lehce poranilo tváø a ruce, ale unikl jsi bez vážnìjšího poranìní.}
 #
 # Big Damage
 #
 {147}{}{Tvùj žalostný pokus o útìk pøed lavinou byl kolosálním neúspìchem. Všechny tvé konèetiny jsou rozdrceny ve velkolepé sprše krve. Ke tvému vlastnímu úžasu jsi stále naživu.}
-{148}{}{Bìhem pádu se ti nepodaøilo nikde zachytit a dopadnul jsi na zem s mohutným nárazem, který ti rozdrtil kosti v obou nohou.}
+{148}{}{Bìhem pádu se ti nepodaøilo nikde zachytit a dopadnul jsi na zem s mohutným nárazem, který ti rozdrtil obì nohy jako radšváby.}
 #
 # Damage Numbers
 #
 {138}{}{Obdržel jsi }
-{139}{}{ bodù zranìní a zlomil jsi si levou nohu.}
-{140}{}{ bodù zranìní a zlomil jsi si pravou nohu.}
-{141}{}{ bodù zranìní.}
-{144}{}{ bodù zranìní a zlomil jsi si levou ruku.}
-{145}{}{ bodù zranìní a zlomil jsi si pravou ruku.}
-{146}{}{ bodù zranìní a zlomil jsi si obì nohy.}
+{139}{}{ hit bodù zranìní a zlomil jsi si levou nohu.}
+{140}{}{ hit bodù zranìní a zlomil jsi si pravou nohu.}
+{141}{}{ hit bodù zranìní.}
+{144}{}{ hit bodù zranìní a zlomil jsi si levou ruku.}
+{145}{}{ hit bodù zranìní a zlomil jsi si pravou ruku.}
+{146}{}{ hit bodù zranìní a zmrzaèil jsi si dvì konèetiny.}
 #
 # Cripples
 #
@@ -90,9 +90,9 @@
 # Critical Success
 #
 {125}{}{Podaøilo se ti vyklouznout bez zranìní. Odvalený kámen odhalil kus zlata!}
-{111}{}{Podaøilo se ti vyklouznout bez zranìní. Odvalený kámen odhalil kus zlata!}
-{142}{}{U pramene si doplòuješ prázdnou láhev.}
-{143}{}{U pramene si doplòuješ prázdné láhve.}
+{111}{}{Odvalený kámen odhalil ložisko zlata!}
+{142}{}{U pramene si doplòuješ prázdnou èutoru.}
+{143}{}{U pramene si doplòuješ prázdné èutory.}
 #
 #
 # MONSTERS - not used
@@ -103,5 +103,5 @@
 {200}{}{Narazil jsi na skupinku geckonù.}
 {201}{}{Narazil jsi na skupinku agresivních geckonù.}
 {202}{}{Po oblasti se potuluje pár geckonù.}
-{203}{}{Ocitáš se uprostøed lánu masožravých rostlin!}
+{203}{}{Ocitáš se uprostøed výtrusnic!}
 {204}{}{Protože jsi bìhem šplhání použil lano, podaøilo se ti vyhnout tìžším zranìním.}

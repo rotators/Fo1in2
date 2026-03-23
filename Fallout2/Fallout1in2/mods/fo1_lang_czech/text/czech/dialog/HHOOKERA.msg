@@ -15,7 +15,7 @@
 {111}{}{Ty si mùj nejlepší kámoš.}
 # best friend (slurred)
 
-{112}{}{Proè jsi,... (škyt) kde to jsem?}
+{112}{}{Proè jsi... (škyt) kde to jsem?}
 {113}{}{Kdo jsi?}
 {114}{}{Znám Tì?}
 {115}{}{Je mi nìjak blbì.}
@@ -112,10 +112,10 @@
 {232}{}{Pìkná sleèna. Bum bum?}
 {233}{}{Ach boe... zlato, sice jsem šlapka, ale i já mám svoje hranice.}
 {235}{}{JÁ CHTÍT!}
-{405}{}{No... Hádám, e bych mohla udìlat vıjimku. Radìji bys mìl mít spoustu penìz.}
+{405}{}{No... asi bych mohla udìlat vıjimku. Ale radši mìj pøipravenej zatracenì velkej balík zátek.}
 # == "you better have a very large amount of caps though"
 {243}{}{Peníz?}
-{244}{}{[povzdech] Ano ty idiote, peníze. Vysol 150 zátek a ukáu ti cestu rájem. To by mi mìlo staèit na to, abych utopila svoji hambu v baru.}
+{244}{}{[Povzdech] Ano ty idiote, zátky. Vysol 150 zátek a ukáu ti cestu rájem. To by mi mìlo staèit na to, abych utopila svoji hanbu v baru.}
 # "that should be enough caps to buy me lots of alcohol and still have caps left over"
 {238}{}{Hmph.}
 {239}{}{Promiò zlato. Pokud nìkdy najdeš mozek, tak se vra.}
@@ -167,13 +167,13 @@
 {300}{}{ zátek.}
 {252}{}{Tolik nemám.}
 {253}{}{Tak proè kurva plıtváš mım èasem? Vypadni!}
-{255}{}{[Konec]}
+{255}{}{[Odejít]}
 
 # messages from team members while doing group action
 {400}{}{No, to bylo zajímavé...}
 {401}{}{Haf!}
 {402}{}{Vrame se zpátky do práce.}
-{403}{}{Ugh, u se nikdy nebudu cítit èistı.}
+{403}{}{Fuj, u se nikdy nebudu cítit èistı.}
 {404}{}{Oh wow...}
 
 ################################
@@ -183,7 +183,7 @@
 {301}{}{Kdy se podíváš pozornìji, tak je zøejmé, e se jedná o prostitutku se zákazníkem. Naznaèuje ti, abys vypadnul.}
 
 {135}{}{Nech nás na pokoji, nebo zavolám hlídku.}
-{136}{}{Hele, já se kamarádím s policajty.}
+{136}{}{Dávej si bacha, se zástupcem šerifa Fryem se znám víc ne dobøe.}
 {137}{}{Dovolíš?}
 # == "could you please leave us alone? you're being rude"
 {138}{}{Tady není ádnı peep show!}
@@ -220,7 +220,7 @@
 # == "get out of here, perverse person"
 
 {155}{}{Máš problém?}
-{156}{}{Vystøel ne se naseru!}
+{156}{}{Vypadni, ne se naseru!}
 # "Beat it" == "get out of here"
 
 {157}{}{Najdi si svojí šlapku.}
@@ -252,12 +252,12 @@
 {164}{}{Jaká jsou pravidla?}
 # in referrence to a gambling game
 
-{165}{}{Bıvala to moje oblíbená hra.}
+{165}{}{Bejvala jsem v tom fakt dobrá.}
 # in referrence to a gambling game
 
 {166}{}{Dík za nic.}
 {167}{}{Tomu nevìøím!}
-{168}{}{Chtìl jsem to udìlat.}
+{168}{}{Chtìl jsem to udìlat, fakt.}
 # he meant to lose.
 
 ######################

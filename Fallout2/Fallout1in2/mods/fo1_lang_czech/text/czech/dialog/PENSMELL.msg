@@ -1,1 +1,1 @@
-{100}{}{Zápach z brahminího chlívku není podobný nièemu, s èím jsem se kdy ve Vaultu setkal.}
+{100}{}{Zápach z brahminího chlívku není podobný nièemu, s èím ses kdy ve Vaultu setkal.}

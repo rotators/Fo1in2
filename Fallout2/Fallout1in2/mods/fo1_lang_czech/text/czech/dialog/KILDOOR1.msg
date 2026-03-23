@@ -7,5 +7,5 @@
 # Fo1in2
 {200}{}{ odemyká zámek.}
 {201}{}{ se pokouší odemknout zámek, ale selhává.}
-{202}{}{Kdy jsi páèila zámek, }
-{203}{}{ podaøilo se jí poškodit západku a zablokovat ho.}
+{202}{}{Pøi páèení zámku }
+{203}{}{vzpøíèí stavítka a zámek zasekne.}

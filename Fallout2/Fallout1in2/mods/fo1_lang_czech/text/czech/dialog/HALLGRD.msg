@@ -8,8 +8,8 @@
 {107}{}{Rhombus je mùj idol.}
 {108}{}{Kéž bych teï mohl trénovat! Tahle hlídka je jenom ztráta èasu.}
 {109}{}{Vree je mùj idol.}
-{110}{}{Ahoj Bratøe.}
+{110}{}{Ahoj bratøe }
 {111}{}{.}
-{200}{}{Do této místnosti mohou vstupovat pouze Písaøi a Paladini.}
+{200}{}{Do této místnosti mohou vstupovat pouze písaøi a paladini.}
 {201}{}{Byla ti dána výstraha. Teï zaplatíš.}
 {202}{}{Promiò, ale sem mohou vstoupit pouze èlenové Bratrstva.}

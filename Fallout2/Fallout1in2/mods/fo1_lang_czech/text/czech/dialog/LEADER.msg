@@ -1,4 +1,4 @@
-{100}{}{Vidíš vùdce ghoulù.}
+{100}{}{Vidíš nervózního ghúla s pøirozenou autoritou.}
 {101}{}{Dík, že si mì rovnou nesejmul. Mùžu ti òák pomoct?}
 {102}{}{Jasnì, hledám vodu.}
 {103}{}{Jasnì, a kdopak seš?}
@@ -9,12 +9,12 @@
 {108}{}{Kdo vás pøinutil schovávat se tady dole?}
 {109}{}{teda, to je pìknì blbý.}
 {110}{}{Hmm. Jasnì. Èau.}
-{111}{}{Povrch Nekropole a vodu kontroluje Set a jeho ghoulové. My jsme mnohem mírumilovnìjší, a to Seta žere.}
+{111}{}{Povrch Nekropole a vodu kontroluje Set a jeho ghúlové. My jsme mnohem mírumilovnìjší, a to Seta žere.}
 {112}{}{Kdo je Set?}
 {113}{}{No, Seta už jsem vyøídil. Nemusíte se ho už bát.}
 {114}{}{A jak tady dole pøežíváte bez vody?}
 {115}{}{No, koukám, že s takovouhle bandou buzíkù už nebudu ani chvíli, ten Set vypadá jako poøádnej chlap.}
-{116}{}{Set je ghoul jako my, ale získal urèitou moc ve mìstì nad zemí, a teï jí zneužívá. Je to prostì hajzl.}
+{116}{}{Set je ghúl jako my, ale získal urèitou moc ve mìstì nad zemí, a teï jí zneužívá. Je to prostì hajzl.}
 {117}{}{No, ale vypadá mnohem zajímavìjš než ty a tvoji buzíci.}
 {118}{}{Proè vás tady dole nechává pøežívat?}
 {119}{}{O tom on moc nemluví, ale bojí se, že by nemìl dost lidí k obranì Nekropolis, kdyby to náhodou potøeboval. A tak nás tady dole vydržuje.}
@@ -43,7 +43,7 @@
 {142}{}{No, je mi to jedno. Pokud mi neuhneš z cesty, tak tì uhnu sám!}
 {143}{}{To bude složité. Potøebné souèástky se poztrácely ve stokách pod Vodárnou.}
 {144}{}{Proè to má být tak složité?}
-{145}{}{Myslíš tyhle souèástky? (Ukážeš souèástky, které jsi našel u vùdce ghoulù.)}
+{145}{}{Myslíš tyhle souèástky? [Ukážeš souèástky, které jsi našel, vùdci ghúlù.]}
 {146}{}{Stoky jsou plné potvor a žádný z mých lidí, který jsem tam poslal, aby je našli, se ještì nevrátil. Chceš nám pomoct ve hledání tìch souèástek a opravit vodní pumpu?}
 {147}{}{No, to vypadá dost nepøíjemnì. Myslím, že vám radši vezmu vodní èip a bude.}
 {148}{}{Ano.}
@@ -63,7 +63,7 @@
 {162}{}{Už jsi opravil pumpu?}
 {163}{}{Ne, ještì ne, ale dìlám na tom.}
 {164}{}{Ne, a ani to nemám v plánu.}
-{165}{}{Ano, to jsou ty souèástky, co jsem o nich mluvil. Díky bohu, že už je máš.}
+{165}{}{Ano, to jsou ty souèástky, o kterých jsem mluvil. Díky toku z hlubin, že už je máš.}
 {166}{}{Ještì nìco bych mìl vìdìt?}
 {167}{}{Je to tak blízko, že se urèitì dostanou k pumpì.}
 {168}{}{Jak už jsem ti øíkal, jsou nìkde ve stokách pod Vodárnou. Jdi nejdøív na východ, potom na sever a dostaneš se tam.}
@@ -76,16 +76,16 @@
 {175}{}{Jak se dostanu k Vodárnì?}
 {176}{}{Co je to ta Vodárna?}
 {177}{}{Dìkuji za opravení vodní pumpy a doufám, že se tvým lidem, až se vrátíš, bude daøit dobøe.}
-{178}{}{Díky za tvojí pomoc. Sbohem.}
+{178}{}{Díky za tvoji pomoc. Sbohem.}
 {179}{}{Podaøilo se ti opravit vodní pumpu a voda už zase teèe. Ale jak vidím, tak se ti nepodaøilo najít vodní èip, který jsi hledal.}
 {180}{}{Jo, nìjak ho nemùžu najít.}
 {181}{}{No, já sem slyšel, že je nìkde hluboko pod Vodárnou, ale nevím to jistì. Pøeju ti hodnì štìstí, aby se ti ho podaøilo najít.}
 {182}{}{Vidím, že si odnášíš, co jsi tu hledal. Ale uvìdom si, že my tady bez vodního èipu všichni umøeme.}
 {183}{}{Jasnì, ale já poøád pracuji na opravì vodní pumpy. Kde že jsi øíkal, že mùžu najít ty souèástky?}
 {184}{}{Já potøebuju ten èip a nemám èas se zabývat vašimi problémy.}
-{185}{}{Jaké mám jiné možnosti.}
+{185}{}{Jaké mám jiné možnosti?}
 {186}{}{Už mám dost tvejch vìènejch pøipomínek. Už na mì radši nemluv.}
-{187}{}{Kdysi jsme mívali vodní pumpu, které èerpala vodu z hlubin. Ale ta se rozbila a náhradní souèástky se poztrácely nìkde ve stokách pod Vodárnou.}
+{187}{}{Kdysi jsme tu mìli èerpadlo, které èerpalo vodu z hlubin. To se však rozbilo a souèástky potøebné k opravì se poztrácely v kanalizaci pøímo pod Vodárnou.}
 {189}{}{A proè jste si je nešli najít?}
 {190}{}{Nás se nemusíš obávat!}
 {191}{}{Než odejdeš, ještì si s tebou musím promluvit.}
@@ -94,17 +94,17 @@
 {194}{}{Nás se nemusíš bát!}
 {195}{}{Než odejdeš, ještì si s tebou musím promluvit.}
 {196}{}{Nenecháváš mi jinou možnost, než abych tì zastavil osobnì.}
-{200}{}{Prùšvih. }
+{200}{}{Prùšvih.}
 {201}{}{A nedá se ta vodní pumpa opravit?}
 {202}{}{Promiò, ale moji lidé potøebují ten èip, aby pøežili.}
 {203}{}{Prosím, neber nám náš èip, bez nìj tu všichni zemøeme.}
 {204}{}{Možná, ale ty souèástky se poztrácely nìkde ve stokách pod Vodárnou. A díky tìm monstrùm, které tam jsou, je nemùžeme dostat nazpátek.}
-{205}{}{Promiò, rád bych, kdybych mohl pomoci.}
+{205}{}{Promiò, rád bych pomohl, ale nemùžu.}
 {206}{}{Najdu ty souèástky.}
 #
 #  by Sduibek for Fallout Fixt:
 #
-{300}{}{Vidíš vùdce ghoulù.}
+{300}{}{Vidíš vùdce ghúlù.}
 
 
 ############ Tell Me Abouts
@@ -124,7 +124,7 @@
 {1100}{}{Snaží se ovládat Nekropolis a donutil nás žít v podzemí.}
 {1101}{}{Ten má nìco spoleèného s mutanty, ale víc toho o nìm nevím.}
 {1102}{}{Získáváme vodu z podzemí pod Vodárnou. Možná, že to s tím má co do èinìní.}
-{1103}{}{Tam je ta rozbitá vodní pumpa. A taky je to místo, kde mutanti získávají a èistí vodu pomocí vodnímu èipu.}
+{1103}{}{Tam je ta rozbitá vodní pumpa. A taky je to místo, kde mutanti získávají a èistí vodu pomocí vodního èipu.}
 {1104}{}{Setùv rádoby palác.}
-{1105}{}{Mìsto Mrtvých, kde bychom rádi žili v míru, ale Set a mutanti nás nenechají na pokoji.}
+{1105}{}{Mìsto mrtvých, kde bychom rádi žili v míru, ale Set a mutanti nás nenechají na pokoji.}
 {1106}{}{Získáváme vodu z místa pod Vodárnou. Možná to má s tím nìco spoleèného.}

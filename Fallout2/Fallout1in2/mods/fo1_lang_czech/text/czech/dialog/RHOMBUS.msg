@@ -2,7 +2,7 @@
 {101}{}{Øekni mi nìco o sobì.}
 {102}{}{Mùeš mi øíct nìco o historii Bratrstva?}
 {103}{}{Slyšel jsi nìjakı dobrı klepy?}
-{104}{}{Co mi mùeš øíct o okolí??}
+{104}{}{Co mi mùeš øíct o okolí?}
 {105}{Rhom1}{Mùu ti pomoct?}
 {106}{}{Mohu se zeptat na nìkolik otázek?}
 {107}{}{Nevypadáš moc jako bojovník.}
@@ -20,11 +20,11 @@
 {119}{}{Okay, mùeš mì nìco nauèit?}
 {120}{}{Vánì? Tohle je náplò tvıho ivota?}
 {121}{}{Co dìlají Paladinové?}
-{122}{Rhom8}{Nìco? Mohl bych tì nauèit, jak bojovat... tedy pokud máš nìjakı vlohy. Ale Nejvyšší velitel naøídil netrénovat nováèky, dokud nepomine nebezpeèí invaze.}
+{122}{Rhom8}{Nìco? Mohl bych tì nauèit, jak bojovat... tedy pokud máš nìjakı vlohy. Ale Vrchní staøešina naøídil netrénovat nováèky, dokud nepomine nebezpeèí invaze.}
 {123}{}{Jaké nebezpeèí?}
 {124}{}{Proè zastavil vıcvik?}
 {125}{}{Mohu tì v boji snadno porazit.}
-{126}{Rhom9}{Na to ti já neodpovím. Pokud chceš, zeptej se na to pøímo Nejvyššího velitele.}
+{126}{Rhom9}{Na to ti já neodpovím. Pokud chceš, zeptej se na to pøímo Vrchního staøešiny.}
 {127}{}{Ale no tak, prosím?}
 {128}{}{V poøádku. Mohu se zeptat ještì na nìco?}
 {129}{Rhom10}{Kolují zvìsti o shromaïování podivné armády. Víc ti neøeknu.}
@@ -36,9 +36,9 @@
 {135}{Rhom12}{Ano. Je tam všechno, co je tøeba.}
 {136}{}{Tvùj ivot vypadá opravdu nezáivnì.}
 {137}{}{Opravdu?}
-{138}{Rhom13}{Nerozumíš toho, co je to bıt Paladin. To je špatné.}
+{138}{Rhom13}{Vùbec nerozumíš tomu, co obnáší bıt paladinem. Tvoje škoda.}
 {139}{}{Myslíš si, e bych se mohl stát Paladinem?}
-{140}{}{Bıt rytíøem zní hloupì..}
+{140}{}{Bıt rytíøem zní hloupì.}
 {141}{}{Ani nápad, nemyslím si. Mùeš další otázky?}
 {142}{Rhom14}{Moná. A bude armáda poraena, vra se a já tì budu trénovat.}
 {143}{}{Myslím, e to udìlám. Díky.}
@@ -61,9 +61,9 @@
 {160}{Rhom22}{Já nedám na klepy.}
 {161}{}{Ale no tak, pouze jeden. Prosím?}
 {162}{}{Dobøe.}
-{163}{Rhom23}{Hub a Pohøebištì je na jih, hory na vıchod a na severu je neobyvatelná Pustina. Ten, kdo tam vyrazil, se u nikdy nevrátil.}
+{163}{Rhom23}{Hub a Kostnice je na jihu, hory na vıchod a na severu je neobyvatelná pustina. Ten, kdo tam vyrazil, se u nikdy nevrátil.}
 {164}{Rhom24}{Vra to zpátky!}
-{165}{Rhom25}{Tohle je to, co dìláme kriminálníkùm...}
+{165}{Rhom25}{Tohle dìláme kriminálníkùm...}
 {166}{Rhom26}{Pøestaò s tím!}
 {167}{Rhom27}{Tak ty jsi zlodìj. Ukáu ti, co tady se zlodìji dìláme...}
 {168}{}{Poèkej. Vysvìtlím ti to!}
@@ -74,23 +74,23 @@
 {173}{Rhom29}{Tak vypadni, a já na tuhle drobnou pøíhodu zapomenu.}
 {174}{}{Dobøe. Díky.}
 {175}{}{Proklatì správnì, budeš.}
-{176}{Rhom30}{Leš, Zasvìèence! Tahle se u nás zachází se zlodìji...}
-{177}{Rhom32}{Buïto si tak hloupej nebo si ze mì dìláš šoufky. A je to jakkoliv, nebudu s tebou ztrácet svùj èas..}
-{178}{Rhom33}{Zeptej se Taluse, mého zástupce. Urèitì ti o tom øekne víc..}
+{176}{Rhom30}{Leš, Zasvìcenèe! Takhle se u nás zachází se zlodìji...}
+{177}{Rhom32}{Buïto si tak hloupej nebo si ze mì dìláš šoufky. A je to jakkoliv, nebudu s tebou ztrácet svùj èas.}
+{178}{Rhom33}{Zeptej se Taluse, mého zástupce. Urèitì ti o tom øekne víc.}
 {179}{Rhom34}{Øíkal jsem...}
 {180}{Rhom35}{Jak jsem ti u øíkal...}
 {181}{Rhom36}{Nebudu se znovu opakovat.}
 {182}{Rhom37}{Neslyšíš? Nebudu to opakovat!}
-{183}{Rhom38}{Ona je vrchní Písaø. Najdeš ji v knihovnì.}
+{183}{Rhom38}{Ona je vrchní písaøka. Najdeš ji v knihovnì.}
 {184}{Rhom39b}{To jsem já.}
 {185}{}{Talus je mùj zástupce.}
-{186}{Rhom40}{Ah, generál Maxson byl zatím náš nejlepší vrchní Paladin. Kdy se stal Nejvyšším velitelem, pøevzal jsem jeho post já.}
+{186}{Rhom40}{Ah, generál Maxson byl zatím náš nejlepší vrchní paladin. Kdy se stal Vrchním staøešinou, pøevzal jsem jeho post já.}
 {187}{Rhom41}{Opisují dokumenty tıkající se zbraní a pøicházejí s novımi nápady. Na co pøijdou, to Rytíøi udìlají.}
 {188}{Rhom42}{Vyrábìjí nové zbranì.}
-{189}{Rhom43}{Hub je na jich. Obèas s nimi obchodujeme.}
+{189}{Rhom43}{Hub je na jihu. Obèas s nimi obchodujeme.}
 {190}{Rhom44}{Zeptej se Vree. Mìla by to vìdìt.}
-{191}{Rhom45}{O tomhle nesmím mluvit. Zeptej se Nejvyššího velitele.}
-{192}{Rhom46}{Pohøebištì je daleko na jihu. Tak najdeš pouze násilí..}
+{191}{Rhom45}{O tomhle nesmím mluvit. Zeptej se Vrchního staøešiny.}
+{192}{Rhom46}{Kostnice je daleko na jihu. Najdeš tam pouze násilí.}
 {193}{Rhom47}{O tomhle nic nevím.}
 {194}{Rhom48}{O tomhle jsem nikdy neslyšel.}
 {195}{Rhom49}{O této vìci nic nevím.}
@@ -98,7 +98,7 @@
 {201}{}{Tobì nemusím nic vysvìtlovat, ty blázne.}
 {202}{}{Dìkuju. Nashle.}
 {203}{}{Táhni k èertu.}
-{204}{}{Dveøe pøi pokusu o otevøení zaskøípaly..}
+{204}{}{Dveøe pøi pokusu o otevøení zaskøípaly.}
 {205}{}{Díky tvım zlodìjskım zkušenostem jsi skøínku otevøel naprosto bez hluku.}
 {206}{}{Je tu nìkdo?}
 {207}{}{Vylekal jsi se a upustil jsi svùj lup.}
@@ -126,7 +126,7 @@
 {1006}{}{Hub}
 {1007}{}{Disky}
 {1008}{}{Armada}
-{1009}{}{Pohrebiste}
+{1009}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {1010}{}{Paladinove}
 {1011}{}{Vudce}
 {1012}{}{Valka}
@@ -139,17 +139,17 @@
 {1019}{}{Cip}
 {1020}{}{Bratrstvo}
 
-{1100}{Rhom38}{Ona je vrchní Písaø. Najdeš ji v knihovnì.}
+{1100}{Rhom38}{Ona je vrchní písaøka. Najdeš ji v knihovnì.}
 {1101}{Rhom39b}{To jsem já.}
 {1102}{Rhom39a}{Talus je mùj zástupce.}
-{1103}{Rhom40}{Ah, generál Maxson byl zatím náš nejlepší vrchní Paladin. Kdy se stal Nejvyšším velitelem, pøevzal jsem jeho post já.}
+{1103}{Rhom40}{Ah, generál Maxson byl zatím náš nejlepší vrchní paladin. Kdy se stal Vrchním staøešinou, pøevzal jsem jeho post já.}
 {1104}{Rhom41}{Opisují dokumenty tıkající se zbraní a pøicházejí s novımi nápady. Na co pøijdou, to Rytíøi udìlají.}
 {1105}{Rhom42}{Vyrábìjí nové zbranì.}
-{1106}{Rhom23}{Hub a Pohøebištì je na jih, hory na vıchod a na severu je neobyvatelná Pustina. Ten, kdo tam vyrazil, se u nikdy nevrátil.}
+{1106}{Rhom23}{Hub a Kostnice je na jihu, hory na vıchod a na severu je neobyvatelná pustina. Ten, kdo tam vyrazil, se u nikdy nevrátil.}
 {1107}{Rhom44}{Zeptej se Vree. Mìla by to vìdìt.}
-{1108}{Rhom45}{O tomhle nesmím mluvit. Zeptej se Nejvyššího velitele.}
-{1109}{Rhom46}{Pohøebištì je daleko na jihu. Tak najdeš pouze násilí.}
-{1110}{Rhom13}{Není ti jasné, co to znamená bıt Paladin. To je špatné.}
+{1108}{Rhom45}{O tomhle nesmím mluvit. Zeptej se Vrchního staøešiny.}
+{1109}{Rhom46}{Kostnice je daleko na jihu. Najdeš tam pouze násilí.}
+{1110}{Rhom13}{Není ti jasné, co to znamená bıt paladin. To je špatné.}
 {1111}{Rhom44}{Zeptej se Vree. Mìla by to vìdìt.}
 {1112}{Rhom21}{Promluv si s Vree, je v hlavní knihovnì.}
 {1113}{Rhom21}{Promluv si s Vree, je v hlavní knihovnì.}

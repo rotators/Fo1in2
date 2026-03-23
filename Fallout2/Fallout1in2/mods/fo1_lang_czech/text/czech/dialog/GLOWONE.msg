@@ -1,6 +1,6 @@
 {100}{}{Vidíš žhnoucí postavu.}
-{101}{}{Mmmm . . .}
-{102}{}{Ahhh . . .}
-{103}{}{Svítiè si nìco mumlá a pak ztichne. Zaèíná nekontrolovatelnì slintat.}
+{101}{}{Mmmm...}
+{102}{}{Ahhh...}
+{103}{}{Záøící ghúl si nìco mumlá a pak ztichne. Nekontrolovatelnì slintá.}
 {104}{}{Žádná odpovìï.}
-{105}{}{Vidíš Svítièe.}
+{105}{}{Vidíš záøícího.}

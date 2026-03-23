@@ -5,9 +5,9 @@
 {103}{}{Dostáváš }
 {104}{}{ zkušenostních bodù.}
 
-{105}{}{Uch och!}
-{106}{}{Klik!}
-{107}{}{Opps!}
+{105}{}{No nazdar!}
+{106}{}{Cvak!}
+{107}{}{Ups!}
 {108}{}{Ouvej!}
 {109}{}{Uvidíme se.}
 {110}{}{Buï v pohodì.}
@@ -19,50 +19,50 @@
 
 {116}{}{Dostáváš }
 
-{117}{}{ bodù k Lehkým zbraním.}
-{118}{}{ bodù k Tìžkým zbraním.}
+{117}{}{ bodù k Lehkým støelným zbraním.}
+{118}{}{ bodù k Tìžkým støelným zbraním.}
 {119}{}{ bodù k Energetickým zbraním.}
 {120}{}{ bodù k Boji beze zbranì.}
-{121}{}{ bodù k Boji na blízko.}
-{122}{}{ bodù k Vrhu.}
+{121}{}{ bodù k Chladným zbraním.}
+{122}{}{ bodù k Vrhacím zbraním.}
 {123}{}{ bodù k První pomoci.}
 {124}{}{ bodù k Doktoru.}
 {125}{}{ bodù k Plížení.}
-{126}{}{ bodù k Ukrást.}
-{127}{}{ bodù k Paklíèi.}
-{128}{}{ bodù k Pasti.}
+{126}{}{ bodù ke Kradení.}
+{127}{}{ bodù k Páèení zámkù.}
+{128}{}{ bodù k Pastem a výbušninám.}
 {129}{}{ bodù k Vìdì.}
-{130}{}{ bodù k Opraváøi.}
+{130}{}{ bodù k Opravování.}
 {131}{}{ bodù k Øeèi.}
-{132}{}{ bodù k Obchodu.}
+{132}{}{ bodù k Obchodování.}
 {133}{}{ bodù k Hazardním hrám.}
-{134}{}{ bodù k Zálesáku.}
+{134}{}{ bodù k Pøežití v pustinì.}
 
-{135}{}{Dostáváš bod k Lehkým zbraním.}
-{136}{}{Dostáváš bod k Tìžkým zbraním.}
+{135}{}{Dostáváš bod k Lehkým støelným zbraním.}
+{136}{}{Dostáváš bod k Tìžkým støelným zbraním.}
 {137}{}{Dostáváš bod k Energetickým zbraním.}
 {138}{}{Dostáváš bod k Boji beze zbranì.}
-{139}{}{Dostáváš bod k Boji na blízko.}
-{140}{}{Dostáváš bod k Vrhu.}
+{139}{}{Dostáváš bod k Chladným zbraním.}
+{140}{}{Dostáváš bod k Vrhacím zbraním.}
 {141}{}{Dostáváš bod k První pomoci.}
 {142}{}{Dostáváš bod k Doktoru.}
 {143}{}{Dostáváš bod k Plížení.}
-{144}{}{Dostáváš bod k Ukrást.}
-{145}{}{Dostáváš bod k Paklíèi.}
-{146}{}{Dostáváš bod k Pastem.}
+{144}{}{Dostáváš bod ke Kradení.}
+{145}{}{Dostáváš bod k Páèení zámkù.}
+{146}{}{Dostáváš bod k Pastem a výbušninám.}
 {147}{}{Dostáváš bod k Vìdì.}
-{148}{}{Dostáváš bod k Opraváøi.}
+{148}{}{Dostáváš bod k Opravování.}
 {149}{}{Dostáváš bod k Øeèi.}
-{150}{}{Dostáváš bod k Obchodu.}
+{150}{}{Dostáváš bod k Obchodování.}
 {151}{}{Dostáváš bod k Hazardním hrám.}
-{152}{}{Dostáváš bod k Zálesáku.}
+{152}{}{Dostáváš bod k Pøežití v pustinì.}
 
 {153}{}{Tvá SÍLA se zvìtšila o }
 {154}{}{Tvá VNÍMAVOST se zvìtšila o }
 {155}{}{Tvá ODOLNOST se zvìtšila o }
-{156}{}{Tvé CHARISMA se zvìtšilo o}
+{156}{}{Tvé CHARISMA se zvìtšilo o }
 {157}{}{Tvá INTELIGENCE se zvìtšila o }
-{158}{}{Tvá HBITOST se zvìtšila o}
+{158}{}{Tvá HBITOST se zvìtšila o }
 {159}{}{Tvé ŠTÌSTÍ se zvìtšilo o }
 {160}{}{ body.}
 
@@ -80,7 +80,7 @@
 {170}{}{Aradesh je naštvaný a nehodlá se s tebou už bavit.}
 
 {171}{}{Myslím, že s tebou chce mluvit Vùdce.}
-{172}{}{Budeš platit za své ROUHAÈSTVÍ!}
+{172}{}{Budeš platit za své ROUHÁNÍ!}
 
 {173}{}{Tento robot vypadá nefunkènì. Je to patrnì kvùli chybìjícímu zdroji energie.}
 {174}{}{Nic zvláštního na tom robotu nevidíš.}
@@ -96,18 +96,18 @@
 {180}{}{Nepodaøilo se ti nic ukrást, bojíš se, že bys mohl být chycen.}
 {181}{}{Èlenové Bratrstva tì pøistihli, jak kradeš.}
 
-{186}{}{Slyšíš reproduktor: Pozor! Vetøelec.}
+{186}{}{Slyšíš reproduktor: „Pozor! Vetøelec.“}
 {187}{}{Sliz zpomalil pøenos úhozù na klávesnici.}
 
-{200}{}{Vidíš hodnì znièený zdroj pole.}
-{201}{}{Zdroj je pøíliš znièený, než aby se dal použít.}
-{202}{}{Zdroj je pøíliš znièený, než aby se dal opravit.}
+{200}{}{Vidíš hodnì poškozený generátor silového pole.}
+{201}{}{Generátor je pøíliš znièený, než aby se dal použít.}
+{202}{}{Generátor je pøíliš znièený, než aby se dal opravit.}
 {203}{}{Pole je dostateènì oslabeno, aby se skrz nìj dalo projít.}
 
 # Fo1in2
-{190}{}{ aktivoval Zmizík.}
-{300}{}{Tvé poškození pøi boji zblízka se zvýší o 1 bod.}
-{301}{}{% Odolnost proti poškození.}
+{190}{}{ aktivoval Mizík.}
+{300}{}{Tvé poškození pøi boji zblízka se zvýšilo o 1 bod.}
+{301}{}{% Odolnost vùèi zranìní.}
 
 # Dehydration encounter
 {305}{}{Dehydratovaný}
@@ -137,13 +137,13 @@
 #
 # For guards within Brotherhood armory (weapons/armor stash on Lvl1)
 #
-{601}{}{Tady by jsi nemìl být, Zasvecenèe.}
+{601}{}{Tady bys nemìl být, Zasvìcenèe.}
 {602}{}{Co tady dìláš?}
 {603}{}{Prosím odejdi. Tady nemáš co dìlat.}
-{604}{}{Hey, žádni Zasvìcenci.}
+{604}{}{Hej, žádní zasvìcenci.}
 {605}{}{Promiò, nemìl bych teï s nikým mluvit. Víš jak to chodí.}
-{606}{}{Milý hochu, tohle není žádná knihovna.}
-{607}{}{Milá zlatá, tohle není žádná knihovna.}
+{606}{}{Tohle není knihovna, hochu. Jestli si chceš jenom listovat, tak bìž do knihovny.}
+{607}{}{Milá zlatá, tohle není žádná knihovna. Jestli si chceš jenom listovat, tak bìž do knihovny.}
 
 #
 # For endgame (when blowing up Vats, and Master's Vault. Both give the XP but didn't notify user previously.)

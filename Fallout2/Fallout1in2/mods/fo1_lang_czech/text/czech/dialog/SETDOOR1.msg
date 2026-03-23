@@ -1,6 +1,6 @@
 {100}{}{Zámek povolil.}
 {101}{}{Zámek nepovolil.}
-{102}{}{Náøadíèko se ti bohuel zlomilo.}
+{102}{}{Zlomil/a sis paklíèe.}
 {103}{}{Nemáš ádnou pøedstavu, jak tenhle zámek odemknout.}
 {104}{}{Dveøe jsou zamèené.}
 {105}{}{Dveøe jsou otevøené.}

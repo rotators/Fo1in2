@@ -4,14 +4,14 @@
 {103}{}{Pch, v pohodì. Uijte si to tady.}
 {104}{}{Rád bych se sem nastìhoval zpátky. Najdìte si jiné místo k bydlení, prosím.}
 {105}{}{Uhh.}
-{106}{}{Tak hele, nechci se s vámi hádat, ale tenhle pokoj vám opravdu nepatøí. Prosím, odejdìte.}
+{106}{}{Tak hele, nechci se s tebou hádat, ale tenhle pokoj ti opravdu nepatøí. Prosím, odejdi.}
 {107}{}{Podívej, pro nás je to tu ideální. Snad zmìníš názor.}
 {108}{}{Dobrá, nechte mì chvíli pøemıšlet. Hmmm. Ne. Ven!}
 {109}{}{Dobrá, ok. Vy to tady vyuijete víc ne já.}
-{110}{}{Díky! Tohle opravdu oceòujeme. Dáme tvoje vìci do bedny.}
+{110}{}{Díky! Tohle opravdu oceòujeme. Dali jsme tvoje vìci do bedny.}
 {111}{}{No. Já nevím. Nevypadá to, e bys to tady vyuíval pøíliš èasto, a nám se to tady ohromnì hodí.}
 {112}{}{Fajn. Je to vaše.}
 {113}{}{Potøebuju to tady, pøipomíná mi to moji minulost. A jen tak mimochodem, dobøe se tady odpoèívá.}
-{114}{}{Mno, podle toho, co se povídá, nemyslím, e by ses tady o to v budoucnu nìjak zvláš staral. Ale dobøe. Vrátíme se zpátky k matce.}
+{114}{}{Tıjo, podle toho, co jsem slyšel, jsem si nemyslel, e ti na tomhle místì ještì bude záleet. Mìj se fajn. My se vrátíme k její matce.}
 {115}{}{Strašnì se nám to tady líbí.}
 {116}{}{Mìli byste odejít. U tady nemáte co dìlat.}

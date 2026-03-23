@@ -18,7 +18,7 @@
 {117}{}{Tento terminál je odpovìdnı za èinnost všech prùmyslovıch robotù General Atomics International v této oblasti.}
 {118}{}{Prosím, buïte více specifickı.}
 {119}{}{Jaké programy jsou spuštìné?}
-{120}{}{Tyto prùmyslové roboty jsou bìnì nazıvané jako "Robobrain". [Cvak!] General Atomics International má ty nejlepší prùmyslové roboty na svìtì. Kupte si dva nebo více robotù od GAI a ušetøíte! Speciální nabídka na modely "Mr. Handy"! [Cvak!] Reklamní program ukonèen.}
+{120}{}{Tyto prùmyslové roboty jsou bìnì nazıvané jako „Robobrain“. [Cvak!] General Atomics International má ty nejlepší prùmyslové roboty na svìtì. Kupte si dva nebo více robotù od GAI a ušetøíte! Speciální nabídka na modely „Mr. Handy“! [Cvak!] Reklamní program ukonèen.}
 {121}{}{Jaké programy jsou spuštìné?}
 {122}{}{Spuštìné aplikace jsou: Údrba zaøízení v2.1, Pohyb v4.8b, Opravy v0.8a, Likvidace škùdcù v1.4, Srdce v1.0 a Senzory '76.}
 {123}{}{Ukonèit Pohyb.}
@@ -59,7 +59,7 @@
 {158}{}{Uprav Likvidaci škùdcù.}
 {159}{}{Spus hru Srdce.}
 {160}{}{Díky. Konec vstupu.}
-{161}{}{Inicializuji hlasové komunikaèní podprogramy. Inicializuji program osobnosti. [Cvak!] Èím mùe tento terminál poslouit?}
+{161}{}{Inicializuji hlasové komunikaèní podprogramy. Inicializuji podprogram osobnosti. [Cvak!] Èím mùe tento terminál poslouit?}
 {162}{}{Hnng.}
 {163}{}{Uka mi programy.}
 {164}{}{Vypnout všechna silová pole.}
@@ -70,14 +70,14 @@
 {169}{}{Uka mi programy.}
 {170}{}{Co je tohle za místo?}
 {171}{}{Zahájit nouzové ukonèení.}
-{172}{}{Konec vstupu}
-{173}{}{Tohle je -- podléhá utajení [cvak!] [cvak!]}
+{172}{}{Konec vstupu.}
+{173}{}{Tohle je -- podléhá utajení [Cvak!] [Cvak!]}
 {174}{}{Poadavek ukonèen. Ukázat programy.}
 {175}{}{Pøekonáno, pokraèuj s poadavky.}
-{176}{}{[Cvak!] Tohle je zaøízení kontrolující vırobu FEV. Terminál je online od 2074. Finální pøedvırobní proces 2075. Nyní je ve fázi finální konstrukce a bude dokonèen 2078. [Cvak]}
+{176}{}{[Cvak!] Tohle je zaøízení kontrolující vırobu FEV. Terminál je online od 2074. Finální pøedvırobní proces 2075. Nyní je ve fázi finální konstrukce a bude dokonèen 2078. [Cvak!]}
 {177}{}{Co je FEV zaè?}
 {178}{}{Jaké je datum?}
-{179}{}{FEV je Forced [cvak!] Evolutionary Virus, produkt laboratoøí Livermore/Broansoun. Je vytvoøen k zvıšení genetické komplexnosti vláken DNA/RNA bìhem krátkého èasového období.}
+{179}{}{FEV je Forced [Cvak!] Evolutionary Virus, produkt laboratoøí Livermore/Broansoun. Je vytvoøen k zvıšení genetické komplexnosti vláken DNA/RNA bìhem krátkého èasového období.}
 {180}{}{Uka programy.}
 {181}{}{Konec vstupu.}
 {182}{}{Potvrzeno. Datum je: 2. únor 2077.}
@@ -86,7 +86,7 @@
 {185}{}{Datum je neplatné. Prosím rekalibrujte.}
 {186}{}{Upravuji. [Cvak!] Chyba. Zkouším diagnostiku. [Cvak! CVAK!] CHYBA! FATÁLNÍ SYSTÉMOVÁ CHYBA. SYSTÉM POŠKOZEN, ZKOUŠÍM REKOMPILACI. [Dlouhá pauza.]}
 {187}{}{Terminále?}
-{188}{}{[cvak] Chyba pøi rekompilaci . . . [cvak]}
+{188}{}{[Cvak] Chyba pøi rekompilaci... [Cvak]}
 {189}{}{Nemohu provést poadavek. Ukonèuji dialog.}
 {190}{}{Potvrïte nouzové ukonèení.}
 {191}{}{Potvrzeno.}

@@ -15,13 +15,13 @@
 {800}{}{Bezpeènostní dveøe}
 {801}{}{Velmi bytelnì vypadající dveøe. Poskytují ochranu pøed venkovním svìtem a nebezpeènımi tvory.}
 {900}{}{Poèítaè}
-{901}{}{Poèítaèovı terminál napojenı na hlavní poèítaè.}
+{901}{}{Poèítaèovı terminál napojenı na sálovı poèítaè.}
 {1000}{}{Sloup}
 {1001}{}{Opìrnı sloup zajišující rovnomìrné rozloení váhy celé stavby.}
 {1100}{}{Poèítaè}
-{1101}{}{Poèítaèovı terminál napojenı na hlavní poèítaè.}
+{1101}{}{Poèítaèovı terminál napojenı na sálovı poèítaè.}
 {1200}{}{Poèítaè}
-{1201}{}{Poèítaèovı terminál napojenı na hlavní poèítaè.}
+{1201}{}{Poèítaèovı terminál napojenı na sálovı poèítaè.}
 {1300}{}{Monitor}
 {1301}{}{Monitor zobrazující zelenou plochu. Na obrazovce obèas probliknou nìjaká data.}
 {1400}{}{Monitor}
@@ -31,7 +31,7 @@
 {1600}{}{Obrazovky}
 {1601}{}{Øada tøí monitorù zobrazujících rùzná data.}
 {1700}{}{Obrazovky}
-{1701}{}{Øada tøí monitorù zobrazujících rùzná data tıkajících se tohoto vaultu.}
+{1701}{}{Øada tøí monitorù zobrazujících rùzná data tıkající se tohoto vaultu.}
 {1800}{}{Dveøe}
 {1801}{}{I po bliším prozkoumání jsou to stále jen dveøe.}
 {1900}{}{Dveøe}
@@ -97,7 +97,7 @@
 {4900}{}{Vıchod z mapy}
 {4901}{}{Vıchod z mapy}
 {5000}{}{Èistièka vzduchu}
-{5001}{}{Zaøízení, které èistí starı vzduch a pøivádí do komplexu novı vzduch.}
+{5001}{}{Jednotka pro èištìní vzduchu, zajišující ventilaci celého komplexu. Tento kus je porouchanı.}
 {5100}{}{idle}
 {5101}{}{idle. Škoda, e nemáš èas si sednout a trochu relaxovat.}
 {5200}{}{idle}
@@ -295,15 +295,15 @@
 {15200}{}{Dveøe}
 {15201}{}{Tyto dveøe jsou pøíkladem vyspìlé konstrukèní technologie. Skládají se ze tøí pohybujících se kovovıch segmentù, které tvoøí samotné dveøe.}
 {15300}{}{Dveøe}
-{15301}{}{Tyto dveøe jsou opatøeny znakem Bratrstva Oceli.}
+{15301}{}{Tyto dveøe jsou opatøeny znakem Bratrstva oceli.}
 {15400}{}{Dveøe}
-{15401}{}{Tyto dveøe jsou opatøeny znakem Bratrstva Oceli.}
+{15401}{}{Tyto dveøe jsou opatøeny znakem Bratrstva oceli.}
 {15500}{}{Vıtah}
 {15501}{}{Vnitøek vıtahu Bratrstva. Je neuvìøitelnì èistı!}
 {15600}{}{Vıtah}
 {15601}{}{Vnitøek vıtahu Bratrstva. Je neuvìøitelnì èistı!}
 {15700}{}{Symbol}
-{15701}{}{Symbol Bratrstva Oceli. Jeho úkolem je informovat všechny pøíchozí o tom, e toto je území Bratrstva a e mají ihned odejít.}
+{15701}{}{Symbol Bratrstva oceli. Jeho úkolem je informovat všechny pøíchozí o tom, e toto je území Bratrstva a e mají ihned odejít.}
 {15800}{}{Monitor}
 {15801}{}{Vidíš poèítaèovı monitor.}
 {15900}{}{Monitor}
@@ -409,8 +409,8 @@
 {21201}{}{Na tomto velmi opotøebovaném spacím zaøízení je nìkolik pochybnıch skvrn neidentifikovatelného pùvodu.}
 {21300}{}{Postel}
 {21301}{}{Tato postel u toho zaila opravdu hodnì. A taky se zdá, e nìco vlezlo mezi matrace a chcíplo tam.}
-{21400}{}{}
-{21500}{}{}
+{21400}{}{Nic neobvyklého.}
+{21500}{}{Nic neobvyklého.}
 {21600}{}{Knihovna}
 {21700}{}{Knihovna}
 {21800}{}{Knihovna}
@@ -598,7 +598,7 @@
 {31400}{}{Odpadky}
 {31401}{}{Trubka je v pùlce zlomená. Vypadá to, e zrezivìla a pøelomila se vlastní vahou.}
 {31500}{}{Odpadkovı koš}
-{31501}{}{Koš na odpadky. Ještì stále na nìm lze rozeznat nápis "Udrujte naše ulice èisté!"}
+{31501}{}{Koš na odpadky. Ještì stále na nìm lze rozeznat nápis „Udrujte naše ulice èisté!“}
 {31600}{}{Strom}
 {31601}{}{Uschlı strom.}
 {31700}{}{Strom}
@@ -763,7 +763,7 @@
 {39900}{}{elezné sudy}
 {39901}{}{Podle dutého zvuku usuzuješ, e jsou tyto sudy nejspíš prázdné.}
 {40000}{}{Vìtrací otvor}
-{40001}{}{Vìtrací otvor ventilace podzemních prostor.}
+{40001}{}{Nacházíš malı štítek s nápisem: „Majetek Oblasti 51. V pøípadì nálezu vrate.“}
 {40100}{}{Bedna}
 {40101}{}{Døevìná bedna. Je v celkem dobrém stavu.}
 {40200}{}{Bedna}
@@ -798,8 +798,8 @@
 {41601}{}{Tìmito trubkami se kdysi èerpalo palivo z podzemních nádrí. Nebyly pouity u velmi dlouhou dobu.}
 {41700}{}{Vıtahová šachta}
 {41701}{}{Èást vıtahového systému.}
-{41800}{}{Vìtrací šachta}
-{41801}{}{Vìtrací šachta vede kamsi hluboko do lodi. Je poškozená.}
+{41800}{}{Vıtahová šachta}
+{41801}{}{Vıtahová šachta vede kamsi hluboko pod zem. Je poškozená.}
 {41900}{}{Vıtah}
 {41901}{}{Vıtah. Pouívá se k pøesunu nahoru a dolù do jinıch pater.}
 {42000}{}{Vıtahová šachta}
@@ -980,11 +980,11 @@
 {52100}{}{Stùl}
 {52101}{}{Tento velkı stùl vypadá dùleitì. e by se tu poøádaly schùze?}
 {52200}{}{Oltáø}
-{52201}{}{Tento oltáø pouívá Bratrstvo Oceli. Jasnì poznáváš jejich symbol.}
+{52201}{}{Tento oltáø pouívá Bratrstvo oceli. Jasnì poznáváš jejich symbol.}
 {52300}{}{Oltáø}
-{52301}{}{Tento oltáø pouívá Bratrstvo Oceli. Jasnì poznáváš jejich symbol.}
+{52301}{}{Tento oltáø pouívá Bratrstvo oceli. Jasnì poznáváš jejich symbol.}
 {52400}{}{Oltáø}
-{52401}{}{Tento oltáø pouívá Bratrstvo Oceli. Jasnì poznáváš jejich symbol.}
+{52401}{}{Tento oltáø pouívá Bratrstvo oceli. Jasnì poznáváš jejich symbol.}
 {52500}{}{Lavice}
 {52501}{}{Sice krásnì navrená, ale u na pohled dìsnì nepohodlná lavice.}
 {52600}{}{Pódium}
@@ -1049,7 +1049,7 @@
 {55600}{}{Rozbitá suspenzní nádr}
 {55601}{}{Zcela znièené zaøízení. Nelze opravit.}
 {55700}{}{Hlavní poèítaè}
-{55701}{}{Velikı superpoèítaè. Pravdìpodobnì nejrychlejší poèítaè jakı existuje.}
+{55701}{}{Velikı superpoèítaè. Pravdìpodobnì nejrychlejší poèítaè, jakı jsi kdy vidìl.}
 {55800}{}{Podpùrná plošina}
 {55801}{}{Tato plošina udruje superpoèítaè nad nádrí s chladícím médiem.}
 {55900}{}{Dont use}
@@ -1085,9 +1085,9 @@
 {57500}{}{Køoví}
 {57501}{}{Nìjaká pouštní rostlina.}
 {57600}{}{Zem}
-{57601}{}{Z této vıšky je na Boneyard pøekrásnı vıhled. Z té ohromné vıšky máš opravdu dobrı pocit.}
+{57601}{}{Z této vıšky je na Kostnici pøekrásnı vıhled. Z té ohromné vıšky máš opravdu dobrı pocit.}
 {57700}{}{Zem}
-{57701}{}{Z této vıšky je na Boneyard pøekrásnı vıhled.}
+{57701}{}{Z této vıšky je na Kostnici pøekrásnı vıhled.}
 {57800}{}{Stìna}
 {57801}{}{Pìknı vıhled z vnìjší strany Katedrály.}
 {57900}{}{Stìna}
@@ -1097,7 +1097,7 @@
 {58100}{}{Dveøe}
 {58101}{}{Tyto dveøe se sem náramnì hodí.}
 {58200}{}{Cedule}
-{58201}{}{Na ceduli stojí "Darkwaterùv obchod."}
+{58201}{}{Na ceduli stojí „Darkwaterùv obchod.“}
 {58300}{}{ebøík}
 {58301}{}{ebøík vede nìkam dolù do temnoty.}
 {58400}{}{ebøík}
@@ -1199,11 +1199,11 @@
 {63200}{}{Terminál}
 {63300}{}{Terminál}
 {63400}{}{Vlajka}
-{63401}{}{Tato vlajka je symbolem Dìtí Katedrály.}
+{63401}{}{Tato vlajka je symbolem Dìtí katedrály.}
 {63500}{}{Vlajka}
-{63501}{}{Tato vlajka je symbolem Dìtí Katedrály.}
+{63501}{}{Tato vlajka je symbolem Dìtí katedrály.}
 {63600}{}{Vlajka}
-{63601}{}{Tato vlajka je symbolem Dìtí Katedrály.}
+{63601}{}{Tato vlajka je symbolem Dìtí katedrály.}
 {63700}{}{Poèítaè}
 {63701}{}{Velkı poèítaè.}
 {63800}{}{Poèítaè}
@@ -1619,7 +1619,7 @@
 {85300}{}{Operaèní stùl}
 {85301}{}{Vypadá to jako stùl k vyšetøování pacientù.}
 {85400}{}{Poutaè}
-{85401}{}{Neonovı poutaè restaurace Maltese Falcon.}
+{85401}{}{Neonovı poutaè restaurace Maltézskı sokol.}
 {85500}{}{Graffiti}
 {85600}{}{Graffiti}
 {85700}{}{Graffiti}
@@ -1641,17 +1641,17 @@
 {87100}{}{Cedule}
 {87101}{}{Poutaè firmy Far Go Traders.}
 {87200}{}{Cedule}
-{87201}{}{Stojí na ní: Gun Runnerové.}
+{87201}{}{Stojí na ní: Gun Runneøi.}
 {87300}{}{Cedule}
-{87301}{}{Toto je cedule obchodní spoleènosti Crimson Caravan.}
+{87301}{}{Toto je cedule obchodní spoleènosti Karmínová karavana.}
 {87400}{}{Cedule}
 {87401}{}{Na ceduli stojí: NEMOCNICE. To se mùe hodit.}
 {87500}{}{Cedule}
-{87501}{}{Toto je cedule hotelu Crash House.}
+{87501}{}{Toto je cedule Chrápárny.}
 {87600}{}{Cedule}
 {87601}{}{Na této velmi neobvyklé ceduli je napsáno: Bobùv obchod s ojetinami.}
 {87700}{}{Cedule}
-{87701}{}{Poutaè Vodních Kupcù, obchodní spoleènosti z Hubu.}
+{87701}{}{Poutaè Obchodníkù s vodou, obchodní spoleènosti z Hubu.}
 {87800}{}{Skoøápka}
 {87801}{}{Kousky rozbité skoøápky.}
 {87900}{}{Skoøápka}
@@ -1680,7 +1680,7 @@
 {89100}{}{Cedule}
 {89101}{}{Je na ní napsáno: VÌZNICE.}
 {89200}{}{Cedule}
-{89201}{}{Toto je cedule baru Skum Pitt.}
+{89201}{}{Toto je cedule baru Špinadíra.}
 {89300}{}{Cedule}
 {89301}{}{Reklama na bøitvy znaèky Blade.}
 {89400}{}{Sprcha}
@@ -2007,19 +2007,19 @@
 {115200}{}{Dùlní vozík}
 {115300}{}{Dùlní vozík s pøipevnìnou eleznou tyèí}
 {115400}{}{Dùlní vozík s dynamitem}
-{115500}{}{Cedule "Zavøeno"}
-{115600}{}{Cedule "Zavøeno"}
+{115500}{}{Cedule „Zavøeno“}
+{115600}{}{Cedule „Zavøeno“}
 {115700}{}{Oznaèení domu vdovy Bucknerové}
 {115800}{}{Oznaèení Vicova staroitnictví}
 {115900}{}{Stìna}
 {116000}{}{Stìna}
 {116100}{}{Oèní skener}
 {116101}{}{Toto je bezpeènostní zaøízení, které snímá lidskou sítnici.}
-{116200}{}{Cedule s nápisem "Centrála"}
-{116300}{}{Cedule s nápisem "Centrála"}
-{116400}{}{Cedule s nápisem "Centrála"}
-{116500}{}{Cedule s nápisem "Pracovní pásmo"}
-{116600}{}{Cedule s nápisem "Pracovní pásmo"}
+{116200}{}{Cedule s nápisem „Centrála“}
+{116300}{}{Cedule s nápisem „Centrála“}
+{116400}{}{Cedule s nápisem „Centrála“}
+{116500}{}{Cedule s nápisem „Pracovní pásmo“}
+{116600}{}{Cedule s nápisem „Pracovní pásmo“}
 {116700}{}{Stroj}
 {116701}{}{Nefunkèní stroj.}
 {116800}{}{Stroj}
@@ -2034,25 +2034,25 @@
 {117500}{}{Nádre}
 {117600}{}{Ventilace}
 {117700}{}{Ventilace}
-{117800}{}{Cedule "Harpyje"}
+{117800}{}{Cedule „Harpyje“}
 {117900}{}{Truhláøská koza}
 {118000}{}{Truhláøská koza}
 {118100}{}{Truhláøská koza}
 {118200}{}{Ventilace}
 {118300}{}{Ventilace}
-{118400}{}{Cedule "Zámeènictví"}
-{118500}{}{Cedule "Kanceláø"}
-{118600}{}{Cedule "Sklad"}
-{118700}{}{Cedule "Radiace"}
+{118400}{}{Cedule „Zámeènictví“}
+{118500}{}{Cedule „Kanceláø“}
+{118600}{}{Cedule „Sklad“}
+{118700}{}{Cedule „Radiace“}
 {118800}{}{Pára}
 {118900}{}{Stroj}
 {118901}{}{Nìjaké nezajímavé zaøízení elektrárny.}
 {119000}{}{Nádr}
 {119100}{}{Oheò}
 {119200}{}{Voda}
-{119300}{}{Cedule "Lovecká ètvr"}
-{119400}{}{Cedule "U Zlatého geckona"}
-{119500}{}{Cedule "Láznì"}
+{119300}{}{Cedule „Lovecká ètvr“}
+{119400}{}{Cedule „U Zlatého geckona“}
+{119500}{}{Cedule „Láznì“}
 {119600}{}{Jeskynní malba}
 {119700}{}{Jeskynní malba}
 {119800}{}{Jeskynní malba}
@@ -2118,37 +2118,37 @@
 {124300}{}{Èerpací stanice}
 {124400}{}{Èerpací stanice}
 {124500}{}{Èerpací stanice}
-{124600}{}{Oznaèení "Èerpací stanice"}
-{124700}{}{Cedule "Stín"}
+{124600}{}{Oznaèení „Èerpací stanice“}
+{124700}{}{Cedule „Stín“}
 {124800}{}{Seník}
 {124900}{}{Seník}
 {125000}{}{Seník}
 {125100}{}{Seník}
 {125200}{}{Seník}
 {125300}{}{Seník}
-{125400}{}{Cedule "Dustyho krèma"}
-{125500}{}{Obchod "Leguání kousky Bobova syna"}
+{125400}{}{Cedule „Dustyho krèma“}
+{125500}{}{Obchod „U Bobova syna“}
 {125501}{}{Poulièní stánek.}
-{125600}{}{Obchod "Leguání kousky Bobovy syna".}
+{125600}{}{Obchod „U Bobova syna“}
 {125601}{}{Poulièní stánek.}
-{125700}{}{Obchod "Leguání kousky Bobovy syna".}
+{125700}{}{Obchod „U Bobova syna“}
 {125701}{}{Poulièní stánek.}
-{125800}{}{Obchod "Leguání kousky Bobovy syna".}
+{125800}{}{Obchod „U Bobova syna“}
 {125801}{}{Poulièní stánek.}
-{125900}{}{Cedule "NCR"}
-{126000}{}{Cedule "Kongres"}
-{126100}{}{Cedule "Kongres"}
+{125900}{}{Cedule „NCR“}
+{126000}{}{Cedule „Kongres“}
+{126100}{}{Cedule „Kongres“}
 {126200}{}{Plakát NCR}
 {126300}{}{Plakát NCR}
 {126400}{}{Plakát NCR}
 {126500}{}{Plakát NCR}
-{126600}{}{Cedule "Salón U Nevydìlanı kùe"}
-{126700}{}{Cedule "Kasíno"}
-{126800}{}{Cedule "Kasíno"}
-{126900}{}{Cedule "Kasíno"}
-{127000}{}{Cedule "Kasíno"}
-{127100}{}{Cedule "Kasíno"}
-{127200}{}{Cedule "Kasíno"}
+{126600}{}{Cedule „Salón U Nevydìlanı kùe“}
+{126700}{}{Cedule „Kasíno“}
+{126800}{}{Cedule „Kasíno“}
+{126900}{}{Cedule „Kasíno“}
+{127000}{}{Cedule „Kasíno“}
+{127100}{}{Cedule „Kasíno“}
+{127200}{}{Cedule „Kasíno“}
 {127300}{}{Hromada kamení}
 {127301}{}{Vypadá to, jako kdyby tyto kameny nìco skrıvaly.}
 {127400}{}{Trám}
@@ -2294,27 +2294,27 @@
 {140400}{}{Prapor}
 {140500}{}{Prapor}
 {140600}{}{Prapor}
-{140700}{}{Cedule "Koèièí Packa"}
-{140800}{}{Cedule "Koèièí Packa"}
+{140700}{}{Cedule „Koèièí Packa“}
+{140800}{}{Cedule „Koèièí Packa“}
 {140900}{}{Cedule}
-{141000}{}{Cedule "Box"}
-{141100}{}{Cedule "Box"}
-{141200}{}{Cedule "Box"}
-{141300}{}{Cedule "Renescova lékárna"}
-{141400}{}{Cedule "Lovecké potøeby"}
-{141500}{}{Cedule "Bar Salvatore"}
+{141000}{}{Cedule „Box“}
+{141100}{}{Cedule „Box“}
+{141200}{}{Cedule „Box“}
+{141300}{}{Cedule „Renescova lékárna“}
+{141400}{}{Cedule „Lovecké potøeby“}
+{141500}{}{Cedule „Bar Salvatore“}
 {141600}{}{Socha}
 {141700}{}{Garáová vrata}
 {141800}{}{Garáová vrata}
-{141900}{}{Cedule "Doktor Johnson"}
-{142000}{}{Cedule "Šerif"}
-{142100}{}{Cedule "Hospoda U Malamuta"}
-{142200}{}{Cedule "Dùl Morningstar"}
-{142300}{}{Cedule "Dùl Kokoweef"}
-{142400}{}{Cedule "Dùl Kokoweef"}
-{142500}{}{Cedule "Dùl Kokoweef"}
+{141900}{}{Cedule „Doktor Johnson“}
+{142000}{}{Cedule „Šerif“}
+{142100}{}{Cedule „Hospoda U Malamuta“}
+{142200}{}{Cedule „Dùl Morningstar“}
+{142300}{}{Cedule „Dùl Kokoweef“}
+{142400}{}{Cedule „Dùl Kokoweef“}
+{142500}{}{Cedule „Dùl Kokoweef“}
 {142600}{}{Ukazatel}
-{142601}{}{Tento døevìnı ukazatel ukazuje do dvou smìrù. Jeden vede do New Rena a druhı do "Pekla". Máš podezøení, e je to obrácenì.}
+{142601}{}{Tento døevìnı ukazatel ukazuje do dvou smìrù. Jeden vede do New Rena a druhı do „Pekla“. Máš podezøení, e je to obrácenì.}
 {142700}{}{Cedule s èíslem 1}
 {142800}{}{Cedule s èíslem 2}
 {142900}{}{Cedule s èíslem 3}
@@ -2441,7 +2441,7 @@
 {154800}{}{Silové pole}
 {154900}{}{Silové pole}
 {155000}{}{Extraktor orgánù}
-{155001}{}{Poslední model z chirurgické série "Udìlej si sám" od firmy Vault-Tec. Pouhım stiskem tlaèítka dokáe automaticky vyjmout libovolnı tìlesnı orgán.}
+{155001}{}{Poslední model z chirurgické série „Udìlej si sám“ od firmy Vault-Tec. Pouhım stiskem tlaèítka dokáe automaticky vyjmout libovolnı tìlesnı orgán.}
 {155100}{}{Raketoplán}
 {155200}{}{Raketoplán}
 {155300}{}{Raketoplán}
@@ -2548,41 +2548,41 @@
 {164600}{}{Schody nahoru}
 {164700}{}{Schody nahoru}
 {164800}{}{Schody nahoru}
-{164900}{}{Jádro reaktoru}
-{165000}{}{Jádro reaktoru}
-{165100}{}{Jádro reaktoru}
-{165200}{}{Cedule "Karavany"}
+{164900}{}{Sálovı poèítaè}
+{165000}{}{Sálovı poèítaè}
+{165100}{}{Sálovı poèítaè}
+{165200}{}{Cedule „Karavany“}
 {165300}{}{Stùl s rakví}
 {165400}{}{Stùl s rakví}
 {165500}{}{Dùlní vıtah}
 {165600}{}{Dùlní vıtah}
 {165700}{}{Stoár na vlajku}
 {165800}{}{Vlajka NCR}
-{165900}{}{Cedule "Pohonné hmoty Poseidon"}
+{165900}{}{Cedule „Pohonné hmoty Poseidon“}
 {166000}{}{Schody dolù}
-{166100}{}{Cedule "Klinika"}
-{166200}{}{Cedule "Nápravné zaøízení"}
-{166300}{}{Cedule "Celnice"}
-{166400}{}{Cedule "Celnice"}
-{166500}{}{Cedule "Uvítací kanceláø"}
-{166600}{}{Cedule "U Šastného Harryho"}
-{166700}{}{Cedule "Díra"}
-{166800}{}{Cedule "Informace"}
-{166900}{}{Cedule "Informace"}
+{166100}{}{Cedule „Klinika“}
+{166200}{}{Cedule „Nápravné zaøízení“}
+{166300}{}{Cedule „Celnice“}
+{166400}{}{Cedule „Celnice“}
+{166500}{}{Cedule „Uvítací kanceláø“}
+{166600}{}{Cedule „U Šastného Harryho“}
+{166700}{}{Cedule „Díra“}
+{166800}{}{Cedule „Informace“}
+{166900}{}{Cedule „Informace“}
 {167000}{}{Logo Vault City}
-{167100}{}{Cedule "Radnice"}
-{167200}{}{Cedule "Radnice"}
-{167300}{}{Nápis "Centrum údrby"}
-{167400}{}{Cedule "Jídelna"}
-{167500}{}{Cedule "Hospoda"}
-{167600}{}{Cedule "Westinùv ranè"}
-{167700}{}{Cedule "Koloniál"}
-{167800}{}{Nápis "A"}
-{167900}{}{Nápis "B"}
-{168000}{}{Cedule "Rozdìlování sluebníkù"}
-{168100}{}{Cedule "Rozdìlování sluebníkù"}
-{168200}{}{Cedule "Obchodní centrum"}
-{168300}{}{Cedule "Obchodní centrum"}
+{167100}{}{Cedule „Radnice“}
+{167200}{}{Cedule „Radnice“}
+{167300}{}{Nápis „Centrum údrby“}
+{167400}{}{Cedule „Jídelna“}
+{167500}{}{Cedule „Hospoda“}
+{167600}{}{Cedule „Westinùv ranè“}
+{167700}{}{Cedule „Koloniál“}
+{167800}{}{Nápis „A“}
+{167900}{}{Nápis „B“}
+{168000}{}{Cedule „Rozdìlování sluebníkù“}
+{168100}{}{Cedule „Rozdìlování sluebníkù“}
+{168200}{}{Cedule „Obchodní centrum“}
+{168300}{}{Cedule „Obchodní centrum“}
 {168400}{}{Dùlní vıtah}
 {168500}{}{Dùlní vıtah}
 {168600}{}{Dùlní vıtah}
@@ -2638,14 +2638,14 @@
 {173400}{}{Kameny}
 {173500}{}{Kameny}
 {173600}{}{Kameny}
-{173700}{}{Cedule "Bar u Becky"}
-{173800}{}{Cedule "Bar u Becky"}
-{173900}{}{Cedule "Salón posledního vydechnutí"}
-{174000}{}{Cedule "U Mámy"}
-{174100}{}{Cedule "Cech otrokáøù"}
-{174200}{}{Cedule "Potøeby pro pøeití"}
-{174300}{}{Cedule "Tubbyho bazar"}
-{174400}{}{Cedule "Tubbyho bazar"}
+{173700}{}{Cedule „Bar u Becky“}
+{173800}{}{Cedule „Bar u Becky“}
+{173900}{}{Cedule „Salón posledního vydechnutí“}
+{174000}{}{Cedule „U Mámy“}
+{174100}{}{Cedule „Cech otrokáøù“}
+{174200}{}{Cedule „Potøeby pro pøeití“}
+{174300}{}{Cedule „Tubbyho bazar“}
+{174400}{}{Cedule „Tubbyho bazar“}
 {174500}{}{Brána dùlního vıtahu}
 {174600}{}{Ventilátor}
 {174700}{}{Ventilátor}
@@ -2653,7 +2653,7 @@
 {174900}{}{Oèní diagram}
 {175000}{}{Ruiny}
 {175100}{}{Stráce Vìènosti}
-{175200}{}{Cedule "Mimo provoz"}
+{175200}{}{Cedule „Mimo provoz“}
 {175300}{}{Zøícená podlaha}
 {175400}{}{Záchod}
 {175500}{}{Køí}
@@ -2717,17 +2717,17 @@
 {180400}{}{Kameny}
 {180500}{}{Kameny}
 {180600}{}{Kameny}
-{180700}{}{Cedule "Kùe"}
-{180800}{}{Cedule "Hotel u Rose"}
-{180900}{}{Cedule "Vortisova úschovna"}
-{181000}{}{Cedule "Vortisova úschovna"}
-{181100}{}{Cedule "Dùl Velkı Wamamingo"}
-{181200}{}{Cedule "Ascortiho Eso a Radnice"}
+{180700}{}{Cedule „Kùe“}
+{180800}{}{Cedule „Hotel u Rose“}
+{180900}{}{Cedule „Vortisova úschovna“}
+{181000}{}{Cedule „Vortisova úschovna“}
+{181100}{}{Cedule „Dùl Velkı Wanamingo“}
+{181200}{}{Cedule „Ascortiho Eso a Radnice“}
 {181300}{}{Zøícená loï}
 {181301}{}{Nìjaké kosmické plavidlo. Zdá se, e tu havarovalo teprve nedávno.}
 {181400}{}{Rakev}
-{181500}{}{Cedule "Stockmanova Asociace"}
-{181600}{}{Cedule "Modocká Jatka"}
+{181500}{}{Cedule „Stockmanova Asociace“}
+{181600}{}{Cedule „Modocká Jatka“}
 {181700}{}{Prkno}
 {181800}{}{Døevìné dveøe}
 {181900}{}{Døevìné dveøe}
@@ -2756,7 +2756,7 @@
 {184200}{}{Strom}
 {184300}{}{Strom}
 {184400}{}{Rampa}
-{184500}{}{Cedule "Porno studio Zlatı glóbus"}
+{184500}{}{Cedule „Porno studio Zlatı glóbus“}
 {184600}{}{Kormidlo}
 {184700}{}{Ovladaè rychlosti}
 {184800}{}{Komunikaèní stanice}
@@ -2798,6 +2798,6 @@
 {186900}{}{Hora}
 {186901}{}{Tyto horské stìny vypadají velmi nepøístupnì.}
 {187000}{}{Zemì}
-{187001}{}{Z této úrovnì vìe je pìknı vıhled na Pohøebištì. Máš dobrı pocit z toho, jak vysoko na obloze se nacházíš.}
+{187001}{}{Z této úrovnì vìe je pìknı vıhled na Kostnici. Máš dobrı pocit z toho, jak vysoko na obloze se nacházíš.}
 {187100}{}{Zemì}
-{187101}{}{Z této úrovnì vìe je pìknı vıhled na Pohøebištì.}
+{187101}{}{Z této úrovnì vìe je pìknı vıhled na Kostnici.}

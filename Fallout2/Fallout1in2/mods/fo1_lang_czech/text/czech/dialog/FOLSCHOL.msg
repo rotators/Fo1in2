@@ -1,9 +1,9 @@
-{100}{}{Vidíš studujícího Následovníka Apokalypsy.}
+{100}{}{Vidíš studujícího Následovníka apokalypsy.}
 {101}{}{Prosím buï ticho, snažím se studovat.}
 {102}{}{Hledáme vìdomosti, které by nás ochránily pøed Dìtmi.}
 {103}{}{Nicole øíká, že znalost našeho nepøítele nám pomùže zvítìzit.}
-{104}{}{Áhoj.}
-{105}{}{Vítej u Následovníkù Apokalypsy. Prosím respektuj svátost naší Knihovny.}
+{104}{}{Ahoj.}
+{105}{}{Vítej u Následovníkù apokalypsy. Prosím respektuj svátost naší Knihovny.}
 {106}{}{Krásný Den ti pøeji.}
 {107}{}{Každá vìdomost je svatá.}
 {108}{}{Musíme se chránit.}
@@ -11,7 +11,7 @@
 {110}{}{Vìdomost je život.}
 {111}{}{Nicole nám pomáhá pochopit svátost vìdomosti.}
 {112}{}{Nicole nás vede, abychom oživili to, co bylo ztraceno.}
-{113}{}{Musím najít knihu pro Nicole.}
+{113}{}{Musím najít tu knihu pro Nicole.}
 {114}{}{Katja tu musí nìkde být. Katjo!}
 {115}{}{Dìti byly vyhnány z Katedrály.}
 {116}{}{To jsi byl ty, ne?}

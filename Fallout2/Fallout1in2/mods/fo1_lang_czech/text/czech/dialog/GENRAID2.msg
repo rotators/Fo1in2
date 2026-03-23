@@ -1,5 +1,5 @@
 {100}{}{Nájezdník se Garla tolik bojí, e u s tebou nebude hovoøit.}
-{101}{}{Vidíš silného pouštního nájezdníka.}
+{101}{}{Vidíš otrlého pouštního nájezdníka.}
 {102}{}{To je Smrtihnát. Vrátil se!}
 {103}{}{Promiò, Smrtihnáte. Nerad tì ruším.}
 {104}{}{Vrátil ses, abys zabil svého syna?}
@@ -11,14 +11,14 @@
 {110}{}{Vítej, pøíteli.}
 {111}{}{Jsem rád, e ses mohl vrátit a navštívit mì.}
 {112}{}{Pokud nechceš problémy, tak si to schovej.}
-{113}{}{Chceš do spoleènosti?}
+{113}{}{Chceš mejdan? Jestli ne, schovej tu zbraò.}
 {114}{}{Och, silák, huh?}
 {115}{}{Garl Smrtihnát miluje své bojovníky. Schovej tu vìc a jdi si s ním promluvit.}
 {116}{}{Tak, ty si myslíš, e jsi tvrïák, huh? Zaple se se mnou a zjistíme to.}
-{117}{}{Nelíbí se mi tvoje pohledy.}
+{117}{}{Nelíbí se mi, jak vypadáš.}
 {118}{}{Jdi pryè!}
 {119}{}{Co chceš?}
-{120}{}{Hledám enu, která si øíká Tandi. Vidìl jsi ji?}
+{120}{}{Hledám enu jménem Tandi. Vidìl jsi ji?}
 {121}{}{Nic. Jen se tu rozhlíím.}
 {122}{}{Huh?}
 {123}{}{Oh. Ty asi hledáš práci. Jdi do té velké místnosti za Garlem a nás nech na pokoji.}
@@ -32,16 +32,16 @@
 {131}{}{Asi šest stop. Blondına. Je ze Shady Sands.}
 {132}{}{Jo, ta je tady. Je v tom velkém baráku. Víš, kdy to øeknem Garlovi, tak bude chtít èást té odmìny. Mìl by sis to promyslet.}
 {133}{}{Ty to nemyslíš vánì. Myslím, e je za tím nìco víc. A jestli mluvíš pravdu, pak si shrábnu odmìnu já.}
-{134}{}{Já . . . nemùu øíct víc, nebo mì Garl zabije.}
+{134}{}{Já... nemùu øíct víc, nebo mì Garl zabije.}
 {135}{}{Kousni mì!}
-{136}{}{Nelíbí se mi tvoje pohledy. Radši jdi ode mne pryè.}
+{136}{}{Nelíbí se mi, jak vypadáš. Radši jdi ode mì pryè.}
 {137}{}{Co? Jdi pryè!}
 #
 # Fallout Fixt:
 #
 {200}{}{Vypadá, e je bojem zocelenı a zvyklı na drsnı ivot v pustinì.}
-{201}{}{Z jeho vırazu mùeš vyèíst, e se nejedná o moc pøíjemnou osobu.}
+{201}{}{Jeho øeè tìla mluví víc ne jeho vıraz. A ani jedno není moc pøíjemnı.}
 {202}{}{Zavrèí na tebe a poloí ruku na zbraò.}
 {203}{}{Vypadá, e je bojem zocelená a zvyklá na drsnı ivot v pustinì.}
-{204}{}{Máš pocit, e slovo "dáma" by pro tuto enu nebylo vhodnım oznaèením.}
+{204}{}{Máš pocit, e slovo „dáma“ by pro tuto enu nebylo vhodnım oznaèením.}
 {205}{}{Dìlá svımi boky oplzlá gesta a mrká na tebe.}

@@ -22,7 +22,7 @@
 # Disguised
 {230}{}{Uhhhh...}
 {231}{}{Ty mít taky rád pejsky?}
-{232}{}{Lou mít radost, ano.}
+{232}{}{Lou být hrdej, jo.}
 {233}{}{Ty jít pryè! Nesmìt tady být.}
 
 # Cover blown

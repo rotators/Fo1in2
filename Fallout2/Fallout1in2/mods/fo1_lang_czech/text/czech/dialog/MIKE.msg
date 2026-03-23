@@ -1,11 +1,11 @@
-{100}{}{Tohle je Mike, stráce Starého Mìsta.}
+{100}{}{Vidíš Mikea, stráce Starého Mìsta.}
 {101}{}{Jo, co chceš?}
-{102}{}{a...dum...um...}
+{102}{}{A... dum... um...}
 {103}{}{Já nejsem odtud. Co je tohle za ètvrt?}
 {104}{}{Nevíš, kde bych mohl najít vodní èip?}
 {105}{}{Um... Nashle.}
 {106}{}{Ha. Jenom další feák. Táhni nìkam jinam, zfetovanèe.}
-{107}{}{Jo. Asi jsi se ztratil. Tady ale smrt najde jen málokdo. Tohle je Vıchodní èást, anebo nìkdo tomu øíká Staré Mìsto. Odpad odpadù.}
+{107}{}{Jo. Ty ses asi ztratil, co? Sem by nikdo soudnej nevlezl ani po smrti. Tohle je Eastside, øíká se tomu Starı Mìsto. Úplnı dno Pustiny.}
 {108}{}{Nevíš, kde bych mohl najít vodní èip?}
 {109}{}{Dík za informace. Nashle.}
 {110}{}{Vodní èip? Jsi zfetovanej? Èip z vody?}

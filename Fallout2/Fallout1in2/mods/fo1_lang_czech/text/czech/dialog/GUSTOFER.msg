@@ -18,7 +18,7 @@
 {117}{}{}
 {118}{}{Promiò, ale dnešní zápas u skonèil.}
 {119}{}{Jéje. Dobrá, co se dá dìlat.}
-{120}{}{Na koho si chceš vsadit, na Saula nebo na vyzıvatele? Asi vyhraje Saul. Sázka je 25. Kdy vsadíš a vyhraje Saul, získáš 50, kdy vsadíš na vyzıvatele a on vyhraje, získáš 100!}
+{120}{}{Na koho si chceš vsadit, na Saula nebo na vyzıvatele? Asi vyhraje Saul. Sázka je 25 zátek. Kdy vsadíš a vyhraje Saul, získáš 50, kdy vsadíš na vyzıvatele a on vyhraje, získáš 100!}
 {121}{}{Sázím na Saula.}
 {122}{}{Sázím na vyzıvatele.}
 {123}{}{OK, jasnì.}
@@ -26,10 +26,10 @@
 {125}{}{Kdo øídí ty zápasy?}
 {126}{}{Hm, no nic.}
 {127}{}{Pardon, nemám èas. Moná pozdìji.}
-{128}{}{Saul má nejtvrdší pìst v Junktownu! A taky nejrychlejší úder. Dennì dohlíím na jeho kondièku. Jen si toho høebce prohlédni... ta bájeèná muná postava! Ta pulzující síla v pìstích!}
-{129}{}{A je to také slušnej chlap co drí své slovo.}
+{128}{}{Saul, nejrychlejší pìst v Junktownu! Zázrak muné muskulatury! Pulzující ranaø s drtivım úderem!}
+{129}{}{A je to taky fajn chlap.}
 {130}{}{Hm, jo. Tak, kdo øídí ty zápasy?}
-{131}{}{Dík. Nìkde Tì uvidím.}
+{131}{}{Dík. Uvidíme se.}
 {132}{}{Gizmo, majitel kasina. On zamìstnává Saula. Pøíleitostnì taky sleduje jeden dva zápasy. Vìtšinou to jsou dobré peníze - lidé na zápasy hodnì sázejí. A navíc pøi nich nebıvá nikdo zabit, na rozdíl od zápasù smrti, které se poøádají v Hubu.}
 {133}{}{Zápasy smrti?}
 {134}{}{Dík.}
@@ -40,10 +40,10 @@
 {139}{}{Chceš si nìco zaèít, ty párátko?}
 {140}{}{Ztichni, prosím.}
 {141}{}{Hm, ne. Nevadí. Zapomeò, e jsem nìco øíkal.}
-{142}{}{Dobrá, dobrá, vypadá to, e jsi vítìz! Tady jsou tvoje peníze.}
-{143}{}{Vra se, a budeš mít dost penìz na sázky!}
+{142}{}{No, no, vypadá to, e jsi vítìz! Tady jsou tvoje zátky.}
+{143}{}{Vra se, a budeš mít dost zátek na sázky!}
 {144}{}{Chceš tu poèkat? Zápas zaèíná ve 2:00.}
-{145}{}{Samozøejmì, e jo, zatracenì.}
+{145}{}{Jasnì, proè ne.}
 {146}{}{No jo. Mám nìjakou práci. Vrátím se pozdìji.}
 {147}{}{Jo, ale kdy zmeškáš zápas, pøijdeš o svou sázku!}
 {148}{}{A zaène zápas!}

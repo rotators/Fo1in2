@@ -1,18 +1,18 @@
-{100}{}{Vidíš úøedníka spoleènosti Crimson caravan.}
-{101}{}{Vidíš úøedníka spoleènosti Kupci s vodou.}
-{102}{}{Vidíš úøedníka spoleènosti Far Go Traders.}
-{103}{}{Nazdar. Hledáš práci?}
+{100}{}{Vidíš úøedníka Karmínové karavany.}
+{101}{}{Vidíš úøedníka Obchodníkù s vodou.}
+{102}{}{Vidíš úøedníka Obchodníkù Far Go.}
+{103}{}{Nazdar. Hledáte práci?}
 {104}{}{Ano.}
 {105}{}{Ne.}
-{106}{}{Výbornì. Máme volné místo strážce. Máš zájem?}
-{107}{}{OK. Jestli potøebuješ práci, tak se tu zastav a domluvíme se.}
+{106}{}{Výbornì. Máme volné místo strážce. Máte zájem?}
+{107}{}{OK. Jestli potøebujete práci, tak se tu zastavte a domluvíme se.}
 {108}{}{To je mi líto. Sbohem.}
-{109}{}{Skvìle. Naše karavany chodívají ve smìru: Pohøebištì, Junktown, Nekropolis a Bratrstvo Oceli. Pro kterou chceš pracovat ty?}
-{110}{}{Výbornì. Naše karavany chodívají ve smìru: Pohøebištì, Junktown a Bratrstvo Oceli. Pro kterou chceš pracovat ty?}
-{111}{}{Výbornì. Naše karavany chodí ve smìru: Pohøebištì a Junktown. Pro kterou chceš pracovat ty?}
-{112}{}{Pohøebištì.}
+{109}{}{Skvìle. Naše karavany jezdí do L.A. kostnice, Junktownu, Nekropole a k Bratrstvu oceli. Pro kterou chcete pracovat?}
+{110}{}{Výbornì. Naše karavany jezdí do L.A. kostnice, Junktownu a k Bratrstvu oceli. Pro kterou chcete pracovat?}
+{111}{}{Výbornì. Naše karavany jezdí do L.A. kostnice a Junktownu. Pro kterou chcete pracovat?}
+{112}{}{L.A. kostnice.}
 {113}{}{Junktown.}
-{114}{}{Bratrstvo Oceli.}
+{114}{}{Bratrstvo oceli.}
 {115}{}{Nekropolis.}
 {116}{}{Žádná.}
 {117}{}{Výbornì. Hned vyrážíme.}

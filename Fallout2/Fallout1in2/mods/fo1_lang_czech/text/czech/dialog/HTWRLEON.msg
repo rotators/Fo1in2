@@ -19,9 +19,9 @@
 {118}{}{Decker vypsal na pana Hightowera odmìnu.}
 {119}{}{Hele, tobì já nic øíkat nebudu!}
 {120}{}{Už jdu.}
-{121}{}{Už zas? Ten Decker je ale vùl.  Fakt?... Myslím ale, že poøád ještì to není takový vùl, jako ti chlapi, které si na tu práci najal. Koukni, podívej se na mojí zbraò.}
-{122}{}{[Leon ti ukazuje svojí zbraò, kde vidíš pìt hlubokých záøezù.]}
-{123}{}{Každý z tìch záøezù znamená pokus o zabití pana Hightowera. Dostal jsem všechny. Øekni mi...víš jak vypadá ten, koho ten cvok Decker najal?}
+{121}{}{Už zas? Ten Decker je ale vùl... Myslím ale, že poøád ještì není takový vùl jako ti chlapi, který si na tu práci najal. Koukni, podívej se na moji zbraò.}
+{122}{}{[Leon ti ukazuje svoji zbraò, kde vidíš pìt hlubokých záøezù.]}
+{123}{}{Každý z tìch záøezù znamená pokus o zabití pana Hightowera. Dostal jsem všechny. Øekni mi... víš jak vypadá ten, koho ten cvok Decker najal?}
 {124}{}{Ne.}
 {125}{}{To jsem já, ty blbèe!}
 {126}{}{Hej! Páni! Ty máš záøezy na svojí zbrani! Ty jsi ale booorec!}
@@ -40,4 +40,4 @@
 {139}{}{Rúdl!}
 {140}{}{Mám pro pana Hightowera dùležitou novinu.}
 {141}{}{Co tu dìláš? Nemám službu. Otravuj nìkoho jinýho.}
-{142}{}{Doufal jsem, že se chceš omluvit za to, že tady zacláníš! Stráže!}
+{142}{}{Doufal jsem, že se tvoje ubohá kùže sem nìkdy zatoulá! Stráže!}

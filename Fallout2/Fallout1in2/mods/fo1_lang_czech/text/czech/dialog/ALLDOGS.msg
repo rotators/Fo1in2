@@ -17,16 +17,16 @@
 #
 # DOG2.MSG
 #
-{107}{}{Pojï sem hochu.}
+{107}{}{Pojï sem, hochu.}
 {108}{}{Haf. Haf.}
 {109}{}{Z nìjakého dùvodu tì ten pes má rád.}
 #
 # DOGMEAT.MSG
 #
 {110}{}{Vidíš Dogmeata.}
-{111}{}{Haf! Haf! Haf! Haf! Haf! Haf! Haf! Haf! Haf!}
-{112}{}{[Èmuch. Èmuch.] Grrrr! Vrrr!}
-{113}{}{[Èmuch. Èmuch.] Haf!}
+{111}{}{Òaf! Òaf Òaf! Òaf! Òaf! Òaf! Òaf! Òaf! Òaf!}
+{112}{}{[Èuch. Èuch.] Grrrr! Vrrr!}
+{113}{}{[Èuch. Èuch.] Haf!}
 #
 # JUNKDOG.MSG
 #
@@ -34,12 +34,12 @@
 {115}{}{Vypadá to, že pes si myslí, že jsi jeho majitel.}
 {116}{}{ zkušeností za to, že jsi vyøešil Philùv problém se psem.}
 {117}{}{Haf-haf!}
-{118}{}{K noze, Dogmeate. Jdeme! [Dogmeat zavrtí ocasem, rozbìhne se k tobì a zaène ti olizovat ruce.]}
-{119}{}{Zùstaò, Dogmeate... Zùstaò! [Dogmeat zùstane stát a trpìlivì èeká na další povel.]}
+{118}{}{Pojï, kámo.}
+{119}{}{Zùstaò tady a èekej, jo?}
 {120}{}{Hodný pejsek.}
 {121}{}{Štìnátko!!!}
 {122}{}{Haf?}
-{123}{}{Arf?}
+{123}{}{Òaf?}
 #
 # for Fallout Fixt:
 #
@@ -53,4 +53,4 @@
 {302}{}{Uhni stranou, kámo. Hodnej hoch.}
 #
 # space is intentional
-{303}{}{ Blbej èokj!}
+{303}{}{ Blbej èokl!}

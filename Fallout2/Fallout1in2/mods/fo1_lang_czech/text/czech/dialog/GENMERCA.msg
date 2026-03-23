@@ -7,7 +7,7 @@
 {106}{}{Jmenuju se Terrance. Jsem smìnaø.}
 {107}{}{Jmenuju se Julian. Jsem dráteník.}
 {108}{}{Jmenuju se Dale. Prodávám a kupuji malé zboží.}
-{109}{}{Jsem na cestì do Adyta prodat nìjaké zboží.}
+{109}{}{Jsem na cestì do Adyta, prodat nìjaké zboží.}
 {110}{}{Jsem na cestì do Junktownu za výmìnou.}
 {111}{}{Jsem na cestì do Hubu vymìnit svoje zboží.}
 {112}{}{Jsem na cestì do Nekropolis na prùzkum.}

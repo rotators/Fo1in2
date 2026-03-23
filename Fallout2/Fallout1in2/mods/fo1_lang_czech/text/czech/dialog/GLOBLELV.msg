@@ -1,4 +1,4 @@
-{100}{}{Výtahové dveøe se zbytky modré barvy.}
+{100}{}{Vidíš výtahové dveøe se zbytky modré barvy.}
 {101}{}{Dostal jsi slabou ránu od zabezpeèovacího systému. Snad je tu nìco, èím by se dal systém obejít.}
 {102}{}{Dostal jsi ránu od zabezpeèovacího systému. Snad je tu nìco, èím by se dal systém obejít.}
 {103}{}{Dostal jsi silnou ránu od zabezpeèovacího systému. Byl jsi zranìn za }

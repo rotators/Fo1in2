@@ -9,7 +9,7 @@
 {108}{}{A co si myslíš o našem mìstì?}
 {109}{}{Je v pohodì.}
 {110}{}{Moc se mi nelíbí. Není moc pøátelské.}
-{111}{}{Vede si pozoruhodnì dobøe, uvážíme-li tu nepøátelskou atmosféru.}
+{111}{}{Vedete si pozoruhodnì dobøe, uvážíme-li tu nepøátelskou atmosféru.}
 {112}{}{Øíkají mi Chuck. Vítej v Adytu. Obávám se ale, že vìtšina lidí tu není k cizincùm moc pøívìtivá.}
 {113}{}{Jo, všiml jsem si.}
 {114}{}{Tak co dìláš, Chucku?}
@@ -22,28 +22,28 @@
 #
 # This is referring to The Glow
 #
-{121}{}{[Chuck vytahuje kartu s obrázkem muže v bílém laboratorním plášti s poèítaèem v ruce a kartu s mužem v Energo brnìní.] Hmm, Heirophant a Pán Prutù z jihu . . . velká moudrost a ušlechtilost tì èeká na nìjakém místì na jihu.}
+{121}{}{[Chuck vytahuje kartu s obrázkem muže v bílém laboratorním plášti s poèítaèem v ruce a kartu s mužem v energozbroji.] Hmm, Veleknìz a Princ holí z jihovýchodu... velká moudrost a ušlechtilost tì èeká na nìjakém místì na jihovýchodì.}
 #
 # This is referring to the Military Base
 #
-{122}{}{[Chuck vytahuje kartu s obrázkem muže s vibraèním nožem v jedné a s vlajkou v druhé ruce.] Princ Meèù na severu, hmm . . . budeš se muset postavit mocnému nepøíteli na severu.}
+{122}{}{[Chuck vytahuje kartu s obrázkem muže s vibraèním nožem v jedné a s vlajkou v druhé ruce.] Princ meèù na severozápadì, hmm... budeš se muset postavit mocnému nepøíteli na severozápadì.}
 #
 # This is referring to The Master
 #
-{123}{}{[Chuck vytahuje kartu s obrázkem vìže a kartu s obrázkem muže v obleku s namalovanou lebkou.] Vìž a Imperátor . . . èeká nás velká zmìna z rukou mocného vùdce. Ale jestli je ta zmìna dobrá nebo zlá, to nedokážu øíct.}
-{124}{}{[Chuck vytahuje kartu s obrázkem muže tanèícího na nukleární hlavici.] Blázen. Nemohu ti pomoci; musíš si svou cestu svìtem prorazit ty sám.}
-{125}{}{[Ještì]}
+{123}{}{[Chuck vytahuje kartu s obrázkem radiové vìže a další kartu s obrázkem muže v obleku se žezlem.] Vìž a Císaø... z rukou mocného vùdce vzejde velká zmìna. Zda tou zmìnou bude smrt, to nedokážu øíct.}
+{124}{}{[Chuck vytahuje kartu s obrázkem muže tanèícího na jaderné hlavici.] Blázen. Nemohu ti pomoci; musíš si svou cestu svìtem prorazit ty sám.}
+{125}{}{[Pokraèovat]}
 {126}{}{Hmm. Díky za radu.}
 {127}{}{Opravdu tomuhle všemu vìøíš?!}
 {128}{}{Mì to vychází. Pokud tomu nechceš vìøit, možná to není urèeno pro tebe.}
 {129}{}{Nic ve zlém, ale to zní jako snùška povìr.}
 {130}{}{No, každý z nás vìøí nìèemu jinému.}
 {131}{}{Pokud to tak cítíš, potom už není, o èem bychom se ještì mohli bavit.}
-{132}{}{Jistì, to ano. A tvùj vesmír je utváøen tvými povìrami, zatímco ten mùj modelují mé myšlenky. Nemùžeme sdílet spoleènou víru, ale já ti v tom tvém svìtì pøeju štìstí.}
+{132}{}{Jistì, to ano. A tvùj vesmír je utváøen tvými pøesvìdèeními, zatímco ten mùj modelují mé myšlenky. Nemùžeme sdílet spoleènou víru, ale já ti v tom tvém svìtì pøeju štìstí.}
 {133}{}{Je to domov.}
 {134}{}{Uh, no jo. Uvidíme se.}
 {135}{}{Je tu ponìkud stísnìné ticho.}
-{136}{}{Vím co myslíš. Už jsem tu vidìl hodnì utrpení.}
+{136}{}{Vím, co myslíš. Už jsem tu vidìl hodnì utrpení.}
 {137}{}{A Regulátoøi se starají, aby se to nezmìnilo. Lidé z Adyta strádají pod jejich krutými zákony.}
 {138}{}{To vìøím. No, uvidíme se.}
 {139}{}{Souhlasíš s tím?}
@@ -69,8 +69,8 @@
 {159}{}{Hmm. Taky si myslím.}
 {160}{}{Jsem farmáø. Taky rád pracuju na budovách, restauruju je a udržuju, aby nespadly. A obèas dávám rady.}
 {161}{}{Jaké rady?}
-{162}{}{Ano, naneštìstí. Já myslím, že . . . že je to nìjaká zkouška našeho charakteru. Abychom pøežili tuto tìžkou dobu, musíme se semknout, nauèit se vzájemnì podporovat a osvojit si schopnosti, jak pøežít. Myslím, že se tím nakonec i lidstvo stane lepší.}
-{163}{}{Nesouhlasím.  Na svých cestách jsem potkal spoustu gangù. Všude pøibývá zabijákù a zlodìjù. Myslím, že tohle je mnohem pravdìpodobnìjší varianta budoucnosti.}
+{162}{}{Ano, naneštìstí. Já myslím, že... že je to nìjaká zkouška našeho charakteru. Abychom pøežili tuto tìžkou dobu, musíme se semknout, nauèit se vzájemnì podporovat a osvojit si schopnosti, jak pøežít. Myslím, že se tím nakonec i lidstvo stane lepší.}
+{163}{}{Nesouhlasím. Na svých cestách jsem potkal spoustu gangù. Všude pøibývá zabijákù a zlodìjù. Myslím, že tohle je mnohem pravdìpodobnìjší varianta budoucnosti.}
 {164}{}{Možná máš pravdu. Ti kdo pøežijí budou silnìjší.}
 {165}{}{Ti všichni nakonec znièí sami sebe. A jediní, kdo zùstanou, budou ti, kdo se kvùli pøežití nauèili spolupracovat. Tak jako my.}
 {166}{}{Jsem rád, že to chápe i nìkdo z vnìjšího svìta. Musíme nalézat cesty jeden k druhému, abychom dokázali vybudovat nìco nového. Nezaène to tady u nás; my jsme pøíliš hlídaní, ale nìkde to urèitì zaène.}

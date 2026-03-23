@@ -16,7 +16,7 @@
 # Too many party members
 {2500}{}{Grrrrr.}
 {2510}{}{Copak je hochu? Tobì se nelíbí, že je se mnou tolik lidí?}
-{2511}{}{[Hotovo]}
+{2511}{}{[Odejít]}
 
 # Fo1in2
 {3500}{}{*kòuèí*}

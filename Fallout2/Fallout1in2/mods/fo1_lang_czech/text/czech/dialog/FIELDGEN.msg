@@ -1,2 +1,2 @@
-{100}{}{Tvùj pokus o znovuzapojení zdroje silového pole selhal.}
-{101}{}{Vypnul jsi zdroj silového pole.}
+{100}{}{Tvùj pokus o znovuzapojení generátoru silového pole selhal.}
+{101}{}{Vypnul jsi generátor silového pole.}

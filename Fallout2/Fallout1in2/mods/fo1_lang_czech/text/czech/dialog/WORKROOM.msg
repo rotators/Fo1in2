@@ -16,8 +16,8 @@
 {115}{}{Moje oèi!}
 {116}{}{Ty nejsi rytíø.}
 {117}{}{Potøebuju mluvit s rytíøem.}
-{118}{}{Tomu nerozumím, napájecí èlánky stále ztrácejí energii.}
-{119}{}{Mìl by si stát stranou; je to trochu nebezpeèné.}
+{118}{}{Nechápu to, ty energetické èlánky mi poøád zkratujou.}
+{119}{}{Mìl bys stát stranou, je to trochu nebezpeèné.}
 {120}{}{Prosím, nevyrušuj mì.}
 {121}{}{Dívej se, kde stojíš.}
 {122}{}{Ztratil ses?}

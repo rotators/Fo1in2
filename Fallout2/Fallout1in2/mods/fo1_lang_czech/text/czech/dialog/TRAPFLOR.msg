@@ -1,9 +1,9 @@
 {100}{}{ cítí, že nìkde blízko je past.}
 {101}{}{Cítíš, že nìkde blízko je past.}
-{102}{}{ zneškodnil past, varující základnu pøed tvou pøítomností.}
-{103}{}{Zneškodnil jsi past varující základnu pøed tvou pøítomností.}
+{102}{}{ spustil past a upozornil základnu na tvou pøítomnost!}
+{103}{}{Spustil jsi past a upozornil základnu na tvou pøítomnost!}
 {104}{}{Získáváš }
-{105}{}{ zkušeností za úspìšné použití dovednosti "pasti".}
+{105}{}{ zkušeností za úspìšné použití dovednosti „pasti“.}
 {106}{}{ zneškodnil past.}
 {107}{}{Zneškodnil jsi past.}
 {108}{}{ spustil past!}

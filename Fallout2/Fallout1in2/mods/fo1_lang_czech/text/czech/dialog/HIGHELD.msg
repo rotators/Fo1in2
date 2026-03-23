@@ -1,10 +1,10 @@
-{100}{}{Vidíš Staršího Bratrstva.}
-{101}{}{Vítej Zasvìcenèe. Musíme si spolu promluvit. (Pokyne ti, abys k nìmu pøistoupil blíž.)}
+{100}{}{Vidíš staršího Bratrstva.}
+{101}{}{Vítej Zasvìcenèe. Musíme si spolu promluvit. [Pokyne ti, abys k nìmu pøistoupil blíž.]}
 {102}{}{A o èem?}
 {103}{}{Právì teï nemám èas.}
 {104}{}{Cháfel?}
 {105}{}{Je tu naléhavá záležitost a já potøebuju, abys mi s ní pomohl. Jde o Maxsona. Vypadá to, že se dostal až na dno svých duševních sil. Nepøestává žvanit o armádì shromažïující se na severu.}
-{106}{}{Nechci naše vojáky posílat tam do tìch oblastí zamoøených radioaktivitou, dokud nebudu mít pøesvìdèivý dùkaz, že ta "armáda" opravdu existuje.}
+{106}{}{Nechci naše vojáky posílat tam do tìch oblastí zamoøených radioaktivitou, dokud nebudu mít pøesvìdèivý dùkaz, že ta „armáda“ opravdu existuje.}
 {107}{}{Potøebuju nìkoho nezávislého. Nìkoho, kdo podá èestné a pravdivé hlášení. Jsi ochotný prozkoumat ten severní region?}
 {108}{}{Udìlám to.}
 {109}{}{Teï to udìlat nemùžu. Mám ještì další vìci, které musím nejdøív zaøídit.}
@@ -18,7 +18,7 @@
 {117}{}{Našel jsem základnu chránìnou tìžce ozbrojenými mutanty. Vypadá to s námi dost bledì.}
 {118}{}{To si nemyslím. Byl jsi pryè pøíliš krátkou dobu. A teï jdi a sem se nevracej, dokud nebudeš moci podat ÚPLNÝ report.}
 {119}{}{Ano, pane.}
-{120}{}{Budu informovat Radu Starších. Poèkáme na Maxsonovo rozhodnutí, co dìlat. Jdi a informuj ho o tom, cos objevil. Díky za tvou pomoc, Zasvìcenèe.}
+{120}{}{Budu informovat Radu starších. Poèkáme na Maxsonovo rozhodnutí, co dìlat. Jdi a informuj ho o tom, cos objevil. Díky za tvou pomoc, Zasvìcenèe.}
 {121}{}{Není zaè.}
 {122}{}{Tak si ten èas udìlej a vyslechni mì.}
 {123}{}{Jsem jedno véélký ucho.}
@@ -27,45 +27,45 @@
 {126}{}{Rozumím. Ale kdybys mìl cestu tím smìrem a cokoliv tam objevil, dej mi prosím vìdìt.}
 {127}{}{Kdybych na severu našel nìco, co pøipomíná armádu, dám ti vìdìt.}
 {128}{}{Dobrá práce s tìmi mutanty. Už jsme slyšeli, že jsi znièil i jejich produkèní zaøízení. Díky, žes za nás vyøešil ten problém.}
-{129}{}{No problem.}
-{130}{}{Cháfel? Co je to za nesmysl ten "Cháfel"? Odejdi! Hned!}
+{129}{}{Žádný problém.}
+{130}{}{Cháfel? Co je to za nesmysl ten „Cháfel“? Odejdi! Hned!}
 {131}{}{Kdyby to záleželo na mnì, už bys tu nebyl.}
 {132}{}{Nemám, co bych ti øekl.}
 {133}{}{Mìl bys se nauèit troše úcty.}
-{134}{}{Schùzka bude podle plánu. Všichni Starší jsou zde a souhlasí, že si vyslechnou hlášení Bratra }
-{135}{}{. Potom rozhodneme, jaké akce budou následovat. Bratøe }
-{136}{}{, øekni nám co jsi vidìl na severu.}
+{134}{}{Zasedání budiž zahájeno. Všichni starší jsou pøítomni a souhlasí, že vyslechnou výpovìï bratra}
+{135}{}{. Potom rozhodneme, jaké kroky budou podniknuty. Bratøe }
+{136}{}{, øekni nám, co jsi vidìl na severu.}
 {137}{}{Bìhem mého prùzkumu jsem našel vojenskou základnu používanou mutanty. To zaøízení je chránìno tìžce ozbrojenými strážemi a peèlivì støeženo.}
 {138}{}{Séfer?}
 {139}{}{A jak ti mutanti vypadají?}
 {140}{}{Jsou to mohutné, humanoidní typy. Jejich svalová hmota je mnohem vìtší, než u kteréhokoliv bìžného èlovìka. Vypadají velice organizovanì a nìkolik z nich chrání vstup.}
 {141}{}{Jsou velcí, nazelenalí a mají zbranì.}
-{142}{}{Jak možná víš, náš Hlavní písaø Vree zhotovila autopsii tvora velice podobného tomu, kterého jsi právì popsal. Myslíš, že je to ten samý typ?}
+{142}{}{Jak možná víš, naše vrchní písaøka Vree provedla pitvu tvora velmi podobného tomu, kterého jsi právì popsal. Myslíš, že jde o to samé?}
 {143}{}{Ano. Ten popis do puntíku souhlasí.}
-{144}{}{Jakou hrozbu pro nás tito "mutanti" pøedstavují?}
-{145}{}{Stejnì jako se Bratrstvo vyzbrojuje do bitvy i tato "armáda mutantù" se pøipravuje na nìco velkého.}
+{144}{}{Jakou hrozbu pro nás tito „mutanti“ pøedstavují?}
+{145}{}{Stejnì jako se Bratrstvo vyzbrojuje do bitvy i tato „armáda mutantù“ se pøipravuje na nìco velkého.}
 {146}{}{Upøímnì øeèeno, tvoje hlášení nás nepøesvìdèilo, že pro nás pøedstavují ohrožení. Nemáš žádný dùkaz, že vùèi nám mají nepøátelské úmysly.}
 {147}{}{Obsadili Nekropolis. Urèitì tam nezùstanou jen tak stát. }
 {148}{}{Shromažïují armádu. Tìžce ozbrojenou armádu. Urèitì ji nemají jen tak na parádu. Zamýšlí ji použít.}
-{149}{}{No a pøi všech z tìchhle akcích, co provádìjí, není pravdìpodobné, že mohou pøijít i sem?}
+{149}{}{Takže podle toho, co provádìjí, je pravdìpodobné, že nakonec pøijdou i sem?}
 {150}{}{Je možné, že už jsou na cestì sem. Bratrstvo je jediný vážnìjší protivník, kterého mají.}
-{151}{}{Nevìøím, že jsou to nepøátelé. Mùžou taky jednoduše chránit sami sebe pøed útokem. I my jsme obèas napadáni bandity a tak.}
-{152}{}{Pokud oni zaútoèí, tak to nebude NIC podobného tìm zøídkavým útokùm lupièù. Bude to masakr. }
+{151}{}{Nevìøím, že to dokazuje nepøátelské úmysly. Mùžou jednoduše chránit sami sebe pøed útokem. I my se musíme obèas vypoøádat s nájezdy.}
+{152}{}{Pokud oni zaútoèí, tak to nebude NIC podobného tìm zøídkavým útokùm nájezdníkù. Bude to masakr. }
 {153}{}{Protože pøicházejí ze staré vojenské základny, umím si docela dobøe pøedstavit, že mají zbranì, které se vyrovnají tìm našim.}
-{154}{}{Co navrhuješ? Preventivní útok na jejich základnu?}
-{155}{}{Ano. Ale nechci, aby vìdìli, že se na nì chystáme.  Malý tým by mohl mít vìtší šanci dostat se až k nim, aniž by ho zaznamenali. }
-{156}{}{To vyøeší jen jednu èást problému. Jsou vedeni skupinou pocházející z Katedrály v Pohøebišti.}
-{157}{}{Tak se i stane. Dostaneš tøi Paladiny, které ti osobnì vyberu a setkáš se s nimi u té Vojenské základny. Pomohou ti dostat se dovnitø. Rado Starších, dìkuji vám za váš èas. Hodnì štìstí, Zasvìcenèe.}
-{158}{}{Pokud jsou vedeni skupinou v Katedrále v Pohøebišti, pak je tu šance, že tam dole mají jen malou pohotovostní armádu. }
+{154}{}{Co navrhuješ? Preventivní úder na jejich vojenskou základnu?}
+{155}{}{Ano. Ale nechci, aby vìdìli, že se na nì chystáme. Malý tým by mohl mít vìtší šanci dostat se až k nim, aniž by ho zaznamenali.}
+{156}{}{To vyøeší jen jednu èást problému. Jsou vedeni skupinou pocházející z Katedrály v Kostnici.}
+{157}{}{Budiž. Dostaneš tøi paladiny, které ti osobnì vyberu, a setkáš se s nimi u té vojenské základny. Pomohou ti dostat se dovnitø. Rado starších, dìkuji vám za váš èas. Hodnì štìstí, Zasvìcenèe.}
+{158}{}{Pokud jsou vedeni skupinou v Katedrále v Kostnici, pak je tu šance, že tam dole mají jen malou pohotovostní armádu. }
 {159}{}{Když je napadneme na severu, pak se odkryjeme a naše jižní strana se stane zranitelnou. Proto mùžu pro takovou akci postrádat jen nìkolik mužù.}
 {160}{}{Dejte mi nìkolik Paladinù, aby mi pomohli dobýt tu jejich základnu na severu.}
 {161}{}{Dejte mi nìkolik Paladinù, aby mi pomohli dobýt tu jejich základnu na jihu.}
-{162}{}{Tak se i stane. Dostaneš dva Paladiny, které ti osobnì vyberu a setkáš se s nimi v Pohøebišti u Katedrály. Rado Starších, dìkuji vám za váš èas. Hodnì štìstí Zasvìcenèe.}
-{163}{}{Tak se i stane. Dostaneš tøi Paladiny, které ti osobnì vyberu a setkáš se s nimi u té Vojenské základny. Pomohou ti dostat se dovnitø. Rado Starších, dìkuji vám za váš èas. Hodnì štìstí, Zasvìcenèe.}
-{164}{}{Zøejmì jsme se zmýlili. Starší, promiòte, že jsem pøipravil o váš èas. Mohl by prosím nìkdo odstranit tohohle debila?}
+{162}{}{Budiž. Dostaneš dva paladiny, které ti osobnì vyberu, a setkáš se s nimi v Kostnici u Katedrály. Rado starších, dìkuji vám za váš èas. Hodnì štìstí, Zasvìcenèe.}
+{163}{}{Budiž. Dostaneš tøi paladiny, které ti osobnì vyberu, a setkáš se s nimi u té vojenské základny. Pomohou ti dostat se dovnitø. Rado starších, dìkuji vám za váš èas. Hodnì štìstí, Zasvìcenèe.}
+{164}{}{Zøejmì jsme se zmýlili. Starší, promiòte, že jsem vás pøipravil o èas. Mohl by prosím nìkdo odstranit tuhle mentální zrùdu?}
 {165}{}{Nemám èas, musím plánovat naši obrannou strategii.}
 {166}{}{Obdržel jsi }
-{167}{}{ zkušenostních bodù za to, že se ti podaøilo pøesvìdèit Starší, aby ti pomohli s útokem na vojenskou základnu Mariposa.}
+{167}{}{ zkušenostních bodù za to, že se ti podaøilo pøesvìdèit Bratrstvo oceli, aby ti pomohlo s útokem na vojenskou základnu Mariposa.}
 
 # Fo1in2
-{168}{}{ zkušenostních bodù za to, že se ti podaøilo pøesvìdèit Starší, aby ti pomohli s útokem na Katedrálu.}
+{168}{}{ zkušenostních bodù za to, že se ti podaøilo pøesvìdèit Bratrstvo oceli, aby ti pomohlo s útokem na Katedrálu v Kostnici.}

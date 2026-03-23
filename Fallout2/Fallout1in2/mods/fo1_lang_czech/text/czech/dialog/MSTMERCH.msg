@@ -24,7 +24,7 @@
 {123}{}{Jestli mi mùeš vìøit?!?  Mì bìnì vìøí mnohem vìtší paranoici ne ty, e jim dopravím vodu! Kdo si myslíš, e jsme? Teroristi?}
 {124}{}{Dobøe, fajn. Kolik chceš penìz za vypravení té karavany.}
 {125}{}{Omlouvám se. Nechtìl jsem tím nic naznaèovat, ale nemohu si dovolit tohle riziko.}
-{126}{}{Dobøe, pokud zmìníš názor, dej mi vìdìt. Jsem a to zvìdav.}
+{126}{}{Dobøe, pokud zmìníš názor, dej mi vìdìt. Jsem na to zvìdav.}
 {127}{}{Ahoj.}
 {128}{}{Potøebuju vodní èip.}
 {129}{}{Poøád hledám vodní èip.}
@@ -38,13 +38,13 @@
 {137}{}{No, je to jenom dohad. Pokoušeli jsme se zavést obchodní cestu pro karavany s vodou do Nekropole, ale odmítli s námi obchodovat. Nikdo se zdravım rozumem v dnešních dobách neodmítne zásobování vodou, pokud nemá vlastní zdroj. Pøedpokládám, e mají svou vlastní èistièku, jinak u by dávno pomøeli.  Tak co, máš zájem, abychom do tvého Vaultu vypravili vodní karavanu?}
 {138}{}{Jo, kolik mì to bude stát?}
 {139}{}{Ne díky.}
-{140}{}{No, je to dost daleko. 2000 babek by bylo za první karavanu a jsem si jist, e tvùj Vault má nìco ke smìnì, aby se nám tam vyplatilo cestovat. Nicménì s našimi souèasnımi zásobami pøedpokládám, e budeme schopni tvému Vaultu dodat vodu aspoò na dalších 100 dní.}
+{140}{}{No, je to dost daleko. 2000 zátek by bylo za první karavanu a jsem si jist, e tvùj Vault má nìco ke smìnì, aby se nám tam vyplatilo cestovat. Nicménì s našimi souèasnımi zásobami pøedpokládám, e budeme schopni tvému Vaultu dodat vodu aspoò na dalších 100 dní.}
 {141}{}{Platí, tady jsou peníze.}
 {142}{}{Ve Vaultu vám budou schopni uhradit vìtšinu z vašich poèáteèních nákladù.  Co kdybych dal pro zaèátek jenom 1000.}
-{143}{}{Do je trochu moc, ale ve Vaultu mají spousty zboí, za které se vám ta cesta rozhodnì vyplatí. Tak co takhle tøeba 500?}
+{143}{}{To je trochu moc, ale ve Vaultu mají spousty zboí, za které se vám ta cesta rozhodnì vyplatí. Tak co takhle tøeba 500?}
 {144}{}{Nemám hotovost, vrátím se, jen co ji budu mít.}
 {145}{}{Zdá se, e nemáš dost penìz, vra se, a se to zmìní. Pamatuj, e potøebuješ }
-{146}{}{ babek.}
+{146}{}{ zátek.}
 {147}{}{Platí, zaènu posílat karavany u ode dneška. Teï bys mìl asi vìdìt, e karavany jsou pomìrnì viditelné kolony cestující napøíè pouští. Take jejich vysláním usnadníš práci komukoli, kdo by snad z jakéhokoli dùvodu pátral po tvém Vaultu. Ještì jseš si jistı, e chceš zaèít se zasíláním vody?}
 {148}{}{No, myslím, e ne.}
 {149}{}{Ano, Vault potøebuje vodu.}
@@ -54,10 +54,10 @@
 {153}{}{Je mi líto, ale musím poadovat plnou cenu.}
 {154}{}{Zaplatíš poadovanou sumu, abychom mohli zaèít vypravovat karavany?}
 {155}{}{Fajn, zaèneme vypravovat karavany v nejbliších hodinách.}
-{156}{}{Je mi líto, ale Kupci s vodou s tebou u spolupracovat nebudou.}
+{156}{}{Je mi líto, ale Obchodníci s vodou s tebou u spolupracovat nebudou.}
 {157}{}{Máš poadovanıch }
-{158}{}{ , abychom mohli zaèít vypravovat karavany do tvého Vaultu?}
+{158}{}{ zátek, abychom mohli zaèít vypravovat karavany do tvého Vaultu?}
 
 # 200-201 added with patch 1.3 from TeamX
-{200}{}{... Coe? ... K èertu. Jsi to TY? Po tom, co jsme kvùli tobì ztratili všechny karavany, si sem dovolíš strkat svùj rypák? Táhni odsud, tady u práci nikdy nedostaneš!}
+{200}{}{...Coe? ...K èertu. Jsi to TY? Po tom, co jsme kvùli tobì ztratili všechny karavany, si sem dovolíš strkat svùj rypák? Táhni odsud, tady u práci nikdy nedostaneš!}
 {201}{}{TY? Vùbec nic mi neøíkej. K sakru, ty jsi je tam nechal! Nevím, jestli teï nedìlám chybu, ale dám ti ještì jednu šanci. Jdi si promluvit s vedoucím karavany.}

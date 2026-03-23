@@ -1,5 +1,5 @@
-{100}{}{Vidíš Holodisk.}
-{101}{}{Pip Boy ukazuje: Naèítám data z disku.}
+{100}{}{Vidíš holodisk.}
+{101}{}{Pip-Boy 2000 ukazuje: „Naèítám data... ... ... Hotovo. Hezký den!“}
 {102}{}{Na tomto disku je uložen nìjaký zábavní program.}
 {103}{}{Tento disk je pøíliš znièen, než abys z nìj mohl cokoli pøeèíst.}
 {104}{}{Na tomto disku je zaznamenáno heslo pro nìjaký jiný disk.}

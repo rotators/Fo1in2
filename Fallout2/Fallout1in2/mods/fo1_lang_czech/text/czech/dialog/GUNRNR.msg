@@ -1,7 +1,7 @@
 {100}{}{Hej! Co si myslíš, že dìláš?!}
-{101}{}{Hej, nemáš nìjakou Nuka Colu?}
+{101}{}{Hej, nemáš nìjakou Nuka-Colu?}
 {102}{}{Dobrý obchod.}
-{103}{}{Gabriel je velký šéf.}
+{103}{}{Gabriel je skvìlej šéf.}
 {104}{}{To je ale krásnì, co?}
 {105}{}{Jestli hledáš výzbroj, promluv si se Zackem.}
 {106}{}{Zack prodává zbranì.}

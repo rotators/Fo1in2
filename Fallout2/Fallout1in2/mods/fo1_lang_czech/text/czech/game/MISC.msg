@@ -41,8 +41,8 @@
 {1005}{}{Trpíš vnitøním krvácením a silným prùjmem. Oteklo ti celé tìlo a zmítáš se v tìžké agónii.}
 {1006}{}{Umíráš v agónii na nemoc z ozáøení.}
 {1007}{}{Zasáhla tì silná dávka radiace.}
-{1008}{}{Geigerùv pøístroj pípá.}
-{1009}{}{Geigerùv pøístroj divoce pípá.}
+{1008}{}{Geigerùv èítaè pípá.}
+{1009}{}{Geigerùv èítaè divoce pípá.}
 #
 # Message used in actions.c
 #
@@ -85,7 +85,7 @@
 #
 # from worldmap.c -- Fallout 2
 #
-{8500}{}{Získáváš %d zkušenostních bodù za úspìšné použití schopnosti "Pøežití v pustinì".}
+{8500}{}{Získáváš %d zkušenostních bodù za úspìšné použití schopnosti „Pøežití v pustinì“.}
 
 #
 # from party.c -- Fallout 2
@@ -108,7 +108,7 @@
 {9032}{}{Všechno to cestování se koneènì zaèíná vyplácet.}
 {9033}{}{Nauèil jsem se pár nových fíglù.}
 
-{9040}{}{Ach bože... Já se z toho opravdu nìco nauèil.} # pMKatja_PID
+{9040}{}{Ach bože... Já jsem se z toho opravdu nìco nauèila.} # pMKatja_PID
 {9041}{}{Stále je toho tolik, co se mùžeme nauèit.}
 {9042}{}{Myslím, že tomu koneènì zaèínám pøicházet na kloub.}
 {9043}{}{Nemùžu uvìøit, že jsem stále naživu.}

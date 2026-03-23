@@ -4,7 +4,7 @@
 # Buttons
 {0}{}{ULOŽIT HRU}
 {1}{}{NAÈÍST HRU}
-{2}{}{NASTAVENí}
+{2}{}{NASTAVENÍ}
 {3}{}{KONEC HRY}
 {4}{}{OK}
 #
@@ -30,7 +30,7 @@
 {117}{}{HLASITOST ØEÈI}
 {118}{}{ÚROVEÒ JASU}
 {119}{}{CITLIVOST MYŠI}
-{120}{}{VYCHOZÍ}
+{120}{}{VÝCHOZÍ}
 {121}{}{ZRUŠIT}
 {122}{}{Zrychlení hráèovy postavy pøi boji}
 {123}{}{Pip-Boy øeè}

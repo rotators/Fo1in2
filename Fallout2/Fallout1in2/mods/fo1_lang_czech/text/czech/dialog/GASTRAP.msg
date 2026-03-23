@@ -1,4 +1,4 @@
-{100}{}{Uh oh, sakra.}
+{100}{}{No nazdar.}
 {101}{}{Spustil jsi plynovou past a pøišel o jeden hit bod.}
 {102}{}{Spustil jsi plynovou past a pøišel o }
 {103}{}{ hit bodù.}

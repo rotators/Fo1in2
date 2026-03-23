@@ -24,21 +24,21 @@
 
 
 # Floats cool
-{150}{}{To je vaše, Pane?}
-{151}{}{To je vaše, Paní?}
+{150}{}{To je vaše, pane?}
+{151}{}{To je vaše, paní?}
 {152}{}{Ty jsi tak cool!}
 {153}{}{Tak cool!}
-{154}{}{Mùj strejda øíká že jsi náfuka!}
+{154}{}{Mùj strejda øíká, že jsi náfuka!}
 {155}{}{Až vyrostu, chci být jako ty!}
 {156}{}{Kéž by to mohl vidìt Jason!}
 {157}{}{Mùžu jít s tebou?}
 {158}{}{Tak jedem! BRRRRRR!}
-{159}{}{Tohle je lepší než pitomé bráhmíní karavany!}
+{159}{}{Tohle je mnohem lepší než ty pitomý brahmíní káry!}
 {160}{}{Ty jsi tady z okolí?}
 {161}{}{Ještì jsem tì tady nevidìl.}
 {162}{}{Ty jsi tady nový, že?}
 {163}{}{Zùstaneš s námi?}
-{164}{}{Nevypadáš moc strašidìlnì!}
+{164}{}{Nevypadáš moc strašidelnì!}
 {165}{}{!}
 {166}{}{Nic neukradu! Slibuju!}
 {167}{}{}

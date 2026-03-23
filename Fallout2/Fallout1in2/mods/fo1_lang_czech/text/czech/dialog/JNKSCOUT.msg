@@ -4,7 +4,7 @@
 {103}{}{Co tady dìláš?}
 {104}{}{Kde je nejbližší mìsto?}
 {105}{}{Nic, díky.}
-{106}{}{Uhh . . .}
+{106}{}{Uhh...}
 {107}{}{Jsem zvìd.}
 {108}{}{Pátrám po nájezdnících a monstrech.}
 {109}{}{Asi Junktown. Není to odsud moc daleko.}

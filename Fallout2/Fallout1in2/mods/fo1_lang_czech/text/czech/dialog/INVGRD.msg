@@ -11,14 +11,14 @@
 {110}{}{Nevyrušuj, máme poplach.}
 {111}{}{Potichu.}
 {112}{}{Nezdruj mì, zasvìcenèe.}
-{113}{}{Buï pøipraven, cizinèe.}
-{114}{}{Dost, ne vypukne krveprolití.}
+{113}{}{Zavøi klapku, cizinèe.}
+{114}{}{Zmiz, cizáku, ne poteèe další krev.}
 {115}{}{Svìt musí bıt zbaven tìchto zrùdnıch ohavností.}
 {116}{}{Co to bylo?}
-{117}{}{Dostal jsem to do nohy.}
+{117}{}{Bolej mì nohy.}
 {118}{}{Za tohle zaplatí...}
 {119}{}{Jen a to zkusí znovu.}
-{120}{}{Co to ... Oh, to nic.}
+{120}{}{Co to... Oh, to nic.}
 {121}{}{Buï ve støehu!}
 {200}{}{Bobe, jaká je situace?}
 {201}{}{Všechno èistı.}

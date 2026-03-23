@@ -46,17 +46,17 @@
 {139}{}{Systém:ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿPrimární zdroj energie:ÿÿÿÿÿÿÿÿÿÿÿÿVYPNUTO ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿNouzovı zdroj energie:ÿÿÿÿÿÿÿÿÿÿVYPNUTO}
 {140}{}{Zapnout nouzovı generátor}
 {141}{}{d**gn*s* pr*m*r* z*d*rj}
-{142}{}{pr*m*r* p*w*r *v*l**t**n}
-{143}{}{*n*bl* *m*rg*nc* p*w*r}
-{144}{}{p*w*r m*n*g*m*nt r*s*rc*}
+{142}{}{pr*m*rn* z*dr*j *v*l**c*}
+{143}{}{z*pn**t n**z*v* z*dr*j}
+{144}{}{o*vl*d*n* *n*rg*t*ck*ch s*st*m*}
 {145}{}{Exit}
-{146}{}{S*st*m *rr*r!
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ*nv*l*d *s*r. n*t*f* *dm*n*str*t**n.
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿS*st*m h*lt*d.}
+{146}{}{Ch*b* s*st*m*!
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿN*pl*tn* **v*t*l. K*nt*kt*jt* *dm*n*str*c*.
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿS*st*m z*st*v*n.}
 {147}{}{Exit}
-{148}{}{d*s*bl* *m*rg*nc* p*w*r}
+{148}{}{v*pn**t n**z*v* z*dr*j}
 
-{200}{}{Pøístup do Hlavního menu.}
+{200}{}{Získat pøístup k centrálnímu poèítaèi.}
 {201}{}{Pøístup zamítnut. Spojení ukonèeno.}
 {202}{}{Vstup povolen.}
 {203}{}{Hlavní menu}
@@ -68,11 +68,11 @@
 {209}{}{Informace o vızkumu}
 {210}{}{Øízení energetickıch systémù}
 {211}{}{Vızkumné zaøízení West Tech:
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿZaloeno v r. 2002 jakoto soukromı dodavatel pro vládu Spojenıch Státù. Hned od poèátku bylo tìištì hlavních prací pøesunuto do dvou samostatnıch divizí - divize vızkumu Perspektivních Zbraòovıch Systémù a divize Biomedicíny.}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿZaloeno v r. 2002 jakoto soukromı dodavatel pro vládu Spojenıch Státù. Spoleènost se zpoèátku skládala ze dvou divizí – divize vızkumu perspektivních zbraòovıch systémù a divize biomedicíny.}
 {241}{}{ V r. 2069 byl u West Tech nejvìtší samostatnı dodavatel vlády Spojenıch Státù. 
-Jeho nejvıznamnìjším kontraktem byla dodávka Energozbroje Model T-51b. }
-{242}{}{Po úspìchu NBC v projektu Pan-Imunitního viru v r. 2076, pøesunula vláda Spojenıch Státù tento tım}
-{243}{}{ v obavì ze špionáe do West Tech a zahájila práci na projektu FEV (Forced Evolutionary Virus).}
+Jeho nejvıznamnìjším kontraktem byla dodávka energozbroje Model T-51b. }
+{242}{}{Po úspìchu NBC v projektu Pan-imunitního viru v r. 2076 pøesunulo Ministerstvo obrany Spojenıch státù v obavì z mezinárodní špionáe tım}
+{243}{}{ pøímo na místo, aby zajistil a dohlíel na projekt, nyní pøejmenovanı na FEV (Forced Evolutionary Virus).}
 {212}{}{Bezpeènost:
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní roboti: Aktivováni}
 {213}{}{Bezpeènost:
@@ -83,54 +83,56 @@ Jeho nejvıznamnìjším kontraktem byla dodávka Energozbroje Model T-51b. }
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  Veškeré záznamy vızkumné základny West Tech}
 {217}{}{Záznamy zamìstnancù divize Vızkumu}
 {218}{}{Energozbroj. Statut: Vızkum ukonèen}
-{219}{}{FEV (Force Evolutionary Virus). Statut: Probíhá vızkum}
+{219}{}{FEV (Forced Evolutionary Virus). Statut: Probíhá vızkum}
 {220}{}{Osobní záznamy}
 {221}{}{Robert Anderson
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vızkumník-Asistent
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská báze Mariposa}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská základna Mariposa}
 {222}{}{Nick Davis
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Øeditel divize NBC základny West Tech
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumná báze West Tech}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumné zaøízení West Tech}
 {223}{}{John Isaac
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vızkumník-Asistent
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Èervená
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumná základna West Tech}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumné zaøízení West Tech}
 {224}{}{Steve Remco
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vızkumník-Asistent
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská báze Mariposa}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská základna Mariposa}
 {225}{}{Charles Rignhold
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vedoucí vızkumu Laserovıch zbraní
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vedoucí vızkumu laserovıch zbraní
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumná základna West Tech}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumné zaøízení West Tech}
 {226}{}{Michele Santose
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  Technik-laborant
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Èervená
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumná základna West Tech}
-{227}{}{Thomas Zvelebil
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿPokusnı objekt è. 0018298. Po aplikaci FEV zjištìn silnı úbytek mozkové hmoty s pøímou vazbou na sníení duševní kapacity. Subjekt je schopen pouze nejjednodušších èinností, jako je pøíjem potravy, vymìšování, hraní poèítaèovıch her a psaní recenzí na nì. ÿÿÿUmístìní: Nejmenovanı èasopis}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vızkumné zaøízení West Tech}
+{227}{}{Erin Shellmanová
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  Technik-laborant
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská základna Mariposa}
 {228}{}{Leon VonFelden
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Vedoucí vızkumu FEV
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBezpeènostní provìøení: Modrá
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská báze Mariposa}
-{229}{}{Nahrát záznamy do PIPBoye}
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿUmístìní: Vojenská základna Mariposa}
+{229}{}{Nahrát záznamy do Pip-Boye 2000}
 {230}{}{ZPÌT}
 {231}{}{Specifikace Energo zbroje:
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  Model T-51b Aktivního Pìchotního
  Brnìní (zkrácenì Energo zbroj) je zkonstruován s vyuitím nejmodernìjších aktivních i pasivních ochrannıch prvkù a to pro civilní i vojenské pouití. }
-{250}{}{Mikro-fúzní reaktor TX-28 generuje 60.000 Wattù pro napájení hydraulickıch systémù zabudovanıch pøímo do konstrukce obleku. }
+{250}{}{Mikro-fúzní reaktor TX-28 generuje 60 000 Wattù pro napájení hydraulickıch systémù HiFlo zabudovanıch pøímo do konstrukce obleku.}
 {251}{}{Povrch obleku T-51b je vyroben z nejmodernìjších, velice lehkıch polylaminátovıch kompozitù a je schopen absorbovat více ne 2.500 Joulù kinetické energie na ètvereèní centimetr. }
 {252}{}{Napaøovanı pláš ze støíbra o tloušce 10 mikronù je schopen odrazit laserové a radiaèní emise, ani by pøitom byl poškozen vnitøní kompozitovı povrch.}
 {232}{}{FEV resumé:
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  2073. Jak se s rozvojem jejich biologickıch zbraní postupnì zvyšovala i agresivita Èíny, cítila vláda Spojenıch Státù nutnost protiopatøení. Z tohoto dùvodu byl 15-tého záøí 2073 oficiálnì zahájen projekt Pan-Imunitního Viru (PIV) . }
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ  2073. Jak se s rozvojem jejich biologickıch zbraní postupnì zvyšovala i agresivita Èíny, cítila vláda Spojenıch Státù nutnost protiopatøení. Z tohoto dùvodu byl 15. záøí 2073 oficiálnì zahájen projekt Pan-Imunitního Viru (PIV).}
 {233}{}{2075. Stále zøetelnìji se ukazuje, e nejlepší zpùsob jak bojovat s novì vytváøenımi biologickımi zbranìmi je prostøednictvím modifikované DNA, tak aby tato u nebyla nadále citlivá vùèi standardním virovım infekcím.}
 {234}{}{2076. Velice brzy po zahájení projektu PIV se objevují nepøedvídané vedlejší efekty. Testy na zvíøecích subjektech naznaèují abnormální rychlost rùstu svalové i kostní tkánì, spojené se zvıšením mozkové aktivity. }
 {235}{}{Vláda Spojenıch Státù obdrela kompletní zprávu o tìchto objevech a v zájmu národní bezpeènosti se poté rozhodla pøemístit vızkumnı tım na lépe chránìné a støeené místo. Projekt dostal nejvyšší prioritu a byl pøejmenován na projekt FEV (Forced Evolutionary Virus).}
 {236}{}{2077. Projekt FEV se blíí úspìšnému zakonèení. Testy na laboratorních zvíøatech jsou témìø 100%-nì úspìšné. Velikost i hustota svalovıch vláken se v prùmìru zvyšují o 60%. Hodnota mìøitelné inteligence se zvyšuje a o 200%. }
-{237}{}{I kdy je teoreticky popsán, efekt na lidské subjekty zùstává dosud neznámı. }
-{238}{}{Protoe si vláda pøeje pokraèovat v dalším testování, je vybudováno velké zaøízení v lokaci Mariposa v centrální Kalifornii. V této nové základnì je FEV virus testován na dobrovolnících z øad armády.}
+{237}{}{Úèinky na lidské subjekty zùstávají neznámé, aèkoli jsou teoreticky slibné.}
+{238}{}{Protoe si armáda pøeje pokraèovat v dalším testování, je vybudováno velké zaøízení na vojenské základnì Mariposa v centrální Kalifornii. V této nové základnì je FEV virus testován na dobrovolnících z øad armády.}
 {239}{}{Rozkaz pøijat:
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿRozkaz proveden}
 {240}{}{Pøístup nepovolen}

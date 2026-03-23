@@ -10,4 +10,4 @@
 {109}{}{Pojïme nìco dìlat.}
 {110}{}{Proè nìkoho nesejmout?}
 {111}{}{Chci nìjakou zábavièku.}
-{112}{}{Uáá. . .}
+{112}{}{Uáá...}

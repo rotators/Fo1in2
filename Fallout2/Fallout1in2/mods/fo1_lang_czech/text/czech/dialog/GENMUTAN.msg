@@ -8,7 +8,7 @@
 {107}{}{To je v pohodì, já tu pracuju.}
 {108}{}{V pohodì, mám propustku.}
 {109}{}{Jsem ozbrojen se svolením Poruèíka.}
-{110}{}{Tohle je velezrada?!}
+{110}{}{Co má tohle bejt za zradu?!}
 {111}{}{Ukaž mi tedy svou propustku.}
 {112}{}{Ehh... musel jsem si ji nechat ve svém druhém odìvu.}
 {113}{}{Hele, koukej, pøidìlal jsem si ji na hlaveò pušky.}
@@ -23,19 +23,19 @@
 {122}{}{Žije ve 3. patøe, kde musí. Proè se ptáš tak hloupì?}
 {123}{}{Oh, uh, jen tak.}
 {124}{}{Protože ho jdu odsud vykopat, uh, nìkam do fakt velké dálky!}
-{125}{}{Ptám? Øíkal jsem: "Sláva Vùdcovi", sbohem.}
+{125}{}{Ptám? Øíkal jsem: „Sláva Vùdcovi“, sbohem.}
 {126}{}{Ty mì urážíš! Zemøeš!}
 {127}{}{Chvála Jednotì.}
-{128}{}{Zní to, jako když nevìøíš, tomu, co øíkáš. Je to pravda? Nebo jsi opustil cestu pravdy?}
+{128}{}{Zní to, jako když nevìøíš tomu, co øíkáš. Je to pravda? Nebo jsi opustil cestu spravedlnosti?}
 {129}{}{Asi tì zmátlo, jak se mi tøese hlas, ale to není strach, ale nìjaká chøipka nebo co.}
-{130}{}{Myslím, že tvùj druh je zatracen. Dokážu ti to s pomocí pár svých pøátel . . .}
+{130}{}{Myslím, že tvùj druh je zatracen. Dokážu ti to s pomocí pár svých pøátel...}
 {131}{}{Když se staneš jedním z nás, nebudeš se obávat povrchních vìcí. Jdi.}
 {132}{}{Co zas? Mám dost málo èasu na tlachání.}
 {133}{}{Labbo!}
-{134}{}{Mám málo èasu na tvùj život . . . Zemøi!}
+{134}{}{Mám málo èasu na tvùj život... Zemøi!}
 {135}{}{Nic, sorry.}
 {136}{}{Chval Jednotu, bratøe.}
-{137}{}{Kdo jsi? Poèkat . . . Argh! Vetøelec . . .}
+{137}{}{Kdo jsi? Poèkat... Argh! Vetøelec...}
 {138}{}{Hni se. Pracuj na svém dílu Jednoty a pøestaò mì obtìžovat!}
 {139}{}{Jdi.}
 {140}{}{Hni se. Pracuj na svém dílu Jednoty.}

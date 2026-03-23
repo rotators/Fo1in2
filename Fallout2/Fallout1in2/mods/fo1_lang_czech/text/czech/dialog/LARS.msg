@@ -1,26 +1,26 @@
 {100}{}{Vidíš nabušeného zjizveného maníka s poøádnım knírem.}
-{101}{}{Vidíš Larse, seranta z Junktownské stráe.}
-{102}{}{Má ještì nezahojené jizvy od posledních zranìní a vypadá jako poøádnı drsoò.}
+{101}{}{Vidíš Larse, seranta junktownské stráe.}
+{102}{}{Má jizvy od pøedchozích zranìní a vypadá jako poøádnı drsoò.}
 {103}{}{Má jizvy od bodnıch i støelnıch zranìní. Jeho svaly budí opravdu respekt.}
-{104}{}{To fakt není nejchytøejší vìc, snait se okrást stráe právì v Junktownu!}
+{104}{}{To fakt není nejchytøejší vìc, snait se okrást stráe právì v Junktownu, prevíte!}
 {105}{}{Mohu ti nìjak pomoci, cizinèe?}
 {106}{}{No, co se tu dá dìlat?}
 {107}{}{Mùeš mi øíct nìco o Junktownu?}
 {108}{}{Co seš zaè?}
 {109}{}{Eergh.}
-{110}{}{Pokud jsi jeden ze stránıch tady, tak bych mìl pro tebe informace.}
+{110}{}{Pokud máš na starosti stráe tady, tak bych mìl pro tebe informace.}
 {111}{}{Hej! Ty! Víme o tobì všechno, ty sadisto!}
-{112}{}{Hodnì, dokud zùstaneš na správné stranì. Máme tu obchod Killiana Darkwatera, kde si mùeš nakoupit nejnutnìjší veci. Taky tu je Gizmovo kasino, pokud chceš zkusit svoje štìstí. A nebo jestli chceš nìco ostøejšího k pití, tak mùeš zajít do Skum Pitt. Ale moc se tam nezøiï.}
+{112}{}{Hodnì, dokud zùstaneš na správné stranì. Máme tu obchod Killiana Darkwatera, kde si mùeš nakoupit nejnutnìjší vìci. Taky tu je Gizmovo kasíno, pokud chceš zkusit svoje štìstí. A nebo jestli chceš nìco ostøejšího k pití, tak mùeš zajít do Špinadíry. Ale moc se tam nezøiï.}
 {113}{}{Hej, poøádná rvaèka, to je ono!}
 {114}{}{No, radši by ses mìl ovládat. Máme tady svobodu, ale jenom voca poca. Nedìlej problémy, nebo si na tebe budeme muset došlápnout.}
 {115}{}{To jako vánì?!}
 {116}{}{Podívej, kámo, mùj úkol je udrovat tady poøádek a pokud budu kvùli tomu muset zlámat pár hnátù, tak to klidnì udìlám. Tak si raèi dej bacha.}
-{117}{}{Já a moji mui dìláme pro Killiana Darkwatera. Udrujeme tady poøádek a dríme na uzdì všechny ty vrahy, zlodìje a podobnou paká z pouštì. Pokud pøijmeš mojí radu, tak se radši dr dál od Gizma. To tlustı prase je namoèenı v pìknı špínì, ale zatím na to nemáme dùkazy. On a ta jeho banda Lebkounù si koledují si o poøádnej vıprask.}
-{118}{}{Teda pìkná nuda, tady . . .}
+{117}{}{Já a moji mui dìláme pro Killiana Darkwatera. Udrujeme tady poøádek a dríme na uzdì všechny ty vrahy, zlodìje a podobnou paká z pouštì. Pokud pøijmeš moji radu, tak se radši dr dál od Gizma. To tlustı prase je namoèenı v pìknı špínì, ale zatím na to nemáme dùkazy. On a ta jeho banda Lebkounù si koledujou o poøádnej vıprask.}
+{118}{}{Teda pìkná nuda, tady...}
 {119}{}{Je dobrı vìdìt, e se tu nìkdo stará o poøádek. Díky.}
 {120}{}{No, a co vám brání jednoduše Gizma a Lebkouny odprásknout?}
-{121}{}{No, je to naše práce. Ale je dobrı vìdìt, e jí dokáe nìkdo i ocenit. Díky.}
-{122}{}{To nejde jenom tak. Víme e Gizmo je namoèenej v nìjakı špínì, ale potøebujeme na to dùkaz. To samı s Lebkouny, sem tam nìjakıho zavøeme, ale to jim nebrání otravovat dál. Bohuel jsme zatím nezískali ádnı pøímı dùkaz o tom, e by se chystali nìkoho okrást nebo zavradit.}
+{121}{}{No, je to naše práce. Ale je dobrı vìdìt, e ji dokáe nìkdo i ocenit. Díky.}
+{122}{}{To nejde jenom tak. Víme, e Gizmo je namoèenej v nìjakı špínì, ale potøebujeme na to dùkaz. To samı s Lebkouny, sem tam nìjakıho zavøeme, ale to jim nebrání otravovat dál. Bohuel jsme zatím nezískali ádnı pøímı dùkaz o tom, e by se chystali nìkoho okrást nebo zavradit.}
 {123}{}{Moná bych vám mohl pomoct.}
 {124}{}{Dobøe, hodnì štìstí.}
 {125}{}{No teda, pokud by se ti podaøilo získat cokoliv, budeme ti zavázaní. Zajdi za Killianem a promluv si s ním o Gizmovi. A kdyby se ti podaøilo zjistit nìco na Lebkouny, tak se jen zastav a my u si to s nima nìjak vyøídíme.}
@@ -41,7 +41,7 @@
 {140}{}{Ano, velím tady stráím. Co pro mì máš?}
 {141}{}{Nic, jen to tak zkouším.}
 {142}{}{Mám nìjaké dùkazy od Sherry, e Lebkouni jsou namoèenı v nìjakı špínì.}
-{143}{}{No, pokud máš nìco na Lebkouny, tak se neboj mi to øíct . . .}
+{143}{}{No, pokud máš nìco na Lebkouny, tak se neboj mi to øíct...}
 {144}{}{Úèastnili se nìkolika vrad a krádeí tady okolo.}
 {145}{}{Pøemluvil jsem jednu z nich, Sherry, aby proti nim svìdèila.}
 {146}{}{To je sice skvìlı, ale já je nemùu zavøít jenom proto, e nìkdo o nich øíká špinavosti. Potøebuju nìjakı nezvratnı dùkaz nebo nìkoho z nich, kdo bude ochotnı svìdèit.}
@@ -54,7 +54,7 @@
 {153}{}{Padej dál, kámo.}
 {154}{}{ zkušenosti za získání dùkazù proti Lebkounùm.}
 {155}{}{Si pøipravenı na Gizma?}
-{156}{}{Jasnì. Ustøelíme mu ptáka . . .}
+{156}{}{Jasnì. Ustøelíme mu ptáka...}
 {157}{}{Ne, rozmyslel jsem si to.}
 {158}{}{Dobøe, jdeme na to.}
 {159}{}{No, tak tady radši poèkej, aby tì netrefila nìjaká ta zbloudilá kulka.}
@@ -67,8 +67,8 @@
 {166}{}{Lebkouni plánujou sejmout Neala!}
 {167}{}{Larsovi mui Lebkouny rychle rozdrtili.}
 {168}{}{Lars zøejmì ještì ije, ale u si nezabojuje.}
-{169}{}{Chlape, to si pìknì posral. Potøebovali jsme dùkaz, abychom mohli dostat Gizma èistì a legálnì. Mezi námi, jsem sice rád, e jsi se toho tlusocha zbavil, ale radši mi padej z oèí a ve mìstì se u se neukazuj.}
-{170}{}{Lidi jako ty tady nechceme. Máš patnáct sekund, ne ti upálím tu tvojí palici.}
+{169}{}{Chlape, to si pìknì posral. Potøebovali jsme dùkaz, abychom mohli dostat Gizma èistì a legálnì. Mezi námi, jsem sice rád, e jsi se toho tlusocha zbavil, ale vradu schvalovat nemùem. Radši mi padej z oèí a ve mìstì se u neukazuj.}
+{170}{}{Lidi jako ty tady nechceme. Máš patnáct sekund, ne ti upálím tu tvoji palici.}
 {171}{}{Zdravím tì! Co pro tebe mùu udìlat tentokrát?}
 {172}{}{Uh-huh.}
 {173}{}{Nuh-uh.}
@@ -76,7 +76,7 @@
 
 {970}{}{To je moje jméno.}
 {971}{}{Mluvíš se mnou.}
-{972}{}{To jsem já}
+{972}{}{To jsem já.}
 
 {980}{}{O tom nic nevím.}
 {981}{}{Promiò, nemám páru.}
@@ -98,7 +98,7 @@
 {1013}{}{Fallout}
 {1014}{}{zlocin|zlodej}
 {1015}{}{Necropolis|Nekropolis}
-{1016}{}{Pohrebiste}
+{1016}{}{Boneyard|The Boneyard|L.A. Boneyard|LA|Los Angeles|LA Boneyard|Kostnice|L.A. kostnice|LA kostnice}
 {1017}{}{zvesti}
 {1018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
 {1019}{}{lebkouni}
@@ -114,22 +114,22 @@
 {1103}{}{Hmm, myslím e je to nìjaká malá vesnice. Nikdy jsem tam nebyl.}
 {1104}{}{Velké mìsto na jihu.}
 {1105}{}{Coe co? Promiò, nemám zdání.}
-{1106}{}{Je to velká budova v severozápadní èásti mìsta. }
+{1106}{}{Je to velká budova v severozápadní èásti mìsta.}
 {1107}{}{Killian má obchod v centru mìsta.}
 {1108}{}{O tom nic nevím, ale jméno je to pìknì dìsivé.}
-{1109}{}{Pokud jsi zranìnı, Doktor Morbid se o tebe postará. Jeho klinika je na jihu.}
+{1109}{}{Pokud jsi zranìnı, doktor Morbid se o tebe postará. Jeho klinika je na jihu.}
 {1110}{}{Killian Darkwater vede místní obchod. Tam mùeš nakupovat a prodávat co hrdlo ráèí.}
-{1111}{}{V pustinách máme hlídky. Je to nebezpeèné místo, ale zvládáme to. }
-{1112}{}{Killian vede místní obchod. Pokud se chceš napít, bar Skunèí díra je na severu. Jestli si chceš zahrát, je tu Gizmovo kasíno.}
-{1113}{}{Nejlepší je zálést si do nìjakého Vaultu}
+{1111}{}{V pustinách máme hlídky. Je to nebezpeèné místo, ale zvládáme to.}
+{1112}{}{Killian vede místní obchod. Pokud se chceš napít, Špinadíra je na severu. Jestli si chceš zahrát, je tu Gizmovo kasíno.}
+{1113}{}{Jsem rád, e u dlouho takhle nepršelo.}
 {1114}{}{Pokud tì pøistihnou pøi krádei, tak tì povìsí.}
-{1115}{}{Myslíš Mìsto mrtvıch? Slyšel jsme jen zvìsti.}
-{1116}{}{Tuším, e leí nìkde daleko na jihu}
+{1115}{}{Myslíš Mìsto mrtvıch? Slyšel jsem jen zvìsti.}
+{1116}{}{Tuším, e leí nìkde daleko na jihu.}
 {1117}{}{Hmm, nic mì nenapadá.}
 {1118}{}{To je náš místní bar. Jídlo ujde, ale pivo je skvìlé.}
 {1119}{}{Na ty je tøeba dávat si pozor. Proè se ptáš? Nìco ti udìlali?}
 {1120}{}{Tady s nima nemáme moc potíí, ale slyšel jsem, e na severu je to o dost horší.}
-{1121}{}{Pokud potøebuješ nìkde hlavu sloit, navštiv Crash House.}
+{1121}{}{Pokud potøebuješ nìkde hlavu sloit, navštiv Chrápárnu.}
 {1122}{}{Ne, díky.}
 {1123}{}{Náš hlavní zdroj obivy pøi obchodování s Hubem.}
 {1124}{}{Promluv si s Killianem. Je náš starosta a urèitì pro tebe bude nìco mít.}

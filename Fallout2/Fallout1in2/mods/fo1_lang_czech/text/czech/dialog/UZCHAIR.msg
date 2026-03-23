@@ -1,1 +1,1 @@
-{100}{}{Sebral jsi klíè ze štìrbiny v køesle.}
+{100}{}{Vytáhneš klíè ze štìrbiny v køesle.}

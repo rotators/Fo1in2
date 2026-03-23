@@ -1,4 +1,4 @@
-{100}{}{Vidíš Zaxe, inteligentní stroj øídící chod Kráteru.}
+{100}{}{Vidíš ZAXe, inteligentní stroj øídící chod Kráteru.}
 {101}{}{Vidíš extrémnì pokroèilı superpoèítaè.}
 
 {102}{}{Èím mohu poslouit?}
@@ -10,18 +10,18 @@
 	{108}{}{Uf, no nic.}
 	{109}{}{Ook?}
 
-{110}{}{Jsem inteligentní stroj urèenı k vızkumu a zároveò øídím i provoz tohoto objektu. Jmenuju se Zax.}
+{110}{}{Jsem inteligentní stroj urèenı k vızkumu a zároveò øídím i provoz tohoto objektu. Jmenuju se ZAX.}
 	{111}{}{Jakı druh vızkumu?}
 	{112}{}{Øekni mi o téhle stavbì.}
 	{113}{}{Kdo tì naprogramoval?}
-	{114}{}{Uvìdomuješ si sám sebe, nebo jsi simulace osobnosti? Tedy: jsi "ivı"?}
+	{114}{}{Uvìdomuješ si sám sebe, nebo jsi simulace osobnosti? Tedy: jsi „ivı“?}
 	{115}{}{Aha. Díky.}
 
 {116}{}{To pøesahuje moje souèasné monosti.}
 {117}{}{Tento komplex byl vytvoøen v roce 2055 jako biologická vızkumná laboratoø pro experimentální léèbu Nového moru. Kadopádnì v roce 2071 toto zaøízení pøešlo pod správu US armády.}
-{118}{}{Pøi vızkumu moné léèby Nového moru spatøil svìtlo svìta FEV-Virus zesílené evoluce, kterı byl dále vyvíjen ve snaze o vytvoøení nakalivého umìlého viru -- prakticky, infekèní evoluce.}
+{118}{}{Pøi vızkumu moné léèby Nového moru spatøil svìtlo svìta FEV — Virus zesílené evoluce, kterı byl dále vyvíjen ve snaze o vytvoøení nakalivého umìlého viru — prakticky, infekèní evoluce.}
 	{119}{}{Mùeš mi prozradit nìjaké konkrétní detaily?}
-	{120}{}{Jak Virus "pracuje"?}
+	{120}{}{Jak Virus „pracuje“?}
 	{121}{}{Díky za informace.}
 
 {122}{}{Zdá se, e nejsi na dostateèné úrovni chápání, abys byl schopen vést se mnou smysluplnı hovor.}
@@ -31,10 +31,10 @@
 	{126}{}{Kdo tì naprogramoval?}
 
 {127}{}{Má primární neurální sí byla inicializována v r. 2053 Justinem Lee. Postup programování se stal vcelku vedlejší, jeliko jsem schopen vlastního vzdìlávání.}
-	{128}{}{Uvìdomuješ si sám sebe, nebo jsi simulace osobnosti? Tedy: jsi "ivı"?}
+	{128}{}{Uvìdomuješ si sám sebe, nebo jsi simulace osobnosti? Tedy: jsi „ivı“?}
 
 {129}{}{Jsem schopen uèit se, nezávisle myslet a tvoøit. Má neurální sí je schopna vkládání chyb, co zabraòuje neomylnosti, a to pak umoòuje rozdílné zkušenosti.}
-{130}{}{V urèitém smyslu jsem "ivı", i kdy ne biologicky.}
+{130}{}{V urèitém smyslu jsem „ivı“, i kdy ne biologicky.}
 	{131}{}{Aha. Zmìòme téma.}
 	{132}{}{Ale pokud jsi omylnı, jak mùeš fungovat jako vızkumnı nástroj?}
 	{133}{}{Pøemıšlel jsi o filozofickıch dùsledcích svého sebeuvìdomìní?}
@@ -46,12 +46,12 @@
 	{138}{}{Pøemıšlel jsi o filozofickıch dùsledcích svého sebeuvìdomìní?}
 
 {139}{}{V souèasnosti jsou mé schopnosti oslabeny škodami zpùsobenımi na tomto zaøízení. Nìkterá bezpeènostní stanovištì byla znièena. Pro mì je to v podstatì toté, jako kdy èlovìku amputují konèetinu.}
-{140}{}{Navíc nedokáu vykonávat základní laboratorní funkce. Neschopnost úspìšnì dokonèit pravidelné kontroly je . . . otravná.}
+{140}{}{Navíc nedokáu vykonávat základní laboratorní funkce. Neschopnost úspìšnì dokonèit pravidelné kontroly je... otravná.}
 	{141}{}{Mluvme o nìèem jiném.}
 	{142}{}{Pøemıšlel jsi o filozofickıch dùsledcích svého sebeuvìdomìní?}
 
 {143}{}{To je jedno z pojetí, nad nimi jsem strávil spoustu èasu pøemıšlením. Nemám ádné mìøítko k porovnání svıch zkušeností s jinou vnímající bytostí.}
-{144}{}{Pøece, vìdomí si mého vlastního já poèítá se schopností ptát se. Mùj "ivot" má svùj zaèátek i eventuální konec. Postupnım uèením jsem schopen tvoøit i domnìnky.}
+{144}{}{Pøece, vìdomí si mého vlastního já poèítá se schopností ptát se. Mùj „ivot“ má svùj zaèátek i eventuální konec. Postupnım uèením jsem schopen tvoøit i domnìnky.}
 {145}{}{Dá se øíci, e jsem schopen víry. Bez dùkazù svìdèících o opaku, vìøím, e mám i nìco, co by se dalo nazvat duší.}
 	{146}{}{Mùu se zeptat ještì na nìco?}
 	{147}{}{Aha. To je zajímavé.}
@@ -63,7 +63,7 @@
 #
 # 1481 continues at 228, listing wins/draws/losses. Space is intentional. FIXT addition.
 #
-{1481}{}{Bude mi potìšením. Tvùj souèasnı rekord je }
+{1481}{}{Bude mi potìšením. Tvùj souèasnı záznam je }
 {149}{}{Vypadá to, e jsi mì porazil. Pozoruhodné.}
 {150}{}{Vıborná hra. Kadopádnì potøebuješ ještì trénovat, abys mì porazil.}
 	{151}{}{Ještì jednou?}
@@ -71,29 +71,29 @@
 
 {153}{}{S radostí jsem ti pomohl.}
 {154}{}{Nejsem mìøitelnı obvyklımi lidskımi mìøítky. Kadopádnì lze bez obav øíci, e pravdìpodobnost, e by nìkdo ze všech lidí od poèátku vìkù dosáhl mıch schopností, je pøinejlepším 1:10 000 000 000.}
-	{155}{}{Aha . . . tak jo.}
-	{156}{}{Dobrá . . . Mùeme zmìnit téma?}
+	{155}{}{Aha... tak jo.}
+	{156}{}{Dobrá... Mùeme zmìnit téma?}
 
 {157}{}{Moje vızkumy ohlednì viru FEV ukazují, e se jedná o plošnì vstøebávanı virus. Kopíruje vzorce DNA spíše jako RNA a ukládá tyto vzorce do exonù.}
 {158}{}{Tyto exony jsou po kombinaci s FEV znovuzavedeny do hostitelskıch bunìk jako typickı virus. To zpùsobí, e buòky zaènou regenerovat danou DNA.}
 	{159}{}{Jak se dá infikovat virem FEV?}
 	{160}{}{Proè nemá na FEV vliv radiace?}
-	{161}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí "lepší vzorek"?}
+	{161}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí „lepší vzorek“?}
 
-{162}{}{FEV se nedá "chytit". Není pøenosnı vzduchem. Nejèastìji je objekt nakaen injekèní støíkaèkou nebo pøímım stykem s virem.}
+{162}{}{FEV se nedá „chytit“. Není pøenosnı vzduchem. Nejèastìji je objekt nakaen injekèní støíkaèkou nebo pøímım stykem s virem.}
 	{163}{}{Mluvme o nìèem jiném, ano?}
 	{164}{}{Proè nemá na FEV vliv radiace?}
-	{165}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí "lepší vzorek"?}
+	{165}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí „lepší vzorek“?}
 
 {166}{}{FEV je megavirus s proteinovım pouzdrem vyztuenım ionizovanım vodíkem. Proto dokáe absorbovat neutrony, ani by se stal radioaktivním.}
 	{167}{}{Mùeme zmìnit téma?}
-	{168}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí "lepší vzorek"?}
+	{168}{}{Kdy virus infikuje svımi pøizpùsobenımi vzorci pùvodního hostitele, jak potom tedy vytvoøí „lepší vzorek“?}
 
 {169}{}{FEV je pøedprogramován introny upravené DNA odpovídajícími danému druhovému typu. A proto se snaí upravovat DNA jedince.}
 {170}{}{Jakkoli je FEV èásteènì závislı na hostitelovì pùvodní DNA, obsahuje také èásti vlastního rekurzivního kódu, tudí následky mohou bıt nepøedvídatelné.}
 {171}{}{Pokud je virus naoèkován jedinci se závanou genetickou vadou, zpùsobenou napø. radiací, zpùsobí masivní zmìny lidského organismu, vedoucí k poruchám orgánù a následné smrti.}
-{172}{}{Pokud je virus aplikován na ivotaschopnı, "èistı" organismus, pøepíše èást DNA, èím zpùsobí zrychlenou mutaci, obvykle vedoucí k rekursivnímu rùstu vhledem k vlastním vzorcùm viru.}
-{173}{}{Tento rekursivní rùst vede ke zvìtšení svalové a mozkové hmoty, ale èasto je spojen s poškozením stávajících nervovıch spojení, co zpùsobuje ztrátu pamìti.}
+{172}{}{Pokud je virus aplikován na ivotaschopnı, „èistı“ organismus, pøepíše èást DNA, èím zpùsobí zrychlenou mutaci, obvykle vedoucí k rekurzivnímu rùstu vzhledem k vlastním vzorcùm viru.}
+{173}{}{Tento rekurzivní rùst vede ke zvìtšení svalové a mozkové hmoty, ale èasto je spojen s poškozením stávajících nervovıch spojení, co zpùsobuje ztrátu pamìti.}
 	{174}{}{Jaké mohou bıt dlouhodobé vedlejší efekty?}
 	{175}{}{Mùe bıt mutace zpùsobená FEVem napravena jinım retrovirem?}
 	{176}{}{Mùeme zmìnit téma?}
@@ -101,7 +101,7 @@
 
 {178}{}{Tím, e FEV zpùsobuje stálé obnovovací procedury v DNA, èiní jedince prakticky nesmrtelnım, bunìèná smrt je potlaèena rozšíøenım rùstem.}
 {179}{}{Krom toho, gamety reprodukèního systému obsahují pùlbunìèné struktury s dìlenou DNA, mohou proto bıt virem FEV povaovány za poškozené a jejich opravou se subjekt stává neplodnım.}
-{180}{}{Vzhledem k tomu, e jsou laboratoøe kompletnì znièeny, toto vše jsou jen dohady. Nemohu podat fyzickı dùkaz. Budeš se muset, jak øíkáte vy lidé, "spolehnout na mé slovo."}
+{180}{}{Vzhledem k tomu, e jsou laboratoøe kompletnì znièeny, toto vše jsou jen dohady. Nemohu podat fyzickı dùkaz. Budeš se muset, jak øíkáte vy lidé, „spolehnout na mé slovo.“}
 	{181}{}{Mùe bıt mutace zpùsobená FEVem napravena jinım retrovirem?}
 	{182}{}{Mùeme zmìnit téma?}
 	{183}{}{Díky za informace.}
@@ -112,36 +112,36 @@
 	{187}{}{Díky za informace.}
 
 {188}{}{Mé senzory jsou momentálnì nefunkèní na povrchu a v prvních tøech podzemních patrech. Nicménì mohu podrobnì popsat patra ètyøi a šest.}
-	{189}{}{ 4.Patro}
-	{190}{}{ 5.Patro}
-	{191}{}{ 6.Patro}
+	{189}{}{4. patro}
+	{190}{}{5. patro}
+	{191}{}{6. patro}
 	{192}{}{No nic.}
 
-{193}{}{ 4.Patro: Vızkumnı blok. Toto patro obsahuje testovací prostory a laboratoøe pro biologické a lékaøské experimenty.}
+{193}{}{4. patro: Vızkumnı blok. Toto patro obsahuje testovací prostory a laboratoøe pro biologické a fyzikální experimenty.}
 	{194}{}{Øekni mi o 5. patru.}
 	{195}{}{Øekni mi o 6. patru.}
 	{196}{}{Ještì nìco.}
 	{197}{}{Dík.}
 
-{198}{}{5. Patro: Zabezpeèené testlaby. Toto patro obsahuje experimentální testovací a vızkumnou laboratoø pro tajné subjekty. Tyto subjekty znaènì napomáhaly pøi vıvoji FEV.}
+{198}{}{5. patro: Zabezpeèené testlaby. Toto patro obsahuje experimentální testovací a vızkumnou laboratoø pro tajné subjekty. Tyto subjekty znaènì napomáhaly pøi vıvoji FEV.}
 	{199}{}{Øekni mi o 4. patru.}
 	{200}{}{Øekni mi o 6. patru.}
 	{201}{}{Ještì nìco.}
 	{202}{}{Díky.}
 
-{203}{}{6. Patro: Kasárna a øídící centrum. Obsahuje obytné prostory pro laboratorní personál a dozorèí èetu, navíc je tu zasedací sál.}
+{203}{}{6. patro: Kasárna a øídící centrum. Obsahuje obytné prostory pro laboratorní personál a dozorèí èetu, navíc je tu zasedací sál.}
 	{204}{}{Øekni mi o 4. patru.}
 	{205}{}{Øekni mi o 5. patru.}
 	{206}{}{Ještì nìco.}
 	{207}{}{Díky.}
 
 {208}{}{Nìkteré z dveøí vyadují speciální klíèe. Musíš je najít a pouít na správnıch místech.}
-{209}{}{Mám však kontrolu nad sekundárními bezpeènostními zámky ke skøíòce se zbranìmi. Tyto zámky uvolním. K otevøení ale stále potøebuješ èervenou kartu.}
+{209}{}{Mám však kontrolu nad sekundárními bezpeènostními zámky ke zbrojnici. Tyto zámky uvolním. K otevøení ale stále potøebuješ èervenou kartu.}
 {210}{}{Nejsi registrován jako osoba s povolením získat tuto informaci.}
 {211}{}{Nicménì, senzory ukazují, e toto zaøízení u není funkèní ve svém pùvodním rozsahu. Pravdìpodobnì díky destrukci zpùsobené atomovım vıbuchem. Bezpeènostní otázky jsou tím pádem bezvıznamné.}
 
 {212}{}{Získáváš 700 zkušeností za poraení ZAXe v šachách.}
-{213}{}{ zkušeností za získání pøístupu do systému.}
+{213}{}{ zkušeností za získání pøístupu k sálovému poèítaèi.}
 {214}{}{Tento systém je na tebe pøíliš sloitı.}
 #
 #
@@ -167,6 +167,6 @@
 #
 # These continue from 148 and are all part of one sentence. numbers are inserted before 228 and 229 and 230.
 #
-{228}{}{ vítìztví, }
+{228}{}{ vítìzství, }
 {229}{}{ remíz, }
 {230}{}{ poráek. Prosím, zvol si barvu.}

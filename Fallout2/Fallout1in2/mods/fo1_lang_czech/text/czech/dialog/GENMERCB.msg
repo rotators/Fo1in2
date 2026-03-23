@@ -1,7 +1,7 @@
 {101}{}{Teï tvoje služby nepotøebuji. Možná pozdìji.}
 {102}{}{Pomoc! Zachraò mì!}
 {103}{}{Za to, co jsi udìlal, musíš zemøít!}
-{104}{}{Zachraò mì! Prosím!}
+{104}{}{Ušetøi mì! Prosím!}
 {105}{}{Už jsou mrtví? Možná jich tam je víc!}
 
 #

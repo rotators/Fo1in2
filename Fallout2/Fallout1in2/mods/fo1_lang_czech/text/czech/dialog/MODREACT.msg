@@ -13,9 +13,9 @@
 {104}{}{Dík.}
 {105}{}{OK, nashle.}
 #
-{106}{}{[Víc]}
+{106}{}{[Pokraèovat]}
 {107}{}{Zzzzz}
-{108}{}{[Hotovo]}
+{108}{}{[Odejít]}
 #
 # Translation note: 109 is referring to weapons,
 #   if you try to give a hired NPC a weapon they aren't allowed to equip.

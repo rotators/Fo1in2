@@ -1,4 +1,4 @@
-{100}{}{Vidíš ghoulího hlídaèe.}
+{100}{}{Vidíš ghúlího strážce.}
 {101}{}{Jdi pryè! Nejsi tu vítán.}
 {102}{}{Dobrá. Taky buï zdráv.}
 {103}{}{Ehe?}
@@ -12,10 +12,10 @@
 {111}{}{Je zavøeno až do soumraku.}
 {112}{}{Potøebuju se tam dostat. Myslíš, že bys mi mohl nìjak pomoct?}
 {113}{}{Hmm, dobøe.}
-{114}{}{Ugh!}
-{115}{}{Dobøe, snad to nemùže uškodit.}
-{116}{}{Hroznì rád bych ti pomohl, ale Set by mi za to mohl vyrvat støeva a nacpat mi je do huby. Víš, jak to je . . . dìlej vždycky to, co ti øeknou hlavouni.}
+{114}{}{Fuj!}
+{115}{}{Dobøe, snad to nemùže uškodit. Pojï dál, odemknu ti.}
+{116}{}{Hroznì rád bych ti pomohl, ale Set by mi za to mohl vyrvat støeva a nacpat mi je do huby. Víš, jak to je... dìlej vždycky to, co ti øeknou hlavouni.}
 {117}{}{Jo, jasnì, rozumím. Dík.}
 {118}{}{Díky!}
 {119}{}{Varoval jsem tì. Èas zemøít.}
-{120}{}{Ghoul tì ignoruje.}
+{120}{}{Ghúl tì ignoruje.}

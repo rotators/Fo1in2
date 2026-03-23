@@ -12,8 +12,8 @@
 # unknown
 {130}{}{Má to tøi oèi a jednu ruku.}
 # bet amount
-{140}{}{Minimální vklad je $}
-{141}{}{.}
+{140}{}{Minimální vklad je }
+{141}{}{ zátek.}
 # normal
 {150}{}{Máš pocit, e se na tebe dívá. }
 {151}{}{Jeho naleštìnı kryt a pozlacená páka svádivì záøí pod blikajícími svìtly. }
@@ -23,18 +23,18 @@
 {180}{}{Moná vıše vıhry vypadá velice lákavì. }
 
 # slot machine first play message
-{200}{}{(Natahuješ se pro mince a pøi tom se ti chvìje celá ruka. Automat ti neustále šeptá.) 
+{200}{}{(Natahuješ se pro mince a pøitom se ti chvìje celá ruka. Automat ti neustále šeptá.)
 *No tak, zlato... to je ono... jdeme na to... neškádli mì...*}
 {201}{}{Vidíš hrací automat. Jeho naleštìnı kryt a pozlacená páka svádivì záøí pod blikajícími svìtly. 
 Štìrbina na mince tì pøitahuje a ty cítíš, jak se ti ruce chvìjí nedoèkavostí.}
-{202}{}{(Natahuješ se pro mince a pøi tom se ti chvìje celá ruka. Automat ti neustále šeptá.) 
-*No tak, zlato... to je ono... chytni tu páku... chytni ji pevnì... jdeme na to... *}
+{202}{}{(Natahuješ se pro mince a pøitom se ti chvìje celá ruka. Automat ti neustále šeptá.)
+*No tak, zlato... to je ono... chytni tu páku... chytni ji pevnì... jdeme na to...*}
 
 # insert coin messages
-{250}{}{Vloit $}
+{250}{}{Vloit }
 {251}{}{. }
-{252}{}{Hrát posledních $}
-{253}{}{.}
+{252}{}{Hrát posledních }
+{253}{}{ zátku.}
 {254}{}{Pro dnešek skonèit.}
 {255}{}{Jsi na dnì. Musíš pro dnešek skonèit.}
 {256}{}{Pro dnešek skonèit.}
@@ -58,8 +58,8 @@
 {605}{}{DVOJITİ JACKPOT!!! }
 
 # payoff amount message
-{700}{}{Vıhra èiní $}
-{701}{}{.}
+{700}{}{Vıhra èiní }
+{701}{}{ zátek.}
 # symbol types
 # singular
 {1001}{}{tøešnièka}
@@ -81,7 +81,7 @@
 # float messages
 {2000}{}{*Pojï si zahrát ještì jednou, kovboji.*}
 {2001}{}{*Ahoj námoøníku.*}
-{2002}{}{*Vhoï minci a zatáhni za páku. Budu k tobì hodnı.*}
+{2002}{}{*Vhoï minci a zatáhni za páku. Budu k tobì hodná.*}
 {2003}{}{*Tik... tik... tíííík...*}
 {2004}{}{*Cink*}
 {2005}{}{*Bøink*}
@@ -98,7 +98,7 @@
 {2175}{}{(Jak tak zíráš na automat, uvìdomuješ si, e nemáš dost penìz na hraní a proklínáš svou chudobu. Moná nìkdy jindy...)}
 {2176}{}{Odejít.}
 # won jackpot block
-{2185}{}{(Na pøístroji bliká svìtlo s nápisem 'MIMO PROVOZ'.)}
+{2185}{}{(Na pøístroji bliká svìtlo s nápisem „MIMO PROVOZ“.)}
 {2186}{}{Odejít.}
 
 # 4. RETARD (WTG)
@@ -106,7 +106,7 @@
 {2101}{}{Já }
 {2102}{}{ kdo ty?}
 {2103}{}{Já chtít MÁMU. }
-{2104}{}{ stıskat se po AR-JOJO. Já chtít jít domù.}
+{2104}{}{ stıskat se po VAUL-TU. Já chtít jít domù.}
 {2105}{}{[Potøást si s rukou]}
 {2106}{}{Ty divnı mutant.}
 {2107}{}{Chvála Vault! Chvála Vault!}
@@ -119,14 +119,14 @@
 {2131}{}{JÁ }
 {2132}{}{! TY ODPOVÌDÌT MNÌ!}
 {2133}{}{[Potøást si s tou rukou]}
-{2134}{}{Já dítì Zakladatel. Ty se mnou TEÏ mluvit.}
+{2134}{}{Já obyvatel Vaultu. Ty se mnou TEÏ mluvit.}
 {2135}{}{ty divnı mutant.}
 {2136}{}{Ty bıt vodní èip?}
 {2137}{}{Odbelhat se jít hledat jiné lesklé vìcièky.}
 {2138}{}{Odejít.}
 
 # 6.  RETARD PULLS HANDLE (4, 5)
-{2151}{}{Uchopíš jeho ruku a jemnì si s ní potøeseš. Slyšíš nìjaké *bzzzzzzz* a krabice promluví! "Prosím... vlote... peníze."}
+{2151}{}{Uchopíš jeho ruku a jemnì si s ní potøeseš. Slyšíš nìjaké *bzzzzzzz* a krabice promluví! „Prosím... vlote... peníze.“}
 {2152}{}{Ajajaj! Robot! Robot! Honééém pryè.}
 {2153}{}{Odejít.}
 
@@ -151,15 +151,15 @@
 {2248}{}{*To je ono, zlato... zatáhni za tu páku... rychleji, více, rychleji... no ták...*}
 {2249}{}{*Ale no tak, zlato... to se stane kadému... zkus to ještì jednou... prosím...*}
 # any
-{2250}{}{*Prosím, ještì to nezdávej, zlato! Potøebuju tì teï jako nikdy pøedtím!*}
+{2250}{}{*Prosím, ještì to nevzdávej, zlato! Potøebuju tì teï jako nikdy pøedtím!*}
 # female [1X - 3X]
 {2251}{}{*No tak, zlato... zkus to ještì jednou... chytni tu páku... pevnì ji stiskni... no ták...*}
 {2252}{}{*To je ono, zlato... zatáhni za tu páku... rychleji, více, rychleji... no ták...*}
 {2253}{}{*Áách! To je ono, zlato! Ještì jednou! A tentokrát zatáhni poøádnì! Poøádnì!*}
 
 # 13. DRUNK, HIGH OR OTHERWISE FUCKED UP (WTG)
-{2280}{}{(Vidíš hrací automat. Jeho naleštìnı povrch a pozlacená páka svádivì záøí pod blikajícími svìtly New Rena. Štìrbina na mince tì pøitahuje a ty cítíš, jak se ti ruce chvìjí nedoèkavostí. Jak na ten stroj zíráš, jedno z jeho tøí oèí na tebe mrkne. Slyšíš jemnı hlas vycházející ze štìrbiny na mince.) *A hele! Nazdááárek, zlato. Chceš se pobavit?*}
-{2281}{}{(Vidíš hrací automat. Jeho bytelná skøíò a pozlacená páka záøí pod svìtly New Rena jako sluníèko. Štìrbina na mince tì pøitahuje a ty cítíš, jak se ti ruce chvìjí nedoèkavostí. Jak na ten stroj zíráš, slyšíš drsnı muskı šepot linoucí se ze štìrbiny na mince.) *Takovouhle koèku jsem tady ještì nevidìl. Chceš se pobavit?*}
+{2280}{}{(Vidíš hrací automat. Jeho naleštìnı povrch a pozlacená páka svádivì záøí pod blikajícími svìtly. Štìrbina na mince tì pøitahuje a ty cítíš, jak se ti ruce chvìjí nedoèkavostí. Jak na ten stroj zíráš, jedno z jeho tøí oèí na tebe mrkne. Slyšíš jemnı hlas vycházející ze štìrbiny na mince.) *A hele! Nazdááárek, zlato. Chceš se pobavit?*}
+{2281}{}{(Vidíš hrací automat. Jeho bytelná skøíò a pozlacená páka záøí pod svìtly jako sluníèko. Štìrbina na mince tì pøitahuje a ty cítíš, jak se ti ruce chvìjí nedoèkavostí. Jak na ten stroj zíráš, slyšíš drsnı muskı šepot linoucí se ze štìrbiny na mince.) *Takovouhle koèku jsem tady ještì nevidìl. Chceš se pobavit?*}
 {2282}{}{::Štípnout se, jestli se ti to jenom nezdá::}
 {2283}{}{Ehm... ahoj?}
 {2284}{}{::Zhluboka se nadechnout a odejít.::}
@@ -180,9 +180,9 @@
 # 16. DRUNK 3 (15)
 {2340}{}{*To samozøejmì mùeme, zlato.* (Automat se zatváøí soucitnì.) *Copak trápí tu tvoji krásnou hlavièku?*}
 {2341}{}{*To samozøejmì mùeme, zlato.* (Automat se zatváøí soucitnì.) *Copak tì trápí, fešáku?*}
-{2342}{}{Já chybìt MÁMA a Arroyo a... nemùšu najíd GECK a... *smrk*}
-{2343}{}{Já chybìt MÁMA a Arroyo bıt NAPADNOUD a... já nevìdìd, gde bıt... a... *smrk*}
-{2344}{}{Já muset spravit véélikou loï... a vùbec nevìdìd JAG... a m-m-moje MÁMA bıt pryè a... *smrk*}
+{2342}{}{Já chybìt MÁMA a VAULT a... nemùšu najíd vodní èip a... *smrk*}
+{2343}{}{Já chybìt MÁMA a VAULT bıt NAPADNOUD a... já nevìdìd, gde bıt... a... *smrk*}
+{2344}{}{Já muset zastavid velkı zlı mutanty... a vùbec nevìdìd JAG... a m-m-moje MÁMA bıt pryè a... *smrk*}
 {2345}{}{Dohrál jsem tudle hru... a te se jen potulujù... a bojím se, e je POFŠEM a... *smrk*}
 {2346}{}{Já jen, e Faloud dvì nepotporuje moji tøi dé efix kartu, za kerou jsem vyhodil tolik p-penìz a *smrk*}
 {2347}{}{chtìl jsem si udìlat dobrou p-p-postavu, ale nìják jsem si špatnì rosdìlil body... a te mám postavu na houno... *smrk*}
@@ -216,4 +216,4 @@
 
 {5000}{}{Pouít fintu na hrací automat, aby vyklopil všechny peníze.}
 {5001}{}{Automat jako by na chvíli zamrzne a poté uslyšíš slabé zarachocení v momentì, kdy se lavina mincí zaèíná valit ze zásobníku.}
-{5002}{}{[Sebrat peníze a odejít]}
+{5002}{}{[Sebrat peníze a odejít.]}

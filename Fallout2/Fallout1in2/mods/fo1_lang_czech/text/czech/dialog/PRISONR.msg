@@ -1,4 +1,4 @@
-{100}{}{Vidíš uvìznìného ghoula.}
+{100}{}{Vidíš uvìznìného ghúla.}
 {101}{}{Co, co chceš.}
 {102}{}{Uh, nic.}
 {103}{}{Hng.}
@@ -17,11 +17,11 @@
 {116}{}{To nic nebylo.}
 {117}{}{Odkud ta voda je?}
 {118}{}{Jo.}
-{119}{}{Pumpují jí ze spodní studny. Vedle dveøí vedoucích do starého Vaultu je cela a v ní je otvor. To je ten zdroj vody. Kdyby to nebylo pro ty dole, mìli bychom se mnohem lépe.}
+{119}{}{Pumpují ji ze studní pod mìstem. V cele vedle je poklop, který vede do starého Vaultu. To je zdroj vody. Kdyby nebylo tìch dole, mìli bychom se mnohem lépe.}
 {120}{}{Co myslíš?}
 {121}{}{Díky.}
-{122}{}{Nìkdy je tìžké pøinutit starou techniku k tomu, aby makala tak, jak má. Záøící ghúlové vylezou vždycky, když jdem dolù. My obyèejní ghúlové je necháváme být a mutanti taky nevypadají, že by se o nì nìjak starali.}
+{122}{}{Nìkdy je tìžké pøinutit starou techniku k tomu, aby makala tak, jak má. Záøící vylezou vždycky, když jdem dolù. My ghúlové je necháváme být a ty velký mutanti taky nevypadají, že by se o to nìjak starali.}
 {123}{}{Hodnì štìstí. Ahoj.}
 {124}{}{Získal jsi }
-{125}{}{ bodù zkušeností za záchranu uvìznìného ghoula.}
+{125}{}{ bodù zkušeností za osvobození ghúlího vìznì.}
 {126}{}{Ještì jednou díky.}

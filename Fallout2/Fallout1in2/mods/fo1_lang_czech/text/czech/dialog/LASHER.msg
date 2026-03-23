@@ -1,4 +1,4 @@
-{100}{}{Vidíš Lashera, jednoho z Dìtí Katedrály.}
+{100}{}{Vidíš Lashera, jednoho z Dìtí katedrály.}
 {101}{}{U vím, kdo jsi. Jsi monstrum plné høíchu posedlé ïáblem, a za to musíš bıt potrestán.}
 {102}{}{U vím, kdo jsi. Jsi ïábel v enské podobì, ale to tì nemùe zachránit pøed spravedlivou odplatou.}
 {103}{}{U vím, kdo jsi. Tvá høíšná povìst tì pøedchází. Poslal jsi dìtské duše Hádovi pøedtím, ne se mohly oèistit. To je nejhorší høích a budeš za to potrestán.}
@@ -10,7 +10,7 @@
 {109}{}{Chci si jenom promluvit s nìkım, kdo to tady vede.}
 {110}{}{Máš pìknou hùl. 'Lasher' ti øíkají kvùli ní?}
 {111}{}{Je to pravda, e rád zneuíváš dìti?}
-{112}{}{Seš takovej hlupák? Není moudrı mì takhle uráet, kreténe!}
+{112}{}{Chceš vidìt, co není moudrı? Není moudrı si na mì takhle otvírat hubu, ty hajzle!}
 {113}{}{Hehe, co to meleš za nesmysly?}
 {114}{}{Proè jsi pøišel, Zasvìcenı? Víš, e mì nikdo nemá rušit.}
 {115}{}{Odpus mi, Otèe, ale mám problémy.}
@@ -35,15 +35,15 @@
 {134}{}{Chtìl jsem si promluvit o zasvìcení.}
 {135}{}{Máš pìknou hùl. 'Lasher' ti øíkají kvùli ní?}
 {136}{}{Ale tohle místo ještì není 'zasvìcené'. Zatím sem tu toti nikoho nesejmul.}
-{137}{}{Uboáku! Mám hodnì vy..svì..ce..ní. . .}
-{138}{}{To je privilegium hodné pouze tìch nejvìrnìjších sluebníkù. Zasvìcení je pro nì nejvyšší ocenìní.}
-{139}{}{A jak mùu získat zasvìcení?}
-{140}{}{Chápu správnì, e uèíš Dìti a pøipravuješ je pro zasvìcení?}
-{141}{}{Mùeš mi pomoci stát se zasvìcenım?}
+{137}{}{Uboáku! Mám hodnì vy..svì..ce..ní...}
+{138}{}{Tato vısada náleí jen tìm nejvìrnìjším ze sluebníkù. Vyšší cti u dosáhneš jen køtem.}
+{139}{}{A jak mùu získat køest?}
+{140}{}{Chápu správnì, e uèíš Dìti a pøipravuješ je na køest?}
+{141}{}{Mùeš mi pomoci dosáhnout køtu?}
 {142}{}{Wow! To musíš bıt nìco extra!}
 {143}{}{To je problém, protoe takové ocenìní je mrtvému platné jako radškorpióní prdel.}
 {144}{}{Bavit se s bláznem nemá cenu. Sbohem.}
-{145}{}{Mìl bys zajít za Otcem Morpheusem. Pøebıvá ve vìi, ale je nepravdìpodobné, e tì Nightkin pustí dovnitø.}
+{145}{}{Mìl bys zajít za otcem Morpheem. Pøebıvá ve vìi, ale je nepravdìpodobné, e tì Nightkin pustí dovnitø.}
 {146}{}{Mohl bys øíct Nightkinovi, aby mì pustil dovnitø?}
 {147}{}{Mùeš mi øíct nìco blišího o Morpheusovi?}
 {148}{}{Mùeš mi øíct nìco blišího o Nightkinovi.}
@@ -61,7 +61,7 @@
 {160}{}{A co potìšení ze zabíjení? Není povolené i to?}
 {161}{}{Ty oplzlá, bezmozká zrùdo! Znesvìtil jsi mì svou pøítomností! Vypadni! Ven! Teï!}
 {162}{}{Ty jsi ena, a proto jsi navdy zatracená. To je vìèné prokletí tvého rodu, ale já ho za tebe vyøeším.}
-{163}{}{Pokud je tvé srdce tak špatné, mùeš bıt klidnı. Spravedlivé srdce nezná pochyby. Vysvìtli mi svùj problém, ale rychle!}
+{163}{}{Pokud by tvé srdce nebylo tak plné høíchu, mìl bys klid. Spravedlivé srdce nezná starosti. Vysvìtli mi svùj problém, ale rychle!}
 {164}{}{Øekni mi, jak dosáhnout spravedlnosti!}
 {165}{}{Chci vìdìt více o Katedrále.}
 {166}{}{Chci vìdìt více o Vùdci.}
@@ -73,16 +73,16 @@
 {172}{}{To je všechno? Tak to je dost ubohı, kámo!}
 {173}{}{Bolest vdy uvítám a rád jí sdílím se svımi pøáteli.}
 {174}{}{Zvíøata melou bez pøemıšlení, ale lidské bytosti nejdøív myslí, a potom teprve mluví. A ty musíš nejdøív v lidskou bytost dospìt, ne s tebou budu chtít mluvit. Teï odejdi.}
-{175}{}{Máš pravdu. No dobøe, tak ti tedy pomohu. ale rychle.}
-{176}{}{Musím vidìt Otce Morpheuse, je to naléhavé.}
+{175}{}{Máš pravdu. No dobøe, tak ti tedy pomohu. Ale rychle.}
+{176}{}{Musím vidìt otce Morphea, je to naléhavé.}
 {177}{}{Øekni mi nìco o Katedrále.}
 {178}{}{To jsem zvìdavı, kde najdu Vùdce.}
 {179}{}{To jsem zvìdavı na ty Dìti.}
 {180}{}{Jediná vìc, o které vím, e je opravdu rychlá, je Smrt!}
-{181}{}{Pøichází èas, kdy si musíš najít odpovìdi na ivotní otázky a já ti v tom pomùu . . . TEÏ!}
+{181}{}{Pøichází èas, kdy si musíš najít odpovìdi na ivotní otázky sám, a ten èas je právì teï. Odejdi!}
 {182}{}{To není moje vìc. Padej.}
 {183}{}{Snášením bolesti, získáním moudrosti a vìrnou slubou. Bolest znamená poznání, moudrost znamená poslušnost a sluba pøináší odvahu. }
-{184}{}{[Více]}
+{184}{}{[Pokraèovat]}
 {185}{}{Musíš odvrhnout Svìtlo, které nás málem všechny znièilo a zavázat se Temnotám, ve kterıch jsme si všichni rovni. Nyní, kdy jsem ti vysvìtlil podstatu, vydej se hledat Vùdce a jeho moudrost.}
 {186}{}{Neporadil jsem se s ním, ale jsem si jistı, e je spokojen s dušemi spravedlivıch, které jsem mu pøivedl. Je to tìká práce, ale já jsem ji udìlal dobøe. Bohuel je také nároèná na èas, a proto se s tebou teï musím rozlouèit.}
 {187}{}{Lichotnı jazyk je v tlamì démona! Démona jako ty. Vypadni mi z oèí!}
@@ -100,7 +100,7 @@
 {199}{}{Ty musíš bıt blázen, pokud si myslíš, e takovou trapnou lstí oklameš Nightkina. Vypadni odtud!}
 {200}{}{Úpadek a pohodlí brání evoluci, a ta je nutná pro pøeití v tomhle drsném svìtì. Naštìstí, jsem mu s pevnou vùlí a odolávám svùdnım lákadlùm. Vidím, e nesdílíš mou filosofii, ale to je mi ukradené. Ztra se mi z oèí!}
 {201}{}{Mutace se nemusíš obávat. Kadé novì narozené dítì má mutovanou DNA svıch rodièù. Všichni jsme mutanti, a tak jediná vìc, na které záleí, je naše pevná morálka a produktivita. A to je moje práce. A teï u jdi.}
-{202}{}{Rozdávám bolest. Pokud je toho zvíøe hodné a chce se uèit, mùe se stát spravedlivou duší. Pokud toho není schopno, tak si nezaslouí ít.}
+{202}{}{Rozdávám bolest. Pokud je toho zvíøe hodné a chce se uèit, mùe se stát spravedlivou duší. Pokud toho není schopno, tak si nezaslouí ít. Ve vzácnıch pøípadech se zvíøe odstraní z genofondu, i kdy ne tak èasto, jak bych si pøál. To se stává èastìji u dospìlıch, neschopnıch zvíøat.}
 {203}{}{A Vùdce souhlasí s takovımi metodami?}
 {204}{}{Jsi monstrum!}
 {205}{}{Myslím, e tì radši opustím.}
@@ -109,20 +109,20 @@
 {208}{}{Hej, mùu je odstranit za tebe. Nikdo se to nemusí dozvìdìt!}
 {209}{}{Ty jsi odporná ena. Mìla bys tu radši lehce našlapovat, Nightkin nemá rád soupeøe. Teï vypadni!}
 {210}{}{Ty jsi odpornı èlovìk. Mìl bys tu radši lehce našlapovat, Nightkin nemá rád soupeøe. Teï vypadni!}
-{211}{}{Spravedlnosti je dosaeno skrze boj, zranìní a uzdravení. Všichni jsme zvíøata, která musí bıt neustále pokoøována, aby pøijmula Vùdcovu pravdu bez váhání. Teï kdy jsi slyšel pravdu, tak se ji sna pochopit. Ted mì nech samotného.}
+{211}{}{Spravedlnosti je dosaeno skrze boj, zranìní a uzdravení. Všichni jsme zvíøata, která musí bıt neustále pokoøována, aby pøijala Vùdcovu pravdu bez váhání. Teï kdy jsi slyšel pravdu, tak se ji sna pochopit. Teï mì nech samotného.}
 {212}{}{Tvùj jazyk budi navìky proklet bez monosti vykoupení. Ztra se mi z oèí!}
 {213}{}{Katedrála uèí mnoho vìcí, které jsou pro nedisciplinovanou mysl nemoné pochopit. A teï mì u nezdruj, mám dùleitìjší úkoly.}
 {214}{}{Stejnì tak já. Vidím, e máme spoustu vìcí spoleènıch, ale naneštìstí mì dokáeš vyprovokovat daleko za hranice mého sebeovládání. A proto vypadni. Teï. Hned!}
 {215}{}{To já nemohu posoudit. Musíš pøesvìdèit Nightkina. Hodnì štìstí. Budeš ho toti potøebovat.}
 {216}{}{Katedrála je svatynì lidské rasy. Kdy apokalypsa udeøila na toto místo, katedrála byla ušetøena. To umonilo zrození Vùdce, a tak povznášející temnota povstala z odporného svìtla.}
 {217}{}{Kdy jsem pøišel, vidìl jsem pouze místo bez morálky a pevnıch zásad. A tak jsem zorganizoval spoleèenství a zaèal ehnat bolestí. To je vše, co potøebuješ vìdìt.}
-{218}{}{Øíká se, e Vùdce èekal dole, v Temnotách, ne svìtlo zradilo Lidstvo a témìø ho znièilo. A teï ehnáme Svìtlu, e zrodilo Vùdce.}
-{219}{}{ Tohle ale nevím jistì a nikdy jsem nemìl to štìstí Ho spatøit. Teï, pokud mì omluvíš, se musím vìnovat své práci.}
+{218}{}{Øíká se, e Vùdce èeká dole v temnotì, nebo svìtlo tam nahoøe lidstvo zradilo a málem nás znièilo. Mnozí však tomu svìtlu ehnají, nebo prı právì ono stvoøilo Vùdce.}
+{219}{}{Tohle ale nevím jistì a nikdy jsem nemìl to štìstí Ho spatøit. Teï, pokud mì omluvíš, se musím vìnovat své práci.}
 {220}{}{Tak za prvé, nebyl jsi tu pøíliš vítán.}
 {221}{}{Dìlával jsem to, ale mnoho postupù bylo zapomenuto ve prospìch tìch hlasitıch zvukù, které slyšíš z Auditoria. To je pro mì zdrojem roztrpèení a hoøkosti. Naštìstí ale stále mohu uèit dìti. Teï mi promiò, musím si pøipravit nìjaké další lekce.}
 {222}{}{Uh... to je samozøejmì vzácná událost a zvíøeti se dostane veškeré podpory, aby se vyvinulo. Teï u koneènì jdi. Jdi pryè!}
-{223}{}{[HOTOVO]}
-{224}{}{To bysme mohli pouít. Vezmi si tenhle symbol. Uka ho Nightkinovi, a ten tì nechá projít. Umoní ti to se setkat s Otcem Morpheusem.}
+{223}{}{[Odejít]}
+{224}{}{To by se ti mohlo hodit. Vezmi si tenhle symbol. Uka ho Nightkinùm, a budeš chtít projít. Umoní ti to setkat se s otcem Morpheem.}
 
 # Weapon-drawn timer is up, let's attack:
 {250}{}{Varoval jsem tì!}

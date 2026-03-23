@@ -2,14 +2,14 @@
 {101}{}{Znovu si zasunul uvolnìný èip a ke tvému pøekvapení se monitor rozvítil.}
 {102}{}{Mnoho obvodù bylo usmaženo vlnou EMP výbuchu.}
 {103}{}{Nefunguje.}
-{104}{}{Poøezal jsi si ruce o popraskanou bednu poèítaèe}
+{104}{}{Poøezal sis ruce o popraskanou bednu poèítaèe.}
 {105}{}{Spouští se Wyndoze 99.
                                           U:\ > }
 {106}{}{dir}
 {107}{}{konec}
 {108}{}{FALLOUT    <DIR>          10-20-99   1:04p
-                            0 bajtù v 1 složce     0 bajtù pøidìleno
-                            4,379,255 bajtù volných}
+                            0 bytes in 1 file     0 bytes allocated
+                            4,379,255 bytes free}
 {109}{}{cd fallout}
 {110}{}{konec}
 {111}{}{U:\ > }
@@ -19,8 +19,8 @@
 {115}{}{.          <DIR>               10-20-99   1:04p
                             ..         <DIR>               10-20-99   1:04p
                             fallout.exe     1384432   10-20-99   1:04p
-                            1,384,432 bajtù ve 3 složkách 1,384,482 bajtù pøidìleno}
-{116}{}{[více]}
+                            1,384,432 bytes in 3 files 1,384,482 bytes allocated}
+{116}{}{[Pokraèovat]}
 {117}{}{ }
 {118}{}{Hmm. To je skvìlá hra!}
 {119}{}{Získáváš 100 zkušeností za hraní Fallouta.}

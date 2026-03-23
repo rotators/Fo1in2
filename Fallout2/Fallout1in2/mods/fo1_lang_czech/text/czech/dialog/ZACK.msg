@@ -10,7 +10,7 @@
 {109}{}{}
 {110}{}{OK. Vra se, pokud budeš nìco potøebovat.}
 {111}{}{Ve vlastním zájmu se rozhodni rychle. Jsi tady kvùli zboí, nebo tì mám rovnou vodprásknout?}
-{112}{}{Máš fakt problém dívat se na to správnì.}
+{112}{}{Máš fakt problém s pøístupem.}
 {113}{}{Promiò, nakonec si snad opravdu nìco vyberu.}
 {114}{}{Tak co tady k èertu teda dìláš?}
 {115}{}{Nic.}
@@ -28,7 +28,7 @@
    {999}{}{Mùeme znovu promluvit o tìch *vıjimeènıch* kouscích?}
 
 {1000}{}{Je mi líto, ale tohle je všechno co mám k dispozici.}
-{1001}{}{Mohli bychom se pokusit znovu dostat do rukou lepší materiály, teï, kdy u nás Páraèi neobtìují. Bude to ale chvíli trvat.}
+{1001}{}{Mohli bychom se pokusit znovu dostat do rukou lepší materiály, teï, kdy u nás páraèi neobtìují. Bude to ale chvíli trvat.}
    {1010}{}{Mùu vám s tím nìjak pomoci?}
 
 {1100}{}{Placení novıch dodavatelù nebude levná záleitost. Pokud chceš ten proces urychlit, pravdìpodobnì by pomohla investice ve vıši 10.000 zátek.}
@@ -44,8 +44,8 @@
 	{1999}{}{Mùeš vylepšit mé zbranì?}
 
 {2000}{}{No jasnì e mùu. Co pro mì máš?}
-{2001}{}{Jasnì se mùu, ale nevypadá to, e máš nìco s èím by se dalo pracovat. Pøines nìjaké... ehm, "normální" pistole a pušky.}
-{2002}{}{Nevypadáš, e bys mìl nìco, co bychom mohli upravit. Pøines nìjaké... eh, "normální" pistole nebo pušky, pak snad pomùeme.}
+{2001}{}{Jasnì e mùu, ale nevypadá to, e máš nìco, s èím by se dalo pracovat. Pøines nìjaké... ehm, „normální“ pistole a pušky.}
+{2002}{}{Nevypadáš, e bys mìl nìco, co bychom mohli upravit. Pøines nìjaké... eh, „normální“ pistole nebo pušky, pak snad pomùeme.}
 	{2010}{}{Dokáeš nìco s pistolemi co mám u sebe?}
 	{2020}{}{Jedna z mıch pušek by potøebovala upgrade.}
 	{2025}{}{Zvládneš vylepšit mùj plamenomet?}
@@ -63,8 +63,8 @@
 {2200}{}{Na ten Magnum ti mùu dát pøídavek pro rychlejší nabíjení za }
 {2201}{}{Ten Desert Eagle... pokud chceš, mùu mu rozšíøit zásobník za }
 {2202}{}{ zátek.}
-{2203}{}{Ta Laserová Pistole... Jsem si jistı, e dovedu zahustit laserové vyzaøování pomocí nového zamìøovacího systému.}
-	{2210}{}{Dej mu tu nabíjeèku na mùj magnum.}
+{2203}{}{Ta laserová pistole... Jsem si jistı, e dovedu zahustit laserové vyzaøování pomocí nového zamìøovacího systému.}
+	{2210}{}{Dej na ten magnum rychlonabíjeè.}
 	{2220}{}{Rozšiø zásobník mého Desert Eagle.}
 	{2230}{}{Vylepši zamìøovací systém mojí laserové pistole.}
 
@@ -72,12 +72,12 @@
 {2300}{}{Na tu loveckou pušku ti mùu nasadit optiku za }
 {2301}{}{Pokud jde o tu útoènou pušku... Mùem ti u ní rozšíøit zásobník za }
 {2302}{}{Pro ten FN FAL tu mám jeden šikovnı, infraèervenı zamìøovaè jen za }
-{2303}{}{To je moc pìkná opakovací brokovnice... Mùeme ji dát bubnovı typ zásobníku za }
+{2303}{}{Ta tvoje bojová brokovnice... Mùeme jí dát bubnovı typ zásobníku za }
 {2304}{}{Jsem si jistı, e se mi tu nìkde válí speciální recyklaèní èip pro tu tvoji laserovou pušku za }
 	{2310}{}{Tak dobrá... namontuj na toho Colta optiku.}
 	{2320}{}{Rozšiø mi zásobník u mé útoèné pušky.}
 	{2330}{}{Pøidej mi infraèervenı zamìøovaè na mùj FN FAL.}
-	{2340}{}{Chci ten bubnovı typ zásobníku pro opakovací brokovnici.}
+	{2340}{}{Chci ten bubnovı typ zásobníku pro bojovou brokovnici.}
 	{2350}{}{Vylepši moji laserovou pušku tím svım recyklaèním èipem.}
 
 # Melee

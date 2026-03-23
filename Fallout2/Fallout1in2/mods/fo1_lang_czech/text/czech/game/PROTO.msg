@@ -93,10 +93,10 @@
 {452}{}{Dìti}
 {453}{}{Supermutanti}
 {454}{}{Ghúlové}
-{455}{}{Brahmini}
+{455}{}{Brahmíny}
 {456}{}{Radškorpióni}
 {457}{}{Krysy}
-{458}{}{Slizouni}
+{458}{}{Floateøi}
 {459}{}{Kentauøi}
 {460}{}{Roboti}
 {461}{}{Psi}
@@ -110,7 +110,7 @@
 {466}{}{Tato øádka ukazuje, kolik žen jsi zabil bìhem svého putování.}
 {467}{}{Tato øádka ukazuje poèet dìtí, které jsi, ty zbabìlej hajzlíku, zabil bìhem svého putování.}
 {468}{}{Poèet supermutantù, které jsi bìhem svého dobrodružství odstranil ze svìta.}
-{469}{}{Tato øádka ukazuje poèet ghoulù, mužù a žen, které jsi zabil bìhem tvého putování.}
+{469}{}{Tato øádka ukazuje poèet ghúlù, mužù a žen, které jsi zabil bìhem svého putování.}
 {470}{}{Tato øádka ukazuje, kolik brahmín (zmutovaných krav) jsi bìhem svého putování rozsekal do guláše.}
 {471}{}{Poèet zmutovaných radškorpionù, které jsi bìhem svého putování odeslal na onen svìt.}
 {472}{}{Poèet zabitých krys, na kterých jsi provedl mechanickou deratizaci. Vèetnì všech genetických pøíbuzných tohoto hlodavce.}
@@ -118,14 +118,14 @@
 {474}{}{Tvoje záøezy za mrtvé kentaury.}
 {475}{}{Poèet robotù, které jsi definitivnì poslal do køemíkového nebe.}
 {476}{}{Celkový poèet psù expresnì odeslaných do velkého psince v nebi.}
-{477}{}{Tato øádka ukazuje celkový poèet zabitých mantisù nebo jiného, stejnì hnusného hmyzu, na kterém jsi provedl dezinsekci.}
+{477}{}{Tato øádka ukazuje celkový poèet zabitých kudlanek nebo jiného, stejnì hnusného hmyzu, na kterém jsi provedl dezinsekci.}
 {478}{}{Tato øádka ti ukazuje, kolik jsi zlikvidoval páraèù. Poèítáno vèetnì všech jejich odrùd.}
 {479}{}{Poèet kytek, které díky tobì už nikdy nezavoní.}
 
 #
 # Use text
 #
-{480}{}{%s.}
+{480}{}{Vidíš: %s.}
 
 #
 # Use Container text
@@ -137,7 +137,7 @@
 #
 # Look text
 #
-{490}{}{%s.}
+{490}{}{Vidíš: %s.}
 {491}{}{Vidíš mrtvolu. Býval to: %s.}
 {492}{}{Vidíš zbytky. Býval to: %s.}
 {493}{}{Nevidíš nic zajímavého.}
@@ -223,8 +223,8 @@
 #
 # Dialog messages
 #
-{650}{}{[HOTOVO]}
-{651}{}{[VÍCE]}
+{650}{}{[Odejít]}
+{651}{}{[Pokraèovat]}
 {652}{}{Více}
 {653}{}{[ZPÌT]}
 {654}{}{Zpìt}     # changed number from 653
@@ -266,7 +266,7 @@
 {904}{}{Tato osoba ti nemá co øíct.}
 {905}{}{Tento pøedmìt nemùžeš sebrat. Už toho víc neuneseš.}
 {910}{}{Zásoby ze záchranáøské brašny už došly.}
-{911}{}{Zásoby z polní lékaøské soupravy už došly.}
+{911}{}{Zásoby ze soupravy první pomoci už došly.}
 {913}{}{Tenhle tvor nemùže nic nosit.}
 
 
@@ -277,19 +277,19 @@
 {1451}{}{Ženy}
 {1452}{}{Dìti}
 {1453}{}{Supermutanti}
-{1454}{}{Ghoulové}
+{1454}{}{Ghúlové}
 {1455}{}{Brahmíny}
-{1456}{}{Radškorpioni}
+{1456}{}{Radškorpióni}
 {1457}{}{Krysy}
 {1458}{}{Floateøi}
 {1459}{}{Kentauøi}
 {1460}{}{Roboti}
 {1461}{}{Psi}
-{1462}{}{Mantisové}
+{1462}{}{Kudlanky}
 {1463}{}{Páraèi}
 {1464}{}{Rostliny}
 {1465}{}{Geckoni}
-{1466}{}{Alieni}
+{1466}{}{Vetøelci}
 {1467}{}{Obøí mravenci}
 {1468}{}{HZH - Hlavní Záporný Hrdina}
 #
@@ -297,9 +297,9 @@
 #
 {1469}{}{Tato øádka ukazuje, kolik mužù jsi bìhem své cesty zabil.}
 {1470}{}{Tato øádka ukazuje, kolik žen jsi bìhem svého putování zabil.}
-{1471}{}{Ten, kdo tenhle øádek vidí, by se nad sebou mìl vážnì zamyslet. Jestli tì opravdu baví støílet do dìtí (i když jen na obrazovce poèítaèe), nebudeš asi docela v poøádku.}
+{1471}{}{Tato øádka ukazuje poèet dìtí, které jsi, ty zbabìlej hajzlíku, zabil bìhem svého putování.}
 {1472}{}{Poèet supermutantù, které jsi bìhem svého dobrodružství odstranil ze svìta.}
-{1473}{}{Tato øádka ukazuje poèet ghoulù, mužù a žen, které jsi zabil bìhem svého putování.}
+{1473}{}{Tato øádka ukazuje poèet ghúlù, mužù a žen, které jsi zabil bìhem svého putování.}
 {1474}{}{Tato øádka ukazuje, kolik brahmín (zmutovaných krav) jsi v prùbìhu hry nasekal do guláše.}
 {1475}{}{Poèet rùznì zmutovaných radškorpionù, které jsi bìhem svého putování odeslal na onen svìt.}
 {1476}{}{Poèet zabitých krys. Vèetnì všech genetických pøíbuzných tohoto hlodavce.}
@@ -307,7 +307,7 @@
 {1478}{}{Tvoje záøezy za mrtvé kentaury.}
 {1479}{}{Poèet robotù, které jsi definitivnì poslal do køemíkového nebe.}
 {1480}{}{Celkový poèet psù expresnì odeslaných do velkého psince v nebi.}
-{1481}{}{Tato øádka ukazuje celkový poèet mantisù nebo jim podobného, stejnì hnusného hmyzu, na kterém jsi provedl dùkladnou dezinsekci.}
+{1481}{}{Tato øádka ukazuje celkový poèet kudlanek nebo jim podobného, stejnì hnusného hmyzu, na kterém jsi provedl dùkladnou dezinsekci.}
 {1482}{}{Tato øádka ti napoví, kolik jsi zlikvidoval páraèù, vèetnì všech jejich genetických pøíbuzných.}
 {1483}{}{Poèet kytek, které díky tobì už nikdy nikomu nezavoní.}
 {1484}{}{Poèet ještìrek, které jsi vymazal z tváøe této planety.}

@@ -8,7 +8,7 @@
 {5}{}{%s ji není èím nabít.}
 {6}{}{%s je zapnut.}
 {7}{}{%s je vypnut.}
-{8}{}{Pøejel jsi Geigerovım poèítaèem pøes své tìlo. Display ukazuje: %d}
+{8}{}{Pøejel jsi Geigerovım èítaèem pøes své tìlo. Display ukazuje: %d}
 {9}{}{Tento pøedmìt se dá pouít pouze z inventáøe.}
 {10}{}{Nic se nestalo.}
 

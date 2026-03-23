@@ -3,7 +3,7 @@
 # 1 Antidote takes away 75 Poison Level
 # 1 RadAway takes away 150 Irradiation Level
 #
-{100}{}{You can't determine if you're poisoned or irradiated.}
+{100}{}{Nedokážeš urèit, jestli jsi otrávený nebo ozáøený.}
 
 {101}{}{Jsi ozáøený a otrávený, ale nevíš jak moc.}
 {102}{}{Jsi ozáøený, ale nevíš jak moc.}
@@ -25,7 +25,7 @@
 {115}{}{ a }  # ...but if also poisoned, this is used.
 
 {116}{}{Úroveò radiace: }
-{117}{}{ .}
+{117}{}{ radù.}
 {118}{}{ Trpíš otravou úrovnì }
 
 {119}{}{Již nejsi ozáøen ani otráven.}

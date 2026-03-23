@@ -22,11 +22,11 @@
 {121}{}{Komu z kasina ty peníze dlužíš?}
 {122}{}{Kolik pøesnì dlužíš?}
 {123}{}{Hmmm. Dík za informace.}
-{124}{}{Nìkolika rváèùm. Øíkají, že pracují pro šéfa kasina, ale toho jsem nikdy nevidìl. Jednomu øíkali Izo, a myslím, že ten druhý byl obr. Podìlaní podvodníci.}
+{124}{}{Nìkolika rváèùm. Øíkají, že pracují pro šéfa kasina, ale toho jsem nikdy nevidìl. Jednomu øíkali Izo a ten druhej byl nìjakej obrovskej chlap, vypadal jak Guido. Podìlaný podvodníci.}
 {125}{}{Proè jim dlužíš tolik penìz?}
 {126}{}{Kolik pøesnì dlužíš?}
 {127}{}{Hmmm. Dík za informace.}
-{128}{}{Oh, ne zas tolik. Pár tisícovek. Hrál jsem jen ètyøi nebo pìt hodin. No, možná chvilku dýl. Dali mi pár žetonù a já už nemám na jejich vyrovnání. Musím vyrazit do Hubu a schrastit peníze. Ale bojím se, že mì sejmou, pokud se pokusím vypadnout.}
+{128}{}{Oh, ne zas tolik. Pár tisícovek. Hrál jsem jen ètyøi nebo pìt hodin. No, možná chvilku dýl. Dali mi pár úpisù a já už nemám na jejich vyrovnání. Musím vyrazit do Hubu a schrastit peníze. Ale bojím se, že mì sejmou, pokud se pokusím vypadnout.}
 {129}{}{Proè jim dlužíš tolik penìz?}
 {130}{}{Komu z kasina ty peníze dlužíš?}
 {131}{}{Hmmm. Dík za informace.}

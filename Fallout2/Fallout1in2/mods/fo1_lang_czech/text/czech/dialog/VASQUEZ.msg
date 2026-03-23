@@ -6,11 +6,11 @@
 {105}{}{Nepracuju pro pitomce. Zmiz.}
 {106}{}{Ty jsi o mì nikdy neslyšel? To mì trochu uráží! Celé mé jméno zní Vasquez Villanova Hernandez Ortega. Jsem slavný desperado, mùj pøíteli. A jestli budeš nìkdy potøebovat, jsem ochoten nechat se najmout.}
 	{107}{}{Opravdu? Jaká je tvoje cena?}
-	{108}{}{Uvidíme se, možná . . . hodnì štìstí. Heh.}
-{109}{}{Ahh, takže zpátky k vìci mùj pøíteli. Výbornì. V rámci tohodle mìsta ti pomùžu za mrzkých 100 zátek týdnì. Moje služby nejsou laciné, ale jak øíkám, stojím za to.}
+	{108}{}{Uvidíme se, možná... hodnì štìstí. Heh.}
+{109}{}{Ahh, takže zpátky k vìci, mùj pøíteli. Výbornì. V rámci tohodle mìsta ti pomùžu za mrzkých 100 zátek týdnì. Moje služby nejsou laciné, ale jak øíkám, stojím za to.}
 	{110}{}{Skvìle. Najmu si tì. Tady je 100 zátek.}
 	{111}{}{Promiò že jsem tì obtìžoval, ale nemyslím si, že budu tvé služby potøebovat.}
-{112}{}{Je mi líto, kámo, ale za neviditelný prachy nepracuju. Potøebuju hmatatelný, zvonivý penízky.}
+{112}{}{Je mi líto, mùj pøíteli, ale pro hezké oèi nepracuju. Potøebuju hotovost, pìknì na ruku.}
 
 # Floats when in party
 {113}{}{Paráda. Jsem tvùj. Pojïme, už se tu nudím.}
@@ -18,37 +18,37 @@
 {115}{}{Pojï, trochu se napijeme!}
 {116}{}{Kam pùjdeme nejdøív?}
 {117}{}{Po dobu, co budeš v Junktownu, jsem tvùj, ale mimo mìsto se mnou nepoèítej.}
-{118}{}{Víš vùbec, že na mojí hlavu byla vypsaná odmìna? Nicménì nestála za to.}
+{118}{}{Víš vùbec, že na moji hlavu byla vypsaná odmìna? Nicménì nestála za to.}
 
 # Returning
-{119}{}{Ah, Jsem rád, že tì zase vidím mùj pøíteli.}
+{119}{}{Ah, mùj pøíteli. Jsem rád, že tì zase vidím.}
 	{120}{}{Chci si tì na týden najmout.}
 	{121}{}{Rád tì zase vidím.}
 	{122}{}{Hnn.}
 {123}{}{Hmm, možná není dobrý, že tì zase vidím. Pøeji dobrý den.}
-{124}{}{Samozøejmì. Má cena je nízka, ale má hodnota je vysoká. 100 zátek, prosím.}
+{124}{}{Samozøejmì. Má cena je nízká, ale má hodnota je vysoká. 100 zátek, prosím.}
 	{125}{}{Tady je máš.}
 
 # Damaged
 {126}{}{Tohle jsi nemìl dìlat, mùj už-brzo-mrtvý pøíteli.}
 
 #Fo1in2
-{130}{}{Jednou okolo mìsta?}
+{130}{}{Tady po mìstì?}
 
 # Map commentary
 {151}{}{Tohle je Killianùv obchod. Skvìlé místo pro takové jako jsme my.}
-{152}{}{Gizmovo casino. Doupì hazardu a neøesti. Myslíš že zapadneš, mùj pøíteli?}
-{153}{}{Potøebuješ si odpoèinou? Crash House je skvìlé a èisté místo.}
+{152}{}{Gizmovo kasíno. Doupì hazardu a neøesti. Myslíš, že zapadneš, mùj pøíteli?}
+{153}{}{Potøebuješ si odpoèinout? Chrápárna je místo, kde si pøijdeš na své.}
 {154}{}{Tohle je vìzení. Je to tam vážnì nudné, vìø mi.}
-{155}{}{Pokud tì zraní, doktor Morbid ti mùže pomoci. Nedávno mi trhal zub. Poøád to bylí...}
+{155}{}{Pokud tì zraní, doktor Morbid ti mùže pomoci. Nedávno mi trhal zub. Poøád to bolí...}
 {156}{}{Tihle chlápci v kápích jsou tady noví. Nemám z nich dobrý pocit.}
-{157}{}{Na zápasy v ringu se dá sázet. Už jsem tu vydìlal malé jmnìní.}
-{158}{}{Tohle je území lebkounù, mùj pøíteli. Nemìli bychom tu být.}
+{157}{}{Na zápasy v ringu se dá sázet. Už jsem tu vydìlal malé jmìní.}
+{158}{}{Tohle je území Lebkounù, mùj pøíteli. Nemìli bychom tu být.}
 {159}{}{Chceš si zajít na sklenièku? Skum Pitt otevírá o setmìní. Mìli bychom se tu vrátit pozdìji.}
 {160}{}{Ahh, tohle je to správné místo! Dáme si sklenièku? Ve Skum Pitt mají vážnì dobrý výbìr!}
-{161}{}{No, tohle bylo území lebkounù. Žádní už ale nezbyli.}
+{161}{}{No, tohle bylo území Lebkounù. Žádní už ale nezbyli.}
 {162}{}{Možná že je ten pes jenom hladový.}
-{163}{}{Ach ... uvidíme se pozdìji, mùj pøíteli.}
+{163}{}{Ach... uvidíme se pozdìji, má lásko.}
 
 # Party dialog
 {200}{}{Mùj pøíteli, tvé ródeo je už pøíliš velké.}
@@ -82,7 +82,7 @@
 {972}{}{To jsem já.}
 
 {980}{}{O tom nic nevím.}
-{981}{}{Primiò. Nemám tušení, mùj pøíteli.}
+{981}{}{Promiò. Nemám tušení, mùj pøíteli.}
 {982}{}{O tom jsem nikdy neslyšel.}
 
 # Generic Party dialog

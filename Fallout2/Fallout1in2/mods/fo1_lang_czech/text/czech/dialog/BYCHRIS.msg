@@ -8,7 +8,7 @@
 {107}{}{Ty jsi moje máma?}
 {108}{}{Jmenuji se Christine a žiji tu se svým manželem Michaelem.}
 {109}{}{Razor se stará o vìtšinu vìcí, které souvisí s Blades. Pomáhá nám organizovat se.}
-{110}{}{Michael a já jsme se sem pøestìhovali teprve nedávno, takže to tu ještì moc neznáme. Slyšela jsem, že na jih odsud je velká katedrála, ale myslím, že to jsou jen povìsti.}
+{110}{}{Michael a já jsme se sem pøestìhovali teprve nedávno, takže to tu ještì moc neznáme. Slyšela jsem, že na jihu odsud je velký kostel, ale myslím, že to jsou jen povìsti.}
 {111}{}{Je tu ještì nìco, co mám vìdìt?}
 
 #
@@ -16,8 +16,8 @@
 #
 {112}{}{C D E D B D Ducks}
 {113}{}{M R Not Ducks}
-{114}{}{O S M R                                                       ÿÿÿÿÿÿÿÿÿÿÿÿC D E D B D Wings}
+{114}{}{O S M R                                                                   C D E D B D Wings}
 {115}{}{Y I B M R Ducks}
 
 {116}{}{Mùžu ti ještì s nìèím pomoct?}
-{117}{}{Ne, já nejsem tvoje máma. A teï padej, než dostaneš pøes prdel.}
+{117}{}{Ne, já nejsem tvoje máma. Tak bìž a jdi si hrát.}

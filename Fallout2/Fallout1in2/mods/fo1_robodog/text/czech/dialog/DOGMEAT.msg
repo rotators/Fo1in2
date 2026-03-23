@@ -36,7 +36,7 @@
 # Too many party members
 {2500}{}{Grrrrr.}
 {2510}{}{Copak je chlapèe? Mam sebou pøíliš mnoho lidí?}
-{2511}{}{[Hotovo]}
+{2511}{}{[Odejít]}
 
 # Fo1in2
 {3500}{}{<cvak> ...bzzzzzz... <cvak>}

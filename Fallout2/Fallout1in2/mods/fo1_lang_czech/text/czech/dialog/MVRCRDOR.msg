@@ -1,4 +1,4 @@
-{100}{}{Vidíš ocelové dveøe. Nápis na nich øíká:"Kontrolní místnost jádra reaktoru". Nepovolaným vstup zakázán."}
+{100}{}{Vidíš ocelové dveøe. Nápis na nich øíká: „Kontrolní místnost jádra reaktoru. Nepovolaným vstup zakázán.“}
 {101}{}{Dveøe jsou elektronicky uzamèeny.}
 {102}{}{Dveøe nejsou zamèeny.}
 {103}{}{Podaøilo se ti obelstít elektronický zámek.}

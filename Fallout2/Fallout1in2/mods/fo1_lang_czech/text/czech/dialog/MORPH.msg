@@ -6,29 +6,29 @@
 {105}{}{. A ty?}
 {106}{}{Jeden z Bratrù mì poslal sem nahoru.}
 {107}{}{Máma?}
-{108}{MORP02A}{Ne. Já jsem otec smrti...}
-{109}{MORP03}{Mé dítì, je velmi nebezpeèné pohybovat se na místech, kde nemáš co dìlat. Kam jsi šel, ne jsi skonèil v soukromıch komnatách?}
-{110}{}{Jsem tu novı. Hledal jsem koupelnu a jeden z nejvyšších knìzù mì poslal sem nahoru.}
-{111}{}{Hledal jsem zpovìdnici a jeden z nejvyšších knìzù mì poslal sem nahoru. Opravdu mì mrzí, e jsem došel a sem!}
+{108}{MORP02A}{Ne. Já jsem otec Smrt...}
+{109}{MORP03}{Mé dítì, je velmi nebezpeèné pohybovat se na místech, kde nemáš co dìlat. Kam jsi šel, ne jsi skonèil v mıch soukromıch komnatách?}
+{110}{}{Jsem tu novı. Hledal jsem koupelnu a jeden z Veleknìí mì poslal sem nahoru.}
+{111}{}{Hledal jsem zpovìdnici a jeden z Veleknìí mì poslal sem nahoru. Opravdu mì mrzí, e jsem došel a sem!}
 {112}{}{No, nejsem opravdu tak docela ztracenı.}
 {113}{}{Jsem tu proto, abych tì zabil.}
 {114}{}{Já zapomnìl. U pùjdu.}
-{115}{MORP04}{Ahh...Heh, heh heh. To byl asi Lasher. Rád posílá vìøící do nesnází. Tohle je tvùj šastnı den, mùj mladı ignorantskı pøíteli. Mùeš odejít a nic se ti nestane.}
+{115}{MORP04}{Ahh... Heh, heh heh. To byl asi Lasher. Rád posílá vìøící do nesnází. Tohle je tvùj šastnı den, mùj nevìdomı malı pøíteli. Mùeš odejít a nic se ti nestane.}
 {116}{MORP04A}{Varoval jsem tì. Stráe!}
 {117}{MORP05A}{Ty patetickı lháøi. Øekni mi pravı dùvod tvé návštìvy... ne s tebe stáhnu kùi zaiva.}
 {118}{}{Ne opravdu! Ztratil jsem se!}
 {119}{}{No tak dobrá, dostal jsi mì. Jsem tu proto, abych ti nabídl obchod.}
 {120}{}{Jen tak se tady porozhlíím.}
-{121}{MORP06}{Myslím, e jsi špión, kterého poslali Následníci. Moná se pletu, ale já nikomu šanci nedávám. Musíš bıt zlikvidován.}
+{121}{MORP06}{Myslím, e jsi špión, kterého poslali Následovníci. Moná se pletu, ale já nikomu šanci nedávám. Musíš bıt zlikvidován.}
 {122}{MORP07}{Tak co mi teda vlastnì mùeš nabídnout?}
 {123}{}{Jsem z Vaultu. Víš zøejmì co to je, e?}
 {124}{}{Rád bych ti poskytl nìjaké informace o tvıch nepøátelích.}
-{125}{}{Poslal mì sem mùj Vùdce. Chtìl, abych tady trochu špehoval.}
+{125}{}{Poslal mì sem Vùdce. Chtìl, abych tady trochu špehoval.}
 {126}{morp08}{Pokraèuj.}
 {127}{}{Rád bych tvému Vùdci poskytl pár informací o mém Vaultu.}
 {128}{}{Mám pár informací pro Vùdce o mém Vaultu.}
 {129}{}{Ne tak rychle. Chci vìdìt, co za své informace mùu dostat.}
-{130}{MORP09}{ Já nemám ádného vùdce ty imbecile! }
+{130}{MORP09}{Já nemám ádného Vùdce, ty imbecile!}
 {131}{}{Tak komu pak tak øíkáte? Nekontroluje pøece i tebe?}
 {132}{}{Jsem si jist, e Vùdce kontroluje i tebe.}
 {133}{}{Hej. Bacha na uráky!}
@@ -48,7 +48,7 @@
 {147}{}{Nic ti neøeknu.}
 {148}{MORP15}{Ne? Tak si ty informace vezmu od tebe. Stráe!}
 {149}{MORP16}{A kdo to má bıt, ti moji nepøátelé?}
-{150}{}{No, napøíklad Následníci.}
+{150}{}{No, napøíklad Následovníci.}
 {151}{}{Z mého pohledu to vypadá, e všichni.}
 {152}{MORP17}{ Øekni mi, co víš. }
 {153}{}{To ne. Zaveï mì k Vùdci. Jemu to øeknu.}
@@ -56,20 +56,20 @@
 {155}{MORP18}{Øekni mi, co víš, jinak zemøeš pomalou... a umìle prodluovanou... smrtí.}
 {156}{}{Myslíš, e bude Vùdce šastnı, kdy zabiješ jednoho obyvatele Vaultu?}
 {157}{}{Budu mluvit pouze s Vùdcem.}
-{158}{MORP19}{Ahh...Take ty si ten z Vaultu, o kterém jsem slyšel. Pøekvapen? Mám své zdroje. Teï tì jako milou pozornost pøedám svému Vùdci. Jistì bude velmi potìšen.}
+{158}{MORP19}{Ahh... Take ty jsi ten z Vaultu, o kterém jsem slyšel. Pøekvapen? Mám své zdroje. Teï tì jako milou pozornost pøedám svému Vùdci. Jistì bude velmi potìšen.}
 {159}{}{Co kdybychom tì místo toho vynesli v pytli ven?}
 {160}{}{Já rovnì.}
 {161}{MORP20}{Špión? Ty si se zbláznil. Bude opravdu tìké sdìlit mu zprávu, kdy budeš mrtvı, nemyslíš?}
 {162}{MORP21}{Jsi mizernı lháø. Teï mi øekni co víš.}
 {163}{}{Pøicházím z Vaultu. Víš, co to je, e?}
 {164}{}{Rád bych ti poskytl nìjaké informace o tvıch nepøátelích.}
-{165}{MORP23}{ Jak pøekvapující.  Teï mi øekni, proè tu vlastnì jsi. }
+{165}{MORP23}{Jak pøekvapující. Teï mi øekni, proè tu vlastnì jsi.}
 {166}{}{Jsem z Vaultu, a ochotnì Vùdci prozradím jeho polohu.}
 {167}{}{Rád bych ti poskytl nìjaké informace o tvıch nepøátelích.}
 {168}{}{Zastrašování ti moc nejde.}
 {169}{}{Nic ti neøeknu.}
 {170}{MORP24}{Oh, skuteènì?  A jak to se svım omraèujícím vtipem a ostrım jazykem plánuješ udìlat?}
-{171}{}{Ne, s tímhle . . .}
+{171}{}{Ne, s tímhle...}
 {172}{}{To by bylo proti tobì pøíliš snadné. Pùjdu trochu obtínìjší cestou.}
 {173}{}{Myslím, e kulka do hlavy to vyøeší.}
 {174}{MORP26}{Tak hele. Øekni mi co víš, a budeš odsud moci odejít po obou nohou.}
@@ -84,19 +84,19 @@
 {183}{}{Ahoj. Jsem tady novı a zajímalo mì, jestli ti mùu poloit pár otázek.}
 {184}{}{Ale nic.}
 {185}{}{Nuhhh?}
-{186}{morp29}{Samozøejmì mé dítì.}
-{187}{}{Díky . . .}
+{186}{morp29}{Samozøejmì, mé dítì.}
+{187}{}{Díky...}
 {188}{}{No nic.}
 {189}{}{Jaké jsou plány Dìtí?}
 {190}{}{Rozmyslel jsem si to. U ádné další otázky.}
 {191}{}{Co øekneš, kdybych ti povìdìl, e jsem z Vaultu?}
-{192}{MORP31}{ Naše plány?  Jsme poslové evoluce, mé dítì. Následujeme Vùdce a jeho vìènı úkol uzdravit zemi a všechny její obyvatele.}
+{192}{MORP31}{Naše plány? Jsme poslové evoluce, mé dítì. Následujeme Vùdce a jeho vìènı úkol uzdravit zemi a všechny její obyvatele.}
 {193}{}{Skuteènì? A jakı druh evoluce se tu uèí?}
 {194}{}{O jakém uzdravení to mluvíš?}
-{195}{MORP32}{Víme, e tu je ještì vyšší stupeò, oslavné místo, kterého se lidé snaí dosáhnout. Náš cíl je uèinit ivot lepším, více uspokojujícím, ne je ten dnešní, pokaenı utrpením a vìènımi spory.}
+{195}{MORP32}{Víme, e tu je ještì vyšší stupeò, nádherné místo, kterého se lidé snaí dosáhnout. Náš cíl je uèinit ivot lepším, více uspokojujícím, ne je ten dnešní, pokaenı utrpením a vìènımi spory.}
 {196}{}{To si dìláš legraci, e?}
-{197}{}{A nalezli jste ten vyšší stupeò ?}
-{198}{MORP33}{[Zlostnì] Proè ty!...[Potichu] Budi ti odpuštìno. Ne kadému je dovoleno vidìt svìtlo. Teï mi ale øekni mé dítì, proè jsi k nám vstoupil?}
+{197}{}{A nalezli jste ten vyšší stupeò?}
+{198}{MORP33}{[Zlostnì] Proè ty!... [Klidnì] Budi ti odpuštìno. Ne kadému je dovoleno vidìt svìtlo. Teï mi ale øekni, mé dítì, proè jsi k nám vstoupil?}
 {199}{}{Chtìl jsem zjistit, jestli je to opravdu takové bláznovství, jak jsem slyšel. Teï u to vím.}
 {200}{}{Promiò. Myslím, e jsem byl trochu mimo.}
 {201}{morp34}{Nic nevíš.}
@@ -104,16 +104,16 @@
 {203}{}{No vlastnì, ještì jich tu pár je.}
 {204}{}{U ne, díky.}
 {205}{MORP36}{Samozøejmì. Prosím. Pokraèuj.}
-{206}{MORP37}{Ano, ale tobì je... odpuštìno. Odejdi v míru mé dítì.}
+{206}{MORP37}{Ano, ale tobì je... odpuštìno. Odejdi v míru, mé dítì.}
 {207}{MORP38}{Ne, ale s vírou a nadìjí ho jistì jednou najdeme. Ale tohle všechno u bys mìl vìdìt, mé dítì.}
 {208}{}{Já vím, ale ještì nìkolik málo otázek, prosím.}
 {209}{}{Já vím. Sbohem.}
-{210}{MORP39}{Léèíme tìlo fyzicky, aby mohlo znovu pracovat. Jistì si u vidìl naše nemocnice. Pak nabízíme nadìji a zahojení víry a ducha.}
+{210}{MORP39}{Zaèínáme léèením fyzického tìla. Jistì jsi u vidìl naše nemocnice. Pak nabízíme nadìji a uzdravení ducha.}
 {211}{}{Wow. Skoro tomu vìøím. Jste opravdu dobøí!}
 {212}{}{Kde jsou ty nemocnice?}
 {213}{MORP40}{Naše snaha napøíklad u nese své ovoce v Adytu a v Hubu u jsme taky dosáhli jistıch úspìchù. Cítím ale, e by ses rád ještì zeptal na nìco jiného.}
 {214}{MORP41}{Jsou to pro nás vıznamné dny. Junktown se pøipojil k Adytu a Hubu a pøidal se tak k našemu poslání zachránit duše a tìla. Pøeješ si vìdìt ještì nìco víc?}
-{215}{}{Pokud je mi známo . . .}
+{215}{}{No, vlastnì...}
 {216}{}{Nic. Musím jít.}
 {217}{MORP42}{Vize Dìtí se pnou z Adyta pøes Hub, Junktown, a dokonce se objevují i v Shady Sands. Proè se ptáš?}
 {218}{}{Jen se tu porozhlíím. Mùu se tì na pár vìcí zeptat?}
@@ -127,9 +127,9 @@
 {226}{MORP47}{Jsi snad hluchej? Øekl jsem...}
 {227}{MORP48}{Nebudu se znovu opakovat!}
 {228}{MORP49}{Nebudu to øíkat znova!}
-{229}{MORP50}{Tenhle Nightkin k nám pøibìhl pøed chvílí. Jsou to trochu podivní mutanti, ale k Dìtem se chovají extrémnì loajálnì. Koneckoncù, jako my všichni.}
+{229}{MORP50}{Nightkinové k nám pøišli u pøed nìjakou dobou. Jsou to sice odpudiví mutanti, ale k Dìtem jsou naprosto oddaní. Ostatnì, jako my všichni.}
 {230}{MORP51}{Je to on, kdo mi odhalil myšlenku Jednoty a je to on, kterı pøinese této zkoušené zemi koneènı mír.}
-{231}{MORP52}{Kde je kazatelna, u bys mìl vìdìt mé dítì. Mívám tam svá kázání.}
+{231}{MORP52}{Kde je kazatelna, u bys mìl vìdìt, mé dítì. Mívám tam svá kázání.}
 {232}{MORP53}{Nezatìuj se tím. Tam mohou pouze nejvyšší knìí.}
 {233}{MORP54}{Jsem pouze pokornı sluebník Jednoty.}
 {234}{MORP55}{Jsme nejvyšší knìí velectìného temného boha. Tøinácti z nás je natolik poehnáno, e mùeme jeho vzácná slova sdìlovat ostatním Dìtem.}
@@ -138,13 +138,13 @@
 {237}{MORP58}{Jednota je náš zpùsob, jak dosáhnout lepšího ivota a souznìní s našimi stoupenci.}
 {238}{MORP59}{On je další nejvyšší knìz. Tráví spoustu svého èasu studiem.}
 {239}{MORP60}{Mé srdce pro nì krvácí. Svedení na špatnou cestu nevìdí, e jejich èiny pøinášejí nám a našim stoupencùm pouze bolest a zármutek.}
-{240}{MORP61}{Nicole je zmatená šéfka Následníkù Apokalypsy.}
+{240}{MORP61}{Nicole je ta nešastná, zmatená vùdkynì Následovníkù apokalypsy.}
 {241}{MORP62}{Adytum je mìsto severovıchodnì odsud.}
 {242}{MORP63}{To není dùleité. }
 {243}{MORP64}{To nic není. Zeptej se na nìco jiného.}
 {244}{morp65}{Nic zajímavého.}
-{245}{}{Vùdèe, vìøím, e se ti tohle bude líbit . . .}
-{500}{}{ zkušenosti za zabití vrchního knìze Dìtí Katedrály.}
+{245}{}{Vùdèe, vìøím, e se ti tohle bude líbit...}
+{500}{}{ zkušenosti za zabití vùdce Dìtí katedrály.}
 
 
 # Morpheus Tell-Me-Abouts generic responses
@@ -179,7 +179,7 @@
 {1018}{}{Cip}
 
 
-{1100}{MORP50}{Tenhle Nightkin k nám pøibìhl pøed chvílí. Jsou to trochu podivní mutanti, ale k Dìtem se chovají extrémnì loajálnì. Koneckoncù, jako my všichni.}
+{1100}{MORP50}{Nightkinové k nám pøišli u pøed nìjakou dobou. Jsou to sice odpudiví mutanti, ale k Dìtem jsou naprosto oddaní. Ostatnì, jako my všichni.}
 {1101}{MORP51}{Je to on, kdo mi odhalil myšlenku Jednoty a je to on, kterı pøinese této zkoušené zemi koneènı mír.}
 {1102}{MORP52}{Kde je kazatelna, u bys mìl vìdìt, mé dítì. Mívám tam svá kázání.}
 {1103}{MORP53}{Nezatìuj se tím.  Tam mohou pouze nejvyšší knìí.}
@@ -187,13 +187,13 @@
 {1105}{MORP55}{Jsme nejvyšší knìí velectìného temného boha. Tøinácti z nás je natolik poehnáno, e mùeme jeho vzácná slova sdìlovat ostatním Dìtem.}
 {1106}{MORP56}{Nemám ponìtí, o èem mluvíš.}
 {1107}{MORP57}{Dìti v nemocnici Katedrály poskytují zbídaèené a rozervané zemi nejlepší péèi ze všech. Tato péèe je pro Jednotu dùleitá.}
-{1108}{MORP58}{Jednota je náš zpùsob jak dosáhnout lepšího ivota a jednoty s našimi stoupenci.}
+{1108}{MORP58}{Jednota je náš zpùsob, jak dosáhnout lepšího ivota a jednoty s našimi stoupenci.}
 {1109}{MORP59}{On je další nejvyšší knìz. Tráví spoustu svého èasu studiem.}
 {1110}{MORP60}{Mé srdce pro nì krvácí. Svedení na špatnou cestu nevìdí, e jejich èiny pøinášejí nám a našim stoupencùm pouze bolest a zármutek.}
-{1111}{MORP61}{Nicole je naneštìstí zmatená šéfka Následníkù Apokalypsy.}
+{1111}{MORP61}{Nicole je ta nešastná, zmatená vùdkynì Následovníkù apokalypsy.}
 {1112}{MORP62}{Adytum je mìsto severovıchodnì odsud. }
 {1113}{MORP60}{Mé srdce pro nì krvácí. Svedení na špatnou cestu nevìdí, e jejich èiny pøinášejí nám a našim stoupencùm pouze bolest a zármutek.}
-{1114}{MORP50}{Tenhle Nightkin k nám pøibìhl pøed chvílí. Jsou to trochu podivní mutanti, ale k Dìtem se chovají extrémnì loajálnì. Koneckoncù, jako my všichni.}
+{1114}{MORP50}{Nightkinové k nám pøišli u pøed nìjakou dobou. Jsou to sice odpudiví mutanti, ale k Dìtem jsou naprosto oddaní. Ostatnì, jako my všichni.}
 {1115}{morp65}{Nic, co by tì mohlo zajímat.}
 {1116}{morp65}{Nic, co by tì mohlo zajímat.}
 {1117}{morp65}{Nic, co by tì mohlo zajímat.}

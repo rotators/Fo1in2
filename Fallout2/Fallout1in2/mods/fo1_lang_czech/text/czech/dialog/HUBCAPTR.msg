@@ -8,6 +8,6 @@
 {104}{}{Takhle to teda je!}
 {105}{}{Sežer to!}
 {106}{}{Už jsi nìkdy za svitu mìsíce tanèil s ïáblem?}
-{107}{}{Dej si odchod, cizinèe!}
+{107}{}{Pojï blíž, cizinèe!}
 {108}{}{Tady máš kulku, synu...}
 {109}{}{Tady máš kulku, mrcho...}

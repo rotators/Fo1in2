@@ -11,7 +11,7 @@
 {100}{}{Šastnı Novı rok!}      # New years
 {101}{}{Šastnı Valentın!}     # April fools
 {102}{}{Veselého Apríla!}      # April fools
-{103}{}{Šastnı den vydání Falloutu!}            # Shipping day!
+{103}{}{Šastnı Den expedice!}            # Shipping day!
 {104}{}{Šastnı Den nezávislosti!}    # Independence day
 {105}{}{Šastnı Halloween!}           # Halloween
 {106}{}{Šastnı Den díkùvzdání!}    # Thanksgiving
@@ -22,7 +22,7 @@
 #
 {200}{}{VÍCE}
 {201}{}{ZPÌT}
-{202}{}{LOKACE}
+{202}{}{STAV}
 {203}{}{Nemáš ádné úkoly.}
 {204}{}{VODÍTKA}  # clues gone
 {205}{}{AUTOMAPY}
@@ -78,7 +78,7 @@
 #
 {400}{}{Záznam experimentu FEV}
 {401}{}{Bezpeènostní záznam}
-{402}{}{Záznam rebelù Bratrstva}
+{402}{}{Dávnı záznam Bratrstva}
 {403}{}{Záznam experimentu Alpha}
 {404}{}{Záznam experimentu Delta}
 {405}{}{Vreeiny poznatky o mutantech}
@@ -90,10 +90,10 @@
 {411}{}{Audio deník Richarda Greye}
 {412}{}{Deník kapitána Maxsona}
 {413}{}{Vızkum FEV}
-{414}{}{Specifikace Energo brnìní}
+{414}{}{Specifikace energozbroje}
 {415}{}{Záznamy o West Tech}
 {416}{}{Lokace Vaultù v34.129}
-{417}{}{Záznam vysílání Regulátorù}
+{417}{}{Vysílání Regulátorù}
 {418}{}{RESERVED (available)}
 {419}{}{RESERVED (available)}
 {420}{}{RESERVED (available)}
@@ -148,21 +148,21 @@
 {703}{}{Znièit zdroj mutantù.}
 {704}{}{Najít Vodní èip.}
 {705}{}{Najít zlodìje vody.}
-{706}{}{Help the medic to synthesize Antidote.}
-{707}{}{Learn about the outside world at the library terminals.}
+{706}{}{Pomoct medikovi syntetizovat protilátku.}
+{707}{}{Zjistit informace o vnìjším svìtì z knihovních terminálù.}
 #
-{710}{}{Znièenı Vault}
-{711}{}{Search for clues and information.}
-{712}{}{Locate a Water Chip.}
+{710}{}{Vault 15}
+{711}{}{Hledat vodítka a informace.}
+{712}{}{Najít vodní èip.}
 #
 {720}{}{Shady Sands}
 {721}{}{Uzdravit Jarvise z otravy radškorpióním jedem.}
 {722}{}{Vyrobit protijed.}
 {723}{}{Zachránit Tandi.}
 {724}{}{Zastavit radškorpióny.}
-{725}{}{Help Shady Sands improve their crop yield.}
-{726}{}{Talk to Katrina.}
-{727}{}{Hire Ian.}
+{725}{}{Pomoct Shady Sands zlepšit úrodu.}
+{726}{}{Promluvit s Katrinou.}
+{727}{}{Najmout Iana.}
 #
 {730}{}{Junktown}
 {731}{}{Pomoci Saulovi.}
@@ -173,7 +173,7 @@
 {736}{}{Zlikvidovat gang Lebkounù.}
 #
 {740}{}{Nájezdníci}
-{741}{}{Pøipoj se ke Khanum.}
+{741}{}{Pøipoj se ke Khanùm.}
 {742}{}{Zniè Khany.}
 {743}{}{Zabij otroky.}
 {744}{}{Zachraò otroky.}
@@ -187,9 +187,9 @@
 {762}{}{Zbavit se Jain.}
 {763}{}{Zbavit se Darena Hightowera.}
 {764}{}{Rozluštit záhadu ztracenıch karavan.}
-{765}{}{Ukrást Kupcùm s vodou náhrdelník.}
+{765}{}{Ukrást Obchodníkùm s vodou náhrdelník.}
 #
-{770}{}{Bratrstvo}
+{770}{}{Bratrstvo oceli}
 {771}{}{Stát se Zasvìcencem.}
 {772}{}{Zachránit Zasvìcence z Hubu.}
 #
@@ -199,11 +199,11 @@
 {791}{}{Odstranit ze zaøízení pasti.}
 {792}{}{Obnovit dodávku energie.}
 #
-{800}{}{Pohøebištì}
+{800}{}{Kostnice}
 {801}{}{Stát se èlenem Blades.}
 {802}{}{Doruèit medailón Romerovi.}
-{803}{}{Doruèit zásilku od GunRunnerù.}
-{804}{}{Vypátrat špióna Dìtí Katedrály u Následovníkù.}
+{803}{}{Doruèit zásilku od Gun Runnerù.}
+{804}{}{Vypátrat špióna Dìtí katedrály u Následovníkù.}
 {805}{}{Opravit pro Adytum jejich hydroponickou farmu.}
 {806}{}{Zachránit Jasona Zimmermana.}
 {807}{}{Zastavit útoky gangù na Adytum.}
@@ -235,7 +235,7 @@
 # -
 {1016}{}{• Datum zápisu: 9. kvìten, 2075}
 {1017}{}{Infikovali jsme FEV nìkolik rùznıch druhù ploštìnek. }
-{1018}{}{Bìhem nìkolika hodin zvìtšil hmyz svou velikost o 28%}
+{1018}{}{Bìhem nìkolika hodin zvìtšily ploštìnky svou velikost o 28%}
 {1019}{}{a populace stala rezistentní vùèi 39 druhùm virové}
 {1020}{}{nákazy. Všechny vzorky si své novì nabyté vlastnosti}
 {1021}{}{podrely i v dalších generacích a nová struktura DNK }
@@ -283,7 +283,7 @@
 {1060}{}{dle Schuler-Kappova indexu. }
 {1061}{}{Naneštìstí nìkolik testovacích subjektù uprchlo z}
 {1062}{}{poškozené klece a muselo bıt odchyceno a usmrceno. }
-{1063}{}{Major Barnett naøídil likvidaci všech zbıvajících objektù.}
+{1063}{}{Major Barnett naøídil likvidaci všech zbıvajících subjektù.}
 {1064}{}{Nicménì pøi koneèném sèítání nám chybìly dva páry.}
 {1065}{}{**END-PAR**}
 # -
@@ -355,14 +355,14 @@
 {3024}{}{na prvních dvou podlaích, ne však na tøetím.}
 {3025}{}{Jensen byl rozsekán na kousky døív, ne staèil zjistit}
 {3026}{}{co se dìje. Ještì nikdy jsme nevidìli zbranì, které by}
-{3027}{}{tak lehce pronikaly Energo brnìním. Mui okolo mì}
+{3027}{}{tak lehce pronikaly energozbrojí. Mui okolo mì}
 {3028}{}{padali jako mouchy, ani mìli sebemenší šanci vystøelit.}
 {3029}{}{Pokoušel jsem se tım pøeskupit, ale do prvního patra}
 {3030}{}{se spolu mnou dokázali dostat jen Soto a Camarillo.}
 {3031}{}{**END-PAR**}
 # -
 {3032}{}{Fakt, e cítím Sotovo spálené maso v místech, kde bylo}
-{3033}{}{jeho brnìní proraeno, znamená e moje vlastní Energo}
+{3033}{}{jeho energozbroj proraena, znamená e moje vlastní}
 {3034}{}{brnìní u není nadále vzduchotìsné. Take polykám}
 {3035}{}{mnohem víc radiace, ne jsem pùvodnì plánoval. Z mojí}
 {3036}{}{hydrauliky se alarmujícím tempem ztrácí kapalina. Musím}
@@ -380,7 +380,7 @@
 {3046}{}{døív ne u bude pozdì.}
 {3047}{}{**END-PAR**}
 # -
-{3048}{}{Serant. D. Allen , armáda Spojenıch Státù.}
+{3048}{}{Serant D. Allen, armáda Spojenıch Státù.}
 {3049}{}{**END-DISK**}
 
 
@@ -407,9 +407,9 @@
 {4017}{}{témìø okamitì. Cytokinezi je zabránìno dùslednou }
 {4018}{}{kontrolou dispozic kinetochorickıch vláken bìhem }
 {4019}{}{procesu anafáze. Celı mitotickı cyklus je ukonèen}
-{4020}{}{pøiblinì po 2 hodinách, aèkoli fenotypická úprava}
-{4021}{}{nové struktury zabere dny a tıdny.}
-{4022}{}{}
+{4020}{}{pøiblinì po 2 hodinách, aèkoli fenotypickı projev}
+{4021}{}{nové struktury mùe bıt patrnı }
+{4022}{}{a po nìkolika dnech nebo tıdnech.}
 {4023}{}{**END-PAR**}
 # -
 {4024}{}{K pøídavku k velmi efektivní odolnosti proti bakteriálnímu }
@@ -476,8 +476,8 @@
 {6023}{}{Tkáòovı rozbor (v % hmotnosti):}
 {6024}{}{Svalstvo:            77.41% }
 {6025}{}{Kosti:               10.23%}
-{6026}{}{Tuk:                 12.36%}
-{6027}{}{Celkovı objem tkání: 69.34%}
+{6026}{}{Tuk:                  3.02%}
+{6027}{}{Ostatní tkánì:        9.34%}
 {6028}{}{**END-PAR**}
 {6029}{}{Bunìèná struktura:}
 {6030}{}{Kultura vykazuje vyšší øád bunìèného dìlení.}
@@ -515,7 +515,7 @@
 {6058}{}{Vizuální pozorování:}
 {6059}{}{Èernı spálenı prach poblí místa vniku nabízí }
 {6060}{}{hypotézu zásahu kulkou.}
-{6061}{}{11.2 cm dlouhá trná rána na lıtku pravé nohy }
+{6061}{}{1.2 cm dlouhá trná rána na lıtku pravé nohy }
 {6062}{}{vypadá, e byla zpùsobena zuby. Provedu}
 {6063}{}{testy na nakaení vzteklinou.}
 {6064}{}{Kùe je pùsobením povìtrnostních vlivù suchá a šupinatá.}
@@ -525,8 +525,8 @@
 {6067}{}{Úroveò ozáøení: 12 rad.}
 {6068}{}{Test vztekliny:  bez nálezu.}
 {6069}{}{Hydrochlorickı plyn: bez nálezu}
-{6070}{}{Úroveò chlorinu: 60.07%}
-{6071}{}{Sulfuric Content: .02%}
+{6070}{}{Úroveò chlorinu: .07%}
+{6071}{}{Obsah síranù: .02%}
 {6072}{}{Phase Shifting Virus:  bez nálezu}
 {6073}{}{Gamma Cyclotronic Virus: bez nálezu}
 {6074}{}{Forced Evolutionary Virus II: vícenásobné pøedávkování}
@@ -575,7 +575,7 @@
 
 # *** Brotherhood of Steel Honor Code ***
 # *** Maxson's History ***
-{7000}{}{Mùj otec byl èlenem vládní ochranky na tajné vojenské bázi}
+{7000}{}{Mùj otec byl èlenem vládní ochranky na tajné vojenské základnì}
 {7001}{}{v poušti jiní Kalifornie. Byl to typickı vojenskı policista,}
 {7002}{}{nejvíc si pamatuji jeho sílu.  Kdy nastal èas revoluce}
 {7003}{}{respektoval jsem jeho pøesvìdèení. Zùstal vzadu,}
@@ -616,7 +616,7 @@
 {7033}{}{**END-DISK**}
 
 # *** Mutant disk *** (bug fixed by WG: 8011 was duplicated)
-{8000}{}{Poslaná zpráva: Základno, tady tım Sbìraèù èíslo dva,}
+{8000}{}{Poslaná zpráva: Základno, tady tım Lapaèù èíslo dva,}
 {8001}{}{jak mì slyšíte? Pøepínám.}
 {8002}{}{**END-PAR**}
 # -
@@ -637,7 +637,7 @@
 {8015}{}{**END-PAR**}
 # -
 {8016}{}{Poslaná zpráva: Negativní. Další èistá práce. Základno,}
-{8017}{}{vyøiïte prosím tımu jedna, e jsme zaznamenali stejnı}
+{8017}{}{vyøiïte prosím tımu Lapaèù jedna, e jsme zaznamenali stejnı}
 {8018}{}{problém jako oni. Jeden z našich pátraèù se nevrátil}
 {8019}{}{ze své patroly. Nìkolik dalších pátraèù ohlásilo, e}
 {8020}{}{minulou noc zahlédlo poblí našeho tábora nìco velkého}
@@ -653,7 +653,7 @@
 
 # *** Military Base Disk***
 {9000}{}{• 10. øíjen, 2077}
-{9001}{}{Já, Roger Maxson, kapitán, èíslo 072389 jsme zaèal tento}
+{9001}{}{Já, Roger Maxson, kapitán, èíslo 072389 jsem zaèal tento}
 {9002}{}{záznam psát proto, e to s ádnım z nás nevypadá pøíliš}
 {9003}{}{rùovì a já chci aby se budoucí lidé mohli dozvìdìt, co}
 {9004}{}{se tu doopravdy stalo. }
@@ -730,7 +730,7 @@
 {9067}{}{Von Felden se z nás právì snail vypáèit, co se tu opravdu }
 {9068}{}{stalo, kdy jsme s ním najednou kompletnì ztratili spojení.}
 {9069}{}{Cítím v kostech, e vızkumná základna byla tìce zasaena. Nevím proè, }
-{9070}{}{øíkejte si tomu pro mì za mì "tušení". Je nepochopitelné, }
+{9070}{}{øíkejte si tomu pro mì za mì „tušení“. Je nepochopitelné, }
 {9071}{}{e na nás dosud ádnı útok nesmìøoval. Ale jsem si jistı, }
 {9072}{}{e svùj omyl u nebude mít Èína pøíleitost napravit. Naštìstí}
 {9073}{}{jsme u vèera pøestìhovali naše rodiny z okolních domkù}
@@ -742,7 +742,7 @@
 {9078}{}{Serant Platner se nabídl k dobrovolnému vıletu na povrch, }
 {9079}{}{aby mohl provést mìøení atmosféry. Zatím to vypadá,}
 {9080}{}{e se radiace a o tolik nezvıšila. Protoe mìl obleèené}
-{9081}{}{svoje Energo brnìní, nehrozilo mu akutní nebezpeèí ozáøení.}
+{9081}{}{svoji energo zbroj, nehrozilo mu akutní nebezpeèí ozáøení.}
 {9082}{}{Ale pokud by byl zasaen, musel bych ho nechat vyhostit.}
 {9083}{}{Na základnì není ádné odpovídající }
 {9084}{}{dekontaminaèní zaøízení.}
@@ -760,10 +760,10 @@
 # -
 {9094}{}{• 27. øíjen 2077}
 {9095}{}{Dnes opouštíme tohle bohem zatracené místo. Vedu tenhle }
-{9096}{}{exodus do starého vládního bunkru ve Ztracenıch Horách. }
+{9096}{}{exodus do starého vládního bunkru v Lost Hills.}
 {9097}{}{Ponechávám tu tenhle záznam pohøbenı a odevzdávám ho}
 {9098}{}{i s celım tímhle místem jeho osudu. Kdo ví, moná}
-{9099}{}{ho jednoho dne nìkdo najde.....}
+{9099}{}{ho jednoho dne nìkdo najde...}
 {9100}{}{**END-DISK**}
 
 # *** Sophia Disk ***
@@ -776,15 +776,15 @@
 {10006}{}{**END-PAR**}
 # -
 {10007}{}{Skupina sama nebyla v nebezpeèí, díky tomu, e mìli}
-{10008}{}{obleèeno posvátné Brnìní Moci. Èlenové jejich rodin }
+{10008}{}{obleèeno posvátné Brnìní moci. Èlenové jejich rodin }
 {10009}{}{ale takové štìstí nemìli. A jakmile ta okolní chátra }
 {10010}{}{zjistila, jak snadnım jsou cílem, zaèala na neozbrojené }
 {10011}{}{civilisty støílet z bezpeèné vzdálenosti. }
 {10012}{}{**END-PAR**}
 # -
 {10013}{}{Pro kadého èlena Exodu znamenala cesta ještì mnoho }
-{10014}{}{bolestnıch ztrát. Na své cestì byli mnohokrát napadeni.}
-{10015}{}{Rovnì dva z našich bratrù poloili své ivoty v poušti.}
+{10014}{}{bolestnıch ztrát. Za kadého èlena Exodu, kterı takto padl,}
+{10015}{}{si naši šlechetní bratøi vzali dva ivoty z pustiny.}
 {10016}{}{**END-PAR**}
 # -
 {10017}{}{Koneènì naši praotcové dorazili do bezpeèí }
@@ -820,7 +820,7 @@
 {11000}{}{Po náhlé smrti plukovníka Roberta Spindela jsem se}
 {11001}{}{stal velícím dùstojníkem základny. Z mého pøíkazu}
 {11002}{}{bylo veškeré osazenstvo bezpeènostního tımu základny}
-{11003}{}{pøemístìno do vládního bunkru ve Ztracenıch Horách.}
+{11003}{}{pøemístìno do vládního bunkru v Lost Hills.}
 {11004}{}{**END-PAR**}
 # -
 {11005}{}{Tento pokyn zahrnuje rovnì rodiny dùstojníkù}
@@ -865,7 +865,7 @@
 {11037}{}{**END-DISK**}
 
 # *** Richard Grey audio diary ***
-{12000}{}{Záznam: 0028 -o0043}
+{12000}{}{                                                    0000 - 0004}
 {12001}{}{Umírám. Tohle musím dopsat døív, ne mì ta bolest}
 {12002}{}{definitivnì zlomí.}
 {12003}{}{**END-PAR**}
@@ -876,7 +876,7 @@
 {12007}{}{málem jsem se v nìm utopil. Ani nevím, co se stalo s}
 {12008}{}{Haroldem. Stál hned vedle, kdy mì ten jeøáb srazil do}
 {12009}{}{nádre. Musel bıt zabit, jinak by se mi urèitì pokusil}
-{12010}{}{pomoci. Francine je mrtvı, zabil ho}
+{12010}{}{pomoci. Francine je mrtvá, zabil ji}
 {12011}{}{jeden z tìch robotù.}
 {12012}{}{**END-PAR**}
 # -
@@ -977,7 +977,7 @@
 {12097}{}{to je ten faktor, kterı jsme celou tu dobu pøehlíeli.}
 {12098}{}{Zdá se, e konverze je úspìšnìjší, pokud subjekt}
 {12099}{}{neutrpìl ádné vìtší poškození radiací. Ještì nikdy jsem}
-{12100}{}{nepocítil takovou slast, jako pøi pohlcování jeho mysl.}
+{12100}{}{nepocítil takovou slast, jako pøi pohlcování jeho mysli.}
 {12101}{}{**END-PAR**}
 # -
 {12102}{}{Záznam: o0237 -o0281}
@@ -1075,7 +1075,7 @@
 {13067}{}{tu opravdu stalo, kdy jsme s ním najednou kompletnì}
 {13068}{}{ztratili spojení. Cítím v kostech, e vızkumná základna}
 {13069}{}{byla tìce zasaena. Nevím proè øíkejte si tomu pro mì a}
-{13070}{}{za mì "tušení". Je nepochopitelné e na nás dosud ádnı}
+{13070}{}{za mì „tušení“. Je nepochopitelné e na nás dosud ádnı}
 {13071}{}{útok nesmìøoval. Ale jsem si jistı, e svùj omyl u}
 {13072}{}{nebude mít Èína pøíleitost napravit. Naštìstí jsme u }
 {13073}{}{vèera pøestìhovali naše rodiny z okolních domkù na}
@@ -1086,7 +1086,7 @@
 {13077}{}{Serant Platner se nabídl k dobrovolnému vıletu na}
 {13078}{}{povrch, aby mohl provést mìøení atmosféry. Zatím to}
 {13079}{}{vypadá, e se radiace a o tolik nezvıšila. Protoe}
-{13080}{}{mìl obleèené svoje Energo brnìní, nehrozilo mu akutní}
+{13080}{}{mìl obleèenou svoji energozbroj, nehrozilo mu akutní}
 {13081}{}{nebezpeèí ozáøení. Ale pokud by byl zasaen, musel bych }
 {13082}{}{ho nechat vyhostit. Na základnì toti není ádné}
 {13083}{}{odpovídající dekontaminaèní zaøízení.}
@@ -1101,10 +1101,10 @@
 # -
 {13091}{}{• 27. øíjen 2077}
 {13092}{}{Dnes opouštíme tohle bohem zatracené místo. Vedu tenhle}
-{13093}{}{exodus do starého vládního bunkru ve Ztracenıch Horách.}
+{13093}{}{exodus do starého vládního bunkru v Lost Hills.}
 {13094}{}{Ponechávám tu tenhle záznam pohøbenı a odevzdávám ho}
 {13095}{}{i s celım tímhle místem jeho osudu. Kdo ví, moná}
-{13096}{}{ho jednoho dne nìkdo najde.....}
+{13096}{}{ho jednoho dne nìkdo najde...}
 {13097}{}{**END-DISK**}
 
 
@@ -1171,19 +1171,19 @@
 {16000}{}{Robert Anderson}
 {16001}{}{Vızkumník-Asistent}
 {16002}{}{Bezpeènostní provìøení: Modrá}
-{16003}{}{Umístìní: Vojenská báze Mariposa}
+{16003}{}{Umístìní: Vojenská základna Mariposa}
 {16004}{}{**END-PAR**}
 #
 {16005}{}{Nick Davis}
 {16006}{}{Øeditel divize NBC základny West Tech}
 {16007}{}{Bezpeènostní provìøení: Modrá}
-{16008}{}{Umístìní: Vızkumná báze West Tech}
+{16008}{}{Umístìní: Vızkumné zaøízení West Tech}
 {16009}{}{**END-PAR**}
 #
 {16010}{}{John Isaac}
 {16011}{}{Vızkumník-Asistent}
 {16012}{}{Bezpeènostní provìøení: Èervená}
-{16013}{}{Umístìní: Vızkumná základna West Tech}
+{16013}{}{Umístìní: Vızkumné zaøízení West Tech}
 {16014}{}{**END-PAR**}
 #
 {16015}{}{Steve Remco}
@@ -1195,25 +1195,25 @@
 {16020}{}{Charles Rignhold}
 {16021}{}{Vedoucí vızkumu Laserovıch zbraní}
 {16022}{}{Bezpeènostní provìøení: Modrá}
-{16023}{}{Umístìní: Vızkumná základna West Tech}
+{16023}{}{Umístìní: Vızkumné zaøízení West Tech}
 {16024}{}{**END-PAR**}
 #
 {16025}{}{Michele Santose}
 {16026}{}{Technik-laborant}
 {16027}{}{Bezpeènostní provìøení: Èervená}
-{16028}{}{Umístìní: Vızkumná základna West Tech}
+{16028}{}{Umístìní: Vızkumné zaøízení West Tech}
 {16029}{}{**END-PAR**}
 #
-{16030}{}{Thomas Zvelebil}
-{16031}{}{Pokusnı FEV objekt è. 0018298}
-{16032}{}{Podléhá obèasnım záchvatùm zuøivosti.}
-{16033}{}{Umístìní: Nejmenovanı èasopis}
+{16030}{}{Erin Shellmanová}
+{16031}{}{Technik-laborant}
+{16032}{}{Bezpeènostní provìøení: Modrá}
+{16033}{}{Umístìní: Vojenská základna Mariposa}
 {16034}{}{**END-PAR**}
 #
 {16035}{}{Leon VonFelden}
 {16036}{}{Vedoucí vızkumu FEV}
 {16037}{}{Bezpeènostní provìøení: Modrá}
-{16038}{}{Umístìní: Vojenská báze Mariposa}
+{16038}{}{Umístìní: Vojenská základna Mariposa}
 {16039}{}{**END-DISK**}
 
 # Holodisk from the Brotherhood Library
@@ -1234,7 +1234,7 @@
 {17009}{}{Pøímo pod rozsáhlou metropolí Bakersfield, leí}
 {17010}{}{technologicky pozoruhodnı Vault 12.  Byl vybudován}
 {17011}{}{s ohledem na maximální pohodlí jeho budoucích obyvatel.}
-{17012}{}{Vaultu 12 bylo udìleno ocenìní "Vault Roku"}
+{17012}{}{Vaultu 12 bylo udìleno ocenìní „Vault Roku“}
 {17013}{}{za jeho zvláštní pozornost k neustálé pohotovosti.}
 {17014}{}{Pohøben hluboko pod zemí poskytne svım obyvatelùm}
 {17015}{}{bezprecedentní ochranu.  Stejnì jako ostatní}
@@ -1300,10 +1300,10 @@
 {18018}{}{Poslaná zpráva: Pane? Uh... rozumìl jsem správnì, pane?}
 {18019}{}{Myslíte, zabít ho? Pøepínám.}
 {18020}{}{**END-PAR**}
-{18021}{}{Pøijatá zpráva: : Pøesnì tak, Regulátore.}
+{18021}{}{Pøijatá zpráva: Pøesnì tak, Regulátore.}
 {18022}{}{A chci to poøádnì krvavı. Narate ho na kùl venku pøed stráním}
 {18023}{}{stanovištìm - oh, a taky mu vyøíznìte jazyk, aby nemohl køièet,}
-{18024}{}{zatímco se budeme pokoušet "zachránit" tu jeho nešastnou prdel.}
+{18024}{}{zatímco se budeme pokoušet „zachránit“ tu jeho nešastnou prdel.}
 {18025}{}{Jasnı?}
 {18026}{}{**END-PAR**}
 {18027}{}{Poslaná zpráva: Provedu, pane. Konec.}

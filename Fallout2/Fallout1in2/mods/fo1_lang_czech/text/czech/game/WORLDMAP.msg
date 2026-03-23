@@ -15,43 +15,43 @@
 #	Up to 10 selection names
 #
 # Vault 13
-{200}{}{Vstup do jeskyne}
+{200}{}{Vstup do jeskynì}
 {201}{}{Vstup}
-{202}{}{Obytne prostory}
-{203}{}{Velin}
+{202}{}{Ubikace}
+{203}{}{Velín}
 #
 # Vault 15
-{210}{}{Vylez do pouste}
-{211}{}{Jeskyne/vstup}
-{212}{}{Obytne prostory}
-{213}{}{Velin}
+{210}{}{Vılez do pouštì}
+{211}{}{Jeskynì/vstup}
+{212}{}{Ubikace}
+{213}{}{Velín}
 #
 # Shady Sands
 {220}{}{Vstup}
 {221}{}{Zahrada}
-{222}{}{Dobytci ohrada}
+{222}{}{Ohrada pro brahmíny}
 #
 # Junktown
 {230}{}{Vstup}
-{231}{}{Crash House}
+{231}{}{Chrápárna}
 {232}{}{Kasino}
 #
 # Raiders
-{240}{}{Tabor Khanu}
+{240}{}{Základna}
 #
 # Necropolis
 {250}{}{Motel}
 {251}{}{Kostel}
-{252}{}{Vodarna}
+{252}{}{Vodárna}
 #
 # Hub
 {260}{}{Vstup}
 {261}{}{Centrum}
 {262}{}{Pahorky}
-{263}{}{Stare mesto}
+{263}{}{Staré Mìsto}
 {264}{}{Kupci}
-{265}{}{Jeskyne}
-{266}{}{Irwinova Farma}
+{265}{}{Jeskynì}
+{266}{}{Irwinova farma}
 #
 # Brotherhood
 {270}{}{Vstup}
@@ -63,19 +63,19 @@
 # Military Base
 {280}{}{Vstup}
 {281}{}{Pevnost}
-{282}{}{Nadrze}
+{282}{}{Nádre}
 {283}{}{Ruiny}
 #
 # Glow
-{290}{}{Krater}
+{290}{}{Kráter}
 {291}{}{1. patro}
 #
 # Boneyard
 {300}{}{Adytum}
 {301}{}{Centrum}
 {302}{}{Knihovna}
-{303}{}{Gun Runnerove}
-{304}{}{Kino}
+{303}{}{Pevnost}
+{304}{}{Sklad}
 #
 # Cathedral
 {310}{}{Vstup}
@@ -83,10 +83,10 @@
 {312}{}{CHILDRN2}
 {313}{}{MSTRLR12}
 {314}{}{MSTRLR34}
-{315}{}{Krater}
+{315}{}{Kráter}
 
 # Cathedral Crater
-{320}{}{Krater}
+{320}{}{Kráter}
 
 # Military Base Ruins
 {330}{}{Ruiny}
@@ -99,7 +99,7 @@
 {410}{}{Motorka bez paliva}
 
 # Misc messages
-{500}{}{Pøibylo ti 10,000 bodù zkušenosti!}
+{500}{}{Pøibylo ti 10 000 bodù zkušeností!}
 {501}{}{Ruiny}
 
 # Random Encounter Desert - triggered by player
@@ -124,10 +124,10 @@
 # Special Encounter TALKCOW
 {770}{}{Pouš}
 # Special Encounter Guardian of Forever
-{780}{}{Stráce vìènosti}
+{780}{}{Stráce Vìènosti}
 
 # Scrapheap
-{790}{}{Smìtištì}
+{790}{}{Šrotištì}
 
 # Copy of Caves (Shady sands), CAVES.MAP - used for optional location circle feature
 {800}{}{Jeskynì}
@@ -148,7 +148,7 @@
 {1006}{}{Radioaktivní pouš}
 
 # Misc messages
-{1500}{}{Pøibylo ti 10,000 bodù zkušenosti!}
+{1500}{}{Pøibylo ti 10 000 bodù zkušeností!}
 {1501}{}{Ruiny}
 {1502}{}{Autu došla energie.}
 {1503}{}{Toto je auto. Nevypadá, e je v provozu.}
@@ -161,7 +161,7 @@
 # Original is "You encounter:"
 {2998}{}{Encounter begins. --- disabled by Sfall ---}
 # Original is "Do you wish to avoid:"
-{2999}{}{Encounter! Investigate?}
+{2999}{}{Støetnutí! Prozkoumat?}
 
 # Encounter Table 0
 {3000}{}{unused}

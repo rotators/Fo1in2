@@ -1,5 +1,5 @@
 {100}{}{Vidíš Jakea od Následovníkù.}
-{101}{}{Vidíš Následovníka Apokalypsy.}
+{101}{}{Vidíš Následovníka apokalypsy.}
 {102}{}{Vítej, mùj pøíteli! Jak ti dnes mohu pomoci?}
 {103}{}{Mì pomoc! Mì pomoc!}
 {104}{}{Slyšel jsem, že jsi tuhej bojovník. Hned to vyzkoušíme.}
@@ -15,12 +15,12 @@
 {114}{}{Nìkteøí z nás používají mozek, aby se dostali dál. Mnohé lze vyøešit mírem a pøemýšlením.}
 {115}{}{A kdy teda ty svý mozky zaènete používat?}
 {116}{}{Máš pravdu. Omlouvám se.}
-{117}{}{To je to. Už se s tebou nebudu bavit.}
+{117}{}{To staèí. Už se s tebou nebudu bavit.}
 {118}{}{To je lepší. Takže, mám tady problém se špiónem. Pomùžeš mi?}
 {119}{}{Ano. O co jde?}
 {120}{}{Pomož si sám, když jsi taková hvìzda.}
 {121}{}{Jen jsem øekl, že tu máme špióna. Myslím si, že by to mohl být nìkdo ze strážných. Nebo nìkterý ze zvìdù. To jsou jediné skupiny, které mají pøístup k Dìtem.}
-{122}{}{Dobøe. Dostanu toho zvìda a vyøeším tím tvùj problém.}
+{122}{}{Dobøe. Dostanu toho špióna a vyøeším tím tvùj problém.}
 {123}{}{Je nìco známo o tom špiónovi?}
 {124}{}{Zapomeò na to. Nepomùžu ti.}
 {125}{}{Díky moc. Teï jdi!}
@@ -28,7 +28,7 @@
 {127}{}{Fajn. Jdu se porozhlédnout.}
 {128}{}{Zapomeò na to. Nepomùžu ti.}
 {129}{}{Pak tì nemohu nechat odejít.}
-{130}{}{Ale mùžeš. Sbohem!}
+{130}{}{Tak dobrá. Mìj se!}
 {131}{}{Máme problém. Naše informace nìjak prosakují k Dìtem. Podle mì tu máme špióna.}
 {132}{}{Dobøe. Co je tu za problém?}
 {133}{}{Dobøe, postarám se o toho špióna.}
@@ -40,6 +40,6 @@
 {139}{}{Já vìdìl, že to musí být Heather. Byla od zaèátku prolhaná a neèestná. Mìl jsem hned všem øíct, co jsem si od zaèátku myslel.}
 {140}{}{Nikdy jsem se od tebe nic nenauèil. Tvùj výcvik byl k nièemu.}
 {141}{}{Mám pro tebe balíèek od Gabriela.}
-{142}{}{Hmm. Aha Díky.}
+{142}{}{Hmm. Aha. Díky.}
 {143}{}{Koukej kurva zmizet.}
 {144}{}{Je to tìžký. Vždycky je to tìžký.}

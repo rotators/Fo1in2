@@ -1,1 +1,1 @@
-{100}{}{Toto je pohotovostní operaèní sál Vaultu zvaný - EML. Zde si poradí s vìtšinou tìžkých zranìní. Jeden doktor by tu mìl mít službu 24 hodin dennì.}
+{100}{}{Toto je Nouzová lékaøská laboratoø Vaultu – EML. Slouží k léèbì všech vážných zranìní a onemocnìní. Službu konající zdravotník by zde mìl být k dispozici ètyøiadvacet hodin dennì.}

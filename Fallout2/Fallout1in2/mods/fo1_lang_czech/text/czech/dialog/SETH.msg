@@ -1,7 +1,7 @@
 {100}{}{Vidíš Setha, velitele stráží vesnice Shady Sands.}
 {101}{}{Ty! Soužil jsi naši ves už dost dlouho. Zabiju tì vlastnoruènì!}
-{102}{}{Od tobì podobných neplyne nic dobrého. Zabiju tì a zbavím tak Pustiny další zrùdy.}
-{103}{}{Nejsi nejbystøeší, co? Hele, dej pozor na radškorpióny, a vyhejbej se problémùm.}
+{102}{}{Od tobì podobných neplyne nic dobrého. Zabiju tì a zbavím tak pustinu další zrùdy.}
+{103}{}{Nejsi nejbystøejší, co? Hele, dej pozor na radškorpióny a vyhejbej se problémùm.}
 {104}{}{Škorpióni!}
 {105}{}{Sbohem.}
 {106}{}{Vypadáš jako jeden z nájezdníkù. Máme dost pøísný hlídky, tady v Shady Sands. Co chceš?}
@@ -20,14 +20,14 @@
 {119}{}{Jeskynì!}
 {120}{}{Nic víc, díky.}
 {121}{}{Co chceš vìdìt?}
-{122}{}{Ti proklatí radškorpióni pasou po našich brahminech od té doby, co jsme se tu usadili. Neuplyne týden, aby nebyl nìkdo pøi zahánìní škorpiónù od dobytèích ohrad uštknut. Minulý týden dostali mého bratra Jarvise. Razlo, náš doktor, se snaží vyrobit protijed co nejrychleji. Hele, jestli nám chceš nìjak pomoci, zajdi si promluvit s naším vùdcem, s Aradeshem.}
-{123}{}{V okolí se potlouká nìkolik nájezdníckych klanù a nezávislých skupin. Jedna velká banda teï táboøí na jihovýchod od nás. Radím ti dobøe, dej si na nì pozor. Pøed nedávnem jsme si museli najmout žoldáky, jako je tøeba Ian, aby nám pomáhali odrážet jejich nájezdy.}
+{122}{}{Ti proklatí radškorpióni pasou po našich brahminách od té doby, co jsme se tu usadili. Neuplyne týden, aby nebyl nìkdo pøi zahánìní škorpiónù od dobytèích ohrad uštknut. Minulý týden dostali mého bratra Jarvise. Razlo, náš doktor, se snaží vyrobit protijed co nejrychleji. Hele, jestli nám chceš nìjak pomoci, zajdi si promluvit s naším vùdcem, s Aradeshem.}
+{123}{}{V okolí se potlouká nìkolik nájezdnických klanù a nezávislých skupin. Jedna velká banda teï táboøí na jihovýchod od nás. Radím ti dobøe, dej si na nì pozor. Pøed nedávnem jsme si museli najmout žoldáky, jako je tøeba Ian, aby nám pomáhali odrážet jejich nájezdy.}
 {124}{}{Shady Sands je mírumilovná komunita. Máme svùj vlastní zavlažovací systém, který nám umožòuje pìstovat si vlastní jídlo. Pokud by nás netrápili nájezdníci a radškorpióni, náš život by byl mnohem snazší.}
 {125}{}{Opravdu chceš, abych ti ukázal, kde jsou jeskynì radškorpiónù? Nemùžu jít s tebou, ale cestu ti ukážu.}
 {126}{}{Ano.}
 {127}{}{Ne.}
 {128}{}{Dobrá, dej mi vìdìt, až budeš schopen vyrazit.}
-{129}{}{[Hotovo]}
+{129}{}{[Odejít]}
 {130}{}{Uh-huh.}
 {131}{}{Uh-uh.}
 
@@ -39,7 +39,7 @@
 {205}{}{Buï pozdraven, cizinèe. Vítej v Shady Sands.}
 {206}{}{Mìl by sis promluvit s Aradeshem, naším vùdcem. Rád se setká s každým cizincem. Mìl by být na radnici, to je ta budova na jihu vsi.}
 
-{300}{}{Dharma buï pochválen, že ses vrátil, poutníku. Mou dívku . . . eh, Tandi, Aradeshovu dceru, unesli. Myslíme, že to byli nájezdníci.}
+{300}{}{Dharma buï pochválen, že ses vrátil, poutníku. Mou dívku... eh, Tandi, Aradeshovu dceru, unesli. Myslíme si, že to byli nájezdníci.}
 {301}{}{Kde ty nájezdníky najdu?}
 {302}{}{Ou. Tìžká rána. Dobrá, uvidíme se pozdìji.}
 {303}{}{Je mi líto, pøál bych si, abych mohl pomoci.}
@@ -101,9 +101,9 @@
 
 # Fo1in2:
 {2000}{}{Nemohu s tebou jít, ale mohu ti ukázat cestu.}
-{2010}{}{[Více]}
+{2010}{}{[Pokraèovat]}
 {2020}{}{Bezva. Tak mi ukaž, kde mám jít.}
-{2100}{}{[Pomocí Sethových pokynù jsi oznaèil jeskyni radškorpionù na mapì svého PipBoye]}
+{2100}{}{[Pomocí Sethových pokynù jsi oznaèil jeskyni radškorpiónù na mapì svého PipBoye]}
 
-{2200}{}{Byl bych radìji, kdybys nejdøív zachránil Tandi, ale pokud jsi ochoten postavit se tìm škorpiónùm...}
+{2200}{}{Byl bych radìji, kdybys nejdøív zachránil Tandi, ale pokud jsi ochoten postavit se tìm radškorpiónùm...}
 {2210}{}{Brzo se vrátím. Sbohem.}

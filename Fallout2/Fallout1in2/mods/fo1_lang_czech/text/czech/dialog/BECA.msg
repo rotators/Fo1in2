@@ -4,7 +4,7 @@
 # referenced as 'SHE/HER' NOT 'he/his/him'. 'Jade' stands for nickname and
 # 'Bec'a stands for the real one.
 
-{100}{}{Vidíš Jadea.}
+{100}{}{Vidíš Jade.}
 {101}{}{Vidíš Becu.}
 {102}{}{}
 {103}{}{}
@@ -22,7 +22,7 @@
 {115}{}{Mùžu si tu trochu oddechnout?}
 {116}{}{Ne. Tohle je jenom pro opravdové Blades, ne pro kdejakého pøivandrovalce.}
 {117}{}{Hej, kámo! Jak je? Lehni si tu, jestli hledáš kousek klidnýho místeèka.}
-{118}{}{Takže jsi se dobrovolnì rozhodl že pomùžeš. Lepší než nic. Dík. Zmíním to ostatním.}
-{119}{}{Jo, uvidím co zmùžu.}
+{118}{}{Takže jsi se dobrovolnì rozhodl, že pomùžeš. Lepší než nic. Dík. Zmíním to ostatním.}
+{119}{}{Jo, uvidím, co zmùžu.}
 {120}{}{Zdravím, kámo. Proslýchá se, že jsi nám fakt pomohl. Jsi víc než hoden naší úcty. Teï jsme volní. (Nyní jsi èlenem gangu Blades.)}
 {121}{}{S tím ti nepomùžu. Promluv si s Razor.}

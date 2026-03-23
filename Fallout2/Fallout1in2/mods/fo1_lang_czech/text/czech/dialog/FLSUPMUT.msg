@@ -1,5 +1,5 @@
-{100}{}{Vidíš Lou, Nightkinku.}
-{101}{}{Vidíš Sue, Nightkinku.}
+{100}{}{Vidíš Lou, Nightkina.}
+{101}{}{Vidíš Sue, Nightkina.}
 {102}{}{Vidíš Drewa, Nightkina.}
 {103}{}{Vidíš Kurta, Nightkina.}
 {104}{}{Vidíš Berta, Nightkina.}

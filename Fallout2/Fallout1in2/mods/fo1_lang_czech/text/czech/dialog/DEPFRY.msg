@@ -1,5 +1,5 @@
-{100}{}{Vidíš zástupce šerifa.}
-{101}{}{Dobrı den, pøíteli. Zástupce šerifa Philip Fry, k tvım slubám.}
+{100}{}{Vidíš zástupce šerifa Frye.}
+{101}{}{Dobrı den, pøíteli. Zástupce šerifa Tony Fry, k tvım slubám.}
 {102}{}{Kde to jsem?}
 {103}{}{Jdi mi z cesty nebo tebou nakrmím èervy.}
 {104}{}{To jsem neudìlal.}
@@ -13,7 +13,7 @@
 {112}{}{Kdo je Decker?}
 {113}{}{Ztracené karavany?}
 {114}{}{Jo, díky.}
-{115}{}{To je pøekvapivé. Venku to bylo docela drsné, zvláš díky tìm mizejícím karavanám. Ale teï jsi v bezpeèí, jen se dr stranou Maltese Falconu. Tam sídlí Decker se svou partou a ti znamenají potíe.}
+{115}{}{To je pøekvapivé. Venku to bylo docela drsné, zvláš díky tìm mizejícím karavanám. Ale teï jsi v bezpeèí, jen se dr stranou Maltézského sokola. Tam sídlí Decker se svou partou a ti znamenají potíe.}
 {116}{}{Kdo je Decker?}
 {117}{}{Ztracené karavany?}
 {118}{}{Jo, jsem docela drsnej.}
