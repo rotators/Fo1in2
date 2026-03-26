@@ -41,7 +41,7 @@ The **type** value in the weapon knockback functions can be 0 or 1. If 0, the va
 
 The `get_sfall_global` and `set_sfall_global` functions require an 8 characters long case sensitive string for the variable name. The variables behave the same as normal Fallout globals, except that they don't have to be declared beforehand in **vault13.gam**. Trying to get a variable which hasn't been set will always return 0. These functions are intended for use when a patch to a mod requires the addition of a new global variable, a case which would otherwise require the player to start a new game.
 
-The `set_pickpocket_max` and `set_hit_chance_max` affect all critters rather than just the player and can set the maximum in range from 0 to 999.
+The `set_pickpocket_max` and `set_hit_chance_max` affect all critters rather than just the player and can set the maximum in the range of 0 to 999.
 
 The `set_skill_max` can't be used to increase the skill cap above 300. The `set_perk_level_mod` sets a modifier between +25 and -25 that is added/subtracted from the player's level for the purposes of deciding which perks can be chosen.
 
@@ -66,7 +66,7 @@ The `get_proto_data` and `set_proto_data` are used to manipulate the in memory c
 The `list_xxx` functions can be used to loop over all items on a map. `list_begin` takes an argument telling sfall what you want to list (defined in **sfall.h**). It returns a list pointer, which you iterate through with `list_next`. Finally, when you've finished with the list use `list_end` on it. Not calling `list_end` will result in a memory leak. Alternatively, use `list_as_array` to get the whole list at once as a temp array variable, which can be looped over using `len_array` and which you don't need to remember to free afterwards.
 
 The `play_sfall_sound` and `stop_sfall_sound` are used to play **mp3/wav/wma** files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an ID which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. These functions do not require **AllowDShowSound** to be set to 1 in **ddraw.ini**.
-Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, you need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is muted), and `Y` is the playback mode.
+Starting from sfall 4.2.8/3.8.28, you can pass a value in the **mode** argument for a reduced sound volume. To set the volume, you need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in the range of 0 to 32767 (the value 32767 is mute), and `Y` is the playback mode.
 
 Arrays are created and manipulated with the `xxx_array` functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create_array` or `temp_array` can then be used with the other array functions. Arrays are shared between all scripts. (i.e. you can call `create_array` from one script, and then use the returned ID from another script.) They are also saved across savegames. Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad ID or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temp arrays. You can use `fix_array` to make a temp array permanent.\
 __NOTE:__ refer to **arrays.md** for detailed description of the array behavior and function usage.
@@ -172,7 +172,7 @@ FUNCTION REFERENCE
 
 -----
 #### `int get_light_level`
-- Ambient light level in range 0..65536
+- Returns ambient light level in the range of 0 to 65536.
 - The value returned by `get_light_level` may not exactly match that set by `set_light_level`, as `set_light_level` applies modifiers from the night vision perk.
 
 -----
@@ -439,7 +439,7 @@ FUNCTION REFERENCE
 
 -----
 #### `int tile_light(int elevation, int tileNum)`
-- Returns light intensity at the given tile in range from 0 to 65536.
+- Returns light intensity at the given tile in the range of 0 to 65536.
 
 -----
 #### `object obj_blocking_line(object objFrom, int tileTo, int blockingType)`
@@ -858,13 +858,11 @@ sfall_funcX metarule functions
 ----
 #### add_extra_msg_file
 `int sfall_func1("add_extra_msg_file", string fileName)`\
-`int sfall_func2("add_extra_msg_file", string fileName, int fileNumber)`
-- Loads the custom message file, and returns the file ID number assigned to it in range from `0x3000` to `0x3FFF` for the `message_str_game` function to get messages from the file
+`int sfall_func2("add_extra_msg_file", string fileName, int fileNumber)` **[DEPRECATED]**
+- Loads a custom message file and returns the file ID number assigned to it, in the range of `0x3000` to `0x3FFF`, for use with the `message_str_game` function
 - `fileName`: the name of the custom message file (including the **.msg** extension) in the `text\<language>\game\` directory
 - __NOTE:__ if the msg file does not exist in the current language directory, the function will try to load it from the `text\English\game\` directory
-
-**Optional argument:**
-- `fileNumber`: the file ID number for the `message_str_game` function. The available range is from `0x2000` to `0x2FFF` (see **ExtraGameMsgFileList** setting in **ddraw.ini**). Use **fileNumber** only if you want to add a message file without editing **ddraw.ini** or existing scripts to support the old way
+- __Deprecation notice:__ Starting from sfall 4.4.10/3.8.50, the two-argument form is deprecated. The `fileNumber` argument is ignored, and the function behaves the same as the one-argument form.
 
 ----
 #### unwield_slot

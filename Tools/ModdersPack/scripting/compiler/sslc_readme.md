@@ -323,6 +323,8 @@ Syntax which requires sfall for compiled scripts to be interpreted is marked by 
 
   __NOTE:__ Just like `for` loop, `continue` statement will respect increments of a hidden counter variable, so you can safely use it inside `foreach`.
 
+- `#pragma sce` directive. If present anywhere in the script source, it will enable short-circuit evaluation for all the logical `AND` and `OR` operators, even if the command line option `-s` is not used.
+
 ---
 
 ### Fixes
@@ -347,6 +349,10 @@ There are several changes in this version of sslc which may result in problems f
 ---
 
 ### Changelog
+
+**sfall 4.4.10:**
+- added `#pragma sce` directive
+- added support for nested array expressions
 
 **sfall 4.4.7:**
 - fixed leftover stack data caused by the `break` statement
