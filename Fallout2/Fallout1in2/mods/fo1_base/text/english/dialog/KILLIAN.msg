@@ -152,7 +152,7 @@
 {251}{Kill73}{That's my store. You need it, I got it.}
 {252}{Kill74}{Great place to get a cheap room. Not too dirty, either. But don't mess with the owner, Marcelles, she'll pull your arms out if you smart off to her.}
 {253}{Kill75}{Ah, Gizmo's is the casino by the entrance. I'm surprised you didn't notice it on your way in. You can usually smell the place for miles. But hey, it brings in the tourists.}
-{254}{Kill76}{That's our resident bar. The food's okay, but the beer's great. The owner, Neil, takes no lip, not even from some of the raiders that come in.}
+{254}{Kill76}{That's our resident bar. The food's okay, but the beer's great. The owner, Neal, takes no lip, not even from some of the raiders that come in.}
 {255}{Kill76a}{Not much to say. Doc Morbid's pretty pissed 'cause their prices are lower for medical stuff. They're on the west side.}
 {256}{Kill77}{The Deathclaw? Oh, that's a bedtime story. Drinks blood and howls at the full moon. Yeah, right.}
 {257}{Kill78}{Well, the Hub's the main place for trade. Anything you don't find here you'll probably find in the Hub. Not sure how safe it is nowadays, with all those strange things going on.}
