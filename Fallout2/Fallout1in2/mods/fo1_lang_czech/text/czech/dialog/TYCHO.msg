@@ -134,69 +134,71 @@
 #
 
 {1000}{}{Junktown}
-{1001}{}{Rangeri}
-{1002}{}{Cip}
-{1003}{}{Valka}
-{1004}{}{Pustina}
-{1005}{}{Nasledovnici}
-{1006}{}{Katedrala}
+{1001}{}{Rangers|Rangeri}
+{1002}{}{Chip|Cip}
+{1003}{}{War|Valka}
+{1004}{}{Wastes|pustina}
+{1005}{}{Followers|nasledovnici}
+{1006}{}{Cathedral|Katedrala}
 {1007}{}{Garl}
-{1008}{}{Vudce}
-{1009}{}{Jednota}
+{1008}{}{Master|Vudce}
+{1009}{}{Unity|Jednota}
 {1010}{}{Set}
-{1011}{}{Vodarna}
-{1012}{}{Nekropolis}
-{1013}{}{Sin}
-{1014}{}{Knihovna}
-{1015}{}{Spravce}
-{1016}{}{Doktor}
-{1017}{}{Leceni}
+{1011}{}{Watershed|Vodarna}
+{1012}{}{Necropolis|Nekropolis}
+{1013}{}{Hall|hala|sin}
+{1014}{}{Library|knihovna}
+{1015}{}{Overseer|Spravce}
+{1016}{}{Medic|medik|Doktor}
+{1017}{}{Healing|leceni}
 {1018}{}{Vault}
-{1019}{}{Vault-13}
+{1019}{}{Vault 13}
 {1020}{}{Vault13}
 {1021}{}{Killian}
 {1022}{}{Gizmo}
-{1023}{}{Kostnice}
+{1023}{}{Boneyard|Kostnice}
 {1024}{}{Shady}
 {1025}{}{Sands}
 {1026}{}{Hub}
-{1027}{}{Kasino}
-{1028}{}{Obchod}
-{1029}{}{Parac}
+{1027}{}{Casino|Kasino}
+{1028}{}{Store|obchod}
+{1029}{}{Deathclaw|parac}
 {1030}{}{Exodus}
-{1031}{}{Zasveceni}
-{1032}{}{Paladinove}
-{1033}{}{Pisari}
-{1034}{}{Deti}
-{1036}{}{Bratrstvo}
-{1037}{}{Nadrze}
-{1038}{}{Vojenska}
-{1039}{}{Zakladna}
-{1041}{}{Apocalypsa}
-{1042}{}{Mutanti}
+{1031}{}{Initiates|zasvecenci|Zasveceni}
+{1032}{}{Paladins|paladini|paladinove}
+{1033}{}{Scribes|pisari}
+{1034}{}{Children|deti}
+{1035}{}{Children|deti}
+{1036}{}{Brotherhood|Bratrstvo}
+{1037}{}{Vats|Nadrze}
+{1038}{}{Military|Vojenska}
+{1039}{}{Base|Zakladna}
+{1040}{}{Base|Zakladna}
+{1041}{}{Apocalypse|Apokalypsa}
+{1042}{}{Mutants|Mutanti}
 {1043}{}{Morpheus}
-{1044}{}{Khanove}
+{1044}{}{Khans|Khanove}
 {1045}{}{Tandi}
 {1046}{}{Alya}
 {1047}{}{Diana}
 {1048}{}{Gwen}
 {1049}{}{Petrox}
 {1050}{}{Tolya}
-{1051}{}{Chlast}
-{1052}{}{Drogy}
+{1051}{}{Booze|Chlast}
+{1052}{}{Drugs|Drogy}
 {1053}{}{Seth}
 {1054}{}{Aradesh}
 {1055}{}{Razlo}
 {1056}{}{Zimmerman}
-{1057}{}{Regulatori}
-{1058}{}{Sberaci}
+{1057}{}{Regulators|Regulatori}
+{1058}{}{Scavs|Sberaci}
 {1059}{}{Blades}
 {1060}{}{Nicole}
-{1061}{}{Porucik}
-{1062}{}{Psychika}
-{1063}{}{Experimenty}
-{1064}{}{Policie}
-{1065}{}{Obchodnici}
+{1061}{}{Lieutenant|Porucik}
+{1062}{}{Psychics|Psychika}
+{1063}{}{Experiments|Experimenty}
+{1064}{}{Police|Policie}
+{1065}{}{Merchants|Obchodnici}
 
 {1100}{}{No, Junktown není mùj domov, ale je to zajímavé mìsto. Má velký potenciál, aèkoliv si nejsem jistý, zda se na troskách budov znièených minulostí dá stavìt budoucnost.}
 {1101}{}{Rangeøi pocházejí z východu, kterému se døíve øíkalo Nevada. Naše minulost sahá až k dobám texaských Rangerù. Nauèili jsme se jak pøežít a bojovat, abychom mohli vyrazit do svìta a snažili se ho udìlat lepším.}
@@ -233,10 +235,12 @@
 {1132}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1133}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1134}{}{Lituji, ale s tím ti nemohu pomoci.}
+{1135}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1136}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1137}{}{Lituji, ale s tím ti nemohu pomoci.}
 {1138}{}{Co vím, tak armáda mìla nìkolik tajných izolovaných základen. Nevím ale pøesnì kde.}
 {1139}{}{Co vím, tak armáda mìla nìkolik tajných izolovaných základen. Nevím ale pøesnì kde.}
+{1140}{}{Co vím, tak armáda mìla nìkolik tajných izolovaných základen. Nevím ale pøesnì kde.}
 {1141}{}{Nukleární armageddon byl výsledkem hrdosti a pošetilosti. Teï za to platíme.}
 {1142}{}{Jisté je, že tam venku je nìco hodnì divného. Vidìl jsem zmutované škorpióny a dvouhlavé krávy a slyšel jsem, že v Nekropolis jsou ghúlové, kteøí vypadají jako lidé, ale ve skuteènosti jsou úplnì jiní.}
 {1143}{}{Lituji, ale s tím ti nemohu pomoci.}

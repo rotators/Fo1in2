@@ -76,10 +76,10 @@
 {166}{}{Ten chlap zabil prej víc lidí ne cholera. Øíká se, e to tu celé vlastní — ne obchodníci, ne policie, ale on. Jestli mu hodláš zkøíit cestu, udìlej to fofrem, ne tì stihne pøeválcovat.}
 {167}{}{To mu ale nedává „licenci zabíjet“.}
 {168}{}{Dìlá se mi z tebe šoufl. Je mi jasnı, e mu tvá spoleènost zcela urèitì chybí.}
-{169}{}{No, máme tu tøi obchodní skupiny. Jsou tu Obchodníci s vodou, Karmínová karavana a Obchodníci Far Go. Oni jsou taky mìstská rada. O èem se chceš dozvìdìt?}
+{169}{}{No, máme tu tøi hlavní obchodní skupiny. Jsou to Obchodníci s vodou, Karmínová karavana a Far Go. Taky tvoøí mìstskou radu. O èem se chceš dozvìdìt?}
 {170}{}{Obchodníci s vodou.}
 {172}{}{Karmínová karavana.}
-{173}{}{Obchodníci Far Go.}
+{173}{}{Far Go.}
 {174}{}{Mìstská rada.}
 {175}{}{To je všechno. Díky za informaci.}
 {176}{}{No vlastnì - zapomeò na to.}
@@ -108,11 +108,11 @@
 {199}{}{Oni také postrádají karavany?}
 {200}{}{Díky, a ještì otázeèku o obchodnících...}
 {201}{}{Díky, sbohem!}
-{202}{}{Vlastnì kadému obchodnickému kartelu se ztrácejí karavany. Obchodníci Far Go nemají zkrátka štìstí, alespoò to tak vypadá.}
+{202}{}{Vlastnì kadému obchodnickému kartelu se ztrácejí karavany. Far Go nemá zkrátka štìstí, alespoò to tak vypadá.}
 {203}{}{Jak riskantní?}
 {204}{}{Díky, a ještì otázeèku o obchodnících...}
 {205}{}{Díky, sbohem.}
-{206}{}{Obchodníci Far Go platí dobøe a náplò práce pro nì není zas tak smrtonosná. Butchovi patøí tenhle kvelb; je to dobrej chlap. Obchodníci Far Go jsou spravedliví a nechávají mì, a si s tímhle místem dìlám co chci; ráda pro nì pracuji. Jo a navíc - jestli dìláš pro Butche, dostaneš slevu na všechno, co prodávám.}
+{206}{}{Far Go platí dobøe a náplò práce pro nì není zas tak smrtonosná. Butchovi patøí tenhle kvelb; je to dobrej chlap. U Far Go jsou fér a nechávají mì, a si s tímhle místem dìlám co chci; ráda pro nì pracuju. Jo a navíc - jestli dìláš pro Butche, dostaneš slevu na všechno, co prodávám.}
 {207}{}{Já osobnì si to nemyslím. Myslím, e to byl Páraè nebo moná Bratrstvo oceli.}
 {208}{}{Proè si myslíš, e to nebyli Obchodníci s vodou?}
 {209}{}{Co pøesnì je páraè?}
@@ -125,9 +125,9 @@
 {216}{}{No, myslela jsem, e je to ono, co nièí karavany, ale asi se mılím. Je to stále tam venku. Kolem je slyšet moc zneklidòujících zpráv na to, aby to neexistovalo.}
 {217}{}{Myslím, e to je to, kvùli èemu mizí karavany. Taky by to mohlo bıt Bratrstvo oceli; jsou to divní pavouci. Nìkteøí lidé si myslí, e to jsou Obchodníci s vodou, ale ti jsou vedle.}
 {218}{}{Jistì.}
-{219}{}{Protoe, jak u jsem kadému øíkala, také se jim ztratilo pár karavan. Nic tak váného jako u Obchodníkù Far Go, ale postieni tím jsou všichni.}
+{219}{}{Protoe, jak u jsem kadému øíkala, také se jim ztratilo pár karavan. Nic tak váného jako u Far Go, ale postieni tím jsou všichni.}
 {220}{}{Mùou buï lhát, nebo to mùe bıt èást jejich plánu - pøesvìdèení širší veøejnosti, e oni za to nemùou.}
-{221}{}{Jak je moné, e se to stává pøedevším Far Go Traders?}
+{221}{}{Jak je moné, e se to stává pøedevším Far Go?}
 {222}{}{Ještì jednu otázeèku ohlednì tìch ztracenıch karavan...}
 {223}{}{Dík, vrame se k obchodníkùm.}
 {224}{}{Si dìláš prdel!}
@@ -135,7 +135,7 @@
 {226}{}{Mìj se na pozoru! Vynášíš soudy moc rychle, nebojíš se náhodou pravdy?}
 {227}{}{Je šest reprezentantù, dva z kadého obchodního kartelu. Takhle všechno potøebuje alespoò ètyøi hlasy, aby to bylo schváleno. Jejich problém ale je v tom, e se nikdy na nièem nedohodnou.}
 {228}{}{Dobrá myšlenka, ale já to vidím jinak. U po léta sabotují jeden druhému co se dá, ale tohle prostì není jejich styl. Neutráceli by tolik penìz za likvidaci karavan. Navíc, všechny karavany jsou velmi tvrdì bránìny. Pøi útoku by se urèitì podaøilo nìkomu utéct. Na udrení takové akce pod kontrolou nemají ani lidi, ani peníze. Kdyby to byli oni, byl by alespoò jeden èlovìk pøeil.}
-{229}{}{Ano, ale proè by se to dìlo Far Go Traders více ne ostatním?}
+{229}{}{Ano, ale proè by se to dìlo Far Go více ne ostatním?}
 {230}{}{Další otázka ohlednì karavan...}
 {231}{}{Díky, vrame se teï zpìt k obchodníkùm.}
 {232}{}{Díky, ale musím jít.}
@@ -243,7 +243,7 @@
 {333}{}{Jasnì, zaslouil si to a já z toho nemám vıèitky.}
 # Sid works for Beth. Sid is male.
 {334}{}{Tys to udìlal? Fakt? Já tì miluju! [Beth se podívá na Sida] Ani na to nemysli chytráku... Tady, jako ukázka mého vdìku... [Beth ti dává šest stimpakù.] Není to moc, ale já jsem ti skuteènì vdìèná.}
-{335}{}{Tys to udìlal? Fakt? Ty jsi jednièka! Ani nevíš jakou radost nám udìlala ta zpráva. Tady vezmi si tohle... [Beth ti dává šest stimpakù.] Není to moc, ale já jsem ti skuteènì vdìèná.}
+{335}{}{Tys to udìlala? Fakt? Ty jsi jednièka! Ani nevíš jakou radost nám udìlala ta zpráva. Tady vezmi si tohle... [Beth ti dává šest stimpakù.] Není to moc, ale já jsem ti skuteènì vdìèná.}
 {336}{}{Promiò, ale já nemám nic, co by se ti líbilo.}
 {337}{}{Nevidíš nic, co by se ti líbilo? No pøíštì se zkusím polepšit...}
 {338}{}{Promiò, e ti moje nabídka nevoní, ale já musím prodávat se ziskem. Neiju jenom z radiace, víš?}
@@ -306,4 +306,4 @@
 {396}{}{Díky.}
 {397}{}{O-oukej.}
 {398}{}{Je tu ve mìstì nìjaké místo, které „nechci navštívit“?}
-{399}{}{Pokud mùu radit, udruj si bezpeènou vzdálenost od Maltézského sokola. Decker a jeho umaštìnı nohsled Kane pøinášejí pouze zlé zprávy. Kdy nebudeš opatrnı, tak ti sedøou kùi z tìla, ani nemrkneš... Lidé mající rádi vlastní ivot také chodí širokım obloukem kolem Lorenza z Friendly Lending Company.}
+{399}{}{Pokud mùu radit, udruj si bezpeènou vzdálenost od Maltézského sokola. Decker a jeho umaštìnı nohsled Kane pøinášejí pouze zlé zprávy. Kdy nebudeš opatrnı, tak ti sedøou kùi z tìla, ani nemrkneš... Lidé mající rádi vlastní ivot také chodí širokım obloukem kolem Lorenza z Pøátelské úvìrové spoleènosti.}

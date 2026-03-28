@@ -140,15 +140,15 @@
 # Gizmo's Tell-Me-Abouts
 #
 
-{1000}{}{Killian}
+{1000}{}{Killian|MAYOR|SHERIFF|SHERRIF|starosta|serif}
 {1001}{}{Gizmo}
-{1002}{}{Darkwater}
-{1003}{}{Gizmovo}
+{1002}{}{Darkwaters}
+{1003}{}{Gizmo's|Gizmovo}
 {1004}{}{Darkwater}
-{1005}{}{Gizmovi}
-{1006}{}{Kasino}
-{1007}{}{Junktown}
-{1008}{}{Darkwaters}
+{1005}{}{Gizmos|Gizmovi}
+{1006}{}{Casino|Kasino}
+{1007}{}{Junktown|Junk Town|Junk}
+{1008}{}{Darkwater's}
 
 {1100}{gizmo36a}{[Gizmo zachrochtá] Killian je starosta tohohle mìsta. Myslí si, že ví všechno... no, [uchichtne se] uvidíme, kolik toho ví doopravdy, že?}
 {1101}{gizmo_37}{[Gizmo kašle.] To jsem já, pitomèe. Øídím tady... místní herní podnik.}

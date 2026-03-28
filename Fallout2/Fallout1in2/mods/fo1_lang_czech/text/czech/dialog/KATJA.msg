@@ -123,47 +123,49 @@
 {981}{}{Nevzpomínám si, že bych o tom nìco slyšela.}
 {982}{}{Ne, o tom jsem neslyšela.}
 
-{1000}{}{Voda}
-{1001}{}{Kostnice}
-{1002}{}{Valka}
+{1000}{}{Water|voda}
+{1001}{}{Boneyard|Kostnice}
+{1002}{}{War|Valka}
 {1003}{}{Adytum}
-{1004}{}{Nasledovnici}
-{1005}{}{Katedrala}
-{1006}{}{cip}
+{1004}{}{Followers|nasledovnici}
+{1005}{}{Cathedral|Katedrala}
+{1006}{}{Chip|Cip}
 {1007}{}{Garl}
-{1008}{}{vudce}
-{1009}{}{Jednota}
-{1010}{}{Sada}
-{1011}{}{vodarna}
-{1012}{}{Nekropolis}
-{1013}{}{Hala}
-{1014}{}{Knihovna}
-{1015}{}{Spravce}
-{1016}{}{Medik}
-{1017}{}{Leceni}
+{1008}{}{Master|Vudce}
+{1009}{}{Unity|Jednota}
+{1010}{}{Set|Sada}
+{1011}{}{Watershed|Vodarna}
+{1012}{}{Necropolis|Nekropolis}
+{1013}{}{Hall|hala|sin}
+{1014}{}{Library|knihovna}
+{1015}{}{Overseer|Spravce}
+{1016}{}{Medic|medik}
+{1017}{}{Healing|leceni}
 {1018}{}{Vault}
-{1019}{}{Vault-13}
-{1020}{}{Vault13}
+{1019}{}{Vault13}
+{1020}{}{Vault 13}
 {1021}{}{Killian}
 {1022}{}{Gizmo}
-{1023}{}{JunkTown}
+{1023}{}{Junktown}
 {1024}{}{Shady}
 {1025}{}{Sands}
 {1026}{}{Hub}
-{1027}{}{Kasino}
-{1028}{}{Obchod}
-{1029}{}{Paraè}
+{1027}{}{Casino|Kasino}
+{1028}{}{Store|obchod}
+{1029}{}{Deathclaw|parac}
 {1030}{}{Exodus}
-{1031}{}{zasveceni}
-{1032}{}{Paladinove}
-{1033}{}{vedci}
-{1034}{}{Deti}
-{1036}{}{Bratrstvo}
-{1037}{}{Nadrze}
-{1038}{}{armada}
-{1039}{}{Zakladna}
-{1041}{}{Apokalypsa}
-{1042}{}{Mutanti}
+{1031}{}{Initiates|zasvecenci|zasveceni}
+{1032}{}{Paladins|paladini|paladinove}
+{1033}{}{Scribes|pisari}
+{1034}{}{Children|deti}
+{1035}{}{Children|deti}
+{1036}{}{Brotherhood|Bratrstvo}
+{1037}{}{Vats|Nadrze}
+{1038}{}{Military|armada}
+{1039}{}{Base|Zakladna}
+{1040}{}{Base|Zakladna}
+{1041}{}{Apocalypse|Apokalypsa}
+{1042}{}{Mutants|Mutanti}
 {1043}{}{Morpheus}
 {1044}{}{Khans}
 {1045}{}{Tandi}
@@ -173,20 +175,20 @@
 {1049}{}{Petrox}
 {1050}{}{Tolya}
 {1051}{}{Booze}
-{1052}{}{chemikalie}
+{1052}{}{Drugs|chemikalie}
 {1053}{}{Seth}
 {1054}{}{Aradesh}
 {1055}{}{Razlo}
 {1056}{}{Zimmerman}
-{1057}{}{Regulatori}
-{1058}{}{Sberaci}
+{1057}{}{Regulators|Regulatori}
+{1058}{}{Scavs|Sberaci}
 {1059}{}{Blades}
 {1060}{}{Nicole}
-{1061}{}{porucik}
-{1062}{}{Psychika}
-{1063}{}{Experimenty}
-{1064}{}{Policie}
-{1065}{}{Obchodníci}
+{1061}{}{Lieutenant|porucik}
+{1062}{}{Psychics|Psychika}
+{1063}{}{Experiments|Experimenty}
+{1064}{}{Police|Policie}
+{1065}{}{Merchants|Obchodnici}
 
 {1100}{}{Nevím, kde bys mohl najít takovou technologickou relikvii.}
 {1101}{}{Andìlská kostnice je to jediný, co ze starýho Los Angeles zbylo. Dneska je to v podstatì jen hromada trosek rozdìlená mezi válèící frakce.}
@@ -223,10 +225,12 @@
 {1132}{}{Nevím o tom nic víc než ty.}
 {1133}{}{Nevím o tom nic víc než ty.}
 {1134}{}{Nemám ráda dìti.}
+{1135}{}{Nemám ráda dìti.}
 {1136}{}{Slyšela jsem, že jsou to nìjací high-tech mniši.}
 {1137}{}{Nevím o tom nic víc než ty.}
 {1138}{}{Nevím o tom nic víc než ty.}
 {1139}{}{Domnívám se, že tam musejí být nìjaké pozùstatky staré armády.}
+{1140}{}{Domnívám se, že tam musejí být nìjaké pozùstatky staré armády.}
 {1141}{}{Myslíš velikou válku? Wow, urèitì si musel žít dlouho v krytu, když o tom nic nevíš.}
 {1142}{}{Jednou jsem vidìla krysu se tøemi oèima. To je ale asi všechno, co vím o mutantech.}
 {1143}{}{Myslím, že je Veleknìzem v Katedrále, nebo nìco takového.}

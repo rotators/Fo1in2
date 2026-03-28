@@ -118,7 +118,7 @@
 # Radiation
 {401}{}{Tvá postava trpí nemocí z ozáøení. Pro zjištìní aktuálního stupnì ozáøení použij Geigerùv poèítaè. Hodnoty nad 150 radù ovlivní tvé zákl. vlastnosti. Nad 1000 radù je nutná léèba do 24 hodin, jinak postava zemøe.}
 # Eye Damage
-{402}{}{Tvá postava byla vážnì zasažena do jednoho nebo obou oèí. To má bohužel negativní vliv na tvé VNÍMÁNÍ. Tvá pøesnost v boji se výraznì sníží. K vyléèení použij dovednost „Léèení“ a potøebné lékaøské vybavení.}
+{402}{}{Tvá postava byla vážnì zasažena do jednoho nebo obou oèí. To má bohužel negativní vliv na tvou VNÍMAVOST. Tvá pøesnost v boji se výraznì sníží. K vyléèení použij dovednost „Léèení“ a potøebné lékaøské vybavení.}
 # Crippled right arm
 {403}{}{Tvá pravá ruka je zmrzaèena. Pokud máš zmrzaèenou jednu ruku, nemùžeš používat obouruèní zbranì. Pokud obì, nemùžeš používat žádnou zbraò. Použij dovednost „Léèení“ a potøebné lékaøské vybavení nebo navštiv doktora.}
 # Crippled left arm

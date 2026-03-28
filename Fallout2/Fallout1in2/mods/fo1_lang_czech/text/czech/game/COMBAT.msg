@@ -794,9 +794,9 @@
 {5402}{}{. Ghúlova ruka efektnì odplachtila vzduchem}
 {5403}{}{, rána pronikla skrz brnìní a zpùsobila mu rozsáhlá poranìní}
 {5404}{}{, rána pronikla skrz brnìní a odtrhla mu témìø celé rameno}
-{5405}{}{. Vypadá to, že byl ve špatný èas na špatném místì. Právì pøišel o oko, což jeho vzhledu urèitì neprospìje}
+{5405}{}{. Ten ghúl se v nepravou chvíli pohnul špatným smìrem a pøišel o oko}
 {5406}{}{. Tento ghúl nemìl obleèeno žádné brnìní}
-{5407}{}{ a útok ho úplnì oslepil}
+{5407}{}{ a bez brnìní ghúl oslepl}
 {5408}{}{, což zpùsobilo, že ghúl vypadá dost zmatenì ve vrcholném okamžiku jeho života}
 #
 # series 5500 - Brahmin

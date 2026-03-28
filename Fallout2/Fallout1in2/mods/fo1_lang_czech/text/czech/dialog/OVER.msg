@@ -177,18 +177,18 @@
 #
 
 
-{1000}{}{vodni}
+{1000}{}{Water|voda|vodni}
 {1001}{}{Vault}
-{1002}{}{valka}
-{1003}{}{venku}
-{1004}{}{Cip}
-{1005}{}{knihovna}
-{1006}{}{leceni}
-{1007}{}{doktor}
+{1002}{}{War|Valka}
+{1003}{}{Outside|pustina|venku}
+{1004}{}{Chip|Cip}
+{1005}{}{Library|knihovna}
+{1006}{}{Healing|leceni}
+{1007}{}{Medic|medik|doktor}
 {1008}{}{Vault13}
-{1009}{}{Vault-13}
-{1010}{}{spravce}
-{1011}{}{vodni cip}
+{1009}{}{Vault 13}
+{1010}{}{Overseer|Jacoben|Spravce}
+{1011}{}{Waterchip|vodni cip}
 
 
 {1100}{Over_200}{Je to nejdùležitìjší souèástka, která nám umožòuje èištìní vody. Bez ní nám pitná voda brzy dojde.}

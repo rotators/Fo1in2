@@ -174,7 +174,7 @@
 {273}{}{Na tom není nic povrchního, kdy øeknu 'nevím'. Sbohem pane.}
 {274}{}{Na tom není nic povrchního, kdy øeknu 'nevím'. Sbohem, paní.}
 {275}{}{Buï vítán, pane. Nech tvou moudrost provází Vùdcovo poehnání.}
-{276}{}{Buïte vítána, sleèno. Nech tvou moudrost provází Vùdcovo poehnání.}
+{276}{}{Buï vítána, sleèno. Nech tvou moudrost provází Vùdcovo poehnání.}
 {277}{}{Je to inteligentní èlovìk a Vùdce mu dùvìøuje. To by mìlo staèit. Nech Vùdce poehná tvou moudrost. Sbohem.}
 {278}{}{Uèí dìti a dìlá to velmi hrubì. Ještì nìco dalšího?}
 {279}{}{Morpheus? Je to dobrı èlovìk?}
@@ -205,4 +205,4 @@
 {304}{}{Nabízíme lidem mnoho slueb. Uzdravujeme nemocné, krmíme hladové, uèíme mladé. Jsem na nì hrdá. Kdy trochu pøitlaèíš na otce Morphea, moná ti øekne, jak bys nám v naší práci mohl bıt nápomocen. Sbohem, pøíteli.}
 {305}{}{Nabízíme lidem mnoho slueb. Uzdravujeme nemocné, krmíme hladové, uèíme mladé. Jsem na nì hrdá. Kdy trochu pøitlaèíš na otce Morphea, moná ti øekne, jak bys nám v naší práci mohl bıt nápomocen. Sbohem, pøíteli.}
 {306}{}{Kdy trochu pøitlaèíš na otce Morphea, moná ti øekne, jak bys nám v naší práci mohl bıt nápomocen. Sbohem, pøíteli.}
-{307}{}{Kdy trochu pøitlaèíš na otce Morphea, moná ti øekne, jak bys nám v naší práci mohl bıt nápomocen. Sbohem, pøíteli.}
+{307}{}{Kdy trochu pøitlaèíš na otce Morphea, moná ti øekne, jak bys nám v naší práci mohla bıt nápomocna. Sbohem, pøítelkynì.}

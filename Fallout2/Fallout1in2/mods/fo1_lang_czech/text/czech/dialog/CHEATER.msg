@@ -103,7 +103,7 @@
 {266}{}{Okay, roll back or roll forward?}
 {267}{}{Are you sure?}
 {268}{}{No. [back]}
-{269}{}{Necropolis,  Vault 13,  Vault 15}
+{269}{}{Nekropolis,  Vault 13,  Vault 15}
 {270}{}{Junktown,  Brotherhood of Steel,  City}
 {271}{}{Children of Cathedral, Master's Vault, Coast, Mountain}
 {272}{}{The Hub}

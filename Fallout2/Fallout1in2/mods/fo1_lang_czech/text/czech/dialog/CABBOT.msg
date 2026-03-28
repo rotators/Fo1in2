@@ -145,28 +145,28 @@
 {981}{Cab_67}{Hmm... nevím. Možná by ses mìl zeptat nìkoho dùležitìjšího, než jsem já.}
 {982}{Cab_68}{Nevím co je to. Možná by ses mìl pozeptat jinde.}
 #
-{1000}{}{Zasvecenec}
-{1001}{}{Vree}
-{1002}{}{Rhombus}
-{1003}{}{Starsi}
-{1004}{}{Rada Starsich}
-{1005}{}{Pisari}
-{1006}{}{Rytiri}
+{1000}{}{Initiate|Zasvecenec}
+{1001}{}{Vree|Head Scribe|Vrchni pisarka}
+{1002}{}{Rhombus|Head Paladin}
+{1003}{}{Elder}
+{1004}{}{Elders|starsi|staresinove|Rada Starsich}
+{1005}{}{Scribes|Scribe|pisari|Pisar}
+{1006}{}{Knights|Knight|rytiri|Rytir}
 {1007}{}{Hub}
-{1008}{}{Disky}
-{1009}{}{Kupci}
-{1010}{}{Bratrsvo}
-{1011}{}{Starobyly}
+{1008}{}{Disks|Disky}
+{1009}{}{Merchants|Merchant|kupci|kupec}
+{1010}{}{Brotherhood|BoS|Brotherhood of Steel|Bratrstvo|Bratrstvo oceli|Bratrsvo}
+{1011}{}{Ancient|Ancient Order|Glow|Starobyly|Krater}
 {1012}{}{Exodus}
 {1013}{}{Cabbot}
-{1014}{}{Rad}
-{1015}{}{Paladini}
-{1016}{}{Vudce}
-{1017}{}{Valka}
-{1018}{}{Armada}
-{1019}{}{Karavany}
-{1020}{}{Katedrala}
-{1021}{}{Cip}
+{1014}{}{Order|Rad}
+{1015}{}{Paladins|Paladin|paladini|paladinove}
+{1016}{}{Master|Vudce}
+{1017}{}{War|Valka}
+{1018}{}{Army|Armada}
+{1019}{}{Caravans|Caravan|karavany|karavana}
+{1020}{}{Children of the Cathedral|Cathedral|Children|CoC|Deti katedraly|Katedrala|deti}
+{1021}{}{Waterchip|Water Chip|Chip|vodni cip|Cip}
 
 {1100}{Cab_53}{No, to jsem pøece já.}
 {1101}{Cab_54}{Je to vedoucí Písaøù. Vìtšinou bývá v knihovnì. Sjeï dolù do suterénu a uh, a potom je to po pravé ruce.}
@@ -179,10 +179,10 @@
 {1108}{Cab_61}{Myslím, že o tom by ti víc povìdìla Vree. Ona o tom ví víc.}
 {1109}{Cab_62}{Prodávají nám jídlo, vodu a spoustu dalších vìcí. My jim za to dodáváme zbranì. Nechodí sem moc èasto, ale uh, ani nevím proè.}
 {1110}{Cab_63}{Ó, to je dlouhý pøíbìh. Zajdi si do knihovny za Vree. Ukáže ti, kde jsou holodisky s historickými daty.}
-{1111}{Cab_64}{Oh, tak, v dobì Exodu se Bratrstvo rozdìlilo na dvì skupiny.  Èást, která se oddìlila, ukradla ostatním nìjaké ty zbranì, a potom zamíøila na jih.  Asi pøed deseti lety jsme poslali pár našich Rytíøù, aby se po nich podívali, ale ti našli jen ruiny.  Nikdo neví, co se tam stalo.}
+{1111}{Cab_64}{Oh, tak, v dobì Exodu se Bratrstvo rozdìlilo na dvì skupiny. Èást, která se oddìlila, ukradla ostatním nìjaké ty zbranì, a potom zamíøila na jih. Asi pøed deseti lety jsme poslali pár našich Rytíøù, aby se po nich podívali, ale ti našli jen ruiny. Nikdo neví, co se tam stalo.}
 {1112}{Cab_65}{Starodávné Bratrstvo sem pøišlo z nìjakého místa daleko na severu už pøed dlouhou dobou. Tomu øíkáme velký Exodus. Mùžeš si o tom pøeèíst nìco v knihovnì, když požádáš Vree, aby ti ukázala disky.}
 {1113}{Cab_53}{No, to jsem pøece já.}
-{1114}{Cab_64}{Oh, tak, v dobì Exodu se Bratrstvo rozdìlilo na dvì skupiny. Èást, která se oddìlila, ukradla ostatním nìjaké ty zbranì, a potom zamíøila na jih.  Asi pøed deseti lety jsme poslali pár našich Rytíøù, aby se po nich podívali, ale ti našli jen ruiny.  Nikdo neví, co se tam stalo.}
+{1114}{Cab_64}{Oh, tak, v dobì Exodu se Bratrstvo rozdìlilo na dvì skupiny. Èást, která se oddìlila, ukradla ostatním nìjaké ty zbranì, a potom zamíøila na jih. Asi pøed deseti lety jsme poslali pár našich Rytíøù, aby se po nich podívali, ale ti našli jen ruiny. Nikdo neví, co se tam stalo.}
 {1115}{Cab_20}{Dìláš si ze mnì legraci, že jo? Sbohem!}
 {1116}{Cab_67}{Hmm... nevím. Možná by ses mìl zeptat nìkoho dùležitìjšího, než jsem já.}
 {1117}{Cab_63}{Ó, to je dlouhý pøíbìh. Zajdi si do knihovny za Vree. Ukáže ti, kde jsou holodisky s historickými daty.}

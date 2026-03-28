@@ -1,4 +1,4 @@
-{100}{}{Vidíš majitele obchodu Všechno-v-Jednom Mitche.}
+{100}{}{Vidíš majitele obchodu Všechno-v-jednom Mitche.}
 {101}{}{Co pro tebe dnes mùžu udìlat?}
 {102}{}{Chci nìco koupit.}
 {103}{}{Chci nìco prodat.}

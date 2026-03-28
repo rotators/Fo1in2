@@ -228,20 +228,20 @@
 {982}{Set311}{Ne v mých zámìrech.}
 {983}{Set204}{Máš v hlavì prázdno?}
 
-{1000}{}{vudce}
-{1001}{}{ghulove}
-{1002}{}{mutanti}
-{1003}{}{Nekropolis}
-{1004}{}{valka}
-{1005}{}{jednota}
+{1000}{}{Master|Mutant Leader|Vudce}
+{1001}{}{Ghouls|Ghoul|ghulove|ghul}
+{1002}{}{Mutants|Mutant|Muties|mutanti}
+{1003}{}{Necropolis|CITY OF DEAD|CITY OF THE DEAD|Nekropolis|Mesto mrtvych}
+{1004}{}{War|2077|Holocaust|Valka}
+{1005}{}{Unity|Jednota}
 {1006}{}{Hub}
-{1007}{}{bratrstvo}
-{1008}{}{bouda}
-{1009}{}{katedrala}
-{1010}{}{cip}
-{1011}{}{hala}
+{1007}{}{Brotherhood of Steel|Brotherhood|Steel|BOS|Bratrstvo oceli|Bratrstvo|ocel}
+{1008}{}{Shed|Watershed|Water Shed|vodarna}
+{1009}{}{Cathedral|Children|Children of the Cathedral|CoC|Katedrala|deti|Deti katedraly}
+{1010}{}{Chip|Cip}
+{1011}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|hala|sin|Sin mrtvych|hala mrtvych}
 {1012}{}{Garret}
-{1013}{}{Set}
+{1013}{}{Set|Seth}
 
 {1100}{Set300}{Jeho mínìní tu nemá místo. Vùbec.}
 {1101}{Set301}{Budoucnost. Pøežijeme kdekoli. Pøedèíme normály.}

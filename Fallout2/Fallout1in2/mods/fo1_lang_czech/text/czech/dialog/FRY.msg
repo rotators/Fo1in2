@@ -16,7 +16,7 @@
 {115}{}{Kde si mùžu vydìlat nìjaký prachy?}
 {116}{}{To je ono, díky.}
 {117}{}{Když to øíkáš. Máš ještì nìjaké otázky?}
-{118}{}{To je skuteèná tragédie. Nìjaké karavany zmizely. Butch z Obchodníkù Far Go nabízí odmìnu za jakékoliv informace. Mìl by ses podívat na Trh, jestli tì to zajímá.}
+{118}{}{To je skuteèná tragédie. Nìjaké karavany zmizely. Butch z Far Go nabízí odmìnu za jakékoliv informace. Mìl by ses podívat na Trh, jestli tì to zajímá.}
 {119}{}{Vlastní Maltézského sokola na Trhu, ale s ním bych se do paktu nedával, jestli nechceš mít problémy. Není nic než krvelaèné zvíøe, ale šerif mi nedovolí ho zatknout bez dùkazu.}
 {120}{}{Žádný problém. Vìø nebo ne, naše mìsto je klidné a bezpeèné místo a naše policie je velmi dobøe vycvièena. Nemìl bys mít žádné problémy. Prostì se drž dál od Maltézského sokola.}
 {121}{}{Lituji, ale nerozumím tomu. Možná potøebuješ vyléèit? Dìti katedrály najdeš na jihu. Jdi smìrem na trh a potom k Obchodníkùm s vodou. Jsou hned vedle nich.}
@@ -42,7 +42,7 @@
 {141}{}{Fakt? Mìl by sis, eee, promluvit se šerifem. Zrovna teï nemùžu opustit svùj post. Musím... uch, zlikvidovat všechny nájezdníky, kteøí by mohli pøijít. A navíc nejsem moc dobrý v hlášení.}
 {142}{}{Ach, promiò. Nevšiml jsem si. Dìti mají nemocnici hned vedle Obchodníkù s vodou. Jdi kolem Trhu a uvidíš ji na severozápad od Obchodníkù s vodou. Doufám, že je všechno jinak v pohodì.}
 {143}{}{Tìžko to minout. Je v nejrušnìjším místì mìsta. Trh je nìkolik mil na jih odsud. Nejvíc tì bude zajímat severní sekce, tam nejvíc našich prodává veøejnosti.}
-{144}{}{Práci najdeš na Trhu, pár mil na jih. Jsou tam dvì karavaní spoleènosti a tøetí trochu dál na jih. Doporuèuji ti jít k Far Go Traders. Dobøe platí a nejsou to takoví cvoci.}
+{144}{}{Práci najdeš na Trhu, pár mil na jih. Jsou tam dvì karavaní spoleènosti a tøetí trochu dál na jih. Doporuèuju ti zkusit Far Go. Dobøe platí a nejsou to takoví cvoci.}
 {145}{}{Mrtví... jsou všichni mrtví...}
 {146}{}{Pfffftttt... Chrrrr...}
 {147}{}{Nevíš, kde bych mohl najít vodní èip? Èip z mého Vaultu je v háji a nutnì potøebujeme nový.}

@@ -109,26 +109,26 @@
 {981}{}{Promiò. Nemám zdání.}
 {982}{}{O tom jsem nikdy neslyšel.}
 
-{1000}{}{Khanove}
-{1001}{}{Garl}
+{1000}{}{Khans|Khan|Raider|Raiders|Great Khans|Khanove|Najezdnik|najezdnici|Velci Khanove}
+{1001}{}{Garl|Death Hand|Smrtihnat}
 {1002}{}{Junktown|Junk Town}
 {1003}{}{Shady Sands|Shady|Sands}
 {1004}{}{Hub}
-{1005}{}{vodni cip|cip}
+{1005}{}{Water|Water Chip|Waterchip|Chip|voda|vodni cip|Cip}
 {1006}{}{Tandi}
 {1007}{}{Aradesh}
 {1008}{}{Seth|Set}
 {1009}{}{Razlo}
-{1010}{}{Doktor}
-{1011}{}{obchod}
-{1012}{}{pustina}
-{1013}{}{vesnice}
-{1014}{}{zlocin|zlodej|zlodeji}
-{1015}{}{Skorpion|Skorpioni|Radskorpion|Radskorpioni}
-{1016}{}{Zmije}
-{1017}{}{Brahmina|Brahminy}
-{1018}{}{Plane}
-{1019}{}{Prace}
+{1010}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{1011}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena}
+{1012}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{1013}{}{Direction|Directions|Whereto|Where to|smer|kam|kudy}
+{1014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{1015}{}{Scorpions|Scorpion|Rad Scorpion|Radscorpions|Radscorpion|skorpioni|skorpion|radskorpion|radskorpioni}
+{1016}{}{Vipers|Viper|Zmije}
+{1017}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{1018}{}{Plains|Pastviny|Plane}
+{1019}{}{Job|Work|Task|Money|prace|ukol|penize}
 {1020}{}{Ian}
 {1021}{}{Vault 15|Vault|Vault15}
 

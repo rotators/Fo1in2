@@ -1,4 +1,4 @@
-{100}{}{Vidíš obchodníka od Far Go.}
+{100}{}{Vidíš obchodníka Far Go.}
 {101}{}{Koukej, kurva, vypadnout.}
 {102}{}{Koukej zmizet, nebo nebudeš žít ani tak dlouho, abys toho zaèal litovat.}
 {103}{}{Parchante!}

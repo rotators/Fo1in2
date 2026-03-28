@@ -90,20 +90,20 @@
 
 #Tell Me Abouts
 
-{1000}{}{valka}
-{1001}{}{vudce}
-{1002}{}{katedrala}
-{1003}{}{Mutanti}
+{1000}{}{War|Valka}
+{1001}{}{Master|Vudce}
+{1002}{}{Cathedral|Children of the Cathedral|CoC|Children|Katedrala|Deti katedraly|deti}
+{1003}{}{Mutants|Mutant|mutanti}
 {1004}{}{Hub}
-{1005}{}{oceli}
-{1006}{}{nadrze}
-{1007}{}{svaty}
-{1008}{}{jednota}
-{1009}{}{bratrstvo}
-{1010}{}{plamen}
-{1011}{}{deti}
-{1012}{}{kult}
-{1013}{}{pozehnani}
+{1005}{}{Steel|Brotherhood of Steel|Brotherhood|BoS|ocel|Bratrstvo oceli|Bratrstvo|oceli}
+{1006}{}{Vats|Nadrze}
+{1007}{}{Holy|Holy One|svaty}
+{1008}{}{Unity|Jednota}
+{1009}{}{Brotherhood|Bratrstvo}
+{1010}{}{Flame|Holy Flame|Plamen|Svaty plamen}
+{1011}{}{Children|Deti}
+{1012}{}{Cult|Crazy|kult}
+{1013}{}{Blessings|Blessing|pozehnani}
 
 {1100}{JAIN300}{Znamenala oèištìní planety. Nedbalost tìch, kteøí pøišli døíve, zpùsobila svaté ohnì. Byla to spravedlnost.}
 {1101}{JAIN301}{Tady není žádný Vùdce, jen Svatý plamen. To on je náš vùdce, on je Vùdce všech.}

@@ -68,7 +68,7 @@
 {167}{}{Rád bych ti poskytl nìjaké informace o tvých nepøátelích.}
 {168}{}{Zastrašování ti moc nejde.}
 {169}{}{Nic ti neøeknu.}
-{170}{MORP24}{Oh, skuteènì?  A jak to se svým omraèujícím vtipem a ostrým jazykem plánuješ udìlat?}
+{170}{MORP24}{Oh, skuteènì? A jak to se svým omraèujícím vtipem a ostrým jazykem plánuješ udìlat?}
 {171}{}{Ne, s tímhle...}
 {172}{}{To by bylo proti tobì pøíliš snadné. Pùjdu trochu obtížnìjší cestou.}
 {173}{}{Myslím, že kulka do hlavy to vyøeší.}
@@ -159,30 +159,30 @@
 
 
 {1000}{}{Nightkin}
-{1001}{}{Vudce}
+{1001}{}{Master|Vudce}
 {1002}{}{Auditorium}
-{1003}{}{Svatyne}
+{1003}{}{Sanctum|Svatyne}
 {1004}{}{Morpheus}
-{1005}{}{Rad}
-{1006}{}{Karavany}
-{1007}{}{Nemocnice}
-{1008}{}{Jednota}
+{1005}{}{Order|Rad}
+{1006}{}{Caravans|karavany}
+{1007}{}{Hospitals|Nemocnice}
+{1008}{}{Unity|Jednota}
 {1009}{}{Lasher}
-{1010}{}{Naslednici}
+{1010}{}{Followers|nasledovnici|Naslednici}
 {1011}{}{Nicole}
 {1012}{}{Adytum}
-{1013}{}{Apokalypsa}
-{1014}{}{Mutanti}
-{1015}{}{Svaty Plamen}
-{1016}{}{Deti}
-{1017}{}{Zakladna}
-{1018}{}{Cip}
+{1013}{}{Apocalypse|apokalypsa}
+{1014}{}{Mutants|mutanti}
+{1015}{}{Holy Flame|Svaty plamen}
+{1016}{}{Children|deti}
+{1017}{}{Base|Zakladna}
+{1018}{}{Chip|Cip}
 
 
 {1100}{MORP50}{Nightkinové k nám pøišli už pøed nìjakou dobou. Jsou to sice odpudiví mutanti, ale k Dìtem jsou naprosto oddaní. Ostatnì, jako my všichni.}
 {1101}{MORP51}{Je to on, kdo mi odhalil myšlenku Jednoty a je to on, který pøinese této zkoušené zemi koneèný mír.}
 {1102}{MORP52}{Kde je kazatelna, už bys mìl vìdìt, mé dítì. Mívám tam svá kázání.}
-{1103}{MORP53}{Nezatìžuj se tím.  Tam mohou pouze nejvyšší knìží.}
+{1103}{MORP53}{Nezatìžuj se tím. Tam mohou pouze nejvyšší knìží.}
 {1104}{MORP54}{Jsem jen pokorný služebník Jednoty.}
 {1105}{MORP55}{Jsme nejvyšší knìží velectìného temného boha. Tøinácti z nás je natolik požehnáno, že mùžeme jeho vzácná slova sdìlovat ostatním Dìtem.}
 {1106}{MORP56}{Nemám ponìtí, o èem mluvíš.}

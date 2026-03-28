@@ -46,30 +46,30 @@
 # HALLDED.MAP
 # The Necropolis Hall of the Dead Tell-Me-Abouts
 #
-{2800}{}{Vudce}
-{2801}{}{Vodni cip|vodni cip}
-{2802}{}{Nekropolis}
+{2800}{}{Master|Vudce}
+{2801}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{2802}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
 {2803}{}{Set|Seth}
-{2804}{}{Vodarna|vodarna}
-{2805}{}{Hala|hala|Hala mrtvych|hala mrtvych}
-{2806}{}{Pomoc|pomoc}
-{2807}{}{Doktor|doktor}
-{2808}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{2809}{}{Voda|voda}
+{2804}{}{Shed|Watershed|Water Shed|vodarna}
+{2805}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|hala|sin|Sin mrtvych|hala mrtvych}
+{2806}{}{Help|Help me|pomoc}
+{2807}{}{Doctor|Medic|Doc|doktor|medik}
+{2808}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{2809}{}{Water|voda}
 {2810}{}{Vault|Vault12|Vault 12}
-{2811}{}{Pustina|pustina}
-{2812}{}{Oblast|oblast}
-{2813}{}{Fallout}
-{2814}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
+{2811}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|pustina}
+{2812}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{2813}{}{Fallout|Fall out|nuclear fallout}
+{2814}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
 {2815}{}{Hub}
-{2816}{}{Radiace|radiace}
+{2816}{}{Radiation|Rads|Rad|Radiace|rady}
 {2817}{}{Hotel|Motel}
-{2818}{}{Supermutant|supermutant|Mutant|mutant}
-{2819}{}{Kase|kase}
-{2820}{}{Brahmina|Brahminy}
-{2821}{}{Prace|prace|Penize|penize}
-{2822}{}{Stoky|stoky|Kanaly|kanaly}
-{2823}{}{Ghoul|ghoul|Ghoulove|ghoulove}
+{2818}{}{Supermutant|Supermutants|Super Mutant|Super Mutants|Mutant|Mutants|Supermutanti|mutanti}
+{2819}{}{Pulp|Kase}
+{2820}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{2821}{}{Job|Work|Task|Money|prace|ukol|penize}
+{2822}{}{Sewer|Sewers|Stoky|Kanaly}
+{2823}{}{Ghoul|Ghouls|ghul|ghulove}
 
 {2900}{}{Není to nìjakı dùleitı tıpek?}
 {2901}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
@@ -100,30 +100,30 @@
 # HOTEL.MAP
 # The Necropolis Hotel Tell-Me-Abouts
 #
-{3400}{}{Vudce}
-{3401}{}{Vodni cip|vodni cip}
-{3402}{}{Nekropolis}
+{3400}{}{Master|Vudce}
+{3401}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{3402}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
 {3403}{}{Set|Seth}
-{3404}{}{Vodarna|vodarna}
-{3405}{}{Hala|hala|Hala mrtvych|hala mrtvych}
-{3406}{}{Pomoc|pomoc}
-{3407}{}{Doktor|doktor}
-{3408}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{3409}{}{Voda|voda}
+{3404}{}{Shed|Watershed|Water Shed|vodarna}
+{3405}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|hala|sin|Sin mrtvych|hala mrtvych}
+{3406}{}{Help|Help me|pomoc}
+{3407}{}{Doctor|Medic|Doc|doktor|medik}
+{3408}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{3409}{}{Water|voda}
 {3410}{}{Vault|Vault12|Vault 12}
-{3411}{}{Pustina|pustina}
-{3412}{}{Oblast|oblast}
-{3413}{}{Fallout}
-{3414}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
+{3411}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|pustina}
+{3412}{}{Direction|Directions|Whereto|Where to|Sewers|smer|kam|Oblast}
+{3413}{}{Fallout|Fall out|nuclear fallout}
+{3414}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
 {3415}{}{Hub}
-{3416}{}{Radiace|radiace}
+{3416}{}{Radiation|Rads|Rad|Radiace|rady}
 {3417}{}{Hotel|Motel}
-{3418}{}{Supermutant|supermutant|Mutant|mutant}
-{3419}{}{Kase|kase}
-{3420}{}{Brahmina|Brahminy}
-{3421}{}{Prace|prace|Penize|penize}
-{3422}{}{Stoky|stoky|Kanaly|kanaly}
-{3423}{}{Ghoul|ghoul|Ghoulove|ghoulove}
+{3418}{}{Supermutant|Supermutants|Super Mutant|Super Mutants|Mutant|Mutants|Supermutanti|mutanti}
+{3419}{}{Pulp|Kase}
+{3420}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{3421}{}{Job|Work|Task|Money|prace|ukol|penize}
+{3422}{}{Sewer|Sewers|Stoky|Kanaly}
+{3423}{}{Ghoul|Ghouls|ghul|ghulove}
 
 {3500}{}{Není to nìjakı dùleitı tıpek?}
 {3501}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
@@ -154,30 +154,30 @@
 # WATRSHD.MAP
 # The Necropolis Watershed Tell-Me-Abouts
 #
-{4000}{}{Vudce}
-{4001}{}{Vodni cip|vodni cip}
-{4002}{}{Nekropolis}
+{4000}{}{Master|Vudce}
+{4001}{}{Water Chip|Waterchip|Chip|Vodni cip}
+{4002}{}{Necropolis|City of the Dead|City of Dead|Nekropolis}
 {4003}{}{Set|Seth}
-{4004}{}{Vodojem|vodojem}
-{4005}{}{Hala|hala|Hala mrtvych|hala mrtvych}
-{4006}{}{Pomoc|pomoc}
-{4007}{}{Doktor|doktor}
-{4008}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{4009}{}{Voda|voda}
+{4004}{}{Shed|Watershed|Water Shed|Vodojem}
+{4005}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|Hala|Hala mrtvych}
+{4006}{}{Help|Help me|Pomoc}
+{4007}{}{Doctor|Medic|Doc|Doktor}
+{4008}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|Nakup|Prodej|Obchod}
+{4009}{}{Water|Voda}
 {4010}{}{Vault|Vault12|Vault 12}
-{4011}{}{Pustina|pustina}
-{4012}{}{Oblast|oblast}
-{4013}{}{Fallout}
-{4014}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
+{4011}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Pustina}
+{4012}{}{Direction|Directions|Whereto|Where to|Sewers|Oblast}
+{4013}{}{Fallout|Fall out|nuclear fallout}
+{4014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|Zlodej|zlodeji|kradez|Zlocin}
 {4015}{}{Hub}
-{4016}{}{Radiace|radiace}
+{4016}{}{Radiation|Rads|Rad|Radiace}
 {4017}{}{Hotel|Motel}
-{4018}{}{Supermutant|Supermutanti|Super Mutant|Super Mutanti|Mutant|Mutanti}
-{4019}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{4020}{}{Brahmina|Brahminy}
-{4021}{}{Prace|prace|Penize|penize}
-{4022}{}{Stoky|stoky|Kanaly|kanaly}
-{4023}{}{Ghoul|ghoul|Ghoulove|ghoulove}
+{4018}{}{Supermutant|Supermutants|Super Mutant|Super Mutants|Mutant|Mutants|Guard|Guards|Supermutanti|Super Mutanti|Mutanti}
+{4019}{}{Children of the Cathedral|Children|Cathedral|CoC|Katedrala|Deti katedraly}
+{4020}{}{Brahmin|Brahmins|Brahma|Brahmina|Brahminy}
+{4021}{}{Job|Work|Task|Money|Prace|Penize}
+{4022}{}{Sewer|Sewers|Stoky|Kanaly}
+{4023}{}{Ghoul|Ghouls|Ghul|Ghulove}
 
 {4100}{}{Není to nìjakı dùleitı tıpek?}
 {4101}{}{O tom nic nevím, ale ve vodárnì by nìjakı mohli mít.}
@@ -209,28 +209,28 @@
 # Vault 13 Tell-Me-Abouts
 #
 {4600}{}{Vault|Vault 13|Vault13}
-{4601}{}{Voda|voda}
-{4602}{}{Spravce|Jacoren}
-{4603}{}{Vodni cip|vodni cip}
-{4604}{}{Doktor|doktor}
-{4605}{}{Knihovna|knihovna}
-{4606}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{4607}{}{Pustina|pustina}
-{4608}{}{Oblast|oblast}
-{4609}{}{Fallout}
-{4610}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{4611}{}{Jeskyne|jeskyne}
-{4612}{}{Ubikace|ubikace}
-{4613}{}{Velitelske centrum|velitelske centrum}
-{4614}{}{Rebelove|rebelove}
+{4601}{}{Water|Water Reserves|Water Supply|voda}
+{4602}{}{Overseer|Jacoren|Spravce}
+{4603}{}{Waterchip|WATER CHIP|Chip|vodni cip|Cip}
+{4604}{}{Medic|DOC|DOCTOR|HELP|HEALING|HURT|WOUNDED|INJURED|medik|doktor|pomoc|leceni|zraneny|zranene}
+{4605}{}{Library|knihovna}
+{4606}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{4607}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{4608}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{4609}{}{Fallout|Fall out|nuclear fallout}
+{4610}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{4611}{}{Cavern Entrance|Cavern|Entrance|Vstup do jeskyne|Jeskyne|Vstup}
+{4612}{}{Living Quarters|Quarters|Ubikace}
+{4613}{}{Command Center|Command|Center|Velin|Velitelske centrum}
+{4614}{}{Rebels|Rebelion|Rebel|Rebell|Rebelove}
 {4615}{}{Cindy}
 {4616}{}{Ed}
 {4617}{}{Lyle}
 {4618}{}{Theresa}
-{4619}{}{Skladiste|skladiste}
-{4620}{}{Radiace|radiace}
-{4621}{}{Co mam delat|Co mam delat?}
-{4622}{}{Prace|prace|Ukol|ukol}
+{4619}{}{Storage Room|Storage|skladiste}
+{4620}{}{Radiation|Rads|Rad|Survival|Radiace|rady}
+{4621}{}{What now|What now?|Co ted|Co ted?}
+{4622}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {4700}{}{To je název místa kde ijeme.}
 {4701}{}{Ano, náš Vault potøebuje vodu. Nutnì potøebujeme novı vodní èip!}
@@ -260,32 +260,32 @@
 # JUNKENT.MAP
 # Junktown Entrance Tell-Me-Abouts
 #
-{7000}{}{Killian|Kilian|Killian Darkwaters|Kilian Darkwaters|Killian Darkwater|Kilian Darkwater|Starosta}
+{7000}{}{Killian|Kilian|Sheriff|Sherrif|Mayor|Killian Darkwaters|Kilian Darkwaters|Killian Darkwater|Kilian Darkwater|Police|serif|starosta|Policie}
 {7001}{}{Gizmo}
 {7002}{}{Junktown|JUNK TOWN}
 {7003}{}{Shady Sands|Shady|Sands}
 {7004}{}{Hub}
-{7005}{}{Vodni cip|vodni cip}
-{7006}{}{Kasino}
-{7007}{}{Obchod|obchod}
-{7008}{}{Parac|Paraci|parac|paraci}
-{7009}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid}
-{7010}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{7011}{}{Pustina|pustina}
-{7012}{}{Oblast|oblast}
-{7013}{}{Fallout}
-{7014}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{7015}{}{Nekropolis}
+{7005}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{7006}{}{Casino|Gizmo's Casino|Gizmo's|Gizmos|Gizmos Casino|Kasino|Gizmovo kasino|Gizmovo}
+{7007}{}{Store|General Store|Darkwater|Darkwaters|obchod}
+{7008}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{7009}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid|medik|doktor|pomoc|leceni|zraneny|zranene|doktor Morbid}
+{7010}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|smena|Nakup|Prodej}
+{7011}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{7012}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{7013}{}{Fallout|Fall out|nuclear fallout}
+{7014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{7015}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
 {7016}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{7017}{}{Zvesti|zvesti}
-{7018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
-{7019}{}{Lebkouni|lebkouni}
-{7020}{}{Khanove|Zmije|Najezdnici}
-{7021}{}{Crash|Crash House}
-{7022}{}{Pivo|pivo}
-{7023}{}{Brahmina|Brahminy}
-{7024}{}{Prace|prace|Penize|penize}
-{7025}{}{Lars}
+{7017}{}{Story|Stories|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{7018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum|Spinadira}
+{7019}{}{Skuls|Skulz|Skulls|Skullz|Lebkouni}
+{7020}{}{Khan|Khans|Viper|Vipers|Raider|Raiders|Khanove|Zmije|Najezdnik|najezdnici}
+{7021}{}{Crash|Crash House|Chraparna}
+{7022}{}{Beer|Booze|Pivo|chlast}
+{7023}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{7024}{}{Job|Work|Task|Money|prace|ukol|penize}
+{7025}{}{Lars|Sergeant|Junktown Guards|Guards|Guard|serzant|straz|strazny}
 {7026}{}{Vinnie|Victor|Shark}
 {7027}{}{Neal}
 
@@ -322,31 +322,31 @@
 # JUNKCSNO.MAP
 # Junktown Casino Tell-Me-Abouts
 #
-{7600}{}{Killian|Kilian|Starosta}
+{7600}{}{Killian|Kilian|Sheriff|Sherrif|Mayor|serif|starosta}
 {7601}{}{Gizmo}
 {7602}{}{Junktown|JUNK TOWN}
 {7603}{}{Shady Sands|Shady|Sands}
 {7604}{}{Hub}
-{7605}{}{Vodni cip|vodni cip}
-{7606}{}{Kasino}
+{7605}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{7606}{}{Casino|Gizmo's Casino|Gizmo's|Gizmos|Gizmos Casino|Kasino|Gizmovo kasino|Gizmovo}
 {7607}{}{Store|General Store|Darkwater|Darkwaters}
-{7608}{}{Parac|Paraci|parac|paraci}
-{7609}{}{Doktor|doktor|Morbid|morbid}
-{7610}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{7611}{}{Pustina|pustina}
-{7612}{}{Oblast|oblast}
-{7613}{}{Fallout}
-{7614}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{7615}{}{Nekropolis}
+{7608}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{7609}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid|medik|doktor|pomoc|leceni|zraneny|zranene|doktor Morbid}
+{7610}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{7611}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{7612}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{7613}{}{Fallout|Fall out|nuclear fallout}
+{7614}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{7615}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
 {7616}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{7617}{}{Zvesti|zvesti}
-{7618}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
-{7619}{}{Lebkouni|lebkouni}
-{7620}{}{Khanove|Zmije|Najezdnici}
-{7621}{}{Crash|Crash House}
-{7622}{}{Pivo|pivo}
-{7623}{}{Brahmina|Brahminy}
-{7624}{}{Prace|prace|Penize|penize}
+{7617}{}{Story|Stories|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{7618}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum|Spinadira}
+{7619}{}{Skuls|Skulz|Skulls|Skullz|Lebkouni}
+{7620}{}{Khan|Khans|Viper|Vipers|Raider|Raiders|Khanove|Zmije|Najezdnik|najezdnici}
+{7621}{}{Crash|Crash House|Chraparna}
+{7622}{}{Beer|Booze|Pivo|chlast}
+{7623}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{7624}{}{Job|Work|Task|Money|prace|ukol|penize}
 {7625}{}{Vinnie|Victor|Shark}
 {7626}{}{Neal}
 
@@ -382,31 +382,31 @@
 # JUNKKILL.MAP
 # Junktown Killian's Tell-Me-Abouts
 #
-{8200}{}{Killian|Kilian|Starosta}
+{8200}{}{Killian|Kilian|Sheriff|Sherrif|Mayor|serif|starosta}
 {8201}{}{Gizmo}
 {8202}{}{Junktown|Junk Town}
 {8203}{}{Shady Sands|Shady|Sands}
 {8204}{}{Hub}
-{8205}{}{Vodni cip|vodni cip}
-{8206}{}{Kasino}
+{8205}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{8206}{}{Casino|Gizmo's Casino|Gizmo's|Gizmos|Gizmos Casino|Kasino|Gizmovo kasino|Gizmovo}
 {8207}{}{Store|General Store|Darkwater|Darkwaters}
-{8208}{}{Parac|Paraci|parac|paraci}
-{8209}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid}
-{8210}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{8211}{}{Pustina|pustina}
-{8212}{}{Oblast|oblast}
-{8213}{}{Fallout}
-{8214}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{8215}{}{Nekropolis}
+{8208}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{8209}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid|medik|doktor|pomoc|leceni|zraneny|zranene|doktor Morbid}
+{8210}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{8211}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{8212}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{8213}{}{Fallout|Fall out|nuclear fallout}
+{8214}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{8215}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
 {8216}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{8217}{}{Zvesti|zvesti}
-{8218}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
-{8219}{}{Lebkouni|lebkouni}
-{8220}{}{Khanove|Zmije|Najezdnici}
-{8221}{}{Crash|Crash House}
-{8222}{}{Pivo|pivo}
-{8223}{}{Brahmina|Brahminy}
-{8224}{}{Prace|prace|Penize|penize}
+{8217}{}{Story|Stories|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{8218}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum|Spinadira}
+{8219}{}{Skuls|Skulz|Skulls|Skullz|Lebkouni}
+{8220}{}{Khan|Khans|Viper|Vipers|Raider|Raiders|Khanove|Zmije|Najezdnik|najezdnici}
+{8221}{}{Crash|Crash House|Chraparna}
+{8222}{}{Beer|Booze|Pivo|chlast}
+{8223}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{8224}{}{Job|Work|Task|Money|prace|ukol|penize}
 {8225}{}{Vinnie|Victor|Shark}
 {8226}{}{Neal}
 
@@ -442,38 +442,38 @@
 # BOS  (8800) 
 # Brotherhood Tell-Me-Abouts
 #
-{8800}{}{Vudce}
-{8801}{}{Valka|2077}
+{8800}{}{Master|Vudce}
+{8801}{}{War|2077|Valka}
 {8802}{}{Exodus}
-{8803}{}{Supermutant|supermutant|Mutant|mutant}
-{8804}{}{Bratrstvo|bratrstvo|bratrstvo oceli}
-{8805}{}{Obchodnici|obchodnici}
-{8806}{}{Karavana|karavana|ztracena karavana|Ztracena karavana}
+{8803}{}{Strange Army|Army|Mutant Army|Mutant|Mutants|Supermutant|Supermutants|Super Mutant|Super Mutants|Podivna armada|Armada|cizi armada|mutanti|Supermutanti}
+{8804}{}{Brotherhood|BoS|Brotherhood of Steel|Bratrstvo|Bratrstvo oceli}
+{8805}{}{The Merchants|Merchants|Merchant|Obchodnici|kupci|kupec}
+{8806}{}{Missing Caravans|Caravans|Caravan|Missing Caravan|ztracena karavana|Ztracene karavany|karavany|karavana}
 {8807}{}{Hub}
-{8808}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{8809}{}{Zasvecenci|zasvecenci}
-{8810}{}{Pisar|pisar}
-{8811}{}{Rytir|rytir}
-{8812}{}{Paladin|paladin}
-{8813}{}{Vodni cip|vodni cip}
-{8814}{}{Lorri|lorri}
-{8815}{}{John Maxson|John|Maxson}
-{8816}{}{Rhombus|rhombus}
-{8817}{}{Vree}
-{8818}{}{Doktor|doktor}
-{8819}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{8820}{}{Pustina|pustina}
-{8821}{}{Oblast|oblast}
-{8822}{}{Fallout}
-{8823}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{8824}{}{Energozbroj|energo zbroj|T-51b|T-51|T51|T51b}
+{8808}{}{Children of the Cathedral|Cathedral|Children|CoC|Deti katedraly|Katedrala|deti}
+{8809}{}{Initiates|Initiate|zasvecenci|Zasvecenec}
+{8810}{}{Scribes|Scribe|pisari|Pisar}
+{8811}{}{Knights|Knight|rytiri|Rytir}
+{8812}{}{Paladins|Paladin|paladini|paladinove}
+{8813}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{8814}{}{Lorri|Dr Lorri|Dr. Lorri}
+{8815}{}{John Maxson|John|Maxson|High Elder|Vrchni staresina}
+{8816}{}{Rhombus|Head Paladin}
+{8817}{}{Vree|Head Scribe|Vrchni pisarka}
+{8818}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Infirmary|medik|doktor|pomoc|leceni|zraneny|zranene|Lekar}
+{8819}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{8820}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{8821}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{8822}{}{Fallout|Fall out|nuclear fallout}
+{8823}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{8824}{}{Power Armor|PowerArmor|PA|Powered Armor|PoweredArmor|Power|Armor|T-51b|T-51|T51|T51b|energozbroj|energo zbroj|Energo|Zbroj}
 {8825}{}{Talus|Talius}
-{8826}{}{Knihovna|knihovna}
+{8826}{}{Library|knihovna}
 {8827}{}{Michael}
 {8828}{}{Kyle}
-{8829}{}{Brahmina|Brahminy}
-{8830}{}{Prace|prace|Penize|penize}
-{8831}{}{Krater|krater}
+{8829}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{8830}{}{Job|Work|Task|Money|prace|ukol|penize}
+{8831}{}{Glow|Ancient Order|Ancient|Order|Krater|Starobyly|Rad}
 
 {8900}{}{Nemám nejmenší ponìtí o èem to mluvíš.}
 {8901}{}{Strašnì nízkı bod lidské historie, jen zformoval náš souèasnı svìt. Zachováváme znalosti z války, abychom zabránili dalšímu holocaustu.}
@@ -511,25 +511,25 @@
 #
 # CHILDRN1.MAP (11200) - whole Cathedral location
 #
-{11200}{}{Svaty plamen|svaty plamen|Plamen|plamen}
-{11201}{}{Jednota|jednota}
-{11202}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{11203}{}{Morpheus|Knez|knez}
-{11204}{}{Mutants|Mutant}
-{11205}{}{Vudce}
-{11206}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{11207}{}{Vojenska zakladna}
-{11208}{}{Nadrze|nadrze}
-{11209}{}{Vodni cip|vodni cip}
-{11210}{}{Doktor|doktor}
-{11211}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{11212}{}{Pustina|pustina}
-{11213}{}{Oblast|oblast}
-{11214}{}{Fallout}
-{11215}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{11216}{}{Lasher|lasher}
+{11200}{}{Holy Flame|The Holy Flame|Holy|Flame|Svaty plamen|Plamen|svaty}
+{11201}{}{Unity|Jednota}
+{11202}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{11203}{}{Morpheus|High Priest|Priest|Veleknez|Knez}
+{11204}{}{Mutants|Mutant|mutanti}
+{11205}{}{Master|Vudce}
+{11206}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{11207}{}{Military Base|vojenska zakladna}
+{11208}{}{The Vats|Vats|Nadrze}
+{11209}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{11210}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Infirmary|medik|doktor|pomoc|leceni|zraneny|zranene|Lekar}
+{11211}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{11212}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{11213}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{11214}{}{Fallout|Fall out|nuclear fallout}
+{11215}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{11216}{}{Lasher|Father Lasher|Father|Lasher of the Children|Lasher of Children|otec Lasher}
 {11217}{}{Wu}
-{11218}{}{Brahmina|Brahminy}
+{11218}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
 
 {11300}{}{Svatı plamen nás povede do nového odváného svìta, kterı nezná nenávist ani válku.}
 {11301}{}{Všichni jsme souèástí Jednoty. Je to láska a mír, které pøedáváme svım bliním. Lidem i mutantùm.}
@@ -555,31 +555,31 @@
 # RAIDERS.MAP
 # Raiders Tell-Me-Abouts
 #
-{15400}{}{Khanove|khanove|Najezdici|najezdnici}
-{15401}{}{Garl|garl}
+{15400}{}{Khans|Khan|Raider|Raiders|Great Khans|Khanove|Najezdnik|najezdnici|Velci Khanove|Najezdici}
+{15401}{}{Garl|Death Hand|Smrtihnat}
 {15402}{}{Junktown|Junk Town}
 {15403}{}{Shady Sands|Shady|Sands}
 {15404}{}{Hub}
-{15405}{}{Vodni cip|vodni cip}
+{15405}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {15406}{}{Tandi}
 {15407}{}{Alya|Advisor}
-{15408}{}{Diana|diana}
+{15408}{}{Diana|Armorer}
 {15409}{}{Gwen}
 {15410}{}{Petrox}
-{15411}{}{Tolya|tolya}
-{15412}{}{Alkohol|alkohol}
-{15413}{}{shady sands|shady|sands}
+{15411}{}{Tolya|Cook|Food}
+{15412}{}{Booze|Drugs|chlast|Drogy|chemikalie|prasky|Alkohol}
+{15413}{}{Shady Sands|Shady|Sands}
 {15414}{}{Aradesh}
-{15415}{}{Doktor|doktor}
-{15416}{}{Pridat se|pridat se|pripojeni}
-{15417}{}{Vudce|vudce|Boss|boss}
-{15418}{}{Lekar|lekar}
-{15419}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{15420}{}{Pustina|pustina}
-{15421}{}{Oblast|oblast}
-{15422}{}{Fallout}
-{15423}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{15424}{}{Brahmina|Brahminy}
+{15415}{}{Help|Hurt|Wounded|Inured|Doc|Doctor|pomoc|zraneny|zranene|Doktor}
+{15416}{}{Join|Become Khan|Joining|Pridat se|Pripojit se|pripojeni}
+{15417}{}{Leader|Your Boss|Boss|Bossmann|vudce}
+{15418}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Infirmary|medik|leceni|Lekar}
+{15419}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{15420}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{15421}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{15422}{}{Fallout|Fall out|nuclear fallout}
+{15423}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{15424}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
 
 {15500}{}{To jsme my, ty uboáku.}
 {15501}{}{Garl je vùdce Khanù! Je to ten nejobávanìjší mu celé pustiny. Moc ho neser, nebo budeš prdìt do hlíny.}
@@ -611,26 +611,26 @@
 # SHADYE.MAP
 # Shady Sands East Tell-Me-Abouts
 #
-{16000}{}{Khanove|khanove|Najezdici|najezdnici}
-{16001}{}{Garl|garl}
+{16000}{}{Khans|Khan|Raider|Raiders|Great Khans|Khanove|Najezdnik|najezdnici|Velci Khanove|Najezdici}
+{16001}{}{Garl|Death Hand|Smrtihnat}
 {16002}{}{Junktown|Junk Town}
 {16003}{}{Shady Sands|Shady|Sands}
 {16004}{}{Hub}
-{16005}{}{Vodni cip|vodni cip}
+{16005}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {16006}{}{Tandi}
 {16007}{}{Aradesh}
 {16008}{}{Seth|Set}
 {16009}{}{Razlo}
-{16010}{}{Doktor|doktor}
-{16011}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{16012}{}{Pustina|pustina}
-{16013}{}{Oblast|oblast}
-{16014}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{16015}{}{Skorpioni|skorpioni|Rad skorpion|Radskorpion|radskorpion}
-{16016}{}{Vipers|Viper}
-{16017}{}{Brahmina|Brahminy}
-{16018}{}{Pastviny}
-{16019}{}{Prace|prace|Penize|penize}
+{16010}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{16011}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{16012}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{16013}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{16014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{16015}{}{Scorpions|Scorpion|Rad Scorpion|Radscorpions|Radscorpion|skorpioni|skorpion|radskorpion|radskorpioni|Rad skorpion}
+{16016}{}{Vipers|Viper|Zmije}
+{16017}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{16018}{}{Plains|Pastviny}
+{16019}{}{Job|Work|Task|Money|prace|ukol|penize}
 {16020}{}{Ian}
 
 {16100}{}{Odporní a nelítostní bandité.}
@@ -646,12 +646,12 @@
 {16110}{}{Pokud se zraníš, navštiv našeho lékaøe, Razla. Najdeš ho v jeho domì v jihozápadní èásti vesnice.}
 {16111}{}{Ve vesnici je zrovna jeden obchodník. Musí bıt nìkde poblí.}
 {16112}{}{Pokud míøíš do pustiny, dej si pozor na radškorpiony.}
-{16113}{}{No, není toho moc. Jak vidíš, tady máme naše plodiny a brahminy. Pokud hledáš Setha, mìl by bıt u brány na západní stranì.}
+{16113}{}{No, není toho moc. Jak vidíš, tady máme naše plodiny a brahmíny. Pokud hledáš Setha, mìl by bıt u brány na západní stranì.}
 {16114}{}{Seth a stráe udrují poøádek v naší vesnici.}
 {16115}{}{Dej si pozor na jejich ocas. Vìtší dávka jedu mùe bıt smrtelná.}
 {16116}{}{Abych byl upøímnı, dìsí mì víc ne Khanové.}
 {16117}{}{Oh, døív jsme mívali více brahmin, ale nájezdníci nám nìjaké ukradli.}
-{16118}{}{Jsou kousek od vesnice. Necháváme tam pást brahminy.}
+{16118}{}{Jsou kousek od vesnice. Necháváme tam pást brahmíny.}
 {16119}{}{Promluv si s Aradeshem. Mohl by pro tebe nìco mít.}
 {16120}{}{Ian je jeden ze stránıch. Byl zranìn pøi útoku nájezdníkù na jeho karavanu a od té doby je s námi.}
 
@@ -659,26 +659,26 @@
 # SHADYW.MAP
 # Shady Sands West Tell-Me-Abouts
 #
-{16600}{}{Khanove|khanove|Najezdici|najezdnici}
-{16601}{}{Garl|garl}
+{16600}{}{Khans|Khan|Raider|Raiders|Great Khans|Khanove|Najezdnik|najezdnici|Velci Khanove|Najezdici}
+{16601}{}{Garl|Death Hand|Smrtihnat}
 {16602}{}{Junktown|Junk Town}
 {16603}{}{Shady Sands|Shady|Sands}
 {16604}{}{Hub}
-{16605}{}{Vodni cip|vodni cip}
+{16605}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {16606}{}{Tandi}
 {16607}{}{Aradesh}
 {16608}{}{Seth|Set}
 {16609}{}{Razlo}
-{16610}{}{Doktor|doktor}
-{16611}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{16612}{}{Pustina|pustina}
-{16613}{}{Oblast|oblast}
-{16614}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{16615}{}{Skorpioni|skorpioni|Rad skorpion|Radskorpion|radskorpion}
-{16616}{}{Vipers|Viper}
-{16617}{}{Brahmina|Brahminy}
-{16618}{}{Pastviny}
-{16619}{}{Prace|prace|Penize|penize}
+{16610}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{16611}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{16612}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{16613}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{16614}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{16615}{}{Scorpions|Scorpion|Rad Scorpion|Radscorpions|Radscorpion|skorpioni|skorpion|radskorpion|radskorpioni|Rad skorpion}
+{16616}{}{Vipers|Viper|Zmije}
+{16617}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{16618}{}{Plains|Pastviny}
+{16619}{}{Job|Work|Task|Money|prace|ukol|penize}
 {16620}{}{Ian}
 {16621}{}{Vault 15|Vault|Vault15}
 
@@ -695,12 +695,12 @@
 {16710}{}{Razlo je náš doktor. Najdeš ho v jeho domì v jihozápadní èásti vesnice.}
 {16711}{}{Máš štìstí, jeden obchodník nás zrovna navštívil. Je nìkde ve vıchodní èásti vesnice.}
 {16712}{}{Pokud míøíš do pustiny, dej si pozor na radškorpiony.}
-{16713}{}{No, není toho moc. Stránice je napravo od brány. Tam najdeš Setha. Naše pole jsou na vıchodní stranì. Kousek od nich máme naše Brahminy.}
+{16713}{}{No, není toho moc. Stránice je napravo od brány. Tam najdeš Setha. Naše pole jsou na vıchodní stranì. Kousek od nich máme naše brahmíny.}
 {16714}{}{Seth a stráe udrují poøádek v naší vesnici.}
 {16715}{}{Dej si pozor na jejich ocas. Vìtší dávka jedu mùe bıt smrtelná.}
 {16716}{}{Abych byl upøímnı, dìsí mì víc ne Khanové.}
 {16717}{}{Oh, døív jsme mívali více brahmin, ale nájezdníci nám nìjaké ukradli.}
-{16718}{}{Jsou kousek od vesnice. Necháváme tam pást brahminy.}
+{16718}{}{Jsou kousek od vesnice. Necháváme tam pást brahmíny.}
 {16719}{}{Promluv si s Aradeshem. Mohl by pro tebe nìco mít.}
 {16720}{}{Ian je jeden ze stránıch. Byl zranìn pøi útoku nájezdníkù na jeho karavanu a od té doby je s námi.}
 {16721}{}{Vìtšina z nás pochází z Vaultu 15.}
@@ -710,32 +710,32 @@
 # Info Level 1 [People who know nothing]
 #
 {17800}{}{Adytum|Adytown}
-{17801}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{17802}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{17803}{}{Rippers|Ripper}
+{17801}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{17802}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{17803}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {17804}{}{Blades|Blade}
-{17805}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{17805}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {17806}{}{Hub}
 {17807}{}{Junktown|Junk Town}
-{17808}{}{Vodni cip|vodni cip}
-{17809}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{17810}{}{Zimmerman|Jon|Jon Zimmermann}
-{17811}{}{Nekropolis}
-{17812}{}{Krater|krater}
-{17813}{}{Regulatori}
-{17814}{}{Sberaci|sberaci}
+{17808}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{17809}{}{Store|Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|obchod|koupit|kupovat|prodat|prodavat|Obchodovani|Nakup|Prodej}
+{17810}{}{Zimmerman|Jon|Jon Zimmermann|Jon Zimmerman}
+{17811}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{17812}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
+{17813}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{17814}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
 {17815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{17816}{}{Doktor|doktor}
-{17817}{}{Pustina|pustina}
-{17818}{}{Oblast|oblast}
-{17819}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{17820}{}{Brahmina|Brahminy}
-{17821}{}{Kino}
-{17822}{}{Parac|Paraci|parac|paraci}
-{17823}{}{Zvesti|zvesti}
+{17816}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{17817}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{17818}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{17819}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{17820}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{17821}{}{Cinema|Kino}
+{17822}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{17823}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
 {17824}{}{Chuck}
 {17825}{}{Caleb}
-{17826}{}{Prace|prace|Penize|penize}
+{17826}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {17900}{}{Stojíš v nìm.}
 {17901}{}{ijí na severu.}
@@ -769,32 +769,32 @@
 # Info level 2 [People who know something]
 #
 {18000}{}{Adytum|Adytown}
-{18001}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{18002}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{18003}{}{Rippers|Ripper}
+{18001}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{18002}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{18003}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {18004}{}{Blades|Blade}
-{18005}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{18005}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {18006}{}{Hub}
 {18007}{}{Junktown|Junk Town}
-{18008}{}{Vodni cip|vodni cip}
-{18009}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{18010}{}{Zimmerman|Jon|Jon Zimmermann}
-{18011}{}{Nekropolis}
-{18012}{}{Krater|krater}
-{18013}{}{Regulatori}
-{18014}{}{Sberaci|sberaci}
+{18008}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{18009}{}{Store|Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|obchod|koupit|kupovat|prodat|prodavat|Obchodovani|Nakup|Prodej}
+{18010}{}{Zimmerman|Jon|Jon Zimmermann|Jon Zimmerman}
+{18011}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{18012}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
+{18013}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{18014}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
 {18015}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{18016}{}{Doktor|doktor}
-{18017}{}{Pustina|pustina}
-{18018}{}{Oblast|oblast}
-{18019}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{18020}{}{Brahmina|Brahminy}
-{18021}{}{Kino}
-{18022}{}{Parac|Paraci|parac|paraci}
-{18023}{}{Zvesti|zvesti}
+{18016}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{18017}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{18018}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{18019}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{18020}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{18021}{}{Cinema|Kino}
+{18022}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{18023}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
 {18024}{}{Chuck}
 {18025}{}{Caleb}
-{18026}{}{Prace|prace|Penize|penize}
+{18026}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {18100}{}{Nacházíš se v Adytu, cizinèe.}
 {18101}{}{Následovníci ijí ve staré knihovnì na severu. Káí toleranci a mír.}
@@ -828,32 +828,32 @@
 # Info level 3 [People who know more than something but less than everything]
 #
 {18200}{}{Adytum|Adytown}
-{18201}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{18202}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{18203}{}{Rippers|Ripper}
+{18201}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{18202}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{18203}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {18204}{}{Blades|Blade}
-{18205}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{18205}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {18206}{}{Hub}
 {18207}{}{Junktown|Junk Town}
-{18208}{}{Vodni cip|vodni cip}
-{18209}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{18210}{}{Zimmerman|Jon|Jon Zimmermann}
-{18211}{}{Nekropolis}
-{18212}{}{Krater|krater}
-{18213}{}{Regulatori}
-{18214}{}{Sberaci|sberaci}
+{18208}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{18209}{}{Store|Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|obchod|koupit|kupovat|prodat|prodavat|Obchodovani|Nakup|Prodej}
+{18210}{}{Zimmerman|Jon|Jon Zimmermann|Jon Zimmerman}
+{18211}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{18212}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
+{18213}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{18214}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
 {18215}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{18216}{}{Doktor|doktor}
-{18217}{}{Pustina|pustina}
-{18218}{}{Oblast|oblast}
-{18219}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{18220}{}{Brahmina|Brahminy}
-{18221}{}{Kino}
-{18222}{}{Parac|Paraci|parac|paraci}
-{18223}{}{Zvesti|zvesti}
+{18216}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{18217}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{18218}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{18219}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{18220}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{18221}{}{Cinema|Kino}
+{18222}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{18223}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
 {18224}{}{Chuck}
 {18225}{}{Caleb}
-{18226}{}{Prace|prace|Penize|penize}
+{18226}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {18300}{}{Jsme potomci obyvatel starého Vaultu, kterı bıval pod jiní stranou mìsta.}
 {18301}{}{Následovníci jsou vzdìlaní mírumilovní lidé. ijí ve staré knihovnì na severu.}
@@ -875,7 +875,7 @@
 {18317}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {18318}{}{Následovníci jsou na severu, Blades se poflakují na vıchodì. Pokud se probiješ pøes staré kino na severu, mùeš si nìco nakoupit u Gun Runnerù.}
 {18319}{}{V Kostnici to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
-{18320}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahminy.}
+{18320}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahmíny.}
 {18321}{}{Sídlili tam Rippeøi, ale nìco je od tamtud vyhnalo.}
 {18322}{}{Proslıchá se, e mají doupì nìkde na vıchod od teritoria Blades.}
 {18323}{}{Drby mì nezajímají.}
@@ -946,31 +946,31 @@
 # Info level 3 [People who know more than something but less than everything]
 #
 {18800}{}{Adytum|Adytown}
-{18801}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{18802}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{18803}{}{Rippers|Ripper}
+{18801}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{18802}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{18803}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {18804}{}{Blades|Blade}
-{18805}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{18805}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {18806}{}{Hub}
 {18807}{}{Junktown|Junk Town}
-{18808}{}{Vodni cip|vodni cip}
+{18808}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {18809}{}{Nicole}
 {18810}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{18811}{}{Nekropolis}
-{18812}{}{Krater|krater}
-{18813}{}{Regulatori}
-{18814}{}{Sberaci|sberaci}
-{18815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{18816}{}{Doktor|doktor}
-{18817}{}{Pustina|pustina}
-{18818}{}{Oblast|oblast}
-{18819}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{18820}{}{Brahmina|Brahminy}
-{18821}{}{Kino}
-{18822}{}{Zvesti|zvesti}
-{18823}{}{Parac|Paraci|parac|paraci}
-{18824}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{18825}{}{Prace|prace|Penize|penize}
+{18811}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{18812}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
+{18813}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{18814}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
+{18815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Andelska kostnice|kostnice}
+{18816}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{18817}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{18818}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{18819}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{18820}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{18821}{}{Cinema|Kino}
+{18822}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{18823}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{18824}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{18825}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {18900}{}{Malé mìsto na jihu. Jsou to dobøí lidé, ale trochu paranoidní. Obèas s nìkterımi spolupracujeme.}
 {18901}{}{My jsme Následovníci apokalypsy. Je naší povinností pøinést svìtu mír a staré znalosti. Nesmíme dopustit, aby zbranì války opìt zjizvily naši planetu.}
@@ -992,7 +992,7 @@
 {18917}{}{Vyrùstat v Kostnici je drsné. Pokud nezemøeš hlady, dostanou tì drogy nebo gangy.}
 {18918}{}{Následovníci jsou na severu, Blades se poflakují na vıchodì. Pokud se probiješ pøes staré kino na severu, mùeš si nìco nakoupit u Gun Runnerù.}
 {18919}{}{V Kostnici to pøímo bují rùznımi gangy. Regulátoøi je drí od bran Adytua.}
-{18920}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahminy.}
+{18920}{}{Místní kupci platí velké peníze za ochranu, jinak rychle pøijdou o své brahmíny.}
 {18921}{}{Sídlili tam Rippeøi, ale nìco je odtamtud vyhnalo.}
 {18922}{}{Nenapadá mì nic, co by tì mohlo zajímat.}
 {18923}{}{Proslıchá se, e mají doupì nìkde na vıchod od teritoria Blades.}
@@ -1002,15 +1002,15 @@
 #
 # Mariposa MBASE     (19000) # Used by Super Mutants and Cathedral Prisoners
 #
-{19000}{}{Vudce}
-{19001}{}{Porucik|Po}
-{19002}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{19003}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
+{19000}{}{Master|Vudce}
+{19001}{}{Lieutenant|Lou|Lt|Porucik|Po}
+{19002}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{19003}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
 {19004}{}{Nightkin|Nightkins}
-{19005}{}{Supermutant|Supermutanti|Super Mutant|Super Mutanti|Mutant|Mutanti}
-{19006}{}{Psychics|Psychic}
-{19007}{}{Experiment|Experimenty}
-{19008}{}{Vodni cip|vodni cip}
+{19005}{}{Super Mutants|Super Mutant|Supermutant|Supermutants|Supermutanti|Super Mutanti|Mutant|Mutanti}
+{19006}{}{Psychics|Psychic|Psychika}
+{19007}{}{Experiments|Experiment|Experimenty}
+{19008}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 
 {19100}{}{Tobì o nìm nic øíkat nebudu.}
 {19101}{}{O tom s nišími rasami mluvit nehodlám.}
@@ -1025,43 +1025,43 @@
 #
 # HUBENT.MAP    (22600)
 #
-{22600}{}{Policie|policie}
-{22601}{}{Kupci s vodou}
-{22602}{}{Crimson caravan|crimson caravan}
-{22603}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go}
-{22604}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{22605}{}{Nekropolis}
-{22606}{}{Krater|krater}
+{22600}{}{Police|Hub Police|Policie|Hubska policie}
+{22601}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou|Kupci s vodou}
+{22602}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{22603}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{22604}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{22605}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{22606}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {22607}{}{Junktown|Junk Town}
-{22608}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
+{22608}{}{Brotherhood of Steel|Brotherhood|Steel|BoS|Bratrstvo oceli|Bratrstvo|ocel}
 {22609}{}{Shady Sands|Shady|Sands}
 {22610}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{22611}{}{Vodojem|vodojem}
-{22612}{}{Stare mesto|stare mesto}
-{22613}{}{Trziste|trziste|Kupecky trh|kupecky trh}
-{22614}{}{Heights|Height}
-{22615}{}{Parac|Paraci|parac|paraci}
-{22616}{}{Vodni cip|vodni cip}
-{22617}{}{Caravans|Caravan}
-{22618}{}{Jednota|jednota}
+{22611}{}{Water Tower|Tower|Watertower|vodojem}
+{22612}{}{Old Town|Oldtown|Stare Mesto}
+{22613}{}{Downtown|Merchant Market|Market|centrum|Trh|Trziste|Kupecky trh}
+{22614}{}{Heights|Height|Pahorky}
+{22615}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{22616}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{22617}{}{Caravans|Caravan|karavany|karavana}
+{22618}{}{Unity|Jednota}
 {22619}{}{Hub}
 {22620}{}{Adytum|Adytown}
-{22621}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
-{22622}{}{Doktor|doktor}
-{22623}{}{Pustina|pustina}
-{22624}{}{Oblast|oblast}
-{22625}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{22626}{}{Brahmina|Brahminy}
-{22627}{}{Zvesti|zvesti}
-{22628}{}{Skag|skag|Skagove|skagove}
-{22629}{}{Greene|Justin|Justin Greene|Sherif}
-{22630}{}{All|Mitch|vse-v-jednom|Vse-v-jednom}
-{22631}{}{Zbran|Zbroj|zbrane|zbroje}
-{22632}{}{Friendly Lending Company|FLC}
-{22633}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night}
-{22634}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{22635}{}{Prace|prace|Penize|penize}
-{22636}{}{Ztracena karavana|Ztracene karavany|ztracena karavana|ztracene karavany}
+{22621}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
+{22622}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{22623}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{22624}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{22625}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{22626}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{22627}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{22628}{}{Skag|Skags|Muties|Mutant|Mutants|Skagove|mutanti}
+{22629}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
+{22630}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{22631}{}{Weapon Shop|Weapon|Weapons|Armory|Armor|Armour|zbran|zbrane|zbroj|zbroje}
+{22632}{}{Friendly Lending Company|FLC|Pratelska uverova spolecnost|spolecnost}
+{22633}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night|Maltezsky sokol|Pendrek}
+{22634}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{22635}{}{Job|Work|Task|Money|prace|ukol|penize}
+{22636}{}{Missing|Missing Caravan|Missing Caravans|Ztraceny|ztracena karavana|Ztracene karavany}
 {22637}{}{Decker}
 {22638}{}{Butch|Butch Harris|Harris}
 
@@ -1078,11 +1078,11 @@
 {22710}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
 {22711}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {22712}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
-{22713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
+{22713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, Pøátelská úvìrová spoleènost a Maltézskı sokol.}
 {22714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {22715}{}{Pohádka, kterou se straší malé dìti.}
 {22716}{}{O tom nic nevím.}
-{22717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
+{22717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go a Obchodníci s vodou.}
 {22718}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {22719}{}{Zrovna stojíš u hlavního vstupu do Hubu.}
 {22720}{}{Malá vesnice v Kostnici.}
@@ -1095,57 +1095,57 @@
 {22727}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
 {22728}{}{Skagové ijí ve Starém mìstì. Nejsou to zrovna dobøí lidé, take se od nich dr dál.}
 {22729}{}{Šerif øídí místní policejní síly a udruje v Hubu poøádek.}
-{22730}{}{Obchod Vše-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
+{22730}{}{Obchod Všechno-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
 {22731}{}{Pokud hledáš nìjaké nové elezo, Bethin obchod se zbranìmi je nejlepší v celém Hubu.}
-{22732}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
+{22732}{}{Máš prázdné kapsy? Pøátelská úvìrová spoleènost ti mùe pùjèit i velké èástky.}
 {22733}{}{Maltese Falcon je místní noèní klub.}
-{22734}{}{Dej se po cestì na jih a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a noèní klub Maltese Falcon.}
-{22735}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
-{22736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
+{22734}{}{Dej se po cestì na jih a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, Pøátelskou úvìrovou spoleènost a noèní klub Maltese Falcon.}
+{22735}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go, Karmínovou karavanu nebo Obchodníky s vodou.}
+{22736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu má Far Go.}
 {22737}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
-{22738}{}{Butch vlastní Far Go Traders. Je to dobrı èlovìk a dá se mu vìøit.}
+{22738}{}{Butch vlastní Far Go. Je to dobrı èlovìk a dá se mu vìøit.}
 
 #
 # HUBDWNTN.MAP  (23800)
 #
-{23800}{}{Policie|policie}
-{23801}{}{Kupci s vodou}
-{23802}{}{Crimson caravan|crimson caravan}
-{23803}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go}
-{23804}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{23805}{}{Nekropolis}
-{23806}{}{Krater|krater}
+{23800}{}{Police|Hub Police|Policie|Hubska policie}
+{23801}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou|Kupci s vodou}
+{23802}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{23803}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{23804}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{23805}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{23806}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {23807}{}{Junktown|Junk Town}
-{23808}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
+{23808}{}{Brotherhood of Steel|Brotherhood|Steel|BoS|Bratrstvo oceli|Bratrstvo|ocel}
 {23809}{}{Shady Sands|Shady|Sands}
 {23810}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{23811}{}{Vodojem|vodojem}
-{23812}{}{Stare mesto|stare mesto}
-{23813}{}{Trziste|trziste|Kupecky trh|kupecky trh}
-{23814}{}{Heights|Height}
-{23815}{}{Parac|Paraci|parac|paraci}
-{23816}{}{Vodni cip|vodni cip}
-{23817}{}{Karavany|Karavana}
-{23818}{}{Jednota|jednota}
+{23811}{}{Water Tower|Tower|Watertower|vodojem}
+{23812}{}{Old Town|Oldtown|Stare Mesto}
+{23813}{}{Downtown|Merchant Market|Market|centrum|Trh|Trziste|Kupecky trh}
+{23814}{}{Heights|Height|Pahorky}
+{23815}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{23816}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{23817}{}{Caravans|Caravan|karavany|karavana}
+{23818}{}{Unity|Jednota}
 {23819}{}{Hub}
 {23820}{}{Adytum|Adytown}
-{23821}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
-{23822}{}{Doktor|doktor}
-{23823}{}{Pustina|pustina}
-{23824}{}{Oblast|oblast}
-{23825}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{23826}{}{Brahmina|Brahminy}
-{23827}{}{Zvesti|zvesti}
-{23828}{}{Skag|skag|Skagove|skagove}
-{23829}{}{Greene|Justin|Justin Greene|Sherif}
-{23830}{}{All|Mitch|vse-v-jednom|Vse-v-jednom}
-{23831}{}{Zbran|Zbroj|zbrane|zbroje}
-{23832}{}{Friendly Lending Company|FLC}
-{23833}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night}
-{23834}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{23835}{}{Hope|hope}
-{23836}{}{Prace|prace|Penize|penize}
-{23837}{}{Ztracena karavana|Ztracene karavany|ztracena karavana|ztracene karavany}
+{23821}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
+{23822}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{23823}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{23824}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{23825}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{23826}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{23827}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{23828}{}{Skag|Skags|Muties|Mutant|Mutants|Skagove|mutanti}
+{23829}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
+{23830}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{23831}{}{Weapon Shop|Weapon|Weapons|Armory|Armor|Armour|zbran|zbrane|zbroj|zbroje}
+{23832}{}{Friendly Lending Company|FLC|Pratelska uverova spolecnost|spolecnost}
+{23833}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night|Maltezsky sokol|Pendrek}
+{23834}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{23835}{}{Hope|Singer|Doll}
+{23836}{}{Job|Work|Task|Money|prace|ukol|penize}
+{23837}{}{Missing|Missing Caravan|Missing Caravans|Ztraceny|ztracena karavana|Ztracene karavany}
 {23838}{}{Decker}
 {23839}{}{Butch|Butch Harris|Harris}
 {23840}{}{Beth}
@@ -1164,11 +1164,11 @@
 {23910}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
 {23911}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {23912}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
-{23913}{}{Teï jsi na trišti. Je tady obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
+{23913}{}{Teï jsi na trišti. Je tady obchod se zbranìmi, zbrojemi, Pøátelská úvìrová spoleènost a Maltese Falcon.}
 {23914}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {23915}{}{Pohádka, kterou se straší malé dìti.}
 {23916}{}{O tom nic nevím.}
-{23917}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
+{23917}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go a Obchodníci s vodou.}
 {23918}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {23919}{}{Teï jsi na trišti.}
 {23920}{}{Malá vesnice v Kostnici.}
@@ -1181,59 +1181,59 @@
 {23927}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
 {23928}{}{Skagové ijí ve Starém mìstì. Nejsou to zrovna dobøí lidé, take se od nich dr dál.}
 {23929}{}{Šerif øídí místní policejní síly a udruje v Hubu poøádek.}
-{23930}{}{Obchod Vše-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
+{23930}{}{Obchod Všechno-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
 {23931}{}{Pokud hledáš nìjaké nové elezo, Bethin obchod se zbranìmi je nejlepší v celém Hubu.}
-{23932}{}{Friendly Lending Company je místní lichváø.}
+{23932}{}{Pøátelská úvìrová spoleènost pùjèuje peníze.}
 {23933}{}{Maltese Falcon je místní noèní klub. Je kousek od centra trištì, nemùeš ho minout.}
 {23934}{}{Hele, vdy stojíš na trišti! Obchody jsou všude okolo!}
 {23935}{}{Hope je zpìvaèka v Maltese Falcon.}
 {23936}{}{Pokud hledáš práci, zeptej se jedné z místních karavanovıch spoleèností.}
-{23937}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
+{23937}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu má Far Go.}
 {23938}{}{Vlastní Maltese Falcon.}
-{23939}{}{Butch vlastní Far Go Traders, je to poctivı chlap.}
+{23939}{}{Butch vlastní Far Go, je to poctivı chlap.}
 {23940}{}{Beth vlastní obchod se zbranìmi. Je to hned za rohem.}
-{23941}{}{Lorenzo je majitel Friendly Lending Company.}
+{23941}{}{Lorenzo je majitel Pøátelské úvìrové spoleènosti.}
 
 #
 # HUBHEIGT.MAP  (24400)
 #
-{24400}{}{Policie|policie}
-{24401}{}{Kupci s vodou}
-{24402}{}{Crimson caravan|crimson caravan}
-{24403}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go}
-{24404}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{24405}{}{Nekropolis}
-{24406}{}{Krater|krater}
+{24400}{}{Police|Hub Police|Policie|Hubska policie}
+{24401}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou|Kupci s vodou}
+{24402}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{24403}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{24404}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{24405}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{24406}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {24407}{}{Junktown|Junk Town}
-{24408}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
+{24408}{}{Brotherhood of Steel|Brotherhood|Steel|BoS|Bratrstvo oceli|Bratrstvo|ocel}
 {24409}{}{Shady Sands|Shady|Sands}
 {24410}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{24411}{}{Vodojem|vodojem}
-{24412}{}{Stare mesto|stare mesto}
-{24413}{}{Trziste|trziste|Kupecky trh|kupecky trh}
-{24414}{}{Pahorky}
-{24415}{}{Parac|Paraci|parac|paraci}
-{24416}{}{Vodni cip|vodni cip}
-{24417}{}{Karavana|Karavany}
-{24418}{}{Jednota|jednota}
+{24411}{}{Water Tower|Tower|Watertower|vodojem}
+{24412}{}{Old Town|Oldtown|Stare Mesto}
+{24413}{}{Downtown|Merchant Market|Market|centrum|Trh|Trziste|Kupecky trh}
+{24414}{}{Heights|Height|Pahorky}
+{24415}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{24416}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{24417}{}{Caravans|Caravan|karavany|karavana}
+{24418}{}{Unity|Jednota}
 {24419}{}{Hub}
 {24420}{}{Adytum|Adytown}
-{24421}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
-{24422}{}{Doktor|doktor}
-{24423}{}{Pustina|pustina}
-{24424}{}{Oblast|oblast}
-{24425}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{24426}{}{Brahmina|Brahminy}
-{24427}{}{Zvesti|zvesti}
-{24428}{}{Skag|skag|Skagove|skagove}
-{24429}{}{Greene|Justin|Justin Greene|Sherif}
-{24430}{}{All|Mitch|vse-v-jednom|Vse-v-jednom}
-{24431}{}{Zbran|Zbroj|zbrane|zbroje}
-{24432}{}{Friendly Lending Company|FLC}
-{24433}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night}
-{24434}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{24435}{}{Prace|prace|Penize|penize}
-{24436}{}{Ztracena karavana|Ztracene karavany|ztracena karavana|ztracene karavany}
+{24421}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
+{24422}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{24423}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{24424}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{24425}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{24426}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{24427}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{24428}{}{Skag|Skags|Muties|Mutant|Mutants|Skagove|mutanti}
+{24429}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
+{24430}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{24431}{}{Weapon Shop|Weapon|Weapons|Armory|Armor|Armour|zbran|zbrane|zbroj|zbroje}
+{24432}{}{Friendly Lending Company|FLC|Pratelska uverova spolecnost|spolecnost}
+{24433}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night|Maltezsky sokol|Pendrek}
+{24434}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{24435}{}{Job|Work|Task|Money|prace|ukol|penize}
+{24436}{}{Missing|Missing Caravan|Missing Caravans|ztracena karavana|Ztracene karavany}
 {24437}{}{Decker}
 
 {24500}{}{Policii øídí šerif Greene a snaí se v Hubu udrovat zákon a poøádek. Nìkteøí si ale myslí, e zpùsobí víc problémù ne vyøeší.}
@@ -1249,11 +1249,11 @@
 {24510}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
 {24511}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {24512}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
-{24513}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
+{24513}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, Pøátelská úvìrová spoleènost a Maltese Falcon.}
 {24514}{}{Tam ijí všichni ti bohatí obchodníci. Vùdce Obchodníkù s vodou, Daren Hightower, tam má obrovské sídlo.}
 {24515}{}{Pohádka, kterou se straší malé dìti.}
 {24516}{}{O tom nic nevím.}
-{24517}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
+{24517}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go a Obchodníci s vodou.}
 {24518}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {24519}{}{U jsi v Hubu. Zrovna stojíš ve ètvrti Pahorky.}
 {24520}{}{Malá vesnice v Kostnici.}
@@ -1266,55 +1266,55 @@
 {24527}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
 {24528}{}{Skagové ijí ve Starém mìstì. Nejsou to zrovna dobøí lidé, take se od nich dr dál.}
 {24529}{}{Šerif øídí místní policejní síly a udruje v Hubu poøádek.}
-{24530}{}{Obchod Vše-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
+{24530}{}{Obchod Všechno-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
 {24531}{}{Pokud hledáš nìjaké nové elezo, Bethin obchod se zbranìmi je nejlepší v celém Hubu.}
-{24532}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
+{24532}{}{Máš prázdné kapsy? Pøátelská úvìrová spoleènost ti mùe pùjèit i velké èástky.}
 {24533}{}{Maltese Falcon je místní noèní klub.}
-{24534}{}{Dej se na vıchod a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{24535}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
-{24536}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
+{24534}{}{Dej se na vıchod a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, Pøátelskou úvìrovou spoleènost a Maltese Falcon.}
+{24535}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go, Karmínovou karavanu nebo Obchodníky s vodou.}
+{24536}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu má Far Go.}
 {24537}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
 #
 # HUBOLDTN.MAP  (25000)
 #
-{25000}{}{Policie|policie}
-{25001}{}{Kupci s vodou}
-{25002}{}{Crimson caravan|crimson caravan}
-{25003}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go}
-{25004}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{25005}{}{Nekropolis}
-{25006}{}{Krater|krater}
+{25000}{}{Police|Hub Police|Policie|Hubska policie}
+{25001}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou|Kupci s vodou}
+{25002}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{25003}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{25004}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{25005}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{25006}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {25007}{}{Junktown|Junk Town}
-{25008}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
+{25008}{}{Brotherhood of Steel|Brotherhood|Steel|BoS|Bratrstvo oceli|Bratrstvo|ocel}
 {25009}{}{Shady Sands|Shady|Sands}
 {25010}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{25011}{}{Vodojem|vodojem}
-{25012}{}{Stare mesto|stare mesto}
-{25013}{}{Trziste|trziste|Kupecky trh|kupecky trh}
-{25014}{}{Pahorky}
-{25015}{}{Parac|Paraci|parac|paraci}
-{25016}{}{Vodni cip|vodni cip}
-{25017}{}{Karavana|Karavany}
-{25018}{}{Jednota|jednota}
+{25011}{}{Water Tower|Tower|Watertower|vodojem}
+{25012}{}{Old Town|Oldtown|Stare Mesto}
+{25013}{}{Downtown|Merchant Market|Market|centrum|Trh|Trziste|Kupecky trh}
+{25014}{}{Heights|Height|Pahorky}
+{25015}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{25016}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{25017}{}{Caravans|Caravan|karavany|karavana}
+{25018}{}{Unity|Jednota}
 {25019}{}{Hub}
 {25020}{}{Adytum|Adytown}
-{25021}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
-{25022}{}{Doktor|doktor}
-{25023}{}{Pustina|pustina}
-{25024}{}{Oblast|oblast}
-{25025}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{25026}{}{Brahmina|Brahminy}
-{25027}{}{Zvesti|zvesti}
-{25028}{}{Skag|skag|Skagove|skagove}
-{25029}{}{Greene|Justin|Justin Greene|Sherif}
-{25030}{}{All|Mitch|vse-v-jednom|Vse-v-jednom}
-{25031}{}{Zbran|Zbroj|zbrane|zbroje}
-{25032}{}{Friendly Lending Company|FLC}
-{25033}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night}
-{25034}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{25035}{}{Prace|prace|Penize|penize}
-{25036}{}{Ztracena karavana|Ztracene karavany|ztracena karavana|ztracene karavany}
+{25021}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
+{25022}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{25023}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{25024}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{25025}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{25026}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{25027}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{25028}{}{Skag|Skags|Muties|Mutant|Mutants|Skagove|mutanti}
+{25029}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
+{25030}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{25031}{}{Weapon Shop|Weapon|Weapons|Armory|Armor|Armour|zbran|zbrane|zbroj|zbroje}
+{25032}{}{Friendly Lending Company|FLC|Pratelska uverova spolecnost|spolecnost}
+{25033}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night|Maltezsky sokol|Pendrek}
+{25034}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{25035}{}{Job|Work|Task|Money|prace|ukol|penize}
+{25036}{}{Missing|Missing Caravan|Missing Caravans|ztracena karavana|Ztracene karavany}
 {25037}{}{Decker}
 
 {25100}{}{Policii øídí šerif Greene a snaí se v Hubu udrovat zákon a poøádek. Nìkteøí si ale myslí, e zpùsobí víc problémù ne vyøeší.}
@@ -1330,11 +1330,11 @@
 {25110}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
 {25111}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {25112}{}{Tady najdeš ty nejchudší z celého Hubu.}
-{25113}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
+{25113}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, Pøátelská úvìrová spoleènost a Maltese Falcon.}
 {25114}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {25115}{}{Pohádka, kterou se straší malé dìti.}
 {25116}{}{O tom nic nevím.}
-{25117}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
+{25117}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go a Obchodníci s vodou.}
 {25118}{}{Není to ta blbost o které mluví Dìti katedrály?}
 {25119}{}{Nacházíš se v Hubu a teï stojíš ve ètvrti Staré mìsto.}
 {25120}{}{Malá vesnice v Kostnici.}
@@ -1347,55 +1347,55 @@
 {25127}{}{Vìøil bys tomu? Øíká se, e starı Slappy vidìl jednoho z tìch Páraèù. Ten chudák byl vdycky trochu na hlavu.}
 {25128}{}{Nejchudší lidé v Hubu. Najdeš je po celém Starém mìstì.}
 {25129}{}{Šerif øídí místní policejní síly a udruje v Hubu poøádek.}
-{25130}{}{Obchod Vše-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
+{25130}{}{Obchod Všechno-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
 {25131}{}{Pokud hledáš nìjaké nové elezo, Bethin obchod se zbranìmi je nejlepší v celém Hubu.}
-{25132}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
+{25132}{}{Máš prázdné kapsy? Pøátelská úvìrová spoleènost ti mùe pùjèit i velké èástky.}
 {25133}{}{Maltese Falcon je místní noèní klub.}
-{25134}{}{Dej se na západ a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
-{25135}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go Traders, Karmínovou karavanu nebo Obchodníky s vodou.}
-{25136}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
+{25134}{}{Dej se na západ a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, Pøátelskou úvìrovou spoleènost a Maltese Falcon.}
+{25135}{}{Pokud hledáš práci, mùeš se pøidat k jedné z velkıch karavanovıch spoleèností. Máme tady Far Go, Karmínovou karavanu nebo Obchodníky s vodou.}
+{25136}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu má Far Go.}
 {25137}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
 #
 # HUBWATER.MAP  (25600)
 #
-{25600}{}{Policie|policie}
-{25601}{}{Kupci s vodou}
-{25602}{}{Crimson caravan|crimson caravan}
-{25603}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go}
-{25604}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{25605}{}{Nekropolis}
-{25606}{}{Krater|krater}
+{25600}{}{Police|Hub Police|Policie|Hubska policie}
+{25601}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou|Kupci s vodou}
+{25602}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{25603}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{25604}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{25605}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{25606}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {25607}{}{Junktown|Junk Town}
-{25608}{}{Bratrstvo|bratrstvo|Bratrstvo oceli|bratrstvo oceli}
+{25608}{}{Brotherhood of Steel|Brotherhood|Steel|BoS|Bratrstvo oceli|Bratrstvo|ocel}
 {25609}{}{Shady Sands|Shady|Sands}
 {25610}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{25611}{}{Vodojem|vodojem}
-{25612}{}{Stare mesto|stare mesto}
-{25613}{}{Trziste|trziste|Kupecky trh|kupecky trh}
-{25614}{}{Pahorky}
-{25615}{}{Parac|Paraci|parac|paraci}
-{25616}{}{Vodni cip|vodni cip}
-{25617}{}{Karavana|Karavany}
-{25618}{}{Jednota|jednota}
+{25611}{}{Water Tower|Tower|Watertower|vodojem}
+{25612}{}{Old Town|Oldtown|Stare Mesto}
+{25613}{}{Downtown|Merchant Market|Market|centrum|Trh|Trziste|Kupecky trh}
+{25614}{}{Heights|Height|Pahorky}
+{25615}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{25616}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{25617}{}{Caravans|Caravan|karavany|karavana}
+{25618}{}{Unity|Jednota}
 {25619}{}{Hub}
 {25620}{}{Adytum|Adytown}
-{25621}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
-{25622}{}{Doktor|doktor}
-{25623}{}{Pustina|pustina}
-{25624}{}{Oblast|oblast}
-{25625}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{25626}{}{Brahmina|Brahminy}
-{25627}{}{Zvesti|zvesti}
-{25628}{}{Skag|skag|Skagove|skagove}
-{25629}{}{Greene|Justin|Justin Greene|Sherif}
-{25630}{}{All|Mitch|vse-v-jednom|Vse-v-jednom}
-{25631}{}{Zbran|Zbroj|zbrane|zbroje}
-{25632}{}{Friendly Lending Company|FLC}
-{25633}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night}
-{25634}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{25635}{}{Prace|prace|Penize|penize}
-{25636}{}{Ztracena karavana|Ztracene karavany|ztracena karavana|ztracene karavany}
+{25621}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
+{25622}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{25623}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{25624}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{25625}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{25626}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{25627}{}{Things|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{25628}{}{Skag|Skags|Muties|Mutant|Mutants|Skagove|mutanti}
+{25629}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
+{25630}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{25631}{}{Weapon Shop|Weapon|Weapons|Armory|Armor|Armour|zbran|zbrane|zbroj|zbroje}
+{25632}{}{Friendly Lending Company|FLC|Pratelska uverova spolecnost|spolecnost}
+{25633}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Nightclub|Club|Night|Maltezsky sokol|Pendrek}
+{25634}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{25635}{}{Job|Work|Task|Money|prace|ukol|penize}
+{25636}{}{Missing|Missing Caravan|Missing Caravans|ztracena karavana|Ztracene karavany}
 {25637}{}{Decker}
 
 {25700}{}{Policii øídí šerif Greene a snaí se v Hubu udrovat zákon a poøádek. Nìkteøí si ale myslí, e zpùsobí víc problémù ne vyøeší.}
@@ -1411,11 +1411,11 @@
 {25710}{}{Místo zamoøené krysami a poulièními gangy. Nebıt vıhodného obchodování s Adytem a Gun Runnery, pochybuji, e by se tam nìjakı kupec odváil.}
 {25711}{}{Ty skladují vodu pro Hub. Patøí Obchodníkùm s vodou.}
 {25712}{}{Staré mìsto je na severovıchodní stranì mìsta. Neijí tam ádní slušní lidé. Slyšel jsem, e je tam dokonce i ta takzvaná „Gilda zlodìjù“.}
-{25713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, spoleènost Friendly Lending Company a Maltese Falcon.}
+{25713}{}{To je místo, kde leí naše centrum obchodu. V této oblasti je obchod se zbranìmi, zbrojnice, Pøátelská úvìrová spoleènost a Maltese Falcon.}
 {25714}{}{To je místo, kde ijí všichni bohatí obchodníci. Vùdce Obchodníkù s vodou Daren Hightower tam má obrovské sídlo.}
 {25715}{}{Pohádka, kterou se straší malé dìti.}
 {25716}{}{O tom nic nevím.}
-{25717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go Traders a Obchodníci s vodou.}
+{25717}{}{Tøi nejvìtší firmy v Hubu jsou Karmínová karavana, Far Go a Obchodníci s vodou.}
 {25718}{}{Není to ta blbost, o které mluví Dìti katedrály?}
 {25719}{}{Tohle je Hub.}
 {25720}{}{Malá vesnice v Kostnici.}
@@ -1428,13 +1428,13 @@
 {25727}{}{Jsem si jistı, e za ty ztracené karavany mùe Bratrstvo oceli.}
 {25728}{}{Skagové ijí ve Starém mìstì. Nejsou to zrovna dobøí lidé, take se od nich dr dál.}
 {25729}{}{Øídí místní policii a snaí se v Hubu udrovat poøádek.}
-{25730}{}{Obchod Vše-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
+{25730}{}{Obchod Všechno-v-jednom nepatøí mezi nejlevnìjší, ale jeho zboí je špièkové.}
 {25731}{}{Pokud hledáš nìjaké nové elezo, Bethin obchod se zbranìmi je nejlepší v celém Hubu.}
-{25732}{}{Máš prázdné kapsy? The Friendly Lending Company ti mùe pùjèit i velké èástky.}
+{25732}{}{Máš prázdné kapsy? Pøátelská úvìrová spoleènost ti mùe pùjèit i velké èástky.}
 {25733}{}{Maltese Falcon je místní noèní klub.}
-{25734}{}{Dej se na sever a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, spoleènost Friendly Lending Company a Maltese Falcon.}
+{25734}{}{Dej se na sever a dojdeš na trištì. Tam najdeš obchod se zbranìmi, zbrojemi, Pøátelskou úvìrovou spoleènost a Maltese Falcon.}
 {25735}{}{No, hádám e mùeš zkusit Obchodníky s vodou.}
-{25736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu mají Far Go Traders.}
+{25736}{}{Karavany stále mizejí a nikdo neví, co se dìje. Nejvìtší smùlu má Far Go.}
 {25737}{}{Vlastní Maltese Falcon, kterı stojí nedaleko trištì.}
 
 #
@@ -1442,30 +1442,30 @@
 # Info Level 1 [People who know nothing]
 #
 {27400}{}{Adytum|Adytown}
-{27401}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{27402}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{27403}{}{Rippers|Ripper}
+{27401}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{27402}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{27403}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {27404}{}{Blades|Blade}
-{27405}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{27405}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {27406}{}{Hub}
 {27407}{}{Junktown|Junk Town}
-{27408}{}{Vodni cip|vodni cip}
+{27408}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {27409}{}{Razor}
-{27410}{}{Nekropolis}
-{27411}{}{Krater|krater}
+{27410}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{27411}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {27412}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27413}{}{Regulatori}
-{27414}{}{Sberaci|sberaci}
-{27415}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27416}{}{Doktor|doktor}
-{27417}{}{Pustina|pustina}
-{27418}{}{Oblast|oblast}
-{27419}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{27420}{}{Brahmina|Brahminy}
-{27421}{}{Kino}
-{27422}{}{Parac|Paraci|parac|paraci}
-{27423}{}{Zvesti|zvesti}
-{27424}{}{Prace|prace|Penize|penize}
+{27413}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{27414}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
+{27415}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Andelska kostnice|kostnice}
+{27416}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{27417}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{27418}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{27419}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{27420}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{27421}{}{Cinema|Kino}
+{27422}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{27423}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
+{27424}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {27500}{}{To je mìsto na jihu.}
 {27501}{}{Banda slabochù.}
@@ -1497,30 +1497,30 @@
 # Info Level 2 [People who know something]
 #
 {27600}{}{Adytum|Adytown}
-{27601}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{27602}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{27603}{}{Rippers|Ripper}
+{27601}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{27602}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{27603}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {27604}{}{Blades|Blade}
-{27605}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{27605}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {27606}{}{Hub}
 {27607}{}{Junktown|Junk Town}
-{27608}{}{Vodni cip|vodni cip}
+{27608}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {27609}{}{Razor}
-{27610}{}{Nekropolis}
-{27611}{}{Krater|krater}
+{27610}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{27611}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {27612}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27613}{}{Regulatori}
-{27614}{}{Sberaci|sberaci}
-{27615}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27616}{}{Doktor|doktor}
-{27617}{}{Pustina|pustina}
-{27618}{}{Oblast|oblast}
-{27619}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{27620}{}{Brahmina|Brahminy}
-{27621}{}{Kino}
-{27622}{}{Parac|Paraci|parac|paraci}
-{27623}{}{Zvesti|zvesti}
-{27624}{}{Prace|prace|Penize|penize}
+{27613}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{27614}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
+{27615}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Andelska kostnice|kostnice}
+{27616}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{27617}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{27618}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{27619}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{27620}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{27621}{}{Cinema|Kino}
+{27622}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{27623}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
+{27624}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {27700}{}{Vesnice slabochù na jihozápadì.}
 {27701}{}{Patetiètí a o míru kázající uboáci. Podáme si je hned jak se zbavíme Ripperù.}
@@ -1552,31 +1552,31 @@
 # Info level 3 [People who know more than something but less than everything]
 #
 {27800}{}{Adytum|Adytown}
-{27801}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{27802}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{27803}{}{Rippers|Ripper}
+{27801}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{27802}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{27803}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {27804}{}{Blades|Blade}
-{27805}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{27805}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {27806}{}{Hub}
 {27807}{}{Junktown|Junk Town}
-{27808}{}{Vodni cip|vodni cip}
+{27808}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {27809}{}{Razor}
-{27810}{}{Nekropolis}
-{27811}{}{Krater|krater}
+{27810}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{27811}{}{Glow|Hot Spot|Spot|Hot Spots|Krater|Misto}
 {27812}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27813}{}{Regulatori}
-{27814}{}{Sberaci|sberaci}
-{27815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{27816}{}{Doktor|doktor}
-{27817}{}{Pustina|pustina}
-{27818}{}{Oblast|oblast}
-{27819}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{27820}{}{Brahmina|Brahminy}
-{27821}{}{Kino}
-{27822}{}{Parac|Paraci|parac|paraci}
-{27823}{}{Zvesti|zvesti}
+{27813}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{27814}{}{Scavs|Scav|Scavanger|Scavengers|sberaci|sberac}
+{27815}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Andelska kostnice|kostnice}
+{27816}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{27817}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{27818}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{27819}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{27820}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{27821}{}{Cinema|Kino}
+{27822}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{27823}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
 {27824}{}{Caleb}
-{27825}{}{Prace|prace|Penize|penize}
+{27825}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {27900}{}{Nenech se zmást. Adytum mùe vypadat jako poklidná vesnice, ale jejich Regulátoøi jsou fakt drsní.}
 {27901}{}{Hmph. Na ty je škoda slov. Slaboši a zbabìlci.}
@@ -1588,7 +1588,7 @@
 {27907}{}{Myslím e leí nìkde na severovıchodì. Je to malé mìsto.}
 {27908}{}{Coe to?}
 {27909}{}{Razor je náš vùdce a nejlepší váleèník. Nepochybuju o tom, e nás dovede k vítìzství nad Rippery.}
-{27910}{}{Je daleko na vıchodì. Proslıchá se, e tam ijí lidoraví ghoulové.}
+{27910}{}{Je to daleko na vıchod odtud. Prı tam ijí ghúlové, kteøí poírají lidské maso. S tìmi ghúly bych bojovat nechtìl.}
 {27911}{}{To jsou zbytky místa, co dostalo pøímı zásah atomovkou. Myslím, e je nìkde na jihu.}
 {27912}{}{Tohle je Kostnice.}
 {27913}{}{Policejní síla Adyta. Støílí po nás bez varování. Ten parchant Caleb je jejich vùdce.}
@@ -1610,26 +1610,26 @@
 #Info Level 1 [People who know nothing]
 #
 {28600}{}{Adytum|Adytown}
-{28601}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{28602}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{28603}{}{Rippers|Ripper}
+{28601}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{28602}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{28603}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {28604}{}{Blades|Blade}
-{28605}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{28605}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {28606}{}{Hub}
 {28607}{}{Junktown|Junk Town}
-{28608}{}{Vodni cip|vodni cip}
+{28608}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {28609}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{28610}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{28611}{}{Doktor|doktor}
-{28612}{}{Pustina|pustina}
-{28613}{}{Oblast|oblast}
-{28614}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{28615}{}{Brahmina|Brahminy}
-{28616}{}{Kino}
-{28617}{}{Parac|Paraci|parac|paraci}
-{28618}{}{Zvesti|zvesti}
-{28619}{}{Regulatori}
-{28620}{}{Prace|prace|Penize|penize}
+{28610}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{28611}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{28612}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{28613}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{28614}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{28615}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{28616}{}{Cinema|Kino}
+{28617}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{28618}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
+{28619}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{28620}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {28700}{}{Malá vesnice na jihu.}
 {28701}{}{Banda cáklıch hypíkù na jihu.}
@@ -1657,26 +1657,26 @@
 # Info Level 2 [People who know something]
 #
 {28800}{}{Adytum|Adytown}
-{28801}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{28802}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{28803}{}{Rippers|Ripper}
+{28801}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{28802}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{28803}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {28804}{}{Blades|Blade}
-{28805}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{28805}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {28806}{}{Hub}
 {28807}{}{Junktown|Junk Town}
-{28808}{}{Vodni cip|vodni cip}
+{28808}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {28809}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{28810}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{28811}{}{Doktor|doktor}
-{28812}{}{Pustina|pustina}
-{28813}{}{Oblast|oblast}
-{28814}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{28815}{}{Brahmina|Brahminy}
-{28816}{}{Kino}
-{28817}{}{Parac|Paraci|parac|paraci}
-{28818}{}{Zvesti|zvesti}
-{28819}{}{Regulatori}
-{28820}{}{Prace|prace|Penize|penize}
+{28810}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{28811}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{28812}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{28813}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{28814}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{28815}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{28816}{}{Cinema|Kino}
+{28817}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{28818}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
+{28819}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{28820}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {28900}{}{Malá vesnice na jihu. Mají tam obstojné opevnìní.}
 {28901}{}{Banda cáklıch hypíkù na jihu. Mìli bychom se jich zbavit.}
@@ -1704,26 +1704,26 @@
 # Info Level 3 [People who know more than something but less than everything]
 #
 {29000}{}{Adytum|Adytown}
-{29001}{}{Nasledovnici|nasledovnici|Nasledovnici apokalypsy|nasledovnici apokalypsy}
-{29002}{}{Katedrala|katedrala|Deti katedraly|deti katedraly}
-{29003}{}{Rippers|Ripper}
+{29001}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{29002}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{29003}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {29004}{}{Blades|Blade}
-{29005}{}{Gun Runner|Gun Runneri|gunrunneri|Gunruneri|gunruneri}
+{29005}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|gunrunneri|Gunruneri}
 {29006}{}{Hub}
 {29007}{}{Junktown|Junk Town}
-{29008}{}{Vodni cip|vodni cip}
+{29008}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
 {29009}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{29010}{}{Nakup|nakup|Prodej|prodej|Obchod|obchod}
-{29011}{}{Doktor|doktor}
-{29012}{}{Pustina|pustina}
-{29013}{}{Oblast|oblast}
-{29014}{}{Zlodej|zlodeji|kradez|Kradez|Zlocin|zlocin}
-{29015}{}{Brahmina|Brahminy}
-{29016}{}{Kino}
-{29017}{}{Parac|Paraci|parac|paraci}
-{29018}{}{Zvesti|zvesti}
-{29019}{}{Regulatori}
-{29020}{}{Prace|prace|Penize|penize}
+{29010}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Nakup|Prodej}
+{29011}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{29012}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{29013}{}{Direction|Directions|Whereto|Where to|smer|kam|Oblast}
+{29014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{29015}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{29016}{}{Cinema|Kino}
+{29017}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{29018}{}{Rumor|Rumors|Rumour|Rumours|povest|povesti|zvest|zvesti}
+{29019}{}{Regulators|Regulator|Police|Police Force|Regulatori|Policie|policejni sila}
+{29020}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {29100}{}{Malé mìsto na jihu. Nepatøí mezi naše zákazníky, take se o nì nestaráme.}
 {29101}{}{Jsou zalezlí ve staré knihovnì na jihu a poøád dokola káou o míru. Nejsou dobøí pro obchod!}

@@ -53,7 +53,7 @@
 {152}{Harry_20}{Um..OK. Jdi tedy.}
 {153}{Harry_21}{Hej, ty bıt normál! Ty jít s Harrym!}
 {154}{Harry_22}{Hmm...OK. Vzít tì k Po.}
-{155}{Harry_23}{Ummm...ano. Ty bıt prvotní normál.  Po bude šastnı. Jdeme, jdeme.}
+{155}{Harry_23}{Ummm...ano. Ty bıt prvotní normál. Po bude šastnı. Jdeme, jdeme.}
 {156}{}{Poèkat, poèkat! Ty mi nerozumíš.}
 {157}{}{Zabiju tì holıma rukama.}
 {158}{Harry_24}{Harry poslouchat rozkazy. Jít spolu k Po.}
@@ -106,18 +106,18 @@
 {983}{Harry303}{Co?}
 {984}{Harry200}{Nemít ti co øíct!}
 
-{1000}{}{Vudce}
-{1001}{}{Po}
-{1002}{}{Set}
-{1003}{}{Vodarna}
-{1004}{}{Ghoul}
-{1005}{}{Normal|Lide}
-{1006}{}{Nekropolis}
-{1007}{}{Jednota}
-{1008}{}{Deti Katedraly|Deti|Katedrala}
-{1009}{}{Cip|Vodni Cip}
-{1010}{}{Hala}
-{1011}{}{Voda}
+{1000}{}{Master|Mutant Leader|Vudce}
+{1001}{}{Lou|Lieutenant|Lutenant|Loo|Lou Tenant|Lt|Po|Porucik}
+{1002}{}{Set|Seth|Wuss}
+{1003}{}{Water Shed|Watershed|Shed|vodarna}
+{1004}{}{Ghouls|Ghoul|Mutant|Mutants|ghulove|ghul|mutanti}
+{1005}{}{Norms|Human|Normies|Normals|Normal|Lide|Normalove}
+{1006}{}{Necropolis|CITY OF DEAD|CITY OF THE DEAD|Nekropolis|Mesto mrtvych}
+{1007}{}{Unity|Jednota}
+{1008}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{1009}{}{Chip|Water Chip|Waterchip|Cip|vodni cip}
+{1010}{}{Hall|hala|sin}
+{1011}{}{Water|voda}
 {1012}{}{Larry|Barry|Gary|Terry|Sally}
 
 {1100}{Harry300}{Nevìdìt, ale myslet on líbit bıt šéf.}

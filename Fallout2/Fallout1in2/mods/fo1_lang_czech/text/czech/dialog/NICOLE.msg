@@ -247,21 +247,21 @@
 {1001}{}{Nicole}
 {1002}{}{Laura}
 {1003}{}{Jake}
-{1004}{}{knihovna}
-{1005}{}{buh}
-{1006}{}{vudce}
-{1007}{}{Nightkin}
-{1008}{}{katedrala}
-{1009}{}{Adytum}
+{1004}{}{Library|knihovna}
+{1005}{}{God|Buh}
+{1006}{}{Master|Vudce}
+{1007}{}{Nightkin|Nightkins}
+{1008}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{1009}{}{Adytum|Adytown}
 {1010}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Angel's Boneyard|Kostnice|Andelska kostnice}
-{1011}{}{naslednici}
-{1012}{}{valka}
+{1011}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy|naslednici}
+{1012}{}{War|2077|Valka}
 {1013}{}{Hub}
-{1014}{}{bratrstvo|bratrstvo oceli}
-{1015}{}{Rippers|Ripper}
+{1014}{}{Brotherhood|Brotherhood of Steel|Steel|BOS|Bratrstvo|Bratrstvo oceli|ocel}
+{1015}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {1016}{}{Blades|Blade}
 {1017}{}{Hub}
-{1018}{}{Gun Runneri|gun runneri|Gunrunner|Gunrunners}
+{1018}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri}
 
 {1100}{Nic_86}{Morpheus je velitelem Dìtí katedrály. Je to ztìlesnìné zlo a tato pravda musí vyjít najevo.}
 {1101}{Nic_87}{Není k tomu moc co øíct.}

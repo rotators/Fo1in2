@@ -46,8 +46,8 @@
 {2200}{}{[Chvíli trvá, než se zorientuješ ve Slappyho instrukcích, ale nakonec se ti podaøí identifikovat místo, jako jedno z pohoøí západnì od Hubu]}
 
 # TMA
-{1000}{}{Parac}
-{1001}{}{Slappy}
+{1000}{}{DEATHCLAW|DEATH|CLAW|DEATH CLAW|DEATH CLAWS|DEATHCLAWS|CLAWS|MONSTER|parac|Smrt|paraci}
+{1001}{}{SLAPPY}
 
 {1100}{}{Jo, Páraè, Páraè.}
 {1101}{}{Øíkají mi Slappy! ... Slappy, Slap-py!}

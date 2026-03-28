@@ -72,7 +72,7 @@
 {171}{TAND_39}{Fajn a jaký je tvùj plán?}
 {172}{}{Jen poèkej až se otevøou dveøe. Pak bìž!}
 {173}{}{Jdu bojovat s velitelem Khanù výmìnou za tvou svobodu.}
-{174}{TAND_40}{To je ono?  To je tvùj plán. Uch! Dobøe. Ale pospíchej. Slyšela jsem je mluvit a jejich plány se mi nelíbí.}
+{174}{TAND_40}{To je ono? To je tvùj plán. Uch! Dobøe. Ale pospíchej. Slyšela jsem je mluvit a jejich plány se mi nelíbí.}
 {175}{TAND_41}{Ty? A bojovat s ním? Ty si dìláš ze mì srandu! [povzdech] Poslouchej, až pøijdeš na nìco jiného, dej mi vìdìt, jo?}
 {176}{TAND_42}{Oh, nejsme tak trochu sarkastiètí? Snažíš se mì odsud dostat, nebo co!?}
 {177}{}{Ano. Jen buï v klidu, a až se otevøou dveøe, utíkej co ti nohy staèí.}
@@ -146,22 +146,22 @@
 {981}{TAND_63}{Hmm...To mi nic neøíká.}
 {982}{TAND_64}{Hm...neee. Nikdy jsem o tom neslyšela.}
 
-{1000}{}{Aradesh|Otec}
+{1000}{}{Aradesh|Father|Dad|Leader|otec|velitel}
 {1001}{}{Tandi}
-{1002}{}{Seth|Kapitan}
-{1003}{}{Najezdnici|Khanove}
-{1004}{}{Studna}
-{1005}{}{Skorpioni|Radskorpioni}
-{1006}{}{Parac}
+{1002}{}{Seth|Captain|kapitan}
+{1003}{}{Raiders|Raider|Khans|Khan|najezdnici|Najezdnik|Khanove}
+{1004}{}{Well|Studna}
+{1005}{}{Scorpions|Scorpion|rad scorpion|Radscorpions|Radscorpion|Monsters|Monster|skorpioni|skorpion|radskorpion|radskorpioni}
+{1006}{}{Claw|DEATHCLAW|DEATHCLAWS|CLAWS|parac|paraci}
 {1007}{}{Junktown|Junk Town}
 {1008}{}{Hub}
-{1009}{}{Nekropolis|Mesto mrtvych}
-{1010}{}{Razlo|Doktor}
-{1011}{}{Sex}
-{1012}{}{Shady Sands|Shady|Sands}
-{1013}{}{Okoli|Mesto}
+{1009}{}{City|Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{1010}{}{Razlo|Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|medik|doktor|pomoc|leceni|zraneny|zranene}
+{1011}{}{Sex|Fuck|Fucking|Rotators|pichat}
+{1012}{}{Shady Sands|Shady|Sands|Town|Home}
+{1013}{}{Direction|Directions|Whereto|Where to|smer|kam|kudy}
 {1014}{}{Agatha}
-{1015}{}{Nuda}
+{1015}{}{Boring|Nuda}
 
 {1100}{TAND_44}{Aradesh je mùj otec. Je to takový otec, jaký by mìl být.}
 {1101}{TAND_45}{To jsem já. Kdo jiný si myslíš, že by to mohl být?}

@@ -2,7 +2,7 @@
 {101}{}{Mùžu nìjak pomoct?}
 {102}{}{Ano. Potøebuji vìdìt, kde to jsem?}
 {103}{}{Nashledanou.}
-{104}{}{Uhhhhhhh.  Huh huh.  Uhhhhh.  Huh.}
+{104}{}{Uhhhhhhh. Huh huh. Uhhhhh. Huh.}
 {105}{}{Chlape, ty jsi blbìjší než pytel kladiv, co? Zmiz.}
 {106}{}{Jsi na jižním konci Hubu. V okolí najdeš Obchodníky s vodou a malou nemocnici.}
 {107}{}{Kdo jsou Obchodníci s vodou?}

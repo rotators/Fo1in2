@@ -148,7 +148,7 @@
 {247}{Gen_62}{Rytíøi vyrábìjí zbranì. Pokud je Rytíø velmi dobrý, mùže se stát Paladinem a potom Starším. V souèasné dobì je hlavou všech Rytíøù Rhombus.}
 {248}{Gen_63}{Paladini mají na starost veškerou naši bezpeènost, tady i operace venku. Pamatuji se na dobu, kdy jsme obchodovali s Hubem, podnikali výzvìdy pro Starší. Ach, to byly doby.}
 {249}{Gen_64}{Hub je smìrem na jihovýchod. Mìníme s nimi naše zbranì za jídlo a jiné zboží. Pokud Hub nìkdy navštívíš, promluv si s Butchem Harrisem.}
-{250}{Gen_65}{Butch je šéfem Obchodníkù Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
+{250}{Gen_65}{Butch je šéfem Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
 {251}{Gen_66}{S tìmi obchodujeme nejvíc. Nejsou úplnì dùvìryhodní, ale poøád mnohem lepší než ti ostatní. }
 {252}{Gen_67}{Nemùžeš jim vìøit. Pøed pár lety nám nabídli nìjakou vodu za hromadu zbraní. Øekli jsme ne, a víš, co udìlali? Poslali sem zlodìje, aby ty zbranì ukradli! Chytili jsme je, ale Starší zamítli vyrazit do Hubu dát tìm obchodníkùm lekci.}
 {253}{Gen_68}{Holodisky? Hmm? Nevidìl jsem je už nìjaký èas.}
@@ -247,7 +247,7 @@
 {357}{Gen_15n}{Sbohem, Zasvìcený.}
 {358}{Gen_15n}{Sbohem, Zasvìcený.}
 {359}{Gen_30}{Ach... Rád tì zase vidím, Zasvìcený. Jde to dobøe?}
-{360}{Gen_30}{Ach... Rád tì zase vidím, Zasvìcený. Jde to dobøe?}
+{360}{Gen_30}{Ach... Rád tì zase vidím, Zasvìcená. Jde to dobøe?}
 
 {400}{}{Navštívil jsem Základnu mutantù na severu. Øeknìme, že už pro nikoho nejsou žádnou hrozbou.}
 
@@ -262,40 +262,40 @@
 #
 
 
-{1000}{}{bratrstvo}
+{1000}{}{Brotherhood|Bratrstvo}
 {1001}{}{Mathia}
 {1002}{}{Cabbot}
 {1003}{}{Vree}
-{1004}{}{knihovna}
+{1004}{}{Library|knihovna}
 {1005}{}{Rhombus}
-{1006}{}{starsi}
-{1007}{}{staresinove}
-{1008}{}{zasveceni}
-{1009}{}{pisari}
-{1010}{}{rytiri}
-{1011}{}{Paladinove}
+{1006}{}{Elder|staresina}
+{1007}{}{Elders|starsi|staresinove|Rada Starsich}
+{1008}{}{Initiates|zasvecenci|zasveceni}
+{1009}{}{Scribes|pisari}
+{1010}{}{Knights|rytiri}
+{1011}{}{Paladins|paladini|paladinove}
 {1012}{}{Hub}
 {1013}{}{Butch}
-{1014}{}{Traders}
-{1015}{}{kupci}
-{1016}{}{Disky}
-{1017}{}{prehravac}
+{1014}{}{Traders|Obchodnici}
+{1015}{}{Merchants|kupci}
+{1016}{}{Disks|Discs|Holodisk|Holodisc|Holo-Disk|Holo-Disc|Disky|Holo}
+{1017}{}{Player|hrac}
 {1018}{}{Roger}
 {1019}{}{Exodus}
-{1020}{}{armada}
-{1021}{}{katedrala}
-{1022}{}{andelske}
-{1023}{}{Gangy}
+{1020}{}{Army|Armada}
+{1021}{}{Cathedral|Katedrala}
+{1022}{}{Angel's|Andele|andelske}
+{1023}{}{Gangs|Gangy}
 {1024}{}{Adytum}
-{1025}{}{parac}
+{1025}{}{Claw|parac}
 {1026}{}{Harris}
 {1027}{}{Maxson}
-{1028}{}{andel}
+{1028}{}{Angels|andel}
 {1029}{}{Boneyard|Kostnice}
-{1030}{}{Vudce}
-{1031}{}{valka}
-{1032}{}{karavany}
-{1033}{}{cip}
+{1030}{}{Master|Vudce}
+{1031}{}{War|Valka}
+{1032}{}{Caravans|karavany}
+{1033}{}{Chip|Cip}
 
 {1100}{Gen_52a}{Jsi tady. Pokud chceš delší verzi, promluv si s Vree.}
 {1101}{Gen_52b}{Mathia je moje asistentka.}
@@ -310,7 +310,7 @@
 {1110}{Gen_62}{Rytíøi vyrábìjí zbranì. Pokud je Rytíø velmi dobrý, mùže se stát Paladinem a potom Starším. V souèasné dobì je hlavou všech Rytíøù Rhombus.}
 {1111}{Gen_63}{Paladini mají na starost veškerou naši bezpeènost a èinnosti venku. Pamatuji se na dobu, kdy jsme obchodovali s Hubem a podnikali výzvìdy pro Starší. Ach, to byly doby.}
 {1112}{Gen_64}{Hub je smìrem na jihovýchod. Mìníme s nimi naše zbranì za jídlo a jiné zboží. Pokud Hub nìkdy navštívíš, promluv si s Butchem Harrisem.}
-{1113}{Gen_65}{Butch je šéfem Obchodníkù Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
+{1113}{Gen_65}{Butch je šéfem Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
 {1114}{Gen_66}{S tìmi obchodujeme nejvíc. Nejsou úplnì dùvìryhodní, ale poøád mnohem lepší než ti ostatní. }
 {1115}{Gen_67}{Chceš slyšet o Obchodnících s vodou. Hehehe, nemùžeš jim vìøit. Pøed pár lety nám nabídli nìjakou vodu za hromadu zbraní. Øekli jsme ne, a víš, co udìlali? Poslali sem zlodìje, aby ty zbranì ukradli! Chytili jsme je, ale Starší zamítli vyrazit do Hubu dát tìm obchodníkùm lekci.}
 {1116}{Gen_68}{Holodisky? Hmm? Nevidìl jsem je už nìjaký èas.}
@@ -323,11 +323,11 @@
 {1123}{Gen_76}{Není toho moc, co øíct. V žádném jsem nikdy nebyl. Slyšel jsem, že pùsobí mnoho problémù obyvatelùm Adyta.}
 {1124}{Gen_77}{To je malé sídlo v Kostnici. Byl jsem tam... och tak dávno. Na nìjaké výzvìdné misi pro Starší.}
 {1125}{Gen_78}{Och. To je další trapná kleveta. Nìkdo tvrdí, že je to obøí pøíšera s tesáky, jiní tvrdí, že je to upír.}
-{1126}{Gen_65}{Butch je šéfem Obchodníkù Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
+{1126}{Gen_65}{Butch je šéfem Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
 {1127}{Gen_70}{Roger Maxson jo? Dovedl sem naše lidi v létech Velkého Exodu a z trosek vytvoøil Bratrstvo. Opravdový vùdce.}
 {1128}{Gen_75}{No, moc toho nevím. Je tam nìkolik gangù, pak taky Adytum a Dìti katedrály. Nic moc víc. Je to dost znièené.}
 {1129}{Gen_75}{No, moc toho nevím. Je tam nìkolik gangù, pak taky Adytum a Dìti katedrály. Nic moc víc. Je to dost znièené.}
 {1130}{Gen_80}{Co to? Ne. O tom jsem nic neslyšel.}
 {1131}{Gen_71}{To bylo v dobách, kdy mùj dìd Roger Maxson vedl své vojáky a založil Bratrstvo. Nikdy se nezmínil, odkud pøišli, ale na tom vážnì nezáleží... teï je náš domov tady.}
-{1132}{Gen_65}{Butch je šéfem Obchodníkù Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
+{1132}{Gen_65}{Butch je šéfem Far Go. Je trochu úlisný, ale není úplnì zpustlý. Ne jako ti Obchodníci s vodou. To je parta hnusných supù, všichni do jednoho.}
 {1133}{Gen_81a}{O tom nic nevím.}

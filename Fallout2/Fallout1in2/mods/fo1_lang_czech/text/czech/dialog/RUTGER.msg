@@ -1,5 +1,5 @@
 {100}{}{Vidíš Rutgera.}
-{101}{}{Zdravím a vítám tì u Far Go Traders. Jak ti mohu pomoci?}
+{101}{}{Zdravím a vítám tì u Far Go. Jak ti mohu pomoci?}
 {102}{}{Mùžete pøevážet vodu?}
 {103}{}{Jsem tady kvùli práci, kterou tady inzerujete.}
 {104}{}{Hledám práci.}
@@ -23,8 +23,8 @@
 {122}{}{Nemùžeš je minout. Najdeš je jižnì odsud, zabarikádované za tím proklatým vodojemem.}
 {123}{}{Co tady vlastnì dìláte?}
 {124}{}{Ok, díky.}
-{125}{}{Jsem tu hlavní...vlastnì, pomáhám tady u Far Go Traders. Když si nìkdo na nás dovolí, já jsem ten, komu se budou zodpovídat. Obchodujeme se zbožím mezi vìtšinou známých míst.}
-{126}{}{Už jsem ti to øekl.  Butch a já vedeme Far Go Traders.  Tak a teï povìz, co chceš?}
+{125}{}{Jsem tu hlavní...vlastnì, pomáhám tady u Far Go. Když si nìkdo na nás dovolí, já jsem ten, komu se budou zodpovídat. Obchodujeme se zbožím mezi vìtšinou známých míst.}
+{126}{}{Už jsem ti to øekl. Butch a já vedeme Far Go. Tak a teï povìz, co chceš?}
 {127}{}{S jakým druhem zboží obchodujete?}
 {128}{}{Zajímavé. Ahoj.}
 {129}{}{Výbornì. A co ta práce, kterou inzerujete?}
@@ -37,7 +37,7 @@
 {136}{}{Díky. Ahoj.}
 {137}{}{Mùžeš mi øíct nìco o té práci, kterou inzerujete?}
 {138}{}{Máš nìjakou práci?}
-{139}{}{Slyšel jsem, že jsi tak trochu blázen, ale možná je to právì to, co teï  potøebujeme. Musíš si promluvit s Butchem. Rád by se poznal se všemi, které najímáme. Je v místnosti za mnou. No, bìž dál.}
+{139}{}{Slyšel jsem, že jsi tak trochu blázen, ale možná je to právì to, co teï potøebujeme. Musíš si promluvit s Butchem. Rád by se poznal se všemi, které najímáme. Je v místnosti za mnou. No, bìž dál.}
 {140}{}{Nemyslím, že bych v nìkteré ze svých karavan potøeboval zabijáka dìtí.}
 {141}{}{Zabiják dìtí? Ale to byla nehoda.}
 {142}{}{Hej, já nikoho pøedem neodepisuju. Jestli se mi ale pøimotaj do cesty, nezávisle na vìku, zbude z nich jen mastnej flek na zdi.}
@@ -165,7 +165,7 @@
 {265}{}{No, slyšel jsem, že pár lidí vidìlo roztroušené skupinky mutantù na severozápadì. Bylo to daleko za Bratrstvem oceli.}
 {266}{}{Víš, když se podaøilo mutanty zlikvidovat, Dìti katedrály se zaèaly chovat velmi divnì. Dokonce jsem slyšel, jak si povídají o tobì. Vypadá to, že tì zoufale shánìjí.}
 {267}{}{Nìjak nic moc. Mutanti nám stále dìlají problémy s karavanama. Museli jsme témìø všechny cesty pozastavit. I tak dík za optání.}
-{268}{}{Jistì, mùžeme tì použít pøi jedné z našich cest.  Už jsi dìlal hlídaèe?  Plat je 400 zátek. Máš zájem?}
+{268}{}{Jistì, mùžeme tì použít pøi jedné z našich cest. Už jsi dìlal hlídaèe? Plat je 400 zátek. Máš zájem?}
 {269}{}{Jistì}
 {270}{}{Ne.}
 {271}{}{Co? A co ztracené karavany?}
@@ -176,8 +176,8 @@
 {276}{}{Výbornì, teï si jen promluv s honákem karavany u vchodu, abys zjistil, kdy se máte vydat na cestu. Dokud budeš odvádìt dobrou práci, budeme tì stále najímat.}
 {277}{}{Dám ti ještì jednu šanci. Plat je 400 babek. Bìž se zeptat honáka karavany u vchodu, kdy bude odjíždìt další výprava.}
 {278}{}{Lituji, ale už jsi dostal šanci. Myslím, že bys mìl odejít.}
-{279}{}{To si dìláš legraci?  Za to, co jsi udìlal, bych ti mìl být vdìèný, ale obávám se, že to nezmìní minulost. Myslím, že bys mìl odejít.}
-{280}{}{Neslyšel jsi mì?  Nechceme tì.  Prosím odejdi.}
+{279}{}{To si dìláš legraci? Za to, co jsi udìlal, bych ti mìl být vdìèný, ale obávám se, že to nezmìní minulost. Myslím, že bys mìl odejít.}
+{280}{}{Neslyšel jsi mì? Nechceme tì. Prosím odejdi.}
 {281}{}{Nemyslím, že by to bylo pøíliš efektivní, ale jestli chceš, mùžeš s jednou jet.}
 {282}{}{Proè jsi to øekl?}
 {283}{}{Máš pravdu, nech mì toho vyèmuchat trochu víc.}

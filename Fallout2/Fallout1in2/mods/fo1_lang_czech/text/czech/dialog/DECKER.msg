@@ -49,7 +49,7 @@
 {148}{DECK_17}{V centru mìsta je Trh, obklopený nìkolika ètvrtìmi. Na západì jsou to Pahorky, Staré Mìsto je zase na východì.}
 {149}{}{Co je to za ètvrti?}
 {150}{}{Díky za informace. Mohu se ještì zeptat?}
-{151}{DECK_18}{Jsi v Maltézském sokolu. Je tu ještì krámek Všechno-v-jednom, Armory, Friendly Lending Company, policie a, bohužel, nemocnice patøící Dìtem katedrály.}
+{151}{DECK_18}{Jsi v Maltézském sokolu. Je tu ještì krámek Všechno-v-jednom, Armory, Pøátelská úvìrová spoleènost, policie a, bohužel, nemocnice patøící Dìtem katedrály.}
 {152}{}{Vypadá to, že Dìti nemáš moc v lásce, o co jde?}
 {153}{}{Díky. Mohu se ještì na nìco zeptat?}
 {154}{DECK_19}{Oni se... rozlézají. Nechme to být, ano?}
@@ -65,7 +65,7 @@
 {164}{deck_24}{Ne.}
 {165}{}{Dobrá. Mohu se ještì na nìco zeptat?}
 {166}{}{Ty jseš ale potrhlej.}
-{167}{DECK_25}{Vypadá to, že nìco krade kompletní karavany Obchodníkù Far Go. A Kruh zlodìjù má své obvyklé drobné potíže.}
+{167}{DECK_25}{Vypadá to, že nìkdo krade celé karavany Far Go. A Kruh zlodìjù jim dìlá své obvyklé drobné potíže.}
 # Line 168 has been changed due to gender issues. See lines 232-233.
 {168}{}{}
 {169}{}{Jistì.}
@@ -114,9 +114,9 @@
 {211}{DECK_57}{Øídili nemocnici, než je vytlaèily Dìti katedrály. Teï døepìj a dumaj ve svým skladišti — divný, co. Najdeš je na severozápadním konci Trhu.}
 {212}{DECK_58}{Je šéfem Karmínové karavany.}
 {213}{DECK_59}{Jsou poslední z kupcù, myslím doslovnì. Krátkodobý záležitosti, vìtšinou. Jsou na severovýchodì Trhu.}
-{214}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go Traders. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
+{214}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
 {215}{DECK_61}{Má pod palcem obchod se zbranìmi.}
-{216}{DECK_62}{Kvùli nìèemu mizí karavany Far Go Traders. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
+{216}{DECK_62}{Kvùli nìèemu mizí karavany Far Go. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
 {217}{Deck_63}{To je v centru mìsta.}
 {218}{DECK_64}{Mýty a legendy. Páraè je nìjaký pøízrak nebo nìco takového.}
 {219}{DECK_65}{Staré Mìsto se rozkládá po celé východní èásti. Žijí tam ztroskotanci.}
@@ -125,7 +125,7 @@
 {222}{DECK_68}{Morpheus je hlavou Dìtí katedrály. Žije nìkde v Kostnici.}
 {223}{DECK_69}{V souèasnosti je šéfkou Dìtí zde v Hubu. Mám dùvod vìøit, že se to ale brzy zmìní.}
 {224}{DECK_70}{Jeden z výmyslù Dìtí. Pravdìpodobnì nìjaké menší božstvo nebo tak nìco.}
-{225}{DECK_71}{Malý koutek, kde prodávají... dobré zbranì. Za budovou Far Go Traders.}
+{225}{DECK_71}{Malý koutek, kde prodávají... dobré zbranì. Za budovou Far Go.}
 {226}{DECK_72}{Vyjdeš ze dveøí a poøád na sever. Nemùžeš minout.}
 {227}{DECK_73}{To není dùležité.}
 {228}{DECK_74}{Cože? To teï není dùležité.}
@@ -155,44 +155,44 @@
 #
 
 {1000}{}{Decker}
-{1001}{}{Podsveti}
-{1002}{}{Maltese}
-{1003}{}{Zlodeji}
-{1004}{}{Justin}
+{1001}{}{Underground|Podsveti}
+{1002}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Maltezsky sokol}
+{1003}{}{Thieves|Thief|Thiefes|Thieve|zlodeji|zlodej}
+{1004}{}{Justin|Greene|Justin Greene}
 {1005}{}{Harold}
-{1006}{}{Kupci}
-{1007}{}{Daren}
-{1008}{}{Crimson}
-{1009}{}{Demetre}
-{1010}{}{Far}
-{1011}{}{Butch}
+{1006}{}{Merchants|Water Merchants|Watermerchants|Merchant|kupci|Obchodnici s vodou|kupec}
+{1007}{}{Daren|Hightower|Daren Hightower}
+{1008}{}{Crimson|Crimson Caravan|Crimson Caravans|Karminova karavana}
+{1009}{}{Demetre|Demetre Romara|Romara}
+{1010}{}{Trader|Far Go Trader|Far Go|Fargo|Far-Go-Trader|Far-Go Trader|Fargo Traders|Far-Go-Traders|Traders|Far-Go|obchodnik Far Go|Obchodnici}
+{1011}{}{Butch|Harris|Butch Harris}
 {1012}{}{Beth}
-{1013}{}{Ztracene}
-{1014}{}{Trziste}
-{1015}{}{Parac}
-{1016}{}{Mesto}
-{1017}{}{Pahorky}
-{1018}{}{Katedrala}
+{1013}{}{Missing|Missing Caravan|Missing Caravans|Caravans|Caravan|ztracena karavana|Ztracene karavany|karavany|karavana}
+{1014}{}{Market|Merchant Market|Trh|Trziste}
+{1015}{}{Claw|Deathclaw|Claws|Deathclaws|parac|paraci}
+{1016}{}{Town|mesto}
+{1017}{}{Heights|Pahorky}
+{1018}{}{Cathedral|Children of the Cathedral|CoC|Children|Katedrala|Deti katedraly|deti}
 {1019}{}{Morpheus}
 {1020}{}{Jain}
-{1021}{}{Vudce}
-{1022}{}{Obchod}
-{1023}{}{Vsechno-v-jednom }
+{1021}{}{Master|Vudce}
+{1022}{}{Store|obchod}
+{1023}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
 {1024}{}{Falcon}
 {1025}{}{Nightclub}
 {1026}{}{Greene}
 {1027}{}{Hightower}
-{1028}{}{Karavany}
+{1028}{}{Caravans}
 {1029}{}{Romara}
 {1030}{}{Go}
 {1031}{}{Trader}
 {1032}{}{Harris}
-{1033}{}{Parac}
-{1034}{}{Paraci}
-{1035}{}{Stare}
-{1036}{}{Mesto}
-{1037}{}{Deti}
-{1038}{}{Vsechno}
+{1033}{}{Death|Smrt}
+{1034}{}{Deathclaw|Parac}
+{1035}{}{Old|Stare}
+{1036}{}{Old Town|Oldtown|Stare Mesto}
+{1037}{}{Children|Deti}
+{1038}{}{All|Vsechno}
 
 {1100}{DECK_49}{O mì nic víc vìdìt nepotøebuješ.}
 {1101}{DECK_50}{Vìtšina lidí nešermuje jménem mé organizace jen tak pro nic za nic. My øídíme celý Hub.}
@@ -205,9 +205,9 @@
 {1108}{DECK_57}{Øídili nemocnici, než je vytlaèily Dìti katedrály. Teï døepìj a dumaj ve svým skladišti — divný, co. Najdeš je na severozápadním konci Trhu.}
 {1109}{DECK_58}{Je šéfem Karmínové karavany.}
 {1110}{DECK_59}{Jsou poslední z kupcù, myslím doslovnì. Krátkodobý záležitosti, vìtšinou. Jsou na severovýchodì Trhu.}
-{1111}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go Traders. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
+{1111}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
 {1112}{DECK_61}{Má pod palcem obchod se zbranìmi.}
-{1113}{DECK_62}{Kvùli nìèemu mizí karavany Far Go Traders. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
+{1113}{DECK_62}{Kvùli nìèemu mizí karavany Far Go. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
 {1114}{Deck_63}{To je v centru mìsta.}
 {1115}{DECK_64}{Mýty a legendy. Páraè je nìjaký pøízrak nebo nìco takového.}
 {1116}{DECK_65}{Staré Mìsto se rozkládá po celé východní èásti. Žijí tam ztroskotanci.}
@@ -216,17 +216,17 @@
 {1119}{DECK_68}{Morpheus je hlavou Dìtí katedrály. Žije nìkde v Kostnici.}
 {1120}{DECK_69}{V souèasnosti je šéfkou Dìtí zde v Hubu. Mám dùvod vìøit, že se to ale brzy zmìní.}
 {1121}{DECK_70}{Jeden z výmyslù Dìtí. Pravdìpodobnì nìjaké menší božstvo nebo tak nìco.}
-{1122}{DECK_71}{Malý koutek, kde prodávají... dobré zbranì. Za budovou Far Go Traders.}
+{1122}{DECK_71}{Malý koutek, kde prodávají... dobré zbranì. Za budovou Far Go.}
 {1123}{DECK_72}{Vyjdeš ze dveøí a poøád na sever. Nemùžeš minout.}
 {1124}{DECK_51}{Má matka, nejlepší žena, kterou jsem znal, mì pøivedla na tuto myšlenku - vytvoøit nejlepší zábavní zaøízení v Hubu.}
 {1125}{DECK_51}{Má matka, nejlepší žena, kterou jsem znal, mì pøivedla na tuto myšlenku - vytvoøit nejlepší zábavní zaøízení v Hubu.}
 {1126}{DECK_53}{Je velitelem policie. Pøíjemnej chlap, pokud máš rád fairplay, èestnej týpek. Ne jako jeho táta; to byl loajální èlovìk.}
 {1127}{DECK_56}{Je šéfem Obchodníkù s vodou.}
-{1128}{DECK_62}{Kvùli nìèemu mizí karavany Far Go Traders. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
+{1128}{DECK_62}{Kvùli nìèemu mizí karavany Far Go. Rád bych vìdìl proè, protože to narušuje èást mých aktivit.}
 {1129}{DECK_58}{Je šéfem Karmínové karavany.}
 {1130}{DECK_59}{Jsou poslední z kupcù, myslím doslovnì. Krátkodobý záležitosti, vìtšinou. Jsou na severovýchodì Trhu.}
 {1131}{DECK_59}{Jsou poslední z kupcù, myslím doslovnì. Krátkodobý záležitosti, vìtšinou. Jsou na severovýchodì Trhu.}
-{1132}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go Traders. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
+{1132}{DECK_60}{Zábavné. Myslí si, že je šéfem Far Go. Ve skuteènosti je spíš loutka. Ví, že se mi nemá plést do obchodù.}
 {1133}{DECK_64}{Mýty a legendy. Páraè je nìjaký pøízrak nebo nìco takového.}
 {1134}{DECK_64}{Mýty a legendy. Páraè je nìjaký pøízrak nebo nìco takového.}
 {1135}{DECK_65}{Staré Mìsto se rozkládá po celé východní èásti. Žijí tam ztroskotanci.}

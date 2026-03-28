@@ -50,7 +50,7 @@
 # Strength
 {200}{}{Vlastní fyzická síla. Vysoká hodnota SÍLY je vhodná pro postavy specializující se na boj zblízka. Ovlivòuje: množství Hit bodù, úèinnost pøi boji holýma rukama a váhu uneseného nákladu.}
 # Perception
-{201}{}{Schopnost vidìt, slyšet, cítit a zaznamenat neznámé a neobvyklé vìci. Vysoká hodnota VNÍMÁNÍ je dùležitá zejména pro postavy milující boj na delší vzdálenost. Ovlivòuje: Postøeh a šanci uspìt ve støelbì.}
+{201}{}{Schopnost vidìt, slyšet, cítit a zaznamenat neznámé a neobvyklé vìci. Vysoká hodnota VNÍMAVOSTI je dùležitá zejména pro postavy milující boj na delší vzdálenost. Ovlivòuje: Postøeh a šanci uspìt ve støelbì.}
 # Endurance
 {202}{}{Fyzická odolnost a životní síla. Postava s vysokou hodnotou ODOLNOSTI pøežije i tam, kde jiní umírají. Ovlivòuje: poèet Hit bodù, odolnost vùèi radiaci a jedùm, schopnost uzdravit se, množství pøidávaných Hit bodù.}
 # Charisma

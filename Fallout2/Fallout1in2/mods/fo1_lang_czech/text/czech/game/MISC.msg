@@ -22,7 +22,7 @@
 {16}{}{Hit body}
 {17}{}{Detektor pohybu není nainstalován.}
 {18}{}{Detektor pohybu je vybitý.}
-{20}{}{Copyright(c) 1998 Interplay Productions.  All rights reserved.}
+{20}{}{Copyright(c) 1998 Interplay Productions. All rights reserved.}
 
 {30}{}{Chceš hrát dál?}
 #

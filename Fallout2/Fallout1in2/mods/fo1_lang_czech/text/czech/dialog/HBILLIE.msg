@@ -11,7 +11,7 @@
 {110}{}{Jen žertuju.}
 {111}{}{Kvùli všem tìm karavanám, co zmizely. Už mu nezbyli žádní brahmini na prodej, karavany je všechny vykoupily. A ti zbývající byli prodáni na maso. Ale už budu muset konèit. Dan by se zlobil, kdyby mì vidìl, jak se bavím s cizincem.}
 {112}{}{Oh, oukej.}
-{113}{}{Nic... tedy, já se starám o brahminy.}
+{113}{}{Nic... tedy, já se starám o brahmíny.}
 {114}{}{Na co máš to kopí? Jsou nebezpeèní? }
 {115}{}{Co je to brahmin?}
 {116}{}{Co je brahmin? Dìláš si legraci? Je to pøece jeden z hlavních zdrojù jídla a dopravy široko daleko. Táhnou vozy karavan. Dan øíká, že dìlám opravdu dùležitou práci, ale mì to moc nebaví. A mimochodem, správnì se øíká 'brahmína' - brahmin je množný èíslo. Trouba.}

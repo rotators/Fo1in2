@@ -17,20 +17,20 @@
 {982}{}{Zeptej se táty.}
 
 # Shady Sands kids
-{1000}{}{Parac}
-{1001}{}{Bandita}
-{1002}{}{Junktown}
-{1003}{}{Brahmin}
-{1004}{}{Cip}
-{1005}{}{Kupci}
-{1006}{}{Khanove}
+{1000}{}{Deathclaw|CLAW|DEATHCLAWS|CLAWS|Parac}
+{1001}{}{Raiders|RAIDER|Bandita}
+{1002}{}{Junktown|JUNK TOWN}
+{1003}{}{Brahmin|BRAHMINS}
+{1004}{}{Chip|WATER CHIP|WATERCHIP|Cip}
+{1005}{}{Merchants|Kupci}
+{1006}{}{Khans|KHAN|Khanove}
 {1007}{}{Garl}
-{1008}{}{Shady Sands}
+{1008}{}{Shady Sands|SHADY|SANDS}
 {1009}{}{Hub}
 {1010}{}{Tandi}
-{1011}{}{Aradesh}
-{1012}{}{Seth}
-{1013}{}{Razlo}
+{1011}{}{Aradesh|LEADER|BOSS}
+{1012}{}{Seth|SET}
+{1013}{}{Razlo|DOCTOR|DOC}
 
 {1100}{}{Jú! To je zlá pøíšera!}
 {1101}{}{Strašnì zlobí!}
@@ -48,20 +48,20 @@
 {1113}{}{Táta o nìm øíká, že je legraèní.}
 
 # Hub kids
-{2000}{}{Policie}
-{2001}{}{Karavany}
-{2002}{}{Obchodnici}
-{2003}{}{Deti}
-{2004}{}{Nekropolis}
-{2005}{}{Spot}
-{2006}{}{Bratrstvo}
-{2007}{}{Boneyard|BONEYARD|LA|LOS ANGELES|Kostnice}
-{2008}{}{Veze}
-{2009}{}{Mesto}
-{2010}{}{Centrum}
-{2011}{}{Pahorky}
-{2012}{}{Pohrebak}
-{2013}{}{Pohrebaci}
+{2000}{}{Police|GUARDS|GUARD|Policie|straz|strazny}
+{2001}{}{Caravans|CARAVAN|karavany|karavana}
+{2002}{}{Traders|TRADER|Obchodnici}
+{2003}{}{Children|KID|KIDS|deti}
+{2004}{}{Necropolis|Nekropolis}
+{2005}{}{Spot|GLOW|HOT SPOT|Misto|Krater}
+{2006}{}{Brotherhood|BOS|BROTHERHOOD OF STEEL|Bratrstvo|Bratrstvo oceli}
+{2007}{}{Boneyard|LA|LOS ANGELES|Kostnice}
+{2008}{}{Towers|Veze}
+{2009}{}{Town|Mesto}
+{2010}{}{Downtown|centrum}
+{2011}{}{Heights|Pahorky}
+{2012}{}{The Boneyard}
+{2013}{}{L.A. Boneyard|L.A. kostnice}
 
 {2100}{}{Velký lidi s puškama.}
 {2101}{}{Mají ty smraïochy, co jim táhnou ty vozy.}

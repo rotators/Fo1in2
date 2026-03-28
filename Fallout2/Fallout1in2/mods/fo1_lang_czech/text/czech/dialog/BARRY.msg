@@ -10,7 +10,7 @@
 {1003}{}{Vodarna}
 {1004}{}{Hala}
 {1005}{}{Lou}
-{1006}{}{Ghoulove}
+{1006}{}{Ghouls|Ghulove}
 {1007}{}{Normalove}
 
 {1100}{}{Nevím.}

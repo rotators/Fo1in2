@@ -9,7 +9,7 @@
 {107}{}{Uf, jaké služby vlastnì nabízíš?}
 {108}{}{Proè si sakra øval na to nebohé dítì?!}
 {109}{}{Ehm.}
-{110}{}{Starám se skoro o všechny karavanní vozy a brahminy v tìchhle konèinách. Jsem ten, na koho se obracejí, pokud cokoli potøebují pro své karavany. Sakra, Velká Trojka spolupracuje exkluzivnì se mnou.}
+{110}{}{Starám se skoro o všechny karavanní vozy a brahmíny v tìchhle konèinách. Jsem ten, na koho se obracejí, pokud cokoli potøebují pro své karavany. Sakra, Velká Trojka spolupracuje exkluzivnì se mnou.}
 {111}{}{Co nebo kdo je Velká Trojka?}
 {112}{}{Ty seš mi ale dùležitej.}
 {113}{}{Vážnì? Prima. Chci se pøipojit ke karavanì.}

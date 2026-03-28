@@ -92,7 +92,7 @@
 {706}{}{Zbav se Deckera.}
 {707}{}{Vyprav karavanu s vodou do Vaultu 13.}
 {708}{}{Staò se strážným Obchodníkù s vodou.}
-{709}{}{Staò se strážným Obchodníkù Far Go.}
+{709}{}{Staò se strážným u Far Go.}
 {710}{}{Staò se strážným Karmínové karavany.}
 {711}{}{Zbav se nájezdníkù na Irwinovì farmì.}
 

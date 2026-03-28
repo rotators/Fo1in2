@@ -44,7 +44,7 @@
 {136}{}{Øekni mi o Sethovi.}
 {137}{}{Prozradíš mi kudy se dostanu do Hubu a do Junktownu?}
 {138}{}{Nic, díky.}
-{139}{}{Hub je velké obchodní centrum daleko na jih od Shady Sands. Ovládá ho pár skupin karavanních obchodníkù: Obchodníci s vodou, Karmínová karavana a Far Go Traders. Junktown je mírnì na jihozápad. Je menší, ale stejnì se v nìm dá zastavit na pár panákù. Celému mìstu šéfuje chlapík jménem Killian Darkwater, místní majitel obchodu, šerif a starosta v jedné osobì.}
+{139}{}{Hub je velké obchodní centrum daleko na jih od Shady Sands. Ovládá ho pár skupin karavanních obchodníkù: Obchodníci s vodou, Karmínová karavana a Far Go. Junktown je mírnì na jihozápad. Je menší, ale stejnì se v nìm dá zastavit na pár panákù. Celému mìstu šéfuje chlapík jménem Killian Darkwater, místní majitel obchodu, šerif a starosta v jedné osobì.}
 {140}{}{Díky.}
 {141}{}{Možná už nejsem tak skvìlý bojovník, ale na tobì podobné ještì poøád staèím!}
 
@@ -80,7 +80,7 @@
 {163}{}{Jakeovy zbranì. Vysoké ceny, ale výborná kvalita.}
 {164}{}{Kanceláø Obchodníkù s vodou. To jsou nejvìtší bossové v Hubu, protože mají pod palcem vodní zásoby, tak to všechno øídí.}
 {165}{}{To je Karmínová karavana. Pracoval jsem pro nì. Pouštìjí se do tìch nejriskantnìjších podnikù.}
-{166}{}{Far Go Traders, vlastníkem je Butch Harris. Je trochu jako uøvanej lampasák, jestli mi rozumíš.}
+{166}{}{Far Go vede Butch Harris. Není zrovna žádnej génius, jestli mi rozumíš.}
 {167}{}{Á, to je Maltézský sokol. Dobrá hudba, dobrý pití, vybraná spoleènost.}
 
 {168}{}{To je ale hnusnej zkurvysyn!}
@@ -128,72 +128,72 @@
 # Ian Tell-Me-Abouts
 #
 
-{1000}{}{vodni}
-{1001}{}{valka}
-{1002}{}{Shady}
-{1003}{}{Junktown}
+{1000}{}{Waterchip|Water Chip|vodni cip|vodni}
+{1001}{}{War|Valka}
+{1002}{}{Shady|Shady Sands|Sands}
+{1003}{}{Junktown|Junk Town}
 {1004}{}{Hub}
-{1005}{}{najezdnici}
-{1006}{}{karavany}
-{1007}{}{Cip}
+{1005}{}{Raiders|Raider|najezdnici|Najezdnik}
+{1006}{}{Caravans|Caravan|karavany|karavana}
+{1007}{}{Chip|Cip}
 {1008}{}{Sands}
-{1009}{}{naslednici}
-{1010}{}{katedrala}
-{1011}{}{Garl}
-{1012}{}{vudce}
-{1013}{}{jednota}
+{1009}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|Nasledovnici apokalypsy|naslednici}
+{1010}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|Katedrala}
+{1011}{}{Garl|Death Hand|Smrtihnat}
+{1012}{}{Master|Vudce}
+{1013}{}{Unity|Jednota}
 {1014}{}{Set}
-{1015}{}{vodarna}
-{1016}{}{Nekropolis}
-{1017}{}{hala}
-{1018}{}{knihovna}
-{1019}{}{spravce}
-{1020}{}{doktor}
-{1021}{}{leceni}
-{1022}{}{Vault}
-{1023}{}{Vault-13}
-{1024}{}{Vault13}
-{1025}{}{Killian}
+{1015}{}{Shed|Watershed|Water Shed|vodarna}
+{1016}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{1017}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|hala|sin|Sin mrtvych|hala mrtvych}
+{1018}{}{Library|knihovna}
+{1019}{}{Overseer|Spravce}
+{1020}{}{Razlo|doktor}
+{1021}{}{Healing|leceni}
+{1022}{}{Water Merchants|Water Merchant|Obchodnici s vodou|obchodnik s vodou}
+{1023}{}{Crimson Caravans|Crimson|Crimson Caravan|karminova karavana}
+{1024}{}{Far Go Traders|Fargo|Fargo Trader|Fargo Traders|FAR-GO-TRADERS|Far Go|Far-Go|obchodnik Far Go}
+{1025}{}{Killian|Kilian|Killian Darkwaters|Kilian Darkwaters|Killian Darkwater|Kilian Darkwater|Darkwater|Darkwaters}
 {1026}{}{Gizmo}
 {1027}{}{Boneyard|Angels Boneyard|Kostnice|Andelska kostnice}
-{1028}{}{kasino}
-{1029}{}{obchod}
-{1030}{}{parac}
+{1028}{}{Casino|Kasino}
+{1029}{}{Store}
+{1030}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
 {1031}{}{Exodus}
-{1032}{}{zasveceni}
-{1033}{}{Paladini}
-{1034}{}{pisari}
-{1035}{}{deti}
-{1036}{}{Bratrstvo}
-{1037}{}{nadrze}
-{1038}{}{vojenska}
-{1039}{}{zakladna}
-{1040}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|Koupit|Kupovat|Prodat|Prodavat|Obchod|Vymenit|Menit|Kseft}
-{1041}{}{apokalypsa}
-{1042}{}{Mutanti}
+{1032}{}{Initiates|Initiate|zasvecenci|Zasvecenec|zasveceni}
+{1033}{}{Paladins|Paladin|paladini|paladinove}
+{1034}{}{Scribes|Scribe|pisari|Pisar}
+{1035}{}{Children|Kid|Kids|Child|deti|Dite}
+{1036}{}{Brotherhood|BoS|Brotherhood of Steel|Bratrstvo|Bratrstvo oceli}
+{1037}{}{Vats|Nadrze}
+{1038}{}{Military|Base|Military Base|armada|vojenska|Zakladna|vojenska zakladna}
+{1039}{}{Scorpions|Scorpion|Rad Scorpion|Radscorpions|Radscorpion|skorpioni|skorpion|radskorpion|radskorpioni}
+{1040}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|Bartering|koupit|kupovat|prodat|prodavat|Obchodovani|obchod|smena|Vymenit|Menit|Kseft}
+{1041}{}{Apocalypse|apokalypsa}
+{1042}{}{Mutants|Mutant|mutanti}
 {1043}{}{Morpheus}
-{1044}{}{Khanove}
+{1044}{}{Khans|Khan|Khanove}
 {1045}{}{Tandi}
 {1046}{}{Alya}
 {1047}{}{Diana}
 {1048}{}{Gwen}
 {1049}{}{Petrox}
 {1050}{}{Tolya}
-{1051}{}{chlast}
-{1052}{}{prasky}
+{1051}{}{Booze|chlast}
+{1052}{}{Drugs|Drug|Drogy|chemikalie|prasky|Alkohol|Droga}
 {1053}{}{Seth}
 {1054}{}{Aradesh}
-{1055}{}{Razlo}
-{1056}{}{Zimmerman}
-{1057}{}{Regulatori}
-{1058}{}{Scavove}
-{1059}{}{Blades}
+{1055}{}{Doctor|Medic|Doc|medik}
+{1056}{}{Zimmerman|Jon Zimmerman|Jon|Zimermann|Jon Zimmermann|Zimmermann}
+{1057}{}{Regulators|Regulator|Regulatori}
+{1058}{}{Scavs|Scav|Scavenger|sberaci|sberac|Scavove}
+{1059}{}{Blades|Blade}
 {1060}{}{Nicole}
-{1061}{}{porucik}
-{1062}{}{drogy}
-{1063}{}{Experimenty}
-{1064}{}{Policie}
-{1065}{}{obchodnici}
+{1061}{}{Lieutenant|Lou|Lt|Porucik|Po}
+{1062}{}{Psychics|Psychic|Psychika}
+{1063}{}{Experiments|Experiment|Experimenty}
+{1064}{}{Ian}
+{1065}{}{Merchants|Merchant|kupci|kupec}
 
 {1100}{}{Nemám tušení, co je to vodní èip. Promiò, kamaráde.}
 {1101}{}{Stalo se to pøed stovkou let. V zásadì se pár státù poøádnì nasralo a následovalo poøádný BUM!}
@@ -288,7 +288,7 @@
 {2611}{}{Junktown je støednì velké mìsto. Než natáhnul baèkory, velel tam chlápek jménem Killian.}
 {2612}{}{Junktown je støednì velké mìsto. Od tý doby co Killian natáhnul baèkory, velí tam tomu chlápek jménem Gizmo. Ale poøád je to dobrý místo.}
 # Hub
-{2620}{}{Hub je nejvìtší obchodní centrum na Novém západì. Vede to tam hlavnì skupina zvaná Obchodníci s vodou, ale jsou zde i další obchodníci, napøíklad Karmínová karavana a Far Go Traders. Je to vzkvétající mìsto, ale mezi obchodníky je spousta politických bojù.}
+{2620}{}{Hub je nejvìtší obchodní centrum na Novém západì. Vede to tam hlavnì skupina zvaná Obchodníci s vodou, ale jsou zde i další obchodníci, napøíklad Karmínová karavana a Far Go. Je to vzkvétající mìsto, ale mezi obchodníky je spousta politických bojù.}
 # Raiders
 {2630}{}{Khanové; opravdu vìøí, že mùžou dobýt celý svìt. Moc rozumu nejspíš nepobrali.}
 {2631}{}{Khanové si mysleli, že mùžou dobýt celý svìt. Teï jsou všichni mrtví.}

@@ -569,9 +569,9 @@
 {669}{}{Bytelné bezpeènostní dveøe}                               #  elecdoor.int
 {670}{}{Podlaha}                                          #  electrap.int
 {671}{}{Farmáø}                                         #  femfarmr.int
-{672}{}{Far Go Trader strážný}                            #  fgtgard.int
+{672}{}{Strážný Far Go}                            #  fgtgard.int
 {673}{}{Dùstojník policie Hubu}                             #  gencop.int
-{674}{}{Obchodník z Far Go Trader}                         #  genfgt.int
+{674}{}{Obchodník Far Go}                         #  genfgt.int
 {675}{}{Skag}                                           #  genskag.int
 {676}{}{Guido}                                          #  guido.int
 {677}{}{Bezpeènostní dveøe}                                    #  gunlock.int
@@ -776,7 +776,7 @@
 {876}{}{Robustní dveøe}                                    #  MetlDoor.int
 {877}{}{Cestující}                             #  HubEnctr.int
 {878}{}{Kupec z karavany}                               #  HGenVan2.int
-{879}{}{Obchodník Far Go Traders}                        #  FGTRtnVn.int
+{879}{}{Obchodník Far Go}                        #  FGTRtnVn.int
 {880}{}{Obchodník Karmínové karavany}                      #  CCRtnVn.int
 {881}{}{Obchodník s vodou}                         #  WMRtnVn.int
 {882}{}{Mitch}                                          #  AllNOne.int
@@ -846,7 +846,7 @@
 {946}{}{Lemmy}                                          #  Lemmy.int
 {947}{}{Hlídaè}                                          #  Bethgrd.int
 {948}{}{Supermutant-obchùzkáø}                             #  DCMutant.int
-{949}{}{Èlen karavany Far Go Trader}                       #  FGTCarvn.int
+{949}{}{Karavaník Far Go}                       #  FGTCarvn.int
 {950}{}{Supermutant-obchùzkáø}                         #  MutAmbsh.int
 {951}{}{Bezpeènostní schránka}                                        #  DocLokr.int
 {952}{}{Lednièka}                                  #  CrashBox.int

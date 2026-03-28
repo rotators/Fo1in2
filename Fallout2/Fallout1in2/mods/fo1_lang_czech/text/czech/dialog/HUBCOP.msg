@@ -45,7 +45,7 @@
 {120}{}{Jestli tì chytneme v nìjaké další rvaèce, zabásneme tì!}
 # "You're going in" equals "You are going to jail"
 
-{121}{}{Slyšel jsi? Obchodníci Far Go jsou vyøízení.}
+{121}{}{Slyšel jsi? S Far Go je konec.}
 # Far Go Traders is a merchant's guild
 
 {122}{}{Obchodníci s vodou jsou u minulost, zaplapánbùh.}

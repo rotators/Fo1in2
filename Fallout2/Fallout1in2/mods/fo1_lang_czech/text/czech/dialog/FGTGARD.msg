@@ -1,8 +1,8 @@
-{100}{}{Vidíš stráného od Far Go Traders.}
+{100}{}{Vidíš stráného Far Go.}
 {101}{}{Ti proklatí Obchodníci s vodou nás všechny okrádají.}
-{102}{}{Nezapomeò vèas platit Friendly Lending Company, jsou to zabijáci.}
+{102}{}{Nezapomeò vèas platit Pøátelské úvìrové spoleènosti, jsou to zabijáci.}
 {103}{}{Budeš chtít asi mluvit s Rutgerem.}
-{104}{}{Far Go Traders jsou nejlepší.}
+{104}{}{Far Go je nejlepší.}
 {105}{}{Karmínová karavana je parta idiotù a šílencù.}
 {106}{}{Hmm, mám chu na leguána na špejli.}
 {107}{}{Kdo, kurva, okrádá naše karavany?}

@@ -374,7 +374,7 @@
 {3041}{}{si vzal všechny naše zbıvající antiradiaèní prostøedky.}
 {3042}{}{**END-PAR**}
 # -
-{3043}{}{Zbyli jsme jen Soto a já.  Kdy nedostaneme ty }
+{3043}{}{Zbyli jsme jen Soto a já. Kdy nedostaneme ty }
 {3044}{}{antiradianty, nedojdeme odtud moc daleko. }
 {3045}{}{Pokusím se najít Camarilla}
 {3046}{}{døív ne u bude pozdì.}
@@ -557,7 +557,7 @@
 {6096}{}{sterilita. Testované subjekty byly neschopné další}
 {6097}{}{reprodukce a u s mutanty nebo pùvodními lidmi.}
 {6098}{}{Dalším vedlejším efektem je zmìna pigmentace}
-{6099}{}{epidermu.  Délka ivota se prodluuje o 10%.}
+{6099}{}{epidermu. Délka ivota se prodluuje o 10%.}
 {6100}{}{Intelekt je sníen v prùmìru o 30%.}
 {6101}{}{**END-PAR**}
 # -
@@ -577,7 +577,7 @@
 # *** Maxson's History ***
 {7000}{}{Mùj otec byl èlenem vládní ochranky na tajné vojenské základnì}
 {7001}{}{v poušti jiní Kalifornie. Byl to typickı vojenskı policista,}
-{7002}{}{nejvíc si pamatuji jeho sílu.  Kdy nastal èas revoluce}
+{7002}{}{nejvíc si pamatuji jeho sílu. Kdy nastal èas revoluce}
 {7003}{}{respektoval jsem jeho pøesvìdèení. Zùstal vzadu,}
 {7004}{}{aby pomohl slabım a zranìnım, vèetnì vìdcù.}
 {7005}{}{Svìøil mne i moji matku do rukou}
@@ -632,7 +632,7 @@
 {8011}{}{a zajmout další karavanu. Pøepínám.}
 {8012}{}{**END-PAR**}
 # -
-{8013}{}{Pøijatá zpráva: Rozumím.  Mìli jste }
+{8013}{}{Pøijatá zpráva: Rozumím. Mìli jste }
 {8014}{}{pøi akci nìjaké ztráty? Pøepínám.}
 {8015}{}{**END-PAR**}
 # -
@@ -701,7 +701,7 @@
 {9041}{}{si vytvoøil pozici vùdce. Mui mì teï poslouchají }
 {9042}{}{na slovo. Vıslechy vìdcù konèí standardnì jejich popravou.}
 {9043}{}{Nejdéle zapírala šéfová projektu, ale koneènı vısledek }
-{9044}{}{byl ten samı jako u ostatních.  Její argumenty o rozkazech}
+{9044}{}{byl ten samı jako u ostatních. Její argumenty o rozkazech}
 {9045}{}{shora byly nedostaèující. Zaèínám z toho všeho mít}
 {9046}{}{opravdu špatnı pocit a bojím se, jak to nakonec}
 {9047}{}{skonèí. U nedokáu nadále lhát sám sobì }
@@ -899,7 +899,7 @@
 {12027}{}{U dokáu zase ujít i nìkolik metrù... Teï se mi zdá}
 {12028}{}{nepochopitelné, e jsem se dokázal vyškrábat celou tu}
 {12029}{}{cestu od nádrí a sem. Kupodivu se u ale cítím }
-{12030}{}{silnìjší i  kdy mám stále ještì bolesti. A taky se }
+{12030}{}{silnìjší i kdy mám stále ještì bolesti. A taky se }
 {12031}{}{mi zdá, jako by se všechno kolem mnì zmenšovalo.}
 {12032}{}{**END-PAR**}
 # -
@@ -1223,7 +1223,7 @@
 {17001}{}{**END-PAR**}
 #
 {17002}{}{Ahoj a vítej v nejèerstvìjší edici propagaèní broury}
-{17003}{}{spoleènosti Vault Tec. pro oblast USA-západ.  Doufáme,}
+{17003}{}{spoleènosti Vault Tec. pro oblast USA-západ. Doufáme,}
 {17004}{}{e se ti naše brourka zalíbí a pamatuj, e Vault není}
 {17005}{}{jen pro horních deset tisíc, ale skuteènì pro kadého.}
 {17006}{}{**END-PAR**}
@@ -1232,14 +1232,14 @@
 {17008}{}{**END-PAR**}
 #
 {17009}{}{Pøímo pod rozsáhlou metropolí Bakersfield, leí}
-{17010}{}{technologicky pozoruhodnı Vault 12.  Byl vybudován}
+{17010}{}{technologicky pozoruhodnı Vault 12. Byl vybudován}
 {17011}{}{s ohledem na maximální pohodlí jeho budoucích obyvatel.}
 {17012}{}{Vaultu 12 bylo udìleno ocenìní „Vault Roku“}
 {17013}{}{za jeho zvláštní pozornost k neustálé pohotovosti.}
 {17014}{}{Pohøben hluboko pod zemí poskytne svım obyvatelùm}
-{17015}{}{bezprecedentní ochranu.  Stejnì jako ostatní}
+{17015}{}{bezprecedentní ochranu. Stejnì jako ostatní}
 {17016}{}{Vaulty, byl i Vault 12 vybaven nejmodernìjším systémem}
-{17017}{}{èištìní a dekontaminace vody.  Tento systém je schopen}
+{17017}{}{èištìní a dekontaminace vody. Tento systém je schopen}
 {17018}{}{pøefiltrovat veškerı odpad v kanálech Bakersfieldu a}
 {17019}{}{mùe tak dodávat a 15,000 galonù èisté,}
 {17020}{}{osvìující pitné vody dennì.}
@@ -1250,14 +1250,14 @@
 #
 {17024}{}{Poloen v pøekrásném hornatém terénu severozápadnì}
 {17025}{}{od Vaultu 12, nabízí tento Vault svım obyvatelùm}
-{17026}{}{nekoneèné mnoství èisté vody.  Povìsti o tom, e }
+{17026}{}{nekoneèné mnoství èisté vody. Povìsti o tom, e }
 {17027}{}{vodní plochy této oblasti mohou bıt v pøípadì }
 {17028}{}{nukleární války lehce kontaminovány byly prošetøeny }
 {17029}{}{Úøadem pro Vodu a Energii a shledány naprosto}
 {17030}{}{bezpøedmìtné. A pro pøípad, e by voda v oblasti byla}
 {17031}{}{opravdu zamoøena (jakkoliv je to nepravdìpodobné) byl}
 {17032}{}{Vault 13 vybaven vládou atestovanım systémem}
-{17033}{}{èištìní a dekontaminace vody.  Protoe je tento systém}
+{17033}{}{èištìní a dekontaminace vody. Protoe je tento systém}
 {17034}{}{schopen pracovat bez poruch více ne 250,000 hodin,}
 {17035}{}{nemají se jeho budoucí obyvatelé èeho obávat.}
 {17036}{}{**END-PAR**}

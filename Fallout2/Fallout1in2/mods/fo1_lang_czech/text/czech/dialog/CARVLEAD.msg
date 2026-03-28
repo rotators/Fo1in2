@@ -12,29 +12,29 @@
 {111}{}{Hunh?}
 {112}{}{Jít. To dobré.}
 {113}{}{Èlovìèe, my teda najímáme poslední dobou blbce.}
-{114}{}{Obvykle odjíždíme dvì hodiny po pøíjezdu.  Ale protože tu není nic, co už bychom pøedtím nevidìli, tak jestli chceš, mùžeme vyrazit i døív. Hned jak budeš pøipraven.}
-{115}{}{Myslím, že se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
-{116}{}{OK.  Tak mùžeme vyrazit do Hubu.  Ani já tu nemusím nic vidìt.}
+{114}{}{Obvykle odjíždíme dvì hodiny po pøíjezdu. Ale protože tu není nic, co už bychom pøedtím nevidìli, tak jestli chceš, mùžeme vyrazit i døív. Hned jak budeš pøipraven.}
+{115}{}{Myslím, že se tu nejdøív trochu porozhlédnu. Uvidíme se pozdìji.}
+{116}{}{OK. Tak mùžeme vyrazit do Hubu. Ani já tu nemusím nic vidìt.}
 {117}{}{Co mi mùžeš øíct o Junktownu?}
 {118}{}{Co mi mùžeš øíct o L.A. kostnici?}
 {119}{}{Co mi mùžeš øíct o Bratrstvu oceli?}
-{120}{}{No, je to tu trochu jako v Hubu, opravdu. Mají tu ty samé problémy: gangy, vrazi, zlodìji, však víš... obvyklé vìci.  Tak jako tak, je to mùj typ mìsta. [Smìje se]}
+{120}{}{No, je to tu trochu jako v Hubu, opravdu. Mají tu ty samé problémy: gangy, vrazi, zlodìji, však víš... obvyklé vìci. Tak jako tak, je to mùj typ mìsta. [Smìje se]}
 {121}{}{Jak dlouho tu karavana zùstane?}
-{122}{}{Myslím, že se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
+{122}{}{Myslím, že se tu nejdøív trochu porozhlédnu. Uvidíme se pozdìji.}
 {123}{}{Tahle èást L.A. kostnice se jmenuje Adytum. V L.A. kostnici vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor. Adytum øídí Regulátoøi. Snaží se tohle místo udržet pohromadì i pøes všechny ty gangsterský války. K cizincùm se chovají pochopitelnì podezíravì, tak jestli jsi s nimi ještì nemluvil, doporuèuju ti, abys to udìlal døív, než se jim tu zaèneš courat.}
 {124}{}{Prázdný}
 {125}{}{Jak dlouho tu karavana zùstane?}
-{126}{}{Myslím, že se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
-{127}{}{Není toho moc, co bych ti o nich øekl.  Bratrstvo je dost uzavøený spolek. Spousta lidí je nemá ráda, ale co já vím, jsou to slušný lidi.  Trochu fanatici, možná, ale jinak jsou to dobráci.}
+{126}{}{Myslím, že se tu nejdøív trochu porozhlédnu. Uvidíme se pozdìji.}
+{127}{}{Není toho moc, co bych ti o nich øekl. Bratrstvo je dost uzavøený spolek. Spousta lidí je nemá ráda, ale co já vím, jsou to slušný lidi. Trochu fanatici, možná, ale jinak jsou to dobráci.}
 {128}{}{Jak dlouho tu karavana zùstane?}
-{129}{}{Myslím, že se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
+{129}{}{Myslím, že se tu nejdøív trochu porozhlédnu. Uvidíme se pozdìji.}
 {130}{}{Jsi pøipraven vyrazit?}
 {131}{}{Jedem!}
-{132}{}{Ne.  Ještì poøád se tu rozhlížím.}
-{133}{}{Jo.  Mùžeme jet.}
+{132}{}{Ne. Ještì poøád se tu rozhlížím.}
+{133}{}{Jo. Mùžeme jet.}
 {134}{}{Tahle èást L.A. kostnice se jmenuje Adytum. V L.A. kostnici vládnou v podstatì gangy. Je to drsné místo, tak si tu dávej pozor.}
 {135}{}{Jak dlouho tu karavana zùstane?}
-{136}{}{Myslím, že se tu nejdøív trochu porozhlédnu.  Uvidíme se pozdìji.}
+{136}{}{Myslím, že se tu nejdøív trochu porozhlédnu. Uvidíme se pozdìji.}
 {137}{}{OK. Zvládl jsi to. Tady je tvých }
 {138}{}{ babek. Pokud budeš chtít ještì práci, staèí si promluvit se šéfem. Budu víc než rád, když s tebou budu moct znovu dìlat. Pøimluvím se za tebe u šéfa. Mìj se.}
 {139}{}{Pá pá.}

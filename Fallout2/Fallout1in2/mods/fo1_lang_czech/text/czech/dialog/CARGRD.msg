@@ -33,8 +33,8 @@
 {132}{}{Promiò, teï s tebou nemùžu mluvit.}
 {133}{}{Vrátíš se s námi do Hubu?}
 {134}{}{Miluju službu u karavany. Spousta zátek i dobrodružství.}
-{135}{}{Nejlepší je pracovat pro Obchodníky Far Go.}
-{136}{}{Nejradši dìlám pro Obchodníky Far Go; zbyteènì neriskujou.}
+{135}{}{Nejlepší je pracovat u Far Go.}
+{136}{}{Nejradši dìlám u Far Go; zbyteènì neriskujou.}
 {137}{}{Karmínová karavana je nejlepší.}
 {138}{}{Karmínová karavana platí skvìle. Ještì rok práce a mùžu jít na odpoèinek.}
 {139}{}{Promluv si s druhým strážným, jestli se s námi chceš vrátit zpátky.}

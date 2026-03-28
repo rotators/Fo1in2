@@ -1,6 +1,6 @@
 {100}{}{Vidíš úøedníka Karmínové karavany.}
 {101}{}{Vidíš úøedníka Obchodníkù s vodou.}
-{102}{}{Vidíš úøedníka Obchodníkù Far Go.}
+{102}{}{Vidíš úøedníka Far Go.}
 {103}{}{Nazdar. Hledáte práci?}
 {104}{}{Ano.}
 {105}{}{Ne.}

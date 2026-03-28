@@ -9,10 +9,10 @@
 {108}{}{Díky za nic.}
 {109}{}{Proè to?}
 {110}{}{To nestojí za øeè.}
-{111}{}{Dìti katedrály nechtìjí mít nic s takovımi, jako jsi ty.  A ty jsi nám u zpùsobil váné problémy. Byl bych rád, kdybys odešel døív, ne budu muset zavolat stráe.}
+{111}{}{Dìti katedrály nechtìjí mít nic s takovımi, jako jsi ty. A ty jsi nám u zpùsobil váné problémy. Byl bych rád, kdybys odešel døív, ne budu muset zavolat stráe.}
 {112}{}{Tohle nemusíš dìlat. Jsem tvùj pøítel.}
 {113}{}{No jistì.}
-{114}{}{Já odmítám mít nìco spoleèného s tìmi, kdo k prosazení svıch cílù uívají hrubou sílu.  My jsme svou moc dokázali získat beze zbraní.}
+{114}{}{Já odmítám mít nìco spoleèného s tìmi, kdo k prosazení svıch cílù uívají hrubou sílu. My jsme svou moc dokázali získat beze zbraní.}
 {115}{}{Ale bez zbraní to pøece nejde!}
 {116}{}{Nech mì a ji schovám a mùeme obchodovat v míru.}
 {117}{}{Dobøe, to se mi líbí. Rád s tebou budu obchodovat.}
@@ -31,7 +31,7 @@
 {130}{}{Myslím, e jsi odpovìdìl na mou otázku. Díky!}
 {131}{}{Ty nafoukanı blázne. Myslím, e si vezmu tu tvoji!}
 {132}{}{No dobøe. Co máš na skladì?}
-{133}{}{Oh, vìtšinou jen vìci pro oškubání hlupákù, co nám lezou do dveøí.  Nic zvláštního. Pojï dál a podívej se.}
+{133}{}{Oh, vìtšinou jen vìci pro oškubání hlupákù, co nám lezou do dveøí. Nic zvláštního. Pojï dál a podívej se.}
 {134}{}{Díky, uvidíme se pozdìji.}
 {135}{}{Máme všechny moné suvenıry, které ti budou pøipomínat tvoji pou do Katedrály. Tyhle vzpomínky se lacino nekoupí, jestli mi rozumíš.}
 {136}{}{Díky...}

@@ -14,4 +14,4 @@
 {107}{}{}
 {108}{}{}
 {109}{}{[Odejít]}
-{110}{}{ODMÌNA: ZTRACENÁ KARAVANA.  Odmìna 500 zátek pro každého, kdo by dostal ty parchanty, kteøí plení naše karavany. Detaily u Butche Harrise, Obchodníci Far Go, severovýchodnì od Trhu.}
+{110}{}{ODMÌNA: ZTRACENÁ KARAVANA. Odmìna 500 zátek pro každého, kdo by dostal ty parchanty, kteøí plení naše karavany. Detaily u Butche Harrise v kanceláøi Far Go, severovýchodnì od Trhu.}

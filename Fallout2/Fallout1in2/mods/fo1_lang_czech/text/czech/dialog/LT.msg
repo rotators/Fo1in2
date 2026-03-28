@@ -185,15 +185,15 @@
 #
 
 
-{1000}{}{Jednota|jednota}
-{1001}{}{FEV|FEV VIRUS|fev|fev virus|FEV virus}
-{1002}{}{Vudce|vudce}
-{1003}{}{Katedrala|katedrala}
-{1004}{}{Nadrze|nadrze}
-{1005}{}{Normalove|normalove}
-{1006}{}{Vault|vault|Vaulty|vaulty}
-{1007}{}{Morpheus|morpheus}
-{1008}{}{Virus|virus}
+{1000}{}{Unity|THE UNITY|Jednota}
+{1001}{}{FEV|FEV VIRUS|FE-VIRUS|FORCED EVOLUTIONARY VIRUS|FORCED EVOLUTION VIRUS}
+{1002}{}{Master|THE MASTER|Vudce}
+{1003}{}{Cathedral|Katedrala}
+{1004}{}{Vats|Nadrze}
+{1005}{}{Normals|Normalove}
+{1006}{}{Vaults|Vault|Vaulty}
+{1007}{}{Morpheus}
+{1008}{}{Virus}
 
 {1100}{LIEUT56}{Jednota je cílem všech supermutantù. Díky FEV viru pøinesem mír celému svìtu.}
 {1101}{LIEUT57}{Vùdce objevil FEV virus pøed pár lety. To je to, co nás dìlá Vyvolenými. Ale na to brzo sám pøijdeš, to ti zaruèuju.}

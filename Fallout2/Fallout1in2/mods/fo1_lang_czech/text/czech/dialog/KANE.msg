@@ -124,7 +124,7 @@
 {224}{}{No, pak ho asi neuvidíš.}
 {225}{}{Kdo tì poslal?}
 {226}{}{Beth.}
-{227}{}{Lorenzo.}
+{227}{}{Posílá mì Lorenzo.}
 {228}{}{Loxley.}
 {229}{}{Šerif.}
 {230}{}{Nikdo.}

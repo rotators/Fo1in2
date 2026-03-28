@@ -21,14 +21,14 @@
 {120}{}{Ani omylem. Vypadáš dùvìryhodnì, ale nemùžu vìdìt, jestli nezmizíš, až pùjde do tuhého. Takže, jeden z nás urèitì pøežije, aby ti mohl zaplatit. To by mohlo zvýšit tvoji jistotu, že nepøijdeš zkrátka.}
 {121}{}{Pojïme na to.}
 {122}{}{Jsi na to sám, šerife.}
-{123}{}{Perfektní! Tady je první platba.  [Šerif ti podává 300 babek]}
+{123}{}{Perfektní! Tady je první platba. [Šerif ti podává 300 babek]}
 {124}{}{Jsem pøipraven.}
 {125}{}{Fajn, sbohem.}
 {126}{}{To velmi nerad slyším. Pokud zmìníš názor, dej mi vìdìt, ale dlouho èekat nemùžu.}
 {127}{}{Fajn, udìlám to. Poèkej na mì až naberu nìjaké zásoby.}
 {128}{}{Jsi šílený.}
 {129}{}{Sbohem.}
-{130}{}{Perfektní! Tady je první platba.  [Šerif ti podává 300 babek]}
+{130}{}{Perfektní! Tady je první platba. [Šerif ti podává 300 babek]}
 {131}{}{Cože? Myslíš, že tady budu jen tak koukat, jak zabíjí nevinné lidi? Mám k tomuto mìstu nìjakou zodpovìdnost. Ale nepøedpokládám, že bys pochopil.}
 {132}{}{Máš pravdu. Teï jsi na tahu.}
 {133}{}{Jak si dovoluješ mì obviòovat!}
@@ -99,9 +99,9 @@
 {202}{}{Radìji odtud vypadni, než tì šoupnu do jedné z našich cel.}
 
 # TMA
-{1000}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Starosta|Sheriff Greene}
+{1000}{}{Greene|Justin|Justin Greene|Sheriff|Sherif|Mayor|Sheriff Greene|serif|starosta|serif Greene}
 {1001}{}{Police|Hub Police|Policie|Hubska policie}
-{1002}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|Kradez|Zlodej|Zlocin|Zlocinci|Zlodeji|Kradeze}
+{1002}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji|Kradeze}
 
 {1100}{}{Mluvíš se mnou.}
 {1101}{}{Udržujeme tu v Hubu zákon a poøádek.}

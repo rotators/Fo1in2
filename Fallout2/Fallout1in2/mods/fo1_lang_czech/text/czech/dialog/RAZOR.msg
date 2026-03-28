@@ -8,7 +8,7 @@
 {107}{}{Co se dìje za tìmi ostnatımi dráty na jihu?}
 # Player's name follows 108
 {108}{}{Tìší mì. Jmenuju se }
-{109}{}{Tìší mì.  Bohuel, musím jít.}
+{109}{}{Tìší mì. Bohuel, musím jít.}
 {110}{}{Gang? To sotva. Ale velím tady.}
 {111}{}{Jestli nejste gang, tak co teda?}
 {112}{}{No, vypadáte tak trochu jako gang.}
@@ -37,11 +37,11 @@
 {135}{}{Proè?}
 {136}{}{Zjistím, co s tím mùu udìlat.}
 {137}{}{Regulátoøi. To oni spravují Adytum. Ne Zimmerman. Pøicházejí, a unášejí naše lidi do Adyta jako otroky. Kdy se pokusíme bojovat, pobijou nás. Nìkolikrát sem pøišli jen tak, nìkolik lidí pozabíjeli, jenom proto, aby mohli Zimmermanovi øíct, e jsme se pokusili dostat se do jejich mìsta. Nebo si vymysleli jinou historku. Vdy ty zmrdi zabili i Zimmermanova syna!}
-{138}{}{Jeho syna?  Proè by to proboha dìlali?}
+{138}{}{Jeho syna? Proè by to proboha dìlali?}
 {139}{}{Øíkáš, e jste nikdy nic proti Adytu nepodnikli?}
 {140}{}{Mezi nimi a námi je hnízdo páraèù. Ani s ádnım Gun Runnerem jsme nikdy nemluvili. Regulátoøi jsou dostateènì silní na to, aby páraèe sejmuli, ale z nám neznámého dùvodu to neudìlali.}
 {141}{}{Kde najdu Gun Runnery?}
-{142}{}{OK.  Nashledanou.}
+{142}{}{OK. Nashledanou.}
 {143}{}{Josh tady il se mnou... teda... chtìla jsem øíct s námi. On znal pravdu, o co tady Regulátorùm jde. Regulátoøi mu pohrozili, e ho zabijou, jestli se nìkdy pokusí spojit se s otcem, nebo jestli se objeví zpátky v Adytu.}
 {144}{}{Zabili ho? Co udìlal?}
 {145}{}{Jdu do Adyta, provìøit to.}
@@ -51,7 +51,7 @@
 {149}{}{Co kdybych tam ten disk odnesl já?}
 {150}{}{Proè nedáte dohromady velkou skupinu a nezaútoèíte na Adytum silou?}
 {151}{}{Ty bys riskoval ivot, abys nám pomohl?}
-{152}{}{Jistì.  Rád pomùu.}
+{152}{}{Jistì. Rád pomùu.}
 {153}{}{Mohl bych. Ale pøed tím si musím všechno dùkladnì provìøit.}
 {154}{}{Díky. To by nám opravdu mohlo pomoct. Hodnì štìstí. [Podává ti holodisk.]}
 {155}{}{Nashledanou.}
@@ -65,7 +65,7 @@
 {163}{}{Ty jsi šéfka tohohle gangu?}
 {164}{}{No nic.}
 {165}{}{E...Co?}
-{166}{}{Gang?  To sotva.  Ale všichni za mnou jdou a vìøí mi.}
+{166}{}{Gang? To sotva. Ale všichni za mnou jdou a vìøí mi.}
 {167}{}{Posílá mì Zimmerman.}
 {168}{}{No, vypadáte jako gang.}
 {169}{}{Nashledanou.}
@@ -128,17 +128,17 @@
 {226}{}{Hootzpah!}
 {227}{}{Jmenuji se Razor, a jsem vùdkynì všech lidí, které zde vidíš. ijeme zde z vrtochu Regulátorù z Adyta.}
 {228}{}{Regulátoøi? O všechny jsem se postaral. Je to problém?}
-{229}{}{Ty si je všechny pobil?  To rozhodnì není problém. Mí lidé mohou nyní ít svobodnì s lidmi z Adyta.}
+{229}{}{Ty si je všechny pobil? To rozhodnì není problém. Mí lidé mohou nyní ít svobodnì s lidmi z Adyta.}
 {230}{}{Nemùu tomu uvìøit. Ty jsi je zvládl všechny zabít. Blades i já ti dìkujeme.}
 {231}{}{Slyšela jsem, e Adytum je poøád v rukou Regulátorù. Co se stalo s tím plánem je všechny oddìlat?}
 {232}{}{Klid, postarám se o to.}
 {233}{}{Nemyslím, e budu schopen to udìlat.}
-{234}{}{Pùjdeme s tebou, ale beze zbraní nás Regulátoøi všechny zabijou. Musí pøece existovat jiná monost. [Razor se na chvilku zamyslela.]  Kdyby se ti podaøilo získat zbranì od Gun Runnerù, hodnì z nás by tì mohlo následovat.}
-{235}{}{To zní dobøe.  Pùjdu si s nimi promluvit.}
+{234}{}{Pùjdeme s tebou, ale beze zbraní nás Regulátoøi všechny zabijou. Musí pøece existovat jiná monost. [Razor se na chvilku zamyslela.] Kdyby se ti podaøilo získat zbranì od Gun Runnerù, hodnì z nás by tì mohlo následovat.}
+{235}{}{To zní dobøe. Pùjdu si s nimi promluvit.}
 {236}{}{Zkusím znièit Regulátory znovu a sám.}
 {237}{}{Ahoj, slyšela jsem, e jsi laškoval s Regulátory. Chtìla jsem ti podìkovat, es nás jich zbavil. Mí lidé nyní mohou ít svobodnì spolu s lidmi z Adyta. Zajdi za Becou (Jade), má ti co øíct.}
 {238}{}{Prostì se o Regulátory postarám sám.}
-{239}{}{Ty?  Dobrá tedy. Jestli budeš potøebovat pomoct, a nebo to zvládneš sám, vra se a promluvíme si.}
+{239}{}{Ty? Dobrá tedy. Jestli budeš potøebovat pomoct, a nebo to zvládneš sám, vra se a promluvíme si.}
 
 # to male player
 {240}{}{Ty hajzle!}

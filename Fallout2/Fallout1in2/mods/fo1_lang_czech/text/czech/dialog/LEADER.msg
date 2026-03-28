@@ -114,12 +114,12 @@
 {982}{}{Nikdy jsem o tom neslyšel.}
 
 {1000}{}{Set}
-{1001}{}{Vudce}
-{1002}{}{Voda}
-{1003}{}{Vodarna}
-{1004}{}{Hala}
-{1005}{}{Nekropolis}
-{1006}{}{Cip}
+{1001}{}{Master|Vudce}
+{1002}{}{Water|voda}
+{1003}{}{Watershed|Vodarna}
+{1004}{}{Hall|hala|sin}
+{1005}{}{Necropolis|Nekropolis}
+{1006}{}{Chip|Cip}
 
 {1100}{}{Snaží se ovládat Nekropolis a donutil nás žít v podzemí.}
 {1101}{}{Ten má nìco spoleèného s mutanty, ale víc toho o nìm nevím.}

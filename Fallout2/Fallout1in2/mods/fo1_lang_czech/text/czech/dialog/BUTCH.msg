@@ -18,7 +18,7 @@
 {117}{}{Kolik za to bude?}
 {118}{}{Uh... co je to za práci?}
 {119}{}{No dobøe. Když to bereš takhle, pùjdu si radši popovídat s Rutgerem.}
-{120}{BUTCH05}{Uh... tohle s tebou vyøídí Rutger. Stará se o veškeré všední záležitosti Far Go Traders. Teï odsud padej, mám práci!}
+{120}{BUTCH05}{Uh... tohle s tebou vyøídí Rutger. Stará se o veškeré všední záležitosti Far Go. Teï odsud padej, mám práci!}
 {121}{}{Ještì jedna otázeèka, jo?}
 {122}{}{Oukej, díky.}
 # Line 123 is prepended to 124.
@@ -75,7 +75,7 @@
 {173}{}{Jen zvìdavost.}
 {174}{}{Jen tak.}
 {175}{}{Hmm... Mám ještì pár otázek.}
-{176}{BUTCH24}{Dobøe, vedu Far Go Traders asi pìt let. Pøedtím jsem žil v Adytu. A ještì pøedtím poblíž Kráteru.}
+{176}{BUTCH24}{Dobøe, vedu Far Go asi pìt let. Pøedtím jsem žil v Adytu. A ještì pøedtím poblíž Kráteru.}
 {177}{}{Ještì nìco?}
 {178}{}{Dobøe, díky.}
 {179}{BUTCH25}{Ani ne.}
@@ -95,7 +95,7 @@
 {193}{BUTCH19}{Uh... co jsi to øíkal?}
 {194}{}{Jsi hluchý?}
 {195}{}{Nic. Ale potøeboval bych se zeptat ještì na pár vìcí.}
-{196}{BUTCH32}{No, máš tu tøeba Maltézský sokol. To je prima místo, když se chceš najíst, to mi vìø. A potom... mùžeš se podívat do obchodu Všechno-v-Jednom, navštívit obchod se zbranìmi... a samozøejmì je tu Bobùv stánek s leguány.}
+{196}{BUTCH32}{No, máš tu tøeba Maltézský sokol. To je prima místo, když se chceš najíst, to mi vìø. A potom... mùžeš se podívat do obchodu Všechno-v-jednom, navštívit obchod se zbranìmi... a samozøejmì je tu Bobùv stánek s leguány.}
 {197}{}{Díky.}
 {198}{}{Ještì nìco?}
 {199}{BUTCH33}{Na západní stranì centra je nemocnice Dìtí katedrály. A potom samozøejmì na jihu máš Obchodníky s vodou a na západì Karmínovou karavanu.}
@@ -114,7 +114,7 @@
 {212}{}{Objevil jsem kdo znièil ty karavany.}
 {213}{}{No, zjistil jsem, že ty karavany neznièil Páraè.}
 {214}{}{Ještì nic. Sbohem.}
-{215}{BUTCH38}{Opravdu?  A kdo?}
+{215}{BUTCH38}{Opravdu? A kdo?}
 {216}{}{Byli to obrovští mutanti.}
 {217}{}{Krysy! OHROMNÉ krysy s OHROMNÝMA zuby...}
 {218}{BUTCH39}{Co . . . proè by chtìli mutanti naše karavany?}
@@ -226,7 +226,7 @@
 {321}{BUTCH112}{Já... uh... nemyslím, že bych o tom chtìl zrovna s tebou mluvit. Jo, tak je to.}
 {322}{BUTCH113}{O tom jsem nikdy neslyšel.}
 {323}{BUTCH114}{No, poslední, co jsem slyšel, je že to tam nìkdo prošmejdil. Ale nevím kdo.}
-{324}{}{Teï nemám èas.  Promluv si s Rutgerem.  Dá mi vìdìt, jestli stojí za to se s tebou setkat.}
+{324}{}{Teï nemám èas. Promluv si s Rutgerem. Dá mi vìdìt, jestli stojí za to se s tebou setkat.}
 {325}{}{Nemám co bych ti øekl.}
 {326}{}{Kde dostanu svoji odmìnu?}
 {327}{}{Co že to mám udìlat?}
@@ -274,46 +274,46 @@
 # Tell-Me-Abouts
 #
 {1000}{}{Decker}
-{1001}{}{Podsveti}
-{1002}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon}
-{1003}{}{Zlodeji}
+{1001}{}{Underground|Podsveti}
+{1002}{}{Maltese|Maltese Falcon|Maltese Falkon|Falcon|Maltezsky sokol}
+{1003}{}{Thieves|Thief|Thiefes|Thieve|zlodeji|zlodej}
 {1004}{}{Justin|Justin Greene|Greene}
-{1005}{}{Harold}
-{1006}{}{Kupci s vodou}
+{1005}{}{Harold|Ghoul|Mutant|ghul}
+{1006}{}{Merchants|Water Merchants|Watermerchants|Merchant|kupci|Obchodnici s vodou|kupec|Kupci s vodou}
 {1007}{}{Daren|Hightower|Daren Hightower}
-{1008}{}{Crimson karavan|crimson karavan}
+{1008}{}{Crimson|Crimson Caravan|Crimson Caravans|Karminova karavana|Crimson karavan}
 {1009}{}{Demetre|Demetre Romara|Romara}
-{1010}{}{Trader|Far Go Trader|Far Go|Fargo|Far-Go-Trader|Far-Go Trader|Hub|Fargo Traders|Far-Go-Traders|Traders|Far-Go}
+{1010}{}{Trader|Far Go Trader|Far Go|Fargo|Far-Go-Trader|Far-Go Trader|Hub|Fargo Traders|Far-Go-Traders|Traders|Far-Go|obchodnik Far Go|Obchodnici}
 {1011}{}{Butch|Butch Harris|Harris}
 {1012}{}{Beth}
 {1013}{}{Rutger|Assistant}
-{1014}{}{voda|Voda}
-{1015}{}{Karavana|Karavany|karavana|karavany}
-{1016}{}{trziste}
-{1017}{}{Parac|parac}
-{1018}{}{Krater|krater}
-{1019}{}{Stare mesto|stare mesto}
-{1020}{}{Heights}
+{1014}{}{Water|voda}
+{1015}{}{Missing|Missing Caravan|Missing Caravans|Caravans|Caravan|ztracena karavana|ztracene karavany|karavany|karavana}
+{1016}{}{Market|Traders Market|Trh|trziste}
+{1017}{}{Claw|Deathclaw|Claws|Deathclaws|parac|paraci}
+{1018}{}{Glow|Hot|Hot Spot|Spot|Krater|Horky|Misto}
+{1019}{}{Town|Old Town|Oldtown|Mesto|Stare Mesto}
+{1020}{}{Heights|Pahorky}
 {1021}{}{Junk|Junktown|Junk Town}
 {1022}{}{Darkwater|Killian Darkwater|Killian|Kilian Darkwater}
-{1023}{}{bratrstvo|bratrstvo oceli|Bratrstvo|Bratrstvo oceli}
-{1024}{}{Starsi}
+{1023}{}{Brotherhood}
+{1024}{}{Elder|starsi}
 {1025}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
 {1026}{}{Adytum|Adytown}
-{1027}{}{Jon|Jon Zimmermann|Zimmermann}
-{1028}{}{Katedrala|Deti katedraly}
+{1027}{}{Jon|Jon Zimmermann|Zimmermann|Jon Zimmerman|Zimmerman}
+{1028}{}{Cathedral|Children of the Cathedral|CoC|Children|Katedrala|Deti katedraly|deti}
 {1029}{}{Morpheus}
 {1030}{}{Jain}
-{1031}{}{Vudce}
-{1032}{}{Weapon|Weapons|Store|guns|zbran|zbrane}
-{1033}{}{Bob|bob|Leguan}
-{1034}{}{Nasledovnici|Nasledovnici apokalypsy|nasledovnici|nasledovnici apokalypsy}
-{1035}{}{Vodojem}
-{1036}{}{bratrstvo|bratrstvo oceli|Bratrstvo|Bratrstvo oceli}
+{1031}{}{Master|The Master|Mutant Leader|Vudce}
+{1032}{}{Weapon|Weapons|Store|guns|Zbran|Zbrane|obchod}
+{1033}{}{Bob's|Bobs|Iguana|Bobovy|Leguan|Leguani}
+{1034}{}{Followers|Followers of the Apocalypse|Apocalypse|FoA|nasledovnici|Nasledovnici apokalypsy|apokalypsa}
+{1035}{}{Tower|Water Tower|Watertower|vodojem}
+{1036}{}{Steel|Brotherhood of Steel|Brotherhood|BoS|ocel|Bratrstvo oceli|Bratrstvo}
 {1037}{}{Maxson}
-{1038}{}{Mitch}
-{1039}{}{prace|penize}
-{1040}{}{pustina}
+{1038}{}{All|Mitch|General Store|Generalstore|General|Allnone|All-N-One|All-N-One store|Vsechno-v-jednom}
+{1039}{}{Job|Work|Task|Money|prace|ukol|penize}
+{1040}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|Direction|Directions|Whereto|Where to|pustina|smer|kam}
 
 {1100}{BUTCH73}{Je to vlastník Maltézského sokola, baru na západní stranì centra. Ale já se s ním nestýkám; není to èestný èlovìk, jako já.}
 {1101}{BUTCH74}{Uh, ne. Ne, o tom nebudeme mluvit.}

@@ -5,12 +5,12 @@
 {104}{}{Máte vodní èip?}
 {105}{}{Nic, díky.}
 {106}{}{Hrgh.}
-{107}{}{Jasnì, super. Jsi pøijat.  Poèkej.  Na jakou pozici?  Ach, hlídaè karavany?  Jo, jistì. Mùeš pro nás dìlat.  Vypadáš v pohodì.  Ještì nìco?}
+{107}{}{Jasnì, super. Jsi pøijat. Poèkej. Na jakou pozici? Ach, hlídaè karavany? Jo, jistì. Mùeš pro nás dìlat. Vypadáš v pohodì. Ještì nìco?}
 {108}{}{Ne.}
 {109}{}{Ano, máte vodní èip?}
 {110}{}{Ehe?}
 {111}{}{Promiò, není èas na nesmysly!}
-{112}{}{Vodní èip... hmm.  Och, tyhle staré Vaultové kontrolní èistící èipy. No, jsem si jistı, e v celém mìstì ádnı nenajdeš. Bez správného vybavení je ale bezcennı. Jenom ve Vaultu, nebo moná v Nekropolis by mohli nìjakı mít. Proè se ptáš?}
+{112}{}{Vodní èip... hmm. Och, tyhle staré Vaultové kontrolní èistící èipy. No, jsem si jistı, e v celém mìstì ádnı nenajdeš. Bez správného vybavení je ale bezcennı. Jenom ve Vaultu, nebo moná v Nekropolis by mohli nìjakı mít. Proè se ptáš?}
 {113}{}{Nekropolis? Proè by tam nìjakı mìli mít?}
 {114}{}{V našem Vaultu se rozbil a já hledám náhradu.}
 {115}{}{Jenom ze zvìdavosti.}
@@ -21,7 +21,7 @@
 {120}{}{Ne, díky.}
 {121}{}{Jo, kdy to øíkáš.}
 {122}{}{Pak tedy promiò, myslím, e ti nemohu pomoci.}
-{123}{}{Jestli mi mùeš vìøit?!?  Mì bìnì vìøí mnohem vìtší paranoici ne ty, e jim dopravím vodu! Kdo si myslíš, e jsme? Teroristi?}
+{123}{}{Jestli mi mùeš vìøit?!? Mì bìnì vìøí mnohem vìtší paranoici ne ty, e jim dopravím vodu! Kdo si myslíš, e jsme? Teroristi?}
 {124}{}{Dobøe, fajn. Kolik chceš penìz za vypravení té karavany.}
 {125}{}{Omlouvám se. Nechtìl jsem tím nic naznaèovat, ale nemohu si dovolit tohle riziko.}
 {126}{}{Dobøe, pokud zmìníš názor, dej mi vìdìt. Jsem na to zvìdav.}
@@ -30,17 +30,17 @@
 {129}{}{Poøád hledám vodní èip.}
 {130}{}{Chci práci.}
 {131}{}{Sbohem.}
-{132}{}{Fajn, bezva. Jsi pøijat. Poèkat. Jaká profese?  Ach, hlídaè karavany, ne?  Jasnì, tak.  Mùeš pro nás dìlat.  Vypadáš v poøádku.}
-{133}{}{Tohle u jsem probrali.  Chceš zaplatit, aby se mohla vypravit karavana s vodou?}
+{132}{}{Fajn, bezva. Jsi pøijat. Poèkat. Jaká profese? Ach, hlídaè karavany, ne? Jasnì, tak. Mùeš pro nás dìlat. Vypadáš v poøádku.}
+{133}{}{Tohle u jsem probrali. Chceš zaplatit, aby se mohla vypravit karavana s vodou?}
 {134}{}{Pøedtím jsi zmínil, e v Nekropoli by mohl bıt vodní èip. Proè by ho potøebovali?}
 {135}{}{O jaké èástce to hovoøíme?}
 {136}{}{Ne, ještì ne.}
-{137}{}{No, je to jenom dohad. Pokoušeli jsme se zavést obchodní cestu pro karavany s vodou do Nekropole, ale odmítli s námi obchodovat. Nikdo se zdravım rozumem v dnešních dobách neodmítne zásobování vodou, pokud nemá vlastní zdroj. Pøedpokládám, e mají svou vlastní èistièku, jinak u by dávno pomøeli.  Tak co, máš zájem, abychom do tvého Vaultu vypravili vodní karavanu?}
+{137}{}{No, je to jenom dohad. Pokoušeli jsme se zavést obchodní cestu pro karavany s vodou do Nekropole, ale odmítli s námi obchodovat. Nikdo se zdravım rozumem v dnešních dobách neodmítne zásobování vodou, pokud nemá vlastní zdroj. Pøedpokládám, e mají svou vlastní èistièku, jinak u by dávno pomøeli. Tak co, máš zájem, abychom do tvého Vaultu vypravili vodní karavanu?}
 {138}{}{Jo, kolik mì to bude stát?}
 {139}{}{Ne díky.}
 {140}{}{No, je to dost daleko. 2000 zátek by bylo za první karavanu a jsem si jist, e tvùj Vault má nìco ke smìnì, aby se nám tam vyplatilo cestovat. Nicménì s našimi souèasnımi zásobami pøedpokládám, e budeme schopni tvému Vaultu dodat vodu aspoò na dalších 100 dní.}
 {141}{}{Platí, tady jsou peníze.}
-{142}{}{Ve Vaultu vám budou schopni uhradit vìtšinu z vašich poèáteèních nákladù.  Co kdybych dal pro zaèátek jenom 1000.}
+{142}{}{Ve Vaultu vám budou schopni uhradit vìtšinu z vašich poèáteèních nákladù. Co kdybych dal pro zaèátek jenom 1000.}
 {143}{}{To je trochu moc, ale ve Vaultu mají spousty zboí, za které se vám ta cesta rozhodnì vyplatí. Tak co takhle tøeba 500?}
 {144}{}{Nemám hotovost, vrátím se, jen co ji budu mít.}
 {145}{}{Zdá se, e nemáš dost penìz, vra se, a se to zmìní. Pamatuj, e potøebuješ }
@@ -50,7 +50,7 @@
 {149}{}{Ano, Vault potøebuje vodu.}
 {150}{}{To zní celkem férovì. Technologie z Vaultu by tady v Hubu mohla dosáhnout vysokıch trních hodnot.}
 {151}{}{Je mi líto, ale musím poadovat plnou cenu.}
-{152}{}{To zní celkem férovì.  Technologie z Vaultu by tady v Hubu mohla dosáhnout vysokıch trních hodnot.}
+{152}{}{To zní celkem férovì. Technologie z Vaultu by tady v Hubu mohla dosáhnout vysokıch trních hodnot.}
 {153}{}{Je mi líto, ale musím poadovat plnou cenu.}
 {154}{}{Zaplatíš poadovanou sumu, abychom mohli zaèít vypravovat karavany?}
 {155}{}{Fajn, zaèneme vypravovat karavany v nejbliších hodinách.}

@@ -25,7 +25,7 @@
 {124}{}{Ha, myslela jsem, e jsi posera! Dobrá...pokud ses odhodlal, zastav se a moná tu pro tebe nìjaká práce bude. Vyjídíme 3. a 17., a pokud budeš mít zájem, tak se tu uka. Kadá zbraò navíc se hodí.}
 {125}{}{Prostì tì baví plıtvat mım èasem, nebo ne?}
 {126}{}{Jasnì, cokoli. Pokud touíš po nìjakı akci, pøijï pozdìji a já tì zapíšu do další karavany.}
-{127}{}{Hej!  Vím, e se v našem mìstì dá sehnat pár kvalitních drog, ale nenajmu tì, dokud nevystøízlivíš.}
+{127}{}{Hej! Vím, e se v našem mìstì dá sehnat pár kvalitních drog, ale nenajmu tì, dokud nevystøízlivíš.}
 {128}{}{Øekla jsem, ádné drogy, zmrde!}
 {129}{}{Øekla jsem, ádné drogy, dìvko!}
 {130}{}{Hmm no... Nerada to øíkám, ale... u jsem o tobì slyšela. Jsi v soukromí stejnì tvrdı jako na veøejnosti? Uvidíme... [Keri tì vede za roh]}
@@ -89,20 +89,20 @@
 {188}{}{Nic.}
 {189}{}{Zug.}
 {190}{}{Ug.}
-{191}{}{No jasnì!  Take jsi opustil další karavanu?  Máš kliku, e se vrátili celí.}
+{191}{}{No jasnì! Take jsi opustil další karavanu? Máš kliku, e se vrátili celí.}
 {192}{}{Já mám kliku? To ty jí máš, e ti jednu nenatáhnu do ksichtu!}
-{193}{}{Hej!  Mám pár míst, kam jít a...chlast!}
-{194}{}{Hej!  Neøekla jsi, e je nemohu opustit!  Nebylo to v prùbìhu ádného boje.}
-{195}{}{Vypadni odsud! Je mi z tebe zle!  Proto jsi opustil karavanu?  Vsadím se, e jsi byl na práškách!}
-{196}{}{Jo?  Dobøe, proè tam teda nejdeš hned!  Z našeho seznamu jsi vymazanej navdy.}
-{197}{}{Co?  Ty nikdy pøedtím nedoprovázel karavanu?  Nechce se mi vìøit, e by mùj otec najal zelenáèe! Ztra se!  Pøijímáme pouze profesionály!  Proto jim taky platíme tìkı prachy!}
+{193}{}{Hej! Mám pár míst, kam jít a...chlast!}
+{194}{}{Hej! Neøekla jsi, e je nemohu opustit! Nebylo to v prùbìhu ádného boje.}
+{195}{}{Vypadni odsud! Je mi z tebe zle! Proto jsi opustil karavanu? Vsadím se, e jsi byl na práškách!}
+{196}{}{Jo? Dobøe, proè tam teda nejdeš hned! Z našeho seznamu jsi vymazanej navdy.}
+{197}{}{Co? Ty nikdy pøedtím nedoprovázel karavanu? Nechce se mi vìøit, e by mùj otec najal zelenáèe! Ztra se! Pøijímáme pouze profesionály! Proto jim taky platíme tìkı prachy!}
 {198}{}{Vedl sis dobøe. Hledáš další práci?}
 {199}{}{Jasnì.}
 {200}{}{Ne.}
 {201}{}{Moná.}
 {202}{}{Ug.}
 {203}{}{Lug.}
-{204}{}{Pøipraven?  Vyráíme dneska.}
+{204}{}{Pøipraven? Vyráíme dneska.}
 {205}{}{Jo!}
 {206}{}{Ne.}
 {207}{}{Hrurra?}
@@ -113,7 +113,7 @@
 {212}{}{. Vra se, pokud ještì budeš chtít tu podìlanou práci. Je mi to fakt jedno, jestli se tu objevíš nebo ne. Ale pokud budeš mít zájem, tak se tu pak prostì uka.}
 {213}{}{Ještì ne.}
 {214}{}{Tati, sklapni u, k èertu!}
-{215}{}{Hej, starochu, mám hlad!  Dám si pauzièku!}
+{215}{}{Hej, starochu, mám hlad! Dám si pauzièku!}
 {216}{}{Nesnáším práci s knihami.}
 {217}{}{Leden }
 {218}{}{Únor }

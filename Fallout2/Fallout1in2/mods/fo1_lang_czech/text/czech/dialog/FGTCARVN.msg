@@ -1,4 +1,4 @@
-{100}{}{Vidíš øidièe karavany obchodníkù Far Go.}
+{100}{}{Vidíš honáka karavany Far Go.}
 {101}{}{Ahoj, jestli chceš práci u karavany, promluv si s Rutgerem. Je pøímo támhle.}
 {102}{}{Budeš si muset promluvit s Rutgerem.}
 {103}{}{Takže jsi se nechal najmout. To rád slyším. Hele, vyjíždíme každých deset dní. To znamená 8., 18. a 28. dne každýho mìsíce. Cestujeme k Bratrstvu, do Junktownu a do L.A. kostnice.}

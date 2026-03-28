@@ -183,22 +183,22 @@
 {981}{Ara_65}{Opravdu nemùžu øíct, že bych o tom nìkdy slyšel.}
 {982}{Ara_66}{Hm, ne. Ne, o tom jsem nikdy neslyšel.}
 
-{1000}{}{Aradesh}
+{1000}{}{Aradesh|LEADER|vudce}
 {1001}{}{Dharma}
 {1002}{}{Tandi}
-{1003}{}{Razlo}
-{1004}{}{najezdnici}
-{1005}{}{zmije}
-{1006}{}{Khanove}
-{1007}{}{Skorpioni}
-{1008}{}{parac}
+{1003}{}{Razlo|HELP|pomoc}
+{1004}{}{Raiders|najezdnici}
+{1005}{}{Vipers|VIPER|Zmije}
+{1006}{}{Khans|KHAN|Khanove}
+{1007}{}{Scorpions|Scorpion|Rad Scorpion|Radscorpions|Radscorpion|skorpioni|skorpion|radskorpion|radskorpioni}
+{1008}{}{Claw|Claws|Deathclaw|Deathclaws|parac|paraci}
 {1009}{}{Junktown}
-{1010}{}{kopi}
-{1011}{}{vez}
-{1012}{}{hnizdo}
-{1013}{}{Seth}
-{1014}{}{Shady|Sands|Shady Sands}
-{1015}{}{Hub}
+{1010}{}{Spear|kopi}
+{1011}{}{Guard House|GUARDHOUSE|straznice}
+{1012}{}{Lair|NEST|hnizdo|Doupe|Brloh}
+{1013}{}{Seth|SET|CAPTAIN|kapitan}
+{1014}{}{Shady|Sands|Shady Sands|Family}
+{1015}{}{Hub|GUARD|GUARDS|straz|strazny}
 
 {1100}{Ara_49}{To jsem já. Jsem vùdcem tohoto tichého mìsta Shady Sands.}
 {1101}{Ara_49A}{Dharma byl moudrý a zbožný muž. Mohlo by ti být velmi k užitku, kdybys pozornì naslouchal jeho slovùm.}

@@ -48,23 +48,23 @@
 {982}{}{Nikdy jsem o tom neslyšel.}
 
 {1000}{}{Adytum|Adytown}
-{1001}{}{Nasledovnici}
-{1002}{}{katedrala}
-{1003}{}{Rippers|Ripperi}
+{1001}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{1002}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{1003}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {1004}{}{Blades|Blade}
-{1005}{}{Gun Runners|Gun Runneri|Gunrunneri|Gun runneri}
+{1005}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners|Gun Runneri|Gunrunneri}
 {1006}{}{Hub}
 {1007}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{1010}{}{Junktown}
-{1011}{}{Nicole}
+{1008}{}{Junktown|Junk Town}
+{1009}{}{Nicole}
 
-{1110}{}{Malé mìsteèko na jihu. Obèas nás nìkdo od nich navštíví.}
-{1111}{}{To jsou ti pošahaní milovníci míru, co žijí poblíž nás.}
-{1112}{}{Divná sekta na jihu Adyta a ve zbytku Kostnice. Nicole øíká, že nìco chystají.}
-{1113}{}{Ultranásilnický gang na západ od nás. Teda býval... Nevím pøesnì, co se stalo, ale teï se jim v základnì hemží páraèi.}
-{1114}{}{Gang na východì. Používají vibraèní nože.}
-{1115}{}{Gang z Hubu, který se usadil na severu a prodává zbranì.}
-{1116}{}{Hub je velké mìsto na východì, hlavní obchodní centrum.}
-{1117}{}{Tohle místo je Andìlská kostnice, pozùstatek starého mìsta Los Angeles.}
-{1120}{}{Junktown je malé mìsto na sever od Hubu.}
-{1121}{}{Vede Následovníky.}
+{1100}{}{Malé mìsteèko na jihu. Obèas nás nìkdo od nich navštíví.}
+{1101}{}{To jsou ti pošahaní milovníci míru, co žijí poblíž nás.}
+{1102}{}{Divná sekta na jihu Adyta a ve zbytku Kostnice. Nicole øíká, že nìco chystají.}
+{1103}{}{Ultranásilnický gang na západ od nás. Teda býval... Nevím pøesnì, co se stalo, ale teï se jim v základnì hemží páraèi.}
+{1104}{}{Gang na východì. Používají vibraèní nože.}
+{1105}{}{Gang z Hubu, který se usadil na severu a prodává zbranì.}
+{1106}{}{Hub je velké mìsto na východì, hlavní obchodní centrum.}
+{1107}{}{Tohle místo je Andìlská kostnice, pozùstatek starého mìsta Los Angeles.}
+{1108}{}{Junktown je malé mìsto na sever od Hubu.}
+{1109}{}{Vede Následovníky.}

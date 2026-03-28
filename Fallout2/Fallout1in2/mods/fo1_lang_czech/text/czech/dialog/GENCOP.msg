@@ -36,7 +36,7 @@
 {135}{}{Ty jseš ten rváè. Už žádné boje, OK?}
 {136}{}{Radìji si s nikým už nezaèínej!}
 {137}{}{To jsi ty... kontroluj svùj temperament.}
-{138}{}{Obchodníci Far Go jsou vybíleni. Nemùžu tomu uvìøit.}
+{138}{}{S Far Go je konec. Nemùžu tomu uvìøit.}
 {139}{}{Obchodníci s vodou jsou v tahu. Jaká úleva.}
 {140}{}{Karmínová karavana byla znièena.}
 {141}{}{Slyšel jsi? Podsvìtí už je koneènì znièeno!}
@@ -56,7 +56,7 @@
 {155}{}{Hej. Já tì znám. Už žádný rvaèky, jo?}
 {156}{}{Ani nemysli na to, že by ses s nìkým rval!}
 {157}{}{Jestli tì uvidím bojovat, budeš bruèet!}
-{158}{}{Slyšel jsi to? Obchodníci Far Go jsou vybíleni.}
+{158}{}{Slyšel jsi to? S Far Go je konec.}
 {159}{}{Obchodníci s vodou jsou historie. To je požehnání.}
 {160}{}{Nìkdo vyvraždil Karmínovou karavanu.}
 {161}{}{Slyšel jsi to? Podsvìtí je koneènì znièeno!}

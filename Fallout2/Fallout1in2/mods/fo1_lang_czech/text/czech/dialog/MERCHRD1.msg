@@ -19,7 +19,7 @@
 {118}{}{Taky se vaše karavana zpozdila?}
 {119}{}{A se ti podaøí dostat aspoò nìco.}
 {120}{}{Vidìl jsi Hightowera?}
-{121}{}{Navštívil bych Obchodníky Far Go na tvém místì.}
+{121}{}{Na tvém místì bych zašel do Far Go.}
 {122}{}{Hledáš šéfa? Je to enská a je pøímo támhle.}
 {123}{}{Pokud mùj náklad brzo nevyjede, tak to bude dost prùser.}
 {124}{}{Martha je pøímo támhle.}

@@ -46,29 +46,29 @@
 {981}{}{Promiò, nemám páru.}
 {982}{}{Nikdy jsem o tom neslyšel.}
 
-{1000}{}{Katedrala}
-{1001}{}{Mutanti}
-{1002}{}{Vudce}
-{1003}{}{Boneyard|The Boneyard|L.A. Boneyard|LA|Los Angeles|LA Boneyard|Kostnice|L.A. kostnice|LA kostnice}
-{1004}{}{Nasledovnici}
-{1005}{}{Cip|Vodni cip}
-{1006}{}{Nekropolis}
+{1000}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{1001}{}{Mutants|Mutant|Ghoul|Ghouls|mutanti|ghul|ghulove}
+{1002}{}{Master|Vudce}
+{1003}{}{Boneyard|The Boneyard|L.A. Boneyard|LA|Los Angeles|LA Boneyard|Kostnice|Pohrebak|L.A. kostnice|LA kostnice}
+{1004}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
+{1005}{}{Waterchip|Water Chip|Chip|vodni cip|Cip}
+{1006}{}{Necropolis|CITY OF DEAD|CITY OF THE DEAD|Nekropolis|Mesto mrtvych}
 {1007}{}{Set|Seth}
-{1008}{}{Vodarna}
-{1009}{}{Hala}
-{1010}{}{Doktor}
-{1011}{}{Jednota}
-{1012}{}{Obchod}
-{1013}{}{Voda}
+{1008}{}{Shed|Watershed|Water Shed|vodarna}
+{1009}{}{Hall|HALL OF THE DEAD|DEADHALL|HALL OF DEAD|hala|sin|Sin mrtvych|hala mrtvych}
+{1010}{}{Help|Help me|Doctor|Medic|Doc|pomoc|doktor|medik}
+{1011}{}{Unity|Jednota}
+{1012}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|koupit|kupovat|prodat|prodavat|Obchodovani|obchod}
+{1013}{}{Water|voda}
 {1014}{}{Vault|Vault12|Vault 12}
-{1015}{}{Pustina}
-{1016}{}{Smer}
-{1017}{}{Kradez|Zlodej}
-{1018}{}{Svaty plamen}
-{1019}{}{Fallout}
-{1020}{}{Rippers|Ripper}
+{1015}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|pustina}
+{1016}{}{Direction|Directions|Whereto|Where to|smer|kam}
+{1017}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{1018}{}{Holy Flame|Svaty plamen}
+{1019}{}{Fallout|Fall out|nuclear fallout|Radiation|Rads|Radiace|Rady}
+{1020}{}{Rippers|Ripper|rozparovaci|rozparovac}
 {1021}{}{Blades|Blade}
-{1022}{}{Gun Runneri|Gunrunneri|gun Runner|gunrunneri}
+{1022}{}{Gun Runners|Gunrunners|Gun Runner|Gunrunner|Gun Runneri|Gunrunneri}
 {1023}{}{Adytum|Adytown}
 
 {1100}{}{To jsme my.}

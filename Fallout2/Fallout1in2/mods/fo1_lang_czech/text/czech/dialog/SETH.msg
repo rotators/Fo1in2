@@ -20,7 +20,7 @@
 {119}{}{Jeskynì!}
 {120}{}{Nic víc, díky.}
 {121}{}{Co chceš vìdìt?}
-{122}{}{Ti proklatí radškorpióni pasou po našich brahminách od té doby, co jsme se tu usadili. Neuplyne týden, aby nebyl nìkdo pøi zahánìní škorpiónù od dobytèích ohrad uštknut. Minulý týden dostali mého bratra Jarvise. Razlo, náš doktor, se snaží vyrobit protijed co nejrychleji. Hele, jestli nám chceš nìjak pomoci, zajdi si promluvit s naším vùdcem, s Aradeshem.}
+{122}{}{Ti proklatí radškorpióni pasou po našich brahmínách od té doby, co jsme se tu usadili. Neuplyne týden, aby nebyl nìkdo pøi zahánìní škorpiónù od dobytèích ohrad uštknut. Minulý týden dostali mého bratra Jarvise. Razlo, náš doktor, se snaží vyrobit protijed co nejrychleji. Hele, jestli nám chceš nìjak pomoci, zajdi si promluvit s naším vùdcem, s Aradeshem.}
 {123}{}{V okolí se potlouká nìkolik nájezdnických klanù a nezávislých skupin. Jedna velká banda teï táboøí na jihovýchod od nás. Radím ti dobøe, dej si na nì pozor. Pøed nedávnem jsme si museli najmout žoldáky, jako je tøeba Ian, aby nám pomáhali odrážet jejich nájezdy.}
 {124}{}{Shady Sands je mírumilovná komunita. Máme svùj vlastní zavlažovací systém, který nám umožòuje pìstovat si vlastní jídlo. Pokud by nás netrápili nájezdníci a radškorpióni, náš život by byl mnohem snazší.}
 {125}{}{Opravdu chceš, abych ti ukázal, kde jsou jeskynì radškorpiónù? Nemùžu jít s tebou, ale cestu ti ukážu.}
@@ -66,21 +66,21 @@
 {324}{}{Rozmyslel jsem si to, sbohem.}
 {325}{}{Skvìle. Hned jsem zpátky a pak mì tam mùžeš vzít.}
 
-{1000}{}{Khanove}
+{1000}{}{Khans|Khanove}
 {1001}{}{Garl}
 {1002}{}{Junktown}
-{1003}{}{Shady}
+{1003}{}{Shady Sands|Shady|Sands}
 {1004}{}{Hub}
-{1005}{}{voda}
+{1005}{}{Water|voda}
 {1006}{}{Tandi}
 {1007}{}{Aradesh}
-{1008}{}{Seth}
+{1008}{}{Seth|Set}
 {1009}{}{Razlo}
 {1010}{}{Sands}
-{1011}{}{skorpion}
-{1012}{}{radskorpion}
-{1013}{}{skorpioni}
-{1014}{}{radskorpioni}
+{1011}{}{Scorpion|skorpion}
+{1012}{}{Radscorpion|radskorpion}
+{1013}{}{Scorpions|skorpioni}
+{1014}{}{Radscorpions|radskorpioni}
 
 
 {1100}{}{Je to banda zloèincù, kteøí si hrajou na nìco z dávné minulosti.}

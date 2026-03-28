@@ -43,7 +43,7 @@
 {142}{}{Hmm, vodní èip? Hmmm, nikdy jsem o nìm neslyšel. Zkus nìkterej z obchodù okolo, mají spoustu harampádí. Takže, chtìls práci?}
 {143}{}{Dobrá, kolik platíte?}
 {144}{}{Ne, vlastnì ne.}
-{145}{}{Ne, zas tolik jich nezmizelo. Vlastnì jenom dvì. Vážnì nevím, proè si nejèastìji vybírají Obchodníky Far Go.}
+{145}{}{Ne, zas tolik jich nezmizelo. Vlastnì jenom dvì. Vážnì nevím, proè si nejèastìji vybírají zrovna Far Go.}
 {146}{}{Nìjaká podezøení?}
 {147}{}{Co cesty a náklad?}
 {148}{}{Jo, dík.}
@@ -73,7 +73,7 @@
 {172}{}{Nejsem závislák... Teda... Arg!}
 {173}{}{Bla, bla!}
 {174}{}{Prášky, co? Sakra, dobøe, že už tì nikdy nenajmeme!}
-{175}{}{Sakra, ne! Ty si neuvìdomuješ, co je všechno v sázce! Nemùžeme si dovolit takový riziko! Sakra, nevím, jak se Obchodníci Far Go držej nad vodou po všech tìch zmizelejch karavanách!}
+{175}{}{Sakra, ne! Ty si neuvìdomuješ, co je všechno v sázce! Nemùžeme si dovolit takový riziko! Sakra, nevím, jak se Far Go drží nad vodou po všech tìch zmizelejch karavanách!}
 {176}{}{Sory, budeš se muset zeptat jinde. Nemùžu si dovolit vzít dalšího.}
 {177}{}{Vypadni, než se z tebe pobleju!}
 {178}{}{Hej! Co si myslíš, že dìláš?}
@@ -112,7 +112,7 @@
 {211}{}{Tvá dcera?}
 {212}{}{Ta nechutnost je tvoje dcera? To mnohé vysvìtluje!}
 {213}{}{Jo.}
-{214}{}{Ano, je to moje pýcha a radost! Není krásná? Promluv s ní, jestli chceš další práci. Jednou... snad brzy, budu moci skonèit s touhle prací a ona to po mì pøevezme.}
+{214}{}{Ano, je to moje pýcha a radost! Není krásná? Promluv s ní, jestli chceš další práci. Jednou... snad brzy, budu moci skonèit s touhle prací a ona to po mnì pøevezme.}
 {215}{}{Ne, pokud budete oba mrtví!}
 {216}{}{Jo, dík.}
 {217}{}{Troufáš si urážet cizí rodinu? Mìl bych ti vyrvat srdce z tìla!}

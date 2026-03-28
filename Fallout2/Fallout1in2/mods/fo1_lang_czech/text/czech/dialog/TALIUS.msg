@@ -76,7 +76,7 @@
 {175}{}{To je drsný. Tak zatím.}
 {176}{}{Urèitì se po nich podívám. Dík za informace.}
 {177}{}{Kdo je vede?}
-{178}{}{Ne. Zabil jsem jen pár mutantù. Byl tam ještì jeden mutant, spíš ghoul, jménem Set, který mi pomohl dostat vìtšinu z nich.}
+{178}{}{Ne. Zabil jsem jen pár mutantù. Byl tam ještì jeden mutant, ghúl jménem Set, který mi pomohl zlikvidovat vìtšinu z nich.}
 {179}{}{Myslím, že tam zbylo ještì pùl tuctu mutantù.}
 {180}{}{To zní dobøe. No, uvidíme se pozdìji.}
 {181}{}{Vìtšina z nich je už mrtvá. Set se má dobøe.}

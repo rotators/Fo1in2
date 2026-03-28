@@ -39,7 +39,7 @@
 {137}{}{Búúúúúúú! Búúúúúúú! Búúúúúúú! Búúúúúúú!}
 {138}{}{Nudím se. A co hùø, pìknì se mnou vyjebali. U to není sranda. Mìl jsi nìkdy pocit, e jsi jenom samej provázek a oni se tì ani neobtìovali povìsit? Jsem rozházenı po celı podlaze!}
 {139}{}{Búúúúúúú! Búúúúúúú! Búúúúúúú! Búúúúúúú!}
-{140}{}{Dost s brahminy! Zaèínáš smrdìt jako oni! Z toho by se jeden poblil!}
+{140}{}{Dost s brahmínami! Zaèínáš smrdìt jako oni! Z toho by se jeden poblil!}
 {141}{}{Víš, bejval jsem šílenej, ne jsem prošel procesem Sluebníkù. Bejval jsem šílenej, ale teï jsem jenom na kousky. Na kousky! Na kousky!}
 {142}{}{Zkurvysyne, jsem skládaèka! Pomùeš mi dát se dohromady?}
 {143}{}{Poøád nemùu uvìøit tomu, e se mnou ještì nìkdo mluví...}
@@ -114,7 +114,7 @@
 {212}{}{Co ti to udìlali?}
 {213}{}{Chceš zemøít? Mùu tì zbavit tvého utrpení.}
 {214}{}{Mluvíš kraviny!}
-{215}{}{Láska je to, co nutí kaktus rùst! Láska je to, co nutí brahminy buèet! Láska je voser, nièí tvùj ivot! Nenávidím lásku! Miluju nenávist! Pokud by nás Vùdce nenávidìl, byli bychom v poøádku!}
+{215}{}{Láska je to, co nutí kaktus rùst! Láska je to, co nutí brahmíny buèet! Láska je voser, nièí tvùj ivot! Nenávidím lásku! Miluju nenávist! Pokud by nás Vùdce nenávidìl, byli bychom v poøádku!}
 {216}{}{Kde je tvoje svìdomí, chlape? Myslíš, e by ivot mìl bıt nìjakı pìknı obrázek bez bídy? ivot JE bída! Bída, a to, co se s tím sakra rozhodneme udìlat!}
 {217}{}{Zvládání! Milování! Píchání! Nenávidìní! Riskování! Otravování lidí! Mlácení kreténù! Kamarádìní se s jinejma kreténama! Útìk pøed vlastníma chybama! Èelení vlastním chybám! Radiace!}
 {218}{}{Mít dìti a dìlat poøád toté, nìkdy líp, nìkdy hùø!}

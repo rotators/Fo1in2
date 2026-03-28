@@ -125,8 +125,8 @@
 #
 
 
-{1000}{}{Jednota}
-{1001}{}{Vudce}
+{1000}{}{Unity|Jednota}
+{1001}{}{Master|Vudce}
 
 {1100}{Mast200}{Já jsem Vùdce. Nemusím ti odpovídat.}
 {1101}{Mast201}{Nejsem tu, abych odpovídal na tvoje otázky. Ty budeš odpovídat na moje.}

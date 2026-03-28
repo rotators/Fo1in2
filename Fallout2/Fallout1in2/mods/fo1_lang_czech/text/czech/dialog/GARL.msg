@@ -112,16 +112,16 @@
 {981}{}{Neotravuj.}
 {982}{}{Radìji bys mìl vypadnout.}
 
-{1000}{}{Khanove}
-{1001}{}{Garl|GARL}
-{1002}{}{Junktown|JUNKTOWN|JUNK TOWN}
-{1003}{}{Shady Sands|SHADY SANDS|SHADY|SANDS}
-{1004}{}{Hub|HUB}
-{1005}{}{Voda}
-{1006}{}{Tandi|TANDI}
-{1007}{}{Cip|Vodni Cip}
-{1008}{}{DOKTOR}
-{1009}{}{Pridat se|Pripojit se}
+{1000}{}{Khans|KHAN|RAIDER|RAIDERS|GREAT KHANS|Khanove|Najezdnik|najezdnici|Velci Khanove}
+{1001}{}{Garl}
+{1002}{}{Junktown|JUNK TOWN}
+{1003}{}{Shady Sands|SHADY|SANDS}
+{1004}{}{The Hub|HUB}
+{1005}{}{Water|voda}
+{1006}{}{Tandi}
+{1007}{}{Chip|Water Chip|Waterchip|Cip|vodni cip}
+{1008}{}{HELP|HURT|WOUNDED|INJURED|DOC|DOCTOR|pomoc|zraneny|zranene|doktor}
+{1009}{}{JOIN|BECOME KHAN|Pridat se|Pripojit se|pripojeni|stat se Khanem}
 
 {1100}{}{To jsme my, ty poskoku.}
 {1101}{}{Jsem vládce Khanù. Nejobávanìjší muž pustiny.}

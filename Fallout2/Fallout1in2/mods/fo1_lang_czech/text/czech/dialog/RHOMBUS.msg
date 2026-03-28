@@ -118,26 +118,26 @@
 
 
 {1000}{}{Vree}
-{1001}{}{Rhombus}
-{1002}{}{Talus}
-{1003}{}{Starsi}
-{1004}{}{Pisari}
-{1005}{}{Rytiri}
+{1001}{}{Rhombus|Head Paladin}
+{1002}{}{Talus|Talius}
+{1003}{}{Elder|starsi}
+{1004}{}{Scribes|Scribe|pisari|Pisar}
+{1005}{}{Knights|Knight|rytiri|Rytir}
 {1006}{}{Hub}
-{1007}{}{Disky}
-{1008}{}{Armada}
+{1007}{}{Disks|Holodisk|Holodisks|Disk|Disky}
+{1008}{}{Army|Strange Army|Mutant Army|Armada|armada mutantu}
 {1009}{}{Boneyard|LA|Los Angeles|Angels Boneyard|Kostnice|Andelska kostnice}
-{1010}{}{Paladinove}
-{1011}{}{Vudce}
-{1012}{}{Valka}
+{1010}{}{Paladins|Paladin|paladini|paladinove}
+{1011}{}{Master|Vudce}
+{1012}{}{War|Valka}
 {1013}{}{Exodus}
-{1014}{}{Podivna armada}
-{1015}{}{Obchodnici}
-{1016}{}{Ztracene karavany}
-{1017}{}{Deti Katedraly}
-{1018}{}{Zasveceni}
-{1019}{}{Cip}
-{1020}{}{Bratrstvo}
+{1014}{}{Strange Army|Podivna armada}
+{1015}{}{Merchants|Merchant|kupci|kupec|Obchodnici}
+{1016}{}{Missing Caravans|Caravans|Caravan|Missing Caravan|ztracena karavana|Ztracene karavany|karavany|karavana}
+{1017}{}{Children of the Cathedral|Cathedral|Children|CoC|Deti katedraly|Katedrala|deti}
+{1018}{}{Initiates|Initiate|zasvecenci|Zasvecenec|Zasveceni}
+{1019}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{1020}{}{Brotherhood|BoS|Brotherhood of Steel|Bratrstvo|Bratrstvo oceli}
 
 {1100}{Rhom38}{Ona je vrchní písaøka. Najdeš ji v knihovnì.}
 {1101}{Rhom39b}{To jsem já.}

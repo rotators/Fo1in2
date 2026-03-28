@@ -197,27 +197,27 @@
 
 
 {1000}{}{Gizmo}
-{1001}{}{Killian|KILIAN|SHERIFF|SHERRIF|MAYOR}
-{1002}{}{Lars|Captain}
+{1001}{}{Killian|KILIAN|SHERIFF|SHERRIF|MAYOR|serif|starosta}
+{1002}{}{Lars|Captain|kapitan}
 {1003}{}{Vinnie}
-{1004}{}{Doc|Morbid|Doc Morbid}
-{1005}{}{Lebkouni}
-{1006}{}{Khan|Khanove}
-{1007}{}{Zmije}
-{1008}{}{Darkwaters}
-{1009}{}{Crash}
-{1010}{}{GizmovoGizmos}
-{1011}{}{Skum}
-{1012}{}{Deti|Ketedrala}
-{1013}{}{Parac}
+{1004}{}{Doc|Morbid|Doc Morbid|Help|Wounded|Injured|Healing|doktor|doktor Morbid|pomoc|zranene|zraneny|leceni}
+{1005}{}{Skulz|Skullz|Skulls|Skuls|Lebkouni}
+{1006}{}{Khans|Khan|Khanove}
+{1007}{}{Vipers|Viper|Zmije}
+{1008}{}{Darkwater's|Darkwaters}
+{1009}{}{Crash|Crash House|Chraparna}
+{1010}{}{Gizmo's|Gizmos|Gizmovo|GizmovoGizmos}
+{1011}{}{Pitt|SKUM PITT|SKUMPITT|SKUM PIT|SKUMPIT|SKUM|SCUM PITT|SCUM PIT|SCUMPIT|SCUMPITT|SCUM|Spinadira}
+{1012}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
+{1013}{}{Claw|Deathclaw|Deathclaws|Claws|parac|paraci}
 {1014}{}{Hub}
 {1015}{}{Shady|Sands|Shady Sands}
-{1016}{}{Nekropolis}
-{1017}{}{Najezdnici}
-{1018}{}{Valka}
-{1019}{}{Karavany|Karavana|Supermutan|Super mutant|Supermutanti|Super mutanti}
+{1016}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{1017}{}{Raiders|Raider|najezdnici|Najezdnik}
+{1018}{}{War|Valka}
+{1019}{}{Strange|Caravans|Caravan|Supermutant|Super Mutant|Supermutants|Super Mutants|Karavany|Karavana|Supermutan|Supermutanti|Super mutanti}
 {1020}{}{Darkwater}
-{1021}{}{Junktown|Junk Town|Junk|Town}
+{1021}{}{Junktown|Junk Town|Junk|Town|Mesto}
 
 {1100}{Kill65}{Gizmovi patøí kasino ve východní èásti. Velice nápaditì ho pojmenoval po sobì. Dej si tam bacha.}
 {1101}{Kill66}{No, to jsem já. Kde si se toulal?}

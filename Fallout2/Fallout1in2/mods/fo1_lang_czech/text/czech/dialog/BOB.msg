@@ -6,8 +6,8 @@
 {105}{}{Co mi mùžeš øíct o Deckerovi?}
 {106}{}{Myslím, že bychom si mìli promluvit o doktoru Morbidovi a o nìkterých tvých tajných pøísadách.}
 {107}{}{Víš nìco o tìch ztracených karavanách?}
-{108}{}{Já a problémy?  Co v tobì budí ten dojem?}
-{109}{}{Já mít hlad!  Grrrrr!}
+{108}{}{Já a problémy? Co v tobì budí ten dojem?}
+{109}{}{Já mít hlad! Grrrrr!}
 {110}{}{Zdravím! Vítejte u Bobova stánku s leguány, restaurace pro celou rodinu. Chcete si objednat?}
 {111}{}{Dej mi leguána na špejli.}
 {112}{}{Víš nìco o vodním èipu?}
@@ -15,9 +15,9 @@
 {114}{}{Myslím, že bychom si mìli promluvit o doktoru Morbidovi a o nìkterých tvých tajných pøísadách.}
 {115}{}{Víš nìco o tìch ztracených karavanách?}
 {116}{}{Dìje se v Hubu nìco zajímavého?}
-{117}{}{Já mít hlad!  Grrrrr!}
+{117}{}{Já mít hlad! Grrrrr!}
 {118}{}{Lituji, ale leguáni už nám došli.}
-{119}{}{Máme pouze leguána na špejli.  Dvacet babek.}
+{119}{}{Máme pouze leguána na špejli. Dvacet babek.}
 {120}{}{Máme jenom kousky z leguána. Ale chutnají skvìle. Osm babek za jeden.}
 {121}{}{Jistì. Máme leguána na špejli za dvacet a naše extra vybrané kousky z leguána za osm babek.}
 {122}{}{Vezmu si celého leguána.}
@@ -31,8 +31,8 @@
 {130}{}{Myslím, že bychom si mìli promluvit o doktoru Morbidovi a o nìkterých tvých tajných pøísadách.}
 {131}{}{Víš nìco o tìch ztracených karavanách?}
 {132}{}{Dìje se v Hubu nìco zajímavého?}
-{133}{}{Já mít hlad!  Grrrrr!}
-{134}{}{Pan Decker je vznešený obchodník, který vede trochu ménì vznešený byznys.  Ještì nìco?}
+{133}{}{Já mít hlad! Grrrrr!}
+{134}{}{Pan Decker je vznešený obchodník, který vede trochu ménì vznešený byznys. Ještì nìco?}
 {135}{}{Chci nìjaké informace o doktoru Morbidovi.}
 {136}{}{Dej mi leguána na špejli.}
 {137}{}{Nic.}
@@ -48,7 +48,7 @@
 {147}{}{Vezmu si tu stovku.}
 {148}{}{Jdu na policii.}
 {149}{}{Pøestaò je prodávat. Hned.}
-{150}{}{Hrozný byznys.  Ti ubozí lidé.  Ach, ti ubozí lidé.  Pøijít tak strašným zpùsobem o život!  Je tu ještì nìco, co pro tebe mùžu udìlat?  Nakrmit tì, tøeba?}
+{150}{}{Hrozný byznys. Ti ubozí lidé. Ach, ti ubozí lidé. Pøijít tak strašným zpùsobem o život! Je tu ještì nìco, co pro tebe mùžu udìlat? Nakrmit tì, tøeba?}
 {151}{}{Dej mi leguána na špejli.}
 {152}{}{Víš nìco o vodním èipu?}
 {153}{}{Co mi mùžeš øíct o Deckerovi?}
@@ -62,12 +62,12 @@
 {161}{}{Víš nìco o tìch ztracených karavanách?}
 {162}{}{Dìje se v Hubu nìco zajímavého?}
 {163}{}{Nìkdo sejmul Deckera. Máme smutek. Aspoò do doby, než v Hubu dojde chlast.}
-{164}{}{Nìkdo sejmul šerifa Greene.  Ale nevím, co je s jeho zástupcem.}
-{165}{}{Daren Hightower byl zavraždìn.  Ani všechny ty jeho prachy mu nepomohly.  To je ironie, co?}
+{164}{}{Nìkdo sejmul šerifa Greene. Ale nevím, co je s jeho zástupcem.}
+{165}{}{Daren Hightower byl zavraždìn. Ani všechny ty jeho prachy mu nepomohly. To je ironie, co?}
 {166}{}{Nìkdo opravdu nasral jednoho dùležitýho èlovìka, protože jsem slyšel, že na jednoho ubohýho blba je vypsaná velká odmìna.}
 {167}{}{Nìkdo ukradl Hightowerovým náhrdelník. Èlovìèe, ten udìlal zatracenì velkou chybu. Už teï je po nìm.}
-{168}{}{Nìkdo zabil Jain, knìžku Dìtí katedrály.  Co jsem slyšel, tak to byla hroznì protivná ženská!}
-{169}{}{No, jediná nová vìc, co vím, je, že Dìti katedrály zabraly Nemocnici.  Jinak je tu poslední dobou hrozná nuda. Ale øeknu ti, že to je moc divná parta.}
+{168}{}{Nìkdo zabil Jain, knìžku Dìtí katedrály. Co jsem slyšel, tak to byla hroznì protivná ženská!}
+{169}{}{No, jediná nová vìc, co vím, je, že Dìti katedrály zabraly Nemocnici. Jinak je tu poslední dobou hrozná nuda. Ale øeknu ti, že to je moc divná parta.}
 {170}{}{Ještì nìco?}
 {171}{}{Dej mi leguána na špejli.}
 {172}{}{Víš nìco o vodním èipu?}
@@ -75,7 +75,7 @@
 {174}{}{Myslím, že bychom si mìli promluvit o doktoru Morbidovi a o nìkterých tvých tajných pøísadách.}
 {175}{}{Víš nìco o tìch ztracených karavanách?}
 {176}{}{Lituji, ale nemùžeš si to dovolit.}
-{177}{}{Ano, jeden celý leguánek, už se to nese!  Ještì nìco?}
+{177}{}{Ano, jeden celý leguánek, už se to nese! Ještì nìco?}
 {178}{}{Dej mi dalšího leguána na špejli.}
 {179}{}{Víš nìco o vodním èipu?}
 {180}{}{Co mi mùžeš øíct o Deckerovi?}
@@ -102,8 +102,8 @@
 {201}{}{Ty mizernej zkurvysynu!}
 {202}{}{Ty mizerná dìvko!}
 {203}{}{No dobrá, vyhrál jsi. Tady jsou tvoje peníze. Vem si je a už se nevracej!}
-{204}{}{Být tebou, pøíteli, tak si to rozmyslím.  Tady v Hubu umírají lidé velice rychle a snadno. A teï zmiz a už se sem nevracej!}
-{205}{}{Fajn, tak možná používám nìjaké ty trochu diskutabilní suroviny.  Ale to neznamená, že snad páchám vraždy.  Zboží doktora Morbida už je mrtvé, nebo ne?}
+{204}{}{Být tebou, pøíteli, tak si to rozmyslím. Tady v Hubu umírají lidé velice rychle a snadno. A teï zmiz a už se sem nevracej!}
+{205}{}{Fajn, tak možná používám nìjaké ty trochu diskutabilní suroviny. Ale to neznamená, že snad páchám vraždy. Zboží doktora Morbida už je mrtvé, nebo ne?}
 {206}{}{Jistì, že ano, Bobe. A jsem si jistý, že to policie pochopí.}
 {207}{}{Kanibalismus je zloèin proti lidstvu, Bobe. A já se postarám, abys za to zaplatil.}
 {208}{}{Možná, že ano. Možná, že ne. To je mi fuk. Je to nemorální. Nech toho.}

@@ -82,31 +82,31 @@
 {981}{}{Promiò, nemám páru.}
 {982}{}{Nikdy jsem o tom neslyšel.}
 
-{1000}{}{Killian|Kilian|Starosta}
+{1000}{}{Killian|Kilian|Sheriff|Sherrif|Mayor|serif|starosta}
 {1001}{}{Gizmo}
 {1002}{}{Junktown|Junk Town|Junk}
 {1003}{}{Shady Sands|Shady|Sands}
 {1004}{}{Hub}
-{1005}{}{Cip|vodni cip}
-{1006}{}{Casino|Kasino}
-{1007}{}{obchod}
-{1008}{}{parac}
-{1009}{}{doktor}
-{1010}{}{prodej}
-{1011}{}{pustina}
-{1012}{}{mesto}
-{1013}{}{Fallout}
-{1014}{}{zlocin|zlodej}
-{1015}{}{Necropolis|Nekropolis}
-{1016}{}{Boneyard|The Boneyard|L.A. Boneyard|LA|Los Angeles|LA Boneyard|Kostnice|L.A. kostnice|LA kostnice}
-{1017}{}{zvesti}
-{1018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum}
-{1019}{}{lebkouni}
-{1020}{}{Khanove|zmije|najezdnici}
-{1021}{}{Crash House}
-{1022}{}{pivo|chlast}
-{1023}{}{Brahmina|Brahminy}
-{1024}{}{prace}
+{1005}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{1006}{}{Casino|Gizmo's Casino|Gizmo's|Gizmos|Gizmos Casino|Kasino|Gizmovo kasino|Gizmovo}
+{1007}{}{Store|General Store|Darkwater|Darkwaters|obchod}
+{1008}{}{Deathclaw|Deathclaws|Claw|Claws|parac|paraci}
+{1009}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Morbid|Doc Morbid|medik|doktor|pomoc|leceni|zraneny|zranene|doktor Morbid}
+{1010}{}{Buy|Buying|Sell|Selling|Barter|Trade|Trading|Business|koupit|kupovat|prodat|prodavat|Obchodovani|prodej}
+{1011}{}{Wasteland|Wastes|Waste|Badland|Badlands|Waste Land|Outside|pustina}
+{1012}{}{Direction|Directions|Whereto|Where to|smer|kam|kudy}
+{1013}{}{Fallout|Fall out|nuclear fallout}
+{1014}{}{Stealing|Thief|Crime|Criminals|Thieves|Thiev|kradez|zlodej|zlocin|zlocinci|zlodeji}
+{1015}{}{Necropolis|City of the Dead|City of Dead|Nekropolis|Mesto mrtvych}
+{1016}{}{Boneyard|The Boneyard|L.A. Boneyard|LA|Los Angeles|LA Boneyard|Kostnice|Pohrebak|L.A. kostnice|LA kostnice}
+{1017}{}{Story|Stories|Rumor|Rumors|Rumour|Rumours|Zvesti|povest|povesti|zvest}
+{1018}{}{Pitt|Skum Pitt|SkumPitt|Skumpit|Skum|Skum Pit|ScumPit|ScumPitt|Scum|Spinadira}
+{1019}{}{Skuls|Skulz|Skulls|Skullz|Lebkouni}
+{1020}{}{Khan|Khans|Viper|Vipers|Raider|Raiders|Khanove|Zmije|Najezdnik|najezdnici}
+{1021}{}{Crash|Crash House|Chraparna}
+{1022}{}{Beer|Booze|pivo|chlast}
+{1023}{}{Brahmin|Brahmins|Brahma|brahmina|Brahminy}
+{1024}{}{Job|Work|Task|Money|prace|ukol|penize}
 
 {1100}{}{Killian je starosta. Vede taky vlastní obchod.}
 {1101}{}{On vede kasino. Je to pìknej gauner.}

@@ -121,23 +121,23 @@
 #
 
 
-{1000}{}{vudce}
-{1001}{}{valka}
-{1002}{}{disky}
-{1003}{}{bratrstvo}
-{1004}{}{Cip}
-{1005}{}{staresina}
-{1006}{}{Rhombus}
+{1000}{}{Master|Vudce}
+{1001}{}{War|Valka}
+{1002}{}{Disks|Holodisk|Holodisks|Disk|Holo|disky}
+{1003}{}{Brotherhood|BoS|Brotherhood of Steel|Bratrstvo|Bratrstvo oceli}
+{1004}{}{Water Chip|Waterchip|Chip|vodni cip|Cip}
+{1005}{}{Elder|High Elder|starsi|Vrchni staresina|staresina}
+{1006}{}{Rhombus|Head Paladin}
 {1007}{}{Exodus}
-{1008}{}{Cizi armada}
-{1009}{}{Kupci}
-{1010}{}{Ztracené karavany}
+{1008}{}{Army|Strange Army|Mutant Army|Armada|Podivna armada|cizi armada}
+{1009}{}{Merchants|Merchant|kupci|kupec}
+{1010}{}{Missing Caravans|Caravans|Caravan|Missing Caravan|ztracena karavana|Ztracene karavany|karavany|karavana}
 {1011}{}{Hub}
-{1012}{}{Deti Katedraly}
-{1013}{}{Zasveceni}
-{1014}{}{pisari}
-{1015}{}{Rytiri}
-{1016}{}{Paladinove}
+{1012}{}{Children of the Cathedral|Cathedral|Children|CoC|Deti katedraly|Katedrala|deti}
+{1013}{}{Initiates|Initiate|zasvecenci|Zasvecenec|Zasveceni}
+{1014}{}{Scribes|Scribe|pisari|Pisar}
+{1015}{}{Knights|Knight|rytiri|Rytir}
+{1016}{}{Paladins|Paladin|paladini|paladinove}
 {1017}{}{Holodisk|Holo-disk|Holo-disc|Holodisc|Holo}
 
 {1100}{Vree300}{Kdo? To jméno mi zní povìdomì. Možná je to vùdce nìkterých mutantù.}

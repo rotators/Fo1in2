@@ -40,8 +40,8 @@
 {980}{}{Teï nemám náladu na vykecávání.}
 {981}{}{Promiò, ale teï opravdu nemám náladu na vykecávání.}
 
-{1000}{}{bratrstvo}
-{1001}{}{oceli}
+{1000}{}{Brotherhood|Bratrstvo}
+{1001}{}{Steel|ocel}
 {1002}{}{Talus}
 
 ## Answers

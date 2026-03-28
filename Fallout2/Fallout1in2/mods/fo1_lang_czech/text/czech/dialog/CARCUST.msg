@@ -31,5 +31,5 @@
 {1107}{}{Jsem rád, že sem Obchodníci s vodou už nechodí.}
 {1109}{}{Cabbot je náš vítaè. Promluv si s ním nebo s Darrellem.}
 {1110}{}{Karmínová karavana má lepší výbìr.}
-{1111}{}{Nejsou Obchodníci Far Go prostì nejlepší?}
+{1111}{}{Nejsou lidi od Far Go fajn parta?}
 {1112}{}{Karmínová karavana je pro mì pøíliš obyèejná.}

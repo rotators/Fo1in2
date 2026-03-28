@@ -156,7 +156,7 @@
 {317}{}{Ale drahoušku, dost mì to ruší. Už ti to prostì nebudu opakovat.}
 {318}{}{Ty jsi... Dobøe! Dobøe! Ty jsi hluchý? Poslouchej poøádnì, už to nebudu opakovat!}
 {319}{}{Myslím, že to už staèí. Už to opakovat nebudu.}
-{320}{}{Neposlouchal, co?  To máš blbý, protože znovu už ti to neøeknu.}
+{320}{}{Neposlouchal, co? To máš blbý, protože znovu už ti to neøeknu.}
 {321}{}{Oh, to jsou strašliví lidé. Radši o nich už nebudu mluvit!}
 {322}{}{Nicole ti o nás asi øekla. Snažíme se vštípit nìco dobrého tìmhle tupohlavejm, zabednìnejm násilnickejm parchantùm...
 Och, samozøejmì teï nemluvím o tobì.}
@@ -206,20 +206,20 @@ Och, samozøejmì teï nemluvím o tobì.}
 #
 
 
-{1000}{}{Nasledovnici}
+{1000}{}{Followers|Apocalypse|Followers of the Apocalypse|FoA|nasledovnici|apokalypsa|Nasledovnici apokalypsy}
 {1001}{}{Nicole}
-{1002}{}{Katedrala}
+{1002}{}{Children of the Cathedral|Children|Cathedral|CoC|Deti katedraly|deti|Katedrala}
 {1003}{}{Morpheus}
-{1004}{}{Vudce}
-{1005}{}{Nightkin}
-{1006}{}{Temny)}
+{1004}{}{Master|Vudce}
+{1005}{}{Nightkin|Nightkins}
+{1006}{}{Dark|Dark God|God|Temny|Temny buh|Buh}
 {1007}{}{Auditorium}
-{1008}{}{Svatyne}
-{1009}{}{servitori}
-{1010}{}{Rad)}
-{1011}{}{Apokalypsa}
-{1012}{}{Buh}
-{1013}{}{Mutanti}
+{1008}{}{Sanctum|Svatyne}
+{1009}{}{Servitors|Servitor|Sluzebnici|servitori}
+{1010}{}{Order|High Order|Rad|Nejvyssi rad}
+{1011}{}{Apocalypse|Apokalypsa}
+{1012}{}{God|Buh}
+{1013}{}{Mutants|Mutant|mutanti}
 
 {1100}{laura74}{Oh, to jsou hrozní lidé. O nich se nebudu bavit!}
 {1101}{laura75}{No, nevím o èem to mluvíš.}

@@ -1613,7 +1613,7 @@
 {85000}{}{Dveøe}
 {85001}{}{Naprosto normální døevìné dveøe.}
 {85100}{}{Cedule}
-{85101}{}{Reklamní cedule spoleènosti Friendly Lending Company.}
+{85101}{}{Reklamní cedule Pøátelské úvìrové spoleènosti.}
 {85200}{}{Emblém}
 {85201}{}{Vypadá to jako nìjaký náboženský symbol.}
 {85300}{}{Operaèní stùl}
@@ -1639,7 +1639,7 @@
 {87000}{}{Cedule}
 {87001}{}{Stojí na ní: POLICIE.}
 {87100}{}{Cedule}
-{87101}{}{Poutaè firmy Far Go Traders.}
+{87101}{}{Poutaè Far Go.}
 {87200}{}{Cedule}
 {87201}{}{Stojí na ní: Gun Runneøi.}
 {87300}{}{Cedule}
@@ -1688,9 +1688,9 @@
 {89500}{}{Sprcha}
 {89501}{}{Normální sprchový kout.}
 {89600}{}{Cedule}
-{89601}{}{Poutaè banky Friendly Lending Company.}
+{89601}{}{Poutaè Pøátelské úvìrové spoleènosti.}
 {89700}{}{Cedule}
-{89701}{}{Poutaè banky Friendly Lending Company.}
+{89701}{}{Poutaè Pøátelské úvìrové spoleènosti.}
 {89800}{}{Plakát}
 {89801}{}{Plakát nìjakého hororového filmu z doby pøed Válkou.}
 {89900}{}{Plakát}
