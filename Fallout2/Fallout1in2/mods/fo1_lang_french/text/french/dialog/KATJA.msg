@@ -157,10 +157,12 @@
 {1032}{}{Paladins}
 {1033}{}{Scribes}
 {1034}{}{Enfants}
+{1035}{}{Enfants}
 {1036}{}{Confrérie}
 {1037}{}{Cuves}
 {1038}{}{Base}
 {1039}{}{Militaire}
+{1040}{}{Militaire}
 {1041}{}{Apocalypse}
 {1042}{}{Mutants}
 {1043}{}{Morpheus}
@@ -222,10 +224,12 @@
 {1132}{}{Je n'en sais pas plus que toi là-dessus.}
 {1133}{}{Je n'en sais pas plus que toi là-dessus.}
 {1134}{}{Je n'aime pas les enfants.}
+{1135}{}{Je n'aime pas les enfants.}
 {1136}{}{J'ai entendu dire que ce sont des sortes de moines high-tech.}
 {1137}{}{Je n'en sais pas plus que toi là-dessus.}
 {1138}{}{Je n'en sais pas plus que toi là-dessus.}
 {1139}{}{Je suppose qu'il reste des vestiges militaires.}
+{1140}{}{Je suppose qu'il reste des vestiges militaires.}
 {1141}{}{Tu veux parler de la grande guerre ? Ouah, tu as dû vivre en ermite pour ne rien savoir là-dessus.}
 {1142}{}{J'ai vu un rat à trois yeux, une fois. C'est à peu près tout ce que je sais sur les mutants.}
 {1143}{}{Je crois que c'est le Grand Prêtre de la Cathédrale, ou quelque chose dans le genre.}

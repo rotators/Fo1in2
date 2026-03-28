@@ -158,10 +158,12 @@
 {1032}{}{Paladins}
 {1033}{}{Scribes}
 {1034}{}{Children}
+{1035}{}{Children}
 {1036}{}{Brotherhood}
 {1037}{}{Vats}
 {1038}{}{Military}
 {1039}{}{Base}
+{1040}{}{Base}
 {1041}{}{Apocalypse}
 {1042}{}{Mutants}
 {1043}{}{Morpheus}
@@ -223,10 +225,12 @@
 {1132}{}{I don't know any more about that than you do.}
 {1133}{}{I don't know any more about that than you do.}
 {1134}{}{I don't like kids.}
+{1135}{}{I don't like kids.}
 {1136}{}{I hear they're some sort of high-tech monks.}
 {1137}{}{I don't know any more about that than you do.}
 {1138}{}{I don't know any more about that than you do.}
 {1139}{}{I suppose there must be some remnants of the old military.}
+{1140}{}{I suppose there must be some remnants of the old military.}
 {1141}{}{You mean the big war? Wow, you sure have led a sheltered life if you don't know anything about that.}
 {1142}{}{I've seen a rat with three eyes once. That's about all I know about mutants.}
 {1143}{}{I think he's a High Priest for the Cathedral, or something.}
