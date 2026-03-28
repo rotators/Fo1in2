@@ -150,10 +150,12 @@
 {1032}{}{Paladin}
 {1033}{}{Scribe}
 {1034}{}{Children of the Cathedral}
+{1035}{}{Children of the Cathedral}
 {1036}{}{Brotherhood of Steel}
 {1037}{}{Container}
 {1038}{}{Stützpunkt}
 {1039}{}{Militärbasis}
+{1040}{}{Militärbasis}
 {1041}{}{Apokalypse}
 {1042}{}{Mutanten}
 {1043}{}{Morpheus}
@@ -215,10 +217,12 @@
 {1132}{}{Davon weiß ich nicht mehr als du.}
 {1133}{}{Davon weiß ich nicht mehr als du.}
 {1134}{}{Ich mag keine Kinder.}
+{1135}{}{Ich mag keine Kinder.}
 {1136}{}{Sollen so was wie High-Tech-Mönche sein.}
 {1137}{}{Davon weiß ich nicht mehr als du.}
 {1138}{}{Davon weiß ich nicht mehr als du.}
 {1139}{}{Es gibt wohl irgendwo Überreste einer alten Militärbasis.}
+{1140}{}{Es gibt wohl irgendwo Überreste einer alten Militärbasis.}
 {1141}{}{Du meinst den großen Krieg? Wau! Du musst wirklich ein ziemlich abgeschiedenes Leben geführt haben, wenn du davon nichts weißt.}
 {1142}{}{Ich habe einmal eine Ratte mit drei Augen gesehen. Das ist so ungefähr alles, was ich an Mutanten gesehen habe.}
 {1143}{}{Ich glaube, er ist ein Hohepriester der Children of the Cathedral oder so was.}
