@@ -1,0 +1,1 @@
+{100}{}{Je to jasné, že tohle má být zasedací místnost Vaultu. Ale tam, kde mìla být skøíò s nouzovými zásobami, jsou teï jen tuny kamení.}

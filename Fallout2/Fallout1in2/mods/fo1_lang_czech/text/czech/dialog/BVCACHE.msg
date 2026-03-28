@@ -1,0 +1,1 @@
+{100}{}{Na východní zdi je skøíòka s pohotovostními lékaøskými potøebami. Ty by se ti mohly hodit.}

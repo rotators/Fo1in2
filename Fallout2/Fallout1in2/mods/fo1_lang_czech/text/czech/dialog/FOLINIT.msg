@@ -1,0 +1,27 @@
+{100}{}{Vidíš zasvìcence Následovníkù Waltera.}
+{101}{}{Vidíš zasvìcence Následovníkù Nicolase.}
+{102}{}{Vidíš zasvìcence Následovníkù Williama.}
+{103}{}{Vidíš zasvìcence Následovníkù Matthewa.}
+{104}{}{Vidíš zasvìcence Následovníkù Johna.}
+{105}{}{Vidíš zasvìcenkyni Následovníkù Mellenii.}
+{106}{}{Vidíš zasvìcenkyni Následovníkù Jeanne.}
+{107}{}{Vidíš zasvìcenkyni Následovníkù Lorraine.}## was Lori, then Gloria
+{108}{}{Vidíš zasvìcenkyni Následovníkù Sarah.}
+{109}{}{Vidíš zasvìcenkyni Následovníkù Christine.}
+{110}{}{Nech je mír tvım prùvodcem touto nehostinnou pustinou.}
+{111}{}{Nemùu se doèkat, a budem bojovat s Dìtmi.}
+{112}{}{Kdy nemùu bıt uèenec, chci bıt písaøem.}
+{113}{}{Moná bych chtìl jednou bıt uèencem.}
+{114}{}{Ty gangy by skuteènì mìly pøestat bojovat.}
+{115}{}{Chtìl bych vìdìt, jakı by byl svìt, kdyby byl mír.}
+{116}{}{Slıchám, e nìkdo dává naše znalosti Dìtem.}
+{117}{}{Nightkinové mì dìsí.}
+{118}{}{Jenom zvìdové smí ven po západu slunce.}
+{119}{}{Zajímalo by mì, kde berou uèenci svoje knihy.}
+{120}{}{Kvùli tomu špiónovi jsme ztratili spoustu lidí.}
+{121}{}{Zaslechl jsem Neila øíkat, e ten špión je pravdìpodobnì nìkdo z tìch novıch lidí.}
+{122}{}{Prosím, najdi toho špiona rychle.}
+{123}{}{Zajímalo by mne, jestli nás Nicole nechá pouívat tuto bojovou techniku.}
+{124}{}{Kdyby nás teï Amber vidìla, zuøila by.}
+{125}{}{Neil byl šasten, e jsi nás chtìl uèit.}
+{126}{}{Teï dokáu sejmout všechny Dìti sám!}
