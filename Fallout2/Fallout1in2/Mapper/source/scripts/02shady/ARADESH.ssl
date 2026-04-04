@@ -142,6 +142,8 @@ variable pickup_attempt;
 #define LVAR_Caught_Stealing         (9)
 #define LVAR_RadscorpionGone         (10)
 
+#define grief_hex       (32945)
+
 procedure start begin
 end
 
@@ -181,7 +183,7 @@ procedure talk_p_proc begin
       end
    end
    if (local_var(LVAR_Grief) == 1) then begin
-      self_walk_to_tile(32945);
+      self_walk_to_tile(grief_hex);
    end
 end
 
@@ -238,7 +240,13 @@ procedure do_dialogue begin
          call aradesh46;
    end
    else begin
-      if tandi_is_kidnapped then begin
+      // Workaround, to have Aradesh react to Tandi's death if she died while being kidnapped.
+      if get_tandi_died then begin
+         set_global_var(GVAR_TANDI_KIDNAPPED_DEAD, 2);
+         call aradesh37;
+      end
+
+      else if tandi_is_kidnapped then begin
          set_local_var(LVAR_Herebefore, 1);
          if tandi_quest_inactive then
             call aradesh39;
@@ -733,6 +741,7 @@ end
 
 procedure aradesh37 begin
    Reply(219);
+   // This would only trigger if Tandi dies while still in the Khan prison cell, which is why we added a workaround in do_dialogue
    if not(is_tandi_alive) then begin
       NOption(220, aradesh38, 5);
       NOption(221, aradesh37a, 4);
