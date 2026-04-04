@@ -114,7 +114,7 @@
 {209}{Over_60}{Retournes-y  et trouve-le. Il faut le détruire pour la sécurité de l'Abri. Essaie à l'Ouest, la plupart des mutants semblent être par là-bas.}
 {210}{Over_61}{Quoi ? T'as tué le chef des mutants ?}
 {211}{}{Euh, ben, euh...}
-{212}{Over_61aS}{Toujours plus de mutants ? Il faut que tu détruises leurs Cuves ? Sacré boulot ! Retourne t'occuper de ça.}
+{212}{Over_61a}{Toujours plus de mutants ? Il faut que tu détruises leurs Cuves ? Sacré boulot ! Retourne t'occuper de ça.}
 {213}{Over_62}{Alors, que deviennent les mutants ?}
 {214}{}{Je les ai fait sauter.}
 {215}{}{Les Cuves des mutants sont détruites.}

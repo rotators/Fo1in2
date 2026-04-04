@@ -55,16 +55,16 @@
 {1005}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners}
 {1006}{}{Hub}
 {1007}{}{Boneyard|LA|Los Angeles|Angels Boneyard}
-{1010}{}{Junktown|Junk Town}
-{1011}{}{Nicole}
+{1008}{}{Junktown|Junk Town}
+{1009}{}{Nicole}
 
-{1110}{}{Eine kleine Stadt im Süden. Manchmal kommen welche von dort.}
-{1111}{}{Das sind die friedliebenden Idioten, die hier in der Nähe leben.}
-{1112}{}{Eine seltsame Sekte südlich von Adytum und dem Rest des Boneyard. Nicole sagt, dass die was vorhaben.}
-{1113}{}{Eine ultrabrutale Gang westlich von uns. Oder waren Sie zumindest... Ich weiß nicht was aus ihnen geworden ist, aber ihre Basis wimmelt jetzt vor Deathclaws.}
-{1114}{}{Eine Gang im Osten. Die setzen Vibromesser ein.}
-{1115}{}{Eine Gang aus dem Hub, die Waffen verkauft. Die sind nördlich von hier.}
-{1116}{}{Der Hub ist eine große Stadt voller Händler und Geschäfte im Osten.}
-{1117}{}{Das ist der Angel's Boneyard, die Überreste der alten Stadt Los Angeles.}
-{1120}{}{Junktown ist eine Kleinstadt nördlich vom Hub.}
-{1121}{}{Sie ist die Anführerin der Followers of the Apocalypse.}
+{1100}{}{Eine kleine Stadt im Süden. Manchmal kommen welche von dort.}
+{1101}{}{Das sind die friedliebenden Idioten, die hier in der Nähe leben.}
+{1102}{}{Eine seltsame Sekte südlich von Adytum und dem Rest des Boneyard. Nicole sagt, dass die was vorhaben.}
+{1103}{}{Eine ultrabrutale Gang westlich von uns. Oder waren Sie zumindest... Ich weiß nicht was aus ihnen geworden ist, aber ihre Basis wimmelt jetzt vor Deathclaws.}
+{1104}{}{Eine Gang im Osten. Die setzen Vibromesser ein.}
+{1105}{}{Eine Gang aus dem Hub, die Waffen verkauft. Die sind nördlich von hier.}
+{1106}{}{Der Hub ist eine große Stadt voller Händler und Geschäfte im Osten.}
+{1107}{}{Das ist der Angel's Boneyard, die Überreste der alten Stadt Los Angeles.}
+{1108}{}{Junktown ist eine Kleinstadt nördlich vom Hub.}
+{1109}{}{Sie ist die Anführerin der Followers of the Apocalypse.}

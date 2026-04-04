@@ -166,10 +166,12 @@
 {1032}{}{Paladins}
 {1033}{}{Scribes}
 {1034}{}{Enfants}
+{1035}{}{Enfants}
 {1036}{}{Confrérie}
 {1037}{}{Cuves}
 {1038}{}{Base}
 {1039}{}{Militaire}
+{1040}{}{Militaire}
 {1041}{}{Apocalypse}
 {1042}{}{Mutants}
 {1043}{}{Morpheus}
@@ -231,10 +233,12 @@
 {1132}{}{Désolé mais je ne peux pas t'aider.}
 {1133}{}{Désolé mais je ne peux pas t'aider.}
 {1134}{}{Désolé mais je ne peux pas t'aider.}
+{1135}{}{Désolé mais je ne peux pas t'aider.}
 {1136}{}{Désolé mais je ne peux pas t'aider.}
 {1137}{}{Désolé mais je ne peux pas t'aider.}
 {1138}{}{Les militaires disposaient de quelques bases secrètes dispersées dans le coin. Mais je ne sais pas où exactement.}
 {1139}{}{Les militaires disposaient de quelques bases secrètes dispersées dans le coin. Mais je ne sais pas où exactement.}
+{1140}{}{Les militaires disposaient de quelques bases secrètes dispersées dans le coin. Mais je ne sais pas où exactement.}
 {1141}{}{La catastrophe nucléaire fut le résultat de beaucoup de fierté et de stupidité. Maintenant, nous en payons le prix.}
 {1142}{}{Il se passe des choses étranges là-bas. J'y ai vu des scorpions géants et des vaches à deux têtes et j'ai entendu dire que Nécropolis abritait des Goules à l'apparence humaine.}
 {1143}{}{Désolé mais je ne peux pas t'aider.}

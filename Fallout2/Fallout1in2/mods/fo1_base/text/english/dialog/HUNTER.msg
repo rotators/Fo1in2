@@ -55,16 +55,16 @@
 {1005}{}{Gun Runners|Gun Runner|Gunrunner|Gunrunners}
 {1006}{}{Hub}
 {1007}{}{Boneyard|LA|Los Angeles|Angels Boneyard}
-{1010}{}{Junktown|Junk Town}
-{1011}{}{Nicole}
+{1008}{}{Junktown|Junk Town}
+{1009}{}{Nicole}
 
-{1110}{}{A small town to the south. Occasionally some of them visit.}
-{1111}{}{Those are the peace-loving freaks who live near us.}
-{1112}{}{A strange cult south of Adytum and in the Boneyard. Nicole says that they are up to something.}
-{1113}{}{An ultra-violent gang to our west. It was, at least... I don't really know what happened but their base is swarming with Deathclaws now.}
-{1114}{}{A gang to the east. They use vibro-knives.}
-{1115}{}{A gang that came from the Hub, and sells guns. They are north of here.}
-{1116}{}{The Hub is a large city of traders and businesses to the east.}
-{1117}{}{This place is the Angel's Boneyard, the remnants of the old city of Los Angeles.}
-{1120}{}{Junktown is a small city just north of the Hub.}
-{1121}{}{She's the leader of the Followers.}
+{1100}{}{A small town to the south. Occasionally some of them visit.}
+{1101}{}{Those are the peace-loving freaks who live near us.}
+{1102}{}{A strange cult south of Adytum and in the Boneyard. Nicole says that they are up to something.}
+{1103}{}{An ultra-violent gang to our west. It was, at least... I don't really know what happened but their base is swarming with Deathclaws now.}
+{1104}{}{A gang to the east. They use vibro-knives.}
+{1105}{}{A gang that came from the Hub, and sells guns. They are north of here.}
+{1106}{}{The Hub is a large city of traders and businesses to the east.}
+{1107}{}{This place is the Angel's Boneyard, the remnants of the old city of Los Angeles.}
+{1108}{}{Junktown is a small city just north of the Hub.}
+{1109}{}{She's the leader of the Followers.}
