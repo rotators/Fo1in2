@@ -28,6 +28,8 @@
 #define get_tandi_returned             (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
 #define get_tandi_died                 (global_var(GVAR_TANDI_KIDNAPPED_DEAD) == 1)
 
+#define set_tandi_died_completed       set_global_var(GVAR_TANDI_KIDNAPPED_DEAD, 2)
+
 #define tandi_quest_inactive           (global_var(GVAR_TANDI_RESCUE) == 0)
 #define tandi_quest_active             (global_var(GVAR_TANDI_RESCUE) == 1)
 #define tandi_quest_completed          (global_var(GVAR_TANDI_RESCUE) == 2)
