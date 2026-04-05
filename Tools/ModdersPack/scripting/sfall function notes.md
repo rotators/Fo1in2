@@ -119,7 +119,7 @@ FUNCTION REFERENCE
 -----
 #### `void inc_npc_level(int pid/string name)`
 - Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party.
-- This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** or **PartyMemberNonRandomLevelUp** setting.
+- This function ignores the player's minimum level and the required number of level-ups between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** or **PartyMemberNonRandomLevelUp** setting.
 
 -----
 #### `int get_npc_level(int pid/string name)`
