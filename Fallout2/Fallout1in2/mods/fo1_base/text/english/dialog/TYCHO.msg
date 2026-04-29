@@ -168,10 +168,12 @@
 {1032}{}{Paladins}
 {1033}{}{Scribes}
 {1034}{}{Children}
+{1035}{}{Children}
 {1036}{}{Brotherhood}
 {1037}{}{Vats}
 {1038}{}{Military}
 {1039}{}{Base}
+{1040}{}{Base}
 {1041}{}{Apocalypse}
 {1042}{}{Mutants}
 {1043}{}{Morpheus}
@@ -233,10 +235,12 @@
 {1132}{}{I'm sorry, I can't help you there.}
 {1133}{}{I'm sorry, I can't help you there.}
 {1134}{}{I'm sorry, I can't help you there.}
+{1135}{}{I'm sorry, I can't help you there.}
 {1136}{}{I'm sorry, I can't help you there.}
 {1137}{}{I'm sorry, I can't help you there.}
 {1138}{}{The military had several secret bases scattered about, I know. I just don't know where.}
 {1139}{}{The military had several secret bases scattered about, I know. I just don't know where.}
+{1140}{}{The military had several secret bases scattered about, I know. I just don't know where.}
 {1141}{}{Nuclear armageddon was the result of pride and foolishness. Now, we're paying the price.}
 {1142}{}{Certainly there are some strange things out there. I've seen mutated scorpions and 2-headed cows, and I've heard that Necropolis is home to ghouls, who seem human but are far different.}
 {1143}{}{I'm sorry, I can't help you there.}

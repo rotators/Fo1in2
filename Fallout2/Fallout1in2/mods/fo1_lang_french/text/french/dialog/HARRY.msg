@@ -72,7 +72,7 @@
 {171}{Harry203}{Toi tué mon frère, Barry !}
 {172}{Harry204}{Toi tué Terry !}
 {173}{Harry205}{Toi tué Sally ! Vrai, il avait vilain nom, mais pas raison pour tuer lui !}
-{174}{Harry26}{Pas embêter moi. Laisser tranquille !}
+{174}{Harry206}{Pas embêter moi. Laisser tranquille !}
 {175}{Harry207}{Euh... sais pas.}
 {176}{Harry300}{Sais pas mais lui commander les gens.}
 {177}{Harry301}{Lui Lou Tenant. Mon chef. Pas dire à lui, mais Harry pourrait prendre bonnes vacances.}

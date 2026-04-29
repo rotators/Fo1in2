@@ -169,10 +169,12 @@
 {1032}{}{Paladins}
 {1033}{}{Scribes}
 {1034}{}{Children}
+{1035}{}{Children}
 {1036}{}{Brotherhood}
 {1037}{}{Container}
 {1038}{}{Militär}
 {1039}{}{Stützpunkt}
+{1040}{}{Stützpunkt}
 {1041}{}{Apocalypse}
 {1042}{}{Mutanten}
 {1043}{}{Morpheus}
@@ -234,10 +236,12 @@
 {1132}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
 {1133}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
 {1134}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
+{1135}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
 {1136}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
 {1137}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}
 {1138}{}{Ich weiß, dass das Militär mehrere geheime Stützpunkte hatte. Wo genau, weiß ich nicht.}
 {1139}{}{Ich weiß, dass das Militär mehrere verstreute geheime Stützpunkte hatte. Wo genau, weiß ich nicht.}
+{1140}{}{Ich weiß, dass das Militär mehrere verstreute geheime Stützpunkte hatte. Wo genau, weiß ich nicht.}
 {1141}{}{Die nukleare Katastrophe war ein Ergebnis von Stolz und Dummheit. Jetzt zahlen wir den Preis dafür.}
 {1142}{}{Sicherlich gibt es da draußen ein paar seltsame Dinge. Ich habe  mutierte Skorpione gesehen und Kühe. Außerdem soll Necropolis das Zuhause von Ghuls sein. Sie sehen zwar menschlich aus, sind aber ganz anders.}
 {1143}{}{Tut mir leid, da kann ich dir nicht weiterhelfen.}

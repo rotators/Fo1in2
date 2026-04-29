@@ -152,7 +152,7 @@
 {251}{Kill73}{C'est ma boutique. T'en as besoin, si j'ai bien compris.}
 {252}{Kill74}{Ils ont des chambres bon marché. Pas trop sales non plus. Mais joue pas au plus malin avec la proprio, Marcelles ! Elle t'arrache la tête si tu veux te payer la sienne.}
 {253}{Kill75}{Ah, le casino, c'est chez Gizmo à l'entrée de la ville. Ca m'étonne que tu l'aies pas remarqué en arrivant. En général, ça pue à des kilomètres à la ronde. Mais bon, ça attire les touristes.}
-{254}{Kill76}{C'est notre café attitré. La bouffe, ça va, et la bière est extra. Neil, le proprio, il supporte pas un mot plus haut que l'autre, même pas des Pillards.}
+{254}{Kill76}{C'est notre café attitré. La bouffe, ça va, et la bière est extra. Neal, le proprio, il supporte pas un mot plus haut que l'autre, même pas des Pillards.}
 {255}{Kill76a}{Pas grand-chose à dire. Doc Morbide, ça le fout en boule parce qu'ils font des prix imbattables sur le matériel médical. Ils sont à l'Ouest.}
 {256}{Kill77}{Le Griffemort ? Oh, des contes à dormir debout. Il boit du sang et hurle à la pleine lune ! Tu parles.}
 {257}{Kill78}{Eh bien, le Centre est le principal lieu de commerce. Tout ce qu'est pas ici, tu le trouveras sans doute au Centre. Mais c'est peut-être pas un endroit sûr de nos jours, avec toutes les bizarreries qui se passent.}
@@ -235,7 +235,7 @@
 {1108}{Kill73}{C'est ma boutique. T'en as besoin, si j'ai bien compris.}
 {1109}{Kill74}{Ils ont des chambres bon marché. Pas trop sales non plus. Mais joue pas au plus malin avec la proprio, Marcelles ! Elle t'arrache la tête si tu veux te payer la sienne.}
 {1110}{Kill75}{Ah, le casino, c'est chez Gizmo à l'entrée de la ville. Ca m'étonne que tu l'aies pas remarqué en arrivant. En général, ça pue à des kilomètres à la ronde. Mais bon, ça attire les touristes.}
-{1111}{Kill76}{C'est notre café attitré. La bouffe, ça va, et la bière est extra. Neil, le proprio, il supporte pas un mot plus haut que l'autre, même pas des Pillards.}
+{1111}{Kill76}{C'est notre café attitré. La bouffe, ça va, et la bière est extra. Neal, le proprio, il supporte pas un mot plus haut que l'autre, même pas des Pillards.}
 {1112}{Kill76a}{Pas grand-chose à dire. Doc Morbide, ça le fout en boule parce qu'ils font des prix imbattables sur le matériel médical. Ils sont à l'Ouest.}
 {1113}{Kill77}{Le Griffemort ? Oh, des contes à dormir debout. Il boit du sang et hurle à la pleine lune ! Tu parles.}
 {1114}{Kill78}{Eh bien, le Centre est le principal lieu de commerce. Tout ce qu'est pas ici, tu le trouveras sans doute au Centre. Mais c'est peut-être pas un endroit sûr de nos jours, avec toutes les bizarreries qui se passent.}

@@ -216,7 +216,7 @@
 {311}{BUTCH103}{Aux dernières nouvelles, il est maire du Sanctuaire.}
 {312}{BUTCH104}{Ah, ils dirigent un vieil hôpital assez grand, au Sud du centre-ville. Une bande de culs-bénits cinglés, si tu veux mon avis.}
 {313}{BUTCH105}{Il est à la tête des Enfants de la Cathédrale, là-bas au Cimetière.}
-{314}{BUTCH105a}{Jain est la Grande Prêtresse des Enfants de la Cathédrale. Elle a installé l'hôpital dans le Centre.}
+{314}{BUTH105a}{Jain est la Grande Prêtresse des Enfants de la Cathédrale. Elle a installé l'hôpital dans le Centre.}
 {315}{BUTCH106}{Euh, oui, je... j'ai entendu des histoires, c'est tout. Mais rien de vrai.}
 {316}{BUTCH107}{Les meilleurs prix sur les meilleurs fusils de la ville. Et tout le monde le pense ; je dis pas ça parce que j'suis le proprio ! Tu sors d'ici, tu tournes à droite. Tu peux pas le manquer.}
 {317}{BUTCH108}{Ah ça, on y mange bien chez Bob ! Bob a les meilleurs iguanes grillés de ce coin du désert.}
@@ -261,7 +261,7 @@
 {501}{butch63a}{Eh ! Ca suffit comme ça !}
 {502}{BUTCH69a}{Comme je te l'ai dit...}
 {503}{BUTCH70b}{Comme je l'ai dit...}
-{504}{BUTCH105b}{Je vois pas du tout de quoi tu parles.}
+{504}{BUTH105b}{Je vois pas du tout de quoi tu parles.}
 
 #
 # Tell-Me-Abouts generic responses
@@ -345,7 +345,7 @@
 {1127}{BUTCH103}{Aux dernières nouvelles, il est maire du Sanctuaire.}
 {1128}{BUTCH104}{Ah, ils dirigent un vieil hôpital assez grand, au Sud du centre-ville. Une bande de culs-bénits cinglés, si tu veux mon avis.}
 {1129}{BUTCH105}{Il est à la tête des Enfants de la Cathédrale, là-bas au Cimetière de L.A.}
-{1130}{BUTCH105a}{Jain est la Grande Prêtresse des Enfants de la Cathédrale. Elle a installé l'hôpital dans le Centre.}
+{1130}{BUTH105a}{Jain est la Grande Prêtresse des Enfants de la Cathédrale. Elle a installé l'hôpital dans le Centre.}
 {1131}{BUTCH106}{Euh, oui, je... j'ai entendu des histoires, c'est tout. Mais rien de vrai.}
 {1132}{BUTCH107}{Les meilleurs prix sur les meilleurs fusils de la ville. Et je suis pas le seul à le dire ! Tu sors d'ici, tu tournes à droite. Tu peux pas le manquer.}
 {1133}{BUTCH108}{Ah ça, on y mange bien chez Bob ! Bob a les meilleurs iguanes grillés de ce coin du désert.}

@@ -4037,8 +4037,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4895)
 #define RESERVED_FOR_FALLOUT_FIXT               (4896)
 #define RESERVED_FOR_FALLOUT_FIXT               (4897)
-#define RESERVED_FOR_FALLOUT_FIXT               (4898)
-#define RESERVED_FOR_FALLOUT_FIXT               (4899)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4898)*/
+#define GVAR_TANDI_KIDNAPPED_DEAD               (4899)
 #define GVAR_ENABLE_AUTO_PUSH                   (4900)
 #define GVAR_NECROPOLIS_PARCHED                 (4901)
 #define GVAR_ENABLE_PARTY_LEVELING              (4902)
