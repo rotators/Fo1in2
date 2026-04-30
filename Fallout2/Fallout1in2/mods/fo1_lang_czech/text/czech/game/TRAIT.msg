@@ -33,7 +33,7 @@
 {207}{}{Nemáš èas na to, abys peèlivì zamìøil svùj útok, protože útoèíš rychleji než druzí. Na druhé stranì tì používání zbraní stojí o 1 AB ménì.}
 {208}{}{Nìjakým podivným øízením osudu lidé kolem tebe umírají násilnì. Vždy uvidíš ten nejhorší možný zpùsob, jakým mohou ostatní zemøít.}
 {209}{}{Ta dobrá zpráva je, že všem okolo tebe v boji èastìji nìco selže. Ta špatná zpráva je, že se to stává i tobì!}
-{210}{}{Bìhem svého života ses zamìøoval pøedevším na studium nebojových umìní. Se svými bojovými schopnostmi zaèínáš na nižším stupni, ale 1. POMOC, DOKTOR, ØEÈ a OBCHOD jsou podstatnì vylepšeny.}
+{210}{}{Bìhem svého života ses zamìøoval pøedevším na studium nebojových umìní. Se svými bojovými schopnostmi zaèínáš na nižším stupni, ale 1. POMOC, LÉÈENÍ, ØEÈ a OBCHOD jsou podstatnì vylepšeny.}
 {211}{}{Snadnìji se stáváš závislým na drogách. Tvoje šance stát se závislým jsou dvojnásobné, ale na druhé stranì se ze závislosti zotavuješ rychleji.}
 {212}{}{Drogy mají na tvou postavu jen polovièní efekt, ale tvé šance stát se na nich závislým jsou rovnìž jen 50%-ní oproti ostatním lidem.}
 {213}{}{Jako noèní pták jsi èilejší po západu slunce. INTELIGENCE a VNÍMAVOST jsou bìhem noci na vyšší úrovni, ale pøes den ochabují.}

@@ -20,9 +20,9 @@
 {119}{}{Když se tak nudíš, proè prostì neodejdeš?}
 {120}{}{No, jsem si jistá, že trochu pøeháníš.}
 {121}{}{Vypadá to tady pøíjemnì a bezpeènì.}
-{122}{TAND_5}{Já, a odejít? Pøála bych si to, ale nemám dost zkušeností, abych odsud sama odešla a nikdo jiný odejít nechce. Navíc mùj otec øekl, že by ho trefil šlak, kdyby se mi nìco stalo! }
+{122}{TAND_5}{Já, a odejít? Pøála bych si to, ale nemám dost zkušeností, abych odsud sama odešla a nikdo jiný odejít nechce. Navíc mùj otec øekl, že by ho trefil šlak, kdyby se mi nìco stalo!}
 {123}{}{Tìžká situace. Mùžu se tì zeptat na pár vìcí?}
-{124}{}{Tak rychle, už musím jít. Hodnì štìstí.}
+{124}{}{A jéje, už musím bìžet. Tak hodnì štìstí.}
 {125}{TAND_6}{Uh... Mìla bych tu teïka zùstat.}
 {126}{TAND_12}{Žiješ tady snad po celý svùj život, že víš jak to tu vypadá?! Ještì nìco chceš vìdìt?}
 {127}{TAND_13}{Ano, opravdu bezpeènì... a taky je tu taková nuda, že oèekávám, že mi každou chvíli vyteèe mozek ušima.}

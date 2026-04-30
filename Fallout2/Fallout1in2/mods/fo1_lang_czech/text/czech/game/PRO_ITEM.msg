@@ -156,7 +156,7 @@
 {7801}{}{Asi obraz nìjakého populárního zpìváka. Pøestože je zøejmì hodnì starý, rám je stále ve skvìlém stavu.}
 {7900}{}{Svìtlice}
 {7901}{}{Svìtlice. Po krátkou dobu vytváøí svìtlo. Papír je trochu omšelý, ale jinak je v dobrém stavu. Aktivuje se pootoèením horní èásti.}
-{8000}{}{Pøíruèka První pomoci}
+{8000}{}{Pøíruèka první pomoci}
 {8001}{}{Skripta popisující zásady první pomoci, vèetnì praktických ukázek.}
 {8100}{}{Leguán-na-špejli}
 {8101}{}{Leguán opeèený ve vlastní kùži.}
@@ -169,7 +169,7 @@
 {8500}{}{Plastická trhavina}
 {8501}{}{Kus Cordexu, velice stabilní a velmi nièivé vojenské plastické trhaviny. Vèetnì èasovaèe.}
 {8600}{}{Pøíruèka pro skauty}
-{8601}{}{Kniha o metodách a idejích skautingu. Plná praktických informací o životì ve volné pøírodì.}
+{8601}{}{Kniha o metodách a ideálech skautingu. Plná praktických informací o životì ve volné pøírodì.}
 {8700}{}{Buffout}
 {8701}{}{Úèinné steroidy. Po dobu úèinku zvyšují sílu a zrychlují reflexy, nicménì zpùsobují závislost.}
 {8800}{}{Hodinky}

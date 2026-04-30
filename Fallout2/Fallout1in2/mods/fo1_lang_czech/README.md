@@ -10,7 +10,6 @@ Hra by měla být kompletně v češtině. Pokud narazíte na neanglické texty 
 Nejdříve se ujistěte, že v souboru fallout2.cfg je nastaven správný jazyk:
 language=czech
 
-Otevřete soubor `mods_order.txt` ve složce `mods` a odstraňte středník před `fo1_lang_czech`.
-Pokud používáte i mod `fo1_new_premades`, nezapomeňte odstranit středník i před `fo1_new_premades_czech`.
+Otevřete soubor `mods_order.txt` ve složce `mods` a odstraŘte středník před `fo1_lang_czech`.
 
 Hra načítá mody v pořadí, v jakém jsou uvedeny.

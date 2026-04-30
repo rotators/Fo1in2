@@ -30,7 +30,7 @@
 {129}{}{Øekni mi nìco o zbytku svìta.}
 {130}{}{Øekni mi o sobì.}
 {131}{}{To je zatím všechno, díky.}
-{132}{}{Pokud nemùžeš k doktorovi, musíš se vyléèit sám. Stimpaky jsou bìžné léèebné prostøedky. Používej je k léèení menších zranìní. PRVNÍ POMOC je pomalejší metoda, ale je vždy k dispozici. Pro vážnìjší zranìní, jako tøeba zlomenina nohy, budeš muset využít schopnosti DOKTOR.}
+{132}{}{Pokud nemùžeš k doktorovi, musíš se vyléèit sám. Stimpaky jsou bìžné léèebné prostøedky. Používej je k léèení menších zranìní. PRVNÍ POMOC je pomalejší metoda, ale je vždy k dispozici. Pro vážnìjší zranìní, jako tøeba zlomenina nohy, budeš muset využít schopnosti LÉÈENÍ.}
 {133}{}{Budeš ji muset sehnat jako my. Najít nebo získat výmìnou. A pokud tì pøepadnou, mùžeš získat nìco z jejich mrtvol. Pokud to budeš ty, kdo pøežije. My jsme mírumilovná osada, vìtšinou mìníme zboží, které nemùžeme vyrobit za vlastní produkty.}
 {134}{}{Øekni mi víc o obchodování.}
 {135}{}{Nacházíš se v Shady Sands. Jsme jen malá vesnice ve velkém svìtì. Chceme si žít po svém. Krom nìkolika druhù zmutovaných a jiných pouštních zvíøat, jsou náš problém jedinì nájezdníci. Aradesh je náš vùdce. Najdeš ho ve velké centrální budovì, promluv si s ním.}
