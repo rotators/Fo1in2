@@ -39,7 +39,7 @@
 # Fo1in2:
 {150}{}{You earn }
 {151}{}{ experience for learning about the Deathclaw.}
-{2000}{}{Ohhh! No. No no no no. Not *going* to the Deathclaw.}
+{2000}{}{Ohhh! No. No no no no. Not *going* to the Deathclaw!}
 {2010}{}{Just shut up and show me on my PipBoy where it is.}
 {2100}{}{Ahh. Show! Here... Here... Here...}
 {2110}{}{[More]}

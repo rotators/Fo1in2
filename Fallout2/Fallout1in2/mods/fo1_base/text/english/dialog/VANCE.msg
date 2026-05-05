@@ -64,3 +64,8 @@
 {160}{}{Justin, Chad, let's show this asshole how we deal with their kind...}
 {161}{}{me Want some.}
 {162}{}{Nuuhhh... buh-bye.}
+
+#
+# Fo1in2
+#
+{164}{}{You see: Vance.}

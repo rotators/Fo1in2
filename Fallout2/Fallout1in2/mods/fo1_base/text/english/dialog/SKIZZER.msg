@@ -1,4 +1,4 @@
-{100}{}{You see Skizzer.}
+{100}{}{You see: Skizzer.}
 {101}{}{You see a man.}
 {102}{}{Fellow Crypter, you doing fine.}
 {103}{}{You some dumb Fool.}
