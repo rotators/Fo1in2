@@ -1,4 +1,4 @@
-{100}{}{You see Skippy.}
+{100}{}{You see: Skippy.}
 {101}{}{You see a ganger.}
 {102}{}{He is tossing what looks like an exotic knife up in the air.}
 {103}{}{[more]}

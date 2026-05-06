@@ -1,5 +1,5 @@
 {100}{}{You see a young woman with dark hair.}
-{101}{}{You see Lorraine, a scav from Adytum.}
+{101}{}{You see: Lorraine, a scav from Adytum.}
 {102}{}{Hi. Are you new here?}
 {103}{}{Yeah. Can you fill me in a little?}
 {104}{}{Yes, I am. I'm called }

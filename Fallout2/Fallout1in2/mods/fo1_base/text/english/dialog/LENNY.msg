@@ -1,4 +1,4 @@
-{100}{}{You see Lenny.}
+{100}{}{You see: Lenny.}
 {101}{}{You see a loser who smells like a Brahmin.}
 {102}{}{[more]}
 {103}{}{[done]}

@@ -1,4 +1,4 @@
-{100}{}{You see Baka.}
+{100}{}{You see: Baka.}
 {101}{}{You see a woman.}
 {102}{}{Crypts should not be here, should they boys? [The other Fools shake their heads.]  I think you should leave.}
 {103}{}{I made a mistake joining the Crypts.  I want to be on your side.}

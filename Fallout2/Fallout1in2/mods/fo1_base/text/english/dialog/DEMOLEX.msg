@@ -1,4 +1,4 @@
-{100}{}{You see Lex.}
+{100}{}{You see: Lex.}
 {101}{}{You see a loser.}
 {102}{}{[More]}
 {103}{}{[Done]}
