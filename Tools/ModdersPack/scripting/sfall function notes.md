@@ -120,6 +120,7 @@ FUNCTION REFERENCE
 #### `void inc_npc_level(int pid/string name)`
 - Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party.
 - This function ignores the player's minimum level and the required number of level-ups between NPC level gains. It also ignores the random element, regardless of sfall's **NPCAutoLevel** or **PartyMemberNonRandomLevelUp** setting.
+- Starting from sfall 4.4.10/3.8.50, the maximum possible NPC level is 10.
 
 -----
 #### `int get_npc_level(int pid/string name)`
@@ -181,19 +182,20 @@ FUNCTION REFERENCE
 - This function works in addition to the **WorldMapTimeMod** setting in **ddraw.ini** and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of pathfinder would result in time passing at 25% the normal speed on the world map.
 
 -----
-#### `void remove_script(object obj)`
-- Accepts a pointer to an object and will remove the script from that object.
+#### `int get_script(object obj)`
+- Accepts a pointer to an object and returns its `scriptID` (line number in **scripts.lst**), or 0 if the object is unscripted.
+- Returns -1 on argument error.
 
 -----
 #### `void set_script(object obj, int scriptID)`
-- Accepts a pointer to an object and **scriptID**, and applies the given script to an object (scriptID accepts the same values as `create_object_sid`)
-- If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided.
-- If you add `0x80000000` to the SID when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
+- Accepts a pointer to an object and **scriptID**, and applies the given script to an object (**scriptID** accepts the same values as `create_object_sid`)
+- If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object.
+- Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided.
+- If you add `0x80000000` to the **scriptID** when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
 
 -----
-#### `int get_script(object obj)`
-- Accepts a pointer to an object and returns its scriptID (line number in **scripts.lst**), or 0 if the object is unscripted.
-- Returns -1 on argument error.
+#### `void remove_script(object obj)`
+- Accepts a pointer to an object and will remove the script from that object.
 
 -----
 #### `void set_self(object setObj)`
@@ -245,11 +247,11 @@ FUNCTION REFERENCE
 
 -----
 #### `int get_tile_ground_fid(int tileNum, int elevation)`
-- Returns FID of a ground tile at given tile number and elevation.
+- Returns FID of a ground tile at the given tile number and elevation.
 
 -----
 #### `int get_tile_roof_fid(int tileNum, int elevation)`
-- Returns FID of a roof tile at given tile number and elevation. Note that FID of 1 is used when there is no actual roof.
+- Returns FID of a roof tile at the given tile number and elevation. Note that FID of 1 is used when there is no actual roof.
 
 -----
 #### `void reg_anim_combat_check(int enable)`
@@ -274,12 +276,13 @@ FUNCTION REFERENCE
 - Should work like `art_change_fid_num` but in `reg_anim` sequence.
 
 -----
-#### `void reg_anim_take_out(object obj, holdFrameID, int delay)`
-- Plays "take out weapon" animation for given **holdFrameID**. It is not required to have such weapon in critter's inventory.
+#### `void reg_anim_take_out(object obj, int weaponCode, int delay)`
+- Plays "take out weapon" animation for the given `weaponCode` (see `WPN_ANIM_*` constants in **define_extra.h**).
+- It is not required for the critter to have this type of weapon in its inventory.
 
 -----
 #### `void reg_anim_turn_towards(object obj, int/object tile/target, int delay)`
-- Makes object change its direction to face given tile number or target object.
+- Makes object change its direction to face the given tile number or target object.
 
 -----
 #### `void reg_anim_callback(procedure proc)`
@@ -348,7 +351,7 @@ FUNCTION REFERENCE
 
 -----
 #### `string sprintf(string format, any value)`
-- Formats given value using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting only 1 value.
+- Formats the given value using standard syntax of C `printf` function (google "printf" for format details). However, it is limited to formatting only 1 value.
 - Can be used to get character by ASCII code (`%c`).
 
 -----
@@ -357,7 +360,7 @@ FUNCTION REFERENCE
 
 -----
 #### `int charcode(string text)`
-- Returns ASCII code for the first character in given string.
+- Returns ASCII code for the first character in the given string.
 
 -----
 #### `div` operator (unsigned integer division)
@@ -414,7 +417,7 @@ FUNCTION REFERENCE
 
 -----
 #### `void register_hook_proc(int hookID, procedure proc)`
-- Works just like `register_hook`, but allows to specify which procedure to use for given hook script (instead of `start`).
+- Works just like `register_hook`, but allows to specify which procedure to use for the given hook script (instead of `start`).
 - Use zero (0) as second argument to unregister hook script from current global script.
 - Only use in global scripts.
 - Second argument should be passed just like you pass procedures to functions like `gsay_option`, `giq_option`, etc. (name without quotes).
@@ -443,17 +446,17 @@ FUNCTION REFERENCE
 
 -----
 #### `object obj_blocking_line(object objFrom, int tileTo, int blockingType)`
-- Returns first object which blocks direct linear path from objFrom to tileTo using selected blocking function (see `BLOCKING_TYPE_*` constants in **sfall.h**).
+- Returns the first object which blocks direct linear path from `objFrom` to `tileTo` using selected blocking function (see `BLOCKING_TYPE_*` constants in **sfall.h**).
 - If path is clear (no blocker was encountered by selected function) - returns 0.
 - `objFrom` is always excluded from calculations, but is required to be a valid object.
 
 -----
 #### `object obj_blocking_tile(int tileNum, int elevation, int blockingType)`
-- Returns first object blocking given tile using given blocking function or 0 if tile is clear.
+- Returns the first object blocking the given tile using the given blocking function, or 0 if the tile is clear.
 
 -----
 #### `array tile_get_objs(int tileNum, int elevation)`
-- Returns an array of all objects at given tile.
+- Returns an array of all objects at the given tile.
 - It will include any hidden, dead or system objects (like cursor), so make sure to check properly when iterating.
 
 -----
@@ -462,17 +465,17 @@ FUNCTION REFERENCE
 
 -----
 #### `array path_find_to(object objFrom, int tileTo, int blockingType)`
-- Returns the shortest path to a given tile using given blocking function as an array of tile directions (0..5) to move on each step.
+- Returns the shortest path to a given tile using the given blocking function as an array of tile directions (0..5) to move on each step.
 - Array length equals to a number of steps.
 - Empty array means that specified target cannot be reached.
 
 -----
 #### `object create_spatial(int scriptID, int tile, int elevation, int radius)`
-- Creates new spatial script with given SID, at given tile, and radius.
+- Creates new spatial script with the given scriptID at the given tile and radius.
 
 -----
 #### `int art_exists(int artFID)`
-- Checks if given **artFID** exists in the game.
+- Checks if the given `artFID` exists in the game.
 - Useful when you want to check if critter can use specific weapon: `art_exists((artFid bwand 0xFFFF0FFF) bwor (weaponAnim * 0x1000))`
 
 -----
@@ -504,7 +507,7 @@ sfall_funcX metarule functions
 ----
 #### spatial_radius
 `int sfall_func1("spatial_radius", object obj)`
-- Returns radius of spatial script, associated with given dummy-object (returned by `create_spatial`)
+- Returns radius of spatial script, associated with the given dummy object (returned by `create_spatial`)
 
 ----
 #### critter_inven_obj2
@@ -555,12 +558,12 @@ sfall_funcX metarule functions
 ----
 #### item_weight
 `int sfall_func1("item_weight", object obj)`
-- Gets the current weight of an object
+- Returns the weight of an item object
 
 ----
 #### get_outline
 `int sfall_func1("get_outline", object obj)`
-- Gets the current outline color for an object
+- Returns the current outline color of an object
 
 ----
 #### set_outline
@@ -573,13 +576,13 @@ sfall_funcX metarule functions
 ----
 #### get_flags
 `int sfall_func1("get_flags", object obj)`
-- Gets the current value of object flags (see **define_extra.h** for available flags)
+- Returns the current value of object flags (see **define_extra.h** for available flags)
 
 -----
 #### set_flags
 `void sfall_func2("set_flags", object obj, int flags)`
 - Sets the current flags of an object
-- All flags are rewritten with given integer, so first get current flags with `get_flags` and use `bwor`/`bwand` to set/remove specific flag
+- All flags are rewritten with the given `flags` integer, so first get the current flags with `get_flags` and use `bwor`/`bwand` to set/remove specific flags
 
 ----
 #### tile_refresh_display
@@ -722,7 +725,7 @@ sfall_funcX metarule functions
 `void sfall_func4("item_make_explosive", int pid, int activePid, int min, int max)`
 - Makes the specified item (pid) an explosive item like Dynamite or Plastic Explosives
 - `activePid` is for an item with an active timer, can be the same as the `pid` argument
-- The item proto must be the **Misc Item** type and have the **Use** action flag
+- The item proto must be of the **Misc Item** type and have the **Use** action flag
 - `min` and `max` are the minimum and maximum explosion damage
 - Using the function on an item that is already set as an explosive will override its previous settings
 - __NOTE:__ this function does not work for pid's of Dynamite and Plastic Explosives
@@ -898,7 +901,7 @@ sfall_funcX metarule functions
 ----
 #### get_sfall_arg_at
 `mixed sfall_func1("get_sfall_arg_at", int argNum)`
-- Gets the value of hook argument with the specified argument number (*first argument of hook starts from 0*)
+- Returns the value of hook argument with the specified argument number (*first argument of hook starts from 0*)
 
 ----
 #### hide_window
