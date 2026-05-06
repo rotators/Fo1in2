@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.15.3735](https://github.com/rotators/Fo1in2/releases/tag/v1.15.3735))
 
+- **Added**: Czech localization
 - **Fixed**: A few text corrections / style improvements.
 - **Fixed**: Aradesh dialog reaction to Tandi's death (if kidnapped and not returned) would never show up due to logic issues with variables.
 - **Fixed**: Explosive traps would show wrong text when looking at them.

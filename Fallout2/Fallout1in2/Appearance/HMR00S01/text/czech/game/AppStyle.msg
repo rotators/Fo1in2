@@ -1,0 +1,2 @@
+{100}{}{Dlouhovlasý brunet}
+{101}{}{Když se dáš do bìhu, tvé dlouhé rozpuštìné vlasy ti poskakují po ramenou. Lidé z tvého kmene hledí s úctou na tvou nádhernou høívu jiskøící se v ranním svìtle.}

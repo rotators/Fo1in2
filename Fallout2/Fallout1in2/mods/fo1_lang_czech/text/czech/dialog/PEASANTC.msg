@@ -1,0 +1,27 @@
+{100}{}{Vypadni odsud!}
+{101}{}{Slyšel jsem o tobì zlé vìci, je to pravda?}
+{102}{}{Èau.}
+{103}{}{Tohle je moje místo, nechceš jít na chvíli jinam?}
+{104}{}{Hmm, vypadáš šavnatì...}
+{105}{}{Doufám, e se nechystáš mì odsud vyhodit.}
+{106}{}{Ne.}
+{107}{}{To je podivnı zpùsob, jak zaèít rozhovor.}
+{108}{}{Hnnn.}
+{109}{}{No dobrá, jestli tu chceš chvíli zùstat, klidnì. Myslím, e jsme tady v bezpeèí.}
+{110}{}{Víš, v tìchto dobách musíš bıt opatrnı. Doufám, e tvùj ivot je lepší ne ten mùj.}
+{111}{}{No, je to pravda. Potom, co se stalo mım pøátelùm, jsem musel chránit svùj domov. Doufám, e mì teï nezabiješ.}
+{112}{}{Ne, neublíím ti. Aspoò ne moc.}
+{113}{}{Jak to myslíš?}
+{114}{}{Gack!}
+{115}{}{Nemám dùvod. Opravdu.}
+# Translation note:
+# Line 116 has one of lines 117-120 appended to it, depending upon circumstances.
+{116}{}{Tihle „pozorní“ hoši chtìli majetek mého pøítele, a tak si ho prostì vzali. Ani nevím, co se s ním vlastnì stalo.}
+{117}{}{ A Killian je pøíliš zaneprázdnìnı, ne aby mi pomohl.}
+{118}{}{ Killian je pøíliš zamìstnanı, ne aby pomohl s Gizmovım bordelem.}
+{119}{}{ Gizmo se mi vysmál, kdy jsem ho poádal o pomoc.}
+{120}{}{ Tady okolo není nikdo, kdo by mi pomohl.}
+{121}{}{Jsi v pohodì?}
+{122}{}{To je škoda.}
+{123}{}{Doufám, opravdu doufám.}
+{124}{}{Nech mì prosím o samotì!}

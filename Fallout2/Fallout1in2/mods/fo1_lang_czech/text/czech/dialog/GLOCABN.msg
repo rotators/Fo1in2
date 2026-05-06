@@ -1,0 +1,10 @@
+{100}{}{Vidíš skøíò.}
+{101}{}{Zdá se, že je na ní elektronický zámek.}
+{102}{}{Skøíò šla snadno odemknout.}
+{103}{}{Zdá se, že ten zámek je problémovìjší, než to vypadalo na první pohled.}
+{104}{}{Zámek na skøíni jsi snadno pøekonal.}
+{105}{}{Zdá se, že ten zámek je problémovìjší, než to vypadalo na první pohled.}
+{106}{}{Tahle dovednost ti tu moc nepomùže.}
+
+# Fo1in2
+{200}{}{ snadno odemyká skøíò.}
