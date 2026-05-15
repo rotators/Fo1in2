@@ -2,8 +2,11 @@ Notable changes since last release ([v1.15.3735](https://github.com/rotators/Fo1
 
 - **Added**: Czech localization
 - **Fixed**: A few text corrections / style improvements.
+- **Fixed**: Added a combat fail-safe to Neal, since there was a possibility of him attacking the player in the Skum Pitt raid, if the player got caught stealing the Urn before.
 - **Fixed**: Aradesh dialog reaction to Tandi's death (if kidnapped and not returned) would never show up due to logic issues with variables.
+- **Fixed**: Changed "Nothing, bye." exit dialog text to generic "goodbye" strings in Iguana Bob dialog, since it never matched with the current dialog.
 - **Fixed**: Explosive traps would show wrong text when looking at them.
+- **Fixed**: If the player destroyed Mariposa and then joins the Unity while talking to the Master, the dipping-in-Vats cutscene won't play anymore.
 - **Fixed**: Looking at Vance in the Hub after knowing his name would print an error message in the log window.
 - **Fixed**: Typos in audio references in dialog files
 - **Fixed**: Various TMA strings couldn't be accessed due to mismatching line numbers.
