@@ -10,4 +10,5 @@ Notable changes since last release ([v1.15.3735](https://github.com/rotators/Fo1
 - **Fixed**: Looking at Vance in the Hub after knowing his name would print an error message in the log window.
 - **Fixed**: Typos in audio references in dialog files
 - **Fixed**: Various TMA strings couldn't be accessed due to mismatching line numbers.
+- **Tweaked**: Rebalanced the amount of bonus hitpoints for critters when using the Tougher Humans and Mutants settings.
 - **Tweaked**: Replaced merchant restocking condition with unsigned int comparison, so the timer won't break after many (ingame) years have passed.
