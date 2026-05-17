@@ -368,6 +368,8 @@ variable step_tile;
 //
 
 #define  get_perk(cr,perk)                has_trait(TRAIT_PERK,cr,perk)
+#define set_perk(cr,perk,level)           critter_add_trait(cr, TRAIT_PERK, perk, level)
+
 #define dude_perk(perk)                   get_perk(dude_obj,perk)
 #define self_perk(perk)                   get_perk(self_obj,perk)
 
