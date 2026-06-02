@@ -6,6 +6,7 @@ Notable changes since last release ([v1.15.3735](https://github.com/rotators/Fo1
 - **Fixed**: Aradesh dialog reaction to Tandi's death (if kidnapped and not returned) would never show up due to logic issues with variables.
 - **Fixed**: Changed "Nothing, bye." exit dialog text to generic "goodbye" strings in Iguana Bob dialog, since it never matched with the current dialog.
 - **Fixed**: Explosive traps would show wrong text when looking at them.
+- **Fixed**: If the V13 water thief gets killed by anyone but the player, he would not get any experience points.
 - **Fixed**: If the player destroyed Mariposa and then joins the Unity while talking to the Master, the dipping-in-Vats cutscene won't play anymore.
 - **Fixed**: Looking at Vance in the Hub after knowing his name would print an error message in the log window.
 - **Fixed**: Typos in audio references in dialog files
