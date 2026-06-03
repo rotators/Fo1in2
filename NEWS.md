@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.15.3735](https://github.com/rotators/Fo1in2/releases/tag/v1.15.3735))
 
 - **Added**: Czech localization
+- **Added**: Updated Sfall to version 4.5
 - **Fixed**: A few text corrections / style improvements.
 - **Fixed**: Added a combat fail-safe to Neal, since there was a possibility of him attacking the player in the Skum Pitt raid, if the player got caught stealing the Urn before.
 - **Fixed**: Aradesh dialog reaction to Tandi's death (if kidnapped and not returned) would never show up due to logic issues with variables.
