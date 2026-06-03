@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.4.9, built for Fallout 2 v1.02 US
+version 4.5, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -54,6 +54,39 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ** Changelog **
 ***************
 
+v4.5
+>Fixed garbled colors during the fade to the main menu on startup when SkipOpeningMovies is enabled
+>Fixed the AP cost display not updating on game load when using HOOK_CALCAPCOST hook script
+>Fixed load_array script function not accepting floats as array keys
+>Fixed a crash when calling proto_data with an invalid data member value
+>Fixed set_critter_current_ap and set_combat_free_move script functions to update the player's AP lights only in combat
+>Fixed set/remove_script script functions not setting the script index number on an object properly
+>Fixed set_unique_id script function to prevent it from reassigning an object ID when unnecessary
+>Fixed ONDEATH hook to prevent it from being triggered by non-critter objects
+>Fixed REMOVEINVENOBJ hook not being triggered when using an item from active item slots while in the inventory screen
+>Changed add_extra_msg_file script function to mark the two-argument form as deprecated
+>Changed objects_in_radius script function to accept a radius of 0
+>Changed the character portrait on the character screen (from the hero appearance mod) to always show the standing pose
+>Re-added NumberPatchLoop option from older versions to ddraw.ini
+>Removed AllowLargeTiles option because its functionality is impractical and has never been used
+>Removed GlobalScriptPaths option because storing global scripts across multiple paths is almost never needed
+>Removed ExtraSaveSlots option from ddraw.ini. Now additional pages of save slots are always available, up to 1000 slots in total
+>Added a fix for the +/- keys not updating the brightness slider when used on the preferences screen
+>Added a fix for getting stuck on an empty map when the encounter table has no available entries
+>Added a fix for a visual glitch on the character screen when selecting perks that modify SPECIAL stats
+>Added a fix for the morning start time used to determine random encounter frequency
+>Added a tweak to center inventory windows horizontally when not using the hi-res patch
+>Added a tweak to the animation sequence when interacting with scenery or using an item on an object
+>Added a tweak to use path length instead of tile distance to determine whether to walk or run to interact with objects
+>Added a new value to InstantWeaponEquip to skip weapon equip/unequip animations only when interacting with objects
+>Added object type validation to item_weight script function to prevent potential issues
+>Added a file size check for scripts to filter out clearly defective ones
+>Added support for nested array expressions (compile.exe in the modders pack is also updated)
+>Increased the maximum party member level from 6 to 10
+
+v4.4.9.1
+>Fixed a crash bug introduced in 4.4.6 when a critter is hit and combat starts at the same time
+
 v4.4.9
 >Fixed the edge-scrolling speed when using the game speed tweak
 >Fixed incorrect unarmed damage being displayed in the inventory under specific conditions
@@ -107,7 +140,7 @@ v4.4.6
 >Added a fix for the duplicate click sound when selecting a location in the Status section of the pipboy
 >Added a fix for extra hidden buttons below the location list in the Status section of the pipboy
 >Added a fix for map lighting from Night Vision perk not updating when loading a saved game
->Added a fix for an animation glitch when death animations and combat start simultaneously
+>Added a fix for an animation glitch when death animations and combat start at the same time
 >Added a fix to prevent the game from hanging when reloading a weapon overloaded with ammo via the interface bar
 >Added a few fixes for issues related to weapons with negative ammo
 >Added a tweak to replace death animations on critters with single-frame variants on map load
@@ -374,14 +407,14 @@ v4.3.0.2
 >Updated French translation (from HawK-EyE)
 
 v4.3.0.1
->Fixed a crash bug introduced in 4.3 with the fix for animation registration
+>Fixed a crash bug introduced in 4.3 by the fix for animation registration
 >Fixed a bug in AIDrugUsePerfFix that could cause a hang in combat
 >Fixed the extra check for friendly fire not working if the 'area_attack_mode' parameter in the AI packet is not set or set to no_pref
 >Added a fix for chem_primary_desire values in party member AI packets not being saved and reset correctly
 
 v4.3
 >Fixed the original engine issues with being unable to register animations in certain situations in the game
->Fixed a crash bug introduced in 4.2.9 with the fix for the 'Leave' event procedure in AddRegionProc function
+>Fixed a crash bug introduced in 4.2.9 by the fix for the 'Leave' event procedure in AddRegionProc function
 >Fixed a bug in ObjCanSeeObj_ShootThru_Fix that could cause a hang in some cases
 >Fixed the check of the ammo cost for a shot in CheckWeaponAmmoCost
 >Fixed set_critter_burst_disable script function, which now applies only to weapons with the burst attack as the secondary mode
@@ -621,7 +654,7 @@ v4.2.2
 >New hook script: hs_targetobject
 
 v4.2.1.1
->Fixed a crash bug introduced in 4.2.1 with the fix for corpses blocking line of fire
+>Fixed a crash bug introduced in 4.2.1 by the fix for corpses blocking line of fire
 
 v4.2.1
 >Fixed a bug in save_array script function that could corrupt sfallgv.sav when saving a new array under the same key
@@ -1121,7 +1154,7 @@ v3.7b
 Original engine bug fixes and various features based on the work by Crafty:
 >Fixed a crash bug introduced with the inventory drag and drop fix
 >Added a new value to SpeedInterfaceCounterAnims to update the HP/AC counters instantly when the number is not negative
->Added an option to skip weapon equip/unequip animations when performing various actions
+>Added an option to skip weapon equip/unequip animations during various actions
 >Added an option to control the speed of pipboy alarm clock animations
 >Added an option to change the carry weight limit
 
