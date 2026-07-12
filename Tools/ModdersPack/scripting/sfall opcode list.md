@@ -101,7 +101,7 @@
 | 0x8183 | `void set_perk_per(int perkID, int value)` |
 | 0x8184 | `void set_perk_end(int perkID, int value)` |
 | 0x8185 | `void set_perk_chr(int perkID, int value)` |
-| 0x8196 | `void set_perk_int(int perkID, int value)` |
+| 0x8186 | `void set_perk_int(int perkID, int value)` |
 | 0x8187 | `void set_perk_agl(int perkID, int value)` |
 | 0x8188 | `void set_perk_lck(int perkID, int value)` |
 | 0x8189 | `void set_perk_name(int perkID, string value)` |

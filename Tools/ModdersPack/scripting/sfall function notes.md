@@ -744,7 +744,7 @@ sfall_funcX metarule functions
 ----
 #### get_current_inven_size
 `int sfall_func1("get_current_inven_size", object obj)`
-- Returns the current inventory size of the container or the critter
+- Returns the total size of items in a container or a critter's inventory
 
 ----
 #### create_win

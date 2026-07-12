@@ -29,24 +29,29 @@
 #define REPEAT_FRAMES      (10)
 #define NO_HIGHLIGHT(obj)  (get_flags(obj) bwand FLAG_NOHIGHLIGHT)
 #define NO_STEAL(obj)      (get_proto_data(obj_pid(obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL)
+#define IS_EMPTY(obj)      (inven_ptr(obj, 0) == 0)
 
-variable configSection := "Highlighting";
-variable highlightKey;
-variable isHighlight;
-variable alsoContainer;
-variable alsoCorpse;
-variable alsoCritter;
-variable checkLOS;
-variable outlineColor;
-variable outlineColorContainers;
-variable outlineColorCorpses;
-variable motionScanner;
-variable highlightFailMsg1;
-variable highlightFailMsg2;
+variable begin
+   configSection := "Highlighting";
+   highlightKey;
+   isHighlight;
+   alsoContainer;
+   alsoCorpse;
+   alsoCritter;
+   checkLOS;
+   outlineColor;
+   outlineColorContainers;
+   outlineColorContainersEmpty;
+   outlineColorCorpses;
+   outlineColorCorpsesEmpty;
+   motionScanner;
+   highlightFailMsg1;
+   highlightFailMsg2;
+end
 
 procedure DudeCanSee(variable obj) begin
    variable block := obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT);
-   return not block or block == obj;
+   return not block or block == obj or tile_num(block) == tile_num(obj);
 end
 
 procedure DudeCanHear(variable obj) begin
@@ -70,10 +75,10 @@ procedure GetOutlineColor(variable obj, variable isCritter) begin
       return 0;
 
    if obj_type(obj) == OBJ_TYPE_CRITTER then
-      return outlineColorCorpses;
+      return outlineColorCorpsesEmpty if IS_EMPTY(obj) else outlineColorCorpses;
 
    if obj_item_subtype(obj) == item_type_container then
-      return outlineColorContainers;
+      return outlineColorContainersEmpty if IS_EMPTY(obj) else outlineColorContainers;
 
    return outlineColor;
 end
@@ -174,12 +179,18 @@ procedure start begin
       alsoCorpse := GetConfig(configSection, "Corpses", 0);
       alsoCritter := GetConfig(configSection, "Critters", 0);
       checkLOS := GetConfig(configSection, "CheckLOS", 0);
+
       outlineColor := GetConfig(configSection, "OutlineColor", 16);
       if (outlineColor < 1) then outlineColor := 64;
-      outlineColorContainers := GetConfig(configSection, "OutlineColorContainers", 16);
+      outlineColorContainers := GetConfig(configSection, "OutlineColorContainers", 32);
       if (outlineColorContainers < 1) then outlineColorContainers := 64;
-      outlineColorCorpses := GetConfig(configSection, "OutlineColorCorpses", 16);
+      outlineColorContainersEmpty := GetConfig(configSection, "OutlineColorContainersEmpty", 4);
+      if (outlineColorContainersEmpty < 0) then outlineColorContainersEmpty := 64; // allow 0
+      outlineColorCorpses := GetConfig(configSection, "OutlineColorCorpses", 32);
       if (outlineColorCorpses < 1) then outlineColorCorpses := 64;
+      outlineColorCorpsesEmpty := GetConfig(configSection, "OutlineColorCorpsesEmpty", 4);
+      if (outlineColorCorpsesEmpty < 0) then outlineColorCorpsesEmpty := 64; // allow 0
+
       motionScanner := GetConfig(configSection, "MotionScanner", 0);
 
       highlightFailMsg1 := Translate("HighlightFail1", "You aren't carrying a motion sensor.");
