@@ -38,6 +38,7 @@ procedure AmmoCost_handler;
 procedure Steal_handler;
 procedure SetLighting_handler;
 procedure AdjustRads_handler;
+procedure DeathAnim2_handler;
 
 procedure steal_urn;
 
@@ -69,6 +70,7 @@ procedure start begin
       register_hook_proc(HOOK_STEAL, Steal_handler);
       register_hook_proc(HOOK_SETLIGHTING, SetLighting_handler);
       register_hook_proc(HOOK_ADJUSTRADS, AdjustRads_handler);
+      register_hook_proc(HOOK_DEATHANIM2, DeathAnim2_handler);
    end
 
    call general;
@@ -460,5 +462,18 @@ procedure AdjustRads_handler begin
    if (dude_rads >= 2000) then begin
       display_msg(mstr_misc(1006));
       kill_critter(dude_obj, ANIM_fall_front_sf);
+   end
+end
+
+procedure DeathAnim2_handler begin
+   variable
+      weapon_pid := get_sfall_arg,
+      attacker := get_sfall_arg,
+      target := get_sfall_arg;
+
+   // Workaround to never accidentally trigger the special rad death screen
+   // Would happen if the player gets shot by someone while he has > 1000 rads
+   if ((target == dude_obj) and (attacker > 0)) then begin
+      set_global_var(GVAR_SPECIAL_RADIATION_DEATH, 0);
    end
 end
