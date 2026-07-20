@@ -59,6 +59,9 @@
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
 
+#define ce_enabled                      (metarule_exist("opcode_exists") == true)
+#define ce_disabled                     (metarule_exist("opcode_exists") == false)
+
 /*********************************************************
     Generic:
     Note: If the player decides to continue after finishing the game,
