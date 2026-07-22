@@ -76,6 +76,8 @@
 #define HOOK_ROLLCHECK        (46)
 #define HOOK_BESTWEAPON       (47)
 #define HOOK_CANUSEWEAPON     (48)
+// RESERVED 49..60
+#define HOOK_BUILDSFXWEAPON   (61)
 
 // Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
@@ -366,6 +368,7 @@
 #define obj_is_openable(obj)                                    sfall_func1("obj_is_openable", obj)
 #define obj_under_cursor(onlyCritter, includeDude)              sfall_func2("obj_under_cursor", onlyCritter, includeDude)
 #define objects_in_radius(tile, radius, elev, type)             sfall_func4("objects_in_radius", tile, radius, elev, type)
+#define opcode_exists(opcodeNum)                                sfall_func1("opcode_exists", opcodeNum)
 #define outlined_object                                         sfall_func0("outlined_object")
 #define overlay_create(winType)                                 sfall_func2("interface_overlay", winType, 1)
 #define overlay_clear(winType)                                  sfall_func2("interface_overlay", winType, 2)

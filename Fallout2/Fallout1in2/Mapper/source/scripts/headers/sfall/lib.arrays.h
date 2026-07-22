@@ -35,8 +35,11 @@ procedure array_keys(variable array);
 // list of array values (useful for maps)
 procedure array_values(variable array);
 
+// fix_array for multi-dimensional arrays
+procedure fix_array_deep(variable array, variable levels := 1);
+
 // makes given array permanent and returns it
-procedure array_fixed(variable array);
+procedure array_fixed(variable array, variable levels := 1);
 
 // returns temp array containing a subarray starting from $index with $count elements
 // negative $index means index from the end of array
@@ -246,11 +249,26 @@ end
 /**
  * Sets given array as permanent and returns it.
  * @arg {array} array
+ * @arg {int} levels - Number of depth levels for a multi-dimensional array
  * @ret {array}
  */
-procedure array_fixed(variable array) begin
-   fix_array(array);
+procedure array_fixed(variable array, variable levels) begin
+   call fix_array_deep(array, levels);
    return array;
+end
+
+/**
+ * Makes a multi-dimensional temp array permenant.
+ * @arg {array} array
+ * @arg {int} levels - Number of depth levels for a multi-dimensional array
+ */
+procedure fix_array_deep(variable array, variable levels) begin
+   fix_array(array);
+   if (levels > 1) then begin
+      foreach (variable subArray in array) begin
+         call fix_array_deep(subArray, levels - 1);
+      end
+   end
 end
 
 /**
@@ -554,14 +572,14 @@ procedure array_transform_kv(variable arr, variable keyFunc, variable valueFunc)
 end
 
 /**
- * Converts given array into a new map where keys are array values and all values are 1.
+ * Converts given array into a new map where keys are array values and all values are set to specified value.
  * @arg {array} arr
  * @ret {array}
  */
-procedure array_to_set(variable arr) begin
+procedure array_to_set(variable arr, variable value := 1) begin
    variable v, retArr := temp_array_map;
    foreach (v in arr) begin
-      retArr[v] := 1;
+      retArr[v] := value;
    end
    return retArr;
 end
@@ -641,7 +659,7 @@ procedure array_fill(variable arr, variable pos, variable count, variable value)
 end
 
 /**
- * Adds all the values of the second array to the first array.
+ * Adds all the values of the second array to the first array. If arr1 is a map then for values with same keys, values from arr2 will take priority.
  * @arg {array} arr1
  * @arg {array} arr2
  * @ret {array} - the first array after modification
@@ -660,6 +678,14 @@ procedure array_append(variable arr1, variable arr2) begin
    end
    return arr1;
 end
+
+/**
+ * Creates a new temp array with all values from arr1 and arr2. If arr1 is a map then for values with same keys, values from arr2 will take priority.
+ * @arg {array} arr1
+ * @arg {array} arr2
+ * @ret {array} - the created temp array
+ */
+#define array_concat(arr1, arr2)       array_append(clone_array(arr1), arr2)
 
 /**
  * Loads a "saved" array. If it doesn't exist, creates it (with a given size).
@@ -749,7 +775,7 @@ end
 procedure debug_array_str_deep(variable arr, variable levels, variable prefix := false) begin
 #define _newline if (levels > 1) then s += "\n";
 #define _indent ii := 0; while (ii < levels - 1) do begin s += "   "; ii++; end
-#define _value(v) (v if (levels <= 1 or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
+#define _value(v) (v if (levels <= 1 or typeof(v) != VALTYPE_INT or not array_exists(v)) else debug_array_str_deep(v, levels - 1))
    variable i := 0, ii, k, v, s, len;
    len := len_array(arr);
    if (array_is_map(arr)) then begin  // print assoc array
@@ -768,7 +794,6 @@ procedure debug_array_str_deep(variable arr, variable levels, variable prefix :=
       s += "}";
    end else begin  // print list
       s := ("List("+len+"): [") if prefix else "[";
-      _newline
       while i < len do begin
          _newline
          v := get_array(arr, i);

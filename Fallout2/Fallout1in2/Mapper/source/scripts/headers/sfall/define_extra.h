@@ -306,6 +306,22 @@
 #define PROTO_CR_AI_PACKET              (408)
 #define PROTO_CR_TEAM_NUM               (412)
 
+// scenery
+#define PROTO_SC_MATERIAL            (44)
+
+// walls
+#define PROTO_WL_MATERIAL            (32)
+
+// material types
+#define MATERIAL_TYPE_GLASS               (0)
+#define MATERIAL_TYPE_METAL               (1)
+#define MATERIAL_TYPE_PLASTIC             (2)
+#define MATERIAL_TYPE_WOOD                (3)
+#define MATERIAL_TYPE_DIRT                (4)
+#define MATERIAL_TYPE_STONE               (5)
+#define MATERIAL_TYPE_CEMENT              (6)
+#define MATERIAL_TYPE_LEATHER             (7)
+
 // weapon calibers
 #define CALIBER_NONE                 (0)
 #define CALIBER_ROCKET               (1)
@@ -459,6 +475,7 @@
 #define OBJ_DATA_DAMAGE_FLAGS       (0x44)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
 #define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
+#define OBJ_DATA_CRITTER_HP         (0x58)
 
 // compute attack result data offsets
 #define C_ATTACK_SOURCE             (0x00)
