@@ -59,8 +59,8 @@
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
 
-#define ce_enabled                      (metarule_exist("opcode_exists") == true andAlso sfall_func1("opcode_exists", 0x81D1) == false)
-#define ce_disabled                     (metarule_exist("opcode_exists") == false orElse sfall_func1("opcode_exists", 0x81D1) == true)
+#define ce_enabled                      (metarule_exist("opcode_exists") == true andAlso opcode_exists(0x81D1) == false)
+#define ce_disabled                     (metarule_exist("opcode_exists") == false orElse opcode_exists(0x81D1) == true)
 
 /*********************************************************
     Generic:
