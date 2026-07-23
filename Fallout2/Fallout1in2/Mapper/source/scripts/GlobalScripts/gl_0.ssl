@@ -11,6 +11,7 @@
 #include "sfall/sfall.h"
 
 procedure start;
+procedure error_UnsupportedBin;
 procedure error_AllowUnsafeScripting;
 procedure error_DisableHorrigan;
 procedure error_UseFileSystemOverride;
@@ -22,6 +23,10 @@ procedure start begin
    variable init;
 
    debug("Remember to wear protective goggles" + _ANSI_window_name("Fallout 1in2 Debug Console"));
+
+   if (sfall_ver_major >= 5) then begin
+      call error_UnsupportedBin in 1;
+   end
 
    if (get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") == 0) then begin
       call error_AllowUnsafeScripting in 1;
@@ -38,6 +43,13 @@ procedure start begin
          call error_Fallout1Behavior in 1;
       end
    end
+end
+
+procedure error_UnsupportedBin begin
+   message_box_warning("ERROR\n\nUnsupported sfall binary detected\nFallout et Tu will close.");
+
+   signal_close_game;
+   call force_crash in 1;
 end
 
 procedure error_AllowUnsafeScripting begin
@@ -82,5 +94,5 @@ end
 
 procedure force_crash begin
    debug_warning("Fo1in2 SETTINGS - force crash for bad config.");
-   variable panik := read_int(0xFFBADCF6);
+   variable panik := get_object_data(0xFFBADCF6, 0);
 end
