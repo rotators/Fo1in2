@@ -97,10 +97,10 @@ procedure Looting_Fridge begin
          script_overrides;
       end
    end
+   last_user := source_obj;
 end
 
 procedure Open_Fridge begin
-   last_user := source_obj;
    if (source_obj == Garret_ptr) then begin
       if (local_var(LVAR_Fridge_State) == CLOSED) then begin
          obj_unlock(self_obj);
@@ -108,15 +108,15 @@ procedure Open_Fridge begin
          set_local_var(LVAR_Fridge_Lock, UNLOCKED);
          set_local_var(LVAR_Fridge_State, OPEN);
       end
-      else if (last_user == Garret_ptr) then begin
+      else begin
+         if (last_user != Garret_ptr) then begin
+            script_overrides;
+            float_msg(Garret_ptr, mstr(104), FLOAT_MSG_NORMAL);
+         end
          //obj_close(self_obj); // is done in GARRET.ssl
          obj_lock(self_obj);
          set_local_var(LVAR_Fridge_State, CLOSED);
          set_local_var(LVAR_Fridge_Lock, LOCKED);
-      end
-      else begin
-         script_overrides;
-         float_msg(Garret_ptr, mstr(104), FLOAT_MSG_NORMAL);
       end
    end
    else begin
@@ -138,6 +138,7 @@ procedure Open_Fridge begin
          set_local_var(LVAR_Fridge_State, OPEN);
       end
    end
+   last_user := source_obj;
 end
 
 procedure pick_lock begin
