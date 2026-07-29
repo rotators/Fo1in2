@@ -109,6 +109,14 @@
 {300}{}{Your Melee Damage is increased by 1 point.}
 {301}{}{% Damage Resistance.}
 
+# Fixt
+{194}{}{you move? in my WAY! *frown*}# Call "Step Aside" code
+{195}{}{go go, no need frend.}# Telling NPC to leave party
+{196}{}{we be frend?}# Request NPC to rejoin party
+
+# Message trying to steal from things like brahmin, rats, scorpions
+{211}{}{You cannot steal from this critter.}
+
 # Dehydration encounter
 {305}{}{Dehydrated}
 {306}{}{The dehydration effects have worn off.}
