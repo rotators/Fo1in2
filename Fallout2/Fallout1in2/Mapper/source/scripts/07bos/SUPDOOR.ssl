@@ -28,6 +28,7 @@ procedure damage_p_proc;
 
 #define LVAR_Door_Status            (0)
 #define LVAR_Door_Destroyed         (1)
+#define LVAR_GaveXP                 (2)
 
 procedure start begin
 end
@@ -49,9 +50,12 @@ end
 procedure use_skill_on_p_proc begin
    variable Skills_Roll := 0;
    inc_map_var(MVAR_Door_Warning);
-   if (local_var(LVAR_Door_Status) == LOCKED) then begin
-      if (action_being_used == SKILL_LOCKPICK) then begin
-         script_overrides;
+
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+
+      if (local_var(LVAR_Door_Status) == LOCKED) then begin
+
          Skills_Roll := roll_vs_skill(source_obj, SKILL_LOCKPICK, -80);
          if (is_success(Skills_Roll)) then begin
             set_local_var(LVAR_Door_Status, UNLOCKED);
@@ -70,7 +74,11 @@ procedure use_skill_on_p_proc begin
                display_msg(mstr(100));
             else
                display_msg(obj_name(source_obj) + message_str(SCRIPT_JUNKJAIL, 200));
-            give_xp(EXP_LOCKPICK_NEG_80);
+
+            if (local_var(LVAR_GaveXP) == 0) then begin
+               set_local_var(LVAR_GaveXP, 1);
+               give_xp(EXP_LOCKPICK_NEG_80);
+            end
          end
          else begin
             if (is_critical(Skills_Roll)) then begin
@@ -84,10 +92,11 @@ procedure use_skill_on_p_proc begin
                   display_msg(obj_name(source_obj) + message_str(SCRIPT_JUNKJAIL, 202));
             end
          end
+
       end
-   end
-   else begin
-      display_msg(message_str(SCRIPT_DOOR, 109)); // Door is already unlocked
+      else begin
+         display_msg(message_str(SCRIPT_DOOR, 109)); // Door is already unlocked
+      end
    end
 end
 
@@ -107,35 +116,45 @@ procedure use_obj_on_p_proc begin
    if (obj_pid(Tool) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Tool) == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
 
-      if (obj_pid(Tool) == PID_ELEC_LOCKPICK_MKII) then
-         Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
+      if (local_var(LVAR_Door_Status) == LOCKED) then begin
+         if (obj_pid(Tool) == PID_ELEC_LOCKPICK_MKII) then
+            Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
 
-      if (is_success(Skills_Roll)) then begin
-         set_local_var(LVAR_Door_Status, UNLOCKED);
-         if dude_is_sneaking then begin
-            if (dude_skill_success(SKILL_SNEAK, -50)) then begin
+         if (is_success(Skills_Roll)) then begin
+            set_local_var(LVAR_Door_Status, UNLOCKED);
+            if dude_is_sneaking then begin
+               if (dude_skill_success(SKILL_SNEAK, -50)) then begin
+               end
+               else begin
+                  set_map_var(MVAR_Door_Warning, 4);
+               end
             end
             else begin
                set_map_var(MVAR_Door_Warning, 4);
             end
+            display_msg(message_str(SCRIPT_DOOR, 100));
+
+            if (local_var(LVAR_GaveXP) == 0) then begin
+               set_local_var(LVAR_GaveXP, 1);
+               give_xp(EXP_LOCKPICK_NEG_80);
+            end
          end
          else begin
-            set_map_var(MVAR_Door_Warning, 4);
+            if (is_critical(Skills_Roll)) then begin
+               rm_obj_from_inven(dude_obj, Tool);
+               destroy_object(Tool);
+               display_msg(message_str(SCRIPT_DOOR, 101));
+            end
+            else begin
+               display_msg(message_str(SCRIPT_DOOR, 103));
+            end
          end
-         display_msg(message_str(SCRIPT_DOOR, 100));
-         give_xp(EXP_LOCKPICK_NEG_80);
       end
       else begin
-         if (is_critical(Skills_Roll)) then begin
-            rm_obj_from_inven(dude_obj, Tool);
-            destroy_object(Tool);
-            display_msg(message_str(SCRIPT_DOOR, 101));
-         end
-         else begin
-            display_msg(message_str(SCRIPT_DOOR, 103));
-         end
+         display_msg(message_str(SCRIPT_DOOR, 109));
       end
    end
+
 end
 
 procedure map_update_p_proc begin

@@ -40,9 +40,11 @@ end
 
 procedure use_skill_on_p_proc begin
    variable Item := 0;
-   if (local_var(LVAR_Door_Status) == LOCKED) then begin
-      if (action_being_used == SKILL_LOCKPICK) then begin
-         script_overrides;
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+
+      if (local_var(LVAR_Door_Status) == LOCKED) then begin
+
          Item := roll_vs_skill(source_obj, SKILL_LOCKPICK, -80);
          if (is_success(Item)) then begin
             set_local_var(LVAR_Door_Status, UNLOCKED);
@@ -68,10 +70,11 @@ procedure use_skill_on_p_proc begin
             else
                display_msg(obj_name(source_obj) + message_str(SCRIPT_JUNKJAIL, 202));
          end
+
       end
-   end
-   else begin
-      display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      else begin
+         display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      end
    end
 end
 
@@ -90,34 +93,46 @@ procedure use_obj_on_p_proc begin
    if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
 
-      if (obj_pid(Item) == PID_EXP_LOCKPICK_SET) then
-         Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
+      if (local_var(LVAR_Door_Status) == LOCKED) then begin
+         if (obj_pid(Item) == PID_EXP_LOCKPICK_SET) then
+            Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
 
-      if (is_success(Skill)) then begin
-         set_local_var(LVAR_Door_Status, UNLOCKED);
-         display_msg(mstr(100));//{100}{}{You unlock the door.}
-         if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-            set_local_var(LVAR_Gave_Locks_XP, 1);
-            give_xp(EXP_LOCKPICK_NEG_80);
+         if (is_success(Skill)) then begin
+            set_local_var(LVAR_Door_Status, UNLOCKED);
+            display_msg(mstr(100));//{100}{}{You unlock the door.}
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NEG_80);
+            end
+         end
+         else begin
+            if (is_critical(Skill)) then begin
+               rm_obj_from_inven(dude_obj, Item);
+               destroy_object(Item);
+               jam_lock(self_obj);
+               display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
+               display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
+            end
+            else begin
+               display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+            end
          end
       end
       else begin
-         if (is_critical(Skill)) then begin
-            rm_obj_from_inven(dude_obj, Item);
-            destroy_object(Item);
-            jam_lock(self_obj);
-            display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
-            display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
-         end
-         else begin
-            display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
-         end
+         display_msg(mstr(109));
       end
+
    end
    else if (obj_pid(Item) == PID_BLACK_COC_BADGE) then begin
       script_overrides;
-      set_local_var(LVAR_Door_Status, UNLOCKED);
-      display_msg(mstr(100));//{100}{}{You unlock the door.}
+
+      if (local_var(LVAR_Door_Status) == LOCKED) then begin
+         set_local_var(LVAR_Door_Status, UNLOCKED);
+         display_msg(mstr(100));//{100}{}{You unlock the door.}
+      end
+      else begin
+         display_msg(mstr(109));
+      end
    end
 end
 

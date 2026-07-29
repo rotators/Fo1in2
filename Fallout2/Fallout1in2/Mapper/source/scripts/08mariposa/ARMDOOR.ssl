@@ -48,9 +48,10 @@ end
 
 procedure use_skill_on_p_proc begin
    variable Item := 0;
-   if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
-      if (action_being_used == SKILL_LOCKPICK) then begin
-         script_overrides;
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+
+      if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
          Item := roll_vs_skill(source_obj, SKILL_LOCKPICK, -40);
          if (is_success(Item)) then begin
             set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
@@ -79,9 +80,10 @@ procedure use_skill_on_p_proc begin
             end
          end
       end
-   end
-   else begin
-      display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      else begin
+         display_msg(mstr(109));//{109}{}{The door is already unlocked.}
+      end
+
    end
 end
 
@@ -100,27 +102,33 @@ procedure use_obj_on_p_proc begin
    if (obj_pid(Item) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Item) == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
 
-      if (obj_pid(Item) == PID_ELEC_LOCKPICK_MKII) then
-         Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -10);
+      if (local_var(LVAR_DoorStatus) == DOOR_LOCKED) then begin
+         if (obj_pid(Item) == PID_ELEC_LOCKPICK_MKII) then
+            Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -10);
 
-      if (is_success(Skill)) then begin
-         set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
-         display_msg(mstr(100));//{100}{}{You unlock the door.}
-         if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-            set_local_var(LVAR_Gave_Locks_XP, 1);
-            give_xp(EXP_LOCKPICK_NEG_40);
+         if (is_success(Skill)) then begin
+            set_local_var(LVAR_DoorStatus, DOOR_UNLOCKED);
+            display_msg(mstr(100));//{100}{}{You unlock the door.}
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NEG_40);
+            end
+         end
+         else begin
+            if (is_critical(Skill)) then begin
+               rm_obj_from_inven(dude_obj, Item);
+               destroy_object(Item);
+               display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
+            end
+            else begin
+               display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
+            end
          end
       end
       else begin
-         if (is_critical(Skill)) then begin
-            rm_obj_from_inven(dude_obj, Item);
-            destroy_object(Item);
-            display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
-         end
-         else begin
-            display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
-         end
+         display_msg(mstr(109));
       end
+
    end
 end
 
