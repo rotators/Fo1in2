@@ -25,8 +25,10 @@ variable $addr;
 #include "voodoo_lib.h"
 
 // This will revert the nerfed player hit chance back to how it was in Fo1
+/*
 #define VOODOO_RevertToHitPlayerNerf \
                write_byte(0x4244ED, 0xEB)
+*/
 
 // This will change the skill bonus from survivalist perk to 0.
 // The bonus for all perk ranks is applied via gl_survivalist.ssl script.
@@ -101,14 +103,15 @@ variable $addr;
 
 // Removes the text under green circles on the worldmap
 // Used by Classic Worldmap mod
-#define VOODOO_remove_circle_name \
+/*#define VOODOO_remove_circle_name \
               begin                                             \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */ \
+               *//* fallout2.wmInterfaceDrawCircleOverlay+0xD2 *//* \
                call VOODOO_WriteNop(0x4c407a);                  \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */ \
+               *//* fallout2.wmInterfaceDrawCircleOverlay+0xEC *//* \
                call VOODOO_BlockCall(0x4c4094,6);               \
               end                                               \
               noop
+*/
 
 // This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
