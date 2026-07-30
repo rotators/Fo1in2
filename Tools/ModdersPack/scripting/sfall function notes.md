@@ -930,7 +930,7 @@ sfall_funcX metarule functions
 - `winName`: the window name, assigned to the window by the `CreateWin` or `create_win` function
 - `winID`: the ID number of the interface or script window obtained with the `get_window_under_mouse` function, or 0 for the current game interface
 - `flag`: the flag to change (see `WIN_FLAG_*` constants in **define_extra.h**)
-- `value`: True - set the flag, False - unset the flag
+- `value`: True - sets the flag; False - unsets the flag
 
 ----
 #### get_text_width
@@ -1172,6 +1172,18 @@ sfall_funcX metarule functions
 - Passing 0 will revert to 1 second of real time (vanilla engine behavior)
 - Passing -1 will disable healing during travel
 - The time interval will be reset each time the player reloads the game
+
+----
+#### set_fo1_hit_chance
+`void sfall_func1("set_fo1_hit_chance", bool state)`
+- Enables/disables Fallout 1 behavior when calculating the player's hit chance
+- `state`: True - removes the (PE - 2) distance penalty (Fallout 1 behavior); False - keeps the penalty (default)
+
+----
+#### remove_wm_town_names
+`void sfall_func1("remove_wm_town_names", bool state)`
+- Enables/disables drawing town names under green circles on the world map
+- `state`: True - hides town names (Fallout 1 behavior); False - shows town names (default)
 
 
 ****
