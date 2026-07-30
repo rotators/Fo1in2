@@ -131,6 +131,7 @@ For various other QoL features that aren't included in FALLOUT ET TU already, ch
 - [FO2tweaks](https://github.com/BGforgeNet/FO2tweaks)
 - [Banjo's Fallout 2 Mods](https://www.nma-fallout.com/threads/banjos-fallout-2-mods.220413/)
 - [Upscaled videos](https://www.nma-fallout.com/threads/fallout-ettu-hd-videos-playable-ingame.221565/)
+- [VaultVox Text-to-Speech Mod](https://www.nexusmods.com/fallout2/mods/168)
 
 SPECIAL THANKS
 --------------
