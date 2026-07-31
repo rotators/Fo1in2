@@ -48,9 +48,14 @@
 *******************   Standard Conditionals    **************************
 ************************************************************************/
 
+/*
+Disabled, because this causes much trouble and confusion
+
 #ifndef day
 #define day                     ((game_time_hour > 600) and (game_time_hour < 1800))
 #endif
 #ifndef night
 #define night                   ((game_time_hour <= 600) or (game_time_hour >= 1800))
 #endif
+
+*/
