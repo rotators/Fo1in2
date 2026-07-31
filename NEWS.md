@@ -4,6 +4,7 @@ Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1
 - **Fixed**: EXP exploit when using lockpicks on the armory door at the BoS bunker.
 - **Fixed**: Logic issue in TMA script when pressing enter / numpad enter on an empty input box.
 - **Fixed**: Missing or wrongly assigned strings in various script files. Mostly door related.
+- **Fixed**: Possible crash related to Jack, the Khan prisoner (cut-content)
 - **Fixed**: Script issue in caravan leader script.
 - **Fixed**: Show Loot Weight mod is now automatically disabled if CE is detected, since CE has its own implementation.
 - **Fixed**: Special radiation death screen could show up even if the player did not die from radiation
