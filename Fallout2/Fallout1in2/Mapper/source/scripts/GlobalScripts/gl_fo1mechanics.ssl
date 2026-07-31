@@ -71,6 +71,12 @@ procedure start begin
       register_hook_proc(HOOK_SETLIGHTING, SetLighting_handler);
       register_hook_proc(HOOK_ADJUSTRADS, AdjustRads_handler);
       register_hook_proc(HOOK_DEATHANIM2, DeathAnim2_handler);
+
+      // Modifier is not saved and must be restored after every load
+      if dude_trait(TRAIT_night_person) then
+         mod_skill_points_per_level(2);
+      else
+         mod_skill_points_per_level(0);
    end
 
    call general;
@@ -202,12 +208,12 @@ procedure night_person begin
    end
    // If used Mutate!-perk to remove Night Person, reset everything to default:
    else if (not(dude_trait(TRAIT_night_person)) AndAlso (global_var(GVAR_NIGHT_PERSON_ACTIVE) > 0)) then begin
-      set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 0);
       mod_skill_points_per_level(0);
-      if night then begin
+      if (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
       end
+      set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 0);
       debug_blue("Night person trait is disabled!");
    end
 end
@@ -257,10 +263,12 @@ procedure motion_scanner begin
       if (tmpItem andAlso obj_pid(tmpItem) == PID_MOTION_SENSOR) then begin
          rm_obj_from_inven(dude_obj, tmpItem);
          destroy_object(tmpItem);
-         if (slot == INVEN_TYPE_LEFT_HAND) then begin
-            set_flags(item, get_flags(item) bwor FLAG_LEFT_HAND);
-         end else begin
-            set_flags(item, get_flags(item) bwor FLAG_RIGHT_HAND);
+         if (item) then begin
+            if (slot == INVEN_TYPE_LEFT_HAND) then begin
+               set_flags(item, get_flags(item) bwor FLAG_LEFT_HAND);
+            end else begin
+               set_flags(item, get_flags(item) bwor FLAG_RIGHT_HAND);
+            end
          end
          tmpScanner := false;
          item := 0;
@@ -406,7 +414,7 @@ procedure InventoryMove_handler begin
    end
 
    // If player uses a bookshelf corner object, reroute the use action to the actual bookshelf
-   if (obj_pid(item) == PID_BOOKSHELF_1_CORNER or obj_pid(item) == PID_BOOKSHELF_2_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER) then begin
+   if (obj_pid(item) == PID_BOOKSHELF_1_CORNER or obj_pid(item) == PID_BOOKSHELF_2_CORNER or obj_pid(item) == PID_BOOKSHELF_3_CORNER or obj_pid(item) == PID_BOOKSHELF_4_CORNER) then begin
       reg_anim_clear(dude_obj);
       Scenery_Creation_Hex := tile_num_in_direction(tile_num(item), 5, 2);
       Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, dude_elevation, (obj_pid(item) - 1)); /*ReDefine::IgnoreLine*/
@@ -465,10 +473,11 @@ end
 
 procedure AdjustRads_handler begin
    variable
-      object := get_sfall_arg;
+      object := get_sfall_arg,
+      amount := get_sfall_arg;
 
    // Failsafe to kill the player if rads accumulate way too much
-   if (dude_rads >= 2000) then begin
+   if ((object == dude_obj) and ((dude_rads + amount) >= 2000)) then begin
       display_msg(mstr_misc(1006));
       kill_critter(dude_obj, ANIM_fall_front_sf);
    end

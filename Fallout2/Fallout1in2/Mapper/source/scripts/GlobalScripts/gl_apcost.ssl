@@ -25,14 +25,41 @@ procedure calcapcost_handler begin
       critter := get_sfall_arg,
       atkType := get_sfall_arg,
       aimed := get_sfall_arg,
+      apCost := get_sfall_arg,
+      weapon := get_sfall_arg,
+      weaponRange,
       slot, item, i := -1;
 
+   /*
+      Recreates FastShotFix=3 on top of Fallout 2's normal Fast Shot effect since the option doesn't exist in CE.
+
+      Vanilla Fast Shot already reduces ranged weapon attacks by 1 AP.
+      This also adds that reduction to equipped weapons whose active attack mode has range < 2: melee and unarmed weapons.
+   */
+   if ce_enabled then begin
+      if (critter == dude_obj and dude_trait(TRAIT_fast_shot) and weapon > 0 and atkType >= ATKTYPE_LWEP1 and atkType <= ATKTYPE_RWEP2) then begin
+         if (atkType == ATKTYPE_LWEP1 or atkType == ATKTYPE_RWEP1) then begin
+            weaponRange := get_proto_data(obj_pid(weapon), PROTO_WP_RANGE_1);
+         end else begin
+            weaponRange := get_proto_data(obj_pid(weapon), PROTO_WP_RANGE_2);
+         end
+
+         if (weaponRange < 2) then begin
+            apCost := apCost - 1;
+            if (apCost < 1) then apCost := 1;
+            set_sfall_return(apCost);
+         end
+      end
+   end
+
+    // Bonus Hand-to-Hand perk
    if (atkType >= ATKTYPE_JAB and atkType <= ATKTYPE_PIERCINGSTRIKE) then begin
       i := 4 - (dude_perk(PERK_bonus_hth_attacks) > 0);
    end else if (atkType >= ATKTYPE_HIPKICK and atkType <= ATKTYPE_PIERCINGKICK) then begin
       i := 5 - (dude_perk(PERK_bonus_hth_attacks) > 0);
    end
 
+   // Weapon reload changes
    if (atkType == hit_left_weapon_reload or atkType == hit_right_weapon_reload) then begin
       if (critter == dude_obj and active_hand == 0) then begin
          slot := INVEN_TYPE_LEFT_HAND;
