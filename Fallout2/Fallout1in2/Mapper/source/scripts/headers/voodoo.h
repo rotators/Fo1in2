@@ -83,47 +83,38 @@ variable $addr;
 //   write_int(0x481B2B, 27); \
 //   signal_end_game
 
+// Disables the "Encounter! Investigate?" dialog
+#define VOODOO_disable_encounter_dialog \
+               write_short(0x4C09A4, 0x0BEB)
+
+// This will disable the "You encounter: ..." message
+#define VOODOO_disable_YouEncounter_message \
+              begin                                     \
+               write_short(0x4C1011, 0x34EB);           \
+               call VOODOO_WriteNop(0x4C1013, 3, true); \
+              end                                       \
+              noop
+
+// This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
+#define VOODOO_dogmeat_pm_dialog \
+               write_byte(0x444D10, 0x7A)
+
+// Removes the text under green circles on the worldmap
+// Used by Classic Worldmap mod
+/*
+#define VOODOO_remove_circle_name \
+               write_short(0x4C3FFE, 0xE990) // jmp 0x4C409A
+*/
+
+// This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
+#define VOODOO_rest_till_0600 \
+               write_byte(0x4995F3, 0x06)
+
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
 //
 // sfall-asm:code-begin //
-
-// Disables the "Encounter! Investigate?" dialog
-#define VOODOO_disable_encounter_dialog \
-              begin                                          \
-               write_short(0x4c0b9d, 0x01b0); /* mov al,1 */ \
-               call VOODOO_WriteNop(0x4C0B75, 40, true);     \
-              end                                            \
-              noop
-
-// This will disable the "You encounter: ..." message
-#define VOODOO_disable_YouEncounter_message \
-              begin                               \
-               call VOODOO_BlockCall(0x4c1011);   \
-               call VOODOO_BlockCall(0x4c1042);   \
-              end                                 \
-              noop
-
-// This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
-#define VOODOO_dogmeat_pm_dialog \
-               write_byte(0x444d10, 0x7a)
-
-// Removes the text under green circles on the worldmap
-// Used by Classic Worldmap mod
-#define VOODOO_remove_circle_name \
-              begin                                             \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */ \
-               call VOODOO_WriteNop(0x4c407a);                  \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */ \
-               call VOODOO_BlockCall(0x4c4094,6);               \
-              end                                               \
-              noop
-
-// This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
-#define VOODOO_rest_till_0600 \
-               write_byte(0x4995f3, 0x06)
-
 // sfall-asm:code-end //
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
