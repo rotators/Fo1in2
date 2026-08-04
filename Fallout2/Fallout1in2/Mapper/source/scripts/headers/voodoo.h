@@ -91,7 +91,7 @@ variable $addr;
 
 // Disables the "Encounter! Investigate?" dialog
 #define VOODOO_disable_encounter_dialog \
-               write_short(0x4C0B0D, 0xE990) // jmp 0x4C0721
+               write_short(0x4C09A4, 0x0BEB)
 
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
