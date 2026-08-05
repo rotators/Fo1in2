@@ -1175,15 +1175,15 @@ sfall_funcX metarule functions
 
 ----
 #### set_fo1_hit_chance
-`void sfall_func1("set_fo1_hit_chance", bool state)`
+`void sfall_func1("set_fo1_hit_chance", bool toggle)`
 - Enables/disables Fallout 1 behavior when calculating the player's hit chance
-- `state`: True - removes the (PE - 2) distance penalty (Fallout 1 behavior); False - keeps the penalty (default)
+- `toggle`: True - removes the (PE - 2) distance penalty (Fallout 1 behavior); False - keeps the penalty (default)
 
 ----
 #### remove_wm_town_names
-`void sfall_func1("remove_wm_town_names", bool state)`
+`void sfall_func1("remove_wm_town_names", bool toggle)`
 - Enables/disables drawing town names under green circles on the world map
-- `state`: True - hides town names (Fallout 1 behavior); False - shows town names (default)
+- `toggle`: True - hides town names (Fallout 1 behavior); False - shows town names (default)
 
 
 ****
