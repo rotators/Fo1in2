@@ -15,4 +15,5 @@ Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1
 - **Fixed**: Tthe Night Person trait effects wouldn't clean up correctly at daytime / after loading a savegame.
 - **Fixed**: Unlocking the khans cell door would jam it for some reason.
 - **Fixed**: Various doors could destroy the used lockpicks on successful unlocking rolls.
+- **Tweaked**: Moved power armor weight change from Sfall into script.
 - **Tweaked**: ShowLootWeight mini-mod now automatically disables if CE is detected, since CE has a build in feature (loot_weight_indicator=3 in fallout2.cfg)
