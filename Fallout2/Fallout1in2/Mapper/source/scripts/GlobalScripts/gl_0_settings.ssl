@@ -8,6 +8,7 @@
 
 #include "define.h"
 #include "voodoo.h"
+#include "ce/ce.h"
 
 #define ini_path                 "config\\fo1_settings.ini"
 #define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
@@ -113,10 +114,15 @@ procedure start begin
 
       // Changes the PipBoy rest timer from 08:00 to 06:00
       // Moved here, because the code needs to run as early as possible
-      // Does not work with CE.
-      if not(fo1in2_0800_resting_enabled) and ce_disabled then begin
-         VOODOO_rest_strings;
-         VOODOO_rest_till_0600;
+      if not(fo1in2_0800_resting_enabled) then begin
+         if ce_disabled then begin
+            VOODOO_rest_strings;
+            VOODOO_rest_till_0600;
+         end
+         else begin
+            rest_option_msgs(320);
+            set_rest_option(REST_OPTION_MORNING, 6);
+         end
       end
    end
 end
