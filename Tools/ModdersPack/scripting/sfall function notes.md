@@ -329,7 +329,7 @@ FUNCTION REFERENCE
 
 -----
 #### `void set_explosion_max_targets(int x)`
-- Sets the maximum number of additional targets for an explosion, valid range: 1..6 (default is 6)
+- Sets the maximum number of additional targets for an explosion. Valid range: 1..6 (default: 6)
 
 ---
 ### Some utility/math functions are available:
@@ -485,7 +485,7 @@ FUNCTION REFERENCE
 
 -----
 #### `any sfall_funcX(string funcName, ...)`
-- These opcodes allows to use additional script functions, that do not require new opcode.
+- These opcodes allow the use of additional script functions without requiring new opcodes.
 - First argument is always function name (string).
 - There are 9 versions of this opcode for different number of additional arguments (for convenience).
 - Opcodes have return value, but it is not necessary to use it.
@@ -1184,6 +1184,17 @@ sfall_funcX metarule functions
 `void sfall_func1("remove_wm_town_names", bool toggle)`
 - Enables/disables drawing town names under green circles on the world map
 - `toggle`: True - hides town names (Fallout 1 behavior); False - shows town names (default)
+
+#### encounter_detection
+`void sfall_func1("encounter_detection", bool toggle)`
+- Enables/disables the engine's random encounter detection process (grants XP and displays a dialog box)
+- If the process is disabled, the player will always be forced into random encounters when they occur
+
+#### set_reaction_thresholds
+`void sfall_func2("set_reaction_thresholds", int neutral, int good)`
+- Sets the thresholds for "neutral" and "good" NPC reactions
+- `neutral`: any reaction value greater than this is considered neutral. Valid range: -125..125 (default: -10)
+- `good`: any reaction value greater than this is considered good. Valid range: -125..125 (default: 10). The value must be greater than or equal to the `neutral` threshold
 
 
 ****
