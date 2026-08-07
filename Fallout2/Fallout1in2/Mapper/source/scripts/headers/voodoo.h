@@ -68,14 +68,12 @@ variable $addr;
 #define VOODOO_rest_strings \
                write_int(0x499746, 320)
 
-// This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
-#define VOODOO_rest_till_0600 \
-               write_byte(0x4995F3, 0x06)
-
 // This changes the animated head reaction values. See modreact.h for more details.
+/*
 #define VOODOO_talking_head_mood \
                write_byte(0x4A29F5, 25); \
                write_byte(0x4A2A0D, 75)
+*/
 
 // This will shut down the game and not just send the player back to the main menu
 //#define VOODOO_close_game \
@@ -83,16 +81,24 @@ variable $addr;
 //   write_int(0x481B2B, 27); \
 //   signal_end_game
 
+/////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
+//
+// ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
+//
+// sfall-asm:code-begin //
+
 // Disables the "Encounter! Investigate?" dialog
+/*
 #define VOODOO_disable_encounter_dialog \
-               write_short(0x4C09A4, 0x0BEB)
+               write_short(0x4C09A4, 0x0BEB) // jmp 0x4C09B1
+*/
 
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
-              begin                                     \
-               write_short(0x4C1011, 0x34EB);           \
-               call VOODOO_WriteNop(0x4C1013, 3, true); \
-              end                                       \
+              begin                               \
+               write_int(0x4C100C, 0x909039EB);   \
+               write_byte(0x4C1010, 0x90);        \
+              end                                 \
               noop
 
 // This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
@@ -110,11 +116,6 @@ variable $addr;
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995F3, 0x06)
 
-/////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
-//
-// ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
-//
-// sfall-asm:code-begin //
 // sfall-asm:code-end //
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
