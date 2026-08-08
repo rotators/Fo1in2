@@ -516,11 +516,11 @@ variable Scenery_Creation_Ptr;
                                                 while (Scenery_Creation_Count < Count) do begin                                                          \
                                                     Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,Rot,1);                             \
                                                     Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_BLOCKING_HEX);        \
-                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                                   \
                                                     Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_RED_CARAVAN_HANDLE);  \
-                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                                   \
                                                     Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_GREY_CARAVAN_HANDLE); \
-                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                                   \
                                                     Scenery_Creation_Count+=1;                                                                           \
                                                 end
 
@@ -528,11 +528,11 @@ variable Scenery_Creation_Ptr;
 // TODO: Add wood caravan wagon from SD3!
 #define Destroy_EW_Caravan(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
                                                 /*Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_WOOD_CARAVAN);*/   \
-                                                /*destroy_object(Scenery_Creation_Ptr);*/                                                 \
+                                                /*if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);*/                \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_RED_CARAVAN);    \
-                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                    \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_GREY_CARAVAN);   \
-                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                    \
                                                 Scenery_Creation_Hex:=Hex_Num;                                                        \
                                                    Dest_Caravan_Cycle(1,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(3,2,Elevation)                                                  \
@@ -567,16 +567,16 @@ variable Scenery_Creation_Ptr;
 // This will destroy the North-South Caravans
 #define Destroy_NS_Caravan(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_NS_RED_CARAVAN);    \
-                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                    \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_NS_GREY_CARAVAN);   \
-                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                    \
                                                 Scenery_Creation_Hex:=Hex_Num;                                                        \
                                                    Dest_Caravan_Cycle(5,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(4,1,Elevation)                                                  \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_RED_CARAVAN_HANDLE);   \
-                                                destroy_object(Scenery_Creation_Ptr);                                                    \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                       \
                                                 Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_GREY_CARAVAN_HANDLE);  \
-                                                destroy_object(Scenery_Creation_Ptr);                                                    \
+                                                if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                       \
                                                    Dest_Caravan_Cycle(5,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(1,2,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(2,3,Elevation)                                                  \
@@ -623,7 +623,7 @@ variable Scenery_Creation_Ptr;
                                                 while (Scenery_Creation_Count < Count) do begin                                         \
                                                     Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,Rot,1);            \
                                                     Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elev_Num,PID_BLOCKING_HEX);   \
-                                                    destroy_object(Scenery_Creation_Ptr);                                               \
+                                                    if Scenery_Creation_Ptr then destroy_object(Scenery_Creation_Ptr);                  \
                                                     Scenery_Creation_Count+=1;                                                          \
                                                 end
 
