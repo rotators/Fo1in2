@@ -1,6 +1,6 @@
 /*
 
-   Generic Merc
+   Encounter - Generic merchant
 
 */
 
@@ -31,9 +31,9 @@ procedure GenMercA04;
 procedure GenMercAEnd;
 
 #define LVAR_Destination   (4)
-#define LVAR_PartySize     (5)
+#define LVAR_JoinGroup     (5)
 
-#define PARTY_FULL   (1)
+#define ALLOW_TRAVEL       (1)
 
 variable scared;
 variable tmp_hostile;
@@ -64,6 +64,11 @@ procedure map_enter_p_proc begin
          index := random(1, 2);
       end
       set_local_var(LVAR_Destination, index);
+
+      // Moved here from the dialog proc, so that player can't savescum anymore
+      if (dude_skill_success(SKILL_SPEECH, 0)) then begin
+         set_local_var(LVAR_JoinGroup, ALLOW_TRAVEL);
+      end
    end
 
    name_index := 105 + local_var(LVAR_Destination);
@@ -156,12 +161,11 @@ procedure GenMercA04 begin
    if (has_rep_berserker or has_rep_childkiller or (check_general_rep < -20)) then begin
       BMessage(117);
    end
-   else if (local_var(LVAR_PartySize) == 0) and (dude_skill_success(SKILL_SPEECH, 0)) then begin
+   else if (local_var(LVAR_JoinGroup) == ALLOW_TRAVEL) then begin
       move := 1;
       NMessage(115);
    end
    else begin
-      set_local_var(LVAR_PartySize, PARTY_FULL);
       NMessage(116);
    end
 end
