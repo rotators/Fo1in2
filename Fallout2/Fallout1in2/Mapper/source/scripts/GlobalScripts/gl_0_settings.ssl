@@ -2,7 +2,7 @@
 
    Fallout et Tu - Settings
 
-   Reads data from the fo1_settings.ini file and switches GVAR's accordingly.
+   Reads data from the fo1_settings.ini file and switches GVARs accordingly.
 
 */
 
@@ -13,22 +13,22 @@
 
 #define ini_path                 "config\\fo1_settings.ini"
 
-#define start_invasion_timer(gvar) ini_val := get_ini_setting(ini_path + "|Fo1in2|" + #gvar); \
-                                   if (ini_val <= 0) then                                           \
-                                      set_global_var(gvar, 999999);                                  \
-                                   else                                                               \
-                                      set_global_var(gvar, get_days_passed + ini_val)
 #define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
-#define gvar_timer(gvar)         ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);   \
-                                  if (ini_val <= 0) then                                               \
-                                     set_global_var(gvar, 999999);                                     \
-                                  else                                                                 \
-                                     set_global_var(gvar, ini_val)
-#define gvar_invasion_timer(gvar) ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar); \
-                                  if (ini_val <= 0 or fo1in2_delayed_invasion_enabled) then         \
-                                     set_global_var(gvar, 999999);                                    \
-                                  else                                                                \
-                                     set_global_var(gvar, ini_val)
+#define gvar_timer(gvar) \
+   ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);  \
+   if (ini_val <= 0) then                                               \
+      set_global_var(gvar, 999999);                                     \
+   else                                                                 \
+      set_global_var(gvar, ini_val)
+
+#define gvar_invasion_timer(gvar, start_now) \
+   ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);              \
+   if (ini_val <= 0 or (not(start_now) and fo1in2_delayed_invasion_enabled)) then   \
+      set_global_var(gvar, 999999);                                                 \
+   else if (start_now) then                                                         \
+      set_global_var(gvar, get_days_passed + ini_val);                              \
+   else                                                                             \
+      set_global_var(gvar, ini_val)
 
 procedure start;
 
@@ -118,17 +118,17 @@ procedure settings begin
    if (global_var(GVAR_SET_GAMESTART_TIMERS) == 0) then begin
       set_global_var(GVAR_SET_GAMESTART_TIMERS, 1);
 
-      gvar_settings(GVAR_INVASION_DELAYED);
-
       gvar_timer(GVAR_VAULT13_WATER_DAYS); // Start timer (150 days)
       gvar_timer(GVAR_NECROPOLIS_INVASION_DAYS);
 
-      gvar_invasion_timer(GVAR_VAULT_13_INVASION_DAYS);
-      gvar_invasion_timer(GVAR_BONEYARD_INVASION_DAYS);
-      gvar_invasion_timer(GVAR_THE_HUB_INVASION_DAYS);
-      gvar_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS);
-      gvar_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS);
-      gvar_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS);
+      gvar_settings(GVAR_INVASION_DELAYED);
+
+      gvar_invasion_timer(GVAR_VAULT_13_INVASION_DAYS, false);
+      gvar_invasion_timer(GVAR_BONEYARD_INVASION_DAYS, false);
+      gvar_invasion_timer(GVAR_THE_HUB_INVASION_DAYS, false);
+      gvar_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS, false);
+      gvar_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS, false);
+      gvar_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS, false);
    end
 
    //===================================================
@@ -145,17 +145,19 @@ procedure settings begin
 end
 
 procedure SetGlobalVar_Handler begin
-   variable changed_gvar := get_sfall_arg;
-   variable new_value := get_sfall_arg;
-   variable ini_val;
+   variable
+      changed_gvar := get_sfall_arg,
+      new_value := get_sfall_arg,
+      ini_val, section := "Fo1in2";
 
-   if (fo1in2_delayed_invasion_enabled and changed_gvar == GVAR_VAULT_WATER and new_value == 2) then begin
-      start_invasion_timer(GVAR_VAULT_13_INVASION_DAYS);
-      start_invasion_timer(GVAR_BONEYARD_INVASION_DAYS);
-      start_invasion_timer(GVAR_THE_HUB_INVASION_DAYS);
-      start_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS);
-      start_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS);
-      start_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS);
+   if (fo1in2_delayed_invasion_enabled and (changed_gvar == GVAR_VAULT_WATER) and (new_value == 2)) then begin
       set_global_var(GVAR_INVASION_DELAYED, -1);
+
+      gvar_invasion_timer(GVAR_VAULT_13_INVASION_DAYS, true);
+      gvar_invasion_timer(GVAR_BONEYARD_INVASION_DAYS, true);
+      gvar_invasion_timer(GVAR_THE_HUB_INVASION_DAYS, true);
+      gvar_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS, true);
+      gvar_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS, true);
+      gvar_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS, true);
    end
 end
