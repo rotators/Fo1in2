@@ -242,10 +242,10 @@ procedure Cheater00e begin
 end
 
 procedure Cheater00b begin
-   Reply("Master or Vats?");
+   Reply("Return the Water Chip, destroy the Master, or destroy Vats?");
    NOption("Water Chip brought back", Cheater00e, 001);
-   NOption("Master", Cheater00C, 001);
-   NOption("Vats", Cheater00d, 001);
+   NOption("Destroy the Master", Cheater00C, 001);
+   NOption("Destroy the Vats", Cheater00d, 001);
    NOption("Start Vats destruction timer!", Cheater00d1, 001);
    NOption(g_bye, CheaterEnd, 004);
 end

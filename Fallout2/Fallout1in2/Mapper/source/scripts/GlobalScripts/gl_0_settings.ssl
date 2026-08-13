@@ -7,20 +7,54 @@
 */
 
 #include "define.h"
+#include "command.h"
 #include "voodoo.h"
 #include "ce/ce.h"
 
 #define ini_path                 "config\\fo1_settings.ini"
-#define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
-#define gvar_timers(gvar)        ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);  \
-                                 if (ini_val <= 0) then                                               \
-                                    set_global_var(gvar, 999999);                                     \
-                                 else                                                                 \
-                                    set_global_var(gvar, ini_val)
 
-//procedure warning_ddraw begin
-//   create_message_window("Warning:\nCustom ddraw.dll detected\nSome features will be disabled!");
-//end
+#define start_invasion_timer(gvar) ini_val := get_ini_setting(ini_path + "|Fo1in2|" + #gvar); \
+                                   if (ini_val <= 0) then                                           \
+                                      set_global_var(gvar, 999999);                                  \
+                                   else                                                               \
+                                      set_global_var(gvar, get_days_passed + ini_val)
+#define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
+#define gvar_timer(gvar)         ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);   \
+                                  if (ini_val <= 0) then                                               \
+                                     set_global_var(gvar, 999999);                                     \
+                                  else                                                                 \
+                                     set_global_var(gvar, ini_val)
+#define gvar_invasion_timer(gvar) ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar); \
+                                  if (ini_val <= 0 or fo1in2_delayed_invasion_enabled) then         \
+                                     set_global_var(gvar, 999999);                                    \
+                                  else                                                                \
+                                     set_global_var(gvar, ini_val)
+
+procedure start;
+
+procedure settings;
+procedure SetGlobalVar_Handler;
+
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_type(0);
+      register_hook_proc(HOOK_SETGLOBALVAR, SetGlobalVar_Handler);
+      call settings;
+
+      // Changes the PipBoy rest timer from 08:00 to 06:00
+      // Moved here, because the code needs to run as early as possible
+      if not(fo1in2_0800_resting_enabled) then begin
+         if ce_disabled then begin
+            VOODOO_rest_strings;
+            VOODOO_rest_till_0600;
+         end
+         else begin
+            rest_option_msgs(320);
+            set_rest_option(REST_OPTION_MORNING, 6);
+         end
+      end
+   end
+end
 
 procedure settings begin
    variable section, ini_val;
@@ -68,6 +102,7 @@ procedure settings begin
    gvar_settings(GVAR_ENABLE_FO2_HITCHANCE);
    gvar_settings(GVAR_ENABLE_AUTO_PUSH);
 
+
    // Demo is always enabled (Vault13.gam -> 1)
    //gvar_settings(GVAR_ENABLE_SCRAPHEAP);
 
@@ -83,15 +118,17 @@ procedure settings begin
    if (global_var(GVAR_SET_GAMESTART_TIMERS) == 0) then begin
       set_global_var(GVAR_SET_GAMESTART_TIMERS, 1);
 
-      gvar_timers(GVAR_VAULT13_WATER_DAYS); // Start timer (150 days)
+      gvar_settings(GVAR_INVASION_DELAYED);
 
-      gvar_timers(GVAR_VAULT_13_INVASION_DAYS);
-      gvar_timers(GVAR_NECROPOLIS_INVASION_DAYS);
-      gvar_timers(GVAR_BONEYARD_INVASION_DAYS);
-      gvar_timers(GVAR_THE_HUB_INVASION_DAYS);
-      gvar_timers(GVAR_BROTHERHOOD_INVASION_DAYS);
-      gvar_timers(GVAR_JUNKTOWN_INVASION_DAYS);
-      gvar_timers(GVAR_SHADY_SANDS_INVASION_DAYS);
+      gvar_timer(GVAR_VAULT13_WATER_DAYS); // Start timer (150 days)
+      gvar_timer(GVAR_NECROPOLIS_INVASION_DAYS);
+
+      gvar_invasion_timer(GVAR_VAULT_13_INVASION_DAYS);
+      gvar_invasion_timer(GVAR_BONEYARD_INVASION_DAYS);
+      gvar_invasion_timer(GVAR_THE_HUB_INVASION_DAYS);
+      gvar_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS);
+      gvar_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS);
+      gvar_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS);
    end
 
    //===================================================
@@ -107,22 +144,18 @@ procedure settings begin
    gvar_settings(GVAR_ENABLE_FIXT_CHESS);
 end
 
-procedure start begin
-   if (game_loaded) then begin
-      set_global_script_type(0);
-      call settings;
+procedure SetGlobalVar_Handler begin
+   variable changed_gvar := get_sfall_arg;
+   variable new_value := get_sfall_arg;
+   variable ini_val;
 
-      // Changes the PipBoy rest timer from 08:00 to 06:00
-      // Moved here, because the code needs to run as early as possible
-      if not(fo1in2_0800_resting_enabled) then begin
-         if ce_disabled then begin
-            VOODOO_rest_strings;
-            VOODOO_rest_till_0600;
-         end
-         else begin
-            rest_option_msgs(320);
-            set_rest_option(REST_OPTION_MORNING, 6);
-         end
-      end
+   if (fo1in2_delayed_invasion_enabled and changed_gvar == GVAR_VAULT_WATER and new_value == 2) then begin
+      start_invasion_timer(GVAR_VAULT_13_INVASION_DAYS);
+      start_invasion_timer(GVAR_BONEYARD_INVASION_DAYS);
+      start_invasion_timer(GVAR_THE_HUB_INVASION_DAYS);
+      start_invasion_timer(GVAR_BROTHERHOOD_INVASION_DAYS);
+      start_invasion_timer(GVAR_JUNKTOWN_INVASION_DAYS);
+      start_invasion_timer(GVAR_SHADY_SANDS_INVASION_DAYS);
+      set_global_var(GVAR_INVASION_DELAYED, -1);
    end
 end
