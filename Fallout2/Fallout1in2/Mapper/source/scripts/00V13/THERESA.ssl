@@ -69,7 +69,11 @@ variable line;
 variable tmp_hostile;
 variable exp_flag;
 
+#define LVAR_HomeTile                     (4)
 #define LVAR_Sleeping                     (5)
+#define LVAR_SpeechAttempted              (7)
+#define LVAR_RebelDiscussion              (6)
+#define LVAR_Hostile                      (8)
 
 procedure start begin
 end
@@ -140,7 +144,7 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_local_var(8, 1);
+      set_local_var(LVAR_Hostile, 1);
    end
 end
 
@@ -163,10 +167,10 @@ procedure map_enter_p_proc begin
       invasion_kill_critter_V13;
    end
 
-   if (not(local_var(4))) then begin
-      set_local_var(4, self_tile);
+   if (not(local_var(LVAR_HomeTile))) then begin
+      set_local_var(LVAR_HomeTile, self_tile);
    end
-   home_tile := local_var(4);
+   home_tile := local_var(LVAR_HomeTile);
    set_self_team(TEAM_V13_REBELS);
    sleep_tile := home_tile;
    sleep_time := 1915;
@@ -185,10 +189,10 @@ procedure talk_p_proc begin
       set_map_var(5, (GAME_TIME_IN_DAYS) + 3);
    end
    get_reaction
-   if (local_var(5) == 1) then begin
+   if (local_var(LVAR_Sleeping) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
-   else if (REP_ENEMY_VAULT13 or local_var(8)) then begin
+   else if (REP_ENEMY_VAULT13 or local_var(LVAR_Hostile)) then begin
       float_msg(self_obj, mstr(174), FLOAT_MSG_RED);
    end
    else begin
@@ -218,7 +222,7 @@ procedure talk_p_proc begin
 
    if ((game_time_hour >= 1700) and (game_time_hour <= 1710)) then begin
    end
-   else if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (local_var(5) == 0) and local_var(6) then begin
+   else if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (local_var(LVAR_Sleeping) == 0) and local_var(LVAR_RebelDiscussion) then begin
       float_msg(self_obj, mstr(176), FLOAT_MSG_NORMAL);
    end
 end
@@ -231,7 +235,7 @@ procedure Theresa01 begin
 end
 
 procedure Theresa02 begin
-   set_local_var(6, 1);
+   set_local_var(LVAR_RebelDiscussion, 1);
    if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
       set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
    end
@@ -244,8 +248,8 @@ end
 
 procedure Theresa02a begin
    variable LVar0 := 0;
-   if (not(local_var(7))) then begin
-      set_local_var(7, 1);
+   if (not(local_var(LVAR_SpeechAttempted))) then begin
+      set_local_var(LVAR_SpeechAttempted, 1);
       LVar0 := roll_vs_skill(dude_obj, SKILL_SPEECH, 0);
       if (is_success(LVar0)) then begin
          call Theresa08;
@@ -281,7 +285,7 @@ procedure Theresa06 begin
 end
 
 procedure Theresa07 begin
-   set_local_var(6, 1);
+   set_local_var(LVAR_RebelDiscussion, 1);
    if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
       set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
    end
@@ -333,7 +337,7 @@ procedure Theresa14 begin
 end
 
 procedure Theresa15 begin
-   set_local_var(6, 1);
+   set_local_var(LVAR_RebelDiscussion, 1);
    if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
       set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
    end
@@ -376,11 +380,11 @@ procedure Theresa20 begin
 end
 
 procedure Theresa21 begin
-   if (local_var(7)) then begin
+   if (local_var(LVAR_SpeechAttempted)) then begin
       call Theresa25;
    end
    else begin
-      set_local_var(7, 1);
+      set_local_var(LVAR_SpeechAttempted, 1);
       if (dude_skill_success(SKILL_SPEECH, 0)) then begin
          exp_flag := 1;
          set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);

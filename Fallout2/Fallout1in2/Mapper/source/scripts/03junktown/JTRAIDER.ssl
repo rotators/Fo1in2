@@ -78,6 +78,11 @@ procedure RaiderSnap;
 procedure safe;
 
 #define LVAR_Herebefore          (4)
+#define LVAR_Hostile             (5)
+#define LVAR_Alerted             (6)
+#define LVAR_Negotiated          (7)
+#define LVAR_SneakWarningShown   (8)
+#define LVAR_KnockoutHandled     (9)
 
 import variable JTRaider_ptr;
 import variable Sinthia_ptr;
@@ -98,20 +103,20 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-   if ((tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(8) == 0) and (has_skill(dude_obj, SKILL_SNEAK) >= 50)) then begin
-      set_local_var(8, 1);
+   if ((tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(LVAR_SneakWarningShown) == 0) and (has_skill(dude_obj, SKILL_SNEAK) >= 50)) then begin
+      set_local_var(LVAR_SneakWarningShown, 1);
       display_msg(mstr(184));
    end
    else begin
       if (map_var(MVAR_raider_status) == 0) then begin
-         if ((local_var(5) == 2) and self_can_see_dude) then begin
-            set_local_var(5, 1);
-            set_local_var(6, 1);
+         if ((local_var(LVAR_Hostile) == 2) and self_can_see_dude) then begin
+            set_local_var(LVAR_Hostile, 1);
+            set_local_var(LVAR_Alerted, 1);
             attack(dude_obj);
          end
-         else if ((local_var(6) == 1) and (tile_distance_objs(dude_obj, self_obj) < 4)) then begin
+         else if ((local_var(LVAR_Alerted) == 1) and (tile_distance_objs(dude_obj, self_obj) < 4)) then begin
             if (not(dude_is_sneaking)) then begin
-               set_local_var(5, 2);
+               set_local_var(LVAR_Hostile, 2);
             end
          end
          else if (self_can_see_dude and (local_var(LVAR_Herebefore) == 0) and (dude_is_sneaking == 0)) then begin
@@ -119,7 +124,7 @@ procedure critter_p_proc begin
          end
       end
       else if (map_var(MVAR_raider_status) == 1) then begin
-         if (local_var(9) == 0) then begin
+         if (local_var(LVAR_KnockoutHandled) == 0) then begin
             rm_timer_event(Sinthia_ptr);
             add_timer_event(Sinthia_ptr, game_ticks(2), 2);
 
@@ -128,7 +133,7 @@ procedure critter_p_proc begin
                reg_anim_animate(self_obj, ANIM_fall_front, -1);
                reg_anim_animate(self_obj, ANIM_fall_front_sf, -1);
             reg_anim_end();
-            set_local_var(9, 1);
+            set_local_var(LVAR_KnockoutHandled, 1);
          end
       end
    end
@@ -143,7 +148,7 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      if (dude_is_sneaking and (map_var(MVAR_raider_status) == 0) and (local_var(9) == 0)) then begin
+      if (dude_is_sneaking and (map_var(MVAR_raider_status) == 0) and (local_var(LVAR_KnockoutHandled) == 0)) then begin
          if (dude_skill_success(SKILL_SNEAK, 0)) then begin
             script_overrides;
             display_msg(mstr(183));
@@ -154,11 +159,11 @@ procedure damage_p_proc begin
             terminate_combat;
          end
          else begin
-            set_local_var(5, 2);
+            set_local_var(LVAR_Hostile, 2);
          end
       end
       else begin
-         set_local_var(5, 2);
+         set_local_var(LVAR_Hostile, 2);
       end
    end
 end
@@ -192,9 +197,9 @@ procedure map_enter_p_proc begin
       end
       else if (map_var(MVAR_raider_status) == 1) then begin
          set_map_var(MVAR_raider_status, 0);
-         set_local_var(5, 2);
-         set_local_var(6, 1);
-         set_local_var(7, 0);
+         set_local_var(LVAR_Hostile, 2);
+         set_local_var(LVAR_Alerted, 1);
+         set_local_var(LVAR_Negotiated, 0);
          if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
             reg_anim_clear(self_obj);
             reg_anim_begin();
@@ -206,15 +211,15 @@ procedure map_enter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   set_local_var(5, 2);
-   set_local_var(6, 1);
-   set_local_var(7, 0);
+   set_local_var(LVAR_Hostile, 2);
+   set_local_var(LVAR_Alerted, 1);
+   set_local_var(LVAR_Negotiated, 0);
 end
 
 procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
-   if (local_var(5) != 0) then begin
+   if (local_var(LVAR_Hostile) != 0) then begin
       call Raider34;
    end
    else begin
@@ -235,7 +240,7 @@ procedure talk_p_proc begin
                set_map_var(MVAR_save_da_ho, 2);
             end
             else begin
-               if (local_var(7) == 1) then begin
+               if (local_var(LVAR_Negotiated) == 1) then begin
                   call Raider21;
                end
                else begin
@@ -277,7 +282,7 @@ end
 procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       game_ui_enable;
-      set_local_var(5, 2);
+      set_local_var(LVAR_Hostile, 2);
    end
    else if (fixed_param == 2) then begin
       critter_dmg(Sinthia_ptr, 75, DMG_normal_dam);
@@ -285,9 +290,9 @@ procedure timed_event_p_proc begin
    end
    else if (fixed_param == 3) then begin
       set_map_var(MVAR_raider_status, 0);
-      set_local_var(5, 2);
-      set_local_var(6, 1);
-      set_local_var(7, 0);
+      set_local_var(LVAR_Hostile, 2);
+      set_local_var(LVAR_Alerted, 1);
+      set_local_var(LVAR_Negotiated, 0);
       if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
          reg_anim_clear(self_obj);
          reg_anim_begin();
@@ -326,7 +331,7 @@ end
 procedure Raider3 begin
    DownReact
    BMessage(109);
-   set_local_var(6, 1);
+   set_local_var(LVAR_Alerted, 1);
 end
 
 procedure Raider4 begin
@@ -342,13 +347,13 @@ end
 
 procedure Raider6 begin
    UpReact
-   set_local_var(6, 1);
+   set_local_var(LVAR_Alerted, 1);
    GMessage(115);
 end
 
 procedure Raider7 begin
    BMessage(116);
-   set_local_var(6, 1);
+   set_local_var(LVAR_Alerted, 1);
 end
 
 procedure Raider8 begin
@@ -375,7 +380,7 @@ end
 
 procedure Raider10a begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
-      set_local_var(7, 1);
+      set_local_var(LVAR_Negotiated, 1);
       call Raider12;
    end
    else begin
@@ -403,7 +408,7 @@ end
 
 procedure Raider14a begin
    if (dude_skill_success(SKILL_SPEECH, 20)) then begin
-      set_local_var(7, 1);
+      set_local_var(LVAR_Negotiated, 1);
       call Raider16;
    end
    else begin
@@ -432,12 +437,12 @@ procedure Raider17 begin
 end
 
 procedure Raider17a begin
-   set_local_var(7, 0);
+   set_local_var(LVAR_Negotiated, 0);
 end
 
 procedure Raider17b begin
    if (dude_skill_success(SKILL_SPEECH, 0)) then begin
-      set_local_var(7, 1);
+      set_local_var(LVAR_Negotiated, 1);
       call Raider20;
    end
    else begin
@@ -452,7 +457,7 @@ end
 
 procedure Raider19 begin
    BMessage(143);
-   set_local_var(7, 0);
+   set_local_var(LVAR_Negotiated, 0);
 end
 
 procedure Raider20 begin
@@ -595,7 +600,7 @@ procedure Raiderend begin
 end
 
 procedure RaiderCombat begin
-   set_local_var(5, 2);
+   set_local_var(LVAR_Hostile, 2);
 end
 
 procedure RaiderSnap begin
@@ -604,7 +609,7 @@ end
 
 procedure safe begin
    award := 1000;
-   set_local_var(6, 0);
+   set_local_var(LVAR_Alerted, 0);
    Sinthia_is_safe := 1;
    if not(is_loading_game) then set_self_invisible;
 end

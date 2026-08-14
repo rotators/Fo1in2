@@ -56,8 +56,10 @@ import variable recipient;
 import variable WtrGrd_ptr;
 import variable getting_ration;
 
+#define LVAR_HomeTile         (4)
 #define LVAR_WaterRations     (5)
 #define LVAR_Sleeping         (6)
+#define LVAR_Hostile          (7)
 
 procedure push_p_proc begin
 end
@@ -71,7 +73,7 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if (local_var(7) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
+      if (local_var(LVAR_Hostile) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
          call flee_dude;
       end
    end
@@ -79,7 +81,7 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_local_var(7, 1);
+      set_local_var(LVAR_Hostile, 1);
    end
 end
 
@@ -97,10 +99,10 @@ procedure map_enter_p_proc begin
 
    flush_add_timer_event(self_obj, game_ticks(1), EVENT_WaterRation);
 
-   if (local_var(4) == 0) then begin
-      set_local_var(4, self_tile);
+   if (local_var(LVAR_HomeTile) == 0) then begin
+      set_local_var(LVAR_HomeTile, self_tile);
    end
-   home_tile := local_var(4);
+   home_tile := local_var(LVAR_HomeTile);
    set_self_team(TEAM_VAULT13);
    call set_ration_tile;
    call set_sleep_tile;
@@ -127,7 +129,7 @@ procedure talk_p_proc begin
 
    get_reaction
 
-   if (local_var(6)) then begin
+   if (local_var(LVAR_Sleeping)) then begin
       if (random(0, 1)) then begin
          float_msg(self_obj, mstr(166), FLOAT_MSG_NORMAL);
       end
@@ -135,7 +137,7 @@ procedure talk_p_proc begin
          display_msg(mstr(167));
       end
    end
-   else if (local_var(7) or REP_ENEMY_VAULT13) then begin
+   else if (local_var(LVAR_Hostile) or REP_ENEMY_VAULT13) then begin
       call Vault00;
    end
    else if waterchip_returned then begin

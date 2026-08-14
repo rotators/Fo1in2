@@ -2,6 +2,9 @@
 
    Vault 13 - Officer / Security
 
+   Note: This is the guard in front of the armory on level 3.
+         If dude is male, a female officer spawns, if dude is female, a male officer spawns via VAULT13.ssl
+
 */
 
 /* Include Files */
@@ -69,6 +72,7 @@ import variable Officer_ptr;
 
 #define LVAR_Home_Tile                  (5)
 #define LVAR_Home_Rotation              (6)
+#define LVAR_Warned                     (14)
 
 #define armory_hex   (21292)
 
@@ -152,8 +156,13 @@ procedure talk_p_proc begin
    if REP_ENEMY_VAULT13 then begin
       start_dialog_at_node(Officer00);
    end
-   else if dude_is_armed and (local_var(14) == 0) then begin
-      start_dialog_at_node(Officer27);
+   else if dude_is_armed then begin
+      if (local_var(LVAR_Warned) == 0) then begin
+         start_dialog_at_node(Officer28);
+      end
+      else begin
+         start_dialog_at_node(Officer27);
+      end
    end
    else if waterchip_returned then begin
       start_dialog_at_node(Officer01);
@@ -334,6 +343,8 @@ procedure Officer27 begin
 end
 
 procedure Officer28 begin
+   set_local_var(LVAR_Warned, 1);
+
    Reply(152);
    NOption(153, Officer30, 4);
    NOption(154, Officer31, 5);
