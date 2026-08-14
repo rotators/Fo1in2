@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1in2/releases/tag/v1.16.3771))
 
+- **Added**: Delayed mutant invasions. If enabled in the fo1_settings.ini file, all invasion timers except Necropolis (for story-reasons), will not start before the water chip has been returned.
 - **Added**: Fast Shot trait implementation compatible with Fo2 CE.
 - **Fixed**: Auto push function for party members could make them fail to move in certain orientations.
 - **Fixed**: Because of a stray night-condition macro, many scripts were checking the beginning of the night wrong (18:00 instead of 19:00).
@@ -14,6 +15,7 @@ Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1
 - **Fixed**: The player could survive receiving huge amounts of rads when he really shouldn't
 - **Fixed**: Tthe Night Person trait effects wouldn't clean up correctly at daytime / after loading a savegame.
 - **Fixed**: Unlocking the khans cell door would jam it for some reason.
+- **Fixed**: Using the terminal in the Master's Vault could possibly not mark the Mariposa military base location on the worldmap
 - **Fixed**: Various doors could destroy the used lockpicks on successful unlocking rolls.
 - **Tweaked**: Moved power armor weight change from Sfall into script.
 - **Tweaked**: ShowLootWeight mini-mod now automatically disables if CE is detected, since CE has a build in feature (loot_weight_indicator=3 in fallout2.cfg)
