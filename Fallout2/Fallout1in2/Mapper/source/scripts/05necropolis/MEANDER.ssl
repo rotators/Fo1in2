@@ -1,6 +1,10 @@
 /*
 
-   ??
+   Necropolis - "Ghoul Peasant" cut-content character, unused right now
+
+   Note:
+      Script is almost the same as HOTGHOUL.ssl except that this one wanders around.
+      Since he floats about eating a dead rat, he was probably one of the underground ghouls?
 
 */
 
@@ -28,6 +32,8 @@ procedure generic01;
 procedure generic02;
 procedure generic03;
 
+#define LVAR_Home_Tile                  (0)
+
 variable prev_tile;
 variable new_tile;
 variable loopcount;
@@ -38,28 +44,27 @@ variable dist;
 variable curtime;
 variable prevtime;
 variable tmp_hostile;
-variable SET;
-variable MUTANTS;
 variable MAXLEASH := 9;
 variable DAY;
 variable initial := 0;
 
-variable rndRads;
-
-
 procedure start begin
+   if not(fo1in2_cut_characters_enabled) then destroy_object(self_obj);
+
    if not(initial) then begin
       initial := 1;
-      if (local_var(0) == 0) then begin
-         set_local_var(0, 1);
+      if (local_var(LVAR_Home_Tile) == 0) then begin
+         set_local_var(LVAR_Home_Tile, self_tile);
       end
       set_self_team(TEAM_NECROPOLIS_MINDLESS);
+      set_self_ai(AI_GHOUL_NORMAL);
    end
+
    curtime := DAY;
    if (prevtime != curtime) then begin
       noevent := curtime;
       prevtime := curtime;
-      self_walk_to_tile(local_var(0));
+      self_walk_to_tile(local_var(LVAR_Home_Tile));
    end
 end
 
@@ -89,23 +94,18 @@ procedure destroy_p_proc begin
    inc_inv_good_crit
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
-   start_gdialog(84, self_obj, 4, -1, -1);
-   gsay_start;
+
    if (tmp_hostile) then begin
       call generic01;
    end
    else begin
       call generic00;
    end
-   gsay_end;
-   end_dialogue;
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    noevent := curtime;
    rndy := random(1, 6);
    if (rndy > 1) then begin
@@ -114,40 +114,25 @@ begin
    if (rndy > 5) then begin
       dist := 3;
    end
-   rndRads := random(0, 5);
    prev_tile := self_tile;
-   new_tile := tile_num_in_direction(prev_tile, rndRads, dist);
-   if (tile_distance(local_var(0), new_tile) < MAXLEASH) then begin
+   new_tile := tile_num_in_direction(prev_tile, random(0, 5), dist);
+   if (tile_distance(local_var(LVAR_Home_Tile), new_tile) < MAXLEASH) then begin
       self_walk_to_tile(new_tile);
    end
 end
 
-procedure genericend
-begin
+procedure genericend begin
 end
 
-procedure genericcbt
-begin
+procedure genericcbt begin
 end
 
-procedure generic00
-begin
+procedure generic00 begin
    rndx := random(1, 7);
-   if (rndx == 1) then begin
-      NMessage(100);
+   if (rndx <= 5) then begin
+      float_msg(self_obj, mstr(random(100, 104)), FLOAT_MSG_NORMAL);
    end
-   if (rndx == 2) then begin
-      NMessage(101);
-   end
-   if (rndx == 3) then begin
-      NMessage(102);
-   end
-   if (rndx == 4) then begin
-      NMessage(103);
-   end
-   if (rndx == 5) then begin
-      NMessage(104);
-   end
+
    if (rndx == 6) then begin
       call generic02;
    end
@@ -156,52 +141,25 @@ begin
    end
 end
 
-procedure generic01
-begin
-   rndx := random(1, 4);
-   if (rndx == 1) then begin
-      NMessage(105);
+procedure generic01 begin
+   float_msg(self_obj, mstr(random(105, 108)), FLOAT_MSG_LIGHT_RED);
+end
+
+procedure generic02 begin
+   if (global_var(GVAR_SET_DEAD)) then begin
+      float_msg(self_obj, mstr(random(109, 110)), FLOAT_MSG_NORMAL);
    end
-   if (rndx == 2) then begin
-      NMessage(106);
-   end
-   if (rndx == 3) then begin
-      NMessage(107);
-   end
-   if (rndx == 4) then begin
-      NMessage(108);
+   else begin
+      float_msg(self_obj, mstr(111), FLOAT_MSG_NORMAL);
    end
 end
 
-procedure generic02
-begin
-   if (SET == 0) then begin
-      rndx := random(1, 2);
-      if (rndx == 1) then begin
-         NMessage(109);
-      end
-      if (rndx == 2) then begin
-         NMessage(110);
-      end
+procedure generic03 begin
+   if (global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) then begin
+      float_msg(self_obj, mstr(random(112, 113)), FLOAT_MSG_NORMAL);
    end
    else begin
-      NMessage(111);
-   end
-end
-
-procedure generic03
-begin
-   if (MUTANTS == 0) then begin
-      rndx := random(1, 2);
-      if (rndx == 1) then begin
-         NMessage(112);
-      end
-      if (rndx == 2) then begin
-         NMessage(113);
-      end
-   end
-   else begin
-      NMessage(114);
+      float_msg(self_obj, mstr(114), FLOAT_MSG_NORMAL);
    end
 end
 

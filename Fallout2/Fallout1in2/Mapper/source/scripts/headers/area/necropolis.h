@@ -53,6 +53,7 @@
    end                                                                                                \
    noop
 
+#define sm_left_watershed              ((global_var(GVAR_NECROP_MUTANTS_KILLED) == 2) or (global_var(GVAR_WATERSHED_MUTANTS_LEAVE) != 0))
 
 // Car related defines
 #define set_car_used_first_time        if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \

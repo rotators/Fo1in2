@@ -23,6 +23,11 @@ procedure destroy_p_proc;
 procedure description_p_proc;
 procedure look_at_p_proc;
 
+#define LVAR_IsGlowingGhoul            (3)
+#define LVAR_Herebefore                (4)
+#define LVAR_Wandering                 (5)
+#define LVAR_Home_Tile                 (6)
+
 variable tmp_hostile;
 variable init := 0;
 variable maxleash := 5;
@@ -35,15 +40,12 @@ variable MUTANTS;
 
 variable rndx;
 
-#define LVAR_IsGlowingGhoul      (3)
-#define LVAR_Herebefore          (4)
-
 procedure start begin
    if not(init) then begin
       init := 1;
-      if (local_var(1) == 0) then begin
-         set_local_var(1, self_tile);
-         set_local_var(0, 1);
+      if (local_var(LVAR_Home_Tile) == 0) then begin
+         set_local_var(LVAR_Home_Tile, self_tile);
+         set_local_var(LVAR_Wandering, 1);
          if CUR_MAP_VAULTNEC then begin
             set_local_var(LVAR_IsGlowingGhoul, 1);
          end
@@ -81,7 +83,7 @@ procedure critter_p_proc begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      else if (local_var(0)) then begin
+      else if (local_var(LVAR_Wandering)) then begin
          loopcount := loopcount + 1;
          if (loopcount > 40) then begin
             loopcount := 0;
@@ -99,7 +101,7 @@ procedure timetomove begin
       noevent := 0;
       set_local_var(2, self_tile);
       new_tile := tile_num_in_direction(local_var(2), random(0, 5), random(1, 5));
-      if (tile_distance(local_var(1), new_tile) < maxleash) then begin
+      if (tile_distance(local_var(LVAR_Home_Tile), new_tile) < maxleash) then begin
          if (random(0, 1) == 0) then begin
             float_msg(self_obj, mstr(102 + random(0, 12)), FLOAT_MSG_LIGHT_RED);
          end
