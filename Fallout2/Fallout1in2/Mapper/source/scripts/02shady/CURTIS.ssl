@@ -36,6 +36,9 @@ procedure CurtisEnd;
 
 procedure movement;
 
+#define LVAR_Sleeping      (4)
+#define LVAR_Hostile       (5)
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
@@ -45,8 +48,6 @@ variable sleep_tile;
 variable new_tile;
 variable round_counter;
 variable tmp_hostile;
-
-#define LVAR_Sleeping                     (4)
 
 procedure start begin
 end
@@ -74,7 +75,7 @@ procedure critter_p_proc begin
          end
       end
       else begin
-         if (local_var(5) == 1) then begin
+         if (local_var(LVAR_Hostile) == 1) then begin
             if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
                call flee_dude;
             end
@@ -91,7 +92,7 @@ end
 
 procedure damage_p_proc begin
    if source_is_dude then begin
-      set_local_var(5, 1);
+      set_local_var(LVAR_Hostile, 1);
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
       tmp_hostile := 1;
    end
@@ -121,18 +122,18 @@ procedure map_enter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   set_local_var(5, 1);
+   set_local_var(LVAR_Hostile, 1);
 end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_SHADYE);
 
    dude_look_at_self;
-   if ((local_var(5) == 1) or REP_ENEMY_SHADY_SANDS) then begin
+   if ((local_var(LVAR_Hostile) == 1) or REP_ENEMY_SHADY_SANDS) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      if (local_var(3) == 1) then begin
+      if (local_var(LVAR_base_reaction) == 1) then begin
          start_dialog_at_node(Curtis02);
       end
       else begin
@@ -142,7 +143,7 @@ procedure talk_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Sleeping) == 0) then begin
       if (random(0, 3) == 3) then
          anim(self_obj, ANIM_magic_hands_ground, 0);
       else
@@ -168,13 +169,13 @@ procedure Curtis03 begin
 end
 
 procedure Curtis03a begin
-   if (local_var(3) == 0) then begin
+   if (local_var(LVAR_base_reaction) == 0) then begin
       NOption(106, Curtis04, 4);
    end
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_reaction) == 0) then begin
       NOption(107, Curtis05, 5);
    end
-   if (local_var(1) == 0) then begin
+   if (local_var(LVAR_reaction_level) == 0) then begin
       NOption(108, Curtis06, 4);
    end
    NOption(109, CurtisEnd, 4);
@@ -182,12 +183,12 @@ end
 
 procedure Curtis04 begin
    Reply(110);
-   set_local_var(3, 1);
+   set_local_var(LVAR_base_reaction, 1);
    call Curtis03a;
 end
 
 procedure Curtis05 begin
-   set_local_var(0, 1);
+   set_local_var(LVAR_reaction, 1);
    Reply(111);
    call Curtis03a;
 end
@@ -195,7 +196,7 @@ end
 procedure Curtis06 begin
    Reply(112);
    NOption(113, Curtis03, 4);
-   if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(1) == 0)) then begin
+   if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(LVAR_reaction_level) == 0)) then begin
       NOption(114, Curtis07, 5);
    end
 end
@@ -210,7 +211,7 @@ procedure Curtis08 begin
    NMessage(118);
    inc_general_rep(2);
    inc_shady_rep(REP_BONUS_CROP_ROTATION);
-   set_local_var(1, 1);
+   set_local_var(LVAR_reaction_level, 1);
    give_xp_msg(EXP_EXPLAINED_CROP_ROTATION, mstr(200));
 end
 

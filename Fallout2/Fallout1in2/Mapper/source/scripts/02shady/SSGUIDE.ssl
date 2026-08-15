@@ -48,6 +48,11 @@ procedure DialogSpecial2;
 procedure DialogSpecial3;
 procedure DialogSpecial4;
 
+#define LVAR_Herebefore             (4)
+#define LVAR_GaveXP                 (5)
+#define LVAR_Warned                 (6)
+#define LVAR_Equipment_Removed      (7)
+
 variable Only_Once := 1;
 variable tmp_hostile;
 variable DisplayMessage;
@@ -62,9 +67,9 @@ variable Vault;
 variable Vaulted;
 
 procedure start begin
-   if (map_first_run) and (local_var(7) != 1) then begin
+   if (map_first_run) and (local_var(LVAR_Equipment_Removed) != 1) then begin
       variable LVar0;
-      set_local_var(7, 1);
+      set_local_var(LVAR_Equipment_Removed, 1);
       if (self_item(PID_BROWN_BAG) > 0) then begin
          LVar0 := self_item(PID_BROWN_BAG);
          rm_obj_from_inven(self_obj, LVar0);
@@ -115,8 +120,8 @@ procedure talk_p_proc begin
       if dude_is_armed then begin
          start_dialog_at_node(DialogWeapon);
       end
-      else if (local_var(4) == 0) then begin
-         set_local_var(4, 1);
+      else if (local_var(LVAR_Herebefore) == 0) then begin
+         set_local_var(LVAR_Herebefore, 1);
          start_dialog_at_node(DialogFirstTime);
       end
       else begin
@@ -157,9 +162,9 @@ procedure destroy_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   if (local_var(6) == 0) then begin
+   if (local_var(LVAR_Warned) == 0) then begin
       float_msg(self_obj, mstr(151), FLOAT_MSG_RED);
-      set_local_var(6, 1);
+      set_local_var(LVAR_Warned, 1);
    end
    else begin
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
@@ -263,8 +268,8 @@ procedure DialogMain begin
       end
    end
    NOption(131, DialogExit, 4);
-   if ((local_var(5) == 0) and ((Hurt == 1) and (Equipment == 1) and (Place == 1) and (World == 1) and (Yourself == 1) and (Bartered == 1) and (Vaulted == 1))) then begin
-      set_local_var(5, 1);
+   if ((local_var(LVAR_GaveXP) == 0) and ((Hurt == 1) and (Equipment == 1) and (Place == 1) and (World == 1) and (Yourself == 1) and (Bartered == 1) and (Vaulted == 1))) then begin
+      set_local_var(LVAR_GaveXP, 1);
       give_xp_msg(EXP_GUIDE_BONUS, mstr(150));
    end
 end

@@ -105,18 +105,21 @@ variable initial := 0;
 
 variable how_many_tails;
 
-#define LVAR_Here_Before         (4)
+#define LVAR_Herebefore          (4)
 #define LVAR_Talk_TandiRescued   (5)
 #define LVAR_Invasion            (6)
 #define LVAR_Tail_EXP            (7)
 #define LVAR_Sleeping            (9)
+#define LVAR_Antidote_Crafted    (8)
+#define LVAR_Caught_Stealing     (10)
+#define LVAR_AskingHelp          (11)
 
 #define craft_antidote_time      (14400)
 
 #define craft_antidote_adv_time  gfade_out(1);                                                           \
                                     game_time_advance(game_ticks(craft_antidote_time * how_many_tails)); \
                                  gfade_in(1);                                                            \
-                                 set_local_var(8, 1)
+                                 set_local_var(LVAR_Antidote_Crafted, 1)
 
 procedure start begin
 end
@@ -162,7 +165,7 @@ procedure talk_p_proc begin
    CHECK_REP_BERSERKER
    CHECK_REP_CHAMPION
 
-   if (local_var(9) == 1) then begin
+   if (local_var(LVAR_Sleeping) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else begin
@@ -171,8 +174,8 @@ procedure talk_p_proc begin
          start_dialog_at_node(razlo00n);
       end
       else if radscorp_quest_active then begin
-         if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-            set_local_var(LVAR_Here_Before, 1);
+         if (tandi_is_kidnapped and (local_var(LVAR_Herebefore) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+            set_local_var(LVAR_Herebefore, 1);
             start_dialog_at_node(razlo01);
          end
          else begin
@@ -197,12 +200,12 @@ procedure talk_p_proc begin
          set_local_var(LVAR_Talk_TandiRescued, 1);
          call razlo08;
       end
-      else if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-         set_local_var(LVAR_Here_Before, 1);
+      else if (tandi_is_kidnapped and (local_var(LVAR_Herebefore) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+         set_local_var(LVAR_Herebefore, 1);
          start_dialog_at_node(razlo01);
       end
-      else if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1) and (local_var(LVAR_Here_Before) == 1)) then begin
-         set_local_var(LVAR_Here_Before, 2);
+      else if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1) and (local_var(LVAR_Herebefore) == 1)) then begin
+         set_local_var(LVAR_Herebefore, 2);
          call razlo07;
       end
       else if (has_rep_berserker or has_rep_childkiller) then begin
@@ -239,11 +242,11 @@ end
 
 procedure razlo02 begin
    NMessage(107);
-   set_local_var(LVAR_Here_Before, 1);
+   set_local_var(LVAR_Herebefore, 1);
 end
 
 procedure razlo03 begin
-   set_local_var(LVAR_Here_Before, 1);
+   set_local_var(LVAR_Herebefore, 1);
    Reply(108);
    NOption(110, razlo04, 5);
    NOption(109, razloend, 4);
@@ -417,7 +420,7 @@ procedure razlo23 begin
 end
 
 procedure razlo23a begin
-   if (local_var(8) == 1) then begin
+   if (local_var(LVAR_Antidote_Crafted) == 1) then begin
       call razlo25;
    end
    else begin
@@ -493,7 +496,7 @@ variable count_tails := dude_item_count(PID_SCORPION_TAIL);
    gfade_out(1);
    game_time_advance(game_ticks(14400));
    gfade_in(1);
-   set_local_var(8, 1);
+   set_local_var(LVAR_Antidote_Crafted, 1);
    call razlo31;
    */
 end
@@ -633,11 +636,11 @@ procedure razlo14n begin
 end
 
 procedure razlo15n begin
-   if (local_var(11) == 1) then begin
+   if (local_var(LVAR_AskingHelp) == 1) then begin
       call razlo16n;
    end
    else begin
-      set_local_var(11, 1);
+      set_local_var(LVAR_AskingHelp, 1);
       call razlo11n;
    end
 end
@@ -699,7 +702,7 @@ procedure givestuff begin
    Item := create_object(PID_MUTATED_FRUIT, 0, 0);
    add_obj_to_inven(dude_obj, Item);
 
-   if (local_var(8) == 1) then begin
+   if (local_var(LVAR_Antidote_Crafted) == 1) then begin
       Item := create_object(PID_ANTIDOTE, 0, 0);
       add_obj_to_inven(dude_obj, Item);
    end
@@ -741,9 +744,9 @@ end
 
 procedure critter_p_proc begin
    if (map_var(MVAR_Caught_Stealing) == 1) then begin
-      set_local_var(10, local_var(10) + 1);
+      set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
       set_map_var(MVAR_Caught_Stealing, 0);
-      if (local_var(10) < 3) then begin
+      if (local_var(LVAR_Caught_Stealing) < 3) then begin
          float_msg(self_obj, mstr(308), FLOAT_MSG_RED);
       end
       else begin

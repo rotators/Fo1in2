@@ -19,6 +19,11 @@ procedure destroy_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 
+#define LVAR_Float                        (0)
+#define LVAR_Hostile                      (1)
+#define LVAR_Sleeping                     (2)
+#define LVAR_Home_Tile                    (3)
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
@@ -27,14 +32,12 @@ variable sleep_tile;
 
 variable initial := 0;
 
-#define LVAR_Sleeping                     (2)
-
 procedure start begin
    if not(initial) then begin
       set_self_team(TEAM_JUNKTOWNER);
       set_self_ai(AI_PEASANT);
-      if (local_var(3) == 0) then begin
-         set_local_var(3, self_tile);
+      if (local_var(LVAR_Home_Tile) == 0) then begin
+         set_local_var(LVAR_Home_Tile, self_tile);
       end
       sleep_tile := 7000;
       wake_time := random(610, 650);
@@ -55,7 +58,7 @@ procedure map_enter_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (local_var(1) and tile_distance_objs(self_obj, dude_obj)) then begin
+   if (local_var(LVAR_Hostile) and tile_distance_objs(self_obj, dude_obj)) then begin
       call flee_dude;
    end
    if REP_ENEMY_JUNKTOWN_CITIZENS then begin
@@ -68,7 +71,7 @@ end
 procedure damage_p_proc begin
    if source_is_dude then begin
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-      set_local_var(1, 1);
+      set_local_var(LVAR_Hostile, 1);
    end
 end
 
@@ -81,19 +84,19 @@ procedure destroy_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   set_local_var(1, 1);
+   set_local_var(LVAR_Hostile, 1);
    set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
 end
 
 procedure talk_p_proc begin
    dude_look_at_self;
-   if ((local_var(1) == 1) or REP_ENEMY_JUNKTOWN) then begin
+   if ((local_var(LVAR_Hostile) == 1) or REP_ENEMY_JUNKTOWN) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      if (local_var(0) == 0) then begin
-         set_local_var(0, random(101, 104));
+      if (local_var(LVAR_Float) == 0) then begin
+         set_local_var(LVAR_Float, random(101, 104));
       end
-      float_msg(self_obj, mstr(local_var(0)), FLOAT_MSG_NORMAL);
+      float_msg(self_obj, mstr(local_var(LVAR_Float)), FLOAT_MSG_NORMAL);
    end
 end

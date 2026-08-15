@@ -54,6 +54,14 @@ procedure travel;
 procedure no_travel;
 procedure pick_start;
 
+#define LVAR_Herebefore                   (4)
+#define LVAR_Sleeping                     (5)
+#define LVAR_Welcome                      (6)
+#define LVAR_Tandi_Discussion             (8)
+#define LVAR_Hostile                      (9)
+#define LVAR_Only_Once                    (7)
+#define LVAR_Invasion                     (10)
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
@@ -63,11 +71,6 @@ variable sleep_tile;
 variable tmp_hostile;
 variable initial := 0;
 variable round_counter;
-
-#define LVAR_Here_Before                  (4)
-#define LVAR_Sleeping                     (5)
-#define LVAR_Welcome                      (6)
-#define LVAR_Invasion                     (10)
 
 procedure start begin
 end
@@ -133,21 +136,21 @@ procedure talk_p_proc begin
 
    get_reaction
 
-   if (local_var(9) == 1) then begin
+   if (local_var(LVAR_Hostile) == 1) then begin
       float_msg(self_obj, mstr(320), FLOAT_MSG_RED);
       tmp_hostile := 1;
    end
    else if (tandi_is_kidnapped and (dude_iq > 3)) then begin
       set_global_var(GVAR_TANDI_TALKED_ABOUT, 1);
-      if (local_var(8) == 0) then begin
-         set_local_var(8, 1);
+      if (local_var(LVAR_Tandi_Discussion) == 0) then begin
+         set_local_var(LVAR_Tandi_Discussion, 1);
          start_dialog_at_node(TanSeth00);
       end
       else begin
          start_dialog_at_node(TanSeth01);
       end
    end
-   else if (local_var(5) == 1) then begin
+   else if (local_var(LVAR_Sleeping) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else if REP_ENEMY_SHADY_SANDS then begin//   Is Shady Sands tmp_hostile to player?
@@ -220,7 +223,7 @@ end
 
 procedure Seth03 begin
    Reply(103);
-   set_local_var(LVAR_Here_Before, 1);
+   set_local_var(LVAR_Herebefore, 1);
    NOption(104, Seth13, 1);
    NOption(105, Seth08a, 1);
 end
@@ -258,7 +261,7 @@ procedure Seth08 begin
       NOption(116, Seth11, 4);
    end
    NOption(117, Seth12, 4);
-   if ((local_var(LVAR_Here_Before) == 1) and not(radscorp_quest_completed) and not(shady_caves_visible_on_map)) then begin
+   if ((local_var(LVAR_Herebefore) == 1) and not(radscorp_quest_completed) and not(shady_caves_visible_on_map)) then begin
       NOption(118, Seth13, 4);
       NLowOption(119, Seth13);
    end
@@ -266,8 +269,8 @@ procedure Seth08 begin
 end
 
 procedure Seth08a begin
-   if (local_var(7) == 0) then begin
-      set_local_var(7, 1);
+   if (local_var(LVAR_Only_Once) == 0) then begin
+      set_local_var(LVAR_Only_Once, 1);
       call Seth14;
    end
    else begin
@@ -284,7 +287,7 @@ procedure Seth09 begin
       NOption(116, Seth11, 4);
    end
    NOption(117, Seth12, 4);
-   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+   if (local_var(LVAR_Herebefore) == 1) and not(shady_caves_visible_on_map) then begin
       NOption(118, Seth13, 4);
       NLowOption(119, Seth13);
    end
@@ -298,12 +301,12 @@ procedure Seth10 begin
    else begin
       Reply(122);
    end
-   set_local_var(LVAR_Here_Before, 1);
+   set_local_var(LVAR_Herebefore, 1);
    if tandi_is_kidnapped then begin
       NOption(116, Seth11, 4);
    end
    NOption(117, Seth12, 4);
-   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+   if (local_var(LVAR_Herebefore) == 1) and not(shady_caves_visible_on_map) then begin
       NOption(118, Seth13, 4);
       NLowOption(119, Seth13);
    end
@@ -318,7 +321,7 @@ procedure Seth11 begin
       NOption(115, Seth10, 4);
    end
    NOption(117, Seth12, 4);
-   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+   if (local_var(LVAR_Herebefore) == 1) and not(shady_caves_visible_on_map) then begin
       NOption(118, Seth13, 4);
       NLowOption(119, Seth13);
    end
@@ -329,7 +332,7 @@ procedure Seth12 begin
    Reply(124);
    NOption(115, Seth10, 4);
    NOption(116, Seth11, 4);
-   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+   if (local_var(LVAR_Herebefore) == 1) and not(shady_caves_visible_on_map) then begin
       NOption(118, Seth13, 4);
       NLowOption(119, Seth13);
    end
@@ -417,7 +420,7 @@ procedure TanSeth04 begin
 end
 
 procedure TanSeth05 begin
-   set_local_var(9, 1);
+   set_local_var(LVAR_Hostile, 1);
    tmp_hostile := 1;
    BMessage(320);
 end

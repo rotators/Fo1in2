@@ -47,6 +47,14 @@ procedure guardDownReact;
 
 procedure set_sleep_tile;
 
+#define LVAR_Herebefore          (4)
+#define LVAR_Invasion            (6)
+#define LVAR_Warned              (7)
+#define LVAR_RescueThanks        (8)
+#define LVAR_Sleeping            (9)
+#define LVAR_Home_Tile           (10)
+#define LVAR_Home_Rotation       (11)
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
@@ -56,12 +64,6 @@ variable sleep_tile;
 variable tmp_hostile;
 variable round_counter;
 variable Warned_Tile;
-
-#define LVAR_Here_Before         (4)
-#define LVAR_Invasion            (6)
-#define LVAR_Sleeping            (9)
-#define LVAR_Home_Tile           (10)
-#define LVAR_Home_Rotation       (11)
 
 procedure start begin
 end
@@ -109,7 +111,7 @@ procedure critter_p_proc begin
       end
    end
 
-   if (local_var(7) == 1) then begin
+   if (local_var(LVAR_Warned) == 1) then begin
       if (tile_distance(self_tile, dude_tile) < tile_distance(self_tile, Warned_Tile)) then begin
          tmp_hostile := 1;
       end
@@ -155,22 +157,22 @@ procedure talk_p_proc begin
    end
    else begin
       if REP_ENEMY_SHADY_SANDS then begin
-         set_local_var(LVAR_Here_Before, 1);
+         set_local_var(LVAR_Herebefore, 1);
          call guard00;
       end
       else if tandi_is_kidnapped then begin
-         set_local_var(LVAR_Here_Before, 1);
+         set_local_var(LVAR_Herebefore, 1);
          call guard01;
       end
-      else if (get_tandi_returned and (local_var(8) == 0)) then begin
-         set_local_var(LVAR_Here_Before, 1);
+      else if (get_tandi_returned and (local_var(LVAR_RescueThanks) == 0)) then begin
+         set_local_var(LVAR_Herebefore, 1);
          call guard02;
       end
       else if not(is_tandi_alive) then begin
-         set_local_var(LVAR_Here_Before, 1);
+         set_local_var(LVAR_Herebefore, 1);
          call guard03;
       end
-      else if (local_var(LVAR_Here_Before) == 1) then begin
+      else if (local_var(LVAR_Herebefore) == 1) then begin
          if bad_critter_reaction then begin
             call guard13;
          end
@@ -179,7 +181,7 @@ procedure talk_p_proc begin
          end
       end
       else begin
-         set_local_var(LVAR_Here_Before, 1);
+         set_local_var(LVAR_Herebefore, 1);
          if bad_critter_reaction then begin
             call guard10;
          end
@@ -207,7 +209,7 @@ end
 procedure guard00 begin
    float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
    Warned_Tile := dude_tile;
-   set_local_var(7, 1);
+   set_local_var(LVAR_Warned, 1);
 end
 
 procedure guard01 begin
@@ -216,7 +218,7 @@ end
 
 procedure guard02 begin
    float_msg(self_obj, mstr(103), FLOAT_MSG_YELLOW);
-   set_local_var(8, 1);
+   set_local_var(LVAR_RescueThanks, 1);
    TopReact
 end
 
