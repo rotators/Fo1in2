@@ -61,13 +61,13 @@ procedure use_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-   variable LVar0 := 0;
+   variable skill_roll := 0;
 
    if (action_being_used == SKILL_LOCKPICK) then begin
       if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
          script_overrides;
-         LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
-         if (is_success(LVar0)) then begin
+         skill_roll := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
+         if (is_success(skill_roll)) then begin
             set_local_var(LVAR_Locked, STATE_INACTIVE);
             //jam_lock(self_obj); // This can't be right. Door jams on unlocking?
             if source_is_dude then
@@ -81,7 +81,7 @@ procedure use_skill_on_p_proc begin
             end
          end
          else begin
-            if (is_critical(LVar0)) then begin
+            if (is_critical(skill_roll)) then begin
                jam_lock(self_obj);
                if source_is_dude then
                   display_msg(mstr(110));
@@ -110,9 +110,9 @@ end
 
 procedure use_obj_on_p_proc begin
    variable item := obj_pid(obj_being_used_with);
-   variable LVar0 := 0;
+   variable tool := 0;
    variable test := 0;
-   LVar0 := obj_being_used_with;
+   tool := obj_being_used_with;
 
    if (item == PID_LOCKPICKS or item == PID_EXP_LOCKPICK_SET) then begin
       if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
@@ -134,8 +134,8 @@ procedure use_obj_on_p_proc begin
          end
          else begin
             if (is_critical(test)) then begin
-               rm_obj_from_inven(dude_obj, LVar0);
-               destroy_object(LVar0);
+               rm_obj_from_inven(dude_obj, tool);
+               destroy_object(tool);
                display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
             end
             else begin
