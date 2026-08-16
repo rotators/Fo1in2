@@ -160,7 +160,7 @@
 # Worldmap Encounter messages
 #
 # Original is "You encounter:"
-{2998}{}{Encounter begins. --- disabled by Sfall ---}
+{2998}{}{}
 # Original is "Do you wish to avoid:"
 {2999}{}{Encounter! Investigate?}
 

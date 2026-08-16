@@ -159,7 +159,7 @@
 # Worldmap Encounter messages
 #
 
-{2998}{}{Tu rencontres : --- disabled by Sfall ---}
+{2998}{}{}
 # Original is "Do you wish to avoid:"
 {2999}{}{Une rencontre ! Investiguer ?}
 
