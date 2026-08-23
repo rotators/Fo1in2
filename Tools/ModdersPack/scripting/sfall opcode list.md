@@ -64,7 +64,7 @@
 | 0x816E | `void set_shader_float(int ID, string param, float value)` |
 | 0x816F | `void set_shader_vector(int ID, string param, float f1, float f2, float f3, float f4)` |
 | 0x81AD | `int  get_shader_version` |
-| 0x81AE | `void set_shader_mode(int mode)` |
+| 0x81AE | `void set_shader_mode(int ID, int mode)` |
 | 0x81B0 | `void force_graphics_refresh(bool enabled)` |
 | 0x81B1 | `int  get_shader_texture(int ID, int texture)` |
 | 0x81B2 | `void set_shader_texture(int ID, string param, int texID)` |
