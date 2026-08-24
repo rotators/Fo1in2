@@ -29,7 +29,7 @@ The `load_shader` takes a path relative to the `<GameRoot>\<master_patches>\shad
 
 The `get_shader_version` gives you the highest shader version supported by the player's graphics cards. Possible return values are 11, 12, 13, 14, 20, 21 and 30.
 
-The `set_shader_mode` tells sfall when to use a shader. The parameter is a set of 32 flags which specify the screens on which the shader will be disabled, unless bit 32 is set, in which case the shader will only be active on those screens. Remember that screens are displayed on top of each other; if the player opens the character menu which in combat, the game still considers the player to be in combat. See **sfall.h** for a list of defines.
+The `set_shader_mode` tells sfall when to use a shader. The `mode` argument is a set of 32 flags which specify the screens on which the shader will be disabled, unless bit 32 is set, in which case the shader will only be active on those screens. Remember that screens are displayed on top of each other; if the player opens the character menu which in combat, the game still considers the player to be in combat. See **sfall.h** for a list of defines.
 
 The `force_graphics_refresh` forces the screen to redraw at times when it normally wouldn't. If you're using animated shader, turning this option on is recommended.
 
