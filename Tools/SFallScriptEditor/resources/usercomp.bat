@@ -13,8 +13,8 @@ set pathcompile=%3
 rem Preprocessor definition for conditional compilation option
 set def=
 if not %4 == 0 (
-	echo Build type: %4
-	set def=-d%4%
+    echo Build type: %4
+    set def=-d%4%
 ) else (echo Build type: None)
 
 rem Compiling with optimization level option
@@ -29,10 +29,11 @@ if exist %prefile% del %prefile%
 if exist %namescript%.ssl del /q %namescript%.ssl
 
 echo -------------------------------------------------------------------------------
-echo   Compilation script:
+echo   Compiling script:
 echo   %~6\%namescript%.ssl
 echo -------------------------------------------------------------------------------
-wcc386.exe %1 -p -fo=%namescript%.i -w -i=%ipath% %def%
+rem wcc386.exe %1 -p -fo=%namescript%.i -i=%ipath% %def% -w -wcd123 -wcd138
+wpp386.exe %1 -p -fo=%namescript%.i -i=%ipath% %def% -w -wcd15 -wcd735 -wcd894
 if not exist %namescript%.i goto ERROR
 echo   Preprocessing script: OK.
 
@@ -43,10 +44,10 @@ rem compiling script sfall compiler with BIS compatible mode
 compile.exe -b -O%optimize% %namescript%.ssl
 
 if exist %namescript%.int (
-	echo   [BIS] Script compilation is completed.
-	goto COMPILE
+    echo   [BIS] Script compilation is completed.
+    goto COMPILE
 )
-echo   [BIS] Compilation script error.
+echo   [BIS] Script compilation error.
 echo   Try sfall compiler.
 echo -------------------------------------------------------------------------------
 compile.exe -O%optimize% %shortCircuit% %namescript%.ssl
