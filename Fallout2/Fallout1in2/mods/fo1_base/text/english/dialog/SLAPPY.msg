@@ -43,7 +43,7 @@
 {2010}{}{Just shut up and show me on my PipBoy where it is.}
 {2100}{}{Ahh. Show! Here... Here... Here...}
 {2110}{}{[More]}
-{2200}{}{[It takes a while to figure out Slappy's directions, but eventually you are able to nail it down to the mountain range west of the Hub]}
+{2200}{}{[It takes a while to figure out Slappy's directions, but eventually you're able to narrow it down to the mountain range west of the Hub]}
 
 # TMA
 {1000}{}{DEATHCLAW|DEATH|CLAW|DEATH CLAW|DEATH CLAWS|DEATHCLAWS|CLAWS|MONSTER}
