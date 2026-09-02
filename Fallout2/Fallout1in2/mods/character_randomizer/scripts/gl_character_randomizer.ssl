@@ -1,0 +1,157 @@
+/*
+
+   Character randomizer
+
+   Notes:
+      - Shuffles SPECIAL stats, traits, and tag skills on game start.
+
+*/
+
+#include "define.h"
+#include "command.h"
+#include "sfall/main.h"
+
+#define TRAIT_COUNT  (16)
+#define RANDOMIZER_GVAR "fi2_rndc"
+
+procedure start;
+procedure map_enter_p_proc;
+
+procedure randomize;
+procedure init_names;
+
+variable male_names, female_names;
+
+// Available "style" skins for male and female characters
+#define F_REG_HAIR            (0)
+#define F_PUNK_HAIR           (1)
+#define M_REG_HAIR            (0)
+#define M_LONG_HAIR           (1)
+#define M_BALD_HAIR           (2)
+
+procedure start begin
+   if ce_disabled then begin // Not compatible with CE
+      if (game_loaded) then begin
+         set_global_script_type(0);
+         call init_names;
+      end
+
+      if (get_sfall_global_int(RANDOMIZER_GVAR) == 0) then begin
+         set_sfall_global(RANDOMIZER_GVAR, 1);
+         call randomize;
+      end
+   end
+end
+
+procedure map_enter_p_proc begin
+
+end
+
+procedure randomize begin
+   variable arr, chosen, val, points_left,
+      stat_to_raise,
+      stat_value,
+      trait_chance,
+      trait1 := -1, trait2,
+      i;
+
+   // Remove selected traits first
+   i := 0;
+   while (i < TRAIT_COUNT) do begin
+      remove_trait(i);
+      i++;
+   end
+
+   // Reset SPECIAL
+   set_critter_base_stat(dude_obj, STAT_st, 1);
+   set_critter_base_stat(dude_obj, STAT_pe, 1);
+   set_critter_base_stat(dude_obj, STAT_en, 1);
+   set_critter_base_stat(dude_obj, STAT_ch, 1);
+   set_critter_base_stat(dude_obj, STAT_iq, 1);
+   set_critter_base_stat(dude_obj, STAT_ag, 1);
+   set_critter_base_stat(dude_obj, STAT_lu, 1);
+
+   // Add 33 points
+   points_left := 33;
+   while (points_left > 0) do begin
+      stat_to_raise := random(STAT_st, STAT_lu);
+      stat_value := get_critter_base_stat(dude_obj, stat_to_raise);
+
+      if (stat_value < 10) then begin
+         set_critter_base_stat(dude_obj, stat_to_raise, stat_value + 1);
+         points_left--;
+      end
+   end
+
+   // Add up to 2 traits
+   trait_chance := random(0, 10);
+   if (trait_chance >= 3) then begin
+      trait1 := random(0, TRAIT_COUNT - 1);
+      add_trait(trait1);
+   end
+
+   trait_chance := random(0, 10);
+   if (trait_chance >= 3) then begin
+      trait2 := random(0, TRAIT_COUNT - 1);
+      while (trait1 >= 0 and trait2 == trait1) do begin
+         trait2 := random(0, TRAIT_COUNT - 1);
+      end
+      add_trait(trait2);
+   end
+
+   // Change tag skills
+   arr := [read_int(0x668070), read_int(0x668074), read_int(0x668078), read_int(0x66807C)];
+   chosen := [-1, -1, -1, -1];
+   for (i := 0; i < 4; i++) begin
+      val := arr[i];
+      if (val == -1) then continue;
+
+      val := random(SKILL_SMALL_GUNS, SKILL_OUTDOORSMAN);
+      while (is_in_array(val, chosen)) do begin
+         val := random(SKILL_SMALL_GUNS, SKILL_OUTDOORSMAN);
+      end
+
+      chosen[i] := val;
+      write_int((0x668070 + 4 * i), val);
+   end
+
+   // Change age and gender, pick random name
+   set_pc_base_stat(STAT_age, random(16, 35));
+   set_pc_base_stat(STAT_gender, random(GENDER_MALE, GENDER_FEMALE));
+   if (dude_is_male) then begin
+      art_change_fid_num(dude_obj, FID_HMJMPS);
+      set_hero_style(random(0, 2));
+      val := male_names[random(0, 24)];
+   end
+   else begin
+      art_change_fid_num(dude_obj, FID_HFJMPS);
+      set_hero_style(random(0, 1));
+      val := female_names[random(0, 24)];
+   end
+
+   // Change name
+   write_string(0x56D75C, val);
+
+   intface_redraw; // Refreshes the interface.. except HP counter
+   debug_red("Character has been randomized!");
+end
+
+procedure init_names begin
+   male_names := [
+      "Albert", "Archie", "Arthur", "Benny", "Calvin",
+      "Chester", "Clark", "Clyde", "Dean", "Earl",
+      "Edgar", "Emmett", "Floyd", "Frank", "Hank",
+      "Harvey", "Howard", "Jack", "Leroy", "Lloyd",
+      "Milton", "Norman", "Otis", "Roy", "Walter"
+   ];
+   female_names := [
+      "Alice", "Betty", "Beverly", "Bonnie", "Carol",
+      "Clara", "Connie", "Daisy", "Dolores", "Dorothy",
+      "Edna", "Eileen", "Esther", "Evelyn", "Florence",
+      "Gloria", "Irene", "June", "Loretta", "Mabel",
+      "Marjorie", "Pearl", "Peggy", "Rita", "Ruth"
+   ];
+
+   fix_array(male_names);
+   fix_array(female_names);
+end
