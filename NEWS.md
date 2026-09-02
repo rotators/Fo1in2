@@ -2,6 +2,7 @@ Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1
 
 - **Added**: Delayed mutant invasions. If enabled in the fo1_settings.ini file, all invasion timers except Necropolis (for story-reasons), will not start before the water chip has been returned.
 - **Added**: Fast Shot trait implementation compatible with Fo2 CE.
+- **Fixed**: Adytum crash (probably) shouldn't happen anymore due to new Sfall fix
 - **Fixed**: Auto push function for party members could make them fail to move in certain orientations.
 - **Fixed**: Because of a stray night-condition macro, many scripts were checking the beginning of the night wrong (18:00 instead of 19:00).
 - **Fixed**: EXP exploit when using lockpicks on the armory door at the BoS bunker.
