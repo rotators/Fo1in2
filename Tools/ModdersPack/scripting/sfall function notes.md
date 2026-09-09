@@ -417,15 +417,15 @@ FUNCTION REFERENCE
 
 -----
 #### `void register_hook_proc(int hookID, procedure proc)`
-- Works just like `register_hook`, but allows to specify which procedure to use for the given hook script (instead of `start`).
-- Use zero (0) as second argument to unregister hook script from current global script.
+- Works just like `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of `start`).
+- Use zero (0) as the second argument to unregister the hook from the current global script.
 - Only use in global scripts.
 - Second argument should be passed just like you pass procedures to functions like `gsay_option`, `giq_option`, etc. (name without quotes).
 - See **hookscripts.md** for more details.
 
 -----
 #### `void register_hook_proc_spec(int hookID, procedure proc)`
-- Works just like `register_hook_proc`, but allows to register a script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script).
+- Works the same as `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script).
 - To unregister hook script from current global script, use the `register_hook_proc` function.
 
 -----

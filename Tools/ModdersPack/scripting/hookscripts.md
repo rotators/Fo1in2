@@ -48,7 +48,7 @@ Changes argument value. The argument number (`argNum`) is 0-indexed. This is use
 Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` procedure will be executed in the current global script. You can use all above functions like normal.
 
 #### `void register_hook_proc(int hookID, procedure proc)`
-The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass the procedure the same as how you use dialog option functions.
+Works just like `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of `start`). Pass the procedure the same as how you use dialog option functions.
 This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script with no conflicts) and flexibility. You can place all related hook scripts for a specific mod in one global script!
 
 Use zero (0) as the second argument to unregister the hook from the current global script.
@@ -135,7 +135,7 @@ Critter ret2 - Override the target of the attack
 
 Runs whenever Fallout calculates the AP cost of using an active item in hand (or unarmed attack). Doesn't run for moving.\
 Note that the first time a game is loaded, this script doesn't run before the initial interface is drawn, so if the script effects the AP cost of whatever is in the player's hands at the time the wrong AP cost will be shown. It will be fixed the next time the interface is redrawn.\
-You can get the weapon object by checking item slot based on attack type (`ATKTYPE_LWEP1`, `ATKTYPE_LWEP2`, etc) and then calling `critter_inven_obj`.
+You can get the weapon object by checking item slot based on attack type (`ATKTYPE_LWEP1`, `ATKTYPE_LWEP2`, etc.) and then calling `critter_inven_obj`.
 
 ```
 Critter arg0 - The critter performing the action
@@ -189,7 +189,7 @@ int     ret0 - The death anim id to override with
 #### `HOOK_COMBATDAMAGE (hs_combatdamage.int)`
 
 Runs when:
-1) Game calculates how much damage each target will get. This includes primary target as well as all extras (explosions and bursts). This happens BEFORE the actual attack animation.
+1) The game calculates how much damage each target will get. This includes primary target as well as all extras (explosions and bursts). This happens BEFORE the actual attack animation.
 2) AI decides whether it is safe to use area attack (burst, grenades), if he might hit friendlies.
 
 Does not run for misses, or non-combat damage like dynamite explosions.
@@ -207,7 +207,7 @@ int     arg8  - Damage Multiplier (this is divided by 2, so a value of 3 does 1.
 int     arg9  - Number of bullets actually hit the target (1 for melee attacks)
 int     arg10 - The amount of knockback to the target
 int     arg11 - Attack Type (see ATKTYPE_* constants)
-mixed   arg12 - computed attack data (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
+mixed   arg12 - Computed attack data (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
 
 int     ret0 - The damage to the target
 int     ret1 - The damage to the attacker
@@ -273,7 +273,7 @@ Critter arg0 - The target
 Critter arg1 - The user
 int     arg2 - The object used
 
-int     ret0 - overrides hard-coded handler and selects what should happen with the item (0 - place it back, 1 - remove it, -1 - use engine handler)
+int     ret0 - Overrides hard-coded handler and selects what should happen with the item (0 - place it back, 1 - remove it, -1 - use engine handler)
 ```
 
 -------------------------------------------
@@ -292,7 +292,7 @@ __NOTE:__ You can't remove and/or destroy this object during the hookscript (gam
 Critter arg0 - The user
 Obj     arg1 - The object used
 
-int     ret0 - overrides hard-coded handler and selects what should happen with the item (0 - place it back, 1 - remove it, -1 - use engine handler)
+int     ret0 - Overrides hard-coded handler and selects what should happen with the item (0 - place it back, 1 - remove it, -1 - use engine handler)
 ```
 
 -------------------------------------------
@@ -302,9 +302,9 @@ int     ret0 - overrides hard-coded handler and selects what should happen with 
 Runs when an object is removed from a container or critter's inventory for any reason.
 
 ```
-Obj     arg0 - the owner that the object is being removed from
-Item    arg1 - the item that is being removed
-int     arg2 - the number of items to remove
+Obj     arg0 - The owner that the object is being removed from
+Item    arg1 - The item that is being removed
+int     arg2 - The number of items to remove
 int     arg3 - The reason the object is being removed (see RMOBJ_* constants)
 Obj     arg4 - The destination object when the item is moved to another object, 0 otherwise
 ```
@@ -318,19 +318,19 @@ Runs whenever the value of goods being purchased is calculated.
 __NOTE:__ The hook is executed twice when entering the barter screen or after transaction: the first time is for the player and the second time is for NPC.
 
 ```
-Critter arg0 - the critter doing the bartering (either dude_obj or inven_dude)
-Critter arg1 - the critter being bartered with
-int     arg2 - the default value of the goods
-Critter arg3 - table of requested goods (being bought from NPC)
-int     arg4 - the number of actual caps in the barter stack (as opposed to goods)
-int     arg5 - the value of all goods being traded before skill modifications
-Critter arg6 - table of offered goods (being sold to NPC)
-int     arg7 - the total cost of the goods offered by the player
+Critter arg0 - The critter doing the bartering (either dude_obj or inven_dude)
+Critter arg1 - The critter being bartered with
+int     arg2 - The default value of the goods
+Critter arg3 - Table of requested goods (being bought from NPC)
+int     arg4 - The number of actual caps in the barter stack (as opposed to goods)
+int     arg5 - The value of all goods being traded before skill modifications
+Critter arg6 - Table of offered goods (being sold to NPC)
+int     arg7 - The total cost of the goods offered by the player
 int     arg8 - 1 if the "offers" button was pressed (not for a party member), 0 otherwise
 int     arg9 - 1 if trading with a party member, 0 otherwise
 
-int     ret0 - the modified value of all of the goods (pass -1 if you just want to modify offered goods)
-int     ret1 - the modified value of all offered goods
+int     ret0 - The modified value of all of the goods (pass -1 if you just want to modify offered goods)
+int     ret1 - The modified value of all offered goods
 ```
 
 -------------------------------------------
@@ -340,11 +340,11 @@ int     ret1 - the modified value of all offered goods
 Runs when calculating the AP cost of movement.
 
 ```
-Critter arg0 - the critter doing the moving
-int     arg1 - the number of hexes being moved
-int     arg2 - the original AP cost
+Critter arg0 - The critter doing the moving
+int     arg1 - The number of hexes being moved
+int     arg2 - The original AP cost
 
-int     ret0 - the new AP cost
+int     ret0 - The new AP cost
 ```
 
 -------------------------------------------
@@ -363,9 +363,9 @@ If you want to check if some tile or path is blocked, use functions: `obj_blocki
 If you want script to be called every time NPC moves by hex in combat, use `HOOK_MOVECOST` hook.
 
 ```
-Critter arg0 - the critter doing the moving
-int     arg1 - the tile number being checked
-int     arg2 - the elevation being checked
+Critter arg0 - The critter doing the moving
+int     arg1 - The tile number being checked
+int     arg2 - The elevation being checked
 int     arg3 - 1 if the hex would normally be blocking
 
 Obj     ret0 - 0 if the hex doesn't block, or any sort of object pointer if it does
@@ -383,7 +383,7 @@ int     arg1 - The default max damage
 Item    arg2 - The weapon used (0 if unarmed)
 Critter arg3 - The critter doing the attacking
 int     arg4 - The type of attack
-int     arg5 - non-zero if this is an attack using a melee weapon
+int     arg5 - Non-zero if this is an attack using a melee weapon
 
 int     ret0 - Either the damage to be used, if ret1 isn't given, or the new minimum damage if it is
 int     ret1 - The new maximum damage
@@ -419,16 +419,16 @@ int     ret0 - The new amount of ammo to be consumed, or ammo cost per round for
 
 Runs once every time when any key was pressed or released.
 - DX codes: see **dik.h** header or https://kippykip.com/b3ddocs/commands/scancodes.htm
-- VK codes: http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
+- VK codes: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
 __NOTE:__ If you want to override a key, the new key DX scancode should be the same for both pressed and released events.
 
 ```
-int     arg0 - event type: 1 - pressed, 0 - released
-int     arg1 - key DX scancode
-int     arg2 - key VK code (very similar to ASCII codes)
+int     arg0 - Event type: 1 - pressed, 0 - released
+int     arg1 - Key DX scancode
+int     arg2 - Key VK code (very similar to ASCII codes)
 
-int     ret0 - overrides the pressed key (a new key DX scancode or 0 for no override)
+int     ret0 - Overrides the pressed key (a new key DX scancode or 0 for no override)
 ```
 
 -------------------------------------------
@@ -438,8 +438,8 @@ int     ret0 - overrides the pressed key (a new key DX scancode or 0 for no over
 Runs once every time when a mouse button was pressed or released.
 
 ```
-int     arg0 - event type: 1 - pressed, 0 - released
-int     arg1 - button number (0 - left, 1 - right, up to 7)
+int     arg0 - Event type: 1 - pressed, 0 - released
+int     arg1 - Button number (0 - left, 1 - right, up to 7)
 ```
 
 -------------------------------------------
@@ -456,10 +456,10 @@ Does not run if the script of the object calls `script_overrides` for using the 
 ```
 Critter arg0 - The user critter
 Obj     arg1 - The target object
-int     arg2 - skill being used
-int     arg3 - skill bonus from items such as first aid kits
+int     arg2 - Skill being used
+int     arg3 - Skill bonus from items such as first aid kits
 
-int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override; if it is 0, there will be a 10% chance of removing the used medical item)
+int     ret0 - Overrides hard-coded handler (-1 - use engine handler, any other value - override; if it is 0, there will be a 10% chance of removing the used medical item)
 ```
 
 -------------------------------------------
@@ -474,14 +474,14 @@ Example message (vanilla behavior):\
 `display_msg(sprintf(mstr_skill(570 + (isSuccess != false) + arg3 * 2), obj_name(arg2)));`
 
 ```
-Critter arg0 - Thief
+Critter arg0 - The thief (usually dude_obj)
 Obj     arg1 - The target
 Item    arg2 - The item being stolen/planted
 int     arg3 - 0 when stealing, 1 when planting
-int     arg4 - quantity of the item being stolen/planted
+int     arg4 - Quantity of the item being stolen/planted
 
-int     ret0 - overrides hard-coded handler (2 - force fail without closing window, 1 - force success, 0 - force fail, -1 - use engine handler)
-int     ret1 - overrides experience points gained for stealing this item (must be greater than or equal to 0)
+int     ret0 - Overrides hard-coded handler (2 - force fail without closing window, 1 - force success, 0 - force fail, -1 - use engine handler)
+int     ret1 - Overrides experience points gained for stealing this item (must be greater than or equal to 0)
 ```
 
 -------------------------------------------
@@ -506,7 +506,7 @@ int     arg3 - Type of hook:
                3 - when AI determines whether it sees a potential target when selecting attack targets
                0 - all other cases
 
-int     ret0 - overrides the returned result of the function:
+int     ret0 - Overrides the returned result of the function:
                0 - not in range (can't see)
                1 - in range (will see if not blocked)
                2 - forced detection (will see regardless, only used in obj_can_see_obj script function which is called by every critter in the game)
@@ -559,13 +559,13 @@ __NOTE:__ When replacing a previously wielded armor or weapon, the unwielding ho
 If you need to rely on this, try checking if armor/weapon is already equipped when wielding hook is executed.
 
 ```
-Critter arg0 - critter
-Item    arg1 - item being wielded or unwielded (weapon/armor)
-int     arg2 - slot (INVEN_TYPE_*)
+Critter arg0 - Critter
+Item    arg1 - Item being wielded or unwielded (weapon/armor)
+int     arg2 - Slot (INVEN_TYPE_*)
 int     arg3 - 1 when wielding, 0 when unwielding
 int     arg4 - 1 when removing an equipped item from inventory, 0 otherwise
 
-int     ret0 - overrides hard-coded handler (-1 - use engine handler, any other value - override) - NOT RECOMMENDED
+int     ret0 - Overrides hard-coded handler (-1 - use engine handler, any other value - override) - NOT RECOMMENDED
 ```
 
 -------------------------------------------
@@ -578,10 +578,10 @@ Also happens on other screens, like barter.
 __NOTE:__ FID has following format: `0x0ABBCDDD`, where: `A` - object type, `BB` - animation code (always 0 in this case), `C` - weapon code, `DDD` - FRM index in LST file.
 
 ```
-int     arg0 - the vanilla FID calculated by the engine according to critter base FID and armor/weapon being used
-int     arg1 - the modified FID calculated by the internal sfall code (like Hero Appearance Mod)
+int     arg0 - The vanilla FID calculated by the engine according to critter base FID and armor/weapon being used
+int     arg1 - The modified FID calculated by the internal sfall code (like Hero Appearance Mod)
 
-int     ret0 - overrides the calculated FID with provided value
+int     ret0 - Overrides the calculated FID with provided value
 ```
 
 -------------------------------------------
@@ -591,15 +591,15 @@ int     ret0 - overrides the calculated FID with provided value
 Runs before and after each turn in combat (for both PC and NPC).
 
 ```
-int     arg0 - event type:
+int     arg0 - Event type:
                 1 - start of turn
                 0 - normal end of turn
                -1 - combat ends abruptly (by script or by pressing Enter during PC turn)
                -2 - combat ends normally (hook always runs at the end of combat)
-Critter arg1 - critter doing the turn
+Critter arg1 - Critter doing the turn
 int     arg2 - 1 at the start/end of the player's turn after loading a game saved in combat mode, 0 otherwise
 
-int     ret0 - pass 1 at the start of turn to skip the turn, pass -1 at the end of turn to force end of combat
+int     ret0 - Pass 1 at the start of turn to skip the turn, pass -1 at the end of turn to force end of combat
 ```
 
 -------------------------------------------
@@ -609,11 +609,11 @@ int     ret0 - pass 1 at the start of turn to skip the turn, pass -1 at the end 
 Runs continuously during world map travel by car.
 
 ```
-int     arg0 - vanilla car speed (between 3 and 8 "steps")
-int     arg1 - vanilla fuel consumption (100 and below)
+int     arg0 - Vanilla car speed (between 3 and 8 "steps")
+int     arg1 - Vanilla fuel consumption (100 and below)
 
-int     ret0 - car speed override (pass -1 if you just want to override fuel consumption)
-int     ret1 - fuel consumption override
+int     ret0 - Car speed override (pass -1 if you just want to override fuel consumption)
+int     ret1 - Fuel consumption override
 ```
 
 -------------------------------------------
@@ -623,10 +623,10 @@ int     ret1 - fuel consumption override
 Runs when setting the value of a global variable.
 
 ```
-int     arg0 - the index number of the global variable being set
-int     arg1 - the set value of the global variable
+int     arg0 - The index number of the global variable being set
+int     arg1 - The set value of the global variable
 
-int     ret0 - overrides the value of the global variable
+int     ret0 - Overrides the value of the global variable
 ```
 
 -------------------------------------------
@@ -636,12 +636,12 @@ int     ret0 - overrides the value of the global variable
 Runs continuously while the player is resting (using pipboy alarm clock).
 
 ```
-int     arg0 - the game time in ticks
-int     arg1 - event type: 1 - when the resting ends normally, -1 - when pressing ESC to cancel the timer, 0 - otherwise
-int     arg2 - the hour part of the length of resting time
-int     arg3 - the minute part of the length of resting time
+int     arg0 - The game time in ticks
+int     arg1 - Event type: 1 - when the resting ends normally, -1 - when pressing ESC to cancel the timer, 0 - otherwise
+int     arg2 - The hour part of the length of resting time
+int     arg3 - The minute part of the length of resting time
 
-int     ret0 - pass 1 to interrupt the resting, pass 0 to continue the rest if it was interrupted by pressing ESC key
+int     ret0 - Pass 1 to interrupt the resting, pass 0 to continue the rest if it was interrupted by pressing ESC key
 ```
 
 -------------------------------------------
@@ -651,8 +651,8 @@ int     ret0 - pass 1 to interrupt the resting, pass 0 to continue the rest if i
 Runs once every time when the game mode was changed, like opening/closing the inventory, character screen, pipboy, etc.
 
 ```
-int     arg0 - event type: 1 - when the player exits the game, 0 - otherwise
-int     arg1 - the previous game mode
+int     arg0 - Event type: 1 - when the player exits the game, 0 - otherwise
+int     arg1 - The previous game mode
 ```
 
 -------------------------------------------
@@ -662,11 +662,11 @@ int     arg1 - the previous game mode
 Runs before playing the "use" (usually "magic hands") animation when a critter uses a scenery/container object on the map, or before walking/running animation if the player is at a distance from the object.
 
 ```
-Critter arg0 - the critter that uses an object (usually dude_obj)
-Obj     arg1 - the object being used
-int     arg2 - the animation code being used (see ANIM_* in Animcomd.h)
+Critter arg0 - The critter that uses an object (usually dude_obj)
+Obj     arg1 - The object being used
+int     arg2 - The animation code being used (see ANIM_* in Animcomd.h)
 
-int     ret0 - overrides the animation code (pass -1 if you want to skip the animation)
+int     ret0 - Overrides the animation code (pass -1 if you want to skip the animation)
 ```
 
 -------------------------------------------
@@ -676,12 +676,12 @@ int     ret0 - overrides the animation code (pass -1 if you want to skip the ani
 Runs after setting the explosive timer. You can override the result.
 
 ```
-int     arg0 - the time in ticks set in the timer
-Obj     arg1 - the explosive object
-int     arg2 - the result of engine calculation of whether the timer was set successfully: 1 - failure, 2 - success (similar to ROLL_* in Condtion.h)
+int     arg0 - The time in ticks set in the timer
+Obj     arg1 - The explosive object
+int     arg2 - The result of engine calculation of whether the timer was set successfully: 1 - failure, 2 - success (similar to ROLL_* in Condtion.h)
 
-int     ret0 - overrides the time of the timer (maximum 18000 ticks)
-int     ret1 - overrides the result of engine calculation: 0/1 - failure, 2/3 - success (similar to ROLL_*), any other value - use engine handler
+int     ret0 - Overrides the time of the timer (maximum 18000 ticks)
+int     ret1 - Overrides the result of engine calculation: 0/1 - failure, 2/3 - success (similar to ROLL_*), any other value - use engine handler
 ```
 
 -------------------------------------------
@@ -696,9 +696,9 @@ Does not run if the script of the object overrides the description.
 __NOTE:__ Returning a pointer to the new text received from the `get_string_pointer` function is still valid, but the method is DEPRECATED and is left for backward compatibility only.
 
 ```
-Obj     arg0 - the object
+Obj     arg0 - The object
 
-String  ret0 - the new description text to use
+String  ret0 - The new description text to use
 ```
 
 -------------------------------------------
@@ -710,12 +710,12 @@ Runs before using any skill on any object. Lets you override the critter that us
 __NOTE:__ The user critter can't be overridden when using Steal skill.
 
 ```
-Critter arg0 - the user critter (usually dude_obj)
-Obj     arg1 - the target object/critter
-int     arg2 - skill being used
+Critter arg0 - The user critter (usually dude_obj)
+Obj     arg1 - The target object/critter
+int     arg2 - Skill being used
 
-int     ret0 - a new critter to override the user critter. Pass -1 to cancel the skill use, pass 0 to skip this return value
-int     ret1 - pass 1 to allow the skill to be used in combat (only for dude_obj or critter being controlled by the player)
+int     ret0 - A new critter to override the user critter. Pass -1 to cancel the skill use, pass 0 to skip this return value
+int     ret1 - Pass 1 to allow the skill to be used in combat (only for dude_obj or critter being controlled by the player)
 ```
 
 -------------------------------------------
@@ -726,15 +726,15 @@ Runs when Fallout is checking all the tiles within the explosion radius for targ
 The tile checking will be interrupted when 6 additional targets (critters) are received.
 
 ```
-int     arg0 - event type: 1 - when checking objects within the explosion radius without causing damage (e.g. the player drops an active explosive), 0 - otherwise
-Critter arg1 - the attacker
-int     arg2 - the tile on which the explosion occurs
-int     arg3 - checked tile within the explosion radius
-Obj     arg4 - first found object on the checked tile as an additional target
-Critter arg5 - the target critter, may be 0 or equal to the attacker
+int     arg0 - Event type: 1 - when checking objects within the explosion radius without causing damage (e.g. the player drops an active explosive), 0 - otherwise
+Critter arg1 - The attacker
+int     arg2 - The tile on which the explosion occurs
+int     arg3 - Checked tile within the explosion radius
+Obj     arg4 - First found object on the checked tile as an additional target
+Critter arg5 - The target critter, may be 0 or equal to the attacker
 int     arg6 - 1 when using throwing weapons (e.g. grenades), 0 otherwise
 
-int     ret0 - overrides the found object on the checked tile, pass 0 to skip the object
+int     ret0 - Overrides the found object on the checked tile, pass 0 to skip the object
 ```
 
 -------------------------------------------
@@ -750,20 +750,20 @@ Runs when:
 Does not run for misses, non-combat damage like dynamite explosions, or if one of the damage formulas is selected in ddraw.ini.
 
 ```
-Critter arg0  - the attacker
-Critter arg1  - the target
-Item    arg2  - the weapon used in the attack
-int     arg3  - attack type (see ATKTYPE_* constants)
-int     arg4  - number of bullets actually hit the target (1 for melee attacks)
-int     arg5  - target's Damage Resistance (DR) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
-int     arg6  - target's Damage Threshold (DT) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
-int     arg7  - bonus ranged damage from the perk
-int     arg8  - damage multiplier (this is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage. Usually it's 2; for critical hits, the value is taken from the critical table; with Silent Death perk and the corresponding attack conditions, the value will be doubled)
-int     arg9  - combat difficulty multiplier (125 - rough, 100 - normal, 75 - wimpy; for player or party members it's always 100)
-int     arg10 - the calculated amount of damage (usually 0, required when using multiple hook scripts to calculate damage and using the set_sfall_arg function)
-mixed   arg11 - computed attack data (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
+Critter arg0  - The attacker
+Critter arg1  - The target
+Item    arg2  - The weapon used in the attack
+int     arg3  - Attack type (see ATKTYPE_* constants)
+int     arg4  - Number of bullets actually hit the target (1 for melee attacks)
+int     arg5  - Target's Damage Resistance (DR) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
+int     arg6  - Target's Damage Threshold (DT) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
+int     arg7  - Bonus ranged damage from the perk
+int     arg8  - Damage multiplier (this is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage. Usually it's 2; for critical hits, the value is taken from the critical table; with Silent Death perk and the corresponding attack conditions, the value will be doubled)
+int     arg9  - Combat difficulty multiplier (125 - rough, 100 - normal, 75 - wimpy; for player or party members it's always 100)
+int     arg10 - The calculated amount of damage (usually 0, required when using multiple hook scripts to calculate damage and using the set_sfall_arg function)
+mixed   arg11 - Computed attack data (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
 
-int     ret0 - the returned amount of damage
+int     ret0 - The returned amount of damage
 ```
 
 -------------------------------------------
@@ -773,12 +773,12 @@ int     ret0 - the returned amount of damage
 Runs before setting the light level for an object or a map. You can override the result.
 
 ```
-Obj     arg0 - the object being set, or -1 when setting the light level for a map
-int     arg1 - the light intensity
-int     arg2 - the light radius, or -1 when setting the light level for a map
+Obj     arg0 - The object being set, or -1 when setting the light level for a map
+int     arg1 - The light intensity
+int     arg2 - The light radius, or -1 when setting the light level for a map
 
-int     ret0 - overrides the light intensity. Intensity range is from 0 to 65536
-int     ret1 - overrides the light radius. Radius range is from 0 to 8 (works only for the object)
+int     ret0 - Overrides the light intensity. Intensity range is from 0 to 65536
+int     ret1 - Overrides the light radius. Radius range is from 0 to 8 (works only for the object)
 ```
 
 -------------------------------------------
@@ -790,11 +790,11 @@ You can override the result of a random Sneak check or the duration time for the
 
 ```
 int     arg0 - Sneak check result: 1 - success, 0 - failure
-int     arg1 - the duration in ticks for the current Sneak check (time depends on Sneak skill level)
-Critter arg2 - the critter (usually dude_obj)
+int     arg1 - The duration in ticks for the current Sneak check (time depends on Sneak skill level)
+Critter arg2 - The critter (usually dude_obj)
 
-int     ret0 - overrides the result of the Sneak check
-int     ret1 - overrides the duration time for the current result
+int     ret0 - Overrides the result of the Sneak check
+int     ret1 - Overrides the duration time for the current result
 ```
 
 -------------------------------------------
@@ -806,14 +806,14 @@ Runs before or after Fallout engine executes a standard procedure (handler) in a
 __NOTE:__ This hook will not be executed for `start`, `critter_p_proc`, `timed_event_p_proc`, and `map_update_p_proc` procedures.
 
 ```
-int     arg0 - the number of the standard script handler (see *_proc in define.h)
-Obj     arg1 - the object that owns this handler (self_obj)
-Obj     arg2 - the object that called this handler (source_obj, can be 0)
+int     arg0 - The number of the standard script handler (see *_proc in define.h)
+Obj     arg1 - The object that owns this handler (self_obj)
+Obj     arg2 - The object that called this handler (source_obj, can be 0)
 int     arg3 - 1 after procedure execution (for HOOK_STDPROCEDURE_END), 0 otherwise
-Obj     arg4 - the object that is acted upon by this handler (target_obj, can be 0)
-int     arg5 - the parameter of this call (fixed_param), useful for combat_proc
+Obj     arg4 - The object that is acted upon by this handler (target_obj, can be 0)
+int     arg5 - The parameter of this call (fixed_param), useful for combat_proc
 
-int     ret0 - pass -1 to cancel the execution of the handler (only for HOOK_STDPROCEDURE)
+int     ret0 - Pass -1 to cancel the execution of the handler (only for HOOK_STDPROCEDURE)
 ```
 
 -------------------------------------------
@@ -824,11 +824,11 @@ Runs when the targeting cursor hovers over an object, or when the player tries t
 You can override the target object or prevent the player from attacking the chosen target.
 
 ```
-int     arg0 - event type: 0 - when the targeting cursor hovers over the object, 1 - when trying to attack the target object
+int     arg0 - Event type: 0 - when the targeting cursor hovers over the object, 1 - when trying to attack the target object
 int     arg1 - 1 when the target object is valid to attack, 0 otherwise
-Obj     arg2 - the target object
+Obj     arg2 - The target object
 
-mixed   ret0 - overrides the target object, or pass -1 to prevent the player from attacking the object
+mixed   ret0 - Overrides the target object, or pass -1 to prevent the player from attacking the object
 ```
 
 -------------------------------------------
@@ -839,14 +839,14 @@ Runs whenever a random encounter occurs (except the Horrigan meeting and scripte
 You can override the map for loading or the encounter.
 
 ```
-int     arg0 - event type: 0 - when a random encounter occurs, 1 - when the player enters from the world map
-int     arg1 - the map ID that the encounter will load (see MAPS.h or Maps.txt)
+int     arg0 - Event type: 0 - when a random encounter occurs, 1 - when the player enters from the world map
+int     arg1 - The map ID that the encounter will load (see MAPS.h or Maps.txt)
 int     arg2 - 1 when the encounter occurs is a special encounter, 0 otherwise
-int     arg3 - encounter table number, or -1 if not an encounter
-int     arg4 - encounter index in the table, or -1 if not an encounter
+int     arg3 - Encounter table number, or -1 if not an encounter
+int     arg4 - Encounter index in the table, or -1 if not an encounter
 
-int     ret0 - overrides the map ID, or pass -1 for event type 0 to cancel the encounter and continue traveling
-int     ret1 - pass 1 to cancel the encounter and load the specified map from the ret0 (only for event type 0)
+int     ret0 - Overrides the map ID, or pass -1 for event type 0 to cancel the encounter and continue traveling
+int     ret1 - Pass 1 to cancel the encounter and load the specified map from the ret0 (only for event type 0)
 ```
 
 -------------------------------------------
@@ -856,13 +856,13 @@ int     ret1 - pass 1 to cancel the encounter and load the specified map from th
 Runs when a critter's poison level is changed, or when the player takes damage from the poison.
 
 ```
-Critter arg0 - the critter
-int     arg1 - the amount of poison being added/removed
-int     arg2 - the damage value at the time of applying the poison effect
+Critter arg0 - The critter
+int     arg1 - The amount of poison being added/removed
+int     arg2 - The damage value at the time of applying the poison effect
                (damage from the poison effect is implemented only for the player character; for other critters, this value will always be 0)
 
-int     ret0 - the new amount of poison being added/removed
-int     ret1 - the new damage value, only negative values are allowed (will only be valid at the time of taking damage from the poison)
+int     ret0 - The new amount of poison being added/removed
+int     ret1 - The new damage value, only negative values are allowed (will only be valid at the time of taking damage from the poison)
 ```
 
 -------------------------------------------
@@ -872,10 +872,10 @@ int     ret1 - the new damage value, only negative values are allowed (will only
 Runs when a critter's radiation level is changed.
 
 ```
-Critter arg0 - the critter (usually dude_obj)
-int     arg1 - the amount of radiation being added/removed
+Critter arg0 - The critter (usually dude_obj)
+int     arg1 - The amount of radiation being added/removed
 
-int     ret0 - the new amount of radiation being added/removed
+int     ret0 - The new amount of radiation being added/removed
 ```
 
 -------------------------------------------
@@ -885,7 +885,7 @@ int     ret0 - the new amount of radiation being added/removed
 Runs when a game event performs a random roll to check the chance of success or failure.
 
 ```
-int     arg0 - event type:
+int     arg0 - Event type:
                1 - checks the chance of an attack hitting the target
                2 - checks the chance of a bullet from a burst hitting the target (for burst attacks)
                3 - checks the chance when using skills (not listed below)
@@ -893,14 +893,14 @@ int     arg0 - event type:
                5 - check the chance of using Doctor skill
                6 - check the chance of using Steal skill for the thief (usually the player)
                7 - the second Steal skill chance check for the target to catch the thief, in which the target's failure is the thief's success result
-int     arg1 - the value of roll result (see ROLL_* constants), which is calculated as:
+int     arg1 - The value of roll result (see ROLL_* constants), which is calculated as:
                for ROLL_CRITICAL_SUCCESS: random(1, 100) <= (random_chance / 10) + bonus
                for ROLL_CRITICAL_FAILURE: random(1, 100) <= -random_chance / 10
-int     arg2 - the chance value
-int     arg3 - the bonus value, used when checking critical success
-int     arg4 - random chance, calculated as: (chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
+int     arg2 - The chance value
+int     arg3 - The bonus value, used when checking critical success
+int     arg4 - Random chance, calculated as: (chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
 
-int     ret0 - overrides the roll result
+int     ret0 - Overrides the roll result
 ```
 
 -------------------------------------------
@@ -911,30 +911,30 @@ Runs when the AI decides which weapon is the best while searching the inventory 
 This also runs when the player presses the "Use Best Weapon" button on the party member control panel.
 
 ```
-Critter arg0 - the critter searching for a weapon
-Item    arg1 - the best weapon chosen from two items
-Item    arg2 - the first choice of weapon
-Item    arg3 - the second choice of weapon
-Critter arg4 - the target of the critter (can be 0)
+Critter arg0 - The critter searching for a weapon
+Item    arg1 - The best weapon chosen from two items
+Item    arg2 - The first choice of weapon
+Item    arg3 - The second choice of weapon
+Critter arg4 - The target of the critter (can be 0)
 
-Item    ret0 - overrides the chosen best weapon
+Item    ret0 - Overrides the chosen best weapon
 ```
 
 -------------------------------------------
 
 #### `HOOK_CANUSEWEAPON (hs_canuseweapon.int)`
 
-Run when the AI checks whether it can use a weapon, or when the game checks whether the player can use an item (weapon) in hand slot.\
+Runs when the AI checks whether it can use a weapon, or when the game checks whether the player can use an item (weapon) in hand slot.\
 For AI, this mostly happens when NPCs try to find weapons in their inventory or on the map.\
 For the player, this happens when the game updates the item data for active item slots on the interface bar.
 
 ```
-Critter arg0 - the critter doing the check
-Item    arg1 - the item being checked
-int     arg2 - attack type (see ATKTYPE_* constants), or -1 for dude_obj
-int     arg3 - original result of engine function: 1 - can use, 0 - cannot use
+Critter arg0 - The critter doing the check
+Item    arg1 - The item being checked
+int     arg2 - Attack type (see ATKTYPE_* constants), or -1 for dude_obj
+int     arg3 - Original result of engine function: 1 - can use, 0 - cannot use
 
-int     ret0 - overrides the result of engine function. Any non-zero value allows using the weapon
+int     ret0 - Overrides the result of engine function. Any non-zero value allows using the weapon
 ```
 
 -------------------------------------------
@@ -944,15 +944,15 @@ int     ret0 - overrides the result of engine function. Any non-zero value allow
 Runs before each weapon sound effect is played or added to the animation queue to determine the name of the sound effect file based on the weapon, target, and action being performed.
 
 ```
-int     arg0 - weapon sound effect type:
+int     arg0 - Weapon sound effect type:
                0 - ready/reload
                1 - attack
                2 - out of ammo
                3 - flying (for projectiles from weapons)
                4 - hit
-Item    arg1 - the weapon being used
-int     arg2 - attack type (see ATKTYPE_* constants)
-Obj     arg3 - the target of the attack (can be 0)
+Item    arg1 - The weapon being used
+int     arg2 - Attack type (see ATKTYPE_* constants)
+Obj     arg3 - The target of the attack (can be 0)
 
-String  ret0 - the filename of the new sound effect to use, without extension (relative to the sound\sfx\ directory)
+String  ret0 - The filename of the new sound effect to use, without extension (relative to the sound\sfx\ directory)
 ```
