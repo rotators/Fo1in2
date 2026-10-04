@@ -141,33 +141,36 @@
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
 // Some possible defines for the fourth argument of HOOK_REMOVEINVENOBJ
-#define RMOBJ_ITEM_REMOVED_INVEN  4831349  // removing or destroying an item (obj_remove_from_inven_)
-#define RMOBJ_ITEM_REMOVED        4548572  // (op_rm_obj_from_inven_)
-#define RMOBJ_ITEM_REMOVED_MULTI  4563866  // (op_rm_mult_objs_from_inven_)
-#define RMOBJ_ITEM_DESTROYED      4543215  // (op_destroy_object_)
-#define RMOBJ_ITEM_DESTROY_MULTI  4571599  // (op_destroy_mult_objs_)
-#define RMOBJ_ITEM_MOVE           4683293  // (item_move_func_)
-#define RMOBJ_ITEM_REPLACE        4686256  // (item_replace_)
-#define RMOBJ_CONSUME_DRUG        4666772  // (inven_action_cursor_)
-#define RMOBJ_USE_OBJ             4666865  // (inven_action_cursor_)
-#define RMOBJ_EQUIP_ARMOR         4658121  // (inven_pickup_)
-#define RMOBJ_EQUIP_WEAPON        4658675  // (switch_hand_)
-#define RMOBJ_UNLOAD_WEAPON       4667030  // (inven_action_cursor_)
-#define RMOBJ_USE_DRUG_ON         4834866  // (obj_use_item_on_)
-#define RMOBJ_STEAL_VIEW          4668206  // (loot_container_)
-#define RMOBJ_ARMOR_EQUIPED       4651961  // removing armor from the player's slot when entering INVENTORY/LOOT/BARTER/USE inventory
-#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // removing item from the player's left slot when entering INVENTORY/LOOT/BARTER/USE inventory
-#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // removing item from the player's right slot when entering INVENTORY/LOOT/BARTER/USE inventory
-#define RMOBJ_REPLACE_WEAPON      4658526  // (switch_hand_)
-#define RMOBJ_THROW               4266040  // (action_ranged_)
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
-#define RMOBJ_AI_USE_DRUG_ON      4359920  // removing before AI uses the drug in combat
-//#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
-//#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
-#define RMOBJ_BARTER_ARMOR        4675656  // removing armor from NPC's slot before entering the barter screen
-#define RMOBJ_BARTER_WEAPON       4675722  // removing weapon from NPC's slot before entering the barter screen
-#define RMOBJ_INVEN_DROP_CAPS     4667295  // if multiple money/caps are dropped manually by the player from the inventory screen
-#define RMOBJ_DROP_INTO_CONTAINER 4678833  // when dropping items into a container item (bag/backpack)
+#define RMOBJ_ITEM_REMOVED_INVEN  4831349  // removing or destroying an item from an object's inventory
+#define RMOBJ_ITEM_REMOVED        4548572  // removing an item from the inventory with the rm_obj_from_inven script function
+#define RMOBJ_ITEM_REMOVED_MULTI  4563866  // removing items with the rm_mult_objs_from_inven script function
+#define RMOBJ_ITEM_DESTROYED      4543215  // removing an object with the destroy_object script function
+#define RMOBJ_ITEM_DESTROY_MULTI  4571599  // removing objects with the destroy_mult_objs and destroy_mult_objs_inven script functions
+#define RMOBJ_ITEM_DESTROY_HIDDEN 4683743  // removing hidden items when a critter dies
+#define RMOBJ_ITEM_MOVE           4683293  // removing an item when moving it to another object's inventory
+#define RMOBJ_CONSUME_DRUG        4666772  // removing a drug item from the inventory when the player uses it
+#define RMOBJ_AI_USE_DRUG_ON      4359920  // removing a drug item before the AI uses it in combat
+#define RMOBJ_USE_OBJ             4666865  // removing a misc item from the inventory when the player uses it
+#define RMOBJ_USE_OBJ_INTERFACE   4833648  // removing an item from the interface bar when the player uses it
+#define RMOBJ_USE_DRUG_ON         4834866  // removing an item (usually a drug) from the interface bar when the player uses it on another object
+#define RMOBJ_INVEN_DROP_CAPS     4667295  // removing money/caps from the player's inventory via the drop action icon
+#define RMOBJ_INVEN_DROP_ALL_CAPS 4683864  // removing all money/caps from a critter's corpse inventory (or upon exploded/electrified death), or via a script function
+#define RMOBJ_INVEN_DROP_ALL_ITEM 4684069  // similar to RMOBJ_INVEN_DROP_ALL_CAPS, but for all items except money/caps
+#define RMOBJ_DROP_INTO_CONTAINER 4678833  // when an item is dropped into or taken from a container item (bag/backpack)
+#define RMOBJ_THROW               4266040  // removing a thrown object/weapon during an attack (possibly followed by an RMOBJ_ITEM_REPLACE event)
+#define RMOBJ_SUB_CONTAINER       4683191  // nested event (searching for the item to be removed inside a container within an object's inventory) - recommended to skip
+// Auxiliary events in which items are not actually removed from the inventory (the item will be added back to the inventory immediately or later)
+#define RMOBJ_ITEM_REPLACE        4686256  // replacing a used or thrown item in the hand slot with a corresponding one from the inventory
+#define RMOBJ_UNLOAD_WEAPON       4667030  // temporarily removing a weapon from the inventory when unloading ammo from it
+#define RMOBJ_EQUIP_ARMOR         4658121  // temporarily removing an item from the player's inventory and placing it in the armor slot
+#define RMOBJ_EQUIP_WEAPON        4658675  // temporarily removing an item from the player's inventory and placing it in a hand slot
+#define RMOBJ_REPLACE_WEAPON      4658526  // temporarily removing an item from the player's inventory and placing it in a hand slot that already has another item
+#define RMOBJ_STEAL_VIEW          4668206  // temporarily removing equipped items from the theft target (critter) when entering the LOOT screen
+#define RMOBJ_ARMOR_EQUIPED       4651961  // temporarily removing armor from the player's armor slot when entering INVENTORY/LOOT/BARTER/USE screens
+#define RMOBJ_LEFT_HAND_EQUIPED   4651899  // temporarily removing an item from the player's left hand slot when entering INVENTORY/LOOT/BARTER/USE screens
+#define RMOBJ_RIGHT_HAND_EQUIPED  4651934  // temporarily removing an item from the player's right hand slot when entering INVENTORY/LOOT/BARTER/USE screens
+#define RMOBJ_BARTER_ARMOR        4675656  // temporarily removing armor from the NPC's slot before entering the BARTER screen
+#define RMOBJ_BARTER_WEAPON       4675722  // temporarily removing weapon from the NPC's slot before entering the BARTER screen
 // old defines
 #define RMOBJ_RM_MULT_OBJS        RMOBJ_ITEM_REMOVED_MULTI
 #define RMOBJ_TRADE               RMOBJ_ITEM_MOVE          // If the object is offered up as a trade
@@ -176,6 +179,8 @@
 //#define RMOBJ_DROP_DYNAMITE     RMOBJ_USE_OBJ
 //#define RMOBJ_CONTAINER         RMOBJ_ITEM_MOVE
 //#define RMOBJ_LOAD_WEAPON       RMOBJ_ITEM_REMOVED_INVEN
+//#define RMOBJ_AI_USE_DRUG_ON_1  4359639  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
+//#define RMOBJ_AI_USE_DRUG_ON_2  4360176  // same as RMOBJ_AI_USE_DRUG_ON (obsolete, use only for sfall before 4.3.1/3.8.31)
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (0)
