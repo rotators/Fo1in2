@@ -36,8 +36,11 @@ procedure CurtisEnd;
 
 procedure movement;
 
-#define LVAR_Sleeping      (4)
-#define LVAR_Hostile       (5)
+#define LVAR_Sleeping                  (4)
+#define LVAR_Hostile                   (5)
+#define LVAR_Herebefore                (8)
+#define LVAR_Asked_Village             (9)
+#define LVAR_Explained_Crop_Rotation   (10)
 
 variable night_person;
 variable wake_time;
@@ -133,7 +136,8 @@ procedure talk_p_proc begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      if (local_var(LVAR_base_reaction) == 1) then begin
+      get_reaction
+      if (local_var(LVAR_Herebefore) == 1) then begin
          start_dialog_at_node(Curtis02);
       end
       else begin
@@ -169,13 +173,13 @@ procedure Curtis03 begin
 end
 
 procedure Curtis03a begin
-   if (local_var(LVAR_base_reaction) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       NOption(106, Curtis04, 4);
    end
-   if (local_var(LVAR_reaction) == 0) then begin
+   if (local_var(LVAR_Asked_Village) == 0) then begin
       NOption(107, Curtis05, 5);
    end
-   if (local_var(LVAR_reaction_level) == 0) then begin
+   if (local_var(LVAR_Explained_Crop_Rotation) == 0) then begin
       NOption(108, Curtis06, 4);
    end
    NOption(109, CurtisEnd, 4);
@@ -183,12 +187,12 @@ end
 
 procedure Curtis04 begin
    Reply(110);
-   set_local_var(LVAR_base_reaction, BAD);
+   set_local_var(LVAR_Herebefore, BAD);
    call Curtis03a;
 end
 
 procedure Curtis05 begin
-   set_local_var(LVAR_reaction, 1);
+   set_local_var(LVAR_Asked_Village, 1);
    Reply(111);
    call Curtis03a;
 end
@@ -196,7 +200,7 @@ end
 procedure Curtis06 begin
    Reply(112);
    NOption(113, Curtis03, 4);
-   if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(LVAR_reaction_level) == 0)) then begin
+   if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(LVAR_Explained_Crop_Rotation) == 0)) then begin
       NOption(114, Curtis07, 5);
    end
 end
@@ -211,7 +215,7 @@ procedure Curtis08 begin
    NMessage(118);
    inc_general_rep(2);
    inc_shady_rep(REP_BONUS_CROP_ROTATION);
-   set_local_var(LVAR_reaction_level, 1);
+   set_local_var(LVAR_Explained_Crop_Rotation, 1);
    give_xp_msg(EXP_EXPLAINED_CROP_ROTATION, mstr(200));
 end
 

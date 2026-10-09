@@ -15,6 +15,7 @@
 /* Include Files */
 #include "define.h"
 #include "command.h"
+#include "modreact.h"
 #include "sfall/main.h"
 #include "sfall/sfall.rotators.h"
 #include "sfall/dik.h"
@@ -39,6 +40,7 @@ procedure MouseClick_Handler;
 
 procedure OpenInput;
 procedure CloseInput;
+procedure isReactionBad(variable critter);
 procedure FindReply(variable source, variable msg_offset);
 procedure GenerateReply;
 procedure PrintReply(variable text);
@@ -292,6 +294,11 @@ procedure OpenInput begin
    // Only open interface if valid TMA data has been saved
    // (computer terminals and some other critters don't have TMAs)
    if (tma_data_array[0] > 0) then begin
+      if (obj_type(dialog_obj) == OBJ_TYPE_CRITTER and isReactionBad(dialog_obj)) then begin
+         dialog_message(mstr_proto(904));
+         return;
+      end
+
       shiftPressed := false;
       fetch_input := true;
       input := "";
@@ -336,6 +343,20 @@ procedure OpenInput begin
 
       show_window("tellme_interface");
    end
+end
+
+// Reaction is initialized in the NPC's dialogue path before TMA can be used.
+procedure isReactionBad(variable critter) begin
+   variable reaction;
+
+   if (critter == dude_obj) then return false;
+
+   set_self(critter);
+   set_self(critter);
+   reaction := local_var(LVAR_reaction);
+   set_self(0);
+
+   return reaction <= LOW_REACTION;
 end
 
 procedure CloseInput begin
