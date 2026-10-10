@@ -7,6 +7,7 @@ Notable changes since last release ([v1.16.3771](https://github.com/rotators/Fo1
 - **Fixed**: Adytum crash (probably) shouldn't happen anymore due to new Sfall fix
 - **Fixed**: Auto push function for party members could make them fail to move in certain orientations.
 - **Fixed**: Because of a stray night-condition macro, many scripts were checking the beginning of the night wrong (18:00 instead of 19:00).
+- **Fixed**: Critters that have a negative reaction to the player will not answer TMA questions anymore.
 - **Fixed**: EXP exploit when using lockpicks on the armory door at the BoS bunker.
 - **Fixed**: Logic issue in TMA script when pressing enter / numpad enter on an empty input box.
 - **Fixed**: Missing or wrongly assigned strings in various script files. Mostly door related.
