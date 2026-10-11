@@ -42,6 +42,12 @@ MOD INSTALLATION
   - If you are using a (pre)release package, `UNDAT.SH` can be found in the `Fallout1in2` folder.
   - If you are using the repository, `UNDAT.SH` can be found in the `Tools/UndatCLI` folder.
 
+- On macOS, use the native extractor instead (no Wine or Homebrew required):
+  - From a release's `Fallout1in2` folder, run `bash undat_macos.sh "/path/to/Fallout 1/MASTER.DAT"`.
+  - From the repository root, run `bash Tools/UndatCLI/undat_macos.sh "/path/to/Fallout 1/MASTER.DAT"`.
+  - The script extracts into `Fallout1in2/data`; an optional second argument selects a different `Fallout1in2` folder.
+  - Playing on macOS requires a compatible native runtime such as CE, installed separately.
+
 - Select the `Fallout1in2` folder as extraction target.
 
 - Extract the files.
