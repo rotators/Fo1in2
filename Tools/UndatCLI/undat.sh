@@ -16,14 +16,14 @@ fi
 
 root_dir="$(dirname $0)"
 data_dir="$root_dir/data"
-dat2="wine $root_dir/dat2.exe"
+dat3="$root_dir/dat3"
 undat_list="$root_dir/undat_files.txt"
 
-if ! $dat2 l "${master_dat}" > /dev/null 2>&1; then
+if ! $dat3 l "${master_dat}" > /dev/null 2>&1; then
   echo "Error: can't read Fallout 1's master.dat."
   exit 1
 fi
 
-$dat2 x -d "$data_dir" "$master_dat" "@$undat_list"
+$dat3 x -o "$data_dir" "$master_dat" "@$undat_list"
 
 echo "Extracted successfully."
