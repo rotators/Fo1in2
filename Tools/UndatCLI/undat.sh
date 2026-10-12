@@ -10,7 +10,12 @@ fi
 
 root_dir="$(dirname "$0")"
 data_dir="$root_dir/data"
-dat3="$root_dir/dat3"
+dat3="$root_dir/utils/dat3"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  dat3="$root_dir/utils/dat3-macos"
+  xattr -d com.apple.quarantine "$dat3" 2>/dev/null || true
+fi
+[[ -x "$dat3" ]] || chmod +x "$dat3"
 undat_list="$root_dir/undat_files.txt"
 
 if ! "$dat3" l "$master_dat" > /dev/null 2>&1; then
