@@ -6,7 +6,7 @@ if not exist "%master_dat%" goto NOFILE
 
 set "root_dir=%~dp0"
 set "data_dir=%root_dir%data"
-set "dat2=%root_dir%dat2.exe"
+set "dat2=%root_dir%utils/dat2.exe"
 set "undat_list=%root_dir%undat_files.txt"
 
 "%dat2%" l "%master_dat%" >nul 2>&1
