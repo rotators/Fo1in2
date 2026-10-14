@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-MOD_VERSION="1.16"
+MOD_VERSION="2.0"
 
 
 MOD_COMMITS=$(git rev-list HEAD --count)
