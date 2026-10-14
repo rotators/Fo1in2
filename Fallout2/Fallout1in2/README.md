@@ -30,25 +30,23 @@ MOD INSTALLATION
     ```
     \Fallout 2\Fallout1in2\Fallout2.exe
     ```
-    For Epic Games version:
+    For Epic Games or Xbox Game Pass version:
     ```
     \fallout2\Fallout 2 English\Fallout1in2\Fallout2.exe
     ```
 
-- Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
-  - If you are using a (pre)release package, `UNDAT.EXE` can be found in the `Fallout1in2` folder.
-  - If you are using the repository, `UNDAT.EXE` can be found in the `Tools\UndatUI` folder.
-  - If you are using Linux, `UNDAT.SH` can be used instead (requires `WINE` installed).
-  - If you are using a (pre)release package, `UNDAT.SH` can be found in the `Fallout1in2` folder.
-  - If you are using the repository, `UNDAT.SH` can be found in the `Tools/UndatCLI` folder.
+- On Windows, start `UNDAT.EXE`, select the `MASTER.DAT` file from your FALLOUT 1 installation directory, and then select the `Fallout1in2` folder as the extraction target.
+- On Linux or macOS, run the `UNDAT.SH` script as follows: `bash undat.sh "/path/to/Fallout 1/MASTER.DAT"`.
 
-- Select the `Fallout1in2` folder as extraction target.
-
-- Extract the files.
+- Wait until the file extraction is completed.
 
 That's it. The game can now be played using `Fallout1in2\Fallout2.exe`!
 
-When using Linux with Wine, if there are issues running the game correctly, set the *.dll override priorities in Wine: `WINEDLLOVERRIDES="ddraw.dll=n,b" wine Fallout2.exe`
+When launching the game on Linux or macOS with Wine, you **must** set the DLL overrides: `WINEDLLOVERRIDES="ddraw.dll=n,b" wine Fallout2.exe` (or use `winecfg` to configure them). Otherwise, the game will not start correctly.
+
+Alternatively, you can run the game with [**Fallout 2 CE**](https://github.com/fallout2-ce/fallout2-ce):
+  - For Windows, `fallout2-ce.exe` is already included.
+  - For Linux and macOS, download [the latest release](https://github.com/fallout2-ce/fallout2-ce/releases), then extract the archive into the `Fallout1in2` folder. You don't need Wine for Fallout 2 CE.
 
 
 CONFIGURATION
