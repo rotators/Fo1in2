@@ -29,7 +29,7 @@
 {202}{}{Voice module online. System nominal. Orders?}
 {203}{}{What was your last task?}
 
-{204}{}{Accessing task queue ... Last task: Parameter security. Task canceled after suffering severe energy fluctuations. Battery overload. Hardware components damaged.}
+{204}{}{Accessing task queue ... Last task: Perimeter security. Task canceled after suffering severe energy fluctuations. Battery overload. Hardware components damaged.}
 {205}{}{What is your status?}
 
 {206}{}{Maintenance status: OK ... Battery status: BAD ... Connection to local network: GOOD ... Weapon systems: ONLINE.}
@@ -71,7 +71,7 @@
 {1007}{}{Tasks?}
 {1008}{}{Tasks?}
 {1009}{}{Confirmed.}
-{1010}{}{[Click] This unit is programmed to follow an automated parameter and / or VIP security protocol. This unit also has a built-in long range scanner system for early threat recognition.}
+{1010}{}{[Click] This unit is programmed to follow an automated perimeter and / or VIP security protocol. This unit also has a built-in long range scanner system for early threat recognition.}
 {1011}{}{[Beep] This unit is equipped with an improved Wattz 2.4 taser-system for fast melee engagements.}
 
 {1100}{}{This eyebot is fully repaired and ready to go.}

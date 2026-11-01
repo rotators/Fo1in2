@@ -96,7 +96,7 @@
 {196}{}{Wall}                                           #  SetSctDr
 {197}{}{Odd Smell}                                      #  Smell
 {198}{}{Centaur Handler}                                #  ECHANDLR.int    ; Super Mutant centaur handler
-{199}{}{Necorpolis Storeroom}                           #  StoreRom
+{199}{}{Necropolis Storeroom}                           #  StoreRom
 {200}{}{Super Mutant}                                   #  Super
 {201}{}{Terry}                                          #  Terry
 {202}{}{Garret}                                         #  Garret
@@ -171,7 +171,7 @@
 {271}{}{Ladder}                                         #  NWDn2Up3
 {272}{}{Andrew}                                         #  Andrew.int
 {273}{}{Hotel of the Dead}                              #  HotelMap
-{274}{}{Lorriane}                                       #  Lorian
+{274}{}{Lorraine}                                       #  Lorian
 {275}{}{Manhole}                                        #  NHUp2Dn1
 {276}{}{Manhole}                                        #  NHUp2Dn2
 {277}{}{Manhole}                                        #  NHUp2Dn3
@@ -193,7 +193,7 @@
 {293}{}{Shady Sands}                                    #  ShadyEt
 {294}{}{Shady Sands}                                    #  ShadyWst
 {295}{}{Medical Lab}                                    #  MedLab
-{296}{}{Abandonned Shack}                               #  shack
+{296}{}{Abandoned Shack}                                #  shack
 {297}{}{Seth}                                           #  Seth2
 {298}{}{Brotherhood Scribe}                             #  SCRIBEA
 {299}{}{Vault 13}                                       #  Vault13
@@ -205,15 +205,15 @@
 {305}{}{Brotherhood of Steel Entrance}                  #  BroHdEnt
 {306}{}{Rat Breeding Pit}                               #  RatPit
 {307}{}{Darkness}                                       #  FearDark
-{308}{}{Cave Openning}                                  #  ValtLeav
+{308}{}{Cave Opening}                                   #  ValtLeav
 {309}{}{Vault 13 Citizen}                               #  ValtCupl
 {310}{}{Your Living Quarters}                           #  YourRoom
 {311}{}{Katrina}                                        #  SSGuide
-{312}{}{Cave Openning}                                  #  LiteLeav
+{312}{}{Cave Opening}                                   #  LiteLeav
 {313}{}{Vault 13 Central Core}                          #  ValtCore
 {314}{}{Computer}                                       #  VCompOp
 {315}{}{Vault 13 Operations Room}                       #  ValtOp
-{316}{}{Vautl 13 Security Room}                         #  ValtSec
+{316}{}{Vault 13 Security Room}                         #  ValtSec
 {317}{}{Vault 13 Storage}                               #  ValtStor
 {318}{}{Vault 13 Meeting Room}                          #  ValtMeet
 {319}{}{Vault 13 Medical Lab}                           #  ValtMed

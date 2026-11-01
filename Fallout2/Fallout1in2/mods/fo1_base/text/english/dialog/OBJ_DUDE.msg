@@ -571,7 +571,7 @@
 {15412}{}{Booze|Drugs}
 {15413}{}{Shady Sands|Shady|Sands}
 {15414}{}{Aradesh}
-{15415}{}{Help|Hurt|Wounded|Inured|Doc|Doctor}
+{15415}{}{Help|Hurt|Wounded|Injured|Doc|Doctor}
 {15416}{}{Join|Become Khan|Joining}
 {15417}{}{Leader|Your Boss|Boss|Bossmann}
 {15418}{}{Medic|Doc|Doctor|Help|Healing|Hurt|Wounded|Injured|Infirmary}
@@ -1423,7 +1423,7 @@
 {25721}{}{They produce and sell weapons.}
 {25722}{}{There is a hospital on the southeast side of town by the Water Merchants.}
 {25723}{}{With the caravans traversing the wastes all the time nowadays, the trade in the Hub is booming.}
-{25724}{}{The Water Tower is where you'll find the Water Merchants. North of here is the most central, theDowntown district. The Heights are to the west of it, and Old Town to the east.}
+{25724}{}{The Water Tower is where you'll find the Water Merchants. North of here is the most central, the Downtown district. The Heights are to the west of it, and Old Town to the east.}
 {25725}{}{They say there's a 'Circle of Thieves' in the Hub. Sounds like bullshit to me. I mean... Sheriff Greene would have taken them down already if that were true.}
 {25726}{}{Brahmins are very important to the Hub. Without them, we wouldn't be where we are today.}
 {25727}{}{Pretty sure the Brotherhood of Steel are responsible for the missing caravans.}

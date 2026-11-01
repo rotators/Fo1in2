@@ -107,7 +107,7 @@
 {5400}{}{Stealth Boy}
 {5401}{}{A RobCo Stealth Boy 3001 personal stealth device. Generates a modulating field that transmits the reflected light from one side of an object to the other.}
 {5500}{}{Water Chip}
-{5501}{}{A water purification control computer system chip. Looks suprisingly like the chip that your Vault needs.}
+{5501}{}{A water purification control computer system chip. Looks surprisingly like the chip that your Vault needs.}
 {5600}{}{Dog Tags}
 {5601}{}{A set of military dog tags. The name Darkwater is readable, but not much else is.}
 {5700}{}{Bug}

@@ -187,7 +187,7 @@
 {1007}{}{Medic}
 {1008}{}{Vault13}
 {1009}{}{Vault 13}
-{1010}{}{Overseer|Jacoben}
+{1010}{}{Overseer|Jacoren}
 {1011}{}{Waterchip}
 
 

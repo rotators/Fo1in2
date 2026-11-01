@@ -81,6 +81,6 @@
 
 # Fo1in2
 # You gain x experience ...
-{200}{}{ for convincnig Rae to destroy the Master.}
+{200}{}{ for convincing Rae to destroy the Master.}
 {201}{}{ for convincing Rae to fight with you against the Master.}
 {202}{}{It is done. Leave now.}
