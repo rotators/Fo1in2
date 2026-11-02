@@ -18,7 +18,7 @@
 {117}{}{You fail to pick the lock and take serious damage from the security system.}
 {118}{}{You fail to pick the lock and take damage from the security system.}
 {119}{}{You are shocked by the security system and lose concentration to pick the lock.}
-{120}{}{You take and intense shock from the security system and lose concentration to pick the lock.}
+{120}{}{You take an intense shock from the security system and lose concentration to pick the lock.}
 {121}{}{You utterly fail in trying to pick this lock and destroy your picks.}
 {122}{}{You fail to pick this lock.}
 {123}{}{You see a sturdy, rusted door.}

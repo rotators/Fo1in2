@@ -295,7 +295,7 @@
 {19100}{}{Deadly Nightkin}
 {19101}{}{}
 {19200}{}{Super Nightkin}
-{19300}{}{Master Nighkin}
+{19300}{}{Master Nightkin}
 {19301}{}{}
 {19400}{}{Guard}
 {19401}{}{}
