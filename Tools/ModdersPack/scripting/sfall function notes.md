@@ -1072,8 +1072,8 @@ sfall_funcX metarule functions
 
 ----
 #### interface_overlay
-`int sfall_func2("interface_overlay", int winType, int mode)`\
-`int sfall_func6("interface_overlay", int winType, 2, int x, int y, int width, int height)`
+`void sfall_func2("interface_overlay", int winType, int mode)`\
+`void sfall_func6("interface_overlay", int winType, 2, int x, int y, int width, int height)`
 - Creates an additional drawing surface above the graphic layer of the specified interface window. All subsequent calls of `interface_art_draw` and `interface_print` functions will draw on it
 - `winType`: the type number of the interface window (see `WINTYPE_*` constants in **sfall.h**)
 - `mode`:\
