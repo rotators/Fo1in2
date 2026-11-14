@@ -45,7 +45,7 @@
 {402}{}{Con las bandas derrotadas, Desguace vuelve a ser un refugio seguro.}
 {403}{}{Gracias, adiós.}
 {404}{}{Vale, gracias.}
-{405}{}{{405}{}{Mmm. Adiós.}}
+{405}{}{Mmm. Adiós.}
 {406}{}{Nos vemos.}
 {407}{}{Gracias.}
 {408}{}{Vale, adiós.}
