@@ -1,0 +1,9 @@
+{100}{}{Estás viendo a un campesino.}
+{101}{}{Oh, sí, un tío grande huyendo de un perro feroz, Phil. Seguro que es el. Sí. Segurísimo.}
+{102}{}{¿Qué haces, Phil? Estás siguiendo las huellas de estas zapatillas, ¿verdad?}
+{103}{}{Tío, este perro parece hambriento. Seguro que quiere comerte vivo, Phil.}
+{104}{}{Eso sería demasiado para un pobre animal indefenso, ¿No opinas lo mismo?}
+{105}{}{Seguro que es un lindo animalito.}
+{106}{}{Estoy seguro de que Phil agradecería que te hicieras cargo de ese perro.}
+{107}{}{Gracias por encargarte de ese perro.}
+{108}{}{Ves: a Lenore.}
