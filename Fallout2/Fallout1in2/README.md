@@ -22,7 +22,7 @@ MOD INSTALLATION
 - Install FALLOUT 1 anywhere.
   - The game is **REQUIRED** to play the Fallout 1 in 2 engine conversion!
 
-- Install FALLOUT 2 anywhere.
+- Install FALLOUT 2 somewhere other than `C:\Program Files` or `C:\Program Files (x86)`.
   - The game is **REQUIRED** to play the Fallout 1 in 2 engine conversion!
 
 - Unpack FALLOUT ET TU into your Fallout 2 main folder (i.e. the folder where `master.dat` and `critter.dat` files are located).
