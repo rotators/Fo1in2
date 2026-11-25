@@ -1,5 +1,5 @@
 sfall, a Fallout 2 engine tweak mod by Timeslip and many other contributors
-version 4.5.1, built for Fallout 2 v1.02 US
+version 4.5.2, built for Fallout 2 v1.02 US
 
 Project Page on SourceForge: https://sourceforge.net/projects/sfall/
 Code Repository on GitHub:   https://github.com/sfall-team/sfall
@@ -53,6 +53,21 @@ Starting from 4.2.2, sfall is not compatible with the experimental version of th
 ***************
 ** Changelog **
 ***************
+
+v4.5.2
+>Fixed issues with endgame music playback when AllowDShowSound is enabled
+>Fixed NPCs getting stuck in combat when attempting to disengage from an out-of-range target
+>Fixed a crash bug in draw_image, draw_image_scaled, and interface_art_draw script functions when art cannot be loaded
+>Fixed a crash when calling get_tile_fid with invalid tile data
+>Fixed fs_write_float script function not accepting float arguments
+>Fixed potential out-of-bounds and overflow errors in various script functions
+>Fixed issues with hs_* scripts unregistering themselves
+>Improved the fix for file seeking in uncompressed .dat files
+>Added a fix to prevent NPCs from unequipping powered melee/unarmed weapons when looking for ammo
+>Added a fix for the player's weapon animation not matching the active item after loading a saved game
+>Added a fix for msg list error message in the debug log when quick saving/loading
+>Added a tweak to prevent failed corpse deletion from blocking saved map loading
+>Added a tweak to use the first frame instead of the last one when displaying a standing critter on the loot screen
 
 v4.5.1
 >HRP: Fixed a possible hang or crash when reloading a saved game in certain cases
@@ -820,9 +835,9 @@ v4.1.8
 >Removed LoadProtoMaxLimit from ddraw.ini. Now the proto limit is automatically increased when needed
 >Added a fix for party member's stats being reset to the base level when their base protos with the read-only attribute set are placed in the proto\critters\ directory
 >Added a fix for NPC stuck in a loop of picking up items in combat and the incorrect message being displayed when the NPC cannot pick up an item due to not enough space in the inventory
->Added a fix to allow fleeing NPC to use drugs
+>Added a fix to allow fleeing NPCs to use drugs
 >Added a fix for AI not checking minimum HP properly for using stimpaks
->Added a fix for NPC stuck in fleeing mode when the hit chance of a target was too low
+>Added a fix for NPC stuck in fleeing mode when a target's hit chance was too low
 >Added a fix to prevent fake perks from being added to all controlled critters
 >Added a missing option for testing AllowSoundForFloats to the [Debugging] section of ddraw.ini
 >Added a new 'dropping item on the character portrait' event to HOOK_INVENTORYMOVE hook script
