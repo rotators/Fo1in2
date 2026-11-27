@@ -1,0 +1,1 @@
+{100}{}{Te das cuenta de que hay un armario en el muro del este, igual que en tu Refugio.}
